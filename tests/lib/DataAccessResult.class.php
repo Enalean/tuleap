@@ -66,7 +66,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * Allow to create an object instead of an array when iterating over results
      *
-     * @param callback $instance_callback The callback to use to create object
+     * @param callable $instance_callback The callback to use to create object
      *
      * @deprecated
      *
@@ -134,7 +134,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     public function current()
     {
         if ($this->instance_callback) {
-            return call_user_func_array($this->instance_callback, array($this->_row));
+            return call_user_func_array($this->instance_callback, [$this->_row]);
         } else {
             return $this->_row;
         }

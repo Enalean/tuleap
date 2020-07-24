@@ -79,11 +79,11 @@ class VisitRetriever
                     $recently_visited_row['created_on'],
                     null,
                     AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
-                        array(
+                        [
                             'group_id' => $tracker->getProject()->getID(),
                             'action'   => 'showKanban',
                             'id'       => $kanban->getId()
-                        )
+                        ]
                     ),
                     $kanban->getName(),
                     $tracker->getColor()->getName(),

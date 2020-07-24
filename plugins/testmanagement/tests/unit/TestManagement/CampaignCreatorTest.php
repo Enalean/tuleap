@@ -196,7 +196,7 @@ class CampaignCreatorTest extends TestCase
         $definition_2->allows()->getId()->andReturn("2");
         $definition_3 = Mockery::mock(\Tracker_Artifact::class);
         $definition_3->allows()->getId()->andReturn("3");
-        $test_definitions = array($definition_1, $definition_2, $definition_3);
+        $test_definitions = [$definition_1, $definition_2, $definition_3];
 
         $this->stubCampaignTracker();
         $this->stubCampaignArtifact();

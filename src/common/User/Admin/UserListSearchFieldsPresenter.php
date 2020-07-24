@@ -46,7 +46,7 @@ class UserListSearchFieldsPresenter
 
     private function getListOfStatusValuePresenter($status_values)
     {
-        return array(
+        return [
             $this->getStatusValuePresenter(self::$ANY, $status_values, $GLOBALS['Language']->getText("admin_userlist", "any")),
             $this->getStatusValuePresenter(PFUser::STATUS_ACTIVE, $status_values, $GLOBALS['Language']->getText("admin_userlist", "active")),
             $this->getStatusValuePresenter(PFUser::STATUS_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "restricted")),
@@ -55,7 +55,7 @@ class UserListSearchFieldsPresenter
             $this->getStatusValuePresenter(PFUser::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText("admin_userlist", "pending")),
             $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated")),
             $this->getStatusValuePresenter(PFUser::STATUS_VALIDATED_RESTRICTED, $status_values, $GLOBALS['Language']->getText("admin_userlist", "validated_restricted"))
-        );
+        ];
     }
 
     private function getStatusValuePresenter($status, $status_values, $label)
@@ -67,10 +67,10 @@ class UserListSearchFieldsPresenter
             $selected = in_array($status, $status_values);
         }
 
-        return array(
+        return [
             'value'       => $status,
             'is_selected' => $selected,
             'label'       => $label
-        );
+        ];
     }
 }

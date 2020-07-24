@@ -68,7 +68,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('exclude'        => '',
+        return ['exclude'        => '',
                      'include_self'   => 0,
                      'noheader'       => 0,
                      'page'           => '[pagename]',
@@ -79,7 +79,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
                      'firstreversed'  => false,
                      'excludeunknown' => true,
                      'includepages'   => '' // to be used only from the IncludeSiteMap plugin
-                     );
+                     ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
@@ -94,7 +94,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $level = '*',
         $reclimit = '***'
     ) {
-        static $VisitedPages = array();
+        static $VisitedPages = [];
 
         $startpagename = $startpage->getName();
         //trigger_error("DEBUG: recursivelyGetBackLinks( $startpagename , $level )");
@@ -130,7 +130,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $level = '*',
         $reclimit = '***'
     ) {
-        static $VisitedPages = array();
+        static $VisitedPages = [];
 
         $startpagename = $startpage->getName();
         //trigger_error("DEBUG: recursivelyGetLinks( $startpagename , $level )");
@@ -179,7 +179,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $out = ''; // get rid of this
         $html = HTML();
         if (empty($exclude)) {
-            $exclude = array();
+            $exclude = [];
         }
         if (! $include_self) {
             $exclude[] = $page;
@@ -209,7 +209,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $pagelist = new PageList($info, $exclude);
         $p = $dbi->getPage($page);
 
-        $pagearr = array();
+        $pagearr = [];
         if ($direction == 'back') {
             $pagearr = $this->recursivelyGetBackLinks(
                 $p,

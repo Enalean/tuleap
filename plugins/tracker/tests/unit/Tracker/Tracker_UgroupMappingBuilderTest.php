@@ -47,15 +47,15 @@ final class Tracker_UgroupMappingBuilderTest extends \PHPUnit\Framework\TestCase
         $ugroup_manager        = \Mockery::spy(\UGroupManager::class);
         $permissions_retriever = \Mockery::spy(\Tracker_UgroupPermissionsGoldenRetriever::class);
 
-        $permissions_retriever->shouldReceive('getListOfInvolvedStaticUgroups')->with($template_tracker)->andReturns(array($template_ugroup_dev,
-                                                                                                                           $template_ugroup_support, $template_ugroup_staff));
-        $ugroup_manager->shouldReceive('getStaticUGroups')->with($target_project)->andReturns(array($target_ugroup_dev,
-                                                                                                    $target_ugroup_support, $target_ugroup_client));
+        $permissions_retriever->shouldReceive('getListOfInvolvedStaticUgroups')->with($template_tracker)->andReturns([$template_ugroup_dev,
+                                                                                                                           $template_ugroup_support, $template_ugroup_staff]);
+        $ugroup_manager->shouldReceive('getStaticUGroups')->with($target_project)->andReturns([$target_ugroup_dev,
+                                                                                                    $target_ugroup_support, $target_ugroup_client]);
 
         $builder = new Tracker_UgroupMappingBuilder($permissions_retriever, $ugroup_manager);
 
         $mapping = $builder->getMapping($template_tracker, $target_project);
 
-        $this->assertEquals(array(1001 => 1002), $mapping);
+        $this->assertEquals([1001 => 1002], $mapping);
     }
 }

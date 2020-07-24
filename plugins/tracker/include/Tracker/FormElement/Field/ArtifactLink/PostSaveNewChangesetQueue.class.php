@@ -25,7 +25,7 @@ class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
 {
 
     /** @var Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand[] */
-    private $queue = array();
+    private $queue = [];
 
     public function add(Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand $command)
     {

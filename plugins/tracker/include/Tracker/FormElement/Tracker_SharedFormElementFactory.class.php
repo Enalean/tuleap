@@ -97,7 +97,7 @@ class Tracker_SharedFormElementFactory
 
     private function populateFormElementDataForASharedField($originField)
     {
-        return array(
+        return [
             'type'              => $this->factory->getType($originField),
             'label'             => $originField->getLabel(),
             'description'       => $originField->getDescription(),
@@ -107,7 +107,7 @@ class Tracker_SharedFormElementFactory
             'required'          => $originField->isRequired(),
             'notifications'     => $originField->hasNotifications(),
             'original_field_id' => $originField->getId(),
-        );
+        ];
     }
 
     /**

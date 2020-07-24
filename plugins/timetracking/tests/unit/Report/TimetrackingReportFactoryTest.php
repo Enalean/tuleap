@@ -83,7 +83,7 @@ class TimetrackingReportFactoryTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($this->tracker);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
-        $expected_result = new TimetrackingReport(1, array($this->tracker));
+        $expected_result = new TimetrackingReport(1, [$this->tracker]);
         $result          = $this->timetracking_report_factory->getReportById(1);
 
         $this->assertEquals($expected_result, $result);

@@ -70,7 +70,7 @@ class Docman_VersionFactory
         $dar = $dao->searchByItemId($item->getId());
         $versions = false;
         if ($dar && ! $dar->isError()) {
-            $versions = array();
+            $versions = [];
             while ($dar->valid()) {
                 $row = $dar->current();
                 $versions[] = new Docman_Version($row);
@@ -185,7 +185,7 @@ class Docman_VersionFactory
      */
     public function archiveBeforePurge(Docman_Version $version): bool
     {
-        $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
+        $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
         $prefix  = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();
 
         $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($version->getPath(), $prefix));
@@ -234,17 +234,17 @@ class Docman_VersionFactory
                     // Take into account deleted items because, when we restore a deleted item
                     // the versions are restored before the item (because we restore the item
                     // only if at least one version was restored successfully
-                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
+                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
                     $user  = $this->_getUserManager()->getCurrentUser();
                     $value = $version->getNumber();
                     if ($row['label'] !== '') {
                         $value .= ' (' . $row['label'] . ')';
                     }
-                    $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', array(
+                    $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', [
                           'group_id'   => $item->getGroupId(),
                           'item'       => $item,
                           'old_value'  => $value,
-                          'user'       => $user));
+                          'user'       => $user]);
                     return true;
                 }
             }
@@ -296,7 +296,7 @@ class Docman_VersionFactory
         $dao = $this->_getVersionDao();
         $dar = $dao->listVersionsToPurgeByItemId($item->getId());
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
-            $list = array();
+            $list = [];
             foreach ($dar as $row) {
                 $version = new Docman_Version($row);
                 $list[] = $version;

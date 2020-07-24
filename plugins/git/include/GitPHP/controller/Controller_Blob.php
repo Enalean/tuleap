@@ -116,7 +116,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 $saveas = $this->params['hash'] . ".txt";
             }
 
-            $headers = array();
+            $headers = [];
 
             $mime = null;
             if (Config::GetInstance()->GetValue('filemimetype', true)) {
@@ -221,7 +221,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             return;
         }
 
-        $this->tpl->assign('extrascripts', array('blame'));
+        $this->tpl->assign('extrascripts', ['blame']);
 
         $detector          = new LanguageDetectorForPrismJS();
         $detected_language = $detector->getLanguage($blob->GetName());

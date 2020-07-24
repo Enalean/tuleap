@@ -16,7 +16,7 @@ class WikiDB_backend_dumb_MostPopularIter extends WikiDB_backend_iterator
 {
     public function __construct($backend, &$all_pages, $limit)
     {
-        $this->_pages = array();
+        $this->_pages = [];
         $pages = &$this->_pages;
 
         while ($page = & $all_pages->next()) {

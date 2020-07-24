@@ -95,7 +95,7 @@ class CardInCellPresenterFactoryTest extends TestCase
         $mapping_collection = Mockery::mock(\Cardwall_MappingCollection::class)
             ->shouldReceive('getSwimLineValues')
             ->with($this->field_id)
-            ->andReturns(array(123, 456))
+            ->andReturns([123, 456])
             ->getMock();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
@@ -103,7 +103,7 @@ class CardInCellPresenterFactoryTest extends TestCase
 
         $this->assertEquals(
             $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, array(123, 456))
+            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, [123, 456])
         );
     }
 }

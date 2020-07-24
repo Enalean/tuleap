@@ -31,7 +31,7 @@ class Console extends AbstractLogger
     public const YELLOW  = "\033[33m";
     public const NOCOLOR = "\033[0m";
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         fwrite(STDERR, $this->colorize($level, $level . ' ' . $message) . PHP_EOL);
         fflush(STDERR);

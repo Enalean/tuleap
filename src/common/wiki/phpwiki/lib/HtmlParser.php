@@ -191,7 +191,7 @@ class HtmlParser extends XmlParser
     public function _elem_is_image_div($node)
     {
         // Return false if node is undefined or isn't a DIV at all
-        if (! $node or ! in_array($node->_tag, array("div","p"))) {
+        if (! $node or ! in_array($node->_tag, ["div", "p"])) {
             return false;
         }
         $contents = $node->getContent();
@@ -234,7 +234,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
     public function __construct()
     {
         $this->_handlers =
-            array('html'   => '',
+            ['html'   => '',
                   'head'   => '',
                   'title'  => '',
                   'meta'   => '',
@@ -243,33 +243,33 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                   'body'   => '',
 
                   'br'     => "<br>",
-                  'b'      => array( "*" ),
-                  'strong' => array( "*" ),
-                  'i'      => array( "_" ),
-                  'em'     => array( "_" ),
+                  'b'      => [ "*" ],
+                  'strong' => [ "*" ],
+                  'i'      => [ "_" ],
+                  'em'     => [ "_" ],
                   'hr'     => "----\n\n",
 
                   // PRE blocks are handled specially (see tidy_whitespace and
                   // wikify methods)
-                  'pre'    => array( "<pre>", "</pre>" ),
+                  'pre'    => [ "<pre>", "</pre>" ],
 
-                  'dl'     => array( '', "\n\n" ),
-                  'dt'     => array( ';', '' ),
-                  'dd'     => array( ':', '' ),
+                  'dl'     => [ '', "\n\n" ],
+                  'dt'     => [ ';', '' ],
+                  'dd'     => [ ':', '' ],
 
-                  'p'      => array( "\n\n", "\n\n" ),
-                  'ul'     => array( '', "\n" ),
-                  'ol'     => array( '', "\n" ),
+                  'p'      => [ "\n\n", "\n\n" ],
+                  'ul'     => [ '', "\n" ],
+                  'ol'     => [ '', "\n" ],
 
                   'li'     => "wikify_list_item",
                   'table'  => "wikify_table",
                   'tr'     => "wikify_tr",
                   'td'     => "wikify_td",
                   'th'     => "wikify_td",
-                  'div'    => array( '', "\n\n" ),
+                  'div'    => [ '', "\n\n" ],
                   'img'    => "wikify_img",
                   'a'      => "wikify_link",
-                  'span'   => array( '', '' ),
+                  'span'   => [ '', '' ],
 
                   'h1'     => "wikify_h",
                   'h2'     => "wikify_h",
@@ -278,12 +278,12 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                   'h5'     => "wikify_h",
                   'h6'     => "wikify_h",
 
-                  'font'   => array( '', '' ),
+                  'font'   => [ '', '' ],
                   'sup'    => "wikify_default",
                   'sub'    => "wikify_default",
                   'nowiki' => "wikify_verbatim",
                   'verbatim' => "wikify_default",
-                  );
+                  ];
     }
 
     public function wikify_table($node)

@@ -87,7 +87,7 @@ class DefaultFineGrainedPermissionFactory
 
     public function getUpdatedPermissionsFromRequest(Codendi_Request $request, Project $project)
     {
-        $updated_permissions = array();
+        $updated_permissions = [];
 
         $this->updateWriters($request, $project, $updated_permissions);
         $this->updateRewinders($request, $project, $updated_permissions);
@@ -99,12 +99,12 @@ class DefaultFineGrainedPermissionFactory
     {
         $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-write");
         if (! is_array($branches)) {
-            $branches = array();
+            $branches = [];
         }
 
         $tags = $request->get(self::EDIT_TAG_PREFIX . "-write");
         if (! is_array($tags)) {
-            $tags = array();
+            $tags = [];
         }
 
         return $branches + $tags;
@@ -164,7 +164,7 @@ class DefaultFineGrainedPermissionFactory
         array &$updated_permissions
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
-            if (! $this->hasChangesInWriters($permission, array())) {
+            if (! $this->hasChangesInWriters($permission, [])) {
                 continue;
             }
 
@@ -182,12 +182,12 @@ class DefaultFineGrainedPermissionFactory
     {
         $branches = $request->get(self::EDIT_BRANCH_PREFIX . "-rewind");
         if (! is_array($branches)) {
-            $branches = array();
+            $branches = [];
         }
 
         $tags = $request->get(self::EDIT_TAG_PREFIX . "-rewind");
         if (! is_array($tags)) {
-            $tags = array();
+            $tags = [];
         }
 
         return $branches + $tags;
@@ -247,7 +247,7 @@ class DefaultFineGrainedPermissionFactory
         array &$updated_permissions
     ) {
         foreach ($remaining_permissions as $permission_id => $permission) {
-            if (! $this->hasChangesInRewinders($permission, array())) {
+            if (! $this->hasChangesInRewinders($permission, [])) {
                 continue;
             }
 
@@ -263,7 +263,7 @@ class DefaultFineGrainedPermissionFactory
 
     private function hasChangesInWriters(DefaultFineGrainedPermission $permission, array $ugroup_ids)
     {
-        $current_ugroup_ids = array();
+        $current_ugroup_ids = [];
         foreach ($permission->getWritersUgroup() as $writer) {
             $current_ugroup_ids[] = $writer->getId();
         }
@@ -273,7 +273,7 @@ class DefaultFineGrainedPermissionFactory
 
     private function hasChangesInRewinders(DefaultFineGrainedPermission $permission, array $ugroup_ids)
     {
-        $current_ugroup_ids = array();
+        $current_ugroup_ids = [];
         foreach ($permission->getRewindersUgroup() as $rewinder) {
             $current_ugroup_ids[] = $rewinder->getId();
         }
@@ -299,7 +299,7 @@ class DefaultFineGrainedPermissionFactory
 
     private function buildRepresentationFromRequest(Codendi_Request $request, Project $project, $prefix)
     {
-        $permissions              = array();
+        $permissions              = [];
         $patterns                 = $request->get("$prefix-name");
         $are_we_activating_regexp = $request->get("use-regexp");
 
@@ -332,14 +332,14 @@ class DefaultFineGrainedPermissionFactory
 
     private function getWritersFromRequest(Codendi_Request $request, $index, $prefix)
     {
-        $all_ugroup_ids = $request->get("$prefix-write") ? $request->get("$prefix-write") : array();
+        $all_ugroup_ids = $request->get("$prefix-write") ? $request->get("$prefix-write") : [];
 
         return $this->buildUgroups($request->getProject(), $all_ugroup_ids, $index);
     }
 
     private function getRewindersFromRequest(Codendi_Request $request, $index, $prefix)
     {
-        $all_ugroup_ids = $request->get("$prefix-rewind") ? $request->get("$prefix-rewind") : array();
+        $all_ugroup_ids = $request->get("$prefix-rewind") ? $request->get("$prefix-rewind") : [];
 
         return $this->buildUgroups($request->getProject(), $all_ugroup_ids, $index);
     }
@@ -349,7 +349,7 @@ class DefaultFineGrainedPermissionFactory
      */
     private function buildUgroups(Project $project, array $all_ugroup_ids, $index)
     {
-        $ugroups    = array();
+        $ugroups    = [];
         $collection = new PermissionsNormalizerOverrideCollection();
 
         if (isset($all_ugroup_ids[$index])) {
@@ -370,7 +370,7 @@ class DefaultFineGrainedPermissionFactory
 
     public function getBranchesFineGrainedPermissionsForProject(Project $project)
     {
-        $permissions = array();
+        $permissions = [];
 
         foreach ($this->dao->searchDefaultBranchesFineGrainedPermissions($project->getID()) as $row) {
             $permission    = $this->getInstanceFromRow($row);
@@ -382,7 +382,7 @@ class DefaultFineGrainedPermissionFactory
 
     public function getTagsFineGrainedPermissionsForProject(Project $project)
     {
-        $permissions = array();
+        $permissions = [];
 
         foreach ($this->dao->searchDefaultTagsFineGrainedPermissions($project->getID()) as $row) {
             $permission    = $this->getInstanceFromRow($row);
@@ -397,7 +397,7 @@ class DefaultFineGrainedPermissionFactory
      */
     private function getWritersForPermission($permission_id)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($this->dao->searchDefaultWriterUgroupIdsForFineGrainedPermissions($permission_id) as $row) {
             $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
@@ -411,7 +411,7 @@ class DefaultFineGrainedPermissionFactory
      */
     private function getRewindersForPermission($permission_id)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($this->dao->searchDefaultRewinderUgroupIdsForFineGrainePermissions($permission_id) as $row) {
             $ugroups[] = $this->ugroup_manager->getById($row['ugroup_id']);
@@ -453,7 +453,7 @@ class DefaultFineGrainedPermissionFactory
         array $permissions,
         array $ugroups_mapping
     ) {
-        $new_permissions = array();
+        $new_permissions = [];
 
         foreach ($permissions as $permission) {
             $writers   = $this->mapUgroup($permission->getWritersUgroup(), $ugroups_mapping);
@@ -473,7 +473,7 @@ class DefaultFineGrainedPermissionFactory
 
     private function mapUgroup(array $ugroups, array $ugroups_mapping)
     {
-        $new_ugroups = array();
+        $new_ugroups = [];
         foreach ($ugroups as $ugroup) {
             $new_ugroups[] = $this->getUgroupFromMapping($ugroup, $ugroups_mapping);
         }
@@ -506,26 +506,26 @@ class DefaultFineGrainedPermissionFactory
 
     public function getDefaultBranchesFineGrainedPermissionsForProject(Project $project)
     {
-        return array(
+        return [
             $this->buildDefaultForProject($project)
-        );
+        ];
     }
 
     public function getDefaultTagsFineGrainedPermissionsForProject(Project $project)
     {
-        return array(
+        return [
             $this->buildDefaultForProject($project)
-        );
+        ];
     }
 
     private function buildDefaultForProject(Project $project)
     {
-        $writers = array();
+        $writers = [];
         foreach ($this->permissions_manager->getAuthorizedUgroupIds($project->getID(), Git::DEFAULT_PERM_WRITE) as $id) {
             $writers[] = $this->ugroup_manager->getById($id);
         }
 
-        $rewinders = array();
+        $rewinders = [];
         foreach ($this->permissions_manager->getAuthorizedUgroupIds($project->getID(), Git::DEFAULT_PERM_WPLUS) as $id) {
             $rewinders[] = $this->ugroup_manager->getById($id);
         }

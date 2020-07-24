@@ -22,7 +22,7 @@ if (! $group->usesPlugin($pluginname)) {
     exit_error("Error", "First activate the $pluginname plugin through the Project's Admin Interface");
 }
 
-$params = array ();
+$params =  [];
 $params['toptab']      = $pluginname;
 $params['group']       = $group_id;
 $params['title']       = _('wiki');
@@ -36,7 +36,7 @@ if (file_exists('/var/lib/gforge/plugins/mediawiki/wikidata/' . $group->getUnixN
     print '<h2>' . _('Wiki not created yet, please wait for a few minutes.') . '</h2>';
 }
 
-site_project_footer(array());
+site_project_footer([]);
 
 // Local Variables:
 // mode: php

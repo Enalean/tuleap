@@ -118,11 +118,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         }
 
         project_admin_header(
-            array(
+            [
                 'title' => $Language->getText('project_admin_servicebar', 'edit_s_bar'),
                 'group' => $group_id,
                 'help' => 'project-links.html'
-            ),
+            ],
             'project_links'
         );
         if ($request->exist('disp')) {
@@ -144,7 +144,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         } else {
             $this->_adminPage_Default($group_id, $project);
         }
-        project_admin_footer(array());
+        project_admin_footer([]);
     }
 
     //========================================================================
@@ -240,13 +240,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 } elseif (
                     update_database(
                         "plugin_projectlinks_link_type",
-                        array(
+                        [
                         "name" => $q_name,
                         "reverse_name" => $q_reverse_name,
                         "description" => $q_description,
                         "uri_plus" => $q_uri_plus,
                         "group_id" => $group_id
-                        ),
+                        ],
                         ($link_type_id === null ? null : "link_type_id=$link_type_id")
                     )
                 ) {
@@ -415,7 +415,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             );
         } else {
             print html_build_list_table_top(
-                array(
+                [
                     $Language->getText('plugin_plinks', 'dbfn_name'),
                     $Language->getText('plugin_plinks', 'dbfn_reverse_name'),
                     $Language->getText('plugin_plinks', 'dbfn_description'),
@@ -423,7 +423,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                      * $Language->getText('plugin_plinks', 'dbfn_uri_plus'),
                      **/
                     ""
-                ),
+                ],
                 false, //links_arr
                 false, //mass_change
                 true //full_width
@@ -455,10 +455,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         "&amp;group_id=$group_id" .
                         "&amp;link_type_id=" . $row["link_type_id"],
                         $Language->getText('plugin_plinks', 'delete_type'),
-                        array(
+                        [
                             'onclick' => "return confirm('" .
                                 $Language->getText('plugin_plinks', 'delete_type') . "?')"
-                        )
+                        ]
                     ) . "
                     </td>
                     </TR>\n";
@@ -471,11 +471,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             // project was built from a proper template - don't support
             // re-sync with site template (yet?)
             form_Start();
-            form_hiddenParams(array(
+            form_hiddenParams([
                 "disp" => 'resync_template',
                 "group_id" => $group_id,
                 "template_id" => $project->getTemplate()
-            ));
+            ]);
             form_End(
                 $Language->getText('plugin_plinks', 'synchronise_with_template'),
                 FORM_NO_RESET_BUTTON
@@ -498,19 +498,19 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 exit_error("invalid data", "2.2"); // unexpected - no i18l
             }
             $row = db_fetch_array($db_res);
-            $def = array(
+            $def = [
                 'name' => htmlentities($row['name']),
                 'reverse_name' => htmlentities($row['reverse_name']),
                 'description' => htmlentities($row['description']),
                 'uri_plus' => htmlentities($row['uri_plus'])
-            );
+            ];
         } else {
-            $def = array(
+            $def = [
                 'name' => "",
                 'reverse_name' => "",
                 'description' => "",
                 'uri_plus' => '/projects/$projname/'
-            );
+            ];
         }
         $HTML->box1_top($Language->getText('plugin_plinks', 'project_links') .
             " " . $this->_icon('main') .
@@ -523,12 +523,12 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         print "<table><tr><td>\n";
         $HTML->box1_top("");
         form_Start("");
-        form_HiddenParams(array(
+        form_HiddenParams([
             "func" => 'pl_type_update',
             "group_id" => $group_id
-        ));
+        ]);
         if (isset($link_type_id)) {
-            form_HiddenParams(array("link_type_id" => $link_type_id));
+            form_HiddenParams(["link_type_id" => $link_type_id]);
         }
         form_GenTextBox(
             "name",
@@ -557,7 +557,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
          * $def['uri_plus'], 85);
          * form_Validation("uri_plus", FORM_VAL_IS_NOT_ZERO_LENGTH);
          **/
-        foreach (array("uri_plus", "name", "reverse_name", "description") as $ref) {
+        foreach (["uri_plus", "name", "reverse_name", "description"] as $ref) {
             $formRefs[$ref] = form_JS_ElementRef($ref) . ".value";
         }
         form_End();
@@ -653,23 +653,23 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             FROM plugin_projectlinks_link_type
             WHERE (group_id = " . db_ei($template_id) . ");");
         print html_build_list_table_top(
-            array(
+            [
                 $Language->getText('plugin_plinks', 'action'),
                 $Language->getText('plugin_plinks', 'dbfn_name'),
                 $Language->getText('plugin_plinks', 'dbfn_reverse_name'),
                 $Language->getText('plugin_plinks', 'dbfn_description'),
                 $Language->getText('plugin_plinks', 'dbfn_uri_plus')
-            ),
+            ],
             false, //links_arr
             false, //mass_change
             false //full_width
         );
-        $typeMatch = array();
+        $typeMatch = [];
         $cnt       = 0;
         while ($ltr_tmplt = db_fetch_array($lt_tmplt)) {
             $cls = "class='" . html_get_alt_row_color($cnt++) . "'";
             print "<tr style=' vertical-align: top;'>\n";
-            $diffs    = array();
+            $diffs    = [];
             $rs_grp   = db_query("SELECT link_type_id, name, reverse_name,
                 description, uri_plus FROM plugin_projectlinks_link_type
                 WHERE ((group_id = " . db_ei($group_id) . ")
@@ -693,7 +693,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $ltr_grp                               = db_fetch_array($rs_grp);
                 $basicURI                              .= "&link_type_id={$ltr_grp['link_type_id']}";
                 $typeMatch[$ltr_tmplt['link_type_id']] = $ltr_grp['link_type_id'];
-                foreach (array('reverse_name', 'description', 'uri_plus') as $param) {
+                foreach (['reverse_name', 'description', 'uri_plus'] as $param) {
                     if ($ltr_tmplt[$param] <> $ltr_grp[$param]) {
                         $diffs[$param] = $ltr_grp[$param];
                     }
@@ -740,7 +740,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 print htmlentities($ltr_tmplt['name']);
             }
             print "</td>";
-            foreach (array('reverse_name', 'description', 'uri_plus') as $param) {
+            foreach (['reverse_name', 'description', 'uri_plus'] as $param) {
                 $style = "";
                 if ($param <> 'description') {
                     $style .= "white-space: nowrap;";
@@ -792,11 +792,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             print $Language->getText('plugin_plinks', 'synchronise_clickit', $this->_icon("add"));
             $type_missing = false;
             print html_build_list_table_top(
-                array(
+                [
                     $Language->getText('plugin_plinks', 'action'),
                     $Language->getText('plugin_plinks', 'dbfn_link_type_id'),
                     $Language->getText('plugin_plinks', 'project')
-                ),
+                ],
                 false, //links_arr
                 false, //mass_change
                 false //full_width
@@ -857,10 +857,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     $Language->getText(
                         'plugin_plinks',
                         'sync_link_new_no_type_explain',
-                        array(
+                        [
                             $this->_icon("add"),
                             $Language->getText('plugin_plinks', 'sync_type')
-                        )
+                        ]
                     ) .
                     "</div>";
             }
@@ -894,11 +894,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $hp->purify($targetProject->getPublicName())
             );
         } else {
-            $updates = array(
+            $updates = [
                 "link_type_id" => $link_type_id,
                 "target_group_id" => $target_group_id,
                 "master_group_id" => $group_id
-            );
+            ];
             if (is_null($link_id)) {
                 // new item - set date, otherwise leave it alone
                 $updates["creation_date"] = time();
@@ -916,7 +916,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $feedback = $Language->getText(
                     'plugin_plinks',
                     'update_failed_named',
-                    array(db_error(), $hp->purify($targetProject->getPublicName()))
+                    [db_error(), $hp->purify($targetProject->getPublicName())]
                 );
             }
         }
@@ -938,8 +938,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
         if ($links->rowCount() > 0) {
             $html .= html_build_list_table_top(
-                array(
-                    $GLOBALS['Language']->getText('plugin_plinks', 'dbfn_name'), ''),
+                [
+                    $GLOBALS['Language']->getText('plugin_plinks', 'dbfn_name'), ''],
                 false,
                 false,
                 false
@@ -1068,7 +1068,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array('projectlinkshomepage'));
+        $this->removeOrphanWidgets(['projectlinkshomepage']);
     }
 
     /**
@@ -1090,7 +1090,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 new NavigationItemPresenter(
                     $GLOBALS['Language']->getText('plugin_plinks', 'project_links_admin'),
                     $this->_adminURI() . '?' . http_build_query(
-                        array('group_id' => $project_id, 'pane' => 'project_links')
+                        ['group_id' => $project_id, 'pane' => 'project_links']
                     ),
                     'project_links',
                     $presenter->getCurrentPaneShortname()

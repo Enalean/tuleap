@@ -58,8 +58,8 @@ EOS;
 
     private function escape($string)
     {
-        $search  = array('\\',   "\n",  '"');
-        $replace = array('\\\\', "\\n", '\\"');
+        $search  = ['\\', "\n", '"'];
+        $replace = ['\\\\', "\\n", '\\"'];
 
         return str_replace($search, $replace, $string);
     }

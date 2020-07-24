@@ -83,7 +83,7 @@ class TroveCatHierarchyRetriever
             $last_parent[]     = $row_child['fullname'];
             $last_parent_ids[] = $row_child['trove_cat_id'];
 
-            $node = array(
+            $node = [
                 'trove_cat_id'                    => $row_child['trove_cat_id'],
                 'parent'                          => $row_child['parent'],
                 'description'                     => $row_child['description'],
@@ -103,11 +103,11 @@ class TroveCatHierarchyRetriever
                     $GLOBALS['Language']->getText(
                         'admin_trove_cat_delete',
                         'alert_description_delete_modal',
-                        array(Codendi_HTMLPurifier::instance()->purify($row_child['fullname'], CODENDI_PURIFIER_FULL))
+                        [Codendi_HTMLPurifier::instance()->purify($row_child['fullname'], CODENDI_PURIFIER_FULL)]
                     ),
                     CODENDI_PURIFIER_LIGHT
                 )
-            );
+            ];
 
             if (! isset($already_seen[$row_child['trove_cat_id']])) {
                 $trove_cat_list[] = $node;
@@ -124,8 +124,8 @@ class TroveCatHierarchyRetriever
             array_pop($last_parent);
             array_pop($last_parent_ids);
             if (! is_array($last_parent) && $retrieve_only_direct_child === false) {
-                $last_parent     = array();
-                $last_parent_ids = array();
+                $last_parent     = [];
+                $last_parent_ids = [];
             } elseif (! is_array($last_parent) && $retrieve_only_direct_child === true) {
                 return;
             }
@@ -145,11 +145,11 @@ class TroveCatHierarchyRetriever
             $last_parent[]     = $row_child['fullname'];
             $last_parent_ids[] = $row_child['trove_cat_id'];
 
-            $node = array(
+            $node = [
                 'trove_cat_id' => $row_child['trove_cat_id'],
                 'hierarchy'    => implode(' :: ', array_reverse($last_parent)),
                 'hierarchy_id' => implode(' :: ', array_reverse($last_parent_ids)),
-            );
+            ];
 
             if (! isset($already_seen[$row_child['parent_id']])) {
                 $trove_cat_list = $node;
@@ -165,8 +165,8 @@ class TroveCatHierarchyRetriever
             array_pop($last_parent);
             array_pop($last_parent_ids);
             if (! is_array($last_parent)) {
-                $last_parent     = array();
-                $last_parent_ids = array();
+                $last_parent     = [];
+                $last_parent_ids = [];
             }
         }
     }

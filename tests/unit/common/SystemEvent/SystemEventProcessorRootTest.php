@@ -97,7 +97,7 @@ class SystemEventProcessorRootTest extends TestCase
     {
         $category = SystemEvent::DEFAULT_QUEUE;
 
-        $types = array('some_type');
+        $types = ['some_type'];
         $this->system_event_manager->shouldReceive('getTypesForQueue')->once()->andReturn($types);
 
         $this->system_event_dao->shouldReceive('checkOutNextEvent')->with('root', $types)->once()->andReturn(false);
@@ -110,7 +110,7 @@ class SystemEventProcessorRootTest extends TestCase
         $system_event->shouldReceive('notify')->once();
         $system_event->shouldReceive('process')->once()->andThrow(new RuntimeException('Something wrong happened'));
 
-        $types = array('some_type');
+        $types = ['some_type'];
         $this->system_event_manager->shouldReceive('getTypesForQueue')->andReturn($types);
 
         $this->system_event_dao->shouldReceive('getElapsedTime')->once();

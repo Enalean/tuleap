@@ -29,7 +29,7 @@ class PermissionPresenterBuilder
      */
     public function build(array $permissions)
     {
-        $presenter = array();
+        $presenter = [];
 
         foreach ($permissions as $permission) {
             $presenter[] = new PermissionPresenter($permission);

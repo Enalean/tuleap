@@ -78,13 +78,13 @@ class WikiPlugin_Template extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array(
+        return [
                      'page'    => false, // the page to include
                      'vars'    => false,
                      'rev'     => false, // the revision (defaults to most recent)
                      'section' => false, // just include a named section
                      'sectionhead' => false // when including a named section show the heading
-                     );
+                     ];
     }
 
     public function getWikiPageLinks($argstr, $basepage)
@@ -97,7 +97,7 @@ class WikiPlugin_Template extends WikiPlugin
         if (! $page or ! $page->name) {
             return false;
         }
-        return array($page->name);
+        return [$page->name];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -113,7 +113,7 @@ class WikiPlugin_Template extends WikiPlugin
         }
 
         // Protect from recursive inclusion. A page can include itself once
-        static $included_pages = array();
+        static $included_pages = [];
         if (in_array($page, $included_pages)) {
             return $this->error(sprintf(
                 _("recursive inclusion of page %s"),
@@ -150,7 +150,7 @@ class WikiPlugin_Template extends WikiPlugin
             );
         }
         if (preg_match('/%%\w+%%/', $initial_content)) { // need variable expansion
-            $var = array();
+            $var = [];
             if (! empty($vars)) {
                 foreach (preg_split("/&/D", $vars) as $pair) {
                     list($key,$val) = preg_split("/=/D", $pair);
@@ -181,7 +181,7 @@ class WikiPlugin_Template extends WikiPlugin
             if (empty($var['creator']) and preg_match('/%%creator%%/', $initial_content)) {
                 $var['creator'] = $thispage->getCreator();
             }
-            foreach (array("SERVER_URL", "DATA_PATH", "SCRIPT_NAME", "PHPWIKI_BASE_URL") as $c) {
+            foreach (["SERVER_URL", "DATA_PATH", "SCRIPT_NAME", "PHPWIKI_BASE_URL"] as $c) {
                 // constants are not overridable
                 if (preg_match('/%%' . $c . '%%/', $initial_content)) {
                     $var[$c] = constant($c);
@@ -203,7 +203,7 @@ class WikiPlugin_Template extends WikiPlugin
 
         array_pop($included_pages);
 
-        return HTML::div(array('class' => 'template'), $content);
+        return HTML::div(['class' => 'template'], $content);
     }
 }
 

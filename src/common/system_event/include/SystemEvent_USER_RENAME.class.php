@@ -109,7 +109,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
                 $renameState = $renameState & false;
             }
 
-            $params = array();
+            $params = [];
             $params['old_user_name'] = $old_user_name;
             $params['user']          = $user;
 

@@ -46,12 +46,12 @@ class AtUserCreationDefaultWidgetsCreator
 
     public function createDefaultDashboard(PFUser $user)
     {
-        $widgets = array(
+        $widgets = [
             MyWelcomeMessage::NAME,
             'myprojects',
-        );
+        ];
 
-        $this->event_manager->processEvent(self::DEFAULT_WIDGETS_FOR_NEW_USER, array('widgets' => &$widgets));
+        $this->event_manager->processEvent(self::DEFAULT_WIDGETS_FOR_NEW_USER, ['widgets' => &$widgets]);
 
         $this->dao->createDefaultDashboardForUser($user->getId(), $widgets);
     }

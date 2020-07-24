@@ -37,7 +37,7 @@ class ReplicationHTTPUser implements PFO_User
 
     public function getGroups()
     {
-        return array();
+        return [];
     }
 
     public function getUnixName()

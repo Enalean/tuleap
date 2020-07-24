@@ -45,10 +45,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         $this->rule_date_factory    = $rule_date_factory;
         $this->token                = $token;
         $this->url_query            = TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'tracker' => (int) $this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_RULES,
-            )
+            ]
         );
     }
 
@@ -198,7 +198,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
             $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int) $param[self::PARAMETER_TARGET_FIELD]);
         }
         $comparator = $this->getComparatorFromRequestParameter($param);
-        return array($source_field, $target_field, $comparator);
+        return [$source_field, $target_field, $comparator];
     }
 
     private function removeRules(Codendi_Request $request)
@@ -315,16 +315,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function getListOfDateFieldLabelsPlusPleaseChoose()
     {
-        $labels = array(
+        $labels = [
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
-        );
+        ];
 
         return $labels + $this->getListOfDateFieldLabels();
     }
 
     private function getListOfDateFieldLabels()
     {
-        $labels = array();
+        $labels = [];
         $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
         foreach ($form_elements as $form_element) {
             $labels[$form_element->getId()] = $form_element->getLabel();

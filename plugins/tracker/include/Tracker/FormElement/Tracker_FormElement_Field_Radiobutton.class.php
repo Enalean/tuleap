@@ -110,7 +110,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
      */
     public function changeType($type)
     {
-        if (in_array($type, array('msb', 'cb'))) {
+        if (in_array($type, ['msb', 'cb'])) {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
             return ! $wf->isWorkflowField($this);

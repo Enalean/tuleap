@@ -147,7 +147,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = [])
     {
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
@@ -177,7 +177,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         $content = '';
         $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
@@ -191,15 +191,15 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
-    public function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink($item, $params = array())
+    public function visitLink($item, $params = [])
     {
         return $this->getSectionForNewVersion();
     }
-    public function visitFile($item, $params = array())
+    public function visitFile($item, $params = [])
     {
         return $this->getSectionForNewVersion();
     }
@@ -217,7 +217,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    public function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = [])
     {
         $content = '<textarea name="content" rows="15" cols="50">';
         $version = $item->getCurrentVersion();
@@ -225,10 +225,10 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             $content .= file_get_contents($version->getPath());
         }
         $content .= '</textarea>';
-        return $this->visitFile($item, array_merge($params, array('input_content' => $content)));
+        return $this->visitFile($item, array_merge($params, ['input_content' => $content]));
     }
 
-    public function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

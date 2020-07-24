@@ -38,7 +38,7 @@ class CollectionOfLabeledItemsRepresentation
 
     public function build(LabeledItemCollection $labeled_items)
     {
-        $this->labeled_items = array();
+        $this->labeled_items = [];
         foreach ($labeled_items->getItems() as $item) {
             $representation = new LabeledItemRepresentation();
             $representation->build($item);

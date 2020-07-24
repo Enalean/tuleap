@@ -33,31 +33,31 @@ class PathJoinUtilTest extends TestCase
 
     public function testEmptyArrayReturnsEmptyPath(): void
     {
-        $this->assertEquals('', PathJoinUtil::unixPathJoin(array()));
+        $this->assertEquals('', PathJoinUtil::unixPathJoin([]));
     }
 
     public function testTheSlashInFrontOfTheFirstElementIsKept(): void
     {
-        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(array('/toto')));
-        $this->assertEquals('/toto/tata/', PathJoinUtil::unixPathJoin(array('/toto', 'tata/')));
+        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(['/toto']));
+        $this->assertEquals('/toto/tata/', PathJoinUtil::unixPathJoin(['/toto', 'tata/']));
     }
 
     public function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne(): void
     {
-        $this->assertEquals('toto/', PathJoinUtil::unixPathJoin(array('toto/')));
-        $this->assertEquals('toto/tata/', PathJoinUtil::unixPathJoin(array('toto','tata/')));
+        $this->assertEquals('toto/', PathJoinUtil::unixPathJoin(['toto/']));
+        $this->assertEquals('toto/tata/', PathJoinUtil::unixPathJoin(['toto', 'tata/']));
     }
 
     public function testRemoveSlashesWhenThereAreMoreThanOne(): void
     {
-        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(array('//toto')));
-        $this->assertEquals('toto/tata', PathJoinUtil::unixPathJoin(array('toto/', '/tata')));
-        $this->assertEquals('/toto/tata/titi/tutu', PathJoinUtil::unixPathJoin(array('/toto/', '/tata/', '/titi/', '//tutu')));
+        $this->assertEquals('/toto', PathJoinUtil::unixPathJoin(['//toto']));
+        $this->assertEquals('toto/tata', PathJoinUtil::unixPathJoin(['toto/', '/tata']));
+        $this->assertEquals('/toto/tata/titi/tutu', PathJoinUtil::unixPathJoin(['/toto/', '/tata/', '/titi/', '//tutu']));
     }
 
     public function testAllEmptyElementsAreIgnored(): void
     {
-        $this->assertEquals('toto/0', PathJoinUtil::unixPathJoin(array('', null, 'toto', '0')));
+        $this->assertEquals('toto/0', PathJoinUtil::unixPathJoin(['', null, 'toto', '0']));
     }
 
     public function testUserRepoPathIsPrefixedByUsername(): void

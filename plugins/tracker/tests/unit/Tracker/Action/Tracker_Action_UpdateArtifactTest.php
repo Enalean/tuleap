@@ -148,7 +148,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->setUpAjaxRequestHeaders();
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
 
-        $expected = array();
+        $expected = [];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -160,7 +160,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
-        $expected = array($user_story_id => array('remaining_effort' => 23));
+        $expected = [$user_story_id => ['remaining_effort' => 23]];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -179,7 +179,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $user_story->shouldReceive('getId')->andReturns($user_story_id);
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
 
-        $expected      = array();
+        $expected      = [];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -211,9 +211,9 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker->shouldReceive('hasFormElementWithNameAndType')->andReturns(true);
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(true);
 
-        $expected      = array(
-            $this->artifact_id => array('remaining_effort' => '42 (autocomputed)')
-        );
+        $expected      = [
+            $this->artifact_id => ['remaining_effort' => '42 (autocomputed)']
+        ];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $action->process($this->layout, $this->request, $this->user);
@@ -227,10 +227,10 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
-        $expected      = array(
-            $this->artifact_id => array('remaining_effort' => 42),
-            $user_story_id     => array('remaining_effort' => 23)
-        );
+        $expected      = [
+            $this->artifact_id => ['remaining_effort' => 42],
+            $user_story_id     => ['remaining_effort' => 23]
+        ];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -243,9 +243,9 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
 
-        $expected = array(
-            $this->artifact_id => array('remaining_effort' => 42),
-        );
+        $expected = [
+            $this->artifact_id => ['remaining_effort' => 42],
+        ];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -266,9 +266,9 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $user_story->shouldReceive('getId')->andReturns($user_story_id);
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
 
-        $expected = array(
-            $this->artifact_id => array('remaining_effort' => 42),
-        );
+        $expected = [
+            $this->artifact_id => ['remaining_effort' => 42],
+        ];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -334,14 +334,14 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItRedirectsToTheTrackerHomePageByDefault(): void
     {
-        $request_data = array();
+        $request_data = [];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertEquals(TRACKER_BASE_URL . "/?tracker=$this->tracker_id", $redirect_uri->toUrl());
     }
 
     public function testItStaysOnTheCurrentArtifactWhenSubmitAndStayIsSpecified(): void
     {
-        $request_data = array('submit_and_stay' => true);
+        $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertEquals(TRACKER_BASE_URL . "/?aid=$this->artifact_id", $redirect_uri->toUrl());
     }
@@ -349,7 +349,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     public function testItReturnsToThePreviousArtifactWhenFromAidIsGiven(): void
     {
         $from_aid     = 33;
-        $request_data = array('from_aid' => $from_aid);
+        $request_data = ['from_aid' => $from_aid];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertEquals(TRACKER_BASE_URL . "/?aid=$from_aid", $redirect_uri->toUrl());
     }
@@ -365,8 +365,8 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     public function testSubmitAndStayHasPrecedenceOverFromAid(): void
     {
         $from_aid     = 33;
-        $request_data = array('from_aid' => $from_aid,
-                              'submit_and_stay' => true);
+        $request_data = ['from_aid' => $from_aid,
+                              'submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "from_aid", $from_aid);
@@ -374,7 +374,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testSubmitAndStayHasPrecedenceOverReturnToAid(): void
     {
-        $request_data = array('submit_and_stay' => true);
+        $request_data = ['submit_and_stay' => true];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
     }

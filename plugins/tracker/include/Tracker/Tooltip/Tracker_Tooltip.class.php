@@ -26,7 +26,7 @@ require_once('dao/Tracker_TooltipDao.class.php');
 class Tracker_Tooltip extends Tracker_Semantic
 {
 
-    public $fields = array();
+    public $fields = [];
 
     public function setFields($fields)
     {
@@ -37,7 +37,7 @@ class Tracker_Tooltip extends Tracker_Semantic
     {
         if (empty($this->fields)) {
             $tf = Tracker_FormElementFactory::instance();
-            $this->fields = array();
+            $this->fields = [];
             foreach ($this->getDao()->searchByTrackerId($this->tracker->id) as $row) {
                 if ($field = $tf->getUsedFormElementById($row['field_id'])) {
                     $this->fields[$field->id] = $field;
@@ -63,7 +63,7 @@ class Tracker_Tooltip extends Tracker_Semantic
         foreach ($this->fields as $fld) {
             $dao->add($this->tracker->id, $fld->id, 'end');
         }
-        $this->fields = array();
+        $this->fields = [];
     }
 
     /**
@@ -159,9 +159,9 @@ class Tracker_Tooltip extends Tracker_Semantic
                 $html .= '<button type="submit" class="btn btn-link">';
                 $html .= $GLOBALS['HTML']->getimage(
                     'ic/cross.png',
-                    array(
+                    [
                         'alt' => dgettext('tuleap-tracker', 'Remove the field from the tooltip')
-                    )
+                    ]
                 );
                 $html .= '</button>';
                 $html .= '</form>';

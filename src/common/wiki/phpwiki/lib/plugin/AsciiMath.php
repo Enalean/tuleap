@@ -61,7 +61,7 @@ class WikiPlugin_AsciiMath extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
     public function handle_plugin_args_cruft(&$argstr, &$args)
     {

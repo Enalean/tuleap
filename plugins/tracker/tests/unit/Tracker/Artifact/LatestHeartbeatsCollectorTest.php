@@ -64,7 +64,7 @@ class LatestHeartbeatsCollectorTest extends TestCase
         ]);
 
         $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->dao->shouldReceive('searchLatestUpdatedArtifactsInProject')->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)->andReturns(\TestHelper::arrayToDar(array('id' => 1), array('id' => 2), array('id' => 3)));
+        $this->dao->shouldReceive('searchLatestUpdatedArtifactsInProject')->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)->andReturns(\TestHelper::arrayToDar(['id' => 1], ['id' => 2], ['id' => 3]));
 
         $artifact1 = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn(1)->getMock();
         $artifact2 = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn(2)->getMock();
@@ -81,9 +81,9 @@ class LatestHeartbeatsCollectorTest extends TestCase
         $artifact3->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->factory->shouldReceive('getInstanceFromRow')->with(array('id' => 1))->andReturns($artifact1);
-        $this->factory->shouldReceive('getInstanceFromRow')->with(array('id' => 2))->andReturns($artifact2);
-        $this->factory->shouldReceive('getInstanceFromRow')->with(array('id' => 3))->andReturns($artifact3);
+        $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 1])->andReturns($artifact1);
+        $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 2])->andReturns($artifact2);
+        $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 3])->andReturns($artifact3);
 
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,

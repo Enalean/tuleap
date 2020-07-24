@@ -65,26 +65,26 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public static function getVariants()
     {
-        return array(
+        return [
             "FlamingParrot_Orange",
             "FlamingParrot_Blue",
             "FlamingParrot_Green",
             "FlamingParrot_BlueGrey",
             "FlamingParrot_Purple",
             "FlamingParrot_Red",
-        );
+        ];
     }
 
     public static function getColorOfCurrentTheme($theme)
     {
-        $array = array(
+        $array = [
             "FlamingParrot_Orange"          => "#F79514",
             "FlamingParrot_Blue"            => "#1593C4",
             "FlamingParrot_Green"           => "#67AF45",
             "FlamingParrot_BlueGrey"        => "#5B6C79",
             "FlamingParrot_Purple"          => "#79558A",
             "FlamingParrot_Red"             => "#BD2626",
-        );
+        ];
 
         return $array[$theme];
     }
@@ -159,7 +159,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $current_user = UserManager::instance()->getCurrentUser();
 
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
-        $body_class       = isset($params['body_class']) ? $params['body_class'] : array();
+        $body_class       = isset($params['body_class']) ? $params['body_class'] : [];
         $has_sidebar      = isset($params['group']) ? 'has-sidebar' : '';
         $sidebar_state    = 'sidebar-expanded';
 
@@ -259,7 +259,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function getPresentersForProjects($list_of_projects)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($list_of_projects as $project) {
             $presenters[] = new FlamingParrot_NavBarProjectPresenter($project);
         }
@@ -277,7 +277,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function displayNewAccount()
     {
         $display_new_user = true;
-        EventManager::instance()->processEvent('display_newaccount', array('allow' => &$display_new_user));
+        EventManager::instance()->processEvent('display_newaccount', ['allow' => &$display_new_user]);
         return $display_new_user;
     }
 
@@ -338,7 +338,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     public function footer(array $params)
     {
         if ($this->canShowFooter($params)) {
-            $this->render('footer', array());
+            $this->render('footer', []);
         }
 
         $this->endOfPage();
@@ -375,13 +375,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function getUserActions(PFUser $current_user)
     {
-        $user_actions = array();
+        $user_actions = [];
         EventManager::instance()->processEvent(
             Event::USER_ACTIONS,
-            array(
+            [
                 'user'    => $current_user,
                 'actions' => &$user_actions
-            )
+            ]
         );
 
         return $user_actions;

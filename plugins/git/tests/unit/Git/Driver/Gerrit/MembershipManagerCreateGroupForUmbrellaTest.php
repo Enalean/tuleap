@@ -84,7 +84,7 @@ class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
         $this->admin_ugroup->shouldReceive('getNormalizedName')->andReturns('project_admins');
         $this->admin_ugroup->shouldReceive('getProject')->andReturns($this->project);
         $this->admin_ugroup->shouldReceive('getProjectId')->andReturns($project_id);
-        $this->admin_ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->admin_ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->ugroup_manager->shouldReceive('getUGroup')->andReturns($this->admin_ugroup);
 
@@ -114,12 +114,12 @@ class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
 
         $child_project = \Mockery::spy(\Project::class, ['getID' => 112, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array($child_project));
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([$child_project]);
     }
 
     public function testItCreateGroupOnAllGerritServersTheProjectAndItsChildrenUse(): void
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(
             [$this->buildGerritServer(3)],
             [$this->buildGerritServer(5)],

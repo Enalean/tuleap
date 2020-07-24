@@ -23,7 +23,7 @@
 class Docman_MetadataHtmlFactory
 {
 
-    public function getFromMetadata($md, $formParams)
+    public static function getFromMetadata($md, $formParams)
     {
         $mdh = null;
 
@@ -60,16 +60,16 @@ class Docman_MetadataHtmlFactory
 
     public function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath)
     {
-        $fields = array();
-        $formParams = array('form_name' => $formName,
-                            'theme_path' => $themePath);
+        $fields = [];
+        $formParams = ['form_name' => $formName,
+                            'theme_path' => $themePath];
 
         foreach ($mdIter as $md) {
             if (
                 ($whitelist && isset($mdla[$md->getLabel()]))
                 || (! $whitelist && ! isset($mdla[$md->getLabel()]))
             ) {
-                $fields[$md->getLabel()] = $this->getFromMetadata($md, $formParams);
+                $fields[$md->getLabel()] = self::getFromMetadata($md, $formParams);
             }
         }
         return $fields;
@@ -99,7 +99,7 @@ class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator
         $msg = sprintf(dgettext('tuleap-docman', '"%1$s" is required, please fill the field.'), $metadata->getName());
 
         if ($metadata !== null) {
-            $selected_elements = array();
+            $selected_elements = [];
 
             $vIter = $metadata->getValue();
             $vIter->rewind();
@@ -420,7 +420,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
     {
         $html = '';
         // First is their any value already selected
-        $selectedElements = array();
+        $selectedElements = [];
         $eIter = $this->md->getValue();
         if ($eIter != null) {
             //@todo: a toArray() method in ArrayIterator maybe useful here.
@@ -499,12 +499,12 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml
 
     public function _getField()
     {
-        $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => dgettext('tuleap-docman', 'Permanent'),
+        $labels = [PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => dgettext('tuleap-docman', 'Permanent'),
                         3 => dgettext('tuleap-docman', '3 Months from today'),
                         6 => dgettext('tuleap-docman', '6 Months from today'),
                         12 => dgettext('tuleap-docman', '12 Months from today'),
                         100 => dgettext('tuleap-docman', 'Fixed date'),
-                        200 => dgettext('tuleap-docman', 'Obsolete today'));
+                        200 => dgettext('tuleap-docman', 'Obsolete today')];
 
         $selected = $this->md->getValue();
         $selectedInput = '';

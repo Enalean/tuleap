@@ -60,7 +60,7 @@ class RepositoriesPermissionRepresentationBuilder
     {
         $repositories = $this->repository_factory->getAllRepositoriesOfProject($project);
 
-        $repositories_representation = array();
+        $repositories_representation = [];
         foreach ($repositories as $repository) {
             if ($this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)) {
                 $repository_representation = $this->fined_grained_representation_builder->build(

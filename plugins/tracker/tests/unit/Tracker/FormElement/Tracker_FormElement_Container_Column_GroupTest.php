@@ -51,9 +51,9 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
         $column_04 = Mockery::mock(Tracker_FormElement_Container_Column::class);
         $column_04->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C4');
 
-        $empty = array();
-        $one   = array($column_01);
-        $many  = array($column_01, $column_02, $column_03, $column_04);
+        $empty = [];
+        $one   = [$column_01];
+        $many  = [$column_01, $column_02, $column_03, $column_04];
 
         $column_group = new Tracker_FormElement_Container_Column_Group();
 
@@ -96,9 +96,9 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
         $column_04 = Mockery::mock(Tracker_FormElement_Container_Column::class);
         $column_04->shouldReceive('fetchArtifactInGroup')->with($artifact, $submitted_values)->andReturns('C4');
 
-        $one_c1   = array($column_01);
-        $one_c2   = array($column_02);
-        $many     = array($column_01, $column_02, $column_03, $column_04);
+        $one_c1   = [$column_01];
+        $one_c2   = [$column_02];
+        $many     = [$column_01, $column_02, $column_03, $column_04];
 
         $column_group = new Tracker_FormElement_Container_Column_Group();
 

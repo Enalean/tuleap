@@ -49,7 +49,7 @@ class JenkinsCSRFCrumbRetriever
             $jenkins_server_url = mb_substr($jenkins_server_url, 0, -1);
         }
 
-        $url_parameters = array('xpath' => 'concat(//crumbRequestField,":",//crumb)');
+        $url_parameters = ['xpath' => 'concat(//crumbRequestField,":",//crumb)'];
 
         $csrf_crumb_retriever_url = $jenkins_server_url . self::CRUMB_ISSUER_PATH . '?' . http_build_query($url_parameters);
 

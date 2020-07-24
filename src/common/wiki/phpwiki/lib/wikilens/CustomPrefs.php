@@ -14,7 +14,7 @@ rcs_id('$Id: CustomPrefs.php,v 1.1 2004/06/18 14:42:17 rurban Exp $');
 
 class _UserPreference_recengine extends _UserPreference // recommendation engine method
 {
-    public $valid_values = array('php','mysuggest','mymovielens','mycluto');
+    public $valid_values = ['php', 'mysuggest', 'mymovielens', 'mycluto'];
     public $default_value = 'php';
 
     public function sanify($value)
@@ -29,13 +29,13 @@ class _UserPreference_recengine extends _UserPreference // recommendation engine
 
 class _UserPreference_recalgo extends _UserPreference // recommendation engine algorithm
 {
-    public $valid_values = array
-        (
+    public $valid_values =
+        [
          'itemCos',  // Item-based Top-N recommendation algorithm with cosine-based similarity function
          'itemProb', // Item-based Top-N recommendation algorithm with probability-based similarity function.
                      // This algorithms tends to outperform the rest.
          'userCos',  // User-based Top-N recommendation algorithm with cosine-based similarity function.
-         'bayes');   // Na�ve Bayesian Classifier
+         'bayes'];   // Na�ve Bayesian Classifier
     public $default_value = 'itemProb';
 
     public function sanify($value)
@@ -52,13 +52,14 @@ class _UserPreference_recnnbr extends _UserPreference_numeric
 {
 }
 
-$WikiTheme->customUserPreferences(array
-         (
+$WikiTheme->customUserPreferences(
+    [
           'recengine' => new _UserPreference_recengine('php'),
           'recalgo'   => new _UserPreference_recalgo('itemProb'),
           //recnnbr: typically 15-30 for item-based, 40-80 for user-based algos
           'recnnbr'   => new _UserPreference_recnnbr(10, 14, 80),
-));
+         ]
+);
 
 
 // $Log: CustomPrefs.php,v $

@@ -28,19 +28,19 @@ class User_LoginPresenterBuilder
         $additional_connectors = '';
         EventManager::instance()->processEvent(
             Event::LOGIN_ADDITIONAL_CONNECTOR,
-            array(
+            [
                 'return_to'            => $return_to,
                 'is_secure'            => $is_secure,
                 'additional_connector' => &$additional_connectors
-            )
+            ]
         );
 
         $display_new_account_button = true;
         EventManager::instance()->processEvent(
             'display_newaccount',
-            array(
+            [
                 'allow' => &$display_new_account_button
-            )
+            ]
         );
 
         $presenter = new User_LoginPresenter(
@@ -57,10 +57,10 @@ class User_LoginPresenterBuilder
 
         EventManager::instance()->processEvent(
             'login_presenter',
-            array(
+            [
                 'presenter'     => &$presenter,
                 'authoritative' => &$authoritative,
-            )
+            ]
         );
 
         return $presenter;

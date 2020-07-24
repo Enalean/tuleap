@@ -45,7 +45,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('page' => '[pagename]');
+        return ['page' => '[pagename]'];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -63,9 +63,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
             $page
         )));
 
-        $table = HTML::table(array('border' => 1,
+        $table = HTML::table(['border' => 1,
                                    'cellpadding' => 2,
-                                   'cellspacing' => 0));
+                                   'cellspacing' => 0]);
         $pagedata = $backend->get_pagedata($page);
         if (! $pagedata) {
             // FIXME: invalid HTML
@@ -78,7 +78,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         for ($version = $backend->get_latest_version($page); $version; $version = $backend->get_previous_version($page, $version)) {
                 $vdata = $backend->get_versiondata($page, $version, true);
                 $this->_fixupData($vdata);
-                $table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
+                $table->pushContent(HTML::tr(HTML::td(['colspan' => 2])));
                 $table->pushContent($this->_showhash(
                     "get_versiondata('$page',$version)",
                     $vdata
@@ -114,18 +114,18 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 $val = unserialize($val);
                 $this->_fixupData($val);
                 $data[$key] = HTML::table(
-                    array('border' => 1,
+                    ['border' => 1,
                                                 'cellpadding' => 2,
-                                                'cellspacing' => 0),
+                                                'cellspacing' => 0],
                     $this->_showhash(false, $val)
                 );
             } elseif (is_array($val)) {
                 // how to indent this table?
                 $this->_fixupData($val);
                 $data[$key] = HTML::table(
-                    array('border' => 1,
+                    ['border' => 1,
                                                 'cellpadding' => 2,
-                                                'cellspacing' => 0),
+                                                'cellspacing' => 0],
                     $this->_showhash(false, $val)
                 );
             } elseif ($key and $key == '%content') {
@@ -142,14 +142,14 @@ class WikiPlugin__BackendInfo extends WikiPlugin
 
     public function _showhash($heading, $hash, $pagename = '')
     {
-        $rows = array();
+        $rows = [];
         if ($heading) {
             $rows[] = HTML::tr(
-                array('bgcolor' => '#ffcccc',
-                                     'style' => 'color:#000000'),
+                ['bgcolor' => '#ffcccc',
+                                     'style' => 'color:#000000'],
                 HTML::td(
-                    array('colspan' => 2,
-                                              'style' => 'color:#000000'),
+                    ['colspan' => 2,
+                                              'style' => 'color:#000000'],
                     $heading
                 )
             );
@@ -158,9 +158,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         foreach ($hash as $key => $val) {
             $rows[] = HTML::tr(
                 HTML::td(
-                    array('align' => 'right',
+                    ['align' => 'right',
                                               'bgcolor' => '#cccccc',
-                                              'style' => 'color:#000000'),
+                                              'style' => 'color:#000000'],
                     HTML(
                         HTML::raw('&nbsp;'),
                         $key,
@@ -168,8 +168,8 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                     )
                 ),
                 HTML::td(
-                    array('bgcolor' => '#ffffff',
-                                              'style' => 'color:#000000'),
+                    ['bgcolor' => '#ffffff',
+                                              'style' => 'color:#000000'],
                     $val ? $val : HTML::raw('&nbsp;')
                 )
             );

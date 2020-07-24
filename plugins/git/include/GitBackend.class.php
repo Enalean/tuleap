@@ -202,7 +202,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     protected function setRepositoryPermissions($repository)
     {
         $path = $this->getGitRootPath() . DIRECTORY_SEPARATOR . $repository->getPath();
-        $no_filter_file_extension = array();
+        $no_filter_file_extension = [];
         $this->recurseChownChgrp(
             $path,
             'codendiadm',
@@ -279,7 +279,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
-        return array('ssh' => $user->getUserName() . '@' . $serverName . ':/gitroot/' . $repository->getProject()->getUnixName() . '/' . $repository->getName() . '.git');
+        return ['ssh' => $user->getUserName() . '@' . $serverName . ':/gitroot/' . $repository->getProject()->getUnixName() . '/' . $repository->getName() . '.git'];
     }
 
     /**
@@ -403,8 +403,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             return;
         }
 
-        $header = array(dgettext('tuleap-git', 'Month'));
-        $line   = array(dgettext('tuleap-git', 'Total number of git read access'));
+        $header = [dgettext('tuleap-git', 'Month')];
+        $line   = [dgettext('tuleap-git', 'Total number of git read access')];
         foreach ($stats as $row) {
             $header[] = $row['month'] . " " . $row['year'];
             $line[]   = intval($row['nb']);

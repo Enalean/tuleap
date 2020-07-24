@@ -121,7 +121,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
         $json->target->field_id = 34;
         $json->target->field_value_id = 75;
         $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-        $json->triggering_fields = array('bla');
+        $json->triggering_fields = ['bla'];
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -139,7 +139,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
         $triggering_field->field_id = 46;
         $triggering_field->field_value_id = 156;
 
-        $json->triggering_fields = array($triggering_field, $triggering_field);
+        $json->triggering_fields = [$triggering_field, $triggering_field];
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -160,7 +160,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
         $triggering_field2->field_id = 67;
         $triggering_field2->field_value_id = 62;
 
-        $json->triggering_fields = array($triggering_field, $triggering_field2);
+        $json->triggering_fields = [$triggering_field, $triggering_field2];
 
         $this->validator->validateJsonFormat($json, $this->tracker);
     }
@@ -180,14 +180,14 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
         $triggering_field2->field_id = 67;
         $triggering_field2->field_value_id = 62;
 
-        $json->triggering_fields = array($triggering_field, $triggering_field2);
+        $json->triggering_fields = [$triggering_field, $triggering_field2];
 
         $field_list = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $bind_value = \Mockery::spy(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->shouldReceive('getId')->andReturns(75);
         $target = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);
         $condition = 'some_condition';
-        $triggers = array();
+        $triggers = [];
         $rule = new Tracker_Workflow_Trigger_TriggerRule(7, $target, $condition, $triggers);
 
         $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();

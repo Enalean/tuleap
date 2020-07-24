@@ -25,7 +25,7 @@ class Tracker_ColorPresenterCollection implements Iterator
 {
 
     /** @var array */
-    private $colors = array();
+    private $colors = [];
 
     public function __construct(Tracker $tracker)
     {

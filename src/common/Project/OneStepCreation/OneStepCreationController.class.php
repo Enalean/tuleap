@@ -103,13 +103,13 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     public function index()
     {
         try {
-            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('register_index', 'project_registration')));
+            $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('register_index', 'project_registration')]);
             $this->permission_checker->checkUserCreateAProject($this->request->getCurrentUser());
             $this->render('register', $this->presenter);
         } catch (RegistrationForbiddenException $exception) {
             $this->render('register-disabled', []);
         }
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
         exit;
     }
 
@@ -126,9 +126,9 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $this->project_creation_notifier->notifySiteAdmin($project);
             $this->postCreate($project);
         } catch (RegistrationForbiddenException $exception) {
-            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('register_index', 'project_registration')));
+            $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('register_index', 'project_registration')]);
             $this->render('register-disabled', []);
-            $GLOBALS['HTML']->footer(array());
+            $GLOBALS['HTML']->footer([]);
         }
     }
 
@@ -170,8 +170,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     private function postCreate(Project $project)
     {
         $one_step_registration_factory = new Project_OneStepRegistration_OneStepRegistrationPresenterFactory($project);
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('register_confirmation', 'registration_complete')));
+        $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('register_confirmation', 'registration_complete')]);
         $this->render('confirmation', $one_step_registration_factory->create());
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
     }
 }

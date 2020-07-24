@@ -124,9 +124,9 @@ class PermissionChangesDetector
         array $write_ugroup_ids,
         array $rewind_ugroup_ids
     ) {
-        $all_permissions = array(
+        $all_permissions = [
             Git::DEFAULT_PERM_READ  => $read_ugroup_ids,
-        );
+        ];
 
         if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
             $all_permissions[Git::DEFAULT_PERM_WRITE] = $write_ugroup_ids;

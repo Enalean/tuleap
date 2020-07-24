@@ -29,10 +29,10 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
     {
         parent::__construct($tracker, $event_manager);
 
-        $this->redirect->query_parameters = array(
+        $this->redirect->query_parameters = [
             'tracker'  => (string) $this->tracker->getId(),
             'func'     => 'submit-artifact',
-        );
+        ];
     }
 
     protected function fetchSubmitInstructions()

@@ -49,7 +49,7 @@ if (
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$HTML->header(array("title" => $Language->getText('bookmark_edit', 'title')));
+$HTML->header(["title" => $Language->getText('bookmark_edit', 'title')]);
 
 print "<H3>" . $Language->getText('bookmark_edit', 'title') . "</H3>\n";
 
@@ -74,4 +74,4 @@ if ($result) {
 
 print "<P><A HREF=\"/my/\">[" . $Language->getText('global', 'back_home') . "]</A>";
 
-$HTML->footer(array());
+$HTML->footer([]);

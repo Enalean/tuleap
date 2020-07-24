@@ -208,12 +208,12 @@ class SvnRouter implements DispatchableWithRequest
                 case 'permission-per-group':
                     if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                         $GLOBALS['Response']->send400JSONErrors(
-                            array(
+                            [
                                 'error' => dgettext(
                                     'tuleap-svn',
                                     "You don't have permissions to see user groups."
                                 )
-                            )
+                            ]
                         );
                     }
 

@@ -156,7 +156,7 @@ class ArtifactField
         if ($field_array['value_function'] != "") {
             $this->value_function = explode(",", $field_array['value_function']);
         } else {
-            $this->value_function = array();
+            $this->value_function = [];
         }
         $this->use_it = $field_array['use_it'];
         $this->place = $field_array['place'];
@@ -811,7 +811,7 @@ class ArtifactField
         $res_value = false;
         $gvf = $this->getGlobalValueFunction();
         if (! isset($gvf[0]) || ! $gvf[0]) {
-            $status_in = array();
+            $status_in = [];
             foreach ($status as $s) {
                 $status_in[] = "'" . db_es($s) . "'";
             }
@@ -1206,9 +1206,9 @@ class ArtifactField
     {
         global $Language;
 
-        $label_values = array();
+        $label_values = [];
 
-        $hash_values = array();
+        $hash_values = [];
      // Retrieve the full list (id+label)
         if ($this->isUserName()) {
             $all_values = $this->getUsersList($values);
@@ -1314,7 +1314,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'upd_err', array($this->field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'upd_err', [$this->field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1326,7 +1326,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'use_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'use_err', [$field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1409,7 +1409,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'upd_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'upd_err', [$field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1461,7 +1461,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'upd_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'upd_err', [$field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1488,7 +1488,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'del_err', [$this->field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1498,7 +1498,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'use_del_err', array($this->field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'use_del_err', [$this->field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1508,7 +1508,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'del_err', [$this->field_id, $group_artifact_id, db_error()]));
             return false;
         }
 
@@ -1601,7 +1601,7 @@ class ArtifactField
 
         $res_insert = db_query($sql);
         if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-            $this->setError($Language->getText('tracker_common_field', 'vl_ins_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'vl_ins_err', [$this->getID(), $group_artifact_id, $value_id, db_error()]));
             return false;
         }
 
@@ -1644,7 +1644,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'vl_upd_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'vl_upd_err', [$this->getID(), $group_artifact_id, $value_id, db_error()]));
             return false;
         }
 
@@ -1669,7 +1669,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (! $res) {
-            $this->setError($Language->getText('tracker_common_field', 'vl_del_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'vl_del_err', [$this->getID(), $group_artifact_id, $value_id, db_error()]));
             return false;
         }
 
@@ -1725,8 +1725,8 @@ class ArtifactField
             return false;
         }
         $ok = $user->isSuperUser()
-              || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)))
-              || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
+              || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, ['artifact_type' => $group_artifact_id]))
+              || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, ['artifact_type' => $group_artifact_id]));
         return $ok;
     }
 
@@ -1744,7 +1744,7 @@ class ArtifactField
         } else {
             $user = $um->getUserById($user_id);
         }
-        $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
+        $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, ['artifact_type' => $group_artifact_id]));
         return $ok;
     }
 
@@ -1766,7 +1766,7 @@ class ArtifactField
         if ($user === null) {
             return false;
         }
-        $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
+        $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, ['artifact_type' => $group_artifact_id]));
         return $ok;
     }
 
@@ -1817,7 +1817,7 @@ class ArtifactField
      */
     public function getPermissionForUgroups($ugroups, $group_artifact_id)
     {
-        $perms = array();
+        $perms = [];
 
         if ($this->ugroupsCanRead($ugroups, $group_artifact_id)) {
             $perms[] = 'TRACKER_FIELD_READ';

@@ -111,7 +111,7 @@ class DataAccessObject
      * @deprecated
      * @return DataAccessResult|false
      */
-    public function retrieve($sql, $params = array())
+    public function retrieve($sql, $params = [])
     {
         $result = $this->da->query($sql, $params);
         if (! $this->handleError($result, $sql)) {
@@ -173,7 +173,7 @@ class DataAccessObject
      */
     private function extractIds(LegacyDataAccessResultInterface $dar)
     {
-        $ids = array();
+        $ids = [];
         foreach ($dar as $row) {
             $ids[] = (int) $row['id'];
         }
@@ -191,7 +191,7 @@ class DataAccessObject
      *
      * @return bool true if success
      */
-    public function update($sql, $params = array())
+    public function update($sql, $params = [])
     {
         $result = $this->da->query($sql, $params);
         return $this->handleError($result, $sql);
@@ -498,7 +498,7 @@ class DataAccessObject
         return implode(
             " OR $field LIKE ",
             array_map(
-                array($this, 'searchExactMatch'),
+                [$this, 'searchExactMatch'],
                 explode(' ', $string)
             )
         );

@@ -109,11 +109,11 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
         $field     = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
-        $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns(array($artifact1, $artifact2));
+        $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact2]);
 
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
 
-        $expected_result = array($artifact1);
+        $expected_result = [$artifact1];
         $this->assertEquals($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
     }
 
@@ -133,10 +133,10 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
         $field     = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
-        $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns(array($artifact1, $artifact4));
+        $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact4]);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
 
-        $expected_result = array($artifact1);
+        $expected_result = [$artifact1];
         $this->assertEquals($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
     }
 
@@ -170,11 +170,11 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $sprint_tracker->shouldReceive('getId')->andReturns(104);
 
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $hierarchy_factory->shouldReceive('getChildren')->with($us_tracker->getId())->andReturn(array($task_tracker));
-        $hierarchy_factory->shouldReceive('getChildren')->with($task_tracker->getId())->andReturn(array());
-        $hierarchy_factory->shouldReceive('getChildren')->with($bug_tracker->getId())->andReturn(array());
-        $hierarchy_factory->shouldReceive('getChildren')->with($sprint_tracker->getId())->andReturn(array());
-        $hierarchy_factory->shouldReceive('getChildren')->with(0)->andReturn(array());
+        $hierarchy_factory->shouldReceive('getChildren')->with($us_tracker->getId())->andReturn([$task_tracker]);
+        $hierarchy_factory->shouldReceive('getChildren')->with($task_tracker->getId())->andReturn([]);
+        $hierarchy_factory->shouldReceive('getChildren')->with($bug_tracker->getId())->andReturn([]);
+        $hierarchy_factory->shouldReceive('getChildren')->with($sprint_tracker->getId())->andReturn([]);
+        $hierarchy_factory->shouldReceive('getChildren')->with(0)->andReturn([]);
 
         $artifact4 = \Mockery::mock(
             Tracker_Artifact::class,
@@ -262,7 +262,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $artifact3->shouldReceive('getTracker')->andReturn($bug_tracker);
         $artifact4->shouldReceive('getTracker')->andReturn($bug_tracker);
 
-        $expected_result = array($artifact1, $artifact3);
+        $expected_result = [$artifact1, $artifact3];
         $this->assertEquals($expected_result, $artifact0->getUniqueLinkedArtifacts($this->user));
     }
 
@@ -272,7 +272,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
     public function giveMeAnArtifactWithChildren()
     {
         $children  = func_get_args();
-        $sub_trackers = array();
+        $sub_trackers = [];
         foreach ($children as $child) {
             $child_tracker                           = $child->getTracker();
             $sub_trackers[$child_tracker->getId()][] = $child_tracker;
@@ -291,10 +291,10 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $tracker)->andReturns($field);
 
         $artifact_id = $this->current_id + 100;
-        $this->artifact_collaborators[$artifact_id] = array(
+        $this->artifact_collaborators[$artifact_id] = [
             'field'     => $field,
             'changeset' => $changeset,
-        );
+        ];
 
 
         $artifact = Mockery::mock(

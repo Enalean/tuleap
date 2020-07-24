@@ -34,7 +34,7 @@ class SVNAccessFileTest extends TestCase
     public function testisGroupDefinedInvalidSyntax(): void
     {
         $saf    = new SVNAccessFile();
-        $groups = array();
+        $groups = [];
         $this->assertFalse($saf->isGroupDefined($groups, 'uGroup1 = rw'));
         $this->assertFalse($saf->isGroupDefined($groups, '@uGroup1  rw'));
         $this->assertFalse($saf->isGroupDefined($groups, '@uGroup1'));
@@ -44,14 +44,14 @@ class SVNAccessFileTest extends TestCase
 
     public function testisGroupDefinedNoUGroup(): void
     {
-        $groups = array();
+        $groups = [];
         $saf    = new SVNAccessFile();
         $this->assertFalse($saf->isGroupDefined($groups, '@uGroup3 = rw'));
     }
 
     public function testisGroupDefined(): void
     {
-        $groups = array('ugroup2' => true, 'a' => true);
+        $groups = ['ugroup2' => true, 'a' => true];
         $saf    = new SVNAccessFile();
         $this->assertTrue($saf->isGroupDefined($groups, '@ugroup2=rw'));
         $this->assertFalse($saf->isGroupDefined($groups, '@uGroup2=rw'));
@@ -63,7 +63,7 @@ class SVNAccessFileTest extends TestCase
     {
         $saf = \Mockery::mock(\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $saf->shouldReceive('isGroupDefined')->andReturns(true);
-        $groups = array('uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true);
+        $groups = ['uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true];
         $this->assertEquals(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw', null));
         $this->assertEquals(' @uGroup11 = rw', $saf->validateUGroupLine($groups, ' @uGroup11 = rw', null));
         $this->assertEquals(' @@uGroup1 = rw', $saf->validateUGroupLine($groups, ' @@uGroup1 = rw', null));
@@ -76,7 +76,7 @@ class SVNAccessFileTest extends TestCase
 
     public function testRenameGroup(): void
     {
-        $groups = array('ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED);
+        $groups = ['ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED];
         $saf    = new SVNAccessFile();
         $saf->setRenamedGroup('ugroup11', 'ugroup1');
         $this->assertEquals('@ugroup11 = rw', $saf->renameGroup($groups, '@ugroup1 = rw'));
@@ -89,7 +89,7 @@ class SVNAccessFileTest extends TestCase
 
     public function testCommentInvalidLine(): void
     {
-        $groups = array('ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED);
+        $groups = ['ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED];
         $saf    = new SVNAccessFile();
         $this->assertEquals('@ugroup1 = rw', $saf->commentInvalidLine($groups, '@ugroup1 = rw'));
         $this->assertEquals('# @ugroup2', $saf->commentInvalidLine($groups, '@ugroup2'));
@@ -110,34 +110,34 @@ class SVNAccessFileTest extends TestCase
     public function testAccumulateDefinedGroupsFromDeFaultGroupsSection(): void
     {
         $saf = new SVNAccessFile();
-        $this->assertEquals(array(), $saf->accumulateDefinedGroups(array(), '', true));
+        $this->assertEquals([], $saf->accumulateDefinedGroups([], '', true));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array(), 'group1 = user1, user2', true));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups([], 'group1 = user1, user2', true));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'group1 = user11, user22', true));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group1 = user11, user22', true));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_REDEFINED, 'group2' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_REDEFINED), 'group2 = user11, user22', true));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED, 'group2' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_REDEFINED], 'group2 = user11, user22', true));
     }
 
     public function testAccumulateDefinedGroups(): void
     {
         $saf = new SVNAccessFile();
-        $this->assertEquals(array(), $saf->accumulateDefinedGroups(array(), ''));
+        $this->assertEquals([], $saf->accumulateDefinedGroups([], ''));
 
-        $this->assertEquals(array(), $saf->accumulateDefinedGroups(array(), 'blah'));
+        $this->assertEquals([], $saf->accumulateDefinedGroups([], 'blah'));
 
-        $this->assertEquals(array(), $saf->accumulateDefinedGroups(array(), '[Groups]'));
+        $this->assertEquals([], $saf->accumulateDefinedGroups([], '[Groups]'));
 
-        $this->assertEquals(array(), $saf->accumulateDefinedGroups(array(), '[/]'));
+        $this->assertEquals([], $saf->accumulateDefinedGroups([], '[/]'));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array(), 'group1 = user1, user2', false));
-        $this->assertNotEquals(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array(), 'Group1 = user1, user2', false));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups([], 'group1 = user1, user2', false));
+        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups([], 'Group1 = user1, user2', false));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'group1 = user1, user2', false));
-        $this->assertNotEquals(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'Group1 = user1, user2', false));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group1 = user1, user2', false));
+        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'Group1 = user1, user2', false));
 
-        $this->assertEquals(array('group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'group2 = user1, user2', false));
-        $this->assertNotEquals(array('group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'Group2 = user1, user2', false));
+        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group2 = user1, user2', false));
+        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'Group2 = user1, user2', false));
     }
 
     public function testGetCurrentSection(): void

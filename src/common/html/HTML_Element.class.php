@@ -41,7 +41,7 @@ abstract class HTML_Element
         $this->label  = $label;
         $this->id     = 'customfield_' . self::$last_id++;
         $this->desc  = $desc;
-        $this->params = array();
+        $this->params = [];
     }
     public function getValue()
     {

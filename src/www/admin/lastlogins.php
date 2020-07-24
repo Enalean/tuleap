@@ -43,7 +43,7 @@ $res_logins = db_query("SELECT session.user_id AS user_id,"
     . "WHERE session.user_id=user.user_id AND "
     . "session.user_id>0 AND session.time>0 ORDER BY session.time DESC LIMIT 5000");
 
-$most_recent_login_presenters = array();
+$most_recent_login_presenters = [];
 
 while ($row_logins = db_fetch_array($res_logins)) {
     $most_recent_login_presenters[] = new MostRecentLoginPresenter(

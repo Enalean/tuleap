@@ -246,7 +246,7 @@ class BacklogItemResource extends AuthenticatedResource
             $artifact->getTracker()->getProject()
         );
 
-        $backlog_items_representations       = array();
+        $backlog_items_representations       = [];
         $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
@@ -329,13 +329,13 @@ class BacklogItemResource extends AuthenticatedResource
                             $id
                         )
                     );
-                    $backlog_items_ids = $validator->validate($id, array(), $to_add);
+                    $backlog_items_ids = $validator->validate($id, [], $to_add);
 
                     $this->artifactlink_updater->updateArtifactLinks(
                         $user,
                         $artifact,
                         $backlog_items_ids,
-                        array(),
+                        [],
                         \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
                     );
                     $indexed_children_ids = array_flip($backlog_items_ids);
@@ -378,7 +378,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getChildrenArtifactIds(PFUser $user, Tracker_Artifact $artifact)
     {
-        $linked_artifacts_index = array();
+        $linked_artifacts_index = [];
         foreach ($artifact->getChildrenForUser($user) as $artifact) {
             $linked_artifacts_index[$artifact->getId()] = true;
         }

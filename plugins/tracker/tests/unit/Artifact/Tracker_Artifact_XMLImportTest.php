@@ -117,7 +117,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('john_doe')->andReturns($this->john_doe);
-        $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(new PFUser(array('user_id' => 0)));
+        $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(new PFUser(['user_id' => 0]));
 
         $this->xml_import_helper = new XMLImportHelper($this->user_manager);
 
@@ -219,9 +219,9 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesArtifactWithSummaryFieldData(): void
     {
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Ça marche'
-        );
+        ];
         $bare_artifact = Mockery::spy(Tracker_Artifact::class);
         $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
@@ -714,9 +714,9 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesTheNewChangesetWithSummaryValue(): void
     {
-        $data = array(
+        $data = [
             $this->summary_field_id => '^Wit updates'
-        );
+        ];
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
 
@@ -1088,9 +1088,9 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesAChangesetWithSummaryWhenFileFormElementDoesNotExist(): void
     {
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Newly submitted'
-        );
+        ];
 
         $this->artifact_creator->shouldReceive('createBare')
             ->with($this->tracker, Mockery::any(), Mockery::any())
@@ -1193,9 +1193,9 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             </artifacts>
         ');
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Newly submitted'
-        );
+        ];
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
@@ -1521,7 +1521,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 Mockery::any(),
                 Mockery::on(function ($data) {
                     return $data[369]['use_artifact_permissions'] === 1 &&
-                           $data[369]['u_groups'] === array(15, 101);
+                           $data[369]['u_groups'] === [15, 101];
                 }),
                 Mockery::any(),
                 Mockery::any(),
@@ -1805,11 +1805,11 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'status_id')->andReturns($status_field);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'assigned_to')->andReturns($assto_field);
 
-        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(234, 'Open')->andReturns(\TestHelper::arrayToDar(array(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(234, 'Open')->andReturns(\TestHelper::arrayToDar([
                                                                                                                                                    'id'    => 104,
                                                                                                                                                    'label' => 'Open',
                                                                                                                                                    // ...
-                                                                                                                                               )));
+                                                                                                                                               ]));
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
               <artifact id="4918">
@@ -1836,8 +1836,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             ->with(
                 Mockery::any(),
                 Mockery::on(function ($data) {
-                    return $data[234] === array(104) &&
-                           $data[456] === array($this->john_doe->getId());
+                    return $data[234] === [104] &&
+                           $data[456] === [$this->john_doe->getId()];
                 }),
                 Mockery::any(),
                 Mockery::any(),
@@ -1865,15 +1865,15 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $static_multi_selectbox_field->shouldReceive('validateField')->andReturns(true);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'multi_select_box')->andReturns($static_multi_selectbox_field);
-        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'UI')->andReturns(\TestHelper::arrayToDar(array(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'UI')->andReturns(\TestHelper::arrayToDar([
                                                                                                                                                                                   'id'    => 101,
                                                                                                                                                                                   'label' => 'UI',
-                                                                                                                                                                              )));
+                                                                                                                                                                              ]));
 
-        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'Database')->andReturns(\TestHelper::arrayToDar(array(
+        $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'Database')->andReturns(\TestHelper::arrayToDar([
                                                                                                                                                                                         'id'    => 102,
                                                                                                                                                                                         'label' => 'Database',
-                                                                                                                                                                                    )));
+                                                                                                                                                                                    ]));
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
               <artifact id="4918">
@@ -1898,7 +1898,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             ->with(
                 Mockery::any(),
                 Mockery::on(function ($data) {
-                    return $data[456] === array(101, 102);
+                    return $data[456] === [101, 102];
                 }),
                 Mockery::any(),
                 Mockery::any(),
@@ -1966,7 +1966,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             ->with(
                 Mockery::any(),
                 Mockery::on(function ($data) {
-                    return $data[456] === array(101, 102);
+                    return $data[456] === [101, 102];
                 }),
                 Mockery::any(),
                 Mockery::any(),

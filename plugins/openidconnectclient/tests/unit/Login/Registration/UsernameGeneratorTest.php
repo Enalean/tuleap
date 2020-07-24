@@ -37,9 +37,9 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'preferred_username' => 'mypreferredusername'
-            )
+            ]
         );
         $this->assertEquals('mypreferredusername', $generated_username);
     }
@@ -52,10 +52,10 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'given_name'  => 'Given Name',
                 'family_name' => 'Family Name'
-            )
+            ]
         );
         $this->assertEquals('gfamilyname', $generated_username);
     }
@@ -68,9 +68,9 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'family_name' => 'Family Name'
-            )
+            ]
         );
         $this->assertEquals('familyname', $generated_username);
     }
@@ -83,9 +83,9 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'given_name' => 'Given Name'
-            )
+            ]
         );
         $this->assertEquals('givenname', $generated_username);
     }
@@ -98,9 +98,9 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'preferred_username' => 'mypreferredusername'
-            )
+            ]
         );
         $this->assertEquals('mypreferredusername1', $generated_username);
     }
@@ -113,7 +113,7 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToGenerateUsernameException');
-        $username_generator->getUsername(array());
+        $username_generator->getUsername([]);
     }
 
     public function testItNeedsDataCompatibleWithUnixUsername(): void
@@ -125,10 +125,10 @@ class UsernameGeneratorTest extends TestCase
 
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\DataIncompatibleWithUsernameGenerationException');
         $username_generator->getUsername(
-            array(
+            [
                 'given_name'  => 'IncompatibleGivenName',
                 'family_name' => 'IncompatibleFamilyName'
-            )
+            ]
         );
     }
 
@@ -140,11 +140,11 @@ class UsernameGeneratorTest extends TestCase
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
-            array(
+            [
                 'preferred_username' => 'incompatiblepreferredusername',
                 'given_name'         => 'Given Name',
                 'family_name'        => 'Family Name'
-            )
+            ]
         );
         $this->assertEquals('gfamilyname', $generated_username);
     }

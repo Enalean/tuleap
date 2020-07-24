@@ -30,8 +30,8 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
     private $da;
 
     private $search_term = 'abc';
-    private $event_type  = array('MY_IMAGINARY_EVENT');
-    private $status      = array('ONGOING');
+    private $event_type  = ['MY_IMAGINARY_EVENT'];
+    private $status      = ['ONGOING'];
 
     protected function setUp(): void
     {

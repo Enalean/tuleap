@@ -92,7 +92,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
 
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     public function cssfile($params)
@@ -120,18 +120,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
      */
     public function trackerEventFetchAdminButtons($params)
     {
-        $url = TIMETRACKING_BASE_URL . '/?' . http_build_query(array(
+        $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
                 'tracker' => $params['tracker_id'],
                 'action'  => 'admin-timetracking'
-        ));
+        ]);
 
-        $params['items']['timetracking'] = array(
+        $params['items']['timetracking'] = [
             'url'         => $url,
             'short_title' => dgettext('tuleap-timetracking', 'Time tracking'),
             'title'       => dgettext('tuleap-timetracking', 'Time tracking'),
             'description' => dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts'),
             'data-test'   => 'timetracking'
-        );
+        ];
     }
 
     public function process(): void

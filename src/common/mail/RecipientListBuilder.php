@@ -31,13 +31,13 @@ class Mail_RecipientListBuilder
      */
     private $user_manager;
 
-    private $allowed_status = array(
+    private $allowed_status = [
         PFUser::STATUS_ACTIVE ,
         PFUser::STATUS_RESTRICTED,
         PFUser::STATUS_PENDING,
         PFUser::STATUS_VALIDATED,
         PFUser::STATUS_VALIDATED_RESTRICTED
-    );
+    ];
 
     public function __construct(UserManager $user_manager)
     {
@@ -51,7 +51,7 @@ class Mail_RecipientListBuilder
      */
     public function getValidRecipientsFromUsers(array $users)
     {
-        $recipients = array();
+        $recipients = [];
         foreach ($users as $user) {
             if ($this->hasAllowedStatus($user)) {
                 $this->addUser($recipients, $user);
@@ -68,7 +68,7 @@ class Mail_RecipientListBuilder
      */
     public function getValidRecipientsFromAddresses(array $addresses)
     {
-        $recipients = array();
+        $recipients = [];
         foreach ($addresses as $address) {
             $matching_users = $this->user_manager->getAllUsersByEmail($address);
             if ($matching_users) {
@@ -113,17 +113,17 @@ class Mail_RecipientListBuilder
 
     private function addExternalAddress(array &$recipients, $address)
     {
-        $recipients[] = array(
+        $recipients[] = [
             'email'     => $address,
             'real_name' => ''
-        );
+        ];
     }
 
     private function addUser(array &$recipients, PFUser $user)
     {
-        $recipients[] = array(
+        $recipients[] = [
             'email'     => $user->getEmail(),
             'real_name' => $user->getRealName()
-        );
+        ];
     }
 }

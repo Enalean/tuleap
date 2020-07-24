@@ -44,12 +44,12 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         return //array_merge
                //(
                //PageList::supportedArgs(),
-             array('user'     => '',
+             ['user'     => '',
                    'order'    => 'reverse',        // latest first
                    'info'     => 'month,numpages', // ignored
                    'month'    => false,
                    'noheader' => 0
-                   );
+                   ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -113,32 +113,32 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                 $basepage = _("BlogArchives");
             }
             $html = HTML::ul();
-            usort($blogs, array("WikiPlugin_WikiBlog", "cmp"));
+            usort($blogs, ["WikiPlugin_WikiBlog", "cmp"]);
             if ($args['order'] == 'reverse') {
                 $blogs = array_reverse($blogs);
             }
             // collapse pagenames by month
-            $months = array();
+            $months = [];
             foreach ($blogs as $rev) {
                 $blog = $this->_blog($rev);
                 $mon = $blog['month'];
                 if (empty($months[$mon])) {
                     $months[$mon] =
-                        array('title' => $this->_monthTitle($mon),
+                        ['title' => $this->_monthTitle($mon),
                               'num'   => 1,
                               'month' => $mon,
                               'link'  => WikiURL(
                                   $basepage,
-                                  $this->_nonDefaultArgs(array('month' => $mon))
-                              ));
+                                  $this->_nonDefaultArgs(['month' => $mon])
+                              )];
                 } else {
                     $months[$mon]['num']++;
                 }
             }
             foreach ($months as $m) {
                 $html->pushContent(HTML::li(HTML::a(
-                    array('href' => $m['link'],
-                                                          'class' => 'named-wiki'),
+                    ['href' => $m['link'],
+                                                          'class' => 'named-wiki'],
                     $m['title'] . " (" . $m['num'] . ")"
                 )));
             }

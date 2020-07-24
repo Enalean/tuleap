@@ -53,7 +53,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         );
         $this->artifact->setTracker($this->task_tracker);
         $this->artifact->setParentWithoutPermissionChecking($parent);
-        $this->artifact->setChangesets(array(\Mockery::spy(\Tracker_Artifact_Changeset::class)));
+        $this->artifact->setChangesets([\Mockery::spy(\Tracker_Artifact_Changeset::class)]);
 
         $target_field_id = 569;
         $target_field    = $this->buildSelectBoxField($target_field_id, $story_tracker);
@@ -168,7 +168,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         );
         $sibling->setTracker($this->task_tracker);
         $sibling->setChangesets([]);
-        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling)));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator([$sibling]));
 
         $this->assertEquals(0, $this->strategy->allPrecondtionsAreMet());
     }
@@ -178,9 +178,9 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling = \Mockery::spy(\Tracker_Artifact::class);
         $sibling->shouldReceive('getId')->andReturns(112);
         $sibling->shouldReceive('getTracker')->andReturns($this->task_tracker);
-        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($this->trigger_value));
+        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value]);
         $sibling->shouldReceive('getValue')->with($this->trigger_field)->andReturns($changeset_value_list);
-        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling)));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator([$sibling]));
 
         $this->assertEquals(1, $this->strategy->allPrecondtionsAreMet());
     }
@@ -191,7 +191,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($this->trigger_value))
+            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
         $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
@@ -199,10 +199,10 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling_2->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($bind_static_value))
+            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator([$sibling_1, $sibling_2]));
 
         $this->assertEquals(0, $this->strategy->allPrecondtionsAreMet());
     }
@@ -213,17 +213,17 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($this->trigger_value))
+            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
         $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->bug_tracker);
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($this->trigger_value_2))
+            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value_2])
         );
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator([$sibling_1, $sibling_2]));
 
         $this->assertEquals(1, $this->strategy_complex_rule->allPrecondtionsAreMet());
     }
@@ -234,7 +234,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($this->trigger_value))
+            new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
         $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
@@ -242,10 +242,10 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $sibling_2->shouldReceive('getTracker')->andReturns($this->bug_tracker);
         $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
-            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, array($bind_static_value))
+            new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$bind_static_value])
         );
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator([$sibling_1, $sibling_2]));
 
         $this->assertEquals(0, $this->strategy_complex_rule->allPrecondtionsAreMet());
     }

@@ -24,9 +24,9 @@ require_once __DIR__ . '/../include/pre.php';
 
 
 $em = EventManager::instance();
-$em->processEvent('before_lostpw', array());
+$em->processEvent('before_lostpw', []);
 
-$HTML->header(array('title' => $Language->getText('account_lostpw', 'title')));
+$HTML->header(['title' => $Language->getText('account_lostpw', 'title')]);
 
 ?>
 
@@ -43,4 +43,4 @@ Login Name:
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
 
 <?php
-$HTML->footer(array());
+$HTML->footer([]);

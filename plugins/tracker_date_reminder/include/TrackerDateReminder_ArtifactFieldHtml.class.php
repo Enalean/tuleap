@@ -37,8 +37,8 @@ class TrackerDateReminder_ArtifactFieldHtml
         $frequency = db_result($res, 0, 'frequency');
         $recurse = db_result($res, 0, 'recurse');
         $notified_people = db_result($res, 0, 'notified_people');
-        $notified_groups = array();
-        $notified_users = array();
+        $notified_groups = [];
+        $notified_users = [];
         if (trim($notified_people) != "") {
             $notif = explode(",", $notified_people);
             foreach ($notif as $value) {
@@ -96,10 +96,10 @@ class TrackerDateReminder_ArtifactFieldHtml
                 . dgettext('tuleap-tracker_date_reminder', 'Codex will send') .
                 '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="' . $recurse . '"> ' . dgettext('tuleap-tracker_date_reminder', 'e-mail(s) to');
 
-        $artRoleNames = array(array('value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_SUBMITTER_short_desc')),
-                              array('value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')),
-                              array('value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')),
-                              array('value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')));
+        $artRoleNames = [['value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_SUBMITTER_short_desc')],
+                              ['value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')],
+                              ['value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')],
+                              ['value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')]];
         $out .= html_build_multiple_select_box_from_array($artRoleNames, 'notified_users[]', $notified_users, 4, true, '', false, '', false, '', false);
 
         $GLOBALS['Language']->getText('global', 'and');
@@ -114,7 +114,7 @@ class TrackerDateReminder_ArtifactFieldHtml
         );
         $res = db_query($qry);
         while ($rows = db_fetch_array($res)) {
-            $groupNames[] = array('value' => 'g' . $rows['ugroup_id'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $rows['name']));
+            $groupNames[] = ['value' => 'g' . $rows['ugroup_id'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $rows['name'])];
         }
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
 

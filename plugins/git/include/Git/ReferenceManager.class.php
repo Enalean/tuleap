@@ -56,7 +56,7 @@ class Git_ReferenceManager
         list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
         $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
         if ($repository) {
-            $args = array($repository->getId(), $sha1);
+            $args = [$repository->getId(), $sha1];
             $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
             if ($reference) {
                 $reference->replaceLink($args);
@@ -70,6 +70,6 @@ class Git_ReferenceManager
         $last_slash_position  = strrpos($value, '/');
         $repository_name      = substr($value, 0, $last_slash_position);
         $sha1                 = substr($value, $last_slash_position + 1);
-        return array($repository_name, $sha1);
+        return [$repository_name, $sha1];
     }
 }

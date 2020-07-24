@@ -61,7 +61,7 @@ class TimeRetriever
      */
     public function getTimesForUser(PFUser $user, Tracker_Artifact $artifact)
     {
-        $times = array();
+        $times = [];
 
         if ($this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $artifact->getTracker())) {
             foreach ($this->dao->getAllTimesAddedInArtifact($artifact->getId()) as $row_time) {

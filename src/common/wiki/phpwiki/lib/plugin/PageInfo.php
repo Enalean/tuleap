@@ -52,8 +52,8 @@ class WikiPlugin_PageInfo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('page' => '[pagename]',
-                     'version' => '[version]');
+        return ['page' => '[pagename]',
+                     'version' => '[version]'];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -83,7 +83,7 @@ class WikiPlugin_PageInfo extends WikiPlugin
         $template = new Template(
             'info',
             $request,
-            array('revision' => $revision)
+            ['revision' => $revision]
         );
         return $template;
     }

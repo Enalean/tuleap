@@ -82,18 +82,18 @@ class ListFieldCheckerWithBindUgroupsTest extends TestCase
         $custom_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
             185,
             new ProjectUGroup(
-                array(
+                [
                     'ugroup_id' => 183,
                     'name'      => 'Mountaineers'
-                )
+                ]
             ),
             false
         );
 
-        $list_values = array(
+        $list_values = [
             2   => $project_members_value,
             185 => $custom_ugroup_value
-        );
+        ];
         $this->bind->shouldReceive('getAllValues')->andReturns($list_values);
 
         $this->ugroup_label_converter_for_collection->shouldReceive('isASupportedDynamicUgroup')->with('Project members')->andReturns(true);

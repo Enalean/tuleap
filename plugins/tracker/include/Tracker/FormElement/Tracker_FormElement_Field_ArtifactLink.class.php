@@ -152,7 +152,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
-        $arr = array();
+        $arr = [];
         $values = $this->getChangesetValues($changeset_id);
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getLink();
@@ -195,7 +195,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
     {
-        $arr = array();
+        $arr = [];
         $values = $this->getChangesetValues($changeset_id);
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getArtifactId();
@@ -275,7 +275,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function getFieldData($string_value, ?Tracker_Artifact $artifact = null)
     {
         $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($string_value);
-        return $this->getDataLikeWebUI($submitted_ids, array($string_value), $artifact);
+        return $this->getDataLikeWebUI($submitted_ids, [$string_value], $artifact);
     }
 
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
@@ -382,13 +382,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr = '';
-        $matches = array();
+        $matches = [];
         if (preg_match('/\/(.*)\//', $criteria_value, $matches)) {
             // If it is sourrounded by /.../ then assume a regexp
             $expr = $field_name . " RLIKE " . $this->getCriteriaDao()->da->quoteSmart($matches[1]);
         }
         if (! $expr) {
-            $matches = array();
+            $matches = [];
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)\$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string) ($this->cast($matches[2]));
@@ -527,14 +527,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         EventManager::instance()->processEvent(
             self::PREPEND_ARTIFACTLINK_INFORMATION,
-            array(
+            [
                 'html'                   => &$html,
                 'artifact'               => $artifact,
                 'current_user'           => $current_user,
                 'read_only'              => $read_only,
                 'reverse_artifact_links' => $reverse_artifact_links,
                 'additional_classes'     => $additional_classes
-            )
+            ]
         );
 
         $html .= '<h5 class="artifack_link_subtitle">' . $this->getWidgetTitle($reverse_artifact_links) . '</h5>';
@@ -562,13 +562,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
             if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
                 $natures        = $this->getNaturePresenterFactory()->getAllUsableTypesInProject($artifact->getTracker()->getProject());
-                $natures_presenter = array();
+                $natures_presenter = [];
                 foreach ($natures as $nature) {
-                    $natures_presenter[] = array(
+                    $natures_presenter[] = [
                         'shortname'     => $nature->shortname,
                         'forward_label' => $nature->forward_label,
                         'is_selected'   => ($nature->shortname == $prefill_nature)
-                    );
+                    ];
                 }
                 $html          .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-selector',
@@ -718,18 +718,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         switch ($request->get('func')) {
             case 'fetch-artifacts':
                 $read_only              = false;
-                $prefill_removed_values = array();
-                $prefill_edited_natures = array();
+                $prefill_removed_values = [];
+                $prefill_edited_natures = [];
                 $only_rows              = true;
                 $this_project_id        = $this->getTracker()->getProject()->getGroupId();
                 $is_reverse             = false;
                 $hp                     = Codendi_HTMLPurifier::instance();
 
-                $ugroups = $current_user->getUgroups($this_project_id, array());
+                $ugroups = $current_user->getUgroups($this_project_id, []);
 
                 $ids     = $request->get('ids'); //2, 14, 15
-                $tracker = array();
-                $result  = array();
+                $tracker = [];
+                $result  = [];
                 if ($this->getTracker()->isProjectAllowedToUseNature()) {
                     $nature_shortname      = $request->get('nature');
                     $nature_presenter      = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
@@ -743,7 +743,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
                     if ($tracker->userCanView() && ! $tracker->isDeleted()) {
                         if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                            $matching_ids['nature'] = array();
+                            $matching_ids['nature'] = [];
                             foreach (explode(',', $matching_ids['id']) as $id) {
                                 $matching_ids['nature'][$id] = $nature_presenter;
                             }
@@ -782,30 +782,30 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
                 $this->appendNatureTable($request, $result);
                 if ($result) {
-                    $head = array();
-                    $rows = array();
+                    $head = [];
+                    $rows = [];
                     foreach ($result as $key => $value) {
                         $head[$key] = $value["head"];
                         $rows[$key] = $value["rows"];
                     }
                     header('Content-type: application/json');
-                    echo json_encode(array('head' => $head, 'rows' => $rows));
+                    echo json_encode(['head' => $head, 'rows' => $rows]);
                 }
                 exit();
                 break;
             case 'fetch-aggregates':
                 $read_only              = false;
-                $prefill_removed_values = array();
+                $prefill_removed_values = [];
                 $only_rows              = true;
                 $only_one_column        = false;
                 $extracolumn            = Tracker_Report_Renderer_Table::EXTRACOLUMN_UNLINK;
                 $read_only              = true;
                 $use_data_from_db       = false;
 
-                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), array());
+                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), []);
                 $ids     = $request->get('ids'); //2, 14, 15
-                $tracker = array();
-                $json = array('tabs' => array());
+                $tracker = [];
+                $json = ['tabs' => []];
                 $dao = new Tracker_ArtifactDao();
                 foreach ($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
@@ -813,7 +813,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $project = $tracker->getProject();
                     if ($tracker->userCanView()) {
                         if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                            $matching_ids['nature'] = array();
+                            $matching_ids['nature'] = [];
                         }
                         $trf = Tracker_ReportFactory::instance();
                         $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
@@ -824,10 +824,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id . '_' . $report->id . '_' . $renderer->getId();
                                     $columns        = $renderer->getTableColumns($only_one_column, $use_data_from_db);
-                                    $json['tabs'][] = array(
+                                    $json['tabs'][] = [
                                         'key' => $key,
                                         'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only),
-                                    );
+                                    ];
                                     break;
                                 }
                             }
@@ -964,7 +964,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_new_values = $submitted_value['new_values'];
         }
 
-        $prefill_removed_values = array();
+        $prefill_removed_values = [];
         if (isset($submitted_value['removed_values'])) {
             $prefill_removed_values = $submitted_value['removed_values'];
         }
@@ -974,7 +974,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_nature = $submitted_value['nature'];
         }
 
-        $prefill_edited_natures = array();
+        $prefill_edited_natures = [];
         if (isset($submitted_value['natures'])) {
             $prefill_edited_natures = $submitted_value['natures'];
         }
@@ -1042,7 +1042,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             '',
             '',
             '',
-            array(),
+            [],
             '',
             true,
             [],
@@ -1092,9 +1092,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $read_only              = true;
         $name                   = '';
         $prefill_new_values     = '';
-        $prefill_removed_values = array();
+        $prefill_removed_values = [];
         $prefill_nature         = '';
-        $prefill_edited_natures = array();
+        $prefill_edited_natures = [];
         $prefill_parent         = '';
         $from_aid               = $artifact->getId();
 
@@ -1137,14 +1137,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (isset($submitted_values[$this->getId()]['nature'])) {
             $prefill_nature = $submitted_values[$this->getId()]['nature'];
         }
-        $prefill_edited_natures = array();
+        $prefill_edited_natures = [];
         if (isset($submitted_values[$this->getId()]['natures'])) {
             $prefill_edited_natures = $submitted_values[$this->getId()]['natures'];
         }
         $read_only              = false;
         $name                   = 'artifact[' . $this->id . ']';
-        $prefill_removed_values = array();
-        $artifact_links         = array();
+        $prefill_removed_values = [];
+        $artifact_links         = [];
 
         // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
         // Here to avoid having to pass null arg for fetchHtmlWidget
@@ -1186,7 +1186,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $prefill_new_values     = dgettext('tuleap-tracker', 'Unchanged');
         $read_only              = false;
         $name                   = 'artifact[' . $this->id . ']';
-        $artifact_links         = array();
+        $artifact_links         = [];
 
         return $this->fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only);
     }
@@ -1245,7 +1245,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         switch ($format) {
             case 'html':
                 $artifactlink_infos = $value->getValue();
-                $url = array();
+                $url = [];
                 foreach ($artifactlink_infos as $artifactlink_info) {
                     if ($ignore_perms || $artifactlink_info->userCanView($user)) {
                         $url[] = $artifactlink_info->getLink();
@@ -1305,7 +1305,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $rows                   = $this->getValueDao()->searchById($value_id, $this->id);
         $artifact_links         = $this->getArtifactLinkInfos($rows);
-        $reverse_artifact_links = array();
+        $reverse_artifact_links = [];
 
         if ($changeset) {
             $reverse_artifact_links = $this->getReverseLinks($changeset->getArtifact()->getId());
@@ -1348,7 +1348,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     private function getArtifactLinkInfos($data)
     {
-        $artifact_links = array();
+        $artifact_links = [];
         while ($row = $data->getRow()) {
             $artifact_links[$row['artifact_id']] = new Tracker_ArtifactLinkInfo(
                 $row['artifact_id'],
@@ -1366,7 +1366,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @return array
      */
-    protected $artifact_links_by_changeset = array();
+    protected $artifact_links_by_changeset = [];
 
     /**
      *
@@ -1377,7 +1377,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     protected function getChangesetValues($changeset_id)
     {
         if (! isset($this->artifact_links_by_changeset[$changeset_id])) {
-            $this->artifact_links_by_changeset[$changeset_id] = array();
+            $this->artifact_links_by_changeset[$changeset_id] = [];
 
             $da = CodendiDataAccess::instance();
             $field_id     = $da->escapeInt($this->id);
@@ -1509,7 +1509,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $hasNoNewValues           = empty($submitted_value['new_values']);
         $hasNoLastChangesetValues = true;
-        $last_changeset_values    = array();
+        $last_changeset_values    = [];
         $last_changeset_value     = $this->getLastChangesetValue($artifact);
 
         if ($last_changeset_value) {
@@ -1608,10 +1608,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         EventManager::instance()->processEvent(
             self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
-            array(
+            [
                 'field' => $this,
                 'queue' => $queue
-            )
+            ]
         );
 
         return $queue;
@@ -1674,7 +1674,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function getNormalizedSubmittedValue($value)
     {
         if (is_null($value)) {
-            $value = array('new_values' => '');
+            $value = ['new_values' => ''];
         }
 
         return $value;
@@ -1734,7 +1734,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user)
     {
-        $artifacts = array();
+        $artifacts = [];
         $changeset_value = $changeset->getValue($this);
         if ($changeset_value) {
             foreach ($changeset_value->getArtifactIds() as $id) {
@@ -1792,14 +1792,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $changeset_value = $changeset->getValue($this);
         if (! $changeset_value) {
-            return new Tracker_Artifact_PaginatedArtifacts(array(), 0);
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
         $artifact_ids = $changeset_value->getArtifactIds();
         $size = count($artifact_ids);
 
-        $artifacts = array();
+        $artifacts = [];
         foreach (array_slice($artifact_ids, $offset, $limit) as $id) {
             $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
         }
@@ -1825,7 +1825,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function augmentDataFromRequest(&$fields_data)
     {
-        $new_values = array();
+        $new_values = [];
 
         if ($this->getTracker()->isProjectAllowedToUseNature()) {
             $this->addNewValuesInNaturesArray($fields_data);
@@ -1844,10 +1844,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         EventManager::instance()->processEvent(
             self::AFTER_AUGMENT_DATA_FROM_REQUEST,
-            array(
+            [
                 'fields_data' => &$fields_data,
                 'field'       => $this
-            )
+            ]
         );
     }
 
@@ -1928,9 +1928,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 NatureTablePresenter::buildForHeader($nature_presenter, $this)
             );
 
-            $result[$key] = array('head' => $head_html, 'rows' => $nature_html);
+            $result[$key] = ['head' => $head_html, 'rows' => $nature_html];
         } else {
-            $result[$key] = array();
+            $result[$key] = [];
         }
     }
 

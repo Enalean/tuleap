@@ -49,22 +49,22 @@ class GitViewHeader
         $layout->addBreadcrumbs($breadcrumbs);
 
         $layout->header(
-            array(
+            [
                 'title'      => dgettext('tuleap-git', 'Git'),
                 'group'      => $project->getID(),
                 'toptab'     => dgettext('tuleap-git', 'Git'),
                 'body_class' => $this->getAdditionalBodyClasses($request)
-            )
+            ]
         );
     }
 
     private function getAdditionalBodyClasses(HTTPRequest $request)
     {
-        $classes = array();
-        $params  = array(
+        $classes = [];
+        $params  = [
             'request' => $request,
             'classes' => &$classes
-        );
+        ];
 
         $this->event_manager->processEvent(GIT_ADDITIONAL_BODY_CLASSES, $params);
 

@@ -60,7 +60,7 @@ class Statistics_Formatter
      */
     public function addHeader($title)
     {
-        $this->addLine(array($title));
+        $this->addLine([$title]);
     }
 
     /**

@@ -46,12 +46,12 @@ class TrackerPermissionPerGroupJSONRetriever
     ) {
         if (! $project->usesService(trackerPlugin::SERVICE_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => dgettext(
                         'tuleap-tracker',
                         "Tracker service is disabled."
                     )
-                )
+                ]
             );
         }
 

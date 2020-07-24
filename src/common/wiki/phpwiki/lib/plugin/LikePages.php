@@ -52,11 +52,11 @@ class WikiPlugin_LikePages extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('page'     => '[pagename]',
+            ['page'     => '[pagename]',
                    'prefix'   => false,
                    'suffix'   => false,
                    'noheader' => false,
-            )
+            ]
         );
     }
     // info arg allows multiple columns
@@ -93,7 +93,7 @@ class WikiPlugin_LikePages extends WikiPlugin
         }
 
         // Search for pages containing either the suffix or the prefix.
-        $search = $match = array();
+        $search = $match = [];
         if (! empty($prefix)) {
             $search[] = $this->_quote($prefix);
             $match[]  = '^' . preg_quote($prefix, '/');

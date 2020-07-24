@@ -109,11 +109,11 @@ class PermissionItemUpdater
 
         $this->event_manager->processEvent(
             'plugin_docman_event_perms_change',
-            array(
+            [
                 'group_id' => $item->getGroupId(),
                 'item'     => $item,
                 'user'     => $user,
-            )
+            ]
         );
     }
 

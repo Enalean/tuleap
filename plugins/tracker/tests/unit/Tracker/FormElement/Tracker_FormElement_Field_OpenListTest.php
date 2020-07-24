@@ -129,7 +129,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
     {
         $artifact = null;
         $changeset_id = 666;
-        $submitted_value = array();
+        $submitted_value = [];
         $submitted_value[] = 'b101';   //exisiting bind value
         $submitted_value[] = 'b102 ';  //existing bind value
         $submitted_value[] = ' o301';  //existing open value
@@ -142,8 +142,8 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $submitted_value = implode(',', $submitted_value);
 
         $open_value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
-        $open_value_dao->shouldReceive('create')->andReturn(array(1, 'new_1'))->once()->andReturn(901);
-        $open_value_dao->shouldReceive('create')->andReturn(array(1, 'new_2'))->once()->andReturn(902);
+        $open_value_dao->shouldReceive('create')->andReturn([1, 'new_1'])->once()->andReturn(901);
+        $open_value_dao->shouldReceive('create')->andReturn([1, 'new_2'])->once()->andReturn(902);
 
         $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
         $value_dao->shouldReceive('create')->withArgs(

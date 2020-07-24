@@ -50,12 +50,12 @@ class BurnupRepresentation
     /**
      * @var array {@type BurnupPointRepresentation}
      */
-    public $points_with_date = array();
+    public $points_with_date = [];
 
     /**
      * @var array {@type BurnupCountElementsPointRepresentation}
      */
-    public $points_with_date_count_elements = array();
+    public $points_with_date_count_elements = [];
 
     public function __construct($capacity, ?BurnupData $burnup_data = null)
     {
@@ -66,7 +66,7 @@ class BurnupRepresentation
         $this->start_date           = JsonCast::toDate($burnup_data->getTimePeriod()->getStartDate());
         $this->duration             = JsonCast::toInt($burnup_data->getTimePeriod()->getDuration());
         $this->is_under_calculation = JsonCast::toBoolean($burnup_data->isBeingCalculated());
-        $this->opening_days         = array(1, 2, 3, 4, 5);
+        $this->opening_days         = [1, 2, 3, 4, 5];
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
             $this->points_with_date[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
         }

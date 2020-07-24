@@ -37,24 +37,24 @@ class ProjectListSearchFieldsPresenterBuilder
 
     private function getListOfStatusValuePresenter($status_values)
     {
-        return array(
+        return [
             $this->getStatusValuePresenter(self::$ANY, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'any')),
             $this->getStatusValuePresenter(Project::STATUS_ACTIVE, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'active')),
             $this->getStatusValuePresenter(Project::STATUS_SYSTEM, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'system')),
             $this->getStatusValuePresenter(Project::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'pending')),
             $this->getStatusValuePresenter(Project::STATUS_SUSPENDED, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'suspended')),
             $this->getStatusValuePresenter(Project::STATUS_DELETED, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'deleted')),
-        );
+        ];
     }
 
     private function getStatusValuePresenter($status, $status_values, $label)
     {
         $selected = in_array($status, $status_values);
 
-        return array(
+        return [
             'value'       => $status,
             'is_selected' => $selected,
             'label'       => $label
-        );
+        ];
     }
 }

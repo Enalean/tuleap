@@ -30,13 +30,13 @@ class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact
 
     public function __construct(SimpleXMLElement $artifact_xml)
     {
-        $this->history = array();
+        $this->history = [];
         $this->files   = $this->extractFilesFromXML($artifact_xml);
     }
 
     public function extractFilesFromXML(SimpleXMLElement $artifact_xml)
     {
-        $files     = array();
+        $files     = [];
         $files_xml = $artifact_xml->file;
 
         foreach ($files_xml as $file) {

@@ -48,7 +48,7 @@ function logs_display($sql, $span, $field, $title = '')
     // Executions will continue until morale improves.
     $res = db_query($sql);
 
-    print '<p><u><b>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', array($hp->purify($title) , $hp->purify($span)));
+    print '<p><u><b>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', [$hp->purify($title), $hp->purify($span)]);
     if (($nb_downloads = db_numrows($res)) >= 1) {
         $row = db_fetch_array($res);
         print ' - ' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'in_total', $hp->purify($nb_downloads)) . '</u></b>';
@@ -264,14 +264,14 @@ function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
         return;
     }
 
-    $month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
+    $month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     $sql = cvsaccess_logs_extract($project, $span, $who);
 
     // Executions will continue until morale improves.
     $res = db_query($sql);
 
-    print '<P><B><U>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', array($GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'cvs_co_upd'), $hp->purify($span))) . '</U></B></P>';
+    print '<P><B><U>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', [$GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'cvs_co_upd'), $hp->purify($span)]) . '</U></B></P>';
 
     // if there are any days, we have valid data.
     if (($nb_downloads = db_numrows($res)) >= 1) {
@@ -353,14 +353,14 @@ function svnaccess_logs_daily($project, $span = 7, $who = "allusers")
         return;
     }
 
-    $month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
+    $month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     $sql = svnaccess_logs_extract($project, $span, $who);
 
     // Executions will continue until morale improves.
     $res = db_query($sql);
 
-    print '<P><B><U>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', array($GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'svn_access'), $hp->purify($span))) . '</U></B></P>';
+    print '<P><B><U>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'access_for_past_x_days', [$GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'svn_access'), $hp->purify($span)]) . '</U></B></P>';
 
     // if there are any days, we have valid data.
     if (($nb_downloads = db_numrows($res)) >= 1) {
@@ -458,14 +458,14 @@ function wiki_attachments_logs_daily($project, $span = 7, $who = "allusers")
 function plugins_log_extract($project, $span, $who)
 {
     $event_manager = EventManager::instance();
-    $logs = array();
-    $event_manager->processEvent('logs_daily', array(
+    $logs = [];
+    $event_manager->processEvent('logs_daily', [
         'group_id'  => $project->getGroupId(),
         'logs_cond' => logs_cond($project, $span, $who),
         'logs'      => &$logs,
         'span'      => $span,
         'who'       => $who,
-    ));
+    ]);
     return $logs;
 }
 

@@ -35,7 +35,7 @@ class LinkPresentersBuilder
 
     private function getLinkPresenters()
     {
-        $link_presenters = array();
+        $link_presenters = [];
 
         foreach ($this->links as $link) {
             $link_presenters[] = $this->getLinkPresenter($link);

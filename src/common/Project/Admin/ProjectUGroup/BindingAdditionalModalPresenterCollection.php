@@ -44,7 +44,7 @@ class BindingAdditionalModalPresenterCollection implements Dispatchable
     public function __construct(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
     {
         $this->ugroup = $ugroup;
-        $this->modals = array();
+        $this->modals = [];
         $this->csrf = $csrf;
     }
 

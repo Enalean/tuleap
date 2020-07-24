@@ -39,9 +39,9 @@ if (substr(PHP_OS, 0, 3) == 'WIN') {
 
 $GLOBALS['_PEAR_default_error_mode']     = PEAR_ERROR_RETURN;
 $GLOBALS['_PEAR_default_error_options']  = E_USER_NOTICE;
-$GLOBALS['_PEAR_destructor_object_list'] = array();
-$GLOBALS['_PEAR_shutdown_funcs']         = array();
-$GLOBALS['_PEAR_error_handler_stack']    = array();
+$GLOBALS['_PEAR_destructor_object_list'] = [];
+$GLOBALS['_PEAR_shutdown_funcs']         = [];
+$GLOBALS['_PEAR_error_handler_stack']    = [];
 
 /**
  * Base class for other PEAR classes.  Provides rudimentary
@@ -114,7 +114,7 @@ class PEAR
      * @var     array
      * @access  private
      */
-    public $_expected_errors = array();
+    public $_expected_errors = [];
 
     // }}}
 
@@ -205,9 +205,9 @@ class PEAR
     * @param  mixed $args  The arguments to pass to the function
     * @return void
     */
-    public function registerShutdownFunc($func, $args = array())
+    public function registerShutdownFunc($func, $args = [])
     {
-        $GLOBALS['_PEAR_shutdown_funcs'][] = array($func, $args);
+        $GLOBALS['_PEAR_shutdown_funcs'][] = [$func, $args];
     }
 
     // }}}
@@ -341,7 +341,7 @@ class PEAR
         if (is_array($code)) {
             array_push($this->_expected_errors, $code);
         } else {
-            array_push($this->_expected_errors, array($code));
+            array_push($this->_expected_errors, [$code]);
         }
         return sizeof($this->_expected_errors);
     }
@@ -567,14 +567,14 @@ class PEAR
             $def_mode = &$GLOBALS['_PEAR_default_error_mode'];
             $def_options = &$GLOBALS['_PEAR_default_error_options'];
         }
-            $stack[] = array($def_mode, $def_options);
+            $stack[] = [$def_mode, $def_options];
 
         if (isset($this)) {
             $this->setErrorHandling($mode, $options);
         } else {
             PEAR::setErrorHandling($mode, $options);
         }
-        $stack[] = array($mode, $options);
+        $stack[] = [$mode, $options];
         return true;
     }
 
@@ -643,7 +643,7 @@ function _PEAR_call_destructors()
         }
         // Empty the object list to ensure that destructors are
         // not called more than once.
-        $_PEAR_destructor_object_list = array();
+        $_PEAR_destructor_object_list = [];
     }
 
     // Now call the shutdown functions
@@ -901,10 +901,10 @@ class PEAR_Error
      */
     public function toString()
     {
-        $modes = array();
-        $levels = array(E_USER_NOTICE  => 'notice',
+        $modes = [];
+        $levels = [E_USER_NOTICE  => 'notice',
                         E_USER_WARNING => 'warning',
-                        E_USER_ERROR   => 'error');
+                        E_USER_ERROR   => 'error'];
         if ($this->mode & PEAR_ERROR_CALLBACK) {
             if (is_array($this->callback)) {
                 $callback = get_class($this->callback[0]) . '::' .

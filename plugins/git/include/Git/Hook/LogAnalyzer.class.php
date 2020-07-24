@@ -54,7 +54,7 @@ class Git_Hook_LogAnalyzer
     public function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
         $change_type   = Git_Hook_PushDetails::ACTION_ERROR;
-        $revision_list = array();
+        $revision_list = [];
         $rev_type      = '';
         try {
             if ($oldrev == self::FAKE_EMPTY_COMMIT) {

@@ -51,6 +51,6 @@ class Project_OneStepRegistration_OneStepRegistrationApprovalPresenter
 
     public function get_thanks()
     {
-        return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'thanks', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'thanks', [ForgeConfig::get('sys_name')]);
     }
 }

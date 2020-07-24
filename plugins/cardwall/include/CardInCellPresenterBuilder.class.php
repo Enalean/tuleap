@@ -75,7 +75,7 @@ class Cardwall_CardInCellPresenterBuilder
      */
     public function getCardInCellPresenters(array $artifacts, $swimline_id = 0)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($artifacts as $artifact) {
             $presenters[] = $this->getCardInCellPresenter($artifact, $swimline_id);

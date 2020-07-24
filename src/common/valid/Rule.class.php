@@ -541,7 +541,7 @@ class Rule_UserName extends Rule
     {
         $sm = $this->_getSystemEventManager();
         if (! $sm->isUserNameAvailable($val)) {
-            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
+            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', [$val]);
             return false;
         }
         return true;
@@ -710,9 +710,9 @@ class Rule_ProjectName extends Rule_UserName
                     $error = '';
                     $this->getEventManager()->processEvent(
                         'file_exists_in_data_dir',
-                        array('new_name'  => $val,
+                        ['new_name'  => $val,
                               'result'     => &$result,
-                              'error' => &$error)
+                              'error' => &$error]
                     );
                     if ($result == false) {
                         $this->error = $error;
@@ -734,7 +734,7 @@ class Rule_ProjectName extends Rule_UserName
     {
         $sm = $this->_getSystemEventManager();
         if (! $sm->isProjectNameAvailable($val)) {
-            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
+            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', [$val]);
             return false;
         }
         return true;

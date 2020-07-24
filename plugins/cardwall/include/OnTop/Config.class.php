@@ -47,7 +47,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     /**
      * @var Cardwall_OnTop_Config_TrackerMapping[]
      */
-    private $cached_mappings = array();
+    private $cached_mappings = [];
 
     public function __construct(
         Tracker $tracker,

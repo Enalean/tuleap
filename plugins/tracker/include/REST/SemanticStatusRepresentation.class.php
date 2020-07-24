@@ -32,7 +32,7 @@ class SemanticStatusRepresentation
     /**
      * @var array {@type int}
      */
-    public $value_ids = array();
+    public $value_ids = [];
 
     public function build($id, array $values)
     {

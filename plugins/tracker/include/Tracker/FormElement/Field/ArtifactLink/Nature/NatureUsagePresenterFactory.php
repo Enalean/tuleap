@@ -40,7 +40,7 @@ class NatureUsagePresenterFactory
      */
     public function getNaturesUsagePresenters(array $natures)
     {
-        $natures_usage_by_shortname = array();
+        $natures_usage_by_shortname = [];
         foreach ($natures as $nature) {
             $natures_usage_by_shortname[$nature->shortname] =  new NatureUsagePresenter(
                 $nature,

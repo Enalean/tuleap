@@ -49,10 +49,10 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \PHPUnit\Framework\Tes
 
         $repository_id    = 154;
         $remote_server_id = 33;
-        $event->shouldReceive('getParametersAsArray')->andReturns(array(
+        $event->shouldReceive('getParametersAsArray')->andReturns([
             $repository_id,
             $remote_server_id,
-        ));
+        ]);
 
         $driver->shouldReceive('makeGerritProjectReadOnly')->with($server, 'projname/repo_01')->once();
 

@@ -30,9 +30,9 @@ $group_id = $request->getProject()->getID();
 
 $url  = '/project/admin/editgroupinfo.php?' .
     http_build_query(
-        array(
+        [
             'group_id' => $group_id
-        )
+        ]
     );
 
 $user = $request->getCurrentUser();

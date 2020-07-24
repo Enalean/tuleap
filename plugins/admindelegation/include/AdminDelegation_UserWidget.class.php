@@ -67,7 +67,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
     public function getProjectAdmins($groupId)
     {
-        $admins = array();
+        $admins = [];
         $um = UserManager::instance();
         $sql = 'SELECT u.user_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = ' . db_ei($groupId);
         $res = db_query($sql);
@@ -83,7 +83,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
         $hp = Codendi_HTMLPurifier::instance();
         $request = HTTPRequest::instance();
-        $vFunc = new Valid_WhiteList('plugin_admindelegation_func', array('show_admins'));
+        $vFunc = new Valid_WhiteList('plugin_admindelegation_func', ['show_admins']);
         $vFunc->required();
         if ($request->valid($vFunc)) {
             $func = $request->get('plugin_admindelegation_func');
@@ -119,7 +119,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
         $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
         if ($func == 'show_admins' && $project && $project->isActive()) {
-            $allAdmins = array();
+            $allAdmins = [];
             $users = $this->getProjectAdmins($project->getId());
             if (count($users) > 0) {
                 $uh = UserHelper::instance();

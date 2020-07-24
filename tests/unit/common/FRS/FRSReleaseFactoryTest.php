@@ -89,9 +89,9 @@ class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     protected function _userCanReadWithSpecificPerms($can_read_release)
     {
-        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, [])->once()->andReturns([1, 2, 76]);
         $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(true);
-        $this->permission_manager->shouldReceive('userHasPermission')->with($this->release_id, 'RELEASE_READ', array(1,2,76))->once()->andReturns($can_read_release);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->release_id, 'RELEASE_READ', [1, 2, 76])->once()->andReturns($can_read_release);
         $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
     }
 
@@ -134,10 +134,10 @@ class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     public function testDeleteProjectReleasesFail()
     {
-        $release1 = array('release_id' => 1);
-        $release2 = array('release_id' => 2);
-        $release3 = array('release_id' => 3);
-        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns(array($release1, $release2, $release3));
+        $release1 = ['release_id' => 1];
+        $release2 = ['release_id' => 2];
+        $release3 = ['release_id' => 3];
+        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns([$release1, $release2, $release3]);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(false);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);
@@ -146,10 +146,10 @@ class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     public function testDeleteProjectReleasesSuccess()
     {
-        $release1 = array('release_id' => 1);
-        $release2 = array('release_id' => 2);
-        $release3 = array('release_id' => 3);
-        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns(array($release1, $release2, $release3));
+        $release1 = ['release_id' => 1];
+        $release2 = ['release_id' => 2];
+        $release3 = ['release_id' => 3];
+        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns([$release1, $release2, $release3]);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(true);
         $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);

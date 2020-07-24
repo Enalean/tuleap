@@ -40,7 +40,7 @@ class LayoutTest extends TestCase
     {
         $l = \Mockery::mock(\Layout::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $l->addStylesheet('/theme/css/style.css');
-        $this->assertEquals(array('/theme/css/style.css'), $l->getAllStyleSheets());
+        $this->assertEquals(['/theme/css/style.css'], $l->getAllStyleSheets());
     }
 
     public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
@@ -53,7 +53,7 @@ class LayoutTest extends TestCase
         $l->addStylesheet($css);
 
         ob_start();
-        $l->displayStylesheetElements(array());
+        $l->displayStylesheetElements([]);
         $content = ob_get_contents();
         ob_end_clean();
 

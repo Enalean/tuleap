@@ -64,7 +64,7 @@ class MIME
 
         // load the glob files if they haven't been loaded already
         if (! isset($this->globFileLines)) {
-            $this->globFileLines = array();
+            $this->globFileLines = [];
 
             // go through the data dirs to search for the globbing files
             foreach ($this->XDG_DATA_DIRS as $dir) {
@@ -116,7 +116,7 @@ class MIME
 
         // load the magic files if they weren't loaded yet
         if (! isset($this->magicRules)) {
-            $this->magicRules = array();
+            $this->magicRules = [];
 
             // go through the data dirs to search for the magic files
             foreach (array_reverse($this->XDG_DATA_DIRS) as $dir) {
@@ -142,7 +142,7 @@ class MIME
                         // create an entry for a new mimetype
                         case '[':
                             $mime = substr($buffer, 1, strpos($buffer, ']') - 1);
-                            $this->magicRules[$mime] = array();
+                            $this->magicRules[$mime] = [];
                             $parents[0] =& $this->magicRules[$mime];
                             $buffer = substr($buffer, strlen($mime) + 3);
                             break;
@@ -170,7 +170,7 @@ class MIME
                             }
                             $parents[$indent][$rulenum]->range_length = ($buffer[0] != '+' ? 1 : intval($buffer));
                             $buffer = substr($buffer, strpos($buffer, "\n") + 1);
-                            $parents[$indent][$rulenum]->children = array();
+                            $parents[$indent][$rulenum]->children = [];
                             $parents[$indent + 1] =& $parents[$indent][$rulenum]->children;
                             break;
                     }

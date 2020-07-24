@@ -31,7 +31,7 @@ class MilestoneBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $response = $this->getResponse(
             $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/burndown')
         );
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSBurndownWithRESTReadOnlyUser(): void

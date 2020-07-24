@@ -264,7 +264,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function permission_db_authorized_ugroups($permission_type)
     {
         include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
-        $result = array();
+        $result = [];
         $res    = permission_db_authorized_ugroups($permission_type, $this->getId());
         if (db_numrows($res) > 0) {
             while ($row = db_fetch_array($res)) {
@@ -279,7 +279,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getAuthorizedUGroups()
     {
         if (! isset($this->authorized_ugroups)) {
-            $this->authorized_ugroups = array();
+            $this->authorized_ugroups = [];
             if ($this->useArtifactPermissions()) {
                 $this->authorized_ugroups = PermissionsManager::instance()->getAuthorizedUgroupIds(
                     $this->id,
@@ -585,7 +585,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($field_value) {
                 $user_manager   = $this->getUserManager();
                 $user_ids       = $field_value->getValue();
-                $assigned_users = array();
+                $assigned_users = [];
                 foreach ($user_ids as $user_id) {
                     if ($user_id != 100) {
                         $assigned_user    = $user_manager->getUserById($user_id);
@@ -595,7 +595,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 return $assigned_users;
             }
         }
-        return array();
+        return [];
     }
 
     /**
@@ -841,10 +841,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'You are currently copying the artifact %1$s.'), $art_link), CODENDI_PURIFIER_LIGHT);
                 EventManager::instance()->processEvent(
                     self::DISPLAY_COPY_OF_ARTIFACT,
-                    array(
+                    [
                         'artifact'     => $this,
                         'current_user' => $current_user
-                    )
+                    ]
                 );
 
                 $renderer = new Tracker_Artifact_CopyRenderer(
@@ -923,12 +923,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $this->getEventManager()->processEvent(
             ITEM_PRIORITY_CHANGE,
-            array(
+            [
                 'user_is_authorized' => &$user_is_authorized,
                 'group_id'           => $this->getProjectId(),
                 'milestone_id'       => $milestone_id,
                 'user'               => $this->getCurrentUser()
-            )
+            ]
         );
 
         return $user_is_authorized;
@@ -953,7 +953,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @return Tracker_Artifact[] */
     public function getChildrenForUser(PFUser $current_user)
     {
-        $children = array();
+        $children = [];
         foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
             if ($child->userCanView($current_user)) {
                 $children[] = $child;
@@ -965,7 +965,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @return Tracker_ArtifactChildPresenter[] */
     private function getChildPresenterCollection(PFUser $current_user)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker      = $child->getTracker();
             $semantics    = Tracker_Semantic_Status::load($tracker);
@@ -977,7 +977,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getChildNaturePresenterCollection()
     {
-        $presenters = array();
+        $presenters = [];
         $artifacts = $this->getNatureIsChildLinkRetriever()->getChildren($this);
 
         foreach ($artifacts as $artifact) {
@@ -1049,11 +1049,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchXRefLink()
     {
-        return '<a class="cross-reference" href="/goto?' . http_build_query(array(
+        return '<a class="cross-reference" href="/goto?' . http_build_query([
             'key'      => $this->getTracker()->getItemName(),
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
-        )) . '">' . $this->getXRef() . '</a>';
+        ]) . '">' . $this->getXRef() . '</a>';
     }
 
     /**
@@ -1094,7 +1094,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function getErrors()
     {
-        $list_errors = array();
+        $list_errors = [];
         $is_valid = true;
         $used_fields    = $this->getFormElementFactory()->getUsedFields($this->getTracker());
         foreach ($used_fields as $field) {
@@ -1323,11 +1323,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getSortedBySubmittedOn(array $followups_content)
     {
-        $changeset_array = array();
+        $changeset_array = [];
         foreach ($followups_content as $changeset) {
             $timestamp = $changeset->getFollowUpDate();
             if (! isset($changeset_array[$timestamp])) {
-                $changeset_array[$timestamp] = array($changeset);
+                $changeset_array[$timestamp] = [$changeset];
             } else {
                 $changeset_array[$timestamp][] = $changeset;
             }
@@ -1338,7 +1338,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function flattenChangesetArray(array $changesets_per_timestamp)
     {
-        $changesets = array();
+        $changesets = [];
         foreach ($changesets_per_timestamp as $changeset_per_timestamp) {
             foreach ($changeset_per_timestamp as $changeset) {
                 $changesets[] = $changeset;
@@ -1394,7 +1394,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getCommentators()
     {
-        $commentators = array();
+        $commentators = [];
         foreach ($this->getChangesets() as $c) {
             if ($submitted_by = $c->getSubmittedBy()) {
                 if ($user = $this->getUserManager()->getUserById($submitted_by)) {
@@ -1635,7 +1635,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 return true;
             }
 
-            $fields_data   = array();
+            $fields_data   = [];
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
             if ($this->getTracker()->isProjectAllowedToUseNature()) {
@@ -1676,9 +1676,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $comment       = '';
         $artlink_field = $artlink_fields[0];
-        $fields_data   = array();
+        $fields_data   = [];
         $fields_data[$artlink_field->getId()]['new_values'] = '';
-        $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
+        $fields_data[$artlink_field->getId()]['removed_values'] = [$linked_artifact_id => 1];
 
         try {
             $this->createNewChangeset($fields_data, $comment, $current_user);
@@ -1719,7 +1719,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getLinkedArtifacts(PFUser $user)
     {
-        $artifact_links      = array();
+        $artifact_links      = [];
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         $last_changeset      = $this->getLastChangeset();
         if ($artifact_link_field && $last_changeset) {
@@ -1762,7 +1762,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         if (! $artifact_link_field) {
-            return new Tracker_Artifact_PaginatedArtifacts(array(), 0);
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
         return $artifact_link_field->getSlicedLinkedArtifacts($this->getLastChangeset(), $user, $limit, $offset);
@@ -1808,7 +1808,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getAllowedChildrenTypesForUser(PFUser $user)
     {
-        $allowed_children = array();
+        $allowed_children = [];
         foreach ($this->getAllowedChildrenTypes() as $tracker) {
             if ($tracker->userCanSubmitArtifact($user)) {
                 $allowed_children[] = $tracker;
@@ -1828,7 +1828,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getUniqueLinkedArtifacts(PFUser $user)
     {
         $sub_artifacts = $this->getLinkedArtifacts($user);
-        $grandchild_artifacts = array();
+        $grandchild_artifacts = [];
         foreach ($sub_artifacts as $artifact) {
             $grandchild_artifacts = array_merge($grandchild_artifacts, $artifact->getLinkedArtifactsOfHierarchy($user));
         }
@@ -1879,7 +1879,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getParentWithoutPermissionChecking(): ?self
     {
         if ($this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)) {
-            $dar = $this->getDao()->getParents(array($this->getId()));
+            $dar = $this->getDao()->getParents([$this->getId()]);
             if ($dar && count($dar) == 1) {
                 $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
             } else {
@@ -1905,7 +1905,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getSiblingsWithoutPermissionChecking()
     {
         if (! isset($this->siblings_without_permission_checking)) {
-            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
+            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith([$this->getArtifactFactory(), 'getInstanceFromRow']);
         }
         return $this->siblings_without_permission_checking;
     }
@@ -1942,7 +1942,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     protected function getChildTrackersIds()
     {
-        $children_trackers_ids = array();
+        $children_trackers_ids = [];
         $children_hierarchy_tracker = $this->getHierarchyFactory()->getChildren($this->getTrackerId());
         foreach ($children_hierarchy_tracker as $tracker) {
             $children_trackers_ids[] = $tracker->getId();
@@ -1990,13 +1990,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $this->getEventManager()->processEvent(
             TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
-            array(
+            [
                 'artifact'             => $this,
                 'linked-artifact-id'   => $linked_artifact_id,
                 'request'              => $request,
                 'user'                 => $current_user,
                 'form_element_factory' => $this->getFormElementFactory(),
-            )
+            ]
         );
     }
 
@@ -2007,7 +2007,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private function getAuthorisedUgroups()
     {
-        $ugroups = array();
+        $ugroups = [];
         //Individual artifact permission
         if ($this->useArtifactPermissions()) {
             $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
@@ -2157,7 +2157,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getNoNatureForLink($linked_artifact_id)
     {
-        $types = array();
+        $types = [];
         $linked_artifact_ids_array = explode(',', $linked_artifact_id);
         foreach ($linked_artifact_ids_array as $linked_artifact_id) {
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;

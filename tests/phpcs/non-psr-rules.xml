@@ -147,6 +147,8 @@
     <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
     <!-- Require /* @var type $foo */ and similar simple inline annotations to be replaced by assert() -->
     <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
+    <!-- Forbid `array(...)` -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>

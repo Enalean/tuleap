@@ -62,13 +62,13 @@ class SOAPBase extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.
         // Connecting to the soap's tracker client
         $this->soap_base = new SoapClient(
             $this->server_base_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1, 'stream_context' => $this->context)
+            ['cache_wsdl' => WSDL_CACHE_NONE, 'exceptions' => 1, 'trace' => 1, 'stream_context' => $this->context]
         );
 
         // Connecting to the soap's tracker client
         $this->soap_project = new SoapClient(
             $this->server_project_url,
-            array('cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $this->context)
+            ['cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $this->context]
         );
 
         if (self::$user_ids === null) {

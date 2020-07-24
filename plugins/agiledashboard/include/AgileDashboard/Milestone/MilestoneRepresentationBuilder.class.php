@@ -60,7 +60,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
 
     public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type)
     {
-        $status_count = array();
+        $status_count = [];
         if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
         }
@@ -103,12 +103,12 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
-            array(
+            [
                 'version'                                   => 'v1',
                 'user'                                      => $user,
                 'milestone'                                 => $milestone,
                 'milestone_representation_reference_holder' => &$milestone_representation_reference_holder,
-            )
+            ]
         );
 
         return $milestone_representation_reference_holder->milestone_representation;
@@ -126,7 +126,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
         $sub_milestones = $this->milestone_factory
             ->getPaginatedSubMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset, $order);
 
-        $submilestones_representations = array();
+        $submilestones_representations = [];
         foreach ($sub_milestones->getMilestones() as $submilestone) {
             $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }
@@ -175,7 +175,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
         $sub_milestones = $this->milestone_factory
             ->getPaginatedTopMilestonesWithStatusCriterion($user, $project, $criterion, $limit, $offset, $order);
 
-        $submilestones_representations = array();
+        $submilestones_representations = [];
         foreach ($sub_milestones->getMilestones() as $submilestone) {
             $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }

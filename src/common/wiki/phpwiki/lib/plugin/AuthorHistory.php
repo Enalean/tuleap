@@ -86,14 +86,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
     public function getDefaultArguments()
     {
         global $request;
-        return array('exclude'      => '',
+        return ['exclude'      => '',
                      'noheader'     => false,
                      'includeminor' => false,
                      'includedeleted' => false,
                      'author'       => $request->_user->UserName(),
                      'page'         => '[pagename]',
                      'info'         => 'version,minor,author,summary,mtime'
-                     );
+                     ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
@@ -121,14 +121,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
         if (! ($page == 'all')) {
             $p = $dbi->getPage($page);
 
-            $t = HTML::table(array('class' => 'pagelist',
-                                   'style' => 'font-size:smaller'));
+            $t = HTML::table(['class' => 'pagelist',
+                                   'style' => 'font-size:smaller']);
             $th = HTML::thead();
             $tb = HTML::tbody();
 
             $th->pushContent(HTML::tr(
                 HTML::td(
-                    array('align' => 'right'),
+                    ['align' => 'right'],
                     _("Version")
                 ),
                 $includeminor ? HTML::td(_("Minor")) : "",
@@ -144,14 +144,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
                 if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                     $difflink = Button(
-                        array('action' => 'diff',
-                                             'previous' => 'minor'),
+                        ['action' => 'diff',
+                                             'previous' => 'minor'],
                         $rev->getversion(),
                         $rev
                     );
                     $tr = HTML::tr(
                         HTML::td(
-                            array('align' => 'right'),
+                            ['align' => 'right'],
                             $difflink,
                             $nbsp
                         ),
@@ -162,7 +162,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                         ), $nbsp),
                         HTML::td($nbsp, $rev->get('summary')),
                         HTML::td(
-                            array('align' => 'right'),
+                            ['align' => 'right'],
                             $WikiTheme->formatdatetime($rev->get('mtime'))
                         )
                     );
@@ -185,15 +185,15 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
             /////////////////////////////////////////////////////////////
 
-            $t = HTML::table(array('class' => 'pagelist',
-                                   'style' => 'font-size:smaller'));
+            $t = HTML::table(['class' => 'pagelist',
+                                   'style' => 'font-size:smaller']);
             $th = HTML::thead();
             $tb = HTML::tbody();
 
             $th->pushContent(HTML::tr(
                 HTML::td(_("Page Name")),
                 HTML::td(
-                    array('align' => 'right'),
+                    ['align' => 'right'],
                     _("Version")
                 ),
                 $includeminor ? HTML::td(_("Minor")) : "",
@@ -212,8 +212,8 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                     $authordoesmatch = $author == $rev->get('author');
                     if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                         $difflink = Button(
-                            array('action' => 'diff',
-                                                 'previous' => 'minor'),
+                            ['action' => 'diff',
+                                                 'previous' => 'minor'],
                             $rev->getversion(),
                             $rev
                         );
@@ -223,14 +223,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                                 ($isminor ? $rev->_pagename : WikiLink($rev->_pagename, 'auto'))
                             ),
                             HTML::td(
-                                array('align' => 'right'),
+                                ['align' => 'right'],
                                 $difflink,
                                 $nbsp
                             ),
                             $includeminor ? (HTML::td($nbsp, ($isminor ? "minor" : "major"), $nbsp)) : "",
                             HTML::td($nbsp, $rev->get('summary')),
                             HTML::td(
-                                array('align' => 'right'),
+                                ['align' => 'right'],
                                 $WikiTheme->formatdatetime($rev->get('mtime')),
                                 $nbsp
                             )

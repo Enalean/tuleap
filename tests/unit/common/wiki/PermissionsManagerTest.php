@@ -60,19 +60,19 @@ class Wiki_PermissionsManagerTest extends TestCase
 
     public function testItReturnsPageRights(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
             '3', '4', '14', '107'
-        ));
+        ]);
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
             '2'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
-        $expected = array(
+        $expected = [
             '@perceval_project_members', '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107'
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -82,19 +82,19 @@ class Wiki_PermissionsManagerTest extends TestCase
 
     public function testItReturnsServiceRightsIfPageRightsAreWeeker(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
             '3'
-        ));
+        ]);
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
             '4', '14', '107'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
-        $expected = array(
+        $expected = [
             '@perceval_project_admin', '@perceval_wiki_admin', '@ug_107'
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -104,19 +104,19 @@ class Wiki_PermissionsManagerTest extends TestCase
 
     public function testItReturnsMixedServiceAndPageRights(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
             '107', '108', '4'
-        ));
+        ]);
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
             '14', '106'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
-        $expected = array(
+        $expected = [
             '@perceval_wiki_admin', '@ug_106', '@perceval_project_admin'
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -126,19 +126,19 @@ class Wiki_PermissionsManagerTest extends TestCase
 
     public function testItDoesNotReturnNonMemberUgroupsIfProjectIsPrivate(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
             '2'
-        ));
+        ]);
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
             '2'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
 
-        $expected = array(
+        $expected = [
             '@perceval_project_admin', '@perceval_wiki_admin'
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -148,19 +148,19 @@ class Wiki_PermissionsManagerTest extends TestCase
 
     public function testItAlwaysReturnsWikiAndProjectAdminGroups(): void
     {
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(101, 'WIKIPAGE_READ')->andReturns([
             '107'
-        ));
+        ]);
 
-        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns(array(
+        $this->permission_manager->shouldReceive('getAuthorizedUgroupIds')->with(200, 'WIKI_READ')->andReturns([
             '3'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
 
-        $expected = array(
+        $expected = [
             '@ug_107', '@perceval_project_admin', '@perceval_wiki_admin'
-        );
+        ];
 
         $this->assertEquals(
             $expected,

@@ -50,17 +50,17 @@ class XmlUgroupRetrieverTest extends TestCase
 
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->ugroup_01 = new ProjectUGroup(array(
+        $this->ugroup_01 = new ProjectUGroup([
             'ugroup_id' => 101,
             'name'      => 'Contributors',
             'group_id'  => 101
-        ));
+        ]);
 
-        $this->ugroup_02 = new ProjectUGroup(array(
+        $this->ugroup_02 = new ProjectUGroup([
             'ugroup_id' => 3,
             'name'      => 'project_members',
             'group_id'  => 101
-        ));
+        ]);
 
         $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'Contributors')->andReturns($this->ugroup_01);
         $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'project_members')->andReturns($this->ugroup_02);
@@ -76,7 +76,7 @@ class XmlUgroupRetrieverTest extends TestCase
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
-        $expected = array(101, 3);
+        $expected = [101, 3];
 
         $this->assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
     }
@@ -91,7 +91,7 @@ XML;
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
-        $expected = array($this->ugroup_01, $this->ugroup_02);
+        $expected = [$this->ugroup_01, $this->ugroup_02];
 
         $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
@@ -107,7 +107,7 @@ XML;
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
-        $expected = array($this->ugroup_01, $this->ugroup_02);
+        $expected = [$this->ugroup_01, $this->ugroup_02];
 
         $this->logger->shouldReceive('warning')->once();
         $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
@@ -124,7 +124,7 @@ XML;
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
-        $expected = array($this->ugroup_01, $this->ugroup_02);
+        $expected = [$this->ugroup_01, $this->ugroup_02];
 
         $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
@@ -140,7 +140,7 @@ XML;
 XML;
 
         $xml_node = new SimpleXMLElement($xml);
-        $expected = array(101, 3);
+        $expected = [101, 3];
 
         $this->assertEquals($expected, $this->retriever->getUgroupIdsForPermissionNode($this->project, $xml_node));
     }

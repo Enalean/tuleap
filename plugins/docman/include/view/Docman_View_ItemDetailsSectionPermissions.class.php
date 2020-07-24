@@ -57,20 +57,20 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
 
         //{{{ Permissions
         $content .= '<div>';
-        $titles = array();
+        $titles = [];
         $titles[] = dgettext('tuleap-docman', 'User groups');
         $titles[] = dgettext('tuleap-docman', 'Access Permissions');
         $content .= html_build_list_table_top($titles, false, false, false);
-        $odd_even = array('boxitem', 'boxitemalt');
+        $odd_even = ['boxitem', 'boxitemalt'];
         $i = 0;
-        $ugroups = permission_get_ugroups_permissions($this->item->getGroupId(), $this->item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
+        $ugroups = permission_get_ugroups_permissions($this->item->getGroupId(), $this->item->getId(), ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'], false);
         ksort($ugroups);
         foreach ($ugroups as $ugroup) {
             $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
             $content .= '<td>' . $ugroup['ugroup']['name'] . '</td>';
             $content .= '<td style="text-align:center;"><select name="permissions[' . $ugroup['ugroup']['id'] . ']">';
             $content .= '<option value="100">-</option>';
-            $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+            $perms = ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'];
             $i = 1;
             foreach ($perms as $perm) {
                 $content .= '<option value="' . $i++ . '" ' . (isset($ugroup['permissions'][$perm])  ? 'selected="selected"' : '') . '>' . permission_get_name($perm) . '</option>';

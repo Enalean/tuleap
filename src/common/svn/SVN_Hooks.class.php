@@ -98,7 +98,7 @@ class SVN_Hooks
 
     private function getMessageFromSvnLook($parameters)
     {
-        $logmsg = array();
+        $logmsg = [];
         exec("/usr/bin/svnlook log $parameters", $logmsg);
         return implode("\n", $logmsg);
     }

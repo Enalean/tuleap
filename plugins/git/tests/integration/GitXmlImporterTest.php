@@ -252,11 +252,11 @@ final class GitXmlImporterTest extends TestCase
 
         $this->permission_dao->shouldReceive('clearPermission')->andReturns(true);
         $this->permission_dao->shouldReceive('addPermission')->andReturns(true);
-        $this->git_dao->shouldReceive('getProjectRepositoryList')->andReturns(array());
+        $this->git_dao->shouldReceive('getProjectRepositoryList')->andReturns([]);
 
         copy(__DIR__ . '/_fixtures/stable_repo_one_commit.bundle', $this->getTmpDir() . DIRECTORY_SEPARATOR . 'stable.bundle');
         $this->project = $this->project_manager->getProjectFromDbRow(
-            array('group_id' => 123, 'unix_group_name' => 'test_project', 'access' => Project::ACCESS_PUBLIC)
+            ['group_id' => 123, 'unix_group_name' => 'test_project', 'access' => Project::ACCESS_PUBLIC]
         );
     }
 
@@ -420,7 +420,7 @@ XML;
                 </git>
             </project>
 XML;
-        $this->git_systemeventmanager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(123))->atLeast()->once();
+        $this->git_systemeventmanager->shouldReceive('queueProjectsConfigurationUpdate')->with([123])->atLeast()->once();
         $this->import(new SimpleXMLElement($xml));
     }
 
@@ -632,8 +632,8 @@ XML;
             0,
             1,
             '*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());
@@ -668,8 +668,8 @@ XML;
             0,
             1,
             '*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->logger->shouldReceive('warning')->once();
@@ -705,16 +705,16 @@ XML;
             0,
             1,
             '*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $representation_02 = new FineGrainedPermission(
             0,
             1,
             '*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(\TestHelper::emptyDar());

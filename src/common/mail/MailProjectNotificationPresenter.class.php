@@ -55,22 +55,22 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
 
     public function get_thanks()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'thanks', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('mail_outline', 'thanks', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_signature()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'signature', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('mail_outline', 'signature', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_section_one()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_one', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_one', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_section_two()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_two', array($this->project->getPublicName()));
+        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_two', [$this->project->getPublicName()]);
     }
 
     public function get_section_three()
@@ -85,7 +85,7 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
 
     public function get_help()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'help', array(ForgeConfig::get('sys_email_admin')));
+        return $GLOBALS['Language']->getText('mail_outline', 'help', [ForgeConfig::get('sys_email_admin')]);
     }
 
     public function get_url()

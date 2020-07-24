@@ -49,8 +49,8 @@ final class GateKeeperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user        = new PFUser(array('user_id' => 112, 'language_id' => 'en'));
-        $this->anonymous   = new PFUser(array('user_id' => 0, 'language_id' => 'en'));
+        $this->user        = new PFUser(['user_id' => 112, 'language_id' => 'en']);
+        $this->anonymous   = new PFUser(['user_id' => 0, 'language_id' => 'en']);
         $this->gate_keeper = new GateKeeper();
         $this->request     = \Mockery::spy(HTTPRequest::class);
     }

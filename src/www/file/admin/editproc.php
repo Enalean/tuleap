@@ -72,7 +72,7 @@ $rank = db_result($result, 0, 'rank');
 if (db_numrows($result) < 1) {
     // invalid  processor  id
     $feedback .= " " . $Language->getText('file_admin_manageprocessors', 'invalid_procid');
-    file_utils_footer(array());
+    file_utils_footer([]);
     exit;
 }
 
@@ -96,4 +96,4 @@ $return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $g
 echo $return;
 
 
-file_utils_footer(array());
+file_utils_footer([]);

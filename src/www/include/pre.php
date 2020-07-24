@@ -90,11 +90,11 @@ if (! ini_get('variables_order')) {
 
 //Cast group_id as int.
 foreach (
-    array(
+    [
         'group_id',
         'atid',
         'pv',
-    ) as $variable
+    ] as $variable
 ) {
     if (isset($_REQUEST[$variable])) {
         $$variable = $_REQUEST[$variable] = $_GET[$variable] = $_POST[$variable] = (int) $_REQUEST[$variable];
@@ -140,12 +140,12 @@ if (! IS_SCRIPT) {
     // XSS prevention
     header('X-Content-Type-Options: nosniff');
     header('X-XSS-Protection: 1; mode=block');
-    $whitelist_scripts = array();
+    $whitelist_scripts = [];
     $event_manager->processEvent(
         Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
-        array(
+        [
             'whitelist_scripts' => &$whitelist_scripts
-        )
+        ]
     );
     $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);
     $csp_whitelist_script_scr .= ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');

@@ -43,10 +43,10 @@ final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extend
     {
         $this->updater->update(
             $this->field_change_xml,
-            array(
+            [
                 '2001',
                 '2002'
-            )
+            ]
         );
 
         $this->assertEquals(2001, (int) $this->field_change_xml->value[0]);
@@ -59,9 +59,9 @@ final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extend
     {
         $this->updater->update(
             $this->field_change_xml,
-            array(
+            [
                 '2001',
-            )
+            ]
         );
 
         $this->assertEquals(2001, (int) $this->field_change_xml->value[0]);

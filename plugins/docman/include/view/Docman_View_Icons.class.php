@@ -35,8 +35,8 @@ class Docman_View_Icons extends Docman_View_Browse
         $nb = $items->size();
         if ($nb) {
             $html .= '<table border="0" cellpadding="0" cellspacing="4" width="100%">';
-            $folders   = array();
-            $documents = array();
+            $folders   = [];
+            $documents = [];
             $it = $items->iterator();
             while ($it->valid()) {
                 $o = $it->current();
@@ -58,7 +58,7 @@ class Docman_View_Icons extends Docman_View_Browse
             usort($documents, $sort);
             $cells = array_merge($folders, $documents);
             $rows = array_chunk($cells, $nb_of_columns);
-            $item_parameters = array(
+            $item_parameters = [
                 'icon_width'            => '32',
                 'theme_path'            => $params['theme_path'],
                 'get_action_on_icon'    => new Docman_View_GetActionOnIconVisitor(),
@@ -67,7 +67,7 @@ class Docman_View_Icons extends Docman_View_Browse
                 //'display_description'    => isset($params['display_description']) ? $params['display_description'] : true,
                 'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false),
                 'item'                  => $params['item'],
-            );
+            ];
             foreach ($rows as $row) {
                 $html .= '<tr style="vertical-align:top">';
                 foreach ($row as $cell => $nop) {
@@ -88,24 +88,24 @@ class Docman_View_Icons extends Docman_View_Browse
     public function visitDocument(&$item, $params)
     {
     }
-    public function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

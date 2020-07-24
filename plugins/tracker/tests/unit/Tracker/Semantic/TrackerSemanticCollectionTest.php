@@ -63,7 +63,7 @@ class TrackerSemanticCollectionTest extends TestCase
         $collection->add($this->status_semantic);
         $collection->add($this->title);
 
-        $this->assertSemanticsCollectionIsIdenticalTo($collection, array($this->status_semantic, $this->title));
+        $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->status_semantic, $this->title]);
     }
 
     public function testItInsertSemanticAfterAnotherOne()
@@ -73,7 +73,7 @@ class TrackerSemanticCollectionTest extends TestCase
         $collection->add($this->title);
         $collection->insertAfter('status', $this->done);
 
-        $this->assertSemanticsCollectionIsIdenticalTo($collection, array($this->status_semantic, $this->done, $this->title));
+        $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->status_semantic, $this->done, $this->title]);
     }
 
     public function testItInsertSemanticAtTheBeginningWhenItemIsNotFound()
@@ -83,7 +83,7 @@ class TrackerSemanticCollectionTest extends TestCase
         $collection->add($this->title);
         $collection->insertAfter('unknown', $this->done);
 
-        $this->assertSemanticsCollectionIsIdenticalTo($collection, array($this->done, $this->status_semantic, $this->title));
+        $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->done, $this->status_semantic, $this->title]);
     }
 
     public function testItRetrievesSemanticByItsShortName()
@@ -104,7 +104,7 @@ class TrackerSemanticCollectionTest extends TestCase
 
         unset($collection['status']);
 
-        $this->assertSemanticsCollectionIsIdenticalTo($collection, array($this->title));
+        $this->assertSemanticsCollectionIsIdenticalTo($collection, [$this->title]);
         $this->assertFalse(isset($collection['status']));
     }
 

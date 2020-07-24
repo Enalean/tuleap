@@ -22,14 +22,14 @@ if (! defined('MEDIAWIKI')) {
     die("Not an entry point.");
 }
 
-$wgExtensionCredits['validextensionclass'][] = array(
+$wgExtensionCredits['validextensionclass'][] = [
     'path'        => __FILE__,
     'name'        => 'TuleapArtLinks',
     'author'      => 'Enalean SAS',
     'url'         => HTTPRequest::instance()->getServerUrl() . '/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/documents-and-files/mediawiki.html#tuleap-specific-extension',
     'description' => 'This extension provides ArtifactLinks integration with Tuleap',
     'version'     => 0.1
-);
+];
 
 // Load needed classes
 $wgAutoloadClasses['TuleapArtLinksHooks'] = dirname(__FILE__) . '/TuleapArtLinks.hooks.php';

@@ -68,10 +68,10 @@ final class Tracker_ReportFactoryTest extends TestCase
     public function testImport(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
-        $reports = array();
+        $reports = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
-            $empty_array = array();
+            $empty_array = [];
             $reports[] = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
         }
 
@@ -92,10 +92,10 @@ final class Tracker_ReportFactoryTest extends TestCase
         $this->renderer_factory->shouldReceive('getInstanceFromXML')->andReturn($renderer);
 
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/tracker_with_renderer_id.xml'));
-        $reports = array();
+        $reports = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
-            $empty_array = array();
+            $empty_array = [];
             $reports[] = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
         }
 

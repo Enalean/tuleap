@@ -148,42 +148,42 @@ final class ApprovalTableTest extends TestCase
     public function testNoData(): void
     {
         // Std case
-        $row = array();
+        $row = [];
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
         $this->assertNull($t1->getApprovalState());
 
-        $row = array('nb_reviewers');
+        $row = ['nb_reviewers'];
         $t2 = new Docman_ApprovalTableItem();
         $t2->initFromRow($row);
         $this->assertNull($t2->getApprovalState());
 
-        $row = array('nb_reviewers', 'rejected');
+        $row = ['nb_reviewers', 'rejected'];
         $t3 = new Docman_ApprovalTableItem();
         $t3->initFromRow($row);
         $this->assertNull($t3->getApprovalState());
 
-        $row = array('nb_reviewers', 'rejected', 'nb_approved');
+        $row = ['nb_reviewers', 'rejected', 'nb_approved'];
         $t4 = new Docman_ApprovalTableItem();
         $t4->initFromRow($row);
         $this->assertNull($t4->getApprovalState());
 
-        $row = array('nb_reviewers', 'rejected' => 0, 'nb_approved');
+        $row = ['nb_reviewers', 'rejected' => 0, 'nb_approved'];
         $t5 = new Docman_ApprovalTableItem();
         $t5->initFromRow($row);
         $this->assertNull($t5->getApprovalState());
 
-        $row = array('nb_reviewers' => 0, 'rejected' => 0, 'nb_approved');
+        $row = ['nb_reviewers' => 0, 'rejected' => 0, 'nb_approved'];
         $t6 = new Docman_ApprovalTableItem();
         $t6->initFromRow($row);
         $this->assertNull($t6->getApprovalState());
 
-        $row = array('nb_reviewers', 'rejected' => 0, 'nb_approved' => 0);
+        $row = ['nb_reviewers', 'rejected' => 0, 'nb_approved' => 0];
         $t7 = new Docman_ApprovalTableItem();
         $t7->initFromRow($row);
         $this->assertNull($t7->getApprovalState());
 
-        $row = array('nb_reviewers' => 0, 'rejected', 'nb_approved' => 0);
+        $row = ['nb_reviewers' => 0, 'rejected', 'nb_approved' => 0];
         $t8 = new Docman_ApprovalTableItem();
         $t8->initFromRow($row);
         $this->assertNull($t8->getApprovalState());

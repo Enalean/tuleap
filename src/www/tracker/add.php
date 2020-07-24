@@ -22,8 +22,8 @@ if (! $ath->userCanSubmit()) {
 }
 
 // Display the menus
-$ath->header(array('title' => $Language->getText('tracker_add', 'add_a') . " " . $ath->getCapsItemName(),'titlevals' => array($ath->getName()),'pagename' => 'tracker_browse',
-    'atid' => $ath->getID(),'help' => 'ArtifactSubmission.html'));
+$ath->header(['title' => $Language->getText('tracker_add', 'add_a') . " " . $ath->getCapsItemName(),'titlevals' => [$ath->getName()],'pagename' => 'tracker_browse',
+    'atid' => $ath->getID(),'help' => 'ArtifactSubmission.html']);
 echo '<div id="tracker_toolbar_clear"></div>';
 
 // Display the artifact items according to all the parameters
@@ -38,4 +38,4 @@ echo "new UserAutoCompleter('tracker_cc',
 echo "</script>";
 
 // Display footer page
-$ath->footer(array());
+$ath->footer([]);

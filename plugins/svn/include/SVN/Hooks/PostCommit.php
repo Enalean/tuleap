@@ -108,10 +108,10 @@ class PostCommit
 
         $this->extractReference($repository, $commit_info_enhanced, $committer, $new_revision);
 
-        $params = array(
+        $params = [
             'repository' => $repository,
             'commit_info' => $commit_info_enhanced
-        );
+        ];
 
         $this->event_manager->processEvent(self::PROCESS_POST_COMMIT, $params);
     }
@@ -242,7 +242,7 @@ class PostCommit
 
     private function getNotifiedMails(Repository $repository)
     {
-        $notified_mails = array();
+        $notified_mails = [];
 
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
         foreach ($commit_info->getChangedDirectories() as $path) {

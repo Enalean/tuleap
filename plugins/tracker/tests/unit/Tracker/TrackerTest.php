@@ -53,14 +53,14 @@ class TrackerTest extends TestCase
 
     public function testHasBlockingErrorWorkflowThrowException()
     {
-        $header = array('summary', 'details');
-        $lines = array(
-            array('summary 1', 'details 1'),
-            array('summary 2', 'details 2'),
-        );
+        $header = ['summary', 'details'];
+        $lines = [
+            ['summary 1', 'details 1'],
+            ['summary 2', 'details 2'],
+        ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns(array($field1, $field2));
+        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
@@ -102,14 +102,14 @@ class TrackerTest extends TestCase
 
     public function testHasBlockingErrorNoError()
     {
-        $header = array('summary', 'details');
-        $lines = array(
-            array('summary 1', 'details 1'),
-            array('summary 2', 'details 2'),
-        );
+        $header = ['summary', 'details'];
+        $lines = [
+            ['summary 1', 'details 1'],
+            ['summary 2', 'details 2'],
+        ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns(array($field1, $field2));
+        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
@@ -158,7 +158,7 @@ class TrackerTest extends TestCase
         ];
         $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns(array($field1, $field2));
+        $this->formelement_factory->shouldReceive("getUsedFields")->andReturns([$field1, $field2]);
 
         $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
         $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);

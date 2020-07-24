@@ -61,7 +61,7 @@ echo "Creating symlinks from $master_path to $src_path...\n";
 if (! ($dh = opendir($src_path))) {
     echo "Could not open mediawiki source directory $src_path!\n";
 } else {
-    $ignore_file = array(
+    $ignore_file = [
     '.' => true,
     '..' => true,
     'config' => true,
@@ -69,7 +69,7 @@ if (! ($dh = opendir($src_path))) {
     'images' => true,
     'tests' => true,
     't' => true,
-    );
+    ];
     while ($file = readdir($dh)) {
         if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
             $from = "$src_path/$file";
@@ -113,10 +113,10 @@ mysymlink($from, $to);
 $fromdir = "$src_path/skins/monobook";
 
 $dh = opendir($fromdir);
-$ignore_file = array(
+$ignore_file = [
     '.' => true,
     '..' => true,
-    );
+    ];
 while ($file = readdir($dh)) {
     if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
         $from = "$fromdir/$file";

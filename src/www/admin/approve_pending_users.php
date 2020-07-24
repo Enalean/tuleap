@@ -41,7 +41,7 @@ define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
 $hp = Codendi_HTMLPurifier::instance();
 $action_select = '';
 $status = '';
-$users_array = array();
+$users_array = [];
 if ($request->exist('action_select')) {
     $action_select = $request->get('action_select');
 }
@@ -52,7 +52,7 @@ if ($request->exist('list_of_users')) {
     $users_array = array_filter(array_map('intval', explode(",", $request->get('list_of_users'))));
 }
 
-$valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED));
+$valid_page = new Valid_WhiteList('page', [ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED]);
 $page = $request->getValidated('page', $valid_page, '');
 $csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
@@ -85,7 +85,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
 
         $em = EventManager::instance();
         foreach ($users_array as $user_id) {
-            $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+            $em->processEvent('project_admin_activate_user', ['user_id' => $user_id]);
         }
 
         // Now send the user verification emails
@@ -98,7 +98,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             if (! send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
                  $GLOBALS['Response']->addFeedback(
                      Feedback::ERROR,
-                     $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
+                     $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
                  );
             }
                usleep(250000);
@@ -137,7 +137,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             if (! send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
                     );
             }
             usleep(250000);
@@ -160,7 +160,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                  " WHERE user_id IN (" . implode(',', $users_array) . ")");
         $em = EventManager::instance();
         foreach ($users_array as $user_id) {
-            $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
+            $em->processEvent('project_admin_delete_user', ['user_id' => $user_id]);
         }
 
         if (count($users_array) > 1) {
@@ -197,13 +197,13 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                     $Language->getText(
                         'admin_approve_pending_users',
                         'resend_mail_success',
-                        array($user->getEmail())
+                        [$user->getEmail()]
                     )
                 );
             } else {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'resend_mail_error', array($user->getEmail()))
+                    $Language->getText('admin_approve_pending_users', 'resend_mail_error', [$user->getEmail()])
                 );
             }
         }
@@ -223,7 +223,7 @@ if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
     $msg = $Language->getText('admin_approve_pending_users', 'no_validated');
 }
 
-$users = array();
+$users = [];
 while ($row = db_fetch_array($res)) {
     $users[] = new Tuleap\User\Admin\PendingUserPresenter(
         $row['user_id'],
@@ -248,12 +248,12 @@ if (count($users) === 0) {
         $title,
         ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
         'no-pending',
-        array(
+        [
             'title'      => $title,
             'msg'        => $msg,
             'go_back'    => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back'),
             'take_break' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'take_break')
-        )
+        ]
     );
 } else {
     $siteadmin = new Tuleap\Admin\AdminPageRenderer();

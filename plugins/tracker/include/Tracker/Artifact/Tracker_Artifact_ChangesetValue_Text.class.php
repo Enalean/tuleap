@@ -208,7 +208,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     {
         $next = $this->getText();
         if ($next != '') {
-            $previous = array('');
+            $previous = [''];
             $next     = explode(PHP_EOL, $this->getText());
             return $this->fetchDiff($previous, $next, $format);
         }
@@ -260,7 +260,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function getFormatedDiff($previous, $next)
     {
-        $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+        $callback = [Codendi_HTMLPurifier::instance(), 'purify'];
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
             array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),

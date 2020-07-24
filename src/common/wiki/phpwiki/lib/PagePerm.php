@@ -83,18 +83,18 @@ function pagePermissions($pagename)
     // Page not found (new page); returned inherited permissions, to be displayed in gray
     if (! $page->exists()) {
         if ($pagename == '.') { // stop recursion
-            return array('default', new PagePermission());
+            return ['default', new PagePermission()];
         } else {
-            return array('inherited', pagePermissions(getParentPage($pagename)));
+            return ['inherited', pagePermissions(getParentPage($pagename))];
         }
     } elseif ($perm = getPagePermissions($page)) {
-        return array('page',$perm);
+        return ['page', $perm];
     // or no permissions defined; returned inherited permissions, to be displayed in gray
     } elseif ($pagename == '.') { // stop recursion in pathological case.
         // "." defined, without any acl
-        return array('default', new PagePermission());
+        return ['default', new PagePermission()];
     } else {
-        return array('inherited', pagePermissions(getParentPage($pagename)));
+        return ['inherited', pagePermissions(getParentPage($pagename))];
     }
 }
 
@@ -120,7 +120,7 @@ function pagePermissionsSimpleFormat($perm_tree, $owner, $group = false)
         return HTML::tt($perm->asRwxString($owner, $group));
     } elseif ($type == 'inherited') {
         return HTML::tt(
-            array('class' => 'inherited', 'style' => 'color:#aaa;'),
+            ['class' => 'inherited', 'style' => 'color:#aaa;'],
             $perm->asRwxString($owner, $group)
         );
     }
@@ -133,7 +133,7 @@ function pagePermissionsAcl($type, $perm_tree)
         $perm_tree = pagePermissionsAcl($type, $perm);
         $perm = $perm_tree[1];
     }
-    return array($type,$perm);
+    return [$type, $perm];
 }
 
 // view => who
@@ -222,7 +222,7 @@ function action2access($action)
 // Maybe page-(current+edit+change?)action pairs will help
 function _requiredAuthorityForPagename($access, $pagename)
 {
-    static $permcache = array();
+    static $permcache = [];
 
     if (
         array_key_exists($pagename, $permcache)
@@ -307,7 +307,7 @@ function getAccessDescription($access)
 {
     static $accessDescriptions;
     if (! $accessDescriptions) {
-        $accessDescriptions = array(
+        $accessDescriptions = [
                                     'list'     => _("List this page and all subpages"),
                                     'view'     => _("View this page and all subpages"),
                                     'edit'     => _("Edit this page and all subpages"),
@@ -315,7 +315,7 @@ function getAccessDescription($access)
                                     'dump'     => _("Download the page contents"),
                                     'change'   => _("Change page attributes"),
                                     'remove'   => _("Remove this page"),
-                                    );
+                                    ];
     }
     if (in_array($access, array_keys($accessDescriptions))) {
         return $accessDescriptions[$access];
@@ -358,7 +358,7 @@ class PagePermission
 {
     public $perm;
 
-    public function __construct($hash = array())
+    public function __construct($hash = [])
     {
         $this->_group = &$GLOBALS['request']->getGroup();
         if (is_array($hash) and ! empty($hash)) {
@@ -472,38 +472,38 @@ class PagePermission
     {
         //Todo: check for the existance of '.' and take this instead.
         //Todo: honor more config.ini auth settings here
-        $perm = array('view'   => array(ACL_EVERY => true),
-                      'edit'   => array(ACL_EVERY => true),
-                      'create' => array(ACL_EVERY => true),
-                      'list'   => array(ACL_EVERY => true),
-                      'remove' => array(ACL_ADMIN => true,
-                                        ACL_OWNER => true),
-                      'change' => array(ACL_ADMIN => true,
-                                        ACL_OWNER => true));
+        $perm = ['view'   => [ACL_EVERY => true],
+                      'edit'   => [ACL_EVERY => true],
+                      'create' => [ACL_EVERY => true],
+                      'list'   => [ACL_EVERY => true],
+                      'remove' => [ACL_ADMIN => true,
+                                        ACL_OWNER => true],
+                      'change' => [ACL_ADMIN => true,
+                                        ACL_OWNER => true]];
         if (ZIPDUMP_AUTH) {
-            $perm['dump'] = array(ACL_ADMIN => true,
-                                  ACL_OWNER => true);
+            $perm['dump'] = [ACL_ADMIN => true,
+                                  ACL_OWNER => true];
         } else {
-            $perm['dump'] = array(ACL_EVERY => true);
+            $perm['dump'] = [ACL_EVERY => true];
         }
         if (defined('REQUIRE_SIGNIN_BEFORE_EDIT') && REQUIRE_SIGNIN_BEFORE_EDIT) {
-            $perm['edit'] = array(ACL_SIGNED => true);
+            $perm['edit'] = [ACL_SIGNED => true];
         }
         // view:
         if (! ALLOW_ANON_USER) {
             if (! ALLOW_USER_PASSWORDS) {
-                $perm['view'] = array(ACL_SIGNED => true);
+                $perm['view'] = [ACL_SIGNED => true];
             } else {
-                $perm['view'] = array(ACL_AUTHENTICATED => true);
+                $perm['view'] = [ACL_AUTHENTICATED => true];
             }
             $perm['view'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
         }
         // edit:
         if (! ALLOW_ANON_EDIT) {
             if (! ALLOW_USER_PASSWORDS) {
-                $perm['edit'] = array(ACL_SIGNED => true);
+                $perm['edit'] = [ACL_SIGNED => true];
             } else {
-                $perm['edit'] = array(ACL_AUTHENTICATED => true);
+                $perm['edit'] = [ACL_AUTHENTICATED => true];
             }
             $perm['edit'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
             $perm['create'] = $perm['edit'];
@@ -546,9 +546,9 @@ class PagePermission
      */
     public function dotPerms()
     {
-        $def = array(ACL_ADMIN => true,
-                     ACL_OWNER => true);
-        $perm = array();
+        $def = [ACL_ADMIN => true,
+                     ACL_OWNER => true];
+        $perm = [];
         foreach (PagePermission::accessTypes() as $access) {
             $perm[$access] = $def;
         }
@@ -591,15 +591,15 @@ class PagePermission
     {
         $table = HTML::table();
         foreach ($this->perm as $access => $perms) {
-            $td = HTML::table(array('class' => 'cal','valign' => 'top'));
+            $td = HTML::table(['class' => 'cal', 'valign' => 'top']);
             foreach ($perms as $group => $bool) {
                 $td->pushContent(HTML::tr(
-                    HTML::td(array('align' => 'right'), $group),
+                    HTML::td(['align' => 'right'], $group),
                     HTML::td($bool ? '[X]' : '[ ]')
                 ));
             }
             $table->pushContent(HTML::tr(
-                array('valign' => 'top'),
+                ['valign' => 'top'],
                 HTML::td($access),
                 HTML::td($td)
             ));
@@ -624,11 +624,11 @@ class PagePermission
         $table = HTML::table();
         $table->pushContent(HTML::tr(
             HTML::th(
-                array('align' => 'left'),
+                ['align' => 'left'],
                 _("Access")
             ),
             HTML::th(
-                array('align' => 'right'),
+                ['align' => 'right'],
                 _("Group/User")
             ),
             HTML::th(_("Grant")),
@@ -649,22 +649,22 @@ class PagePermission
         foreach ($this->perm as $access => $groups) {
             //$permlist = HTML::table(array('class' => 'cal','valign' => 'top'));
             $first_only = true;
-            $newperm = HTML::input(array('type' => 'checkbox',
+            $newperm = HTML::input(['type' => 'checkbox',
                                          'name' => "acl[_new_perm][$access]",
-                                         'value' => 1));
-            $addbutton = HTML::input(array('type' => 'checkbox',
+                                         'value' => 1]);
+            $addbutton = HTML::input(['type' => 'checkbox',
                                            'name' => "acl[_add_group][$access]",
                                            //'src'  => $addsrc,
                                            //'alt'   => "Add",
                                            'title' => _("Add this ACL"),
-                                           'value' => 1));
-            $newgroup = HTML::select(array('name' => "acl[_new_group][$access]",
+                                           'value' => 1]);
+            $newgroup = HTML::select(['name' => "acl[_new_group][$access]",
                                            'style' => 'text-align: right;',
-                                           'size' => 1));
+                                           'size' => 1]);
             foreach ($allGroups as $groupname) {
                 if (! isset($groups[$groupname])) {
                     $newgroup->pushContent(HTML::option(
-                        array('value' => $groupname),
+                        ['value' => $groupname],
                         $this->groupName($groupname)
                     ));
                 }
@@ -674,7 +674,7 @@ class PagePermission
                 $newperm->setAttr('checked', 'checked');
                 $table->pushContent(
                     HTML::tr(
-                        array('valign' => 'top'),
+                        ['valign' => 'top'],
                         HTML::td(HTML::strong($access . ":")),
                         HTML::td($newgroup),
                         HTML::td($nbsp, $newperm),
@@ -684,36 +684,36 @@ class PagePermission
                 );
             }
             foreach ($groups as $group => $bool) {
-                $checkbox = HTML::input(array('type' => 'checkbox',
+                $checkbox = HTML::input(['type' => 'checkbox',
                                               'name' => "acl[$access][$group]",
                                               'title' => _("Allow / Deny"),
-                                              'value' => 1));
+                                              'value' => 1]);
                 if ($bool) {
                     $checkbox->setAttr('checked', 'checked');
                 }
                 $checkbox = HTML(
-                    HTML::input(array('type' => 'hidden',
+                    HTML::input(['type' => 'hidden',
                                                    'name' => "acl[$access][$group]",
-                                                   'value' => 0)),
+                                                   'value' => 0]),
                     $checkbox
                 );
-                $deletebutton = HTML::input(array('type' => 'checkbox',
+                $deletebutton = HTML::input(['type' => 'checkbox',
                                                   'name' => "acl[_del_group][$access][$group]",
                                                   'style' => 'background: #aaa url(' . $deletesrc . ')',
                                                   //'src'  => $deletesrc,
                                                   //'alt'   => "Del",
                                                   'title' => _("Delete this ACL"),
-                                                  'value' => 1));
+                                                  'value' => 1]);
                 if ($first_only) {
                     $table->pushContent(
                         HTML::tr(
                             HTML::td(HTML::strong($access . ":")),
                             HTML::td(
-                                array('class' => 'cal-today','align' => 'right'),
+                                ['class' => 'cal-today', 'align' => 'right'],
                                 HTML::strong($this->groupName($group))
                             ),
-                            HTML::td(array('align' => 'center'), $nbsp, $checkbox),
-                            HTML::td(array('align' => 'right','style' => 'background: #aaa url(' . $deletesrc . ') no-repeat'), $deletebutton),
+                            HTML::td(['align' => 'center'], $nbsp, $checkbox),
+                            HTML::td(['align' => 'right', 'style' => 'background: #aaa url(' . $deletesrc . ') no-repeat'], $deletebutton),
                             HTML::td(HTML::em(getAccessDescription($access)))
                         )
                     );
@@ -723,11 +723,11 @@ class PagePermission
                         HTML::tr(
                             HTML::td(),
                             HTML::td(
-                                array('class' => 'cal-today','align' => 'right'),
+                                ['class' => 'cal-today', 'align' => 'right'],
                                 HTML::strong($this->groupName($group))
                             ),
-                            HTML::td(array('align' => 'center'), $nbsp, $checkbox),
-                            HTML::td(array('align' => 'right','style' => 'background: #aaa url(' . $deletesrc . ') no-repeat'), $deletebutton),
+                            HTML::td(['align' => 'center'], $nbsp, $checkbox),
+                            HTML::td(['align' => 'right', 'style' => 'background: #aaa url(' . $deletesrc . ') no-repeat'], $deletebutton),
                             HTML::td()
                         )
                     );
@@ -736,11 +736,11 @@ class PagePermission
             if (! empty($groups)) {
                 $table->pushContent(
                     HTML::tr(
-                        array('valign' => 'top'),
-                        HTML::td(array('align' => 'right'), _("add ")),
+                        ['valign' => 'top'],
+                        HTML::td(['align' => 'right'], _("add ")),
                         HTML::td($newgroup),
-                        HTML::td(array('align' => 'center'), $nbsp, $newperm),
-                        HTML::td(array('align' => 'right','style' => 'background: #ccc url(' . $addsrc . ') no-repeat'), $addbutton),
+                        HTML::td(['align' => 'center'], $nbsp, $newperm),
+                        HTML::td(['align' => 'right', 'style' => 'background: #ccc url(' . $addsrc . ') no-repeat'], $addbutton),
                         HTML::td(HTML::small(_("Check to add this ACL")))
                     )
                 );

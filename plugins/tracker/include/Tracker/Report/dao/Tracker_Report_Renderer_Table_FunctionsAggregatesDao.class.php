@@ -37,7 +37,7 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
 
     public function create($renderer_id, $field_id, $aggregate)
     {
-        $allowed = array('SUM', 'AVG', 'STD', 'COUNT', 'COUNT_GRBY', 'MIN', 'MAX');
+        $allowed = ['SUM', 'AVG', 'STD', 'COUNT', 'COUNT_GRBY', 'MIN', 'MAX'];
         if (in_array($aggregate, $allowed)) {
             $renderer_id = $this->da->escapeInt($renderer_id);
             $field_id    = $this->da->escapeInt($field_id);

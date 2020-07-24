@@ -21,7 +21,7 @@ use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 
 class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement_View_Admin_Field_List
 {
-    protected $availableTypes = array('rb', 'msb', 'cb');
+    protected $availableTypes = ['rb', 'msb', 'cb'];
 
     public function fetchTypeForUpdate()
     {
@@ -34,7 +34,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
         if (! $wf->isWorkflowField($this->formElement)) {
             $html .= ' (' . dgettext('tuleap-tracker', 'Switch to:') . ' ';
 
-            $change_links = array();
+            $change_links = [];
 
             $labels = [
                 'msb' => dgettext('tuleap-tracker', 'Multi Select Box'),
@@ -43,12 +43,12 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                 'rb' => dgettext('tuleap-tracker', 'Radio button'),
             ];
             foreach ($this->getAvailableTypes() as $type) {
-                $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+                $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
                         'tracker'            => $this->formElement->tracker_id,
                         'func'               => 'admin-formElement-update',
                         'formElement'        => $this->formElement->id,
                         'change-type'        => $type
-                    )) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
+                    ]) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
                        . $labels[$type] . '</a> ';
             }
             $html .= implode(', ', $change_links);

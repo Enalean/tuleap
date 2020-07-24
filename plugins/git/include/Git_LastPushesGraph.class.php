@@ -37,7 +37,7 @@ class Git_LastPushesGraph
     /**
      * @var Array
      */
-    public $repoList   = array();
+    public $repoList   = [];
 
     /**
      * @var int
@@ -52,17 +52,17 @@ class Git_LastPushesGraph
     /**
      * @var Array
      */
-    protected $dates   = array();
+    protected $dates   = [];
 
     /**
      * @var Array
      */
-    protected $weekNum = array();
+    protected $weekNum = [];
 
     /**
      * @var Array
      */
-    protected $year    = array();
+    protected $year    = [];
 
     /**
      *
@@ -168,7 +168,7 @@ class Git_LastPushesGraph
         $colors   = array_slice($colors_for_charts->getChartColors(), 0, $nbRepo);
         $nbColors = count($colors);
         $i        = 0;
-        $bplot    = array();
+        $bplot    = [];
         foreach ($this->repoList as $repository) {
             $this->legend = null;
             $pushes = $this->getRepositoryPushesByWeek($repository);
@@ -195,7 +195,7 @@ class Git_LastPushesGraph
      */
     private function getRepositoryPushesByWeek(GitRepository $repository)
     {
-        $pushes    = array();
+        $pushes    = [];
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
             $rows = $gitLogDao->getRepositoryPushesByWeek($repository->getId(), $w, $this->year[$key]);

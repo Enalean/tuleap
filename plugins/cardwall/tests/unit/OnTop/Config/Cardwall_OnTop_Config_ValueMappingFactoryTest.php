@@ -59,31 +59,31 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         $this->tracker_20->shouldReceive('getId')->andReturn(20);
 
         $this->dao->shouldReceive('searchMappingFieldValues')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'tracker_id' => 10,
                 'field_id'   => 125,
                 'value_id'   => 1000,
                 'column_id'  => 1,
-            ),
-            array(
+            ],
+            [
                 'tracker_id' => 20,
                 'field_id'   => 124,
                 'value_id'   => 1001,
                 'column_id'  => 1,
-            ),
-            array(
+            ],
+            [
                 'tracker_id' => 20,
                 'field_id'   => 124,
                 'value_id'   => 1002,
                 'column_id'  => 2,
-            )
+            ]
         ));
 
-        $this->status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')->andReturns(array(
+        $this->status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')->andReturns([
             new Tracker_FormElement_Field_List_Bind_StaticValue(1001, 'Todo', '', 0, 0),
             new Tracker_FormElement_Field_List_Bind_StaticValue(1002, 'On Going', '', 0, 0),
             new Tracker_FormElement_Field_List_Bind_StaticValue(1003, 'Done', '', 0, 0),
-        ));
+        ]);
     }
 
     public function testItLoadsMappingsFromTheDatabase(): void
@@ -96,11 +96,11 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
     public function testItLoadStatusValues(): void
     {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
-            array(
+            [
                 new Cardwall_Column(1, 'Todo', 'white'),
                 new Cardwall_Column(2, 'In Progress', 'white'),
                 new Cardwall_Column(3, 'Done', 'white'),
-            )
+            ]
         );
 
         $mappings = $this->factory->getStatusMappings($this->tracker_10, $columns);
@@ -128,19 +128,19 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         $tracker_20   = Mockery::mock(Tracker::class);
         $tracker_20->shouldReceive('getId')->andReturn(20);
 
-        $dao->shouldReceive('searchMappingFieldValues')->with($tracker->getId())->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchMappingFieldValues')->with($tracker->getId())->andReturns(\TestHelper::arrayToDar([
             'tracker_id' => 10,
             'field_id'   => 125,
             'value_id'   => 1000,
             'column_id'  => 1,
-        ), array(
+        ], [
             'tracker_id' => 20,
             'field_id'   => 124,
             'value_id'   => 1001,
             'column_id'  => 1,
-        )));
+        ]));
 
         $mappings = $factory->getMappings($tracker, $tracker_20, $field_124);
-        $this->assertEquals(array(), $mappings);
+        $this->assertEquals([], $mappings);
     }
 }

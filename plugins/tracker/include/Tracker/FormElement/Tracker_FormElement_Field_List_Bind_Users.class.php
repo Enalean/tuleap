@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     /** @var UserManager */
     protected $userManager;
-    protected $value_function = array();
+    protected $value_function = [];
     protected $values;
 
 
@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getChangesetValues($changeset_id)
     {
         $uh = UserHelper::instance();
-        $values = array();
+        $values = [];
         foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
             $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
         }
@@ -183,7 +183,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getRESTAvailableValues()
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($this->value_function as $ugroup) {
             if ($ugroup != self::REGISTERED_USERS_UGROUP_NAME && $ugroup != '') {
@@ -191,7 +191,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         }
 
-        $rest_values = array();
+        $rest_values = [];
         if (! empty($ugroups)) {
             foreach ($this->getAllValuesByUGroupList($ugroups) as $value) {
                 $rest_values[] = $this->getRESTBindValue($value);
@@ -207,27 +207,27 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     protected function getRESTBindingList()
     {
-        $ugroups = array();
+        $ugroups = [];
         foreach ($this->value_function as $ugroup) {
             if ($ugroup) {
                 switch ($ugroup) {
                     case 'group_members':
-                        $ugroups[] = array(
+                        $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
                             self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
-                        );
+                        ];
                         break;
                     case 'group_admins':
-                        $ugroups[] = array(
+                        $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
                             self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
-                        );
+                        ];
                         break;
                     case 'artifact_submitters':
-                        $ugroups[] = array(
+                        $ugroups[] = [
                             self::REST_BINDING_LIST_ID    => 0,
                             self::REST_BINDING_LIST_LABEL => $ugroup
-                        );
+                        ];
                         break;
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
@@ -235,10 +235,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             if ($ugroup_data) {
                                 $user_group = new ProjectUGroup($ugroup_data);
 
-                                $ugroups[] = array(
+                                $ugroups[] = [
                                     self::REST_BINDING_LIST_ID    => $matches[1],
                                     self::REST_BINDING_LIST_LABEL => $user_group->getNormalizedName(),
-                                );
+                                ];
                             }
                         }
                         break;
@@ -327,7 +327,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @var array of additionnal values (typically users that are not active or removed from the value_function)
      */
-    protected $additionnal_values = array();
+    protected $additionnal_values = [];
 
     /**
      * Return the addtionnal value
@@ -370,14 +370,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getBindtableSqlFragment()
     {
-        return array(
+        return [
             'select'     => "user.user_name,
                              user.realname,
                              CONCAT(user.realname,' (',user.user_name,')') AS full_name", //TODO: use UserHelper to respect user preferences
             'select_nb'  => 3,
             'from'       => 'user',
             'join_on_id' => 'user.user_id',
-        );
+        ];
     }
 
     /**
@@ -392,7 +392,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $return = array();
+            $return = [];
             $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getUsername(), $submitted_values)) {
@@ -501,34 +501,34 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $R1  = 'R1_' . $this->field->id;
         $R2  = 'R2_' . $this->field->id;
-        $same     = array();
-        $separate = array();
+        $same     = [];
+        $separate = [];
         foreach ($functions as $f) {
             if (in_array($f, $this->field->getAggregateFunctions())) {
                 if (substr($f, -5) === '_GRBY') {
-                    $separate[] = array(
+                    $separate[] = [
                         'function' => $f,
                         'select'   => "$R2.user_name AS label, count(*) AS value",
                         'group_by' => "$R2.user_name",
-                    );
+                    ];
                 } else {
                     $select = "$f($R2.user_name) AS `" . $this->field->name . "_$f`";
                     if ($this->field->isMultiple()) {
-                        $separate[] = array(
+                        $separate[] = [
                             'function' => $f,
                             'select'   => $select,
                             'group_by' => null,
-                        );
+                        ];
                     } else {
                         $same[] = $select;
                     }
                 }
             }
         }
-        return array(
+        return [
             'same_query'       => implode(', ', $same),
             'separate_queries' => $separate,
-        );
+        ];
     }
 
     /**
@@ -549,7 +549,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function fetchRawValueFromChangeset($changeset)
     {
         $value = '';
-        $values_array = array();
+        $values_array = [];
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
             foreach ($values as $val) {
@@ -586,7 +586,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public static function fetchAdminCreateForm($field)
     {
-        return self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, array());
+        return self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, []);
     }
 
     /**
@@ -793,7 +793,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     private function extractBindValuesByIds(array $values, array $bindvalue_ids)
     {
-        $list_of_bindvalues = array();
+        $list_of_bindvalues = [];
         foreach ($bindvalue_ids as $i) {
             if (isset($values[$i])) {
                 $list_of_bindvalues[$i] = $values[$i];
@@ -831,7 +831,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value)
     {
-        $recipients = array();
+        $recipients = [];
         foreach ($changeset_value->getListValues() as $user_value) {
             if ($user_value->getId() != 100) {
                 $recipients[] = $user_value->getUsername();
@@ -881,7 +881,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
     {
         // returns an empty array as it doesn't make sense with Users
-        return array();
+        return [];
     }
 
     public function getType()
@@ -905,7 +905,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $bind_values = $this->getBindValuesForIds(array_keys($this->getDefaultValues()));
 
-        $rest_array = array();
+        $rest_array = [];
         foreach ($bind_values as $value) {
             $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser());
             $rest_array[] = $representation;

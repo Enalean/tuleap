@@ -32,7 +32,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
     {
         $view = \Mockery::spy(\GitViews::class);
         $user = \Mockery::spy(\PFUser::class);
-        $repositories = array();
+        $repositories = [];
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($view);
         $this->assertSame('', $strategy->fetch($repositories, $user));
     }
@@ -116,9 +116,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
          * `-- lxc
          *
          */
-        return array(
+        return [
             2 =>
-                array (
+                 [
                     'repository_id' => '2',
                     'repository_name' => 'abc',
                     'repository_namespace' => '',
@@ -133,9 +133,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             3 =>
-                array (
+                 [
                     'repository_id' => '3',
                     'repository_name' => 'Python',
                     'repository_namespace' => 'automaticTests',
@@ -150,9 +150,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             4 =>
-                array (
+                 [
                     'repository_id' => '4',
                     'repository_name' => 'Ruby',
                     'repository_namespace' => 'automaticTests',
@@ -167,9 +167,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             5 =>
-                array (
+                 [
                     'repository_id' => '5',
                     'repository_name' => 'cvsgraph',
                     'repository_namespace' => 'deps/3rdparty',
@@ -184,9 +184,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             6 =>
-                array (
+                 [
                     'repository_id' => '6',
                     'repository_name' => 'geshi',
                     'repository_namespace' => 'deps/3rdparty',
@@ -201,9 +201,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             7 =>
-                array (
+                 [
                     'repository_id' => '7',
                     'repository_name' => 'gitolite',
                     'repository_namespace' => 'deps/3rdparty',
@@ -218,9 +218,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             8 =>
-                array (
+                 [
                     'repository_id' => '8',
                     'repository_name' => 'lxc/tools',
                     'repository_namespace' => '',
@@ -235,9 +235,9 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitolite',
-                ),
+                ],
             9 =>
-                array (
+                 [
                     'repository_id' => '9',
                     'repository_name' => 'gitshell',
                     'repository_namespace' => '',
@@ -252,7 +252,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
                     'repository_access' => 'private',
                     'repository_events_mailing_prefix' => '[SCM]',
                     'repository_backend_type' => 'gitshell',
-                ),
-        );
+                ],
+        ];
     }
 }

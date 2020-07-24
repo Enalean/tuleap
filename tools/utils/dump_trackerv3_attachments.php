@@ -66,9 +66,9 @@ EOT;
 
 function get_all_attachment_ids()
 {
-    $attachments = array();
+    $attachments = [];
 
-    $file_ids = array();
+    $file_ids = [];
     $res = db_query('
         SELECT id, artifact_id
         FROM artifact_file

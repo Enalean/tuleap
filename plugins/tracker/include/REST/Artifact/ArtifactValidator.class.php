@@ -36,7 +36,7 @@ class Tracker_REST_Artifact_ArtifactValidator
      */
     public function getFieldsDataOnCreate(array $values, Tracker $tracker)
     {
-        $new_values     = array();
+        $new_values     = [];
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
             $array_representation = $value->toArray();
@@ -49,7 +49,7 @@ class Tracker_REST_Artifact_ArtifactValidator
 
     public function getFieldsDataOnCreateFromValuesByField(array $values, Tracker $tracker)
     {
-        $new_values = array();
+        $new_values = [];
         foreach ($values as $field_name => $value) {
             $field = $this->getFieldByName($tracker, $field_name);
 
@@ -74,7 +74,7 @@ class Tracker_REST_Artifact_ArtifactValidator
      */
     public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact)
     {
-        $new_values     = array();
+        $new_values     = [];
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
             $array_representation = $value->toArray();
@@ -104,7 +104,7 @@ class Tracker_REST_Artifact_ArtifactValidator
 
     private function getIndexedFields(Tracker $tracker)
     {
-        $indexed_fields = array();
+        $indexed_fields = [];
         foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
             $indexed_fields[$field->getId()] = $field;
         }

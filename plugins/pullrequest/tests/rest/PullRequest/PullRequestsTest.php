@@ -54,7 +54,7 @@ class PullRequestsTest extends RestBase
     {
         $response = $this->getResponse($this->client->options('pull_requests/'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithReadOnlyAdmin()
@@ -64,7 +64,7 @@ class PullRequestsTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetPullRequestThrows403IfUserCantSeeGitRepository()
@@ -97,9 +97,9 @@ class PullRequestsTest extends RestBase
 
     public function testPATCHPullRequestThrow400IfStatusIsUnknown()
     {
-        $data = json_encode(array(
+        $data = json_encode([
             'status' => 'whatever'
-        ));
+        ]);
 
         $response = $this->getResponse($this->client->patch(
             'pull_requests/1',

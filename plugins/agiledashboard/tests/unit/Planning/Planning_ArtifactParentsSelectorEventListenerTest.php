@@ -158,20 +158,20 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
         $label            = '';
         $possible_parents = '';
         $display_selector = true;
-        $params           = array(
+        $params           = [
             'user'             => $this->user,
             'parent_tracker'   => $this->epic_tracker,
             'label'            => &$label,
             'possible_parents' => &$possible_parents,
             'display_selector' => &$display_selector,
-        );
+        ];
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->sprint_id);
 
         $this->event_listener->process($params);
 
         $this->assertEquals('Available epic_tracker', $label);
-        $this->assertEquals(array($this->epic, $this->epic2), $possible_parents);
+        $this->assertEquals([$this->epic, $this->epic2], $possible_parents);
         $this->assertTrue($display_selector);
     }
 
@@ -180,13 +180,13 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
         $label            = 'untouched';
         $possible_parents = 'untouched';
         $display_selector = 'untouched';
-        $params           = array(
+        $params           = [
             'user'             => $this->user,
             'parent_tracker'   => $this->epic_tracker,
             'label'            => &$label,
             'possible_parents' => &$possible_parents,
             'display_selector' => &$display_selector,
-        );
+        ];
         $this->request->shouldReceive('get')->andReturns(false);
 
         $this->event_listener->process($params);
@@ -201,19 +201,19 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
         $label            = '';
         $possible_parents = '';
         $display_selector = true;
-        $params           = array(
+        $params           = [
             'user'             => $this->user,
             'parent_tracker'   => $this->epic_tracker,
             'label'            => &$label,
             'possible_parents' => &$possible_parents,
             'display_selector' => &$display_selector,
-        );
+        ];
         $this->request->shouldReceive('get')->with('func')->andReturns('new-artifact');
         $this->request->shouldReceive('get')->with('child_milestone')->andReturns($this->epic2_id);
 
         $this->event_listener->process($params);
 
-        $this->assertEquals(array($this->epic2), $possible_parents);
+        $this->assertEquals([$this->epic2], $possible_parents);
         $this->assertFalse($display_selector);
     }
 }

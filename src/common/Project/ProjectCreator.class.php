@@ -404,16 +404,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $template_group = $data->getBuiltFromTemplateProject()->getProject();
 
-        $legacy = array(
+        $legacy = [
             Service::SVN       => true,
             Service::TRACKERV3 => true
-        );
+        ];
 
-        $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, array(
+        $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, [
             'template'              => $template_group,
             'project_creation_data' => &$data,
             'use_legacy_services'   => &$legacy
-        ));
+        ]);
 
         $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
         $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
@@ -429,7 +429,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
         //Copy ugroups
-        $ugroup_mapping = array();
+        $ugroup_mapping = [];
         $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
         $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
@@ -438,8 +438,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             [$tracker_mapping, $report_mapping] =
                 $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
         } else {
-            $tracker_mapping = array();
-            $report_mapping  = array();
+            $tracker_mapping = [];
+            $report_mapping  = [];
         }
         $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
@@ -453,7 +453,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
         // Raise an event for plugin configuration
-        $this->event_manager->processEvent(Event::REGISTER_PROJECT_CREATION, array(
+        $this->event_manager->processEvent(Event::REGISTER_PROJECT_CREATION, [
             'reportMapping'         => $report_mapping, // Trackers v3
             'trackerMapping'        => $tracker_mapping, // Trackers v3
             'ugroupsMapping'        => $ugroup_mapping,
@@ -462,7 +462,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'project_creation_data' => $data,
             'legacy_service_usage'  => $legacy,
             'project_administrator' => $admin_user,
-        ));
+        ]);
 
         if ($data->projectShouldInheritFromTemplate()) {
             $this->initLayoutFromTemplate($group, $template_group);
@@ -497,7 +497,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         // make group entry
-        $insert_data = array(
+        $insert_data = [
             'group_name'          => "'" . db_es($data->getFullName()) . "'",
             'access'              => "'" . $access . "'",
             'unix_group_name'     => "'" . db_es($data->getUnixName()) . "'",
@@ -510,12 +510,12 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
             'type'                => db_ei($type)
-        );
+        ];
         $sql = 'INSERT INTO groups(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
         $result = db_query($sql);
 
         if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
             return false;
         } else {
             $group_id = db_insertid($result);
@@ -545,7 +545,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this->project_manager->getProject($group_id)->getUnixName() . "')");
         if (! $result) {
             [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', [$host, db_error()]));
         }
     }
 
@@ -569,7 +569,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             . "2," // svn_flags
             . "2)"); // news_flags
         if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
         }
 
         // clear the user data to take into account this new group.
@@ -727,8 +727,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
     {
         $group_id = $group->getID();
-        $tracker_mapping = array();
-        $report_mapping  = array();
+        $tracker_mapping = [];
+        $report_mapping  = [];
         if (TrackerV3::instance()->available()) {
             $atf = new ArtifactTypeFactory($template_group);
             //$tracker_error = "";
@@ -736,7 +736,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $res = $atf->getTrackerTemplatesForNewProjects();
             while ($arr_template = db_fetch_array($res)) {
                 $ath_temp = new ArtifactType($template_group, $arr_template['group_artifact_id']);
-                $report_mapping_for_this_tracker = array();
+                $report_mapping_for_this_tracker = [];
                 $new_at_id = $atf->create($group_id, $template_group->getID(), $ath_temp->getID(), db_escape_string($ath_temp->getName()), db_escape_string($ath_temp->getDescription()), $ath_temp->getItemName(), $ugroup_mapping, $report_mapping_for_this_tracker);
                 if (! $new_at_id) {
                     $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
@@ -768,7 +768,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 }
             }
         }
-        return array($tracker_mapping, $report_mapping);
+        return [$tracker_mapping, $report_mapping];
     }
 
     /**

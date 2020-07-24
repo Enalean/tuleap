@@ -96,7 +96,7 @@ class Git_MirrorResourceRestrictor
     public function searchAllowedProjectsOnMirror(Git_Mirror_Mirror $mirror)
     {
         $rows     = $this->restricted_mirror_dao->searchAllowedProjectsOnResource($mirror->id);
-        $projects = array();
+        $projects = [];
 
         foreach ($rows as $row) {
             $projects[] = new Project($row);

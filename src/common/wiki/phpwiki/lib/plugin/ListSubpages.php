@@ -53,13 +53,13 @@ class WikiPlugin_ListSubpages extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('noheader' => false, // no header
+            ['noheader' => false, // no header
                      'basepage' => false, // subpages of which page, default: current
                      'maxpages' => '',    // maximum number of pages to include, change that to limit
                      //'exclude'  => '',
                      /*'relative' => false, */
                      'info'     => ''
-            )
+            ]
         );
     }
     // info arg allows multiple columns
@@ -107,7 +107,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
 
         foreach ($subpages as $page) {
             // A page cannot include itself. Avoid doublettes.
-            static $included_pages = array();
+            static $included_pages = [];
             if (in_array($page, $included_pages)) {
                 $content->pushContent(HTML::p(sprintf(
                     _("recursive inclusion of page %s ignored"),

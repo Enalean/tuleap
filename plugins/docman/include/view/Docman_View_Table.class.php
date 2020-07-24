@@ -47,12 +47,12 @@ class Docman_View_Table extends Docman_View_Browse
         $itemIterator = $itemFactory->getItemList(
             $params['item']->getId(),
             $nbItemsFound,
-            array('user' => $params['user'],
+            ['user' => $params['user'],
                                                     'ignore_collapse' => true,
                                                     'ignore_obsolete' => true,
                                                     'filter' => $params['filter'],
                                                     'start' => $_low_limit,
-            'offset' => $offset)
+            'offset' => $offset]
         );
 
         // Default URL
@@ -93,7 +93,7 @@ class Docman_View_Table extends Docman_View_Browse
 
         // Prepare Navigation Bar
         if ($_low_limit > 0) {
-            $firstUrl    = $this->_buildSearchUrl($params, array('start' => '0'));
+            $firstUrl    = $this->_buildSearchUrl($params, ['start' => '0']);
             $first       = '<a href="' . $firstUrl . '">&lt;&lt; ' . dgettext('tuleap-docman', 'Begin') . '</a>';
         } else {
             $first       = '&lt;&lt; ' . dgettext('tuleap-docman', 'Begin');
@@ -104,14 +104,14 @@ class Docman_View_Table extends Docman_View_Browse
             if ($previousOffset < 0) {
                 $previousOffset = 0;
             }
-            $previousUrl = $this->_buildSearchUrl($params, array('start' => $previousOffset));
+            $previousUrl = $this->_buildSearchUrl($params, ['start' => $previousOffset]);
             $previous    = '<a href="' . $previousUrl . '">&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset) . '&gt;</a>';
         } else {
             $previous    = '&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset);
         }
 
         if ($_high_limit < $nbItemsFound) {
-            $nextUrl     = $this->_buildSearchUrl($params, array('start' => $_high_limit));
+            $nextUrl     = $this->_buildSearchUrl($params, ['start' => $_high_limit]);
             $next        = '<a href="' . $nextUrl . '">' . sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;</a>';
         } else {
             $next        = sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;';
@@ -119,7 +119,7 @@ class Docman_View_Table extends Docman_View_Browse
 
         if ($_high_limit < $nbItemsFound) {
             $lastOffset  = $nbItemsFound - $offset;
-            $lastUrl     = $this->_buildSearchUrl($params, array('start' => $lastOffset));
+            $lastUrl     = $this->_buildSearchUrl($params, ['start' => $lastOffset]);
             $last        = '<a href="' . $lastUrl . '">' . dgettext('tuleap-docman', 'End') . ' &gt;&gt;</a>';
         } else {
             $last        = dgettext('tuleap-docman', 'End') . ' &gt;&gt;';

@@ -310,7 +310,7 @@ class Git_SystemEventManager
 
     public function getTypes()
     {
-        return array(
+        return [
             SystemEvent_GIT_REPO_UPDATE::NAME,
             SystemEvent_GIT_REPO_DELETE::NAME,
             SystemEvent_GIT_REPO_FORK::NAME,
@@ -328,17 +328,17 @@ class Git_SystemEventManager
             SystemEvent_GIT_DELETE_MIRROR::NAME,
             SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
             ProjectIsSuspended::NAME
-        );
+        ];
     }
 
     public function getGrokMirrorTypes()
     {
-        return array(
+        return [
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
-        );
+        ];
     }
 
     /**
@@ -353,17 +353,17 @@ class Git_SystemEventManager
      */
     public function getTypesForDefaultQueue(): array
     {
-        $types = array(
+        $types = [
             ParseGitolite3Logs::NAME,
-        );
+        ];
 
         if ($this->repository_factory->hasGitShellRepositories()) {
             return array_merge(
                 $types,
-                array(
+                [
                     SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
                     SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
-                )
+                ]
             );
         }
 

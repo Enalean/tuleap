@@ -56,7 +56,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array());
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
         $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
@@ -72,7 +72,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $item = \Mockery::spy(\Docman_Item::class);
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -97,7 +97,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $item2 = \Mockery::spy(\Docman_Folder::class);
         $item2->shouldReceive('getTitle')->andReturns('SameName');
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item1, $item2));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -126,7 +126,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $item2 = \Mockery::spy(\Docman_Folder::class);
         $item2->shouldReceive('getTitle')->andReturns('AnotherName');
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item1, $item2));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -149,7 +149,7 @@ class WebDAVDocmanFolderTest extends TestCase
     {
         $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns(array());
+        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns([]);
 
         $this->assertSame([], $webDAVDocmanFolder->getChildren());
     }
@@ -161,7 +161,7 @@ class WebDAVDocmanFolderTest extends TestCase
     {
         $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns(array('SomeName' => 'duplicate'));
+        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns(['SomeName' => 'duplicate']);
 
         $this->assertSame([], $webDAVDocmanFolder->getChildren());
     }
@@ -179,7 +179,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $item2 = \Mockery::spy(\Docman_Folder::class);
         $item2->shouldReceive('getTitle')->andReturns('AnotherName');
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item1, $item2));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -207,7 +207,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array());
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
         $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
@@ -227,7 +227,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $item2 = \Mockery::spy(\Docman_Folder::class);
         $item2->shouldReceive('getTitle')->andReturns('SameName');
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item1, $item2));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -255,7 +255,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $item2 = \Mockery::spy(\Docman_Folder::class);
         $item2->shouldReceive('getTitle')->andReturns('samename');
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item1, $item2));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -285,7 +285,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $folder->shouldReceive('getItem')->andReturns($item);
 
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns(array($item));
+        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);

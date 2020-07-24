@@ -34,7 +34,7 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
     /**
      * @var Tracker_ArtifactLinkInfo[]
      */
-    private $removed = array();
+    private $removed = [];
 
     public function __construct(CollectionOfLinksFormatter $formatter)
     {

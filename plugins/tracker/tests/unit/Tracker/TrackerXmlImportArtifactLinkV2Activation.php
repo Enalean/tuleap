@@ -53,7 +53,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->external_validator          = \Mockery::mock(ExternalFieldsExtractor::class);
 
         $form_element_factory = new class extends Tracker_FormElementFactory {
-            private $mapping = array();
+            private $mapping = [];
 
             public function __construct()
             {

@@ -69,49 +69,49 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPublicTest ext
     {
         $this->expectPermissionsOnce(ProjectUGroup::ANONYMOUS);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
     public function testItSavesRegisteredWhenSelectedAuthenticated(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
     public function testItSavesRegisteredWhenSelectedRegistered(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED));
+        $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
     public function testItSavesProjectMembersWhenSelectedProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS]);
     }
 
     public function testItSavesOnlyAnonymousWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::ANONYMOUS);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup(): void
@@ -125,7 +125,7 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPublicTest ext
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup(): void
@@ -139,7 +139,7 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPublicTest ext
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesSVNAdminWikiAdminAndStatic(): void
@@ -157,13 +157,13 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPublicTest ext
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
     }
 
     public function testItSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS]);
     }
 }

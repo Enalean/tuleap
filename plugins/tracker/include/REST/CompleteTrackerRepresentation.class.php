@@ -71,17 +71,17 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     /**
      * @var array {@type Tracker_REST_FieldRepresentation}
      */
-    public $fields = array();
+    public $fields = [];
 
     /**
      * @var array {@type Tuleap\Tracker\REST\StructureElementRepresentation
      */
-    public $structure = array();
+    public $structure = [];
 
     /**
      * @var array {@type Tuleap\Tracker\REST\SemanticRepresentation}
      */
-    public $semantics = array();
+    public $semantics = [];
 
     /**
      * @var WorkflowRepresentation | null
@@ -132,12 +132,12 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->structure   = $structure;
         $this->semantics   = $semantics;
         $this->workflow    = $workflow;
-        $this->resources   = array(
-            array(
+        $this->resources   = [
+            [
                 'type' => 'reports',
                 'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE
-            )
-        );
+            ]
+        ];
         $this->color_name  = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;
 

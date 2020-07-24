@@ -151,7 +151,7 @@ if (! defined('TIMEOFFSET_DEFAULT_HOURS')) {
 
 // The last object in the row is the bad guy...
 if (! is_array($GLOBALS['USER_AUTH_ORDER'])) {
-    $GLOBALS['USER_AUTH_ORDER'] = array("Forbidden");
+    $GLOBALS['USER_AUTH_ORDER'] = ["Forbidden"];
 } else {
     $GLOBALS['USER_AUTH_ORDER'][] = "Forbidden";
 }
@@ -612,8 +612,8 @@ class _WikiUser
     public function AuthCheck($postargs)
     {
         // Normalize args, and extract.
-        $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
-                      'cancel');
+        $keys = ['userid', 'passwd', 'require_level', 'login', 'logout',
+                      'cancel'];
         foreach ($keys as $key) {
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
@@ -728,7 +728,7 @@ class _AnonUser extends _WikiUser
         $packed = $prefs->store();
         $unpacked = $prefs->unpack($packed);
         if (count($unpacked)) {
-            foreach (array('_method','_select','_update','_insert') as $param) {
+            foreach (['_method', '_select', '_update', '_insert'] as $param) {
                 if (! empty($this->_prefs->{$param})) {
                     $prefs->{$param} = $this->_prefs->{$param};
                 }
@@ -861,7 +861,7 @@ class _PassUser extends _AnonUser
             if (! isset($this->_prefs->_update) and $dbh->getAuthParam('pref_update')) {
                 $this->_prefs->_update = $this->prepare(
                     $dbh->getAuthParam('pref_update'),
-                    array("userid", "pref_blob")
+                    ["userid", "pref_blob"]
                 );
             }
         } else {
@@ -980,10 +980,10 @@ class _PassUser extends _AnonUser
 
     public function _normalize_stmt_var($var, $oldstyle = false)
     {
-        static $valid_variables = array('userid','password','pref_blob','groupname');
+        static $valid_variables = ['userid', 'password', 'pref_blob', 'groupname'];
         // old-style: "'$userid'"
         // new-style: '"\$userid"' or just "userid"
-        $new = str_replace(array("'",'"','\$','$'), '', $var);
+        $new = str_replace(["'", '"', '\$', '$'], '', $var);
         if (! in_array($new, $valid_variables)) {
             trigger_error("Unknown DBAuthParam statement variable: " . $new, E_USER_ERROR);
             return false;
@@ -1000,7 +1000,7 @@ class _PassUser extends _AnonUser
         // "'\$userid"' => %s
         // variables can be old-style: '"\$userid"' or new-style: "'$userid'" or just "userid"
         // old-style strings don't survive pear/Config/IniConfig treatment, that's why we changed it.
-        $new = array();
+        $new = [];
         if (is_array($variables)) {
             for ($i = 0; $i < count($variables); $i++) {
                 $var = $this->_normalize_stmt_var($variables[$i], $oldstyle);
@@ -1043,10 +1043,10 @@ class _PassUser extends _AnonUser
             if (! stristr($stmt, $prefix)) {
                 $oldstmt = $stmt;
                 $stmt = str_replace(
-                    array(" user "," pref "," member "),
-                    array(" " . $prefix . "user ",
+                    [" user ", " pref ", " member "],
+                    [" " . $prefix . "user ",
                                           " " . $prefix . "pref ",
-                    " " . $prefix . "member "),
+                    " " . $prefix . "member "],
                     $stmt
                 );
                 //Do it automatically for the lazy admin? Esp. on sf.net it's nice to have
@@ -1486,7 +1486,7 @@ class _UserPreference_language extends _UserPreference
     {
         if (! $this->_init) {
             // invalidate etag to force fresh output
-            $GLOBALS['request']->setValidators(array('%mtime' => false));
+            $GLOBALS['request']->setValidators(['%mtime' => false]);
             update_locale($newvalue ? $newvalue : $GLOBALS['LANG']);
         }
     }
@@ -1512,7 +1512,7 @@ class _UserPreference_theme extends _UserPreference
         global $WikiTheme;
         // invalidate etag to force fresh output
         if (! $this->_init) {
-            $GLOBALS['request']->setValidators(array('%mtime' => false));
+            $GLOBALS['request']->setValidators(['%mtime' => false]);
         }
         if ($newvalue) {
             include_once($this->_themefile($newvalue));
@@ -1554,7 +1554,7 @@ class _UserPreference_notify extends _UserPreference
         $dbh = $GLOBALS['request']->getDbh();
         $notify = $dbh->get('notify');
         if (empty($notify)) {
-            $data = array();
+            $data = [];
         } else {
             $data = $notify;
         }
@@ -1585,16 +1585,16 @@ class _UserPreference_notify extends _UserPreference
         if (! empty($pages)) {
             foreach ($pages as $page) {
                 if (! isset($data[$page])) {
-                    $data[$page] = array();
+                    $data[$page] = [];
                 }
                 if (! isset($data[$page][$userid])) {
                     // should we really store the verification notice here or
                     // check it dynamically at every page->save?
                     if ($verified) {
-                        $data[$page][$userid] = array('email' => $email,
-                                                      'verified' => $verified);
+                        $data[$page][$userid] = ['email' => $email,
+                                                      'verified' => $verified];
                     } else {
-                        $data[$page][$userid] = array('email' => $email);
+                        $data[$page][$userid] = ['email' => $email];
                     }
                 }
             }
@@ -1676,10 +1676,10 @@ function ValidateMail($email, $noconnect = false)
 
     // if this check is too strict (like invalid mail addresses in a local network only)
     // uncomment the following line:
-    return array(true,"not validated");
+    return [true, "not validated"];
     // see http://sourceforge.net/tracker/index.php?func=detail&aid=1053681&group_id=6121&atid=106121
 
-    $result = array();
+    $result = [];
 
     // This is Paul Warren's (pdw@ex-parrot.com) monster regex for RFC822
     // addresses, from the Perl module Mail::RFC822::Address, reduced to
@@ -1717,7 +1717,7 @@ function ValidateMail($email, $noconnect = false)
         return $result;
     }
     if ($noconnect) {
-        return array(true,sprintf(_("E-Mail address '%s' is properly formatted"), $email));
+        return [true, sprintf(_("E-Mail address '%s' is properly formatted"), $email)];
     }
 
     list ( $Username, $Domain ) = preg_split("/@/D", $email);
@@ -1786,7 +1786,7 @@ class UserPreferences
         // userid is needed for pref reflexion. current pref must know its username,
         // if some app needs prefs from different users, different from current user.
         $this->_prefs
-            = array(
+            = [
                     'userid'        => new _UserPreference(''),
                     'passwd'        => new _UserPreference(''),
                     'autologin'     => new _UserPreference_bool(),
@@ -1815,7 +1815,7 @@ class UserPreferences
                     'relativeDates' => new _UserPreference_bool(),
                     'googleLink'    => new _UserPreference_bool(), // 1.3.10
                     'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
-                    );
+                    ];
         // add custom theme-specific pref types:
         // FIXME: on theme changes the wiki_user session pref object will fail.
         // We will silently ignore this.
@@ -2016,7 +2016,7 @@ class UserPreferences
         if (! is_array($packed)) {
             return false;
         }
-        $prefs = array();
+        $prefs = [];
         foreach ($packed as $name => $packed_pref) {
             if (is_string($packed_pref) and substr($packed_pref, 0, 2) == "O:") {
                 //legacy: check if it's an old array of objects
@@ -2064,7 +2064,7 @@ class UserPreferences
 
     public function defaultPreferences()
     {
-        $prefs = array();
+        $prefs = [];
         foreach ($this->_prefs as $key => $obj) {
             $prefs[$key] = $obj->default_value;
         }

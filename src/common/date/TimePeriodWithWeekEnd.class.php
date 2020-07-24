@@ -74,7 +74,7 @@ class TimePeriodWithWeekEnd implements TimePeriod
     public function getDayOffsets()
     {
         if ($this->duration < 0) {
-            return array(0);
+            return [0];
         } else {
             return range(0, $this->duration);
         }

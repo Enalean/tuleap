@@ -32,11 +32,11 @@ class BuildParams
 
     public function getAdditionalSvnParameters(Repository $repository, CommitInfo $commit_info)
     {
-        return array(
+        return [
             self::BUILD_PARAMETER_PROJECT    => $repository->getProject()->getUnixName(),
             self::BUILD_PARAMETER_USER       => $commit_info->getUser(),
             self::BUILD_PARAMETER_REPOSITORY => $repository->getName(),
             self::BUILD_PARAMETER_PATH       => implode("\n", $commit_info->getChangedDirectories())
-        );
+        ];
     }
 }

@@ -23,7 +23,7 @@ class IconPlot
     private $iHorAnchor = 'left';
     private $iVertAnchor = 'top';
     private $iFile = '';
-    private $iAnchors = array('left','right','top','bottom','center');
+    private $iAnchors = ['left', 'right', 'top', 'bottom', 'center'];
     private $iCountryFlag = '';
     private $iCountryStdSize = 3;
     private $iScalePosY = null;
@@ -110,7 +110,7 @@ class IconPlot
 
     public function Max()
     {
-        return array(false,false);
+        return [false, false];
     }
 
 
@@ -137,7 +137,7 @@ class IconPlot
 
     public function Min()
     {
-        return array(false,false);
+        return [false, false];
     }
 
     public function StrokeMargin(&$aImg)
@@ -194,7 +194,7 @@ class IconPlot
         $iconh = imagesy($gdimg);
 
         if ($aReturnWidthHeight) {
-            return array(round($iconw * $this->iScale),round($iconh * $this->iScale));
+            return [round($iconw * $this->iScale), round($iconh * $this->iScale)];
         }
 
         if ($x !== null && $y !== null) {

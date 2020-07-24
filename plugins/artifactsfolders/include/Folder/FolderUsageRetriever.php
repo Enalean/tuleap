@@ -55,7 +55,7 @@ class FolderUsageRetriever
      */
     private function getProjectTrackerIds(array $project_tracker)
     {
-        $project_tracker_ids = array();
+        $project_tracker_ids = [];
         foreach ($project_tracker as $tracker) {
             $project_tracker_ids[] = $tracker->getId();
         }

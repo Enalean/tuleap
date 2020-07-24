@@ -24,15 +24,15 @@ use PHPUnit\Framework\TestCase;
 class ColorHelperTest extends TestCase
 {
 
-    private $colorSet = array(
-        '#FFFFFF' => array(255, 255, 255),
-        '#000000' => array(0, 0, 0),
-        '#FF0000' => array(255, 0, 0),
-        '#00FF00' => array(0, 255, 0),
-        '#0000FF' => array(0, 0, 255),
-        '#38CDAF' => array(56, 205, 175),
-        '#E025DC' => array(224, 37, 220)
-    );
+    private $colorSet = [
+        '#FFFFFF' => [255, 255, 255],
+        '#000000' => [0, 0, 0],
+        '#FF0000' => [255, 0, 0],
+        '#00FF00' => [0, 255, 0],
+        '#0000FF' => [0, 0, 255],
+        '#38CDAF' => [56, 205, 175],
+        '#E025DC' => [224, 37, 220]
+    ];
 
     public function testRGBToHexa(): void
     {
@@ -44,7 +44,7 @@ class ColorHelperTest extends TestCase
     public function testHexaToRGB(): void
     {
         foreach ($this->colorSet as $hexa => $rgb) {
-            $this->assertEquals(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa));
+            $this->assertEquals([$rgb[0], $rgb[1], $rgb[2]], ColorHelper::HexaToRGB($hexa));
         }
     }
 }

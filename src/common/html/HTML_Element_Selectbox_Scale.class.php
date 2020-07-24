@@ -31,7 +31,7 @@ class HTML_Element_Selectbox_Scale extends HTML_Element_Selectbox
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        foreach (array('day', 'week', 'month', 'year') as $scale) {
+        foreach (['day', 'week', 'month', 'year'] as $scale) {
             $selected = $this->value == $scale;
             $this->addOption(
                 new HTML_Element_Option(

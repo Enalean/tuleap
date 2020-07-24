@@ -61,7 +61,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      */
     public function getChildren()
     {
-        $children = array();
+        $children = [];
 
         // Generate release list of the given package
         $releases = $this->getReleaseList($this->getPackage());

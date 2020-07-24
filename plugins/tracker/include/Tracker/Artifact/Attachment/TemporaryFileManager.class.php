@@ -73,7 +73,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
 
         $old_files = $this->dao
             ->searchTemporaryFilesOlderThan($timestamp)
-            ->instanciateWith(array($this, 'getInstanceFromRow'));
+            ->instanciateWith([$this, 'getInstanceFromRow']);
 
         foreach ($old_files as $file) {
             $this->removeTemporaryFile($file);
@@ -206,7 +206,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
     {
         $files = $this->dao
             ->searchPaginatedUserTemporaryFiles($user->getId(), $offset, $limit)
-            ->instanciateWith(array($this, 'getInstanceFromRow'));
+            ->instanciateWith([$this, 'getInstanceFromRow']);
 
         return new PaginatedTemporaryFiles($files, $this->dao->foundRows());
     }

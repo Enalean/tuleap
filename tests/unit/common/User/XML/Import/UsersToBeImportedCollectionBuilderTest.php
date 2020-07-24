@@ -91,11 +91,11 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('kperry')->andReturns($this->suspended_user_in_db);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('mmanson@example.com')->andReturns(array());
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns(array(
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('mmanson@example.com')->andReturns([]);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns([
             $this->active_user_in_ldap,
             $this->suspended_user_in_ldap
-        ));
+        ]);
 
         $this->john_doe = $this->createUser(
             1001,
@@ -107,7 +107,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:jd3456')->andReturns($this->john_doe);
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('jdoe')->andReturns($this->john_doe);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns(array($this->john_doe));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns([$this->john_doe]);
 
         $this->cat_steven = $this->createUser(
             1002,
@@ -118,7 +118,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
             PFUser::STATUS_ACTIVE
         );
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('cstevens')->andReturns($this->cat_steven);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('cstevens@example.com')->andReturns(array($this->john_doe));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('cstevens@example.com')->andReturns([$this->john_doe]);
     }
 
     private function createUser(int $id, string $username, string $realname, string $email, string $ldapid, string $status): PFUser
@@ -193,9 +193,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -218,9 +218,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'doe' => new ToBeActivatedUser($this->suspended_user_in_ldap, 107, 'sus1234')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -243,9 +243,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, '')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -268,9 +268,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'kperry' => new ToBeActivatedUser($this->suspended_user_in_db, 109, '')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -293,9 +293,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'cstevens' => new AlreadyExistingUser($this->active_user_in_db, 108, 'no_matching_ldap_id')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -318,9 +318,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'cstevens' => new EmailDoesNotMatchUser($this->active_user_in_db, 'bogossdu38@example.com', 108, '')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -343,9 +343,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'jdoe' => new AlreadyExistingUser($this->active_user_in_ldap, 107, 'jd3456')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -368,7 +368,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'mmanson' => new ToBeCreatedUser(
                 'mmanson',
                 'Marylin Manson',
@@ -376,7 +376,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
                 111,
                 ''
             )
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -399,18 +399,18 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->build($xml);
-        $expected   = array(
+        $expected   = [
             'john.doe' => new ToBeMappedUser(
                 'john.doe',
                 'John Doe',
-                array(
+                [
                     $this->active_user_in_ldap,
                     $this->suspended_user_in_ldap
-                ),
+                ],
                 109,
                 ''
             )
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -433,9 +433,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         ');
 
         $collection = $this->builder->buildWithoutEmail($xml);
-        $expected   = array(
+        $expected   = [
             'jdoe' => new AlreadyExistingUser($this->john_doe, 109, 'jd3456')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -459,9 +459,9 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
 
         $collection = $this->builder->buildWithoutEmail($xml);
 
-        $expected   = array(
+        $expected   = [
             'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456')
-        );
+        ];
 
         $this->assertEquals(
             $expected,
@@ -485,7 +485,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
 
         $collection = $this->builder->buildWithoutEmail($xml);
 
-        $expected   = array(
+        $expected   = [
             'ci_bot_manathan' => new ToBeCreatedUser(
                 'ci_bot_manathan',
                 'Continuous Integration Bot',
@@ -493,7 +493,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
                 111,
                 ''
             )
-        );
+        ];
 
         $this->assertEquals(
             $expected,

@@ -71,7 +71,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      */
     private function insertDateReminderRoles($reminderId, $roles)
     {
-        $values = array();
+        $values = [];
         foreach ($roles as $role) {
             $role = (int) $this->da->escapeInt($role);
             $values[] = " (

@@ -27,7 +27,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 class ParentOfArtifactCollection
 {
 
-    private $artifacts = array();
+    private $artifacts = [];
     private $is_graph;
 
     public function addArtifacts($artifacts)

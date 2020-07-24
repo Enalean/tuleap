@@ -30,15 +30,15 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
         $_SERVER['server_exists'] = '1';
         $_SERVER['server_quote'] = "l'avion du server";
         $_REQUEST['quote'] = "l'avion";
-        $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
+        $_REQUEST['array'] = ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]];
         $_REQUEST['testkey'] = 'testvalue';
-        $_REQUEST['testarray'] = array('key1' => 'valuekey1');
-        $_REQUEST['testkey_array'] = array('testvalue1', 'testvalue2', 'testvalue3');
-        $_REQUEST['testkey_array_empty'] = array();
-        $_REQUEST['testkey_array_mixed1'] = array('testvalue',1, 2);
-        $_REQUEST['testkey_array_mixed2'] = array(1, 'testvalue', 2);
-        $_REQUEST['testkey_array_mixed3'] = array(1, 2, 'testvalue');
-        $_FILES['file1'] = array('name' => 'Test file 1');
+        $_REQUEST['testarray'] = ['key1' => 'valuekey1'];
+        $_REQUEST['testkey_array'] = ['testvalue1', 'testvalue2', 'testvalue3'];
+        $_REQUEST['testkey_array_empty'] = [];
+        $_REQUEST['testkey_array_mixed1'] = ['testvalue', 1, 2];
+        $_REQUEST['testkey_array_mixed2'] = [1, 'testvalue', 2];
+        $_REQUEST['testkey_array_mixed3'] = [1, 2, 'testvalue'];
+        $_FILES['file1'] = ['name' => 'Test file 1'];
     }
 
     protected function tearDown(): void
@@ -112,7 +112,7 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     public function testArray()
     {
         $r = new HTTPRequest();
-        $this->assertSame($r->get('array'), array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau")));
+        $this->assertSame($r->get('array'), ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]]);
     }
 
     public function testValidKeyTrue()
@@ -304,7 +304,7 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     {
         $v = \Mockery::mock(\Valid_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $v->shouldReceive('getKey')->times(1)->andReturns('file1');
-        $v->shouldReceive('validate')->with(array('file1' => array('name' => 'Test file 1')), 'file1')->once();
+        $v->shouldReceive('validate')->with(['file1' => ['name' => 'Test file 1']], 'file1')->once();
         $r = new HTTPRequest();
         $r->validFile($v);
     }

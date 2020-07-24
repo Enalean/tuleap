@@ -69,7 +69,7 @@ class Git_Mirror_ManifestManager
         $all_mirrors = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
             $repositories = $this->data_mapper->fetchRepositoriesForMirror($mirror);
-            array_splice($repositories, 0, 0, array($gitolite_admin_repository));
+            array_splice($repositories, 0, 0, [$gitolite_admin_repository]);
             $this->generator->ensureManifestContainsLatestInfoOfRepositories(
                 $mirror,
                 $repositories

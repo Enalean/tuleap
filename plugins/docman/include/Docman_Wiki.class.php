@@ -61,7 +61,7 @@ class Docman_Wiki extends Docman_Document
         return $row;
     }
 
-    public function accept($visitor, $params = array())
+    public function accept($visitor, $params = [])
     {
         return $visitor->visitWiki($this, $params);
     }

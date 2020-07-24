@@ -47,7 +47,7 @@ class IconPresenterFactory
      */
     public function getIconsPresenters(): array
     {
-        $icons_presenters = array();
+        $icons_presenters = [];
 
         foreach (self::AVAILABLE_ICONS as $icon) {
             $icons_presenters[] = new IconPresenter($icon, false);
@@ -61,7 +61,7 @@ class IconPresenterFactory
      */
     public function getIconsPresentersForProvider(Provider $provider): array
     {
-        $icons_presenters = array();
+        $icons_presenters = [];
 
         foreach (self::AVAILABLE_ICONS as $icon) {
             $is_icon_selected = false;

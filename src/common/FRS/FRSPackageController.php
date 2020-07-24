@@ -89,7 +89,7 @@ class FRSPackageController
     public function displayCreationForm(Project $project, array $existing_packages)
     {
         $title   = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
-        $package = new FRSPackage(array('group_id' => $project->getGroupId()));
+        $package = new FRSPackage(['group_id' => $project->getGroupId()]);
         frs_display_package_form($package, $title, '?group_id=' . $project->getGroupId() . '&amp;func=create', $existing_packages);
     }
 
@@ -151,7 +151,7 @@ class FRSPackageController
         $this->license_agreement_factory->updateLicenseAgreementForPackage($project, $package, (int) $package_data['approve_license']);
         $this->package_factory->update($package);
 
-        $ugroups = array();
+        $ugroups = [];
         if ($request->get('ugroups')) {
             $ugroups = $request->get('ugroups');
         }
@@ -180,7 +180,7 @@ class FRSPackageController
 
     private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $object_id = null)
     {
-        $options         = array();
+        $options         = [];
         foreach ($project_ugroups as $project_ugroup) {
             if ($this->isUgroupHidden($project_ugroup)) {
                 continue;
@@ -188,11 +188,11 @@ class FRSPackageController
 
             $package_ugroups = $this->getAllUserGroups($permission_type, $object_id);
 
-            $options[] = array(
+            $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
                 'selected' => $this->isUgroupSelected($project_ugroup, $package_ugroups)
-            );
+            ];
         }
 
         return $options;
@@ -205,7 +205,7 @@ class FRSPackageController
 
     private function getAllUserGroups($permission_type, $object_id)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         $package_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
         while ($ugroup = db_fetch_array($package_ugroups)) {

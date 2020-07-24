@@ -47,7 +47,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
         $task_tracker = Mockery::spy(Tracker::class);
         $task_tracker->shouldReceive('getId')->andReturn(899);
         $this->artifact = new Tracker_Artifact(1, 899, null, 10, null);
-        $this->artifact->setChangesets(array(\Mockery::spy(\Tracker_Artifact_Changeset::class)));
+        $this->artifact->setChangesets([\Mockery::spy(\Tracker_Artifact_Changeset::class)]);
         $this->artifact->setParentWithoutPermissionChecking($this->parent);
         $this->artifact->setTracker($task_tracker);
         $this->rules_processor = \Mockery::mock(
@@ -87,9 +87,9 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
 
     public function testItAlwaysApplyRuleWhenAtLeastOneValueIsSet(): void
     {
-        $fields_data = array(
+        $fields_data = [
             $this->target_field_id => $this->target_value_id
-        );
+        ];
         $send_notification = true;
 
         $this->parent->shouldReceive('createNewChangeset')
@@ -101,7 +101,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
 
     public function testItDoesntSetTargetValueIfAlreadySet(): void
     {
-        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(74, Mockery::mock(Tracker_Artifact_Changeset::class), $this->target_field, null, array($this->target_value));
+        $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(74, Mockery::mock(Tracker_Artifact_Changeset::class), $this->target_field, null, [$this->target_value]);
         $this->parent->shouldReceive('getValue')->with($this->target_field)->andReturns($changeset_value_list);
         $this->parent->shouldReceive('createNewChangeset')->never();
         $this->rules_processor->process($this->artifact, $this->rule);

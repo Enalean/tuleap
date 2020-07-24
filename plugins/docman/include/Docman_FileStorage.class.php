@@ -110,7 +110,7 @@ class Docman_FileStorage
         $hash1 = $item_id % 10;
         $hash2 = ( ($item_id - $hash1) / 10) % 10;
 
-        $path_elements = array($this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number);
+        $path_elements = [$this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number];
         $path = '';
         foreach ($path_elements as $elem) {
             $path .= $elem . '/';

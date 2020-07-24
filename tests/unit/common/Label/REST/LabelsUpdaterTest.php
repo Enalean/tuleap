@@ -63,19 +63,19 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItAddsAndRemoveLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelRepresentation(3)
-        );
-        $body->remove = array(
+        ];
+        $body->remove = [
             $this->buildLabelRepresentation(4),
             $this->buildLabelRepresentation(5),
             $this->buildLabelRepresentation(6)
-        );
+        ];
 
-        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 3))->once();
-        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array(4, 5, 6))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 3])->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, [4, 5, 6])->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -83,9 +83,9 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItUsesTransaction(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1)
-        );
+        ];
 
         $this->project_label_dao->shouldReceive('startTransaction')->once();
         $this->project_label_dao->shouldReceive('commit')->once();
@@ -96,14 +96,14 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItOnlyAddsLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelRepresentation(3)
-        );
+        ];
 
-        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 3))->once();
-        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array())->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 3])->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, [])->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -111,14 +111,14 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItOnlyRemovesLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->remove = array(
+        $body->remove = [
             $this->buildLabelRepresentation(4),
             $this->buildLabelRepresentation(5),
             $this->buildLabelRepresentation(6)
-        );
+        ];
 
-        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array())->once();
-        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array(4, 5, 6))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [])->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, [4, 5, 6])->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -126,14 +126,14 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItDoesNotKnowHowToAddAndRemoveTheSameLabel(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelRepresentation(3)
-        );
-        $body->remove = array(
+        ];
+        $body->remove = [
             $this->buildLabelRepresentation(1),
-        );
+        ];
 
         $this->expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->never();
@@ -145,12 +145,12 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotAddLabelThatIsNotInProject(): void
     {
-        $this->project_label_dao->shouldReceive('checkThatAllLabelIdsExistInProjectInTransaction')->with(66, array(1))->andThrows(new UnknownLabelException());
+        $this->project_label_dao->shouldReceive('checkThatAllLabelIdsExistInProjectInTransaction')->with(66, [1])->andThrows(new UnknownLabelException());
 
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
-        );
+        ];
 
         $this->expectException(\Tuleap\Label\UnknownLabelException::class);
         $this->item_label_dao->shouldReceive('addLabelsInTransaction')->never();
@@ -165,13 +165,13 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->andReturns(10);
 
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelToCreateRepresentation('Emergency Fix')
-        );
+        ];
 
-        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 10))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, [1, 2, 10])->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
@@ -179,9 +179,9 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItTrimsLabelToAdd(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
-        );
+        ];
 
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->once();
 
@@ -191,10 +191,10 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     public function testItDoesNotAddEmptyLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
-        $body->add = array(
+        $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelToCreateRepresentation(' ')
-        );
+        ];
 
         $this->expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->never();

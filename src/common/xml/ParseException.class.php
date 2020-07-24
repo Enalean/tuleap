@@ -50,7 +50,7 @@ class XML_ParseException extends Exception
 
     public function getIndentedXml()
     {
-        $output = array();
+        $output = [];
         $line_no = 1;
         foreach ($this->indented_xml as $line) {
             $output[] = $line_no . ': ' . $line;

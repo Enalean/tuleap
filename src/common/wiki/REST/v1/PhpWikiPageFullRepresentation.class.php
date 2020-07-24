@@ -49,7 +49,7 @@ class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation
 
     private function getVerisonsRepresentations()
     {
-        $representations = array();
+        $representations = [];
 
         $wiki_version_dao     = new WikiVersionDao();
         $wiki_version_factory = new WikiPageVersionFactory();

@@ -43,7 +43,7 @@ class PullRequestInlineCommentRepresentationBuilder
     {
         $res = $this->dao->searchUpToDateByFilePath($pull_request->getId(), $file_path);
 
-        $inline_comments = array();
+        $inline_comments = [];
         foreach ($res as $row) {
             $user_id = $row['user_id'];
             $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user_id));

@@ -39,7 +39,7 @@ class GitActionsProjectPrivacyTest extends TestCase
     public function testItDoesNothingWhenThereAreNoRepositories(): void
     {
         $project_id = 99;
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns(array());
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([]);
         $this->changeProjectRepositoriesAccess($project_id, true);
         $this->changeProjectRepositoriesAccess($project_id, false);
     }
@@ -50,7 +50,7 @@ class GitActionsProjectPrivacyTest extends TestCase
         $is_private = false;
         $repo_id = 333;
         $repo = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns(array($repo_id => null));
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
@@ -70,7 +70,7 @@ class GitActionsProjectPrivacyTest extends TestCase
         $repo->shouldReceive('getAccess');
         $repo->shouldReceive('changeAccess')->once();
 
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns(array($repo_id => null));
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
@@ -83,7 +83,7 @@ class GitActionsProjectPrivacyTest extends TestCase
         $repo = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
         $repo->shouldReceive('getAccess')->andReturns(GitRepository::PRIVATE_ACCESS);
         $repo->shouldReceive('changeAccess')->andReturns("whatever");
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns(array($repo_id => null));
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
@@ -115,7 +115,7 @@ class GitActionsProjectPrivacyTest extends TestCase
         $repo1->shouldReceive('changeAccess')->once();
         $repo2->shouldReceive('changeAccess')->once();
 
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns(array($repo_id1 => null, $repo_id2 => null));
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id1 => null, $repo_id2 => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id1)->andReturns($repo1);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id2)->andReturns($repo2);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);

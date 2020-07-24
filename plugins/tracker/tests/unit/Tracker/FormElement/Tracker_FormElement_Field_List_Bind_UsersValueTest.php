@@ -41,7 +41,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \PHPUnit\
         $u = Mockery::mock(PFUser::class);
 
         $uh = Mockery::mock(UserManager::class);
-        $uh->shouldReceive('getUserById')->withArgs(array(12))->andReturn($u);
+        $uh->shouldReceive('getUserById')->withArgs([12])->andReturn($u);
 
         $bv = $this->getListBindUserValue();
         $bv->shouldReceive('getUserManager')->andReturn($uh);
@@ -58,7 +58,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends \PHPUnit\
         $user->shouldReceive('isNone')->andReturn(false);
 
         $user_manager = Mockery::mock(UserManager::class);
-        $user_manager->shouldReceive('getUserById')->withArgs(array(12))->andReturn($user);
+        $user_manager->shouldReceive('getUserById')->withArgs([12])->andReturn($user);
 
         $user_helper = Mockery::mock(UserHelper::class);
         $user_helper->shouldReceive('getDisplayNameFromUserId')->andReturn('Thomas A. Anderson (neo)');

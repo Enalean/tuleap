@@ -31,7 +31,7 @@ if (! defined('COOKIE_DOMAIN')) {
     define('COOKIE_DOMAIN', '/');
 }
 
-$UserPreferences = array(
+$UserPreferences = [
                          'userid'        => new _UserPreference(''), // really store this also?
                          'passwd'        => new _UserPreference(''),
                          'email'         => new _UserPreference(''),
@@ -46,7 +46,7 @@ $UserPreferences = array(
                          'relativeDates' => new _UserPreference_bool(),
                          'googleLink'    => new _UserPreference_bool(), // 1.3.10
                          'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
-                         );
+                         ];
 
 function WikiUserClassname()
 {
@@ -132,9 +132,9 @@ class WikiUser
     public function _ok()
     {
         if (
-            (in_array($this->_level, array(WIKIAUTH_BOGO,
+            (in_array($this->_level, [WIKIAUTH_BOGO,
                                            WIKIAUTH_USER,
-                                           WIKIAUTH_ADMIN))
+                                           WIKIAUTH_ADMIN])
             &&
             (is_string($this->_userid)))
         ) {
@@ -193,8 +193,8 @@ class WikiUser
     public function AuthCheck($postargs)
     {
         // Normalize args, and extract.
-        $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
-                      'cancel');
+        $keys = ['userid', 'passwd', 'require_level', 'login', 'logout',
+                      'cancel'];
         foreach ($keys as $key) {
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
@@ -396,10 +396,10 @@ class WikiUser
         } else {
             // empty page
             include "lib/loadsave.php";
-            $pageinfo = array('pagedata' => array('pref' => serialize($pref->_pref)),
-                              'versiondata' => array('author' => $this->_userid),
+            $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
+                              'versiondata' => ['author' => $this->_userid],
                               'pagename' => $this->_userid,
-                              'content' => _('CategoryHomepage'));
+                              'content' => _('CategoryHomepage')];
             SavePage($this->_request, $pageinfo, false, false);
         }
         $this->setPreferences($pref);
@@ -415,29 +415,29 @@ class WikiUser
         //  properly expanded template and the pref metadata
         $template = Template('homepage.tmpl', $this->_request);
         $text  = $template->getExpansion();
-        $pageinfo = array('pagedata' => array('pref' => serialize($pref->_pref)),
-                          'versiondata' => array('author' => $this->_userid),
+        $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
+                          'versiondata' => ['author' => $this->_userid],
                           'pagename' => $pagename,
-                          'content' => $text);
+                          'content' => $text];
         SavePage($this->_request, $pageinfo, false, false);
 
         // create Calender
         $pagename = $this->_userid . SUBPAGE_SEPARATOR . _('Preferences');
         if (! isWikiPage($pagename)) {
-            $pageinfo = array('pagedata' => array(),
-                              'versiondata' => array('author' => $this->_userid),
+            $pageinfo = ['pagedata' => [],
+                              'versiondata' => ['author' => $this->_userid],
                               'pagename' => $pagename,
-                              'content' => "<?plugin Calender ?>\n");
+                              'content' => "<?plugin Calender ?>\n"];
             SavePage($this->_request, $pageinfo, false, false);
         }
 
         // create Preferences
         $pagename = $this->_userid . SUBPAGE_SEPARATOR . _('Preferences');
         if (! isWikiPage($pagename)) {
-            $pageinfo = array('pagedata' => array(),
-                              'versiondata' => array('author' => $this->_userid),
+            $pageinfo = ['pagedata' => [],
+                              'versiondata' => ['author' => $this->_userid],
                               'pagename' => $pagename,
-                              'content' => "<?plugin UserPreferences ?>\n");
+                              'content' => "<?plugin UserPreferences ?>\n"];
             SavePage($this->_request, $pageinfo, false, false);
         }
     }
@@ -492,7 +492,7 @@ class WikiUser
     {
         // on external DBAuth maybe. on IMAP or LDAP not
         // on internal DBAuth yes
-        if (in_array($this->_authmethod, array('IMAP', 'LDAP'))) {
+        if (in_array($this->_authmethod, ['IMAP', 'LDAP'])) {
             return false;
         }
         if ($this->isAdmin()) {
@@ -661,7 +661,7 @@ class UserPreferences
 {
     public function __construct($saved_prefs = false)
     {
-        $this->_prefs = array();
+        $this->_prefs = [];
 
         if (isa($saved_prefs, 'UserPreferences') && $saved_prefs->_prefs) {
             foreach ($saved_prefs->_prefs as $name => $value) {

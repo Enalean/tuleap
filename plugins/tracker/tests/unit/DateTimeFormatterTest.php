@@ -105,14 +105,14 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItReturnsWellFormedDateForCSVWihoutSecondsEvenIfGiven(): void
     {
-        $date_exploded = array(
+        $date_exploded = [
             '2014',
             '09',
             '03',
             '08',
             '06',
             '12'
-        );
+        ];
 
         $expected = '2014-09-03 08:06';
 
@@ -121,13 +121,13 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItReturnsWellFormedDateForCSV(): void
     {
-        $date_exploded = array(
+        $date_exploded = [
             '2014',
             '09',
             '03',
             '08',
             '06'
-        );
+        ];
 
         $expected = '2014-09-03 08:06';
 

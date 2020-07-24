@@ -78,7 +78,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function getDependencies()
     {
-        return array('tracker', 'agiledashboard');
+        return ['tracker', 'agiledashboard'];
     }
 
     public function getPluginInfo()

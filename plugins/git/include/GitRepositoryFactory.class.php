@@ -93,7 +93,7 @@ class GitRepositoryFactory
      */
     public function getAllRepositories(Project $project)
     {
-        $repositories = array();
+        $repositories = [];
         $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
@@ -202,7 +202,7 @@ class GitRepositoryFactory
      */
     public function getActiveRepositoriesWithRemoteServersForAllProjects()
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->getActiveRepositoryPathsWithRemoteServersForAllProjects() as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);
@@ -219,7 +219,7 @@ class GitRepositoryFactory
      */
     public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, ProjectUGroup $ugroup, PFUser $user)
     {
-        $repositories = array();
+        $repositories = [];
         $ugroups      = $user->getUgroups($project->getID(), null);
         $ugroups[]    = $ugroup->getId();
         $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroupAndProject($project->getID(), $ugroups);
@@ -238,16 +238,16 @@ class GitRepositoryFactory
     public function getAllGerritRepositoriesFromProject(Project $project, PFUser $user)
     {
         $all_repositories_dar = $this->dao->searchAllGerritRepositoriesOfProject($project->getId());
-        $all_repositories     = array();
+        $all_repositories     = [];
 
         if (count($all_repositories_dar) == 0) {
-            return array();
+            return [];
         }
 
         foreach ($all_repositories_dar as $row) {
             $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
         }
-        $admin_ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN));
+        $admin_ugroup = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_ADMIN]);
         $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroupAndProject($project, $admin_ugroup, $user);
 
         foreach ($repositories_with_admin_permissions as $repository_id => $repository) {
@@ -271,7 +271,7 @@ class GitRepositoryFactory
      */
     private function getByRepositoryRootMatch($base_dir, $path)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('%' . $base_dir . '/([^/]+)/(.*)$%', $path, $matches)) {
             return $this->getByProjectNameAndPath($matches[1], $matches[2]);
         }
@@ -353,7 +353,7 @@ class GitRepositoryFactory
      */
     public function getArchivedRepositoriesToPurge($retention_period)
     {
-        $archived_repositories = array();
+        $archived_repositories = [];
         $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_period);
         foreach ($deleted_repositories as $deleted_repository) {
             $repository = $this->instanciateFromRow($deleted_repository);
@@ -371,7 +371,7 @@ class GitRepositoryFactory
      */
     public function getDeletedRepositoriesByProjectId($project_id, $retention_period)
     {
-        $repositories         = array();
+        $repositories         = [];
         $deleted_repositories = $this->dao->getDeletedRepositoriesByProjectId($project_id, $retention_period);
         foreach ($deleted_repositories as $deleted_repository) {
             $repository = $this->instanciateFromRow($deleted_repository);

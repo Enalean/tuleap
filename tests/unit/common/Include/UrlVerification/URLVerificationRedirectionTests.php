@@ -63,11 +63,11 @@ class URLVerificationRedirectionTests extends TestCase
 
     public function testGetRedirectionProtocolModified(): void
     {
-        $server = array(
+        $server = [
             'HTTP_HOST'   => 'example.com',
             'REQUEST_URI' => ''
-        );
-        $chunks = array('protocol' => 'https');
+        ];
+        $chunks = ['protocol' => 'https'];
 
 
         $this->url_verification->shouldReceive('getUrlChunks')->andReturns($chunks);
@@ -77,11 +77,11 @@ class URLVerificationRedirectionTests extends TestCase
 
     public function testGetRedirectionProtocolAndHostModified(): void
     {
-        $server = array(
+        $server = [
             'HTTP_HOST'   => 'test.example.com',
             'REQUEST_URI' => '/user.php'
-        );
-        $chunks = array('protocol' => 'http', 'host' => 'secure.example.com');
+        ];
+        $chunks = ['protocol' => 'http', 'host' => 'secure.example.com'];
 
         $this->url_verification->shouldReceive('getUrlChunks')->andReturns($chunks);
 
@@ -93,11 +93,11 @@ class URLVerificationRedirectionTests extends TestCase
 
     public function testGetRedirectionRequestModified(): void
     {
-        $server = array(
+        $server = [
             'HTTP_HOST'   => 'secure.example.com',
             'REQUEST_URI' => '/user.php'
-        );
-        $chunks = array('script' => '/project.php');
+        ];
+        $chunks = ['script' => '/project.php'];
 
         $this->url_verification->shouldReceive('getUrlChunks')->andReturns($chunks);
 
@@ -114,10 +114,10 @@ class URLVerificationRedirectionTests extends TestCase
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($user);
         $user->shouldReceive('isRestricted')->andReturns(true);
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/search/',
             'SCRIPT_NAME' => 'blah'
-        );
+        ];
 
         $url = Mockery::mock(URL::class);
         $this->url_verification->shouldReceive('getUrl')->andReturns($url);
@@ -151,10 +151,10 @@ class URLVerificationRedirectionTests extends TestCase
             null
         )->andReturn(false)->once();
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/search/',
             'SCRIPT_NAME' => 'blah'
-        );
+        ];
 
         $this->url_verification->shouldReceive('displayRestrictedUserError')->once();
 
@@ -173,10 +173,10 @@ class URLVerificationRedirectionTests extends TestCase
         $user->shouldReceive('isRestricted')->andReturns(true);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($user);
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/search/',
             'SCRIPT_NAME' => 'blah'
-        );
+        ];
 
         $this->url_verification->shouldReceive('restrictedUserCanAccessUrl')->andReturn(false);
         $this->url_verification->shouldReceive('displayRestrictedUserError')->with($user)->once();
@@ -195,10 +195,10 @@ class URLVerificationRedirectionTests extends TestCase
         $user->shouldReceive('isRestricted')->andReturns(true);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($user);
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/search/',
             'SCRIPT_NAME' => 'blah'
-        );
+        ];
 
         $this->url_verification->shouldReceive('restrictedUserCanAccessUrl')->andReturn(false);
         $this->url_verification->shouldReceive('displayRestrictedUserError')->once();

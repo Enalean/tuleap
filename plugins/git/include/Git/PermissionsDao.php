@@ -31,12 +31,12 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
         try {
             $this->updatePermissionsForGitRepositories(
                 $project_id,
-                array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+                [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED],
                 ProjectUGroup::PROJECT_MEMBERS
             );
             $this->updatePermissionsForDefaultGitAccessRights(
                 $project_id,
-                array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+                [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED],
                 ProjectUGroup::PROJECT_MEMBERS
             );
         } catch (PDOException $ex) {
@@ -54,12 +54,12 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
         try {
             $this->updatePermissionsForGitRepositories(
                 $project_id,
-                array(ProjectUGroup::AUTHENTICATED),
+                [ProjectUGroup::AUTHENTICATED],
                 ProjectUGroup::REGISTERED
             );
             $this->updatePermissionsForDefaultGitAccessRights(
                 $project_id,
-                array(ProjectUGroup::AUTHENTICATED),
+                [ProjectUGroup::AUTHENTICATED],
                 ProjectUGroup::REGISTERED
             );
         } catch (PDOException $ex) {

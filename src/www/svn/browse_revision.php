@@ -28,8 +28,8 @@ if (! $request->valid($vGroupId)) {
 
     $hp = Codendi_HTMLPurifier::instance();
 
-    svn_header($request->getProject(), array ('title' => $Language->getText('svn_browse_revision', 'browsing'),
-                      'help' => 'svn.html#the-subversion-browsing-interface'));
+    svn_header($request->getProject(), ['title' => $Language->getText('svn_browse_revision', 'browsing'),
+                      'help' => 'svn.html#the-subversion-browsing-interface']);
 
     $vOffset = new Valid_UInt('offset');
     $vOffset->required();
@@ -47,7 +47,7 @@ if (! $request->valid($vGroupId)) {
         $chunksz = 15;
     }
 
-    $vMsort = new Valid_WhiteList('msort', array(0, 1));
+    $vMsort = new Valid_WhiteList('msort', [0, 1]);
     $vMsort->required();
     if ($request->valid($vMsort)) {
         $msort = $request->get('msort');
@@ -55,7 +55,7 @@ if (! $request->valid($vGroupId)) {
         $msort = 0;
     }
 
-    $vOrder = new Valid_WhiteList('order', array('revision', 'description', 'date', 'who'));
+    $vOrder = new Valid_WhiteList('order', ['revision', 'description', 'date', 'who']);
 
     // Morder
     if (user_isloggedin() && ! $request->existAndNonEmpty('morder')) {
@@ -145,7 +145,7 @@ if (! $request->valid($vGroupId)) {
     // No treatment
     $request->valid(new Valid_String('SUBMIT'));
 
-    $vSet = new Valid_WhiteList('set', array('custom', 'my', 'any'));
+    $vSet = new Valid_WhiteList('set', ['custom', 'my', 'any']);
     $vSet->required();
     if (! $request->valid($vSet)) {
         /*
@@ -250,5 +250,5 @@ if (! $request->valid($vGroupId)) {
         echo $hp->purify($Language->getText('svn_browse_revision', 'no_match'));
         echo $hp->purify(db_error());
     }
-    svn_footer(array());
+    svn_footer([]);
 }

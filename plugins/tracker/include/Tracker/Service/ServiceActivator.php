@@ -99,13 +99,13 @@ class ServiceActivator
             $this->service_creator->createService(
                 ServiceTracker::getDefaultServiceData($project->getID()),
                 $project->getID(),
-                array(
+                [
                     'system' => $template->isSystem(),
                     'name'   => $template->isSystem() ? '' : $template->getUnixName(),
                     'id'     => $template->getID(),
                     'is_used'   => (int) $this->mustServiceBeUsed($tracker_core_service, $tracker_plugin_service),
                     'is_active' => (int) $this->mustServiceBeActive($tracker_core_service, $tracker_plugin_service),
-                )
+                ]
             );
         }
     }

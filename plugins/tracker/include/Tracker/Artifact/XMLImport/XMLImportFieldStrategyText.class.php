@@ -33,10 +33,10 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_A
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $data = array(
+        $data = [
             'format'  => (string) $field_change->value['format'],
             'content' => (string) $field_change->value
-        );
+        ];
 
         return $data;
     }

@@ -56,7 +56,7 @@ class Tracker_ArtifactFactoryTest extends TestCase
 
         $artifacts = [$art12, $art30];
 
-        $this->dao->shouldReceive('getTitles')->with(array(12, 30))->once()->andReturns(\TestHelper::emptyDar());
+        $this->dao->shouldReceive('getTitles')->with([12, 30])->once()->andReturns(\TestHelper::emptyDar());
 
         $this->artifact_factory->setTitles($artifacts);
     }
@@ -66,9 +66,9 @@ class Tracker_ArtifactFactoryTest extends TestCase
         $art24 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24->shouldReceive('getId')->andReturn(24);
 
-        $artifacts = array($art24);
+        $artifacts = [$art24];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(array('id' => 24, 'title' => 'Zoum')));
+        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
 
         $this->artifact_factory->setTitles($artifacts);
 
@@ -83,9 +83,9 @@ class Tracker_ArtifactFactoryTest extends TestCase
         $art32 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art32->shouldReceive('getId')->andReturn(32);
 
-        $artifacts = array($art24, $art32);
+        $artifacts = [$art24, $art32];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(array('id' => 24, 'title' => 'Zoum'), array('id' => 32, 'title' => 'Zen')));
+        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum'], ['id' => 32, 'title' => 'Zen']));
 
         $this->artifact_factory->setTitles($artifacts);
 
@@ -100,9 +100,9 @@ class Tracker_ArtifactFactoryTest extends TestCase
         $art24_2 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24_2->shouldReceive('getId')->andReturn(24);
 
-        $artifacts = array($art24_1, $art24_2);
+        $artifacts = [$art24_1, $art24_2];
 
-        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(array('id' => 24, 'title' => 'Zoum')));
+        $this->dao->shouldReceive('getTitles')->andReturns(\TestHelper::arrayToDar(['id' => 24, 'title' => 'Zoum']));
 
         $this->artifact_factory->setTitles($artifacts);
 

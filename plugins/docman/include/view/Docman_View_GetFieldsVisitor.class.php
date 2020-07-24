@@ -28,7 +28,7 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
 {
     public $mdLabelToSkip;
 
-    public function __construct($mdLabelToSkip = array())
+    public function __construct($mdLabelToSkip = [])
     {
         $this->mdLabelToSkip = $mdLabelToSkip;
     }
@@ -47,16 +47,16 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
         return $mdHtmlFactory->buildFieldArray($mdIter, $this->mdLabelToSkip, false, $formName, $themePath);
     }
 
-    public function visitItem(Docman_Item $item, $params = array())
+    public function visitItem(Docman_Item $item, $params = [])
     {
         $mdIter = $item->getMetadataIterator();
         return $this->buildFieldArray($mdIter, $params);
     }
 
-    public function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
-        $folderMetadata = array('title', 'description','create_date', 'update_date');
-        $mda = array();
+        $folderMetadata = ['title', 'description', 'create_date', 'update_date'];
+        $mda = [];
         foreach ($folderMetadata as $mdLabel) {
             $mda[] = $item->getMetadataFromLabel($mdLabel);
         }
@@ -64,28 +64,28 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
         return $this->buildFieldArray($mdIter, $params);
     }
 
-    public function visitDocument(Docman_Document $item, $params = array())
+    public function visitDocument(Docman_Document $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
-    public function visitWiki(Docman_Wiki $item, $params = array())
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }

@@ -101,7 +101,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
 
     public function getFields()
     {
-        $diplayed_fields_presenter = array();
+        $diplayed_fields_presenter = [];
         $displayed_fields = $this->card_fields->getFields($this->getArtifact());
 
         foreach ($displayed_fields as $displayed_field) {

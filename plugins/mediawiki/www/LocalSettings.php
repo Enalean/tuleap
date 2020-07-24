@@ -65,26 +65,26 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $project_name_retriever = new MediawikiFusionForgeProjectNameRetriever();
     $project_manager        = ProjectManager::instance();
 
-    $forbidden_permissions = array(
+    $forbidden_permissions = [
     'editmyusercss',
     'editmyuserjs',
     'viewmyprivateinfo',
     'editmyprivateinfo'
-    );
+    ];
 
-    $read_permissions = array(
+    $read_permissions = [
     'read',
     'viewmywatchlist',
     'editmywatchlist'
-    );
+    ];
 
-    $write_permissions = array(
+    $write_permissions = [
     'edit',
     'createpage',
     'move',
     'createtalk',
     'writeapi'
-    );
+    ];
 
 //Trust Mediawiki security
     $xml_security = new XML_Security();
@@ -111,7 +111,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
             exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), Codendi_HTMLPurifier::instance()->purify($group->getPublicName()) . ' : ' . $project_dir));
         }
     }
-    $path = array( $IP, "$IP/includes", "$IP/languages" );
+    $path = [$IP, "$IP/includes", "$IP/languages"];
     set_include_path(implode(PATH_SEPARATOR, $path) . PATH_SEPARATOR . get_include_path());
 
     require_once("$IP/includes/AutoLoader.php");
@@ -153,10 +153,10 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $wgDBssl = true;
     }
     $wgMainCacheType    = CACHE_NONE;
-    $wgMemCachedServers = array();
+    $wgMemCachedServers = [];
     $wgEnableParserCache = false;
 
-    $debug_project_ids = array();
+    $debug_project_ids = [];
     $debug_project_id = forge_get_config('mw_debug_project_id', 'mediawiki');
     if ($debug_project_id !== false) {
         $debug_project_ids = array_map(
@@ -517,7 +517,7 @@ require_once "$IP/extensions/ImageMap/ImageMap.php";
 require_once "$IP/extensions/InputBox/InputBox.php";
 
 // UNC_links
-$wgUrlProtocols = array(
+$wgUrlProtocols = [
     'http://',
     'https://',
     'ftp://',
@@ -545,7 +545,7 @@ $wgUrlProtocols = array(
     'urn:', // Allow URNs to be used in Microdata/RDFa <link ... href="urn:...">s
     'geo:', // urls define geo locations, they're useful in Microdata/RDFa and for coordinates
     '//', // for protocol-relative URLs
-);
+];
 
 if ($manager->isCompatibilityViewEnabled($group)) {
     // WikiEditor Extension inclusion

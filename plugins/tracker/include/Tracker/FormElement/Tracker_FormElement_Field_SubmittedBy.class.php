@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
 
-    public $default_properties = array();
+    public $default_properties = [];
 
     /**
      * The field is permanently deleted from the db
@@ -52,7 +52,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             $b = 'B_' . $this->id;
             $ids_to_search = array_values(array_intersect(
                 array_values($criteria_value),
-                array_merge(array(100), array_keys($this->getBind()->getAllValues()))
+                array_merge([100], array_keys($this->getBind()->getAllValues()))
             ));
             if (count($ids_to_search) > 1) {
                 return " artifact.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
@@ -156,11 +156,11 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
         //force the bind
         $form_element_data['bind-type'] = 'users';
-        $form_element_data['bind'] = array(
-            'value_function' => array(
+        $form_element_data['bind'] = [
+            'value_function' => [
                 'artifact_submitters',
-            )
-        );
+            ]
+        ];
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 

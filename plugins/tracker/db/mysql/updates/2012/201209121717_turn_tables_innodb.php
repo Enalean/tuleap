@@ -42,7 +42,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
             }
         }
 
-        $tables = array(
+        $tables = [
             'tracker_workflow ',
             'tracker_workflow_transition ',
             'tracker_workflow_transition_postactions_field_date ',
@@ -109,7 +109,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
             'tracker_perm ',
             'tracker_rule',
             'tracker_hierarchy ',
-            'tracker_reminder');
+            'tracker_reminder'];
         foreach ($tables as $table) {
             if (! $this->isTableInnoDB($table)) {
                 $this->log->info("Convert $table");

@@ -27,7 +27,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollect
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageManager
 {
-    private $services = array();
+    private $services = [];
 
     public const SVN = 'svn';
     public const CVS = 'cvs';
@@ -87,18 +87,18 @@ class Statistics_DiskUsageManager
     public function getProjectServices($siteAdminView = true)
     {
         if (count($this->services) == 0) {
-            $this->services = array(self::SVN           => 'Subversion',
+            $this->services = [self::SVN           => 'Subversion',
                                      self::CVS           => 'CVS',
                                      self::FRS           => 'File releases',
                                      self::FTP           => 'Public FTP',
                                      self::GRP_HOME      => 'Home page',
                                      self::WIKI          => 'Wiki',
-                                     self::MAILMAN       => 'Mailman');
+                                     self::MAILMAN       => 'Mailman'];
             if ($siteAdminView) {
                 $this->services[self::PLUGIN_WEBDAV] = 'SVN/Webdav';
             }
 
-            $params = array('services' => &$this->services);
+            $params = ['services' => &$this->services];
             $this->event_manager->processEvent('plugin_statistics_disk_usage_service_label', $params);
         }
         return $this->services;
@@ -143,7 +143,7 @@ class Statistics_DiskUsageManager
             default:
                 // If plugins don't want to color themselves they are white
                 $color = 'white';
-                $params = array('service' => $service, 'color' => &$color);
+                $params = ['service' => $service, 'color' => &$color];
                 $this->event_manager->processEvent('plugin_statistics_color', $params);
                 return $color;
         }
@@ -151,7 +151,7 @@ class Statistics_DiskUsageManager
 
     public function getGeneralData($date)
     {
-        $res = array();
+        $res = [];
         $dao  = $this->_getDao();
         if ($date) {
             $res['date'] = $date;
@@ -204,7 +204,7 @@ class Statistics_DiskUsageManager
 
     private function getRangeDates($dar, $groupBy)
     {
-        $dates = array();
+        $dates = [];
         foreach ($dar as $row) {
             $dates[$this->getKeyFromGroupBy($row, $groupBy)] = 0;
         }
@@ -213,7 +213,7 @@ class Statistics_DiskUsageManager
 
     public function getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate)
     {
-        $res     = array();
+        $res     = [];
         $groupBy = strtoupper($groupBy);
         $dao     = $this->_getDao();
         $dar     = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate);
@@ -235,7 +235,7 @@ class Statistics_DiskUsageManager
         $dao   = $this->_getDao();
         $dar   = $dao->getProjectContributionForService($startDate, $endDate, $service, $order, $offset, $limit);
         $nbPrj = $dao->foundRows();
-        return array($dar, $nbPrj);
+        return [$dar, $nbPrj];
     }
 
     /**
@@ -250,13 +250,13 @@ class Statistics_DiskUsageManager
     public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId = null)
     {
         // Build final array based on services (ensure always same order)
-        $values = array();
+        $values = [];
         foreach ($this->getProjectServices() as $k => $v) {
-            $values[$k] = array('service'        => $k,
+            $values[$k] = ['service'        => $k,
                                 'start_size'     => 0,
                                 'end_size'       => 0,
                                 'evolution'      => 0,
-                                'evolution_rate' => 0);
+                                'evolution_rate' => 0];
         }
 
         // Start values
@@ -299,7 +299,7 @@ class Statistics_DiskUsageManager
     public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
     {
         $dao = $this->_getDao();
-        $res = array();
+        $res = [];
         $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate, $endDate);
         if (! $dar || $dar->isError()) {
             return false;
@@ -355,7 +355,7 @@ class Statistics_DiskUsageManager
 
     private function extractSavedServicesDiskUsages(CompatPDODataAccessResult $dar): array
     {
-        $saved_usages = array();
+        $saved_usages = [];
 
         foreach ($dar as $row) {
             $saved_usages[$row['service']] = $row['size'];
@@ -367,7 +367,7 @@ class Statistics_DiskUsageManager
     public function returnTotalSizeOfProjects($date)
     {
         $dao            = $this->_getDao();
-        $projects_sizes = array();
+        $projects_sizes = [];
         $projects       = $dao->searchAllGroups();
 
         if ($projects && ! $projects->isError()) {
@@ -381,16 +381,16 @@ class Statistics_DiskUsageManager
     public function returnTotalSizeOfProjectNearDate($group_id, $date)
     {
         $dao    = $this->_getDao();
-        $result = array();
+        $result = [];
 
         $project_size_dar = $dao->returnTotalSizeProjectNearDate($group_id, $date);
         if ($project_size_dar && ! $project_size_dar->isError()) {
             $project_row  = $project_size_dar->getRow();
             $project_size = $project_row['size'];
-            $result       = array(
+            $result       = [
                 'group_id' => $group_id,
                 'result'   => $project_size
-            );
+            ];
         }
 
         return $result;
@@ -473,7 +473,7 @@ class Statistics_DiskUsageManager
     public function getDirSize($dir)
     {
         if (is_dir($dir)) {
-            $output = array();
+            $output = [];
             exec("nice -n 19 du -s --block-size=1 $dir", $output, $returnValue);
             if ($returnValue === 0) {
                 $size = explode("\t", $output[0]);
@@ -538,7 +538,7 @@ class Statistics_DiskUsageManager
      */
     private function collectProjects(DateTimeImmutable $collect_date)
     {
-        $time_to_collect = array(
+        $time_to_collect = [
             Service::SVN => 0,
             Service::CVS => 0,
             self::FRS => 0,
@@ -547,7 +547,7 @@ class Statistics_DiskUsageManager
             Service::WIKI => 0,
             self::PLUGIN_WEBDAV => 0,
             self::MAILMAN => 0,
-        );
+        ];
 
         $dar = $this->dao->searchAllOpenProjects();
         foreach ($dar as $row) {
@@ -566,13 +566,13 @@ class Statistics_DiskUsageManager
             // Fake plugin for webdav/subversion
             $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . "/" . $row['unix_group_name'], $time_to_collect);
 
-            $params = array(
+            $params = [
                 'DiskUsageManager' => $this,
                 'project_row'      => $row,
                 'project'          => $project,
                 'collect_date'     => $collect_date,
                 'time_to_collect'  => &$time_to_collect
-            );
+            ];
 
             $this->event_manager->processEvent(
                 'plugin_statistics_disk_usage_collect_project',
@@ -698,7 +698,7 @@ class Statistics_DiskUsageManager
 
     public function storeDf(DateTimeImmutable $collect_date)
     {
-        $output      = array();
+        $output      = [];
         $returnValue = -1;
         exec("nice -n 19 df --sync -k --portability --block-size=1", $output, $returnValue);
         if ($returnValue === 0) {

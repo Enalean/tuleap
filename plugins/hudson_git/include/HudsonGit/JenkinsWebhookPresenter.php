@@ -32,7 +32,7 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
     public function __construct(GitRepository $repository, $url, array $hooklogs, CSRFSynchronizerToken $csrf)
     {
         $use_default_edit_modal = false;
-        parent::__construct($repository, 'jenkins', $url, array(), $csrf, $use_default_edit_modal);
+        parent::__construct($repository, 'jenkins', $url, [], $csrf, $use_default_edit_modal);
 
         $this->remove_form_action   = '/plugins/hudson_git/?group_id=' . (int) $repository->getProjectId();
 

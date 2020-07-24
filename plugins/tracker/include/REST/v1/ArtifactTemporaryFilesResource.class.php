@@ -88,7 +88,7 @@ class ArtifactTemporaryFilesResource
         }
 
         $paginated_files = $this->file_manager->getPaginatedUserTemporaryFiles($this->user, $offset, $limit);
-        $files_representations = array();
+        $files_representations = [];
 
         foreach ($paginated_files->getFiles() as $file) {
             $files_representations[] = $this->buildFileRepresentation($file);

@@ -32,57 +32,57 @@ class FineGrainedPermissionSorterTest extends TestCase
             0,
             1,
             'refs/heads/*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $permission_02 = new FineGrainedPermission(
             1,
             1,
             'refs/heads/application',
-            array(),
-            array()
+            [],
+            []
         );
 
         $permission_03 = new FineGrainedPermission(
             2,
             1,
             'refs/heads/master',
-            array(),
-            array()
+            [],
+            []
         );
 
         $permission_04 = new FineGrainedPermission(
             3,
             1,
             'refs/heads/application/*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $permission_05 = new FineGrainedPermission(
             4,
             1,
             'refs/heads/application/dev/*',
-            array(),
-            array()
+            [],
+            []
         );
 
-        $permissions = array(
+        $permissions = [
             $permission_01,
             $permission_02,
             $permission_03,
             $permission_04,
             $permission_05,
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             2 => $permission_03,
             4 => $permission_05,
             3 => $permission_04,
             1 => $permission_02,
             0 => $permission_01,
-        );
+        ];
 
         $sorter = new FineGrainedPermissionSorter();
 

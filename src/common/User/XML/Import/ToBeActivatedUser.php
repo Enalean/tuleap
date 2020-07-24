@@ -24,7 +24,7 @@ use PFUser;
 class ToBeActivatedUser extends ActionToBeTakenForUser
 {
 
-    private static $ALLOWED_ACTIONS = array(self::ACTION, ToBeMappedUser::ACTION);
+    private static $ALLOWED_ACTIONS = [self::ACTION, ToBeMappedUser::ACTION];
 
     public const ACTION = 'noop';
 
@@ -46,7 +46,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser
     /** @return array */
     public function getCSVData()
     {
-        return array(
+        return [
             $this->username,
             self::ACTION,
             sprintf(
@@ -54,7 +54,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser
                 $this->username,
                 $this->status
             )
-        );
+        ];
     }
 
     public function isActionAllowed($action)

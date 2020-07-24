@@ -70,10 +70,10 @@ class RequestWrapper
     private function getTokenForUser($username, $password)
     {
         $payload = json_encode(
-            array(
+            [
                 'username' => $username,
                 'password' => $password,
-            )
+            ]
         );
 
         // Retry is there because in some circumstances (PHP 5.6 first REST call) restler shits bricks

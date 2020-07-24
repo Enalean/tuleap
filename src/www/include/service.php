@@ -27,11 +27,11 @@ function service_replace_template_name_in_link($link, array $template, Project $
     $link = preg_replace('/group_id=' . preg_quote($template['id'], '/') . '([^\d]|$)/', 'group_id=' . $project->getGroupId() . '$1', $link);
     EventManager::instance()->processEvent(
         Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK,
-        array(
+        [
             'link'     => &$link,
             'template' => $template,
             'project'  => $project
-        )
+        ]
     );
     return $link;
 }

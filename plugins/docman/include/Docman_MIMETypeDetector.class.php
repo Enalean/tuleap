@@ -21,7 +21,7 @@
 class Docman_MIMETypeDetector
 {
 
-    private $office_types = array(
+    private $office_types = [
         '.doc'  => 'application/msword',
         '.dot'  => 'application/msword',
         '.docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -49,7 +49,7 @@ class Docman_MIMETypeDetector
         '.potm' => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
         '.ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
         '.xps'  => 'application/vnd.ms-xpsdocument'
-    );
+    ];
 
     /**
      * @param string $filename

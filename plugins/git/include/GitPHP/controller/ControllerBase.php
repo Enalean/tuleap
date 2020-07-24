@@ -47,7 +47,7 @@ abstract class ControllerBase
      *
      * @access protected
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * headers
@@ -56,7 +56,7 @@ abstract class ControllerBase
      *
      * @access protected
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * __construct

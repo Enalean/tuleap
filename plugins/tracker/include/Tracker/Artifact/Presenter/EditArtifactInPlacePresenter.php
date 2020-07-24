@@ -124,7 +124,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public function parent_artifact_presenter()
     {
-        $parent_artifact_presenter = array();
+        $parent_artifact_presenter = [];
         $parent_artifact           = $this->artifact->getParent($this->user);
 
         if ($parent_artifact) {

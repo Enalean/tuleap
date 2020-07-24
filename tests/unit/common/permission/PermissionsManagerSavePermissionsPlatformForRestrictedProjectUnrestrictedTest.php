@@ -70,49 +70,49 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
     {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
     public function testItSavesAuthenticatedWhenSelectedAuthenticated()
     {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
     public function testItSavesRegisteredWhenSelectedRegistered()
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED));
+        $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
     public function testItSavesProjectMembersWhenSelectedProjectMembers()
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS]);
     }
 
     public function testItSavesOnlyAuthenticatedWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
     {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesOnlyAuthenticatedWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup()
     {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup()
@@ -126,7 +126,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup()
@@ -140,7 +140,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesSVNAdminWikiAdminAndStatic()
@@ -158,20 +158,20 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedT
             ->ordered()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
     }
 
     public function testItSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers()
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS]);
     }
 
     public function testItSavesAuthenticatedWhenAuthenticatedAndRegisteredAndProjectMembersAreSelected()
     {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_MEMBERS]);
     }
 }

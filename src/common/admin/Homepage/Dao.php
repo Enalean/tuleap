@@ -44,7 +44,7 @@ class Admin_Homepage_Dao extends DataAccessObject
     /** @return bool */
     public function save(array $headlines)
     {
-        $values = array();
+        $values = [];
 
         foreach ($headlines as $language_id => $headline) {
             $language_id = $this->da->quoteSmart($language_id);

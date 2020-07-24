@@ -176,7 +176,7 @@ class WikiEntry
 
         $res = db_query($qry);
 
-        $weArray = array();
+        $weArray = [];
         while ($row = db_fetch_array($res)) {
             $we = new WikiEntry();
             $we->setFromRow($row);

@@ -62,7 +62,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $first_data = fgetcsv($csv);
         fclose($csv);
 
-        return array($header, $first_data);
+        return [$header, $first_data];
     }
 
     public function testItGeneratesTheHeader(): void
@@ -70,7 +70,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->collection->toCSV($this->output_filename);
 
         $header = $this->getCSVHeader();
-        $this->assertEquals(array('name', 'action', 'comments'), $header);
+        $this->assertEquals(['name', 'action', 'comments'], $header);
     }
 
     public function testItDoesNotDumpAlreadyExistingUser(): void
@@ -92,7 +92,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(array('jdoe', 'noop', 'Status of existing user jdoe is [S]'), $data);
+        $this->assertEquals(['jdoe', 'noop', 'Status of existing user jdoe is [S]'], $data);
     }
 
     public function testItDumpsToBeCreatedUser(): void
@@ -101,7 +101,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
-        $this->assertEquals(array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'), $data);
+        $this->assertEquals(['jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'], $data);
     }
 
     public function testItDumpsEmailDoesNotMatchUser(): void
@@ -116,11 +116,11 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
 
         $data = $this->getCSVFirstData();
         $this->assertEquals(
-            array(
+            [
                 'jdoe',
                 'map:',
                 'There is an existing user jdoe but its email <john.doe@example.com> does not match <jdoe@example.com>. Use action "map:jdoe" to confirm the mapping.'
-            ),
+            ],
             $data
         );
     }
@@ -139,17 +139,17 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $user2->shouldReceive('getEmail')->andReturns('john.doe@example.com');
         $user2->shouldReceive('getStatus')->andReturns('A');
 
-        $this->collection->add(new ToBeMappedUser('jdoe', 'John Doe', array($user1, $user2), 104, 'ldap1234'));
+        $this->collection->add(new ToBeMappedUser('jdoe', 'John Doe', [$user1, $user2], 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
         $data = $this->getCSVFirstData();
         $this->assertEquals(
-            array(
+            [
                 'jdoe',
                 'map:',
                 'User John Doe (jdoe) has the same email address than following users: John Doe (john) [A], John Doe (admin) (admin_john) [A].'
                 . ' Use one of the following actions to confirm the mapping: "map:john", "map:admin_john".'
-            ),
+            ],
             $data
         );
     }

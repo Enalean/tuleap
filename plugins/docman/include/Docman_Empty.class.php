@@ -31,7 +31,7 @@ class Docman_Empty extends Docman_Document
         parent::__construct($data);
     }
 
-    public function accept($visitor, $params = array())
+    public function accept($visitor, $params = [])
     {
         return $visitor->visitEmpty($this, $params);
     }

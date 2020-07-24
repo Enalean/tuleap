@@ -50,16 +50,16 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
             1,
             1,
             'refs/heads/master',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->tag_fine_grained_permission = new FineGrainedPermission(
             2,
             1,
             'refs/tags/*',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->repository = \Mockery::mock(\GitRepository::class)->shouldReceive('getId')->andReturn(1)->getMock();
@@ -71,11 +71,11 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(),
+            [],
             'on',
-            array($this->branch_fine_grained_permission),
-            array(),
-            array()
+            [$this->branch_fine_grained_permission],
+            [],
+            []
         );
 
         $this->assertTrue($has_changes);
@@ -87,11 +87,11 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(),
+            [],
             'on',
-            array(),
-            array($this->tag_fine_grained_permission),
-            array()
+            [],
+            [$this->tag_fine_grained_permission],
+            []
         );
 
         $this->assertTrue($has_changes);
@@ -103,11 +103,11 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(),
+            [],
             'on',
-            array(),
-            array(),
-            array($this->tag_fine_grained_permission)
+            [],
+            [],
+            [$this->tag_fine_grained_permission]
         );
 
         $this->assertTrue($has_changes);
@@ -119,11 +119,11 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(),
+            [],
             'on',
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            []
         );
 
         $this->assertTrue($has_changes);
@@ -135,11 +135,11 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(),
+            [],
             false,
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            []
         );
 
         $this->assertTrue($has_changes);
@@ -148,18 +148,18 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
     public function testItDetectsChangesIfGlobalPermissionAreChanged(): void
     {
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
-        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
-            Git::PERM_READ => array('3'),
-            Git::PERM_WRITE => array('4')
-        ));
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
+            Git::PERM_READ => ['3'],
+            Git::PERM_WRITE => ['4']
+        ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(Git::PERM_READ => array('3', '101'), Git::PERM_WRITE => array('4')),
+            [Git::PERM_READ => ['3', '101'], Git::PERM_WRITE => ['4']],
             false,
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            []
         );
 
         $this->assertTrue($has_changes);
@@ -168,17 +168,17 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
     public function testItDoesNotDetectChangesIfNothingChangedWithFineGrainedPermissions(): void
     {
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
-        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
-            Git::PERM_READ => array('3')
-        ));
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
+            Git::PERM_READ => ['3']
+        ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(Git::PERM_READ => array('3')),
+            [Git::PERM_READ => ['3']],
             'on',
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            []
         );
 
         $this->assertFalse($has_changes);
@@ -187,18 +187,18 @@ class PermissionChangesDetectorForRepositoryTest extends TestCase
     public function testItDoesNotDetectChangesIfNothingChangedWithoutFineGrainedPermissions(): void
     {
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
-        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
-            Git::PERM_READ => array('3'),
-            Git::PERM_WRITE => array('4')
-        ));
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns([
+            Git::PERM_READ => ['3'],
+            Git::PERM_WRITE => ['4']
+        ]);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
-            array(Git::PERM_READ => array('3'), Git::PERM_WRITE => array('4')),
+            [Git::PERM_READ => ['3'], Git::PERM_WRITE => ['4']],
             false,
-            array(),
-            array(),
-            array()
+            [],
+            [],
+            []
         );
 
         $this->assertFalse($has_changes);

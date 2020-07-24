@@ -26,7 +26,7 @@ class Search_SearchTypePresenter
     public $has_facets;
     public $url;
 
-    public function __construct($search_type, $title, $facets = array(), $url = '#')
+    public function __construct($search_type, $title, $facets = [], $url = '#')
     {
         $this->search_type = $search_type;
         $this->title       = $title;

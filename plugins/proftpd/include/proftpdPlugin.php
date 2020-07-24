@@ -69,10 +69,10 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
     private function getRouter()
     {
         return new Tuleap\ProFTPd\ProftpdRouter(
-            array(
+            [
                 $this->getExplorerController(),
                 $this->getAdminController(),
-            )
+            ]
         );
     }
 
@@ -149,11 +149,11 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
 
         $project = $this->getProject($params['group_id']);
         if ($project->usesService($this->getServiceShortname())) {
-            $params['logs'][] = array(
+            $params['logs'][] = [
                 'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
                 'field' => dgettext('tuleap-proftpd', 'Filepath'),
                 'title' => dgettext('tuleap-proftpd', 'FTP access')
-            );
+            ];
         }
     }
 
@@ -250,11 +250,11 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-proftpd', 'Proftpd'),
                 $this->getPluginPath() . '/?' . http_build_query(
-                    array(
+                    [
                         'group_id'   => $project->getID(),
                         'controller' => "admin",
                         'action'     => 'index'
-                    )
+                    ]
                 )
             )
         );

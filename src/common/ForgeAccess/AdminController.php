@@ -208,7 +208,7 @@ class ForgeAccess_AdminController
     {
         $validator = new Valid_WhiteList(
             $key,
-            array("0", "1")
+            ["0", "1"]
         );
         if (! $this->request->valid($validator)) {
             return -1;

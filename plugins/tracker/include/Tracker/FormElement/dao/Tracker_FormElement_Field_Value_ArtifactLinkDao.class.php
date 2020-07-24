@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $keyword            = $this->da->quoteSmart($keyword);
         $group_id           = $this->da->escapeInt($group_id);
 
-        $sql_values = array();
+        $sql_values = [];
         foreach ($artifact_ids as $id) {
             $id           = $this->da->escapeInt($id);
             $sql_values[] = "($changeset_value_id, $nature, $id, $keyword, $group_id)";

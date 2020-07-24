@@ -42,7 +42,7 @@ class ProjectBacklogV2Test extends RestBase
     public function testOPTIONSBacklog(): void
     {
         $response = $this->getResponse($this->client->options("projects/$this->project_pbi_id/backlog"));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSBacklogWithRESTReadOnlyUser(): void

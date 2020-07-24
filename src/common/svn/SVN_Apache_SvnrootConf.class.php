@@ -35,7 +35,7 @@ class SVN_Apache_SvnrootConf
      */
     private $authFactory;
 
-    private $apacheConfHeaders = array();
+    private $apacheConfHeaders = [];
 
     public function __construct(SVN_Apache_Auth_Factory $authFactory, $projects)
     {

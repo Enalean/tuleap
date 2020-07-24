@@ -36,7 +36,7 @@ class BaseLanguage
     public $name;
     public $id;
     public $code;
-    public $file_array = array();
+    public $file_array = [];
 
     /**
      * Supported languages
@@ -55,7 +55,7 @@ class BaseLanguage
      */
     public function __construct($supported_languages, $default_language)
     {
-        $this->allLanguages = array();
+        $this->allLanguages = [];
         $supported_languages = explode(',', $supported_languages);
         foreach ($supported_languages as $v) {
             if (trim($v) !== '') {
@@ -78,7 +78,7 @@ class BaseLanguage
      */
     public function compileLanguage($lang)
     {
-        $text_array = array();
+        $text_array = [];
         $this->loadAllLanguageFiles($lang, $text_array);
 
         $this->dumpLanguageFile($lang, $text_array);
@@ -136,7 +136,7 @@ class BaseLanguage
     {
         $directories = array_merge(
             array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path'))),
-            array(ForgeConfig::get('sys_pluginsroot'))
+            [ForgeConfig::get('sys_pluginsroot')]
         );
         foreach ($directories as $dir) {
             $this->_loadPluginsSiteContent($dir, $lang, $text_array);
@@ -389,7 +389,7 @@ class BaseLanguage
      */
     public function getLanguages()
     {
-        $ret = array();
+        $ret = [];
         foreach ($this->allLanguages as $lang) {
             $text_array = $this->compileLanguage($lang);
             $ret[$lang] = $text_array['system']['locale_label'];
@@ -426,8 +426,8 @@ class BaseLanguage
      */
     public function parseAcceptLanguage($accept_language)
     {
-        $langs      = array();
-        $lang_parse = array();
+        $langs      = [];
+        $lang_parse = [];
 
         // break up string into pieces (languages and q factors)
         preg_match_all(
@@ -470,7 +470,7 @@ class BaseLanguage
         $relevant_language = $this->defaultLanguage;
 
         //extract language abbr and country codes from Codendi languages
-        $provided_languages = array();
+        $provided_languages = [];
         foreach ($this->allLanguages as $lang) {
             list($l,$c) = explode('_', $lang);
             $provided_languages[strtolower($l)][strtolower($c)] = $lang;

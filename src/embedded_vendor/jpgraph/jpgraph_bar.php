@@ -37,8 +37,8 @@ class BarPlot extends Plot
     public $valuepos = 'top';
     public $grad = false;
     public $grad_style = 1;
-    public $grad_fromcolor = array(50,50,200);
-    public $grad_tocolor = array(255,255,255);
+    public $grad_fromcolor = [50, 50, 200];
+    public $grad_tocolor = [255, 255, 255];
     public $ymin = 0;
     protected $width = 0.4; // in percent of major ticks
     protected $abswidth = -1; // Width in absolute pixels
@@ -103,7 +103,7 @@ class BarPlot extends Plot
     // Horizontal bars
     public function RotatePattern($aPat, $aRotate = true)
     {
-        $rotate = array(1 => 2, 2 => 1, 3 => 3, 4 => 5, 5 => 4, 6 => 6, 7 => 7, 8 => 8);
+        $rotate = [1 => 2, 2 => 1, 3 => 3, 4 => 5, 5 => 4, 6 => 6, 7 => 7, 8 => 8];
         if ($aRotate) {
             return $rotate[$aPat];
         } else {
@@ -114,7 +114,7 @@ class BarPlot extends Plot
     public function Legend($graph)
     {
         if ($this->grad && $this->legend != "" && ! $this->fill) {
-            $color = array($this->grad_fromcolor,$this->grad_tocolor);
+            $color = [$this->grad_fromcolor, $this->grad_tocolor];
             // In order to differentiate between gradients and cooors specified as an RGB triple
             $graph->legend->Add(
                 $this->legend,
@@ -138,7 +138,7 @@ class BarPlot extends Plot
             if ($p3 < 90) {
                 $p3 += 5;
             }
-            $color = array($p1,$p2,$p3,$this->fill_color);
+            $color = [$p1, $p2, $p3, $this->fill_color];
             // A kludge: Too mark that we add a pattern we use a type value of < 100
             $graph->legend->Add(
                 $this->legend,
@@ -290,10 +290,10 @@ class BarPlot extends Plot
     {
         if (is_array($aPattern)) {
             $n = count($aPattern);
-            $this->iPattern = array();
-            $this->iPatternDensity = array();
+            $this->iPattern = [];
+            $this->iPatternDensity = [];
             if (is_array($aColor)) {
-                $this->iPatternColor = array();
+                $this->iPatternColor = [];
                 if (count($aColor) != $n) {
                     JpGraphError::RaiseL(2001);//('NUmber of colors is not the same as the number of patterns in BarPlot::SetPattern()');
                 }
@@ -423,11 +423,11 @@ class BarPlot extends Plot
             }
             */
             // Stroke fill color and fill gradient
-            $pts = array(
+            $pts = [
             $x,$zp,
             $x,$yscale->Translate($this->coords[0][$i]),
             $x + $abswidth,$yscale->Translate($this->coords[0][$i]),
-            $x + $abswidth,$zp);
+            $x + $abswidth,$zp];
             if ($this->grad) {
                 if ($grad === null) {
                     $grad = new Gradient($img);
@@ -786,7 +786,7 @@ class GroupBarPlot extends BarPlot
             $xmin = max($xmin, $xm);
             $ymin = min($ymin, $ym);
         }
-        return array($xmin,$ymin);
+        return [$xmin, $ymin];
     }
 
     public function Max()
@@ -798,7 +798,7 @@ class GroupBarPlot extends BarPlot
             $xmax = max($xmax, $xm);
             $ymax = max($ymax, $ym);
         }
-        return array($xmax,$ymax);
+        return [$xmax, $ymax];
     }
 
     public function GetCSIMareas()
@@ -927,7 +927,7 @@ class AccBarPlot extends BarPlot
         if ($ymax <= $this->ybase) {
             $ymax = $this->ybase;
         }
-        return array($xmax,$ymax);
+        return [$xmax, $ymax];
     }
 
     public function Min()
@@ -963,7 +963,7 @@ class AccBarPlot extends BarPlot
         if ($ymin >= $this->ybase) {
             $ymin = $this->ybase;
         }
-        return array($xmin,$ymin);
+        return [$xmin, $ymin];
     }
 
     // Stroke acc bar plot
@@ -997,7 +997,7 @@ class AccBarPlot extends BarPlot
                     $abswidth = round($this->width * $xscale->scale_factor, 0);
                 }
 
-                $pts = array($xt,$accyt,$xt,$yt,$xt + $abswidth,$yt,$xt + $abswidth,$accyt);
+                $pts = [$xt, $accyt, $xt, $yt, $xt + $abswidth, $yt, $xt + $abswidth, $accyt];
 
                 if ($this->bar_shadow) {
                     $ssh = $this->bar_shadow_hsize;

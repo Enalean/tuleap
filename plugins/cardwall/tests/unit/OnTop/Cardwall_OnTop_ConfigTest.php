@@ -48,13 +48,13 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $mapping_ongoing = new Cardwall_OnTop_Config_ValueMapping($value_inprogress, 11);
         $mapping_done    = new Cardwall_OnTop_Config_ValueMapping($value_done, 12);
 
-        $value_mappings = array(
+        $value_mappings = [
             100 => $mapping_none,
             101 => $mapping_todo,
             102 => $mapping_ongoing,
             103 => $mapping_done,
-        );
-        $this->mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        ];
+        $this->mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $this->config   = \Mockery::mock(\Cardwall_OnTop_Config::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -102,7 +102,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $column_factory          = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
         $mapping                 = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMapping::class);
         $tracker_mapping_factory = \Mockery::mock(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
-        $tracker_mapping_factory->shouldReceive('getMappings')->andReturn(array(99 => $mapping));
+        $tracker_mapping_factory->shouldReceive('getMappings')->andReturn([99 => $mapping]);
         $column_factory->shouldReceive('getDashboardColumns')->with($tracker)->andReturns(new Cardwall_OnTop_Config_ColumnCollection());
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         $this->assertEquals($mapping, $config->getMappingFor($mapping_tracker));

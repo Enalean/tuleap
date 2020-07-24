@@ -105,11 +105,11 @@ class Planning_MilestoneController extends BaseController
         $this->generateBareMilestone();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
-        return array(
+        return [
             Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
                 $this->getActivePaneIdentifier()
             )
-        );
+        ];
     }
 
     private function getMilestonePresenter(PanePresenterData $presenter_data)
@@ -145,9 +145,9 @@ class Planning_MilestoneController extends BaseController
         $this->addFeedback(Feedback::INFO, dgettext('tuleap-agiledashboard', 'Inconsistencies successfully solved!'));
 
         if (! $request_has_redirect = $extractor->getRedirectToParameters($this->request, $this->project)) {
-            $this->redirect(array(
+            $this->redirect([
                 'group_id' => $this->project->getGroupId()
-            ));
+            ]);
         }
 
         $this->redirect($extractor->getRedirectToParameters($this->request, $this->project));

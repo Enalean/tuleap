@@ -72,7 +72,7 @@ class Docman_BuildItemMappingVisitor
     public function __construct($groupId)
     {
         $this->groupId = $groupId;
-        $this->itemMapping = array();
+        $this->itemMapping = [];
         $this->dao = null;
     }
 
@@ -84,7 +84,7 @@ class Docman_BuildItemMappingVisitor
      */
     public function visitFolder($item, $params)
     {
-        $nodesToInspect = array();
+        $nodesToInspect = [];
 
         // Initial case of the recursion
         // If there is not yet a mapping between the current item id and his
@@ -172,7 +172,7 @@ class Docman_BuildItemMappingVisitor
      */
     public function compareFolderChildren($srcItem, $dstItem)
     {
-        $nodesToInspect = array();
+        $nodesToInspect = [];
         $srcList = $srcItem->getAllItems();
         $dstList = $dstItem->getAllItems();
         if (
@@ -246,7 +246,7 @@ class Docman_BuildItemMappingVisitor
      */
     public function getChildrenTitles($item)
     {
-        $title = array();
+        $title = [];
         $childList = $item->getAllItems();
         if ($childList && $childList->size()) {
             $childIter = $childList->iterator();
@@ -268,7 +268,7 @@ class Docman_BuildItemMappingVisitor
      */
     public function getTitleStrings($item)
     {
-        $title = array();
+        $title = [];
         if ($item->titlekey != null) {
             // Hardcoded for all languages. There is no simple and testable
             // ways to do it

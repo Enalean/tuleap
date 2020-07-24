@@ -61,7 +61,7 @@ class Worker
     public function main()
     {
         try {
-            $options = getopt('vh', array('help', 'id:'));
+            $options = getopt('vh', ['help', 'id:']);
             $this->showHelp($options);
             $this->checkWhoIsRunning();
             $this->configureRunner($options);
@@ -115,10 +115,10 @@ class Worker
         if (isset($options['v'])) {
             $this->setLogger(
                 new BrokerLogger(
-                    array(
+                    [
                         new Log_ConsoleLogger(),
                         BackendLogger::getDefaultLogger(basename(self::DEFAULT_LOG_FILE_PATH)),
-                    )
+                    ]
                 )
             );
         } else {

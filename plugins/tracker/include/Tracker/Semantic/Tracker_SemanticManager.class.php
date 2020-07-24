@@ -57,12 +57,12 @@ class Tracker_SemanticManager
         echo '</p>';
 
         foreach ($this->getSemantics() as $semantic) {
-            echo '<h3>' . $semantic->getLabel() . ' <a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+            echo '<h3>' . $semantic->getLabel() . ' <a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
                 'semantic' => $semantic->getShortName(),
-            )) . '">';
-            echo $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit'));
+            ]) . '">';
+            echo $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']);
             echo '</a></h3>';
             $semantic->display();
         }
@@ -141,10 +141,10 @@ class Tracker_SemanticManager
     {
          EventManager::instance()->processEvent(
              TRACKER_EVENT_MANAGE_SEMANTICS,
-             array(
+             [
                 'semantics'   => $semantics,
                 'tracker'     => $this->tracker,
-             )
+             ]
          );
     }
 
@@ -181,12 +181,12 @@ class Tracker_SemanticManager
 
     protected function getSemanticOrder()
     {
-        $order = array('title', 'description', 'status', 'contributor', SemanticTimeframe::NAME);
+        $order = ['title', 'description', 'status', 'contributor', SemanticTimeframe::NAME];
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTICS_NAMES,
-            array(
+            [
                 'semantics' => &$order
-            )
+            ]
         );
 
         return $order;

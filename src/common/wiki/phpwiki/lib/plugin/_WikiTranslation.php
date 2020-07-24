@@ -150,7 +150,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array( 'languages'  => '',  // comma delimited string of de,en,sv,...
+            [ 'languages'  => '',  // comma delimited string of de,en,sv,...
                     'string'     => '',
                     'page'       => '',  // use a translation service
                     'what'       => 'pages', // or 'buttons', 'plugins' or 'wikiwords'
@@ -166,7 +166,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                     'noT'           => false,  // don't display the T link
                                      // (for development only)
                     'debug'         => false
-            )
+            ]
         );
     }
 
@@ -201,8 +201,8 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             return $text;
         }
 
-        $this->_locales = array();
-        $this->_reverse_locales = array();
+        $this->_locales = [];
+        $this->_reverse_locales = [];
 
         if (! isset($this->_locales[$lang])) {
             $this->init_locale($lang);
@@ -301,12 +301,12 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             if (in_array($from_lang, $available_languages)) {
                 $languages = $available_languages;
             } else {
-                $languages = array_merge($available_languages, array($from_lang));
+                $languages = array_merge($available_languages, [$from_lang]);
             }
         } elseif (strstr($languages, ',')) {
             $languages = explode(',', $languages);
         } else {
-            $languages = array($languages);
+            $languages = [$languages];
         }
         if (in_array('zh', $languages) or in_array('ja', $languages)) {
             // If the current charset != utf-8 the text will not be displayed correctly.
@@ -328,7 +328,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             if ($dbi->isWikiPage($pagename)) {
                 $url = '';
                 // google can only translate from english and french
-                if (in_array($from_lang, array('en', 'fr'))) {
+                if (in_array($from_lang, ['en', 'fr'])) {
                     $url = "http://translate.google.com/translate";
                     $url .= "?langpair=" . urlencode($from_lang . "|" . $to_lang);
                     $url .= "&u=" . urlencode(WikiURL($pagename, false, true));
@@ -499,8 +499,8 @@ class _PageList_Column_customlang extends _PageList_Column
                 ! ($this->_noT or $this->_nolinks)
                 and $this->dbi->isWikiPage($trans)
             ) {
-                $url = WikiURL($trans, array('action' => 'TranslateText',
-                                             'lang' => $this->_field));
+                $url = WikiURL($trans, ['action' => 'TranslateText',
+                                             'lang' => $this->_field]);
                 $button = $WikiTheme->makeButton('T', $url);
                 $button->addTooltip(sprintf(
                     _("Define the translation for %s in %s"),

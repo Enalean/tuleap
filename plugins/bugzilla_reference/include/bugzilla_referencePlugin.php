@@ -71,10 +71,10 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
 
     public function addSiteAdministrationOptionHook(array $params)
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
             'href'  => BUGZILLA_REFERENCE_BASE_URL . '/admin/'
-        );
+        ];
     }
 
     public function routeAdmin(): DispatchableWithRequest
@@ -117,10 +117,10 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     public function get_available_reference_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['natures']['bugzilla'] =
-            array(
+            [
                 'keyword' => 'bugzilla',
                 'label'   => dgettext('tuleap-bugzilla_reference', 'Bugzilla')
-            );
+            ];
     }
 
     /**

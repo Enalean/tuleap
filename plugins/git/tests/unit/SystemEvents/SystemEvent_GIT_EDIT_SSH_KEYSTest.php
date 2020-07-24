@@ -83,8 +83,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 
     public function testItTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
     {
-        $original_keys = array();
-        $new_keys = array();
+        $original_keys = [];
+        $new_keys = [];
 
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -105,11 +105,11 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 
     public function testItTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
     {
-        $new_keys      = array();
-        $original_keys = array(
+        $new_keys      = [];
+        $original_keys = [
             'abcdefg',
             'wxyz',
-        );
+        ];
 
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::' . 'abcdefg' . PFUser::SSH_KEY_SEPARATOR . 'wxyz', '', '', '', '', '', '');
         $event->injectDependencies(

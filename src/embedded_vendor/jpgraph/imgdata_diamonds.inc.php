@@ -11,11 +11,11 @@
 class ImgData_Diamonds extends ImgData
 {
     protected $name = 'Diamonds';
-    protected $an = array(MARK_IMG_DIAMOND => 'imgdata');
-    protected $colors = array('lightblue','darkblue','gray',
-    'blue','pink','purple','red','yellow');
-    protected $index  = array('lightblue' => 7,'darkblue' => 2,'gray' => 6,
-    'blue' => 4,'pink' => 1,'purple' => 5,'red' => 0,'yellow' => 3);
+    protected $an = [MARK_IMG_DIAMOND => 'imgdata'];
+    protected $colors = ['lightblue','darkblue','gray',
+    'blue','pink','purple','red','yellow'];
+    protected $index  = ['lightblue' => 7,'darkblue' => 2,'gray' => 6,
+    'blue' => 4,'pink' => 1,'purple' => 5,'red' => 0,'yellow' => 3];
 
     protected $maxidx = 7;
     protected $imgdata;

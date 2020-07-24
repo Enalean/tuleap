@@ -31,13 +31,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public const OPEN_PREFIX = 'o';
     public const NEW_VALUE_PREFIX = '!';
 
-    public $default_properties = array(
-        'hint' => array(
+    public $default_properties = [
+        'hint' => [
             'value' => 'Type in a search term',
             'type'  => 'string',
             'size'  => 40,
-        ),
-    );
+        ],
+    ];
 
     /**
      * @return bool
@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string html
      */
-    public function fetchOpenList($values = array(), $name = true)
+    public function fetchOpenList($values = [], $name = true)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string html
      */
-    public function fetchOpenListMasschange($values = array(), $name = true)
+    public function fetchOpenListMasschange($values = [], $name = true)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -168,7 +168,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         array $submitted_values
     ) {
         assert($value instanceof Tracker_Artifact_ChangesetValue_List);
-        $selected_values = $value ? $value->getListValues() : array();
+        $selected_values = $value ? $value->getListValues() : [];
         if (is_array($submitted_values) && isset($submitted_values[$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[$this->id]));
         }
@@ -185,8 +185,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $labels = array();
-        $selected_values = $value ? $value->getListValues() : array();
+        $labels = [];
+        $selected_values = $value ? $value->getListValues() : [];
 
         if (empty($selected_values)) {
             return $this->getNoValueLabel();
@@ -236,7 +236,10 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
-                $selected_values = ! empty($value) ? $value->getListValues() : array();
+                $selected_values = [];
+                if ($value !== null) {
+                    $selected_values = $value->getListValues();
+                }
                 foreach ($selected_values as $value) {
                     if ($value->getId() != 100) {
                         $output .= $value->getLabel();
@@ -250,7 +253,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public function textboxlist($keyword, $limit = 10)
     {
-        $json_values = array();
+        $json_values = [];
         $matching_values = $this->getBind()->getValuesByKeyword($keyword, $limit);
         $nb = count($matching_values);
         if ($nb < $limit) {
@@ -327,18 +330,18 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     {
         $changeset_value = null;
         $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
-        $bindvalue_ids = array();
+        $bindvalue_ids = [];
         foreach ($value_ids as $v) {
             if ($v['bindvalue_id']) {
                 $bindvalue_ids[] = $v['bindvalue_id'];
             }
         }
-        $bind_values = array();
+        $bind_values = [];
         if (count($bindvalue_ids)) {
             $bind_values = $this->getBind()->getBindValuesForIds($bindvalue_ids);
         }
 
-        $list_values = array();
+        $list_values = [];
         foreach ($value_ids as $v) {
             if ($v['bindvalue_id']) {
                 if (isset($bind_values[$v['bindvalue_id']])) {
@@ -359,7 +362,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return new Tracker_FormElement_Field_List_OpenValueDao();
     }
 
-    protected $cache_openvalues = array();
+    protected $cache_openvalues = [];
 
     public function getOpenValueById($oid)
     {
@@ -385,7 +388,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $openvalue_dao = $this->getOpenValueDao();
         // the separator is a comma
         $values = $this->sanitize($value);
-        $value_ids = array();
+        $value_ids = [];
         foreach ($values as $v) {
             $bindvalue_id = null;
             $openvalue_id = null;
@@ -403,10 +406,10 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     break;
             }
             if ($bindvalue_id || $openvalue_id) {
-                $value_ids[] = array(
+                $value_ids[] = [
                     'bindvalue_id' => $bindvalue_id,
                     'openvalue_id' => $openvalue_id,
-                );
+                ];
             }
         }
 
@@ -427,7 +430,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function sanitize($submitted_value)
     {
         $values = explode(',', (string) $submitted_value);
-        $sanitized = array();
+        $sanitized = [];
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
@@ -456,7 +459,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function toObj($submitted_value)
     {
         $values    = explode(',', (string) $submitted_value);
-        $sanitized = array();
+        $sanitized = [];
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
@@ -504,7 +507,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
-        $arr = array();
+        $arr = [];
         $bindtable = $this->getBind()->getBindtableSqlFragment();
         $values = $this->getDao()->searchChangesetValues(
             $changeset_id,
@@ -552,7 +555,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
     {
-        $arr = array();
+        $arr = [];
         $bindtable = $this->getBind()->getBindtableSqlFragment();
         $values = $this->getDao()->searchChangesetValues(
             $changeset_id,
@@ -602,8 +605,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         //Only filter query if field is used
         if ($this->isUsed()) {
             $criteria_value = $this->extractCriteriaValue($this->getCriteriaValue($criteria));
-            $openvalues     = array();
-            $bindvalues     = array();
+            $openvalues     = [];
+            $bindvalues     = [];
             foreach ($criteria_value as $v) {
                 if (is_a($v, 'Tracker_FormElement_Field_List_UnsavedValue')) {
                     //ignore it
@@ -690,7 +693,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public function getCriteriaValue($criteria)
     {
         if (! isset($this->criteria_value)) {
-            $this->criteria_value = array();
+            $this->criteria_value = [];
         }
 
         if (! isset($this->criteria_value[$criteria->report->id])) {
@@ -745,7 +748,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         }
 
         //first extract open and unsaved values
-        $bindvalue_ids = array();
+        $bindvalue_ids = [];
         foreach ($criteria_value as $key => $val) {
             $val = trim($val);
             if (! $val) {
@@ -767,7 +770,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         }
 
         //load bind values
-        $bind_values = array();
+        $bind_values = [];
         if (count($bindvalue_ids)) {
             $bind_values = $this->getBind()->getBindValues($bindvalue_ids);
         }
@@ -828,7 +831,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     {
         return $this->joinFieldDataFromArray(
             array_map(
-                array($this, 'getFieldDataFromStringValue'),
+                [$this, 'getFieldDataFromStringValue'],
                 $values
             )
         );
@@ -836,7 +839,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     private function getFieldDataFromRESTObjects(array $values)
     {
-        $data = array();
+        $data = [];
         foreach ($values as $value) {
             $data[] = $this->getFieldDataFromRESTObject($value);
         }
@@ -908,7 +911,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     {
         $default_values = parent::getDefaultValue();
 
-        if (! $default_values || $default_values === array(parent::NONE_VALUE)) {
+        if (! $default_values || $default_values === [parent::NONE_VALUE]) {
             return '';
         }
 
@@ -930,20 +933,20 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $type = $this->getBind()->getType();
 
         if ($type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
-            return array(
-                'resource' => array(
+            return [
+                'resource' => [
                     'type' => 'users',
                     'uri'  => 'users/?query='
-                )
-            );
+                ]
+            ];
         }
 
         if ($type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
             $ugroup_manager = new UGroupManager();
             $project        = $this->getTracker()->getProject();
-            $user_groups    = $ugroup_manager->getUGroups($project, array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::NONE));
+            $user_groups    = $ugroup_manager->getUGroups($project, [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::NONE]);
 
-            $values = array();
+            $values = [];
             foreach ($user_groups as $ugroup) {
                 $ugroup_representation = new MinimalUserGroupRepresentation();
                 $ugroup_representation->build($project->getID(), $ugroup);

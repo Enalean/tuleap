@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
      */
     public function getBacklog(Planning_Milestone $milestone, $limit = null, $offset = null)
     {
-        $backlog_trackers_children_can_manage = array();
+        $backlog_trackers_children_can_manage = [];
         $first_child_backlog_trackers = $this->getFirstChildBacklogTracker($milestone);
         if ($first_child_backlog_trackers) {
             $backlog_trackers_children_can_manage = array_merge($backlog_trackers_children_can_manage, $first_child_backlog_trackers);

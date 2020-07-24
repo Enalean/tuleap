@@ -67,12 +67,12 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $this->field_int    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturns(30)->getMock();
         $this->field_list   = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(40)->getMock();
 
-        $this->used_fields = array(
+        $this->used_fields = [
             $this->field_string,
             $this->field_text,
             $this->field_int,
             $this->field_list,
-        );
+        ];
 
         $this->user           = \Mockery::spy(\PFUser::class);
         $this->tracker        = Mockery::spy(Tracker::class);

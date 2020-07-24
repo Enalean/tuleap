@@ -40,12 +40,12 @@ class AgileDashboardJSONPermissionsRetriever
     {
         if (! $project->usesService(AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => dgettext(
                         'tuleap-agiledashboard',
                         "Service Agiledashboard is disabled."
                     )
-                )
+                ]
             );
         }
 

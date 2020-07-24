@@ -62,31 +62,31 @@ class PermissionPerGroupBuilder
     private function addForgeUGroups(array &$ugroups)
     {
         if (ForgeConfig::areAnonymousAllowed()) {
-            $ugroups[] = array(
+            $ugroups[] = [
                 'id'   => ProjectUGroup::ANONYMOUS,
                 'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::ANON),
-            );
+            ];
         } elseif (ForgeConfig::areRestrictedUsersAllowed()) {
-            $ugroups[] = array(
+            $ugroups[] = [
                 'id'   => ProjectUGroup::AUTHENTICATED,
                 'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::AUTHENTICATED),
-            );
+            ];
         }
 
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'   => ProjectUGroup::REGISTERED,
             'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::REGISTERED),
-        );
+        ];
     }
 
     private function addDynamicUgroups(Project $project, array &$ugroups)
     {
         $this->addForgeUGroups($ugroups);
 
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'   => ProjectUGroup::PROJECT_MEMBERS,
             'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
-        );
+        ];
 
         $this->addWiki($project, $ugroups);
         $this->addForum($project, $ugroups);
@@ -96,10 +96,10 @@ class PermissionPerGroupBuilder
 
     private function getUGroupEntry(ProjectUGroup $ugroup)
     {
-        return array(
+        return [
             'id'   => $ugroup->getId(),
             'name' => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
-        );
+        ];
     }
 
     private function appendToUGroups(array &$ugroups, Project $project, int $ugroup_id): void
@@ -134,10 +134,10 @@ class PermissionPerGroupBuilder
 
     private function addNobody(array &$ugroups)
     {
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'   => ProjectUGroup::NONE,
             'name' => NameTranslator::getUserGroupDisplayName(NameTranslator::NOBODY),
-        );
+        ];
     }
 
     private function addStaticUgroups(Project $project, array &$ugroups)

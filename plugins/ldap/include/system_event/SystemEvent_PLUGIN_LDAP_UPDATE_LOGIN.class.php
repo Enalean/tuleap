@@ -62,7 +62,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
     public function process()
     {
         $user_ids    = $this->getParametersAsArray();
-        $project_ids = array();
+        $project_ids = [];
 
         // Get all projects the user is member of (project member or user group member)
         $um = $this->getUserManager();

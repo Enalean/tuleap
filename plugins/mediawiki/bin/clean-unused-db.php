@@ -22,7 +22,7 @@
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-if (isset($argv[1]) && in_array($argv[1], array('help', '-h', '--help'))) {
+if (isset($argv[1]) && in_array($argv[1], ['help', '-h', '--help'])) {
     echo <<<EOT
 USAGE: clean-unused-db.php [go] [id] [id]
 

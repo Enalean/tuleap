@@ -112,23 +112,23 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \PHPUnit\Framew
 
     public function testItGeneratesFieldDataFromRestValuesByField(): void
     {
-        $values = array(
-            'integer' => array(
+        $values = [
+            'integer' => [
                'value' => 42
-            ),
-            'floatibulle' => array(
+            ],
+            'floatibulle' => [
                 'value' => 3.14
-            ),
-            'string' => array(
+            ],
+            'string' => [
                 'value' => 'My text'
-            ),
-            'text' => array(
-                'value' => array(
+            ],
+            'text' => [
+                'value' => [
                     'format'  => 'text',
                     'content' => 'My awesome text'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
@@ -137,30 +137,30 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \PHPUnit\Framew
 
         $fields_data = $this->validator->getFieldsDataOnCreateFromValuesByField($values, $this->tracker);
 
-        $expected = array(
+        $expected = [
             1 => 42,
             2 => 3.14,
             3 => 'My text',
-            4 => array(
+            4 => [
                 'format'  => 'text',
                 'content' => 'My awesome text'
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $fields_data);
     }
 
     public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void
     {
-        $values = array(
+        $values = [
             'integerV2'   => 42,
             'floatibulle' => 3.14,
             'string'      => 'My text',
-            'text'        => array(
+            'text'        => [
                 'format'  => 'text',
                 'content' => 'My awesome text'
-            )
-        );
+            ]
+        ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'integer')->andReturns($this->field_int);
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'floatibulle')->andReturns($this->field_float);
@@ -174,9 +174,9 @@ final class Tracker_REST_Artifact_ArtifactValidator_Test extends \PHPUnit\Framew
 
     public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
-        $values = array(
+        $values = [
             'msb' => ['whatever']
-        );
+        ];
 
         $this->form_element_factory->shouldReceive('getUsedFieldByName')->with(101, 'msb')->andReturns($this->field_msb);
 

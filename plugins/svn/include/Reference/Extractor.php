@@ -46,7 +46,7 @@ class Extractor
             return false;
         }
 
-        $matches = array();
+        $matches = [];
         if (! preg_match($this->getRegExp(), $value, $matches)) {
             return false;
         }

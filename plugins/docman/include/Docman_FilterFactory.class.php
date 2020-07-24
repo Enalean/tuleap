@@ -28,7 +28,7 @@ class Docman_FilterFactory
 
     public function __construct($groupId)
     {
-        $this->dynTextFields = array();
+        $this->dynTextFields = [];
         $this->groupId = $groupId;
     }
 
@@ -40,9 +40,9 @@ class Docman_FilterFactory
 
         $itsMd = $this->getItemTypeSearchMetadata();
         $itemTypeSearchSearch = false;
-        $itsRows = array();
+        $itsRows = [];
 
-        $filtersArray = array();
+        $filtersArray = [];
 
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
         $dao = $this->getDao();
@@ -132,8 +132,8 @@ class Docman_FilterFactory
         $md->setLabel('item_type');
         $md->setIsMultipleValuesAllowed(true);
 
-        $row = array();
-        $values = array();
+        $row = [];
+        $values = [];
         $item_factory = Docman_ItemFactory::instance($this->groupId);
         $all_types = [
             PLUGIN_DOCMAN_ITEM_TYPE_FILE,
@@ -387,7 +387,7 @@ class Docman_FilterFactory
             $dstFilter->setValue($srcFilter->getValue());
             $dstFilter->setOperator($srcFilter->getOperator());
         } elseif (is_a($srcFilter, 'Docman_FilterListAdvanced')) {
-            $dstVal = array();
+            $dstVal = [];
             foreach ($srcFilter->getValue() as $val) {
                 $v = $this->getLoveClonedValue($srcFilter, $val, $metadataMapping);
                 if ($v !== null) {

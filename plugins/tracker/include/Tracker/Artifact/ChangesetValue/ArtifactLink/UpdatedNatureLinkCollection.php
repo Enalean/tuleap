@@ -46,7 +46,7 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
     /**
      * @var Tracker_ArtifactLinkInfo[]
      */
-    private $changed = array();
+    private $changed = [];
 
     public function __construct(
         NaturePresenter $source_nature,

@@ -55,7 +55,7 @@ class Pack
      * Caches object offsets
      *
      */
-    private $offsetCache = array();
+    private $offsetCache = [];
 
     /**
      * indexModified
@@ -140,7 +140,7 @@ class Pack
         $indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
         $mTime = filemtime($indexFile);
         if ($mTime > $this->indexModified) {
-            $this->offsetCache = array();
+            $this->offsetCache = [];
             $this->indexModified = $mTime;
         }
 
@@ -339,7 +339,7 @@ class Pack
             $low = Pack::fuint32($index);
             $high = Pack::fuint32($index);
         }
-        return array($low, $high);
+        return [$low, $high];
     }
 
     /**
@@ -413,7 +413,7 @@ class Pack
             /*
              * regular gzipped object data
              */
-            return array($type, gzuncompress(fread($pack, $size + 512), $size));
+            return [$type, gzuncompress(fread($pack, $size + 512), $size)];
         } elseif ($type == Pack::OBJ_OFS_DELTA) {
             /*
              * delta of an object at offset
@@ -449,7 +449,7 @@ class Pack
                  */
                 list($type, $base) = $this->UnpackObject($pack, $baseOffset);
                 $data = Pack::ApplyDelta($delta, $base);
-                return array($type, $data);
+                return [$type, $data];
             }
         } elseif ($type == Pack::OBJ_REF_DELTA) {
             /*
@@ -471,7 +471,7 @@ class Pack
 
             $data = Pack::ApplyDelta($delta, $base);
 
-            return array($type, $data);
+            return [$type, $data];
         }
 
         return false;

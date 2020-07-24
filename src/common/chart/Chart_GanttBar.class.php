@@ -136,7 +136,7 @@ class Chart_GanttBar
      */
     public function __call($method, $args)
     {
-        $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
+        $result = call_user_func_array([$this->jpgraph_instance, $method], $args);
         return $result;
     }
 
@@ -152,7 +152,7 @@ class Chart_GanttBar
     {
         $this->jpgraph_instance->SetCSIMTarget($link);
         $this->jpgraph_instance->SetCSIMAlt($alt);
-        $this->jpgraph_instance->title->SetCSIMTarget(array($link, $link));
-        $this->jpgraph_instance->title->SetCSIMAlt(array($alt));
+        $this->jpgraph_instance->title->SetCSIMTarget([$link, $link]);
+        $this->jpgraph_instance->title->SetCSIMAlt([$alt]);
     }
 }

@@ -41,7 +41,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/comments'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsWithReadOnlyAdmin(): void
@@ -51,7 +51,7 @@ final class PullRequestsCommentsTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetPullRequestComments(): void
@@ -94,9 +94,9 @@ final class PullRequestsCommentsTest extends RestBase
     public function testPostPullRequestComment(): void
     {
         $response  = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
-            array(
+            [
                 'content' => 'Shot down in flames'
-            )
+            ]
         )));
 
         $this->assertEquals($response->getStatusCode(), 201);
@@ -112,9 +112,9 @@ final class PullRequestsCommentsTest extends RestBase
                 'pull_requests/1/comments',
                 null,
                 json_encode(
-                    array(
+                    [
                         'content' => 'Shot down in flames'
-                    )
+                    ]
                 )
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME

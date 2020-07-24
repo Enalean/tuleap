@@ -79,7 +79,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $lus->shouldReceive('sync')->never();
         $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
+        $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
 
     public function testNoDBUpdateIfLdapSearchErrno(): void
@@ -110,7 +110,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $lus->shouldReceive('sync')->never();
         $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
+        $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
 
     public function testUserSuspendedIfNotInLDAP(): void
@@ -162,15 +162,15 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $lus->shouldReceive('sync')->never();
         $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
+        $sync->ldapSync(['ldap_id' => 'ed1234'], 1);
     }
 
     public function testUserLdapUidUpdateIfLdapDoesntMatch(): void
     {
-        $row = array('user_id'  => '4321',
+        $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'oula la'
-                     );
+                     ];
         $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $res = \Mockery::spy(\LDAPResult::class);
@@ -244,10 +244,10 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $lus->shouldReceive('sync')->once()->andReturns(true);
         $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
 
-        $row = array('user_id'  => '4321',
+        $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
-                     );
+                     ];
         $sync->ldapSync($row, 1);
     }
 
@@ -284,10 +284,10 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
         $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
 
-        $row = array('user_id'  => '4321',
+        $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
-                     );
+                     ];
         $sync->ldapSync($row, 1);
     }
 
@@ -329,10 +329,10 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $syncReminderManager = \Mockery::spy(\LDAP_SyncReminderNotificationManager::class);
         $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
 
-        $row = array('user_id'  => '4321',
+        $row = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
-                     );
+                     ];
         $sync->ldapSync($row, 1);
     }
 }

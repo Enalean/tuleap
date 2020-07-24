@@ -89,19 +89,19 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testExtractReturnType(): void
     {
         $return = $this->givenTheReturnTypeOfAddProject();
-        $this->assertEquals(array('addProject' => 'xsd:int'), $return);
+        $this->assertEquals(['addProject' => 'xsd:int'], $return);
     }
 
     public function testExtractReturnTypeBoolean(): void
     {
         $gen = $this->givenGenerator('returnBoolean');
-        $this->assertEquals(array('returnBoolean' => 'xsd:boolean'), $gen->getReturnType());
+        $this->assertEquals(['returnBoolean' => 'xsd:boolean'], $gen->getReturnType());
     }
 
     public function testItExtractReturnTypeArrayOfString(): void
     {
         $gen = $this->givenGenerator('returnArrayOfString');
-        $this->assertEquals(array('returnArrayOfString' => 'tns:ArrayOfstring'), $gen->getReturnType());
+        $this->assertEquals(['returnArrayOfString' => 'tns:ArrayOfstring'], $gen->getReturnType());
     }
 
     public function testItThrowAnExceptionOnUnknownTypes(): void
@@ -116,15 +116,15 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
         {
             public function wsdlDoc2soapTypes($params)
             {
-                $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
+                $params['doc2soap_types'] = array_merge($params['doc2soap_types'], [
                     'arrayofplugintypes' => 'tns:ArrayOfStats'
-                ));
+                ]);
             }
         };
         EventManager::instance()->addListener(Event::WSDL_DOC2SOAP_TYPES, $plugin, 'wsdlDoc2soapTypes', false);
 
         $gen = $this->givenGenerator('returnArrayOfPluginTypes');
-        $this->assertEquals(array('returnArrayOfPluginTypes' => 'tns:ArrayOfStats'), $gen->getReturnType());
+        $this->assertEquals(['returnArrayOfPluginTypes' => 'tns:ArrayOfStats'], $gen->getReturnType());
     }
 
     private function givenTheCommentOfAddProject(): string

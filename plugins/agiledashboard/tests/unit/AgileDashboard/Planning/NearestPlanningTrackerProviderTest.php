@@ -68,14 +68,14 @@ class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends \PHPUni
         $sprint_planning->shouldReceive('getPlanningTracker')->andReturns($this->sprint_tracker);
 
         $hierarchy         = \Mockery::spy(\Tracker_Hierarchy::class);
-        $hierarchy->shouldReceive('sortTrackerIds')->andReturns(array('release', 'sprint'));
+        $hierarchy->shouldReceive('sortTrackerIds')->andReturns(['release', 'sprint']);
         $this->hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->hierarchy_factory->shouldReceive('getHierarchy')->andReturns($hierarchy);
 
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->task_tracker)->andReturns(array());
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($story_tracker)->andReturns(array($sprint_planning));
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->epic_tracker)->andReturns(array());
+        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->task_tracker)->andReturns([]);
+        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($story_tracker)->andReturns([$sprint_planning]);
+        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->epic_tracker)->andReturns([]);
 
         $this->provider = new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->planning_factory);
     }

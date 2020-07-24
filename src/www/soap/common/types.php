@@ -6,8 +6,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'xsd:string[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'xsd:string[]']],
     'xsd:string'
 );
 
@@ -17,8 +17,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'xsd:integer[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'xsd:integer[]']],
     'xsd:integer'
 );
 
@@ -28,8 +28,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'xsd:long[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'xsd:long[]']],
     'xsd:long'
 );
 
@@ -39,8 +39,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'xsd:int[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'xsd:int[]']],
     'xsd:int'
 );
 
@@ -50,12 +50,12 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'revision' => array('name' => 'revision', 'type' => 'xsd:string'),
-        'author'   => array('name' => 'author',   'type' => 'xsd:string'),
-        'date'     => array('name' => 'date',     'type' => 'xsd:string'),
-        'message'  => array('name' => 'message',  'type' => 'xsd:string'),
-    )
+    [
+        'revision' => ['name' => 'revision', 'type' => 'xsd:string'],
+        'author'   => ['name' => 'author',   'type' => 'xsd:string'],
+        'date'     => ['name' => 'date',     'type' => 'xsd:string'],
+        'message'  => ['name' => 'message',  'type' => 'xsd:string'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -64,8 +64,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Revision[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Revision[]']],
     'tns:Revision'
 );
 
@@ -75,10 +75,10 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'user_id'      => array('name' => 'user_id',      'type' => 'xsd:int'),
-        'commit_count' => array('name' => 'commit_count', 'type' => 'xsd:int'),
-    )
+    [
+        'user_id'      => ['name' => 'user_id',      'type' => 'xsd:int'],
+        'commit_count' => ['name' => 'commit_count', 'type' => 'xsd:int'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -87,8 +87,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:Commiter[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Commiter[]']],
     'tns:Commiter'
 );
 
@@ -98,10 +98,10 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'path'         => array('name' => 'path',         'type' => 'xsd:string'),
-        'commit_count' => array('name' => 'commit_count', 'type' => 'xsd:int'),
-    )
+    [
+        'path'         => ['name' => 'path',         'type' => 'xsd:string'],
+        'commit_count' => ['name' => 'commit_count', 'type' => 'xsd:int'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -110,8 +110,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:SvnPathInfo[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:SvnPathInfo[]']],
     'tns:SvnPathInfo'
 );
 
@@ -121,12 +121,12 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'path'      => array('name' => 'path',       'type' => 'xsd:string'),
-        'author'    => array('name' => 'author',     'type' => 'xsd:int'),
-        'message'   => array('name' => 'message',    'type' => 'xsd:string'),
-        'timestamp' => array('name' => 'timestamp',  'type' => 'xsd:int'),
-    )
+    [
+        'path'      => ['name' => 'path',       'type' => 'xsd:string'],
+        'author'    => ['name' => 'author',     'type' => 'xsd:int'],
+        'message'   => ['name' => 'message',    'type' => 'xsd:string'],
+        'timestamp' => ['name' => 'timestamp',  'type' => 'xsd:int'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -135,8 +135,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:SvnPathDetails[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:SvnPathDetails[]']],
     'tns:SvnPathDetails'
 );
 
@@ -146,14 +146,14 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'identifier' => array('name' => 'identifier', 'type' => 'xsd:string'),
-        'username' => array('name' => 'username', 'type' => 'xsd:string'),
-        'id' => array('name' => 'id', 'type' => 'xsd:string'),
-        'real_name' => array('name' => 'real_name', 'type' => 'xsd:string'),
-        'email' => array('name' => 'email', 'type' => 'xsd:string'),
-        'ldap_id' => array('name' => 'ldap_id', 'type' => 'xsd:string'),
-    )
+    [
+        'identifier' => ['name' => 'identifier', 'type' => 'xsd:string'],
+        'username' => ['name' => 'username', 'type' => 'xsd:string'],
+        'id' => ['name' => 'id', 'type' => 'xsd:string'],
+        'real_name' => ['name' => 'real_name', 'type' => 'xsd:string'],
+        'email' => ['name' => 'email', 'type' => 'xsd:string'],
+        'ldap_id' => ['name' => 'ldap_id', 'type' => 'xsd:string'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -162,8 +162,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:UserInfo[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:UserInfo[]']],
     'tns:UserInfo'
 );
 
@@ -173,11 +173,11 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'id'           => array('name' => 'id',           'type' => 'xsd:int'),
-        'name'         => array('name' => 'name',         'type' => 'xsd:string'),
-        'is_mandatory' => array('name' => 'is_mandatory', 'type' => 'xsd:int'),
-    )
+    [
+        'id'           => ['name' => 'id',           'type' => 'xsd:int'],
+        'name'         => ['name' => 'name',         'type' => 'xsd:string'],
+        'is_mandatory' => ['name' => 'is_mandatory', 'type' => 'xsd:int'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -186,8 +186,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:DescField[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:DescField[]']],
     'tns:DescField'
 );
 
@@ -197,10 +197,10 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'id'    => array('name' => 'id',    'type' => 'xsd:int'),
-        'value' => array('name' => 'value', 'type' => 'xsd:string'),
-    )
+    [
+        'id'    => ['name' => 'id',    'type' => 'xsd:int'],
+        'value' => ['name' => 'value', 'type' => 'xsd:string'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -209,8 +209,8 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:DescFieldValue[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:DescFieldValue[]']],
     'tns:DescFieldValue'
 );
 
@@ -220,11 +220,11 @@ $server->wsdl->addComplexType(
     'struct',
     'sequence',
     '',
-    array(
-        'id'         => array('name' => 'id',         'type' => 'xsd:int'),
-        'short_name' => array('name' => 'short_name', 'type' => 'xsd:string'),
-        'is_used'    => array('name' => 'is_used',    'type' => 'xsd:int'),
-    )
+    [
+        'id'         => ['name' => 'id',         'type' => 'xsd:int'],
+        'short_name' => ['name' => 'short_name', 'type' => 'xsd:string'],
+        'is_used'    => ['name' => 'is_used',    'type' => 'xsd:int'],
+    ]
 );
 
 $server->wsdl->addComplexType(
@@ -233,7 +233,7 @@ $server->wsdl->addComplexType(
     'array',
     '',
     'SOAP-ENC:Array',
-    array(),
-    array(array('ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ServiceValue[]')),
+    [],
+    [['ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:ServiceValue[]']],
     'tns:ServiceValue'
 );

@@ -70,42 +70,42 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest ex
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
     public function testItSavesRegisteredWhenSelectedAuthenticated(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
     public function testItSavesRegisteredWhenSelectedRegistered(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED));
+        $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
     public function testItSavesProjectMembersWhenSelectedProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS]);
     }
 
     public function testItSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup(): void
@@ -113,7 +113,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest ex
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->ordered()->andReturnTrue();
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup(): void
@@ -121,7 +121,7 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest ex
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->ordered()->andReturnTrue();
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesSVNAdminWikiAdminAndStatic(): void
@@ -130,13 +130,13 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest ex
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->ordered()->andReturnTrue();
         $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
     }
 
     public function testItSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS]);
     }
 }

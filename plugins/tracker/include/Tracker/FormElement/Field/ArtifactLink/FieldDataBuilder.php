@@ -24,16 +24,16 @@ class FieldDataBuilder
 {
     public function getDataLikeWebUI(array $new_values, array $removed_values, array $submitted_values)
     {
-        return array(
+        return [
             'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
             'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values),
             'natures'        => $this->formatNaturesLikeWebUI($submitted_values)
-        );
+        ];
     }
 
     private function formatNaturesLikeWebUI(array $new_values)
     {
-        $natures = array();
+        $natures = [];
 
         foreach ($new_values as $value) {
             if (is_array($value) && isset($value['type'])) {
@@ -46,7 +46,7 @@ class FieldDataBuilder
 
     private function formatNewValuesLikeWebUI(array $new_values)
     {
-        $artifact_ids = array();
+        $artifact_ids = [];
         foreach ($new_values as $value) {
             $artifact_ids[] = $value;
         }
@@ -56,9 +56,9 @@ class FieldDataBuilder
 
     private function formatRemovedValuesLikeWebUI(array $removed_values)
     {
-        $values = array();
+        $values = [];
         foreach ($removed_values as $value) {
-            $values[$value] = array($value);
+            $values[$value] = [$value];
         }
 
         return $values;
@@ -71,7 +71,7 @@ class FieldDataBuilder
      */
     public function getArrayOfIdsFromArray(array $new_value)
     {
-        $artifact_ids = array();
+        $artifact_ids = [];
 
         foreach ($new_value as $value) {
             $artifact_ids[] = (int) $value['id'];
@@ -97,10 +97,10 @@ class FieldDataBuilder
         }
 
         if ($id) {
-            return array(
+            return [
                 "id"     => $id,
                 "nature" => $nature
-            );
+            ];
         }
 
         return null;

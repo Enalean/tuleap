@@ -23,10 +23,10 @@ class MailEnhancer
 {
 
     /** @var Array */
-    private $additional_headers = array();
+    private $additional_headers = [];
 
     /** @var Array */
-    private $additional_properties = array();
+    private $additional_properties = [];
 
     /** @var int */
     private $message_id;

@@ -68,7 +68,7 @@ class Tracker_Widget_MyArtifacts extends Widget
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
-        $vShow = new Valid_WhiteList('show', array('A', 'S', 'AS'));
+        $vShow = new Valid_WhiteList('show', ['A', 'S', 'AS']);
         $vShow->required();
         if (! $request->exist('cancel')) {
             if ($request->valid($vShow)) {

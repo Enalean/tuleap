@@ -106,12 +106,12 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
  */
 function isActionPage($filename)
 {
-    static $special = array("DebugInfo"     => "_BackendInfo",
+    static $special = ["DebugInfo"     => "_BackendInfo",
                             "PhpWikiRecentChanges" => "RssFeed",
                             "ProjectSummary"      => "RssFeed",
                             "RecentReleases"      => "RssFeed",
                             "InterWikiMap"      => "InterWikiMap",
-                            );
+                            ];
     $base = preg_replace("/\..{1,4}$/", "", basename($filename));
     if (isset($special[$base])) {
         return $special[$base];
@@ -300,7 +300,7 @@ function DoUpgrade($request)
         $request->_notAuthorized(WIKIAUTH_ADMIN);
         $request->finish(
             HTML::div(
-                array('class' => 'disabled-plugin'),
+                ['class' => 'disabled-plugin'],
                 fmt("Upgrade disabled: user != isAdmin")
             )
         );

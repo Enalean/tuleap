@@ -112,7 +112,7 @@ class ArtifactImport
         $this->submitted_by_column = -1;
         $this->submitted_on_column = -1;
         $this->last_update_date_column = -1;
-        $this->parsed_labels = array();
+        $this->parsed_labels = [];
     }
 
     public function localizeLabels()
@@ -192,7 +192,7 @@ class ArtifactImport
         for ($c = 0; $c < $this->num_columns; $c++) {
             $field_label = SimpleSanitizer::sanitize($data[$c]);
             if (! array_key_exists($field_label, $this->used_fields)) {
-                $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_not_known', array($field_label,$this->ath->getName())));
+                $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_not_known', [$field_label, $this->ath->getName()]));
                 return false;
             }
 
@@ -241,7 +241,7 @@ class ArtifactImport
                         $label != $this->lbl_list['cc_comment'] &&
                         ! $field->isEmptyOk() && ! in_array($label, $this->parsed_labels)
                     ) {
-                                   $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory', array($label,$this->ath->getName())));
+                                   $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory', [$label, $this->ath->getName()]));
                                    return false;
                     }
                 }
@@ -267,12 +267,12 @@ class ArtifactImport
             $val_arr = explode(",", $val);
             foreach ($val_arr as $name) {
                 if (! array_key_exists($name, $predef_vals) && $name != $GLOBALS['Language']->getText('global', 'none')) {
-                           $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', array(
+                           $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', [
                        $row + 1,
                        $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
                        $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
                        $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                       $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML))));
+                       $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML)]));
                                       return false;
                 }
             }
@@ -296,12 +296,12 @@ class ArtifactImport
                           //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
                     return true;
                 } else {
-                      $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', array(
+                      $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', [
                       $row + 1,
                       $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
                       $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
                       $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                      $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML))));
+                      $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML)]));
                       return false;
                 }
             }
@@ -356,12 +356,12 @@ class ArtifactImport
                      $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val == $GLOBALS['Language']->getText('global', 'none')) : ($val == ''));
 
                     if ($is_empty) {
-                        $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_current', array(
+                        $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_current', [
                         $row + 1,
                         $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
                         $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
                         $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ,
-                        $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
+                        $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ]));
                         return false;
                     }
                 }
@@ -378,10 +378,10 @@ class ArtifactImport
                     } else {
                         list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
                         if (! $ok) {
-                             $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'incorrect_date', array(
+                             $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'incorrect_date', [
                                $row + 1,
                                $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
-                               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
+                               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ]));
                                  return false;
                         }
                         $date = format_date("Y-m-d", $unix_time);
@@ -415,11 +415,11 @@ class ArtifactImport
                            $label != $this->lbl_list['cc_comment'] &&
                            ! $field->isEmptyOk() && ! in_array($label, $this->parsed_labels)
                     ) {
-                                   $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_line', array(
+                                   $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_line', [
                                    $row + 1,
                                    $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
                                    $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                                   $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) )));
+                                   $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ]));
                                    return false;
                     }
                 }
@@ -461,11 +461,11 @@ class ArtifactImport
             $res = db_query("SELECT * FROM artifact WHERE group_artifact_id = " . db_ei($this->ath->getID()) .
             " AND submitted_by=" .  db_ei($sub_user_id) . " AND summary='" .  db_es($summary) . "'");
             if ($res && db_numrows($res) > 0) {
-                    $this->setError($Language->getText('tracker_import_utils', 'already_submitted', array(
+                    $this->setError($Language->getText('tracker_import_utils', 'already_submitted', [
                   $row + 1,
                   $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
                   $sub_user_name,
-                  $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) )));
+                  $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) ]));
                     return false;
             }
         }
@@ -483,11 +483,11 @@ class ArtifactImport
         $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = " . $this->ath->getID();
         $result = db_query($sql);
         if (db_numrows($result) == 0) {
-            $this->setError($Language->getText('tracker_import_utils', 'art_not_exists', array(
+            $this->setError($Language->getText('tracker_import_utils', 'art_not_exists', [
             $row + 1,
             $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
             $aid,
-            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) )));
+            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ]));
             return false;
         }
 
@@ -559,11 +559,11 @@ class ArtifactImport
                                $data_details .= "[" . $this->parsed_labels[$key] . "] => $value";
                     }
                     reset($data);
-                    $this->setError($Language->getText('tracker_import_utils', 'column_mismatch', array(
+                    $this->setError($Language->getText('tracker_import_utils', 'column_mismatch', [
                     $row + 1,
                     $hp->purify($data_details, CODENDI_PURIFIER_CONVERT_HTML) ,
                     $num,
-                    $this->num_columns)));
+                    $this->num_columns]));
                     return false;
                 }
 
@@ -832,7 +832,7 @@ class ArtifactImport
             $by_position = strpos($comment, $GLOBALS['Language']->getText('global', 'by') . ": ");
 
             if ($by_position === false) {
-                  $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', array($i - 1,$comment)));
+                  $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', [$i - 1, $comment]));
                   return false;
             }
 
@@ -856,7 +856,7 @@ class ArtifactImport
             } else {
                   $user = $this->getUserManager()->getUserByUserName($by);
                 if ($user == null) {
-                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', array($by,$i - 1)));
+                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', [$by, $i - 1]));
                     return false;
                 }
             }
@@ -867,7 +867,7 @@ class ArtifactImport
                 } elseif (validate_email($by)) {
               //ok, $by remains what it is
                 } else {
-                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', array($by,$i - 1)));
+                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', [$by, $i - 1]));
                     return false;
                 }
             }
@@ -980,7 +980,7 @@ class ArtifactImport
                 $comment = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": "));
                 $by_position = strpos($comment, $GLOBALS['Language']->getText('global', 'by') . ": ");
                 if ($by_position === false) {
-                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', array($i - 1,$comment)));
+                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', [$i - 1, $comment]));
                     return false;
                 }
                 $type = trim(substr($comment, 0, $by_position));
@@ -1003,7 +1003,7 @@ class ArtifactImport
       // By:
             $by_position = strpos($comment, $GLOBALS['Language']->getText('global', 'by') . ": ");
             if ($by_position === false) {
-                $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', array($i - 1,$comment)));
+                $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', [$i - 1, $comment]));
                 return false;
             }
 
@@ -1018,7 +1018,7 @@ class ArtifactImport
                 } elseif (validate_email($by)) {
                   //ok, $by remains what it is
                 } else {
-                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', array($by,$i - 1)));
+                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_user', [$by, $i - 1]));
                     return false;
                 }
             }
@@ -1214,7 +1214,7 @@ class ArtifactImport
             }
 
             $em = EventManager::instance();
-            $em->processEvent('artifact_import_insert_artifact', array('ah' => $ah, 'ath' => $this->ath));
+            $em->processEvent('artifact_import_insert_artifact', ['ah' => $ah, 'ath' => $this->ath]);
         }
         return true;
     }

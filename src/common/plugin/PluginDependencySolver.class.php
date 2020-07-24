@@ -75,7 +75,7 @@ class PluginDependencySolver
 
     private function getUnmetMissingDependencies(Plugin $plugin, $method)
     {
-        $unmet_dependencies = array();
+        $unmet_dependencies = [];
         foreach ($plugin->getDependencies() as $dependency_name) {
             $dependency_plugin = $this->plugin_manager->$method($dependency_name);
             if (! $dependency_plugin) {
@@ -87,7 +87,7 @@ class PluginDependencySolver
 
     private function getMissingDependencies(Plugin $plugin, array $plugins_collection)
     {
-        $missing_dependencies = array();
+        $missing_dependencies = [];
         foreach ($plugins_collection as $candidate_plugin) {
             if (in_array($plugin->getName(), $candidate_plugin->getDependencies())) {
                 $missing_dependencies[] = $candidate_plugin->getName();

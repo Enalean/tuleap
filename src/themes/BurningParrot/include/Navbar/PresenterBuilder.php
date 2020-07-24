@@ -75,7 +75,7 @@ class PresenterBuilder
 
     private function getGlobalDropdownMenuItems(PFUser $user)
     {
-        $global_dropdown_menu_items = array();
+        $global_dropdown_menu_items = [];
 
         $dropdown_menu_item_content_project_presenters_builder = new ProjectPresentersBuilder();
         $dropdown_menu_item_content_project_presenters         = $dropdown_menu_item_content_project_presenters_builder->build(
@@ -158,7 +158,7 @@ class PresenterBuilder
 
         EventManager::instance()->processEvent(
             'display_newaccount',
-            array('allow' => &$display_new_user_menu_item)
+            ['allow' => &$display_new_user_menu_item]
         );
 
         return $display_new_user_menu_item;

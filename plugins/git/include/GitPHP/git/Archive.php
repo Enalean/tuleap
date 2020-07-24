@@ -373,7 +373,7 @@ class Archive
 
         $exe = new GitExe($this->GetProject());
 
-        $args = array();
+        $args = [];
 
         switch ($this->format) {
             case self::COMPRESS_ZIP:
@@ -521,7 +521,7 @@ class Archive
      */
     public static function SupportedFormats() // @codingStandardsIgnoreLine
     {
-        $formats = array();
+        $formats = [];
 
         $formats[self::COMPRESS_TAR] = self::FormatToExtension(self::COMPRESS_TAR);
 

@@ -37,12 +37,12 @@ class SVN_RevisionPathInfo
 
     public function exportToSoap()
     {
-        return array(
+        return [
             'path'      => $this->path,
             'author'    => (int) $this->author_id,
             'timestamp' => (int) $this->timestamp,
             'message'   => $this->commit_message,
-        );
+        ];
     }
 
     public function getTimestamp()

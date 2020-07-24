@@ -142,7 +142,7 @@ class UserDetailsPresenter
 
         $this->is_in_limbo = in_array(
             $user->getStatus(),
-            array(PFUser::STATUS_PENDING, PFUser::STATUS_VALIDATED, PFUser::STATUS_VALIDATED_RESTRICTED)
+            [PFUser::STATUS_PENDING, PFUser::STATUS_VALIDATED, PFUser::STATUS_VALIDATED_RESTRICTED]
         );
         $this->current_status_id    = $user->getStatus();
         $this->current_status_label = $this->getCurrentStatusLabel($this->current_status_id);
@@ -152,7 +152,7 @@ class UserDetailsPresenter
 
     private function getCurrentStatusLabel($current_status_id)
     {
-        $labels = array(
+        $labels = [
             PFUser::STATUS_ACTIVE               => $GLOBALS['Language']->getText('admin_userlist', 'active'),
             PFUser::STATUS_RESTRICTED           => $GLOBALS['Language']->getText('admin_userlist', 'restricted'),
             PFUser::STATUS_VALIDATED_RESTRICTED => $GLOBALS['Language']->getText('admin_userlist', 'validated_restricted'),
@@ -160,7 +160,7 @@ class UserDetailsPresenter
             PFUser::STATUS_SUSPENDED            => $GLOBALS['Language']->getText('admin_userlist', 'suspended'),
             PFUser::STATUS_PENDING              => $GLOBALS['Language']->getText('admin_userlist', 'pending'),
             PFUser::STATUS_VALIDATED            => $GLOBALS['Language']->getText('admin_userlist', 'validated')
-        );
+        ];
 
         return $labels[$current_status_id];
     }

@@ -159,7 +159,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
                 $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
                 $value = $this->field_calculator->calculate(
-                    array($burndown_informations['id']),
+                    [$burndown_informations['id']],
                     $worked_day,
                     true,
                     'remaining_effort',

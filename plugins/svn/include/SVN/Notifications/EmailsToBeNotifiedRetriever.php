@@ -40,7 +40,7 @@ class EmailsToBeNotifiedRetriever
 
     public function getEmailsToBeNotifiedForPath(Repository $repository, $path)
     {
-        $notified_emails = array();
+        $notified_emails = [];
 
         $notifications = $this->notification_manager->getByPath($repository, $path);
         foreach ($notifications as $notification) {

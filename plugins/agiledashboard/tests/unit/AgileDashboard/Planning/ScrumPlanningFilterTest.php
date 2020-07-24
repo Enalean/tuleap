@@ -70,8 +70,8 @@ class ScrumPlanningFilterTest extends TestCase
     public function testItRetrieveMonoMilestoneTrackerWhenScrumMonoMilestoneIsEnabled(): void
     {
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->with(101)->andReturns(true);
-        $this->planning_factory->shouldReceive('getAvailableBacklogTrackers')->andReturns(array())->once();
-        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->andReturns(array())->once();
+        $this->planning_factory->shouldReceive('getAvailableBacklogTrackers')->andReturns([])->once();
+        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->andReturns([])->once();
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
             $this->planning,

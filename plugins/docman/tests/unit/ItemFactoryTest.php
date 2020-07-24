@@ -42,24 +42,24 @@ class Docman_ItemFactoryTest extends TestCase
      */
     public function testConnectOrphansToParentsStep1(): void
     {
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = array(113 => $fld113);
-        $orphans = array(113 => 113);
-        $wantedItems = array();
+        $itemList = [113 => $fld113];
+        $orphans = [113 => 113];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(112), $wantedItems);
-        $this->assertEquals(array(113 => 113), $orphans);
-        $this->assertEquals(array(113 => $fld113), $itemList);
+        $this->assertEquals([112], $wantedItems);
+        $this->assertEquals([113 => 113], $orphans);
+        $this->assertEquals([113 => $fld113], $itemList);
         $this->assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep2(): void
     {
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 150, 'title' => 'Folder 112']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
 
         // Expected item List
         //@php5: clone
@@ -70,21 +70,21 @@ class Docman_ItemFactoryTest extends TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = array(112 => $fld112, 113 => $fld113);
-        $orphans  = array(112 => 112, 113 => 113);
-        $wantedItems = array();
+        $itemList = [112 => $fld112, 113 => $fld113];
+        $orphans  = [112 => 112, 113 => 113];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(150), $wantedItems);
-        $this->assertEquals(array(112 => 112), $orphans);
-        $this->assertEquals(array(112 => $c_fld112, 113 => $c_fld113), $itemList);
+        $this->assertEquals([150], $wantedItems);
+        $this->assertEquals([112 => 112], $orphans);
+        $this->assertEquals([112 => $c_fld112, 113 => $c_fld113], $itemList);
         $this->assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep3(): void
     {
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld150 = new Docman_Folder(['item_id' => 150, 'parent_id' => 140, 'title' => 'Folder 150']);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 150, 'title' => 'Folder 112']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
 
         // Expected item List
         //@php5: clone
@@ -97,22 +97,22 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
-        $itemList = array(150 => $fld150, 112 => $fld112, 113 => $fld113);
-        $orphans  = array(150 => 150, 112 => 112);
-        $wantedItems = array();
+        $itemList = [150 => $fld150, 112 => $fld112, 113 => $fld113];
+        $orphans  = [150 => 150, 112 => 112];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(140), $wantedItems);
-        $this->assertEquals(array(150 => 150), $orphans);
-        $this->assertEquals(array(150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113), $itemList);
+        $this->assertEquals([140], $wantedItems);
+        $this->assertEquals([150 => 150], $orphans);
+        $this->assertEquals([150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
         $this->assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep4(): void
     {
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation'));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150'));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation']);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'parent_id' => 140, 'title' => 'Folder 150']);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 150, 'title' => 'Folder 112']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
 
         // Expected item List
         //@php5: clone
@@ -128,13 +128,13 @@ class Docman_ItemFactoryTest extends TestCase
 
         $fld112->addItem($fld113);
         $fld150->addItem($fld112);
-        $itemList = array(140 => $fld140, 150 => $fld150, 112 => $fld112, 113 => $fld113);
-        $orphans  = array(140 => 140, 150 => 150);
-        $wantedItems = array();
+        $itemList = [140 => $fld140, 150 => $fld150, 112 => $fld112, 113 => $fld113];
+        $orphans  = [140 => 140, 150 => 150];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(), $wantedItems);
-        $this->assertEquals(array(), $orphans);
-        $this->assertEquals(array(140 => $c_fld140, 150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113), $itemList);
+        $this->assertEquals([], $wantedItems);
+        $this->assertEquals([], $orphans);
+        $this->assertEquals([140 => $c_fld140, 150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
         $this->assertEquals(140, $rootId);
     }
 
@@ -151,8 +151,8 @@ class Docman_ItemFactoryTest extends TestCase
      */
     public function testconnectOrphansToParentsStep3PermissionDenied(): void
     {
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 150, 'title' => 'Folder 112']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
 
         // Expected item List
         //@php5: clone
@@ -163,13 +163,13 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
-        $itemList = array(150 => false, 112 => $fld112, 113 => $fld113);
-        $orphans  = array(150 => 150, 112 => 112);
-        $wantedItems = array();
+        $itemList = [150 => false, 112 => $fld112, 113 => $fld113];
+        $orphans  = [150 => 150, 112 => 112];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(), $wantedItems);
-        $this->assertEquals(array(150 => 150, 112 => 112), $orphans);
-        $this->assertEquals(array(150 => false, 112 => $c_fld112, 113 => $c_fld113), $itemList);
+        $this->assertEquals([], $wantedItems);
+        $this->assertEquals([150 => 150, 112 => 112], $orphans);
+        $this->assertEquals([150 => false, 112 => $c_fld112, 113 => $c_fld113], $itemList);
         $this->assertFalse($rootId);
     }
 
@@ -289,7 +289,7 @@ class Docman_ItemFactoryTest extends TestCase
         $fld112->shouldReceive('getParentId')->once()->andReturns(111);
         $fld113->shouldReceive('getParentId')->never()->andReturns(112);
 
-        $this->assertEquals(array(111 => true, 110 => true), $itemFactory->getParents(112));
+        $this->assertEquals([111 => true, 110 => true], $itemFactory->getParents(112));
     }
 
     public function testGetParentsForRoot()
@@ -302,7 +302,7 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory->shouldReceive('isRoot')->with($fld110)->once()->andReturns(true);
         $fld110->shouldReceive('getParentId')->never()->andReturns(0);
 
-        $this->assertEquals(array(), $itemFactory->getParents(110));
+        $this->assertEquals([], $itemFactory->getParents(110));
     }
 
     /**
@@ -320,35 +320,35 @@ class Docman_ItemFactoryTest extends TestCase
      */
     public function testBuildTreeFromLeavesMultipleStep1()
     {
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113'));
-        $fld115 = new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115'));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135'));
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
+        $fld115 = new Docman_Folder(['item_id' => 115, 'parent_id' => 150, 'title' => 'Folder 115']);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'parent_id' => 140, 'title' => 'Folder 135']);
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = array(113 => $fld113,
+        $itemList = [113 => $fld113,
                           115 => $fld115,
-                          135 => $fld135);
-        $orphans = array(113 => 113,
+                          135 => $fld135];
+        $orphans = [113 => 113,
                          115 => 115,
-                         135 => 135);
-        $wantedItems = array();
+                         135 => 135];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(112, 150, 140), $wantedItems);
-        $this->assertEquals(array(113 => 113, 115 => 115, 135 => 135), $orphans);
-        $this->assertEquals(array(113 => $fld113, 115 => $fld115, 135 => $fld135), $itemList);
+        $this->assertEquals([112, 150, 140], $wantedItems);
+        $this->assertEquals([113 => 113, 115 => 115, 135 => 135], $orphans);
+        $this->assertEquals([113 => $fld113, 115 => $fld115, 135 => $fld135], $itemList);
         $this->assertFalse($rootId);
     }
 
 
     public function testBuildTreeFromLeavesMultipleStep2()
     {
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'parent_id' => 140,'title' => 'Folder 150', 'rank' => -2));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'parent_id' => 150,'title' => 'Folder 112', 'rank' => -2));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'parent_id' => 112,'title' => 'Folder 113', 'rank' => 0));
-        $fld115 = new Docman_Folder(array('item_id' => 115, 'parent_id' => 150,'title' => 'Folder 115', 'rank' => -1));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'parent_id' => 140,'title' => 'Folder 135', 'rank' => -1));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'parent_id' => 140, 'title' => 'Folder 150', 'rank' => -2]);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 150, 'title' => 'Folder 112', 'rank' => -2]);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113', 'rank' => 0]);
+        $fld115 = new Docman_Folder(['item_id' => 115, 'parent_id' => 150, 'title' => 'Folder 115', 'rank' => -1]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'parent_id' => 140, 'title' => 'Folder 135', 'rank' => -1]);
 
         // Expected item List
         //@php5: clone
@@ -366,12 +366,12 @@ class Docman_ItemFactoryTest extends TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = array(113 => $fld113,
+        $itemList = [113 => $fld113,
                           115 => $fld115,
                           150 => $fld150,
                           140 => $fld140,
                           135 => $fld135,
-                          112 => $fld112);
+                          112 => $fld112];
         // It's not very clean but the orphan order is very important to make
         // the test pass. To avoid the pain to develop a tree comparator, we rely
         // on the array/object comparison of SimpleTest. The bad news comes with
@@ -379,25 +379,25 @@ class Docman_ItemFactoryTest extends TestCase
         // the priorities. While the final result will always be the same
         // (items ordered by priority) the internal status of the mapping may
         // differ. And this internal difference will break tests :/
-        $orphans = array(140 => 140,
+        $orphans = [140 => 140,
                          150 => 150,
                          112 => 112,
                          113 => 113,
                          115 => 115,
-                         135 => 135);
-        $wantedItems = array();
+                         135 => 135];
+        $wantedItems = [];
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals(array(), $wantedItems);
-        $this->assertEquals(array(), $orphans);
+        $this->assertEquals([], $wantedItems);
+        $this->assertEquals([], $orphans);
         $this->assertEquals(
-            array(
+            [
                 113 => $c_fld113,
                 115 => $c_fld115,
                 135 => $c_fld135,
                 112 => $c_fld112,
                 140 => $c_fld140,
                 150 => $c_fld150
-            ),
+            ],
             $itemList
         );
         $this->assertEquals(140, $rootId);
@@ -422,7 +422,7 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('listItemsToPurge')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('listItemsToPurge')->andReturns(\TestHelper::arrayToDar([
             'id'               => null,
             'title'            => null,
             'description'      => null,
@@ -435,7 +435,7 @@ class Docman_ItemFactoryTest extends TestCase
             'ownerId'          => null,
             'status'           => null,
             'obsolescenceDate' => null
-        )));
+        ]));
         $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
 
         $itemFactory->shouldReceive('purgeDeletedItem')->once();
@@ -461,7 +461,7 @@ class Docman_ItemFactoryTest extends TestCase
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
         $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
 
         $this->assertTrue($itemFactory->restore($item));
@@ -495,7 +495,7 @@ class Docman_ItemFactoryTest extends TestCase
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
         $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
 
         $this->assertTrue($itemFactory->restore($item));
@@ -553,7 +553,7 @@ class Docman_ItemFactoryTest extends TestCase
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
         $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
 
         $this->assertTrue($itemFactory->restore($item));

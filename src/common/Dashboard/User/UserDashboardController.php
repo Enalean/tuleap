@@ -130,7 +130,7 @@ class UserDashboardController
 
         $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
-        $GLOBALS['Response']->header(array('title' => $purifier->purify($title)));
+        $GLOBALS['Response']->header(['title' => $purifier->purify($title)]);
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );
@@ -143,7 +143,7 @@ class UserDashboardController
                 $user_dashboards_presenter
             )
         );
-        $GLOBALS['Response']->footer(array('without_content' => true));
+        $GLOBALS['Response']->footer(['without_content' => true]);
     }
 
     /**
@@ -206,7 +206,7 @@ class UserDashboardController
      */
     private function getUserDashboardsPresenter(PFUser $user, $dashboard_id, array $user_dashboards)
     {
-        $user_dashboards_presenter = array();
+        $user_dashboards_presenter = [];
 
         foreach ($user_dashboards as $index => $dashboard) {
             if (! $dashboard_id && $index === 0) {
@@ -215,7 +215,7 @@ class UserDashboardController
                 $is_active = $dashboard->getId() === $dashboard_id;
             }
 
-            $widgets_presenter = array();
+            $widgets_presenter = [];
             if ($is_active) {
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {

@@ -86,8 +86,8 @@ class TrackerXmlExport
         PFUser $user,
         ArchiveInterface $archive
     ) {
-        $exported_trackers = array();
-        $xml_field_mapping = array();
+        $exported_trackers = [];
+        $xml_field_mapping = [];
 
         $xml_trackers = $xml_content->addChild('trackers');
 
@@ -100,13 +100,13 @@ class TrackerXmlExport
             }
         }
 
-        $params = array(
+        $params = [
             'user'        => $user,
             'xml_content' => &$xml_content,
             'group_id'    => $project->getID(),
             'project'     => $project,
             'archive'     => &$archive
-        );
+        ];
 
         $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
 
@@ -138,8 +138,8 @@ class TrackerXmlExport
         SimpleXMLElement $xml_content,
         PFUser $user
     ) {
-        $exported_trackers = array();
-        $xml_field_mapping = array();
+        $exported_trackers = [];
+        $xml_field_mapping = [];
 
         $xml_trackers = $xml_content->addChild('trackers');
 
@@ -250,7 +250,7 @@ class TrackerXmlExport
 
     private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker)
     {
-        $xml_field_mapping = array();
+        $xml_field_mapping = [];
 
         $tracker->exportToXMLInProjectExportContext($tracker_xml, $this->user_xml_exporter, $xml_field_mapping);
     }

@@ -59,7 +59,7 @@ class MediawikiLanguageManagerTest extends TestCase
 
     public function testItReturnsProjectLanguageWhenItIsSet()
     {
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(array('language' => 'ja_JP'));
+        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(['language' => 'ja_JP']);
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'ja_JP');
     }
@@ -75,7 +75,7 @@ class MediawikiLanguageManagerTest extends TestCase
     public function testItUsesTheSystemLangIfThereIsOnlyOneAndNullProjectLanguage()
     {
         ForgeConfig::set('sys_supported_languages', 'it_IT');
-        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(array('language' => null));
+        $this->dao->shouldReceive('getUsedLanguageForProject')->andReturn(['language' => null]);
 
         $this->assertSame($this->language_manager->getUsedLanguageForProject($this->project), 'it_IT');
     }

@@ -64,11 +64,11 @@ class SVN_Apache_Auth_Factory
     {
         $svn_apache_auth = null;
 
-        $params = array(
+        $params = [
             'svn_apache_auth'           => &$svn_apache_auth,
             'cache_parameters'          => $this->cache_parameters,
             'project_info'              => $project_info
-        );
+        ];
 
         $this->event_manager->processEvent(Event::SVN_APACHE_AUTH, $params);
 

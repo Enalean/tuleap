@@ -39,7 +39,7 @@ class NonUniqueUidRetriever
     public function getNonUniqueLdapUid()
     {
         $rows      = $this->dao->searchNonUniqueLdapUid();
-        $ldap_uids = array();
+        $ldap_uids = [];
 
         foreach ($rows as $row) {
             $ldap_uids[] = $row['ldap_uid'];

@@ -33,8 +33,8 @@ class PermissionsManager implements IPermissionsManagerNG
     public function __construct($permission_dao)
     {
         $this->_permission_dao   = $permission_dao;
-        $this->_permissions      = array();
-        $this->_ugroups_for_user = array();
+        $this->_permissions      = [];
+        $this->_ugroups_for_user = [];
     }
 
     /**
@@ -75,7 +75,7 @@ class PermissionsManager implements IPermissionsManagerNG
     public function userHasPermission($object_id, $permission_type, array $ugroups)
     {
         if (! isset($this->_permissions[$object_id])) {
-            $this->_permissions[$object_id] = array();
+            $this->_permissions[$object_id] = [];
         }
 
         if (count(array_diff($ugroups, array_keys($this->_permissions[$object_id]))) > 0) {
@@ -107,12 +107,12 @@ class PermissionsManager implements IPermissionsManagerNG
     public function getPermissionsAndUgroupsByObjectid($object_id)
     {
         $this->retrievePermissions($object_id);
-        $perms = array();
+        $perms = [];
         if (isset($this->_permissions[$object_id])) {
             foreach ($this->_permissions[$object_id] as $ugroup_id => $permissions) {
                 foreach ($permissions as $perm) {
                     if (! isset($perms[$perm])) {
-                        $perms[$perm] = array();
+                        $perms[$perm] = [];
                     }
                     $perms[$perm][] = $ugroup_id;
                 }
@@ -187,10 +187,10 @@ class PermissionsManager implements IPermissionsManagerNG
     {
         $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
         if (! $dar || $dar->isError()) {
-            return array();
+            return [];
         }
 
-        $ugroups = array();
+        $ugroups = [];
         foreach ($dar as $row) {
             $ugroups[] = $row['ugroup_id'];
         }
@@ -199,7 +199,7 @@ class PermissionsManager implements IPermissionsManagerNG
 
     public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type)
     {
-        $ugroups = array();
+        $ugroups = [];
         $dar = $this->getAuthorizedUgroups($object_id, $permission_type, false);
         if ($dar && ! $dar->isError()) {
             $normalizer = new PermissionsUGroupMapper($project);
@@ -271,15 +271,15 @@ class PermissionsManager implements IPermissionsManagerNG
     {
         while ($row = $dar->getRow()) {
             if (! isset($this->_permissions[$row['object_id']])) {
-                $this->_permissions[$row['object_id']] = array();
+                $this->_permissions[$row['object_id']] = [];
             }
             foreach ($ugroups as $ugroup) {
                 if (! isset($this->_permissions[$row['object_id']][$ugroup])) {
-                    $this->_permissions[$row['object_id']][$ugroup] = array();
+                    $this->_permissions[$row['object_id']][$ugroup] = [];
                 }
             }
             if (! isset($this->_permissions[$row['object_id']][$row['ugroup_id']])) {
-                $this->_permissions[$row['object_id']][$row['ugroup_id']] = array();
+                $this->_permissions[$row['object_id']][$row['ugroup_id']] = [];
             }
             if (! in_array($row['permission_type'], $this->_permissions[$row['object_id']][$row['ugroup_id']])) {
                 $this->_permissions[$row['object_id']][$row['ugroup_id']][] = $row['permission_type'];
@@ -295,7 +295,7 @@ class PermissionsManager implements IPermissionsManagerNG
     * @param  int     $object_id  The id of the object
     * @param  array   $ugroups    A list of ugroups we want to see in permissions
     */
-    protected function retrievePermissions($object_id, $ugroups = array())
+    protected function retrievePermissions($object_id, $ugroups = [])
     {
         $tracker_field_id = explode('#', $object_id); //An artifact field ?
         if (count($tracker_field_id) > 1) {
@@ -374,7 +374,7 @@ class PermissionsManager implements IPermissionsManagerNG
 
     public function isPermissionExist($object_id, $ptype)
     {
-        $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
+        $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, [$ptype]);
         return $dar->valid();
     }
 

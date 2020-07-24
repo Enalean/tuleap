@@ -51,7 +51,7 @@ class Transition_PostActionSubFactories
      */
     public function loadPostActions(Transition $transition)
     {
-        $post_actions = array();
+        $post_actions = [];
         foreach ($this->factories as $factory) {
             $post_actions = array_merge($post_actions, $factory->loadPostActions($transition));
         }

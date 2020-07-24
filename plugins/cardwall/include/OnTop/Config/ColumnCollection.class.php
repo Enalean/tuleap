@@ -29,7 +29,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
      */
     private $columns;
 
-    public function __construct(array $columns = array())
+    public function __construct(array $columns = [])
     {
         $this->columns = $columns;
     }
@@ -107,7 +107,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
 
     public function getRestValue()
     {
-        $column_representations = array();
+        $column_representations = [];
         foreach ($this->columns as $column) {
             $column_representation = new AgileDashboard_ColumnRepresentation();
             $column_representation->build($column);

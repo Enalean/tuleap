@@ -28,13 +28,13 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('milestones'));
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSMilestonesId(): void
     {
         $response = $this->getResponse($this->client->options('milestones/' . $this->release_artifact_ids[1]));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithRESTReadOnlyUser(): void
@@ -86,23 +86,23 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     private function assertGETResourcesMilestones(array $milestone): void
     {
         $this->assertEquals(
-            array(
+            [
                 'uri'    => 'milestones/' . $this->release_artifact_ids[1] . '/milestones',
-                'accept' => array(
-                    'trackers' => array(
-                        array(
+                'accept' => [
+                    'trackers' => [
+                        [
                             'id'  => $this->sprints_tracker_id,
                             'uri' => "trackers/$this->sprints_tracker_id",
                             'label' => 'Sprints',
-                            'project' => array(
+                            'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                            )
-                        )
-                    )
-                ),
-            ),
+                            ]
+                        ]
+                    ]
+                ],
+            ],
             $milestone['resources']['milestones']
         );
 
@@ -112,35 +112,35 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     private function assertGETResourcesBacklog(array $milestone): void
     {
         $this->assertEquals(
-            array(
+            [
                 'uri'    => 'milestones/' . $this->release_artifact_ids[1] . '/backlog',
-                'accept' => array(
-                    'trackers' => array(
-                        array(
+                'accept' => [
+                    'trackers' => [
+                        [
                             'id'  => $this->user_stories_tracker_id,
                             'uri' => 'trackers/' . $this->user_stories_tracker_id,
                             'label' => 'User Stories',
-                            'project' => array(
+                            'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                            )
-                        )
-                    ),
-                    'parent_trackers' => array(
-                        array(
+                            ]
+                        ]
+                    ],
+                    'parent_trackers' => [
+                        [
                             'id'  => $this->epic_tracker_id,
                             'uri' => 'trackers/' . $this->epic_tracker_id,
                             'label' => 'Epics',
-                            'project' => array(
+                            'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                            )
-                        )
-                    ),
-                ),
-            ),
+                            ]
+                        ]
+                    ],
+                ],
+            ],
             $milestone['resources']['backlog']
         );
     }
@@ -148,23 +148,23 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     private function assertGETResourcesContent(array $milestone): void
     {
         $this->assertEquals(
-            array(
+            [
                 'uri'    => 'milestones/' . $this->release_artifact_ids[1] . '/content',
-                'accept' => array(
-                    'trackers' => array(
-                        array(
+                'accept' => [
+                    'trackers' => [
+                        [
                             'id'  => $this->epic_tracker_id,
                             'uri' => 'trackers/' . $this->epic_tracker_id,
                             'label' => 'Epics',
-                            'project' => array(
+                            'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
                                 'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                            )
-                        )
-                    )
-                ),
-            ),
+                            ]
+                        ]
+                    ]
+                ],
+            ],
             $milestone['resources']['content']
         );
     }
@@ -186,9 +186,9 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
 
         $milestone = $response->json();
         $this->assertEquals(
-            array(
+            [
                 'uri' => 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown',
-            ),
+            ],
             $milestone['resources']['burndown']
         );
     }
@@ -200,9 +200,9 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
 
         $milestone = $response->json();
         $this->assertEquals(
-            array(
+            [
                 'uri'    => 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall',
-            ),
+            ],
             $milestone['resources']['cardwall']
         );
     }

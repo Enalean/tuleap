@@ -45,7 +45,7 @@ class Docman_MetadataDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchByGroupId($id, $onlyUsed, $type = array())
+    public function searchByGroupId($id, $onlyUsed, $type = [])
     {
         $where_clause = '';
         if ($onlyUsed) {
@@ -73,12 +73,12 @@ class Docman_MetadataDao extends DataAccessObject
     // right now, only 'use_it' field is concerned by update
     public function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt)
     {
-        $row = array('field_id' => $id,
+        $row = ['field_id' => $id,
                      'name' => $name,
                      'description' => $description,
                      'empty_ok' => $emptyAllowed,
                      'mul_val_ok' => $mulValuesAllowed,
-                     'use_it' => $useIt);
+                     'use_it' => $useIt];
         return $this->updateFromRow($row);
     }
 
@@ -94,7 +94,7 @@ class Docman_MetadataDao extends DataAccessObject
             $dar = $this->searchById($id);
             if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
-                $set_array = array();
+                $set_array = [];
                 foreach ($row as $key => $value) {
                     if ($key != 'field_id' && $value != $current[$key]) {
                         $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);
@@ -146,8 +146,8 @@ class Docman_MetadataDao extends DataAccessObject
         $mdId = $this->_createAndReturnId($sql);
         if ($mdId !== false) {
             //update label
-            $row = array('field_id' => $mdId,
-                         'label'    => 'field_' . $mdId);
+            $row = ['field_id' => $mdId,
+                         'label'    => 'field_' . $mdId];
             $updated = $this->updateFromRow($row);
             if (! $updated) {
                 return false;

@@ -74,13 +74,13 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao(): void
     {
-        $data = array(
+        $data = [
             'source_field_id'   => 46345,
             'target_field_id'   => 465,
             'tracker_id'        => 5458,
             'source_value_id'   => '46345gfv',
             'target_value_id'   => '465',
-        );
+        ];
 
         $this->list_rule_dao->shouldReceive('searchById')->andReturns($data);
         $list_rule = $this->list_rule_factory
@@ -103,13 +103,13 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $data_access_result = \Mockery::spy(\DataAccessResult::class);
 
-        $data = array(
+        $data = [
             'source_field_id'   => 46345,
             'target_field_id'   => 465,
             'tracker_id'        => 5458,
             'source_value_id'   => '46345gfv',
             'target_value_id'   => '465',
-        );
+        ];
 
         $data_access_result->shouldReceive('rowCount')->andReturns(1);
         $data_access_result->shouldReceive('getRow')->andReturns($data, false);
@@ -127,16 +127,16 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
-        $field_mapping   = array(
-            array(
+        $field_mapping   = [
+            [
                 'from'  => 123,
                 'to'    => 888
-            ),
-            array(
+            ],
+            [
                 'from'  => 456,
                 'to'    => 999
-            ),
-        );
+            ],
+        ];
 
         $db_data = false;
 
@@ -153,58 +153,58 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = array(
-            array(
+        $field_mapping   = [
+            [
                 'from'  => 123,
                 'to'    => 888,
-                'values' => array(
+                'values' => [
                     789 => 777
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'from'  => 456,
                 'to'    => 999,
-                'values' => array(
+                'values' => [
                     101 => 666
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'from'  => 1001,
                 'to'    => 9999,
-                'values' => array(
+                'values' => [
                     1003 => 9998
-                )
-            ),
-            array(
+                ]
+            ],
+            [
                 'from'  => 1002,
                 'to'    => 9997,
-                'values' => array(
+                'values' => [
                     1004 => 9996,
                     1005 => 9995
-                )
-            ),
-        );
+                ]
+            ],
+        ];
 
-        $db_data1 = array(
+        $db_data1 = [
             'source_field_id' => 123,
             'target_field_id' => 456,
             'source_value_id' => 789,
             'target_value_id' => 101
-        );
+        ];
 
-        $db_data2 = array(
+        $db_data2 = [
             'source_field_id' => 1001,
             'target_field_id' => 1002,
             'source_value_id' => 1003,
             'target_value_id' => 1004
-        );
+        ];
 
-        $db_data3 = array(
+        $db_data3 = [
             'source_field_id' => 1001,
             'target_field_id' => 1002,
             'source_value_id' => 1003,
             'target_value_id' => 1005
-        );
+        ];
 
         $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
         $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data1, $db_data2, $db_data3));
@@ -237,9 +237,9 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
         $bf->shouldReceive('getType')->with($bind_f2)->andReturns('static');
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_xml_mapping = array('F25' => 102,
+        $array_xml_mapping = ['F25' => 102,
                                    'F28' => 103,
-                                   'values' => array(
+                                   'values' => [
                                        'F25-V1' => 801,
                                        'F25-V2' => 802,
                                        'F25-V3' => 803,
@@ -248,13 +248,13 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
                                        'F28-V2' => 807,
                                        'F28-V3' => 808,
                                        'F28-V4' => 809,
-                                   ));
+                                   ]];
 
         $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
         $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
 
         $trm = \Mockery::mock(\Tracker_Rule_List_Factory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $trm->shouldReceive('searchByTrackerId')->andReturns(array($r1, $r2));
+        $trm->shouldReceive('searchByTrackerId')->andReturns([$r1, $r2]);
 
         $trm->exportToXML($root, $array_xml_mapping, $form_element_factory, 666);
         $this->assertNull($root->dependencies->rule);

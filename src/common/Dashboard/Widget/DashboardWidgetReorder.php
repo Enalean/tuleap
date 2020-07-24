@@ -73,7 +73,7 @@ class DashboardWidgetReorder
         DashboardWidgetColumn $column
     ) {
         $widgets = $this->remover_in_list->removeWidgetInWidgetsListColumn($widget_to_update, $column);
-        array_splice($widgets, $new_widget_rank, 0, array($widget_to_update));
+        array_splice($widgets, $new_widget_rank, 0, [$widget_to_update]);
         $this->updateWidgetsRank($widgets);
     }
 

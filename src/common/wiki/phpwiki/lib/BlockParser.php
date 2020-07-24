@@ -215,7 +215,7 @@ class BlockParser_Input
 
     public function getPos()
     {
-        return array($this->_pos, $this->_atSpace);
+        return [$this->_pos, $this->_atSpace];
     }
 
     public function setPos($pos)
@@ -321,7 +321,7 @@ class BlockParser_InputSubBlock extends BlockParser_Input
 
     public function getPos()
     {
-        return array($this->_line, $this->_atSpace, $this->_input->getPos());
+        return [$this->_line, $this->_atSpace, $this->_input->getPos()];
     }
 
     public function setPos($pos)
@@ -399,9 +399,9 @@ class ParsedBlock extends Block_HtmlElement
 
         if (! is_object($_regexpset)) {
             foreach (
-                array('oldlists', 'list', 'dl', 'table_dl',
+                ['oldlists', 'list', 'dl', 'table_dl',
                            'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
-                           'plugin', 'p') as $type
+                           'plugin', 'p'] as $type
             ) {
                    $class = "Block_$type";
                    $proto = new $class();
@@ -571,7 +571,7 @@ class Block_list extends BlockMarkup
                   | [o](?=\ )
                   | [*] (?!(?=\S)[^*]*(?<=\S)[*](?:\\s|[-)}>"\'\\/:.,;!?_*=]) )
                 )\ *(?=\S)';
-    public $_content = array();
+    public $_content = [];
 
     public function _match(&$input, $m)
     {
@@ -668,7 +668,7 @@ class Block_dl extends Block_list
         $indent = strlen($mm[0]);
         $term = TransformInline(rtrim(substr(trim($m->match), 0, -1)));
         $defn = new TightSubBlock($input, sprintf("\\ {%d}", $indent), false, 'dd');
-        return array($term, $defn, $loose);
+        return [$term, $defn, $loose];
     }
 }
 
@@ -884,7 +884,7 @@ class Block_table_dl extends Block_dl
         }
 
         return HTML::table(
-            array('class' => 'wiki-dl-table', 'border' => 1, 'cellspacing' => 0, 'cellpadding' => 6),
+            ['class' => 'wiki-dl-table', 'border' => 1, 'cellspacing' => 0, 'cellpadding' => 6],
             $defs
         );
     }
@@ -997,7 +997,7 @@ class Block_pre extends BlockMarkup
     public function _match(&$input, $m)
     {
         $endtag = '</' . substr($m->match, 1);
-        $text = array();
+        $text = [];
         $pos = $input->getPos();
 
         $line = $m->postmatch;
@@ -1055,7 +1055,7 @@ class Block_plugin extends Block_pre
 
 class Block_email_blockquote extends BlockMarkup
 {
-    public $_attr = array('class' => 'mail-style-quote');
+    public $_attr = ['class' => 'mail-style-quote'];
     public $_re = '>\ ?';
 
     public function _match(&$input, $m)

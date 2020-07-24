@@ -71,8 +71,8 @@ class ArtifactFieldFactory
 
         $this->ArtifactType = $ArtifactType;
 
-        $this->USAGE_BY_NAME = array();
-        $this->USAGE_BY_ID = array();
+        $this->USAGE_BY_NAME = [];
+        $this->USAGE_BY_ID = [];
 
         $this->fetchData($this->ArtifactType->getID());
 
@@ -149,7 +149,7 @@ class ArtifactFieldFactory
      */
     public function getAllUsedFields()
     {
-        $result_fields = array();
+        $result_fields = [];
         foreach ($this->USAGE_BY_NAME as $key => $field) {
             if ($field->getUseIt() == 1) {
                 $result_fields[$key] = $field;
@@ -167,7 +167,7 @@ class ArtifactFieldFactory
      */
     public function getAllUnusedFields()
     {
-        $result_fields = array();
+        $result_fields = [];
         foreach ($this->USAGE_BY_NAME as $key => $field) {
             if ($field->getUseIt() == 0) {
                 $result_fields[$key] = $field;
@@ -190,7 +190,7 @@ class ArtifactFieldFactory
     {
         $request = HTTPRequest::instance();
 
-        $vfl = array();
+        $vfl = [];
         if ($post_method) {
             foreach ($_POST as $key => $val) {
                 //verify if the prefix param is given and cut the
@@ -290,7 +290,7 @@ class ArtifactFieldFactory
     {
         global $Language;
 
-        $bad_fields = array();
+        $bad_fields = [];
         foreach ($field_array as $key => $val) {
             //Those fields are automatically filled out
             if ($key != 'artifact_id' && $key != 'open_date' && $key != 'last_update_date') {
@@ -310,7 +310,7 @@ class ArtifactFieldFactory
 
         if (count($bad_fields) > 0) {
             $hp = Codendi_HTMLPurifier::instance();
-            $bad_fields_escaped = array();
+            $bad_fields_escaped = [];
             foreach ($bad_fields as $f) {
                 $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODENDI_PURIFIER_CONVERT_HTML);
             }
@@ -332,7 +332,7 @@ class ArtifactFieldFactory
      */
     public function getAllFieldsNotShownOnAdd()
     {
-        $result_fields = array();
+        $result_fields = [];
         foreach ($this->USAGE_BY_NAME as $key => $field) {
             if (
                 $field->getUseIt() == 1 &&
@@ -353,7 +353,7 @@ class ArtifactFieldFactory
      */
     public function getFieldsContainedInFieldSet($fieldset_id)
     {
-        $fields_contained_in_fieldset = array();
+        $fields_contained_in_fieldset = [];
         $sql = "SELECT af.field_id
                 FROM artifact_field af, artifact_field_usage afu
                 WHERE af.field_set_id=" . db_ei($fieldset_id) . " AND
@@ -409,7 +409,7 @@ class ArtifactFieldFactory
 
          //test if we got as value_function a ugroup that does not exist in the dest group
             $val_function = $field->getValueFunction();
-            $dest_val_func = array();
+            $dest_val_func = [];
 
          //go through all group binds
             if (! empty($val_function)) {
@@ -422,7 +422,7 @@ class ArtifactFieldFactory
                                   $name = $this->_getForeignUgroupName($ug, $atid_dest);
                             if ($name !== false) {
           //don't copy this ugroup
-                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory', 'ugroup_not_exist', array($field->getLabel(),$name)));
+                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory', 'ugroup_not_exist', [$field->getLabel(), $name]));
                             } else {
                                 $dest_val_func[] = "ugroup_$ug";
                             }
@@ -434,7 +434,7 @@ class ArtifactFieldFactory
                                 $name = $this->_getForeignUgroupName($ug, $atid_dest);
                                 if ($name !== false) {
                                   //don't copy this ugroup
-                                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory', 'ugroup_not_exist', array($field->getLabel(),$name)));
+                                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory', 'ugroup_not_exist', [$field->getLabel(), $name]));
                                 }
                             }
                         }
@@ -457,7 +457,7 @@ class ArtifactFieldFactory
             $res_insert = db_query($sql_insert);
          //echo $sql_insert;
             if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-                $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', array($field_array["field_id"],$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', [$field_array["field_id"], $atid_dest, db_error()]));
                 return false;
             }
 
@@ -469,7 +469,7 @@ class ArtifactFieldFactory
          //echo $sql_insert;
             $res_insert = db_query($sql_insert);
             if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-                $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', array($field->getID(),$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', [$field->getID(), $atid_dest, db_error()]));
                 return false;
             }
         } // while
@@ -491,7 +491,7 @@ class ArtifactFieldFactory
       //echo $sql_insert;
             $res_insert = db_query($sql_insert);
             if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-                $this->setError($Language->getText('tracker_common_field_factory', 'vl_ins_err', array($field_array["field_id"],$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_field_factory', 'vl_ins_err', [$field_array["field_id"], $atid_dest, db_error()]));
                 return false;
             }
         } // while
@@ -687,7 +687,7 @@ class ArtifactFieldFactory
 
         $res_insert = db_query($sql);
         if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-            $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
+            $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', [$field_id, $this->ArtifactType->getID(), db_error()]));
             return false;
         }
 
@@ -698,7 +698,7 @@ class ArtifactFieldFactory
 
         $res_insert = db_query($sql);
         if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-            $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
+            $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', [$field_id, $this->ArtifactType->getID(), db_error()]));
             return false;
         }
 
@@ -757,13 +757,13 @@ class ArtifactFieldFactory
         $this->fetchData($this->ArtifactType->getID());
 
         //Set permissions
-        $permissions = array($field_id =>
-                             array(
+        $permissions = [$field_id =>
+                             [
                                    $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('TRACKER_FIELD_READ'),
                                    $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('TRACKER_FIELD_SUBMIT'),
                                    $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
-                             )
-           );
+                             ]
+           ];
 
            permission_process_update_fields_permissions(
                $this->ArtifactType->getGroupID(),

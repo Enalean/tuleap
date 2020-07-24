@@ -68,8 +68,8 @@ class Widget_ProjectSvnStats extends Widget
         $week = 7 * $day;
 
         //compute the stats
-        $stats = array();
-        $nb_of_commits = array();
+        $stats = [];
+        $nb_of_commits = [];
         foreach ($dao->statsByGroupId($owner_id, $duration) as $row) {
             $stats[$row['whoid']]['by_day'][$row['day'] * $day] = $row['nb_commits'];
             $stats[$row['whoid']]['by_week'][$row['week']]      = $row['nb_commits'];
@@ -77,15 +77,15 @@ class Widget_ProjectSvnStats extends Widget
         }
         if (count($stats)) {
             //sort the results
-            uksort($stats, array($this, 'sortByTop'));
+            uksort($stats, [$this, 'sortByTop']);
 
             $today           = $_SERVER['REQUEST_TIME'];
             $start_of_period = strtotime("-$nb_weeks weeks");
 
             //fill-in the holes
-            $tmp_stats = array();
+            $tmp_stats = [];
             foreach ($stats as $whoid => $stat) {
-                $tmp_stats = array();
+                $tmp_stats = [];
                 for ($i = $start_of_period; $i <= $today; $i += $week) {
                     $w = (int) date('W', $i);
                     $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
@@ -94,7 +94,7 @@ class Widget_ProjectSvnStats extends Widget
             }
 
             //fill-in the labels
-            $dates = array();
+            $dates = [];
             for ($i = $start_of_period; $i <= $today; $i += $week) {
                 $dates[] = date('M d', $i);
             }
@@ -123,7 +123,7 @@ class Widget_ProjectSvnStats extends Widget
 
             $colors = array_reverse(array_slice($colors_for_charts->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
-            $bars = array();
+            $bars = [];
             $i = 0;
             foreach ($stats as $whoid => $stat) {
                 if (! array_key_exists('by_week', $stat)) {

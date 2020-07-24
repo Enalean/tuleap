@@ -117,7 +117,7 @@ class SemanticDone extends Tracker_Semantic
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
 
         $semantic_status_field = $this->semantic_status->getField();
-        $selected_values         = array();
+        $selected_values         = [];
 
         if ($semantic_status_field) {
             $selected_values = $this->getFormattedDoneValues();
@@ -143,7 +143,7 @@ class SemanticDone extends Tracker_Semantic
         $sm->displaySemanticHeader($this, $tracker_manager);
 
         $semantic_status_field = $this->semantic_status->getField();
-        $closed_values         = array();
+        $closed_values         = [];
 
         if ($semantic_status_field) {
             $closed_values = $this->getFormattedClosedValues($semantic_status_field);
@@ -179,10 +179,10 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getAdminSemanticUrl()
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(array(
+        return TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => $this->tracker->getId(),
                 'func'    => 'admin-semantic'
-        ));
+        ]);
     }
 
     /**
@@ -190,12 +190,12 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getFormattedDoneValues()
     {
-        $formatted_done_values = array();
+        $formatted_done_values = [];
 
         foreach ($this->done_values as $done_value) {
-            $formatted_done_values[] = array(
+            $formatted_done_values[] = [
                 'label' => $done_value->getLabel()
-            );
+            ];
         }
 
         return $formatted_done_values;
@@ -207,14 +207,14 @@ class SemanticDone extends Tracker_Semantic
     private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
         $done_values_ids        = $this->getDoneValuesIds();
-        $formated_closed_values = array();
+        $formated_closed_values = [];
 
         foreach ($this->getClosedValues($semantic_status_field) as $value_id => $value) {
-            $formated_closed_values[] = array(
+            $formated_closed_values[] = [
                 'id'       => $value->getId(),
                 'label'    => $value->getLabel(),
                 'selected' => in_array($value_id, $done_values_ids)
-            );
+            ];
         }
 
         return $formated_closed_values;
@@ -227,7 +227,7 @@ class SemanticDone extends Tracker_Semantic
     {
         $all_values    = $semantic_status_field->getAllVisibleValues();
         $open_values   = $this->semantic_status->getOpenValues();
-        $closed_values = array();
+        $closed_values = [];
 
         foreach ($all_values as $value_id => $value) {
             if (in_array($value_id, $open_values)) {
@@ -286,7 +286,7 @@ class SemanticDone extends Tracker_Semantic
         try {
             $this->dao->clearForTracker($tracker_id);
 
-            $this->setNewDoneValues(array());
+            $this->setNewDoneValues([]);
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -337,11 +337,11 @@ class SemanticDone extends Tracker_Semantic
 
     private function setNewDoneValues(array $selected_values)
     {
-        $this->done_values = array();
+        $this->done_values = [];
 
         $field = $this->semantic_status->getField();
 
-        if ($selected_values === array() || ! $field) {
+        if ($selected_values === [] || ! $field) {
             return;
         }
 
@@ -428,7 +428,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function getDoneValuesIds()
     {
-        $done_values_ids = array();
+        $done_values_ids = [];
         foreach ($this->done_values as $done_value) {
             $done_values_ids[] = $done_value->getId();
         }

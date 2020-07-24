@@ -125,7 +125,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     protected function launchAs($user, $command)
     {
         $return_val = 0;
-        $output = array();
+        $output = [];
         $cmd    = 'su -l ' . $user . ' -c "' . $command . ' 2>&1"';
         exec($cmd, $output, $return_val);
         if ($return_val == 0) {

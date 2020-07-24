@@ -82,10 +82,10 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \PHPUnit\Framewo
         $this->updater             = new Tracker_XML_Updater_ChangesetXMLUpdater($this->visitor, $this->formelement_factory);
         $this->user                = new PFUser(['user_id' => $this->user_id, 'language_id' => 'en']);
         $this->tracker             = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
-        $this->submitted_values    = array(
+        $this->submitted_values    = [
             1001 => 'Content of summary field',
             1002 => '123'
-        );
+        ];
 
         $this->field_summary = Mockery::spy(Tracker_FormElement_Field_String::class);
         $this->field_summary->shouldReceive('getId')->andReturn(1001);

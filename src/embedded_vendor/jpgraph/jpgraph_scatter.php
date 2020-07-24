@@ -19,9 +19,9 @@ class FieldArrow
     public $iColor = 'black';
     public $iSize = 10;  // Length in pixels for  arrow
     public $iArrowSize = 2;
-    private $isizespec = array(
-        array(2,1),array(3,2),array(4,3),array(6,4),array(7,4),array(8,5),array(10,6),array(12,7),array(16,8),array(20,10)
-        );
+    private $isizespec = [
+        [2,1],[3,2],[4,3],[6,4],[7,4],[8,5],[10,6],[12,7],[16,8],[20,10]
+        ];
     public function __construct()
     {
         // Empty
@@ -48,11 +48,11 @@ class FieldArrow
         $aImg->SetAngle(-$a + $old_a);
 
         $dx = round($this->iSize / 2);
-        $c = array($x - $dx,$y,$x + $dx,$y);
+        $c = [$x - $dx, $y, $x + $dx, $y];
         $x += $dx;
 
         list($dx,$dy) = $this->isizespec[$this->iArrowSize];
-        $ca = array($x,$y,$x - $dx,$y - $dy,$x - $dx,$y + $dy,$x,$y);
+        $ca = [$x, $y, $x - $dx, $y - $dy, $x - $dx, $y + $dy, $x, $y];
 
         $aImg->SetColor($this->iColor);
         $aImg->Polygon($c);
@@ -70,7 +70,7 @@ class FieldArrow
 class FieldPlot extends Plot
 {
     public $arrow = '';
-    private $iAngles = array();
+    private $iAngles = [];
     private $iCallback = '';
 
     public function __construct($datay, $datax, $angles)

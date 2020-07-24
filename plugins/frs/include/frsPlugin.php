@@ -87,7 +87,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     /**

@@ -37,7 +37,7 @@ class FRSFileMD5SumException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array(basename($file->getFileName()), $file->getComputedMd5())), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', [basename($file->getFileName()), $file->getComputedMd5()]), $code);
     }
 }
 
@@ -93,7 +93,7 @@ class FRSFileForgeException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'fileforge_error', array($file->getFileName())), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'fileforge_error', [$file->getFileName()]), $code);
     }
 }
 
@@ -107,7 +107,7 @@ class FRSFileDbException extends FRSFileException
      */
     public function __construct($file, $code = 0)
     {
-        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'db_error', array($file->getFileName())), $code);
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'db_error', [$file->getFileName()]), $code);
     }
 }
 

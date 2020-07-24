@@ -58,12 +58,12 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                      'p'        => "[]",  // list of pages
                      's'     => false, /* select by pagename */
                      /* Columns to include in listing */
                      'info'     => 'pagename,perm,mtime,owner,author',
-            )
+            ]
         );
     }
 
@@ -149,7 +149,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $p = $request->getArg('p');
         $post_args = $request->getArg('admin_setacl');
         $next_action = 'select';
-        $pages = array();
+        $pages = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         } elseif ($this->_list) {
@@ -194,11 +194,11 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $pagelist = new PageList_Selectable(
             $args['info'],
             $args['exclude'],
-            array('types' => array(
+            ['types' => [
                                                   'perm'
                                                   => new _PageList_Column_perm('perm', _("Permission")),
                                                   'acl'
-            => new _PageList_Column_acl('acl', _("ACL"))))
+            => new _PageList_Column_acl('acl', _("ACL"))]]
         );
 
         $pagelist->addPageList($pages);
@@ -222,19 +222,19 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         );
 
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('admin_setacl')
+                ['admin_setacl']
             ),
-            HiddenInputs(array('admin_setacl[action]' => $next_action)),
+            HiddenInputs(['admin_setacl[action]' => $next_action]),
             ENABLE_PAGEPERM
                           ? ''
-                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          : HiddenInputs(['require_authority_for_post' => WIKIAUTH_ADMIN]),
             $buttons
         );
     }
@@ -244,7 +244,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $acl = $post_args['acl'];
 
         //FIXME: find intersection of all pages perms, not just from the last pagename
-        $pages = array();
+        $pages = [];
         foreach ($pagehash as $name => $checked) {
             if ($checked) {
                 $pages[] = $name;
@@ -286,9 +286,9 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         //                                       'value' => $post_args['acl'])));
         $header->pushContent(HTML::br());
         if (! empty($pages) and DEBUG) {
-            $checkbox = HTML::input(array('type' => 'checkbox',
+            $checkbox = HTML::input(['type' => 'checkbox',
                                         'name' => 'admin_setacl[updatechildren]',
-                                        'value' => 1));
+                                        'value' => 1]);
             if (! empty($post_args['updatechildren'])) {
                 $checkbox->setAttr('checked', 'checked');
             }

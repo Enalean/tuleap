@@ -80,32 +80,32 @@ class CrossTrackerTest extends RestBase
 
     public function testPut()
     {
-        $params   = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params   = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ""
-        );
+        ];
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $expected_cross_tracker = array(
+        $expected_cross_tracker = [
             "id"           => 1,
             "uri"          => "cross_tracker_reports/1",
             "expert_query" => "",
-            "trackers"     => array(
-                array(
+            "trackers"     => [
+                [
                     "id"    => $this->epic_tracker_id,
                     "uri"   => "trackers/" . $this->epic_tracker_id,
                     "label" => REST_TestDataBuilder::EPICS_TRACKER_LABEL,
-                    "project" => array(
+                    "project" => [
                         "id"    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                    )
-                )
-            ),
+                    ]
+                ]
+            ],
             "invalid_trackers" => []
-        );
+        ];
 
         $this->assertEquals(
             $response->json(),
@@ -115,10 +115,10 @@ class CrossTrackerTest extends RestBase
 
     public function testPutForReadOnlyUser(): void
     {
-        $params   = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params   = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ""
-        );
+        ];
         $response = $this->getResponse(
             $this->client->put('cross_tracker_reports/1', null, $params),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -151,10 +151,10 @@ class CrossTrackerTest extends RestBase
     public function testGetContentIdWithQuery(): void
     {
         $query    = json_encode(
-            array(
-                "trackers_id"  => array(1),
+            [
+                "trackers_id"  => [1],
                 "expert_query" => ""
-            )
+            ]
         );
         $response = $this->getResponse(
             $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
@@ -175,7 +175,7 @@ class CrossTrackerTest extends RestBase
 
         $this->assertEquals(
             $cross_tracker_artifacts['artifacts'],
-            array()
+            []
         );
     }
 

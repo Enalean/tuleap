@@ -40,8 +40,8 @@ class Docman_ItemAction
         $this->action           = '';
         $this->classes          = '';
         $this->title            = '';
-        $this->other_icons      = array();
-        $this->extraUrlParams   = array();
+        $this->other_icons      = [];
+        $this->extraUrlParams   = [];
     }
 
     public function fetchAction($params)
@@ -55,8 +55,8 @@ class Docman_ItemAction
 
     public function fetch($params)
     {
-        $dfltUrlParams = array('action' => $this->action,
-                               'id' => $this->item->getId());
+        $dfltUrlParams = ['action' => $this->action,
+                               'id' => $this->item->getId()];
         $_urlParams = array_merge($dfltUrlParams, $this->extraUrlParams);
         $url = DocmanViewURLBuilder::buildActionUrl(
             $this->item,
@@ -187,8 +187,8 @@ class Docman_ItemActionCopy extends Docman_ItemAction
 
         $currentItem = $params['item'];
         $origAction = isset($params['action']) ? $params['action'] : 'show';
-        $this->extraUrlParams   = array('orig_id'     => $currentItem->getId(),
-                                        'orig_action' => $origAction);
+        $this->extraUrlParams   = ['orig_id'     => $currentItem->getId(),
+                                        'orig_action' => $origAction];
     }
 }
 
@@ -203,8 +203,8 @@ class Docman_ItemActionCut extends Docman_ItemAction
 
         $currentItem = $params['item'];
         $origAction = isset($params['action']) ? $params['action'] : 'show';
-        $this->extraUrlParams   = array('orig_id'     => $currentItem->getId(),
-                                        'orig_action' => $origAction);
+        $this->extraUrlParams   = ['orig_id'     => $currentItem->getId(),
+                                        'orig_action' => $origAction];
     }
 }
 

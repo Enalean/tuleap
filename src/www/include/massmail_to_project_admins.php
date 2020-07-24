@@ -44,19 +44,19 @@ $body = $body_info . $body;
 if ($massmail_sender->sendMassmail($project, $user, $subject, $body, $admins)) {
     $GLOBALS['Response']->addFeedback(
         'info',
-        $GLOBALS['Language']->getText('contact_admins', 'mail_sent_admin', array($project_name))
+        $GLOBALS['Language']->getText('contact_admins', 'mail_sent_admin', [$project_name])
     );
 } else {
     $GLOBALS['Response']->addFeedback(
         'error',
-        $GLOBALS['Language']->getText('contact_admins', 'mail_not_sent_admin', array($project_name))
+        $GLOBALS['Language']->getText('contact_admins', 'mail_not_sent_admin', [$project_name])
     );
 }
 
 $event_manager = EventManager::instance();
 $event_manager->processEvent(
     Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS,
-    array()
+    []
 );
 
 $GLOBALS['Response']->redirect("/projects/" . $project->getUnixName());

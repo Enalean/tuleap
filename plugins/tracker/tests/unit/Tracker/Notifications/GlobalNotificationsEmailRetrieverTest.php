@@ -56,14 +56,14 @@ class GlobalNotificationsEmailRetrieverTest extends TestCase
         $this->notification = $this->buildNotification();
 
         $notified_users_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
-        $notified_users_dao->shouldReceive('searchUsersByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(array('email' => 'andrew@example.com'), array('email' => 'smith@example.com')));
+        $notified_users_dao->shouldReceive('searchUsersByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(['email' => 'andrew@example.com'], ['email' => 'smith@example.com']));
         $notified_ugroups_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UgroupsToNotifyDao::class);
-        $notified_ugroups_dao->shouldReceive('searchUgroupsByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 104, 'name' => 'Developers')));
+        $notified_ugroups_dao->shouldReceive('searchUgroupsByNotificationId')->with(1)->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 104, 'name' => 'Developers']));
 
         $developers = Mockery::mock(ProjectUGroup::class);
         $developers->shouldReceive('getMembers')
             ->andReturn(
-                array(
+                [
                     new PFUser([
                         'language_id' => 'en',
                         'user_id' => 201,
@@ -82,7 +82,7 @@ class GlobalNotificationsEmailRetrieverTest extends TestCase
                         'status' => PFUser::STATUS_SUSPENDED,
                         'email' => 'suspended@example.com'
                     ])
-                )
+                ]
             );
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);

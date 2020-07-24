@@ -366,10 +366,10 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => dgettext('tuleap-git', 'Git'),
             'href'  => GIT_SITE_ADMIN_BASE_URL
-        );
+        ];
     }
 
     public function getPluginInfo()
@@ -485,36 +485,36 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         switch ($params['type']) {
             case SystemEvent_GIT_REPO_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGitSystemEventManager()
-                );
+                ];
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getLogger(),
                     $this->getGitSystemEventManager(),
                     $this->getUgroupsToNotifyDao(),
                     $this->getUsersToNotifyDao(),
                     EventManager::instance()
-                );
+                ];
                 break;
             case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_LEGACY_REPO_DELETE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getManifestManager(),
                     $this->getLogger(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME:
                 $params['class'] = 'SystemEvent_GIT_LEGACY_REPO_ACCESS';
                 break;
             case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitDao(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
@@ -534,140 +534,140 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                             new MailLogger()
                         )
                     ),
-                );
+                ];
                 break;
             case SystemEvent_GIT_REPO_FORK::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_FORK';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory()
-                );
+                ];
                 break;
             case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGerritServerFactory(),
                     $this->getSSHKeyDumper(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_PROJECT_DELETE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     $this->getGerritDriverFactory()
-                );
+                ];
                 break;
             case SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_PROJECT_READONLY';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     $this->getGerritDriverFactory()
-                );
+                ];
                 break;
             case SystemEvent_GIT_USER_RENAME::NAME:
                 $params['class'] = 'SystemEvent_GIT_USER_RENAME';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getSSHKeyDumper(),
                     UserManager::instance()
-                );
+                ];
                 break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getManifestManager(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME:
                 $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getManifestManager(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME:
                 $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getManifestManager(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getManifestManager(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_EDIT_SSH_KEYS::NAME:
                 $params['class'] = 'SystemEvent_GIT_EDIT_SSH_KEYS';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     UserManager::instance(),
                     $this->getSSHKeyDumper(),
                     $this->getUserAccountManager(),
                     $this->getGitSystemEventManager(),
                     $this->getLogger()
-                );
+                ];
                 break;
             case SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME:
                 $params['class'] = 'SystemEvent_GIT_DUMP_ALL_SSH_KEYS';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getSSHKeyMassDumper(),
                     $this->getLogger()
-                );
+                ];
                 break;
             case SystemEvent_GIT_REPO_RESTORE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_RESTORE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getGitSystemEventManager()
-                );
+                ];
                 break;
             case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_PROJECTS_UPDATE';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getLogger(),
                     $this->getGitSystemEventManager(),
                     $this->getProjectManager(),
                     $this->getGitoliteDriver(),
-                );
+                ];
                 break;
             case SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME:
                 $params['class'] = 'SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitoliteDriver()
-                );
+                ];
                 break;
             case SystemEvent_GIT_UPDATE_MIRROR::NAME:
                 $params['class'] = 'SystemEvent_GIT_UPDATE_MIRROR';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitoliteDriver()
-                );
+                ];
                 break;
             case SystemEvent_GIT_DELETE_MIRROR::NAME:
                 $params['class'] = 'SystemEvent_GIT_DELETE_MIRROR';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitoliteDriver()
-                );
+                ];
                 break;
             case SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME:
                 $params['class'] = 'SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitoliteDriver(),
                     $this->getProjectManager()
-                );
+                ];
                 break;
             case ProjectIsSuspended::NAME:
                 $params['class'] = ProjectIsSuspended::class;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitoliteDriver(),
                     $this->getProjectManager()
-                );
+                ];
                 break;
             case ParseGitolite3Logs::NAME:
                 $params['class'] = '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getGitolite3Parser()
-                );
+                ];
                 break;
             default:
                 break;
@@ -688,12 +688,12 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $params['natures'] = array_merge(
             $params['natures'],
-            array(
-                Git::REFERENCE_NATURE => array(
+            [
+                Git::REFERENCE_NATURE => [
                     'keyword' => Git::REFERENCE_KEYWORD,
                     'label'   => dgettext('tuleap-git', 'Git commit')
-                )
-            )
+                ]
+            ]
         );
     }
 
@@ -738,7 +738,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function isNameAvailable($newName, &$error)
     {
         $backend_gitolite = $this->getBackendGitolite();
-        $backend_gitshell = Backend::instance('Git', 'GitBackend', array($this->getGitRepositoryUrlManager()));
+        $backend_gitshell = Backend::instance('Git', 'GitBackend', [$this->getGitRepositoryUrlManager()]);
 
         if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
             $error = dgettext('tuleap-git', 'A file already exists with this name under gitroot');
@@ -1052,7 +1052,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function permission_get_object_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
-            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+            if (in_array($params['permission_type'], ['PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'])) {
                 $params['object_type'] = 'git_repository';
             }
         }
@@ -1060,7 +1060,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
-            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+            if (in_array($params['permission_type'], ['PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'])) {
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -1085,7 +1085,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             }
 
             if (! $this->_cached_permission_user_allowed_to_change) {
-                if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                if (in_array($params['permission_type'], ['PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'])) {
                     $repository = new GitRepository();
                     $repository->setId($params['object_id']);
                     try {
@@ -1186,7 +1186,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         if (! empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
-            $gitBackend = Backend::instance('Git', 'GitBackend', array($this->getGitRepositoryUrlManager()));
+            $gitBackend = Backend::instance('Git', 'GitBackend', [$this->getGitRepositoryUrlManager()]);
             echo $gitBackend->getBackendStatistics($formatter);
         }
     }
@@ -1329,11 +1329,11 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         foreach ($params['ugroups'] as $ugroup_id) {
             $this->project_admin_ugroup_remove_user(
-                array(
+                [
                     'group_id'  => $params['group_id'],
                     'user_id'   => $params['user_id'],
                     'ugroup_id' => $ugroup_id,
-                )
+                ]
             );
         }
     }
@@ -1341,22 +1341,22 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function userIsNoLongerProjectAdmin(UserIsNoLongerProjectAdmin $event)
     {
         $this->project_admin_ugroup_remove_user(
-            array(
+            [
                 'user_id'   => $event->getUser()->getId(),
                 'group_id'  => $event->getProject()->getID(),
                 'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
-            )
+            ]
         );
     }
 
     public function userBecomesProjectAdmin(UserBecomesProjectAdmin $event)
     {
         $this->project_admin_ugroup_add_user(
-            array(
+            [
                 'user_id'   => $event->getUser()->getId(),
                 'group_id'  => $event->getProject()->getID(),
                 'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
-            )
+            ]
         );
     }
 
@@ -1367,18 +1367,18 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $project_id = $params['group_id'];
 
         foreach ($users as $user) {
-            $calling = array(
+            $calling = [
                 'group_id' => $project_id,
                 'user_id'  => $user->getId(),
                 'ugroup'   => $ugroup
-            );
+            ];
             $this->project_admin_ugroup_remove_user($calling);
         }
 
         $this->getFineGrainedUpdater()->deleteUgroupPermissions($ugroup, $project_id);
         $this->getUgroupsToNotifyDao()->deleteByUgroupId($project_id, $ugroup->getId());
 
-        $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
+        $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate([$project_id]);
     }
 
     public function project_admin_add_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1480,7 +1480,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array('plugin_git_user_pushes', 'plugin_git_project_pushes'));
+        $this->removeOrphanWidgets(['plugin_git_user_pushes', 'plugin_git_project_pushes']);
     }
 
     private function getProjectCreator()
@@ -1931,7 +1931,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->getPermissionsManager()->duplicateWithStaticMapping(
             $params['template_id'],
             $params['group_id'],
-            array(Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS),
+            [Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS],
             $params['ugroupsMapping']
         );
 
@@ -2377,10 +2377,10 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-git', 'Git'),
                 $this->getPluginPath() . '/?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID(),
                         'action'   => 'admin-git-admins'
-                    )
+                    ]
                 )
             )
         );

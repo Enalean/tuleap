@@ -42,32 +42,32 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         parent::setUp();
 
-        $this->first_file = array(
+        $this->first_file = [
             'name'        => 'my file',
             'description' => 'a very LARGE file',
             'mimetype'    => 'text/plain',
             'content'     => base64_encode('a very LARGE file'),
-        );
+        ];
 
-        $this->second_file = array(
+        $this->second_file = [
             'name'        => 'my file 2',
             'description' => 'a very small file',
             'mimetype'    => 'text/plain',
             'content'     => base64_encode('a very small file'),
-        );
+        ];
 
-        $this->third_file = array(
+        $this->third_file = [
             'name'        => 'my file 3',
             'description' => 'a very small file',
             'mimetype'    => 'text/plain',
             'content'     => base64_encode('a very small file'),
-        );
+        ];
     }
 
     public function testOptionsArtifactFiles()
     {
         $response = $this->getResponse($this->client->options('artifact_temporary_files'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(0, (string) $response->getHeader('X-DISK-USAGE'));
         $this->assertEquals(self::$DEFAULT_QUOTA, (string) $response->getHeader('X-QUOTA'));
     }
@@ -119,10 +119,10 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         $second_chunk = 'with more data';
 
-        $put_resource = json_encode(array(
+        $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
             'offset'  => "2",
-        ));
+        ]);
 
         $request  = $this->client->put('artifact_temporary_files/' . $file_id, null, $put_resource);
         $response = $this->getResponse($request);
@@ -147,10 +147,10 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         $second_chunk = 'with more data';
 
-        $put_resource = json_encode(array(
+        $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
             'offset'  => "2",
-        ));
+        ]);
 
         $request = $this->client->put('artifact_temporary_files/' . $file_id, null, $put_resource);
 
@@ -165,10 +165,10 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         $second_chunk = 'with more data';
 
-        $put_resource = json_encode(array(
+        $put_resource = json_encode([
             'content' => base64_encode($second_chunk),
             'offset'  => "45",
-        ));
+        ]);
 
         $request = $this->client->put('artifact_temporary_files/' . $file_id, null, $put_resource);
 
@@ -182,10 +182,10 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $file_id = 1453655565245655;
         $chunk   = 'with more data';
 
-        $put_resource = json_encode(array(
+        $put_resource = json_encode([
             'content' => base64_encode($chunk),
             'offset'  => "2",
-        ));
+        ]);
 
         $request = $this->client->put('artifact_temporary_files/' . $file_id, null, $put_resource);
 
@@ -221,7 +221,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $response = $this->getResponse($this->client->options('artifact_temporary_files/' . $file_id));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -267,26 +267,26 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertNotNull($field_id_summary);
         $this->assertNotNull($field_id_status);
 
-        $params = json_encode(array(
-            'tracker' => array(
+        $params = json_encode([
+            'tracker' => [
                 'id'  => $this->user_stories_tracker_id,
                 'uri' => 'trackers/' . $this->user_stories_tracker_id
-            ),
-            'values' => array(
-                array(
+            ],
+            'values' => [
+                [
                     'field_id' => $field_id_summary,
                     'value'    => 'I want 2',
-                ),
-                array(
+                ],
+                [
                     'field_id'       => $field_id_status,
-                    'bind_value_ids' => array(205),
-                ),
-                array(
+                    'bind_value_ids' => [205],
+                ],
+                [
                     'field_id' => $field_id_file,
-                    'value'    => array($file_representation['id']),
-                ),
-            ),
-        ));
+                    'value'    => [$file_representation['id']],
+                ],
+            ],
+        ]);
 
         $response = $this->getResponse($this->client->post('artifacts', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
@@ -310,11 +310,11 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
         $this->assertTrue($file_exists);
 
-        return $parameters = array(
+        return $parameters = [
             'artifact_id' => $posted_artifact['id'],
             'field_id'    => $field_id_file,
             'file_id'     => $file_representation['id']
-        );
+        ];
     }
 
     /**
@@ -376,14 +376,14 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         }
         $this->assertNotNull($field_id);
 
-        $params = json_encode(array(
-            'values' => array(
-                array(
+        $params = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
-                    'value'    => array($file_id),
-                ),
-            ),
-        ));
+                    'value'    => [$file_id],
+                ],
+            ],
+        ]);
 
         $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $params));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -452,7 +452,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $response = $this->getResponse($this->client->options('artifact_files/' . $file_id));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -466,7 +466,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testArtifactTemporaryFilesDeleteId()

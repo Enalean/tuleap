@@ -46,7 +46,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory
      */
     public function getStatusMappings(Tracker $mapping_tracker, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $mappings = array();
+        $mappings = [];
         $status_values = $this->getStatusValuesIndexedByLabel($mapping_tracker);
         foreach ($columns as $master_column) {
             if (isset($status_values[$master_column->getLabel()])) {
@@ -72,12 +72,12 @@ class Cardwall_OnTop_Config_ValueMappingFactory
         if (isset($mappings[$mapping_tracker->getId()][$mapping_field->getId()])) {
             return $mappings[$mapping_tracker->getId()][$mapping_field->getId()];
         }
-        return array();
+        return [];
     }
 
     private function getMappingFieldValuesIndexedByTracker(Tracker $tracker)
     {
-        $mappings = array();
+        $mappings = [];
         foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
             $field = $this->element_factory->getFieldById($row['field_id']);
             if ($field) {
@@ -95,7 +95,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory
 
     private function getStatusValuesIndexedByLabel(Tracker $mapping_tracker)
     {
-        $values = array();
+        $values = [];
         $field  = $mapping_tracker->getStatusField();
         if ($field) {
             foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {

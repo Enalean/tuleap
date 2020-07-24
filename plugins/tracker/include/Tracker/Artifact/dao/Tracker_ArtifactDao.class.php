@@ -404,7 +404,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $criteria   = $criteria === 'OR' ? 'OR' : 'AND'; //make sure that the request is not forged
         $offset     = $this->da->escapeInt($offset);
         $limit      = $this->da->escapeInt($limit);
-        $keywords_array = array_map(array($this, 'quote_keyword'), explode(" ", $keywords));
+        $keywords_array = array_map([$this, 'quote_keyword'], explode(" ", $keywords));
 
         // search in all text fields
         $search_query1 = implode(" $criteria cvt.value LIKE ", $keywords_array);
@@ -561,7 +561,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function getChildren($artifact_id)
     {
-        return $this->getChildrenForArtifacts(array($artifact_id));
+        return $this->getChildrenForArtifacts([$artifact_id]);
     }
 
     /**
@@ -578,7 +578,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                "WHERE parent_art.id IN (" . $this->da->escapeIntImplode($artifact_ids) . ")
                 GROUP BY parent_art.id";
 
-        $children_count = array();
+        $children_count = [];
         foreach ($this->retrieve($sql) as $row) {
             $children_count[$row['id']] = $row['nb'];
         }
@@ -610,7 +610,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function getPaginatedChildren($artifact_id, $limit, $offset)
     {
-        return $this->getPaginatedChildrenForArtifacts(array($artifact_id), $limit, $offset);
+        return $this->getPaginatedChildrenForArtifacts([$artifact_id], $limit, $offset);
     }
 
     public function getChildrenForArtifacts(array $artifact_ids)
@@ -752,7 +752,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function getLinkedArtifacts($artifact_id)
     {
-        return $this->getLinkedArtifactsByIds(array($artifact_id));
+        return $this->getLinkedArtifactsByIds([$artifact_id]);
     }
 
     public function getLinkedOpenArtifactsOfTrackersNotLinkedToOthers($artifact_id, array $tracker_ids, array $excluded_linked_ids, array $additional_artifacts)
@@ -1189,7 +1189,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * @param array $excluded_ids Exclude those ids from the results
      * @return DataAccessResult
      */
-    public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = array())
+    public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = [])
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
         $exclude      = '';
@@ -1260,7 +1260,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         if ($row && $row['sorted_ids'] != null) {
             return explode(',', $row['sorted_ids']);
         }
-        return array();
+        return [];
     }
 
     public function doesUserHaveUnsubscribedFromArtifactNotifications($artifact_id, $user_id)

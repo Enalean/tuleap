@@ -44,11 +44,11 @@ class PackagePermissionPerGroupJSONRepresentationRetriever
     {
         if (! $project->usesService(Service::FILE)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => _(
                         "Files service is disabled for this project."
                     )
-                )
+                ]
             );
         }
 

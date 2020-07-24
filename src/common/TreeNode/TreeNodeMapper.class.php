@@ -43,7 +43,7 @@ class TreeNodeMapper
     public function map(TreeNode $node)
     {
         $new_node = $this->function->apply($node);
-        $children = array_map(array($this, 'map'), $node->getChildren());
+        $children = array_map([$this, 'map'], $node->getChildren());
         $new_node->setChildren($children);
         return $new_node;
     }

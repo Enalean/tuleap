@@ -44,18 +44,18 @@ class ReferenceAdministrationViews extends Views
     public function header()
     {
         project_admin_header(
-            array(
+            [
                 'title' => $GLOBALS['Language']->getText('project_reference', 'edit_reference'),
                 'group' => $GLOBALS['group_id'],
                 'help'  => 'project-admin.html#reference-pattern-configuration'
-            ),
+            ],
             'references'
         );
     }
 
     public function footer()
     {
-        project_admin_footer(array());
+        project_admin_footer([]);
     }
 
     // {{{ Views
@@ -90,7 +90,7 @@ class ReferenceAdministrationViews extends Views
 <HR>
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
 
-        $title_arr = array();
+        $title_arr = [];
         if ($request->get('group_id') == 100) {
             $title_arr[] = $GLOBALS['Language']->getText('project_reference', 'id');
         }
@@ -111,7 +111,7 @@ class ReferenceAdministrationViews extends Views
                 //changing from system to project
                 echo '</TABLE><H3>' . $GLOBALS['Language']->getText('project_reference', 'manage_proj_r') . '</H3><P>';
                 echo '<TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
-                $title_arr_project = array();
+                $title_arr_project = [];
                 if ($request->get('group_id') == 100) {
                     $title_arr_project[] = $GLOBALS['Language']->getText('project_reference', 'id');
                 }
@@ -145,7 +145,7 @@ class ReferenceAdministrationViews extends Views
     {
         $description = '';
         if (strpos($ref->getDescription(), "_desc_key") !== false) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                 if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                     $description = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
@@ -166,10 +166,10 @@ class ReferenceAdministrationViews extends Views
         $can_be_deleted = ($ref->getScope() != "S") || ($ref->getGroupId() == 100);
         EventManager::instance()->processEvent(
             Event::GET_REFERENCE_ADMIN_CAPABILITIES,
-            array(
+            [
                 'reference'      => $ref,
                 'can_be_deleted' => &$can_be_deleted
-            )
+            ]
         );
 
         if ($ref->getId() == 100) {
@@ -259,10 +259,10 @@ class ReferenceAdministrationViews extends Views
             $can_create = true;
             EventManager::instance()->processEvent(
                 Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
-                array(
+                [
                     'nature'     => $nature_key,
                     'can_create' => &$can_create
-                )
+                ]
             );
             if ($can_create) {
                 echo '<option value="' . $purifier->purify($nature_key) . '">' . $purifier->purify($nature_desc['label']) . '</option>';
@@ -284,8 +284,8 @@ class ReferenceAdministrationViews extends Views
 <td>';
 // Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
-            $serv_label = array();
-            $serv_short_name = array();
+            $serv_label = [];
+            $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
                 if ($label == "service_" . $serv['short_name'] . "_lbl_key") {
@@ -358,10 +358,10 @@ class ReferenceAdministrationViews extends Views
         $can_be_edited = true;
         EventManager::instance()->processEvent(
             Event::GET_REFERENCE_ADMIN_CAPABILITIES,
-            array(
+            [
                 'reference'     => $ref,
                 'can_be_edited' => &$can_be_edited
-            )
+            ]
         );
         $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100);
         if ($ro) {
@@ -410,10 +410,10 @@ class ReferenceAdministrationViews extends Views
                 $can_create = true;
                 EventManager::instance()->processEvent(
                     Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
-                    array(
+                    [
                         'nature'     => $nature_key,
                         'can_create' => &$can_create
-                    )
+                    ]
                 );
                 if ($can_create) {
                     if ($ref->getNature() == $nature_key) {
@@ -443,8 +443,8 @@ class ReferenceAdministrationViews extends Views
 <td>';
             // Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
-            $serv_label = array();
-            $serv_short_name = array();
+            $serv_label = [];
+            $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
                 if ($label == "service_" . $serv['short_name'] . "_lbl_key") {

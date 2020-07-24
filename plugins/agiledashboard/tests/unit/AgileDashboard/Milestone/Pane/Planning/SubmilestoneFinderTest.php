@@ -165,8 +165,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsNullIfThereIsNoChildTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->sprint_tracker_id)->andReturns(array());
+        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->sprint_tracker_id)->andReturns([]);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
         $this->sprint_milestone->shouldReceive('getProject')->andReturns($this->project);
@@ -183,9 +183,9 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsSprintWhenBothPlanningsHaveSameBacklogTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->sprint_tracker));
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
@@ -202,8 +202,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsNullWhenChildHaveNoPlanningForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->sprint_tracker));
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns(null);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
@@ -220,10 +220,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsSprintWhenTheBacklogTrackerIsParentForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->epic_tracker));
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->sprint_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns(array($this->epic_tracker));
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->epic_tracker]);
+        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
@@ -242,10 +242,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsNullWhenTheBacklogTrackerIsNotRelatedForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->epic_tracker));
-        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->team_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->requirement_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns(array());
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->epic_tracker]);
+        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->team_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->requirement_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns([]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
@@ -263,10 +263,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
       */
     public function testItReturnsSprintWhenTheBacklogTrackerIsAncestorForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->theme_tracker));
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->sprint_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns(array($this->epic_tracker, $this->theme_tracker));
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->theme_tracker]);
+        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([$this->epic_tracker, $this->theme_tracker]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 
         $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturns(false);
@@ -287,12 +287,12 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
      */
     public function testItReturnsSprintEvenIfThereIsSiblingWithoutMatchingBacklogTrackerForMultiMilestoneConfiguration(): void
     {
-        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->team_tracker));
-        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns(array($this->user_story_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns(array($this->requirement_tracker, $this->sprint_tracker));
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns(array());
-        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns(array());
+        $this->release_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->requirement_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->team_tracker]);
+        $this->sprint_planning->shouldReceive('getBacklogTrackers')->andReturns([$this->user_story_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getChildren')->with($this->release_tracker_id)->andReturns([$this->requirement_tracker, $this->sprint_tracker]);
+        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->team_tracker)->andReturns([]);
+        $this->tracker_hierarchy_factory->shouldReceive('getAllParents')->with($this->user_story_tracker)->andReturns([]);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->requirement_tracker)->andReturns($this->requirement_planning);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($this->sprint_tracker)->andReturns($this->sprint_planning);
 

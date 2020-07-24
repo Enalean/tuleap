@@ -98,22 +98,22 @@ $renderer->header($GLOBALS['Language']->getText('tracker_admin_restore', 'pendin
 
 EventManager::instance()->processEvent(
     Event::LIST_DELETED_TRACKERS,
-    array()
+    []
 );
 
-$tracker_list = array();
+$tracker_list = [];
 if (TrackerV3::instance()->available()) {
     $tracker_factory = new ArtifactTypeFactory($group);
     $trackers        = $tracker_factory->getPendingArtifactTypes();
 
     while ($tracker = db_fetch_array($trackers)) {
-        $tracker_list[] = array(
+        $tracker_list[] = [
            'group_artifact_id' => $tracker['group_artifact_id'],
            'project_name'      => $tracker['project_name'],
            'name'              => $tracker['name'],
            'deletion_date'     => date("Y-m-d", $tracker['deletion_date']),
            'group_id'          => $tracker['group_id'],
-        );
+        ];
     }
 
     $tv3_presenter = new ArtifactPendingDeletionPresenter($tracker_list);

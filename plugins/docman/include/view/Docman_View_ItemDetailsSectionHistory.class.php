@@ -64,7 +64,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
         if ($versions) {
             if (count($versions)) {
-                $titles = array();
+                $titles = [];
                 $titles[] = dgettext('tuleap-docman', 'Version');
                 $titles[] = dgettext('tuleap-docman', 'Date');
                 $titles[] = dgettext('tuleap-docman', 'Author');
@@ -73,7 +73,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $titles[] = dgettext('tuleap-docman', 'Approval');
                 $titles[] = dgettext('tuleap-docman', 'Delete');
                 $content .= html_build_list_table_top($titles, false, false, false, null, "table");
-                $odd_even = array('boxitem', 'boxitemalt');
+                $odd_even = ['boxitem', 'boxitemalt'];
                 $i = 0;
                 foreach ($versions as $key => $nop) {
                     $download = DocmanViewURLBuilder::buildActionUrl(
@@ -135,16 +135,16 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         $versions        = $version_factory->getAllVersionForItem($this->item);
 
         if ($versions) {
-            $titles = array(
+            $titles = [
                 dgettext('tuleap-docman', 'Version'),
                 dgettext('tuleap-docman', 'Date'),
                 dgettext('tuleap-docman', 'Author'),
                 dgettext('tuleap-docman', 'Label'),
                 dgettext('tuleap-docman', 'Change Log'),
-            );
+            ];
             $content .= html_build_list_table_top($titles, false, false, false, null, "table");
 
-            $odd_even = array('boxitem', 'boxitemalt');
+            $odd_even = ['boxitem', 'boxitemalt'];
             $i = 0;
 
             foreach (array_keys($versions) as $key) {

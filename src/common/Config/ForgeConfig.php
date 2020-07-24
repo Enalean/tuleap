@@ -32,7 +32,7 @@ class ForgeConfig
     /**
      * Hold the configuration variables
      */
-    protected static $conf_stack = array(0 => array());
+    protected static $conf_stack = [0 => []];
 
     /**
      * Load the configuration variables into the current stack
@@ -105,10 +105,10 @@ class ForgeConfig
     {
         $filename = $GLOBALS['Language']->getContent('include/restricted_user_permissions', 'en_US');
         if (! $filename) {
-            return array();
+            return [];
         }
 
-        $public_projects = array();
+        $public_projects = [];
         include($filename);
 
         return $public_projects;
@@ -132,7 +132,7 @@ class ForgeConfig
      */
     public static function store()
     {
-        array_unshift(self::$conf_stack, array());
+        array_unshift(self::$conf_stack, []);
         if (! count(self::$conf_stack)) {
             trigger_error('Config registry lost');
         }

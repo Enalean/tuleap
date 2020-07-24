@@ -56,7 +56,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         // Set ForumML plugin scope to 'Projects' wide
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->allowedForProject = array();
+        $this->allowedForProject = [];
     }
 
     public function getPluginInfo()
@@ -87,14 +87,14 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if ($group_id && $request->exist('list')) {
-            $params['search_entries'][] = array(
+            $params['search_entries'][] = [
                 'value' => 'mail',
                 'selected' => true,
-            );
-            $params['hidden_fields'][] = array(
+            ];
+            $params['hidden_fields'][] = [
                 'name'  => 'list',
                 'value' => $request->getValidated('list', 'uint'),
-            );
+            ];
         }
     }
 
@@ -136,14 +136,14 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function search_types_presenters($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['project']->getId()) && ! $params['project']->isError()) {
-            $lists = array();
+            $lists = [];
             $dao = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {
-                $lists[] = array(
+                $lists[] = [
                     'url'              => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
                     'title'            => $row['list_name'],
                     'extra-parameters' => false
-                );
+                ];
             }
 
             if (! $lists) {

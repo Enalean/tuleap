@@ -163,12 +163,12 @@ class BackendAliases extends Backend
 
     private function writeOtherAliases($fp)
     {
-        $aliases = array();
+        $aliases = [];
         EventManager::instance()->processEvent(
             Event::BACKEND_ALIAS_GET_ALIASES,
-            array(
+            [
                 'aliases' => &$aliases
-            )
+            ]
         );
 
         foreach ($aliases as $alias) {

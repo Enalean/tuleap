@@ -68,7 +68,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * @access protected
      */
-    protected $fileDiffs = array();
+    protected $fileDiffs = [];
 
     /**
      * dataRead
@@ -123,11 +123,11 @@ class TreeDiff implements \Iterator, \Countable
     {
         $this->dataRead = true;
 
-        $this->fileDiffs = array();
+        $this->fileDiffs = [];
 
         $exe = new GitExe($this->project);
 
-        $args = array();
+        $args = [];
 
         $args[] = '-r';
         if ($this->renames) {

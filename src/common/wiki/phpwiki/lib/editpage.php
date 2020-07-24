@@ -55,11 +55,11 @@ class PageEditor
             }
         }
 
-        $this->meta = array('author' => $this->user->getId(),
+        $this->meta = ['author' => $this->user->getId(),
                             'author_id' => $this->user->getAuthenticatedId(),
-                            'mtime' => time());
+                            'mtime' => time()];
 
-        $this->tokens = array();
+        $this->tokens = [];
 
         $version = $request->getArg('version');
         if ($version !== false) {
@@ -288,7 +288,7 @@ class PageEditor
 
             // Save succeded. We raise an event.
             $new = $this->version + 1;
-            $difflink = WikiURL($page->getName(), array('action' => 'diff'), true);
+            $difflink = WikiURL($page->getName(), ['action' => 'diff'], true);
             $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
             $eM = EventManager::instance();
             $uM = UserManager::instance();
@@ -296,14 +296,14 @@ class PageEditor
             $wiki_page = new WikiPage(GROUP_ID, $page->getName());
             $eM->processEvent(
                 "wiki_page_updated",
-                array(
+                [
                     'group_id'         => GROUP_ID,
                     'wiki_page'        => $page->getName(),
                     'referenced'       => $wiki_page->isReferenced(),
                     'diff_link'        => $difflink,
                     'user'             => $user,
                     'version'          => $this->version
-                )
+                ]
             );
         }
 
@@ -458,12 +458,12 @@ class PageEditor
         }
 
         $textarea = HTML::textarea(
-            array('class' => 'wikiedit',
+            ['class' => 'wikiedit',
                                          'name' => 'edit[content]',
                                          'id'   => 'edit[content]',
                                          'rows' => $request->getPref('editHeight'),
                                          'cols' => $request->getPref('editWidth'),
-                                         'readonly' => (bool) $readonly),
+                                         'readonly' => (bool) $readonly],
             $this->_content
         );
         if (USE_HTMLAREA) {
@@ -479,42 +479,42 @@ class PageEditor
         $request = &$this->request;
         $page = &$this->page;
 
-        $h = array('action'   => 'edit',
+        $h = ['action'   => 'edit',
                    'pagename' => $page->getName(),
                    'version'  => $this->version,
                    'edit[pagetype]' => $this->meta['pagetype'],
-                   'edit[current_version]' => $this->_currentVersion);
+                   'edit[current_version]' => $this->_currentVersion];
 
         $el['HIDDEN_INPUTS'] = HiddenInputs($h);
         $el['EDIT_TEXTAREA'] = $this->getTextArea();
         $el['SUMMARY_INPUT']
-            = HTML::input(array('type'  => 'text',
+            = HTML::input(['type'  => 'text',
                                 'class' => 'wikitext',
                                 'id' => 'edit[summary]',
                                 'name'  => 'edit[summary]',
                                 'size'  => 50,
                                 'maxlength' => 256,
-                                'value' => $this->meta['summary']));
+                                'value' => $this->meta['summary']]);
         $el['MINOR_EDIT_CB']
-            = HTML::input(array('type' => 'checkbox',
+            = HTML::input(['type' => 'checkbox',
                                 'name'  => 'edit[minor_edit]',
                                 'id' => 'edit[minor_edit]',
-                                'checked' => (bool) $this->meta['is_minor_edit']));
+                                'checked' => (bool) $this->meta['is_minor_edit']]);
         $el['OLD_MARKUP_CB']
-            = HTML::input(array('type' => 'checkbox',
+            = HTML::input(['type' => 'checkbox',
                                 'name' => 'edit[markup]',
                                 'value' => 'old',
                                 'checked' => $this->meta['markup'] < 2.0,
                                 'id' => 'useOldMarkup',
-                                'onclick' => 'showOldMarkupRules(this.checked)'));
+                                'onclick' => 'showOldMarkupRules(this.checked)']);
         $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0)
             ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
         $el['LOCKED_CB']
-            = HTML::input(array('type' => 'checkbox',
+            = HTML::input(['type' => 'checkbox',
                                 'name' => 'edit[locked]',
                                 'id'   => 'edit[locked]',
                                 'disabled' => (bool) ! $this->user->isadmin(),
-                                'checked'  => (bool) $this->locked));
+                                'checked'  => (bool) $this->locked]);
 
         $el['PREVIEW_B'] = Button(
             'submit:edit[preview]',
@@ -527,22 +527,22 @@ class PageEditor
 
         $el['IS_CURRENT'] = $this->version == $this->current->getVersion();
 
-        $el['WIDTH_PREF'] = HTML::input(array('type' => 'text',
+        $el['WIDTH_PREF'] = HTML::input(['type' => 'text',
                                     'size' => 3,
                                     'maxlength' => 4,
                                     'class' => "numeric",
                                     'name' => 'pref[editWidth]',
                                     'id'   => 'pref[editWidth]',
                                     'value' => $request->getPref('editWidth'),
-                                    'onchange' => 'this.form.submit();'));
-        $el['HEIGHT_PREF'] = HTML::input(array('type' => 'text',
+                                    'onchange' => 'this.form.submit();']);
+        $el['HEIGHT_PREF'] = HTML::input(['type' => 'text',
                                      'size' => 3,
                                      'maxlength' => 4,
                                      'class' => "numeric",
                                      'name' => 'pref[editHeight]',
                                      'id'   => 'pref[editHeight]',
                                      'value' => $request->getPref('editHeight'),
-                                     'onchange' => 'this.form.submit();'));
+                                     'onchange' => 'this.form.submit();']);
         $el['SEP'] = $WikiTheme->getButtonSeparator();
         $el['AUTHOR_MESSAGE'] = fmt("Author will be logged as %s.", HTML::em($this->user->getId()));
 

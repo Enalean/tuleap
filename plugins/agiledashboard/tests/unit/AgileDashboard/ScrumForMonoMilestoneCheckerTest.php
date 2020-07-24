@@ -76,8 +76,8 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
 
     public function testItReturnsFalseWhenOnePlanningIsDefinedAndConfigurationAllowsMonoMilestone(): void
     {
-        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
-        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns([101]);
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns([1]);
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
@@ -89,8 +89,8 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
 
     public function testItReturnsFalseWhenTwoPlanningsAreDefinedAndConfigurationAllowsMonoMilestone(): void
     {
-        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
-        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1,2));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns([101]);
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns([1, 2]);
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
@@ -102,7 +102,7 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
 
     public function testItAlwaysReturnsTrueWhenMonoMilestoneIsDefinedInDb(): void
     {
-        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(array(101));
+        $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns([101]);
 
         $this->assertTrue(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(
@@ -115,7 +115,7 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
     public function testItReturnsTrueWhenOnePlanningIsDefinedAndUserIsInLabMode(): void
     {
         $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
-        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns([1]);
         $this->user->shouldReceive('useLabFeatures')->andReturns(true);
 
         $this->assertTrue(
@@ -129,7 +129,7 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
     public function testItReturnsFalseWhenOnePlanningIsDefinedAndUserIsNotInLabMode(): void
     {
         $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
-        $this->planning_factory->shouldReceive('getPlannings')->andReturns(array(1));
+        $this->planning_factory->shouldReceive('getPlannings')->andReturns([1]);
         $this->user->shouldReceive('useLabFeatures')->andReturns(false);
 
         $this->assertFalse(

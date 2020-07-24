@@ -55,11 +55,11 @@ class WikiPlugin_WantedPages extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('page'     => '[pagename]', // just for a single page.
+            ['page'     => '[pagename]', // just for a single page.
                    'noheader' => false,
                    'exclude_from'  => _("PgsrcTranslation") . ',' . _("InterWikiMap"),
                    'limit'    => '100',
-            'paging'   => 'auto')
+            'paging'   => 'auto']
         );
     }
 
@@ -86,11 +86,11 @@ class WikiPlugin_WantedPages extends WikiPlugin
 
         if (! $page) {
             $GLOBALS['WikiTheme']->addPageListColumn(
-                array('wanted' => array('_PageList_Column_WantedPages_wanted', 'custom:wanted', _("Wanted From"), 'left'))
+                ['wanted' => ['_PageList_Column_WantedPages_wanted', 'custom:wanted', _("Wanted From"), 'left']]
             );
         }
         $pagelist = new PageList($page ? '' : 'pagename,wanted', $exclude, $args); // search button?
-        $pagelist->_wpagelist = array();
+        $pagelist->_wpagelist = [];
 
         if (! $page) {
             list($offset, $maxcount) = $pagelist->limit($limit);

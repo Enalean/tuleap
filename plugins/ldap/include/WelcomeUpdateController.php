@@ -76,14 +76,14 @@ class WelcomeUpdateController implements DispatchableWithRequest
         }
 
         $mailSite = 0;
-        $vMailSite = new Valid_WhiteList('form_mail_site', array('1'));
+        $vMailSite = new Valid_WhiteList('form_mail_site', ['1']);
         $vMailSite->required();
         if ($request->valid($vMailSite)) {
             $mailSite = 1;
         }
 
         $mailVa = 0;
-        $vMailVa = new Valid_WhiteList('form_mail_va', array('1'));
+        $vMailVa = new Valid_WhiteList('form_mail_va', ['1']);
         $vMailVa->required();
         if ($request->valid($vMailVa)) {
             $mailVa = 1;
@@ -97,7 +97,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
             if ($this->userValuesHaveNotBeenModified($current_user, $timezone, $mailVa, $mailSite) || $this->user_manager->updateDb($current_user)) {
                 $this->ldap_user_dao->setLoginDate($current_user->getId(), $_SERVER['REQUEST_TIME']);
             } else {
-                $this->welcomeExitError($request, $layout, $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up'), $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up_expl', array('')));
+                $this->welcomeExitError($request, $layout, $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up'), $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up_expl', ['']));
                 return;
             }
         }
@@ -112,17 +112,17 @@ class WelcomeUpdateController implements DispatchableWithRequest
         $layout->addFeedback(\Feedback::ERROR, $title);
 
         if ((int) $request->get('pv') === 2) {
-            $layout->pv_header(array());
+            $layout->pv_header([]);
         } else {
-            site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error'), 'registeration_process' => true));
+            site_header(['title' => $GLOBALS['Language']->getText('include_exit', 'exit_error'), 'registeration_process' => true]);
         }
 
         echo '<p>',$text,'</p>';
 
         if ((int) $request->get('pv') === 2) {
-            $layout->pv_footer(array());
+            $layout->pv_footer([]);
         } else {
-            $layout->footer(array('showfeedback' => false));
+            $layout->footer(['showfeedback' => false]);
         }
     }
 

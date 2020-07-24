@@ -20,5 +20,5 @@
 
 class Tracker_FormElement_View_Admin_Field_Checkbox extends Tracker_FormElement_View_Admin_Field_MultiSelectbox
 {
-    protected $availableTypes = array('sb', 'rb', 'msb');
+    protected $availableTypes = ['sb', 'rb', 'msb'];
 }

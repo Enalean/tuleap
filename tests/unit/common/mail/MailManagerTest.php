@@ -51,15 +51,15 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $nicolas->shouldReceive('getStatus')->andReturns('A');
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns(array($manuel));
-        $um->shouldReceive('getAllUsersByEmail')->with('nicolas@enalean.com')->andReturns(array($nicolas));
+        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel]);
+        $um->shouldReceive('getAllUsersByEmail')->with('nicolas@enalean.com')->andReturns([$nicolas]);
         $mm->shouldReceive('getUserManager')->andReturns($um);
 
-        $addresses = array('manuel@enalean.com', 'nicolas@enalean.com');
+        $addresses = ['manuel@enalean.com', 'nicolas@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals(array($manuel), $prefs['html']);
-        $this->assertEquals(array($nicolas), $prefs['text']);
+        $this->assertEquals([$manuel], $prefs['html']);
+        $this->assertEquals([$nicolas], $prefs['text']);
     }
 
     public function testGetMailPrefsShouldReturnUserWithTextPref(): void
@@ -75,14 +75,14 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $manuel2->shouldReceive('getStatus')->andReturns('A');
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns(array($manuel, $manuel2));
+        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
 
         $mm->shouldReceive('getUserManager')->andReturns($um);
 
-        $addresses = array('manuel@enalean.com');
+        $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
-        $this->assertEquals(array($manuel), $prefs['text']);
+        $this->assertEquals([$manuel], $prefs['text']);
         $this->assertEquals([], $prefs['html']);
     }
 
@@ -99,15 +99,15 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $manuel2->shouldReceive('getStatus')->andReturns('A');
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns(array($manuel, $manuel2));
+        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
 
         $mm->shouldReceive('getUserManager')->andReturns($um);
 
-        $addresses = array('manuel@enalean.com');
+        $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
         $this->assertEquals([], $prefs['text']);
-        $this->assertEquals(array($manuel2), $prefs['html']);
+        $this->assertEquals([$manuel2], $prefs['html']);
     }
 
     public function testGetMailPrefsShouldReturnLastUser(): void
@@ -123,15 +123,15 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $manuel2->shouldReceive('getStatus')->andReturns('A');
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns(array($manuel, $manuel2));
+        $um->shouldReceive('getAllUsersByEmail')->with('manuel@enalean.com')->andReturns([$manuel, $manuel2]);
 
         $mm->shouldReceive('getUserManager')->andReturns($um);
 
-        $addresses = array('manuel@enalean.com');
+        $addresses = ['manuel@enalean.com'];
 
         $prefs = $mm->getMailPreferencesByEmail($addresses);
         $this->assertEquals([], $prefs['text']);
-        $this->assertEquals(array($manuel2), $prefs['html']);
+        $this->assertEquals([$manuel2], $prefs['html']);
     }
 
     public function testGetMailPrefsShouldReturnHTMLUsersWithAnonymous(): void
@@ -139,12 +139,12 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getAllUsersByEmail')->andReturns(array());
+        $um->shouldReceive('getAllUsersByEmail')->andReturns([]);
         $mm->shouldReceive('getUserManager')->andReturns($um);
 
         $mm->shouldReceive('getConfig')->andReturns('fr_BE');
 
-        $prefs = $mm->getMailPreferencesByEmail(array('manuel@enalean.com'));
+        $prefs = $mm->getMailPreferencesByEmail(['manuel@enalean.com']);
         $this->assertEquals([], $prefs['text']);
         $this->assertCount(1, $prefs['html']);
         $this->assertEquals('manuel@enalean.com', $prefs['html'][0]->getEmail());
@@ -155,7 +155,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
     public function testGetMailPrefsByUsersShouldReturnHTMLByDefault(): void
     {
         $mm   = new MailManager();
-        $user = new PFUser(array('id' => 123, 'language_id' => 'en_US'));
+        $user = new PFUser(['id' => 123, 'language_id' => 'en_US']);
         $this->assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
     }
 

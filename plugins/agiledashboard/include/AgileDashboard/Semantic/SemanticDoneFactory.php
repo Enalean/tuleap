@@ -71,7 +71,7 @@ class SemanticDoneFactory
      */
     private function getDoneValues(SimpleXMLElement $xml, SimpleXMLElement $full_semantic_xml, array $xmlMapping)
     {
-        $done_values         = array();
+        $done_values         = [];
         $xml_semantic_status = $this->getSemanticDoneFromXML($full_semantic_xml);
 
         if (! $xml_semantic_status) {

@@ -334,10 +334,10 @@ class AgileDashboardRouter
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
             case 'showKanban':
-                $header_options = array(
-                    'body_class'                 => array('agiledashboard_kanban'),
+                $header_options = [
+                    'body_class'                 => ['agiledashboard_kanban'],
                     Layout::INCLUDE_FAT_COMBINED => false,
-                );
+                ];
 
                 $tracker_factory = TrackerFactory::instance();
                 $controller = new ShowKanbanController(
@@ -349,7 +349,7 @@ class AgileDashboardRouter
                     new BreadCrumbBuilder($tracker_factory, $this->kanban_factory),
                     new RecentlyVisitedKanbanDao()
                 );
-                $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
+                $this->renderAction($controller, 'showKanban', $request, [], $header_options);
                 break;
             case 'burnup-cache-generate':
                 $this->buildFormElementController()->forceBurnupCacheGeneration($request);
@@ -357,12 +357,12 @@ class AgileDashboardRouter
             case 'permission-per-group':
                 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                     $GLOBALS['Response']->send400JSONErrors(
-                        array(
+                        [
                             'error' => dgettext(
                                 'tuleap-agiledashboard',
                                 "You don't have permissions to see user groups."
                             )
-                        )
+                        ]
                     );
                 }
 
@@ -370,10 +370,10 @@ class AgileDashboardRouter
                 break;
             case 'index':
             default:
-                $header_options = array(
-                    'body_class' => array('agiledashboard_homepage')
-                );
-                $this->renderAction($planning_controller, 'index', $request, array(), $header_options);
+                $header_options = [
+                    'body_class' => ['agiledashboard_homepage']
+                ];
+                $this->renderAction($planning_controller, 'index', $request, [], $header_options);
         }
     }
 
@@ -389,7 +389,7 @@ class AgileDashboardRouter
      */
     private function getHeaderTitle(Codendi_Request $request, $action_name)
     {
-        $header_title = array(
+        $header_title = [
             'index'               => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
             'exportToFile'        => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
             'adminScrum'          => dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard'),
@@ -401,7 +401,7 @@ class AgileDashboardRouter
             'show'                => dgettext('tuleap-agiledashboard', 'View Planning'),
             'showTop'             => dgettext('tuleap-agiledashboard', 'View Planning'),
             'showKanban'          => dgettext('tuleap-agiledashboard', 'Kanban')
-        );
+        ];
 
         $title = $header_title[$action_name];
 
@@ -540,8 +540,8 @@ class AgileDashboardRouter
         MVC2_Controller $controller,
         $action_name,
         Codendi_Request $request,
-        array $args = array(),
-        array $header_options = array()
+        array $args = [],
+        array $header_options = []
     ) {
         $content = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge($header_options, $controller->getHeaderOptions());
@@ -562,9 +562,9 @@ class AgileDashboardRouter
     protected function executeAction(
         MVC2_Controller $controller,
         $action_name,
-        array $args = array()
+        array $args = []
     ) {
-        return call_user_func_array(array($controller, $action_name), $args);
+        return call_user_func_array([$controller, $action_name], $args);
     }
 
     /**
@@ -588,8 +588,8 @@ class AgileDashboardRouter
                 /* no break */
             default:
                 $controller = $this->milestone_controller_factory->getMilestoneController($request);
-                $action_arguments = array();
-                $this->renderAction($controller, 'show', $request, $action_arguments, array('body_class' => array('agiledashboard_planning')));
+                $action_arguments = [];
+                $this->renderAction($controller, 'show', $request, $action_arguments, ['body_class' => ['agiledashboard_planning']]);
         }
     }
 
@@ -614,12 +614,12 @@ class AgileDashboardRouter
 
         $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
         $header_options = array_merge(
-            array('body_class' => array('agiledashboard_planning')),
+            ['body_class' => ['agiledashboard_planning']],
             $controller->getHeaderOptions()
         );
         $breadcrumbs = $controller->getBreadcrumbs();
 
-        $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
+        $top_planning_rendered = $this->executeAction($controller, 'showTop', []);
         $service->displayHeader(
             sprintf(
                 dgettext('tuleap-agiledashboard', '%s top backlog'),

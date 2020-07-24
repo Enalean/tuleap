@@ -35,7 +35,7 @@ class ConfigValueFileProvider implements ConfigValueProvider
     public function getVariables()
     {
         if (! is_file($this->file)) {
-            return array();
+            return [];
         }
 
         include($this->file);

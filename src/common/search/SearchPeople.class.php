@@ -69,7 +69,7 @@ class Search_SearchPeople
 
     private function getResultsPresenters(PaginatedUserCollection $user_collection)
     {
-        $users_presenters = array();
+        $users_presenters = [];
 
         foreach ($user_collection->getUsers() as $user) {
             $users_presenters[] = new Search_SearchPeopleResultPresenter($user);

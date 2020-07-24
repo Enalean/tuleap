@@ -28,7 +28,7 @@ class ArtifactBase extends Base
 {
     public const BURNUP_FIELD_SHORTNAME = 'burnup_field';
 
-    protected $burnup_artifact_ids = array();
+    protected $burnup_artifact_ids = [];
     private $burnup_tracker_id;
 
     public function setUp(): void

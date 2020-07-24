@@ -190,7 +190,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
                 'project_admins_daily_synchronization_user_not_removed',
                 $user->getUnixName(),
                 $this->id,
-                array()
+                []
             );
         }
 

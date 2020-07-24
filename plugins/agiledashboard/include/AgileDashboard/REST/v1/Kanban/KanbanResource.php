@@ -718,9 +718,9 @@ class KanbanResource extends AuthenticatedResource
                 throw new RestException(403, 'You cannot access this kanban item.');
             }
 
-            $fields_data = array(
+            $fields_data = [
                 $status_field->getId() => $column_id
-            );
+            ];
 
             $artifact->createNewChangeset($fields_data, '', $user);
         }
@@ -728,7 +728,7 @@ class KanbanResource extends AuthenticatedResource
 
     private function validateIdsInAddAreInKanbanTracker(AgileDashboard_Kanban $kanban, KanbanAddRepresentation $add)
     {
-        $all_kanban_item_ids = array();
+        $all_kanban_item_ids = [];
         foreach ($this->kanban_item_dao->getAllKanbanItemIds($kanban->getTrackerId()) as $row) {
             $all_kanban_item_ids[] = $row['id'];
         }
@@ -737,7 +737,7 @@ class KanbanResource extends AuthenticatedResource
 
     private function getKanbanBacklogItemIds($tracker_id)
     {
-        $backlog_item_ids = array();
+        $backlog_item_ids = [];
         foreach ($this->kanban_item_dao->getKanbanBacklogItemIds($tracker_id) as $artifact) {
             $backlog_item_ids[$artifact['id']] = true;
         }
@@ -912,7 +912,7 @@ class KanbanResource extends AuthenticatedResource
 
     private function getKanbanArchiveItemIds($tracker_id)
     {
-        $archive_item_ids = array();
+        $archive_item_ids = [];
         foreach ($this->kanban_item_dao->getKanbanArchiveItemIds($tracker_id) as $artifact) {
             $archive_item_ids[$artifact['id']] = true;
         }
@@ -1116,7 +1116,7 @@ class KanbanResource extends AuthenticatedResource
 
     private function getItemsInColumn($tracker_id, $column_id)
     {
-        $column_item_ids = array();
+        $column_item_ids = [];
         foreach ($this->kanban_item_dao->getItemsInColumn($tracker_id, $column_id) as $artifact) {
             $column_item_ids[$artifact['id']] = true;
         }

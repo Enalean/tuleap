@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Fi
     public function create($changeset_value_id, $value_ids)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        $values = array();
+        $values = [];
         foreach ($value_ids as $v) {
             $b = $v['bindvalue_id'] ? (int) $v['bindvalue_id'] : 'NULL';
             $o = $v['openvalue_id'] ? (int) $v['openvalue_id'] : 'NULL';

@@ -40,51 +40,51 @@ function svn_header(Project $project, $params)
     $params['toptab'] = 'svn';
     $params['group']  = $group_id;
 
-    $additional_params = array();
+    $additional_params = [];
     if (isset($params['body_class'])) {
-        $additional_params = array(
+        $additional_params = [
             'body_class' => $params['body_class']
-        );
+        ];
     }
 
-    $toolbar = array();
-    $toolbar[] = array('title' => $Language->getText('svn_utils', 'svn_info'),
-                     'url'   => '/svn/?func=info&group_id=' . $group_id);
+    $toolbar = [];
+    $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_info'),
+                     'url'   => '/svn/?func=info&group_id=' . $group_id];
 
     if ($project->isPublic() || user_isloggedin()) {
-        $toolbar[] = array('title' => $Language->getText('svn_utils', 'browse_tree'),
-                           'url'   => '/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixName(false));
+        $toolbar[] = ['title' => $Language->getText('svn_utils', 'browse_tree'),
+                           'url'   => '/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixName(false)];
     }
 
     if (user_isloggedin()) {
-        $toolbar[] = array('title' => $Language->getText('svn_utils', 'my_ci'),
-                           'url'   => '/svn/?func=browse&group_id=' . $group_id . '&set=my');
-        $toolbar[] = array('title' => $Language->getText('svn_utils', 'svn_query'),
-                           'url'   => '/svn/?func=browse&group_id=' . $group_id);
+        $toolbar[] = ['title' => $Language->getText('svn_utils', 'my_ci'),
+                           'url'   => '/svn/?func=browse&group_id=' . $group_id . '&set=my'];
+        $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_query'),
+                           'url'   => '/svn/?func=browse&group_id=' . $group_id];
     }
     if (user_ismember($group_id, 'A') || user_ismember($group_id, 'SVN_ADMIN')) {
-        $toolbar[] = array('title' => $Language->getText('svn_utils', 'svn_admin'),
-                           'url'   => '/svn/admin/?group_id=' . $group_id);
+        $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_admin'),
+                           'url'   => '/svn/admin/?group_id=' . $group_id];
         if (isset($params['path']) && ! empty($params['path'])) {
             // TODO: Validate the path
-            $toolbar[] = array('title' => $Language->getText('svn_utils', 'notif'),
-                               'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path']);
+            $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
+                               'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path']];
         }
     }
     if (! isset($params['help']) || ! $params['help']) {
         $params['help'] = "svn.html";
     }
-    $toolbar[] = array('title' => $Language->getText('global', 'help'),
-                       'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');');
+    $toolbar[] = ['title' => $Language->getText('global', 'help'),
+                       'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
 
     $service->displayHeader(
         $params['title'],
-        array(
-            array(
+        [
+            [
                 'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_svn_lbl_key'),
                 'url' => '/svn/?group_id=' . $group_id
-            )
-        ),
+            ]
+        ],
         $toolbar,
         $additional_params
     );
@@ -105,25 +105,25 @@ function svn_header_admin($params)
         return;
     }
 
-    $toolbar = array();
-    $toolbar[] = array('title' => $Language->getText('svn_utils', 'admin'),
-                       'url'   => '/svn/admin/?group_id=' . $group_id);
-    $toolbar[] = array('title' => $Language->getText('svn_admin_index', 'gen_sett'),
-                       'url'   => '/svn/admin/?func=general_settings&group_id=' . $group_id);
-    $toolbar[] = array('title' => $Language->getText('svn_admin_index', 'immutable_tags'),
-                       'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id);
-    $toolbar[] = array('title' => $Language->getText('svn_admin_index', 'access'),
-                       'url'   => '/svn/admin/?func=access_control&group_id=' . $group_id);
-    $toolbar[] = array('title' => $Language->getText('svn_utils', 'notif'),
-                       'url'   => '/svn/admin/?func=notification&group_id=' . $group_id);
+    $toolbar = [];
+    $toolbar[] = ['title' => $Language->getText('svn_utils', 'admin'),
+                       'url'   => '/svn/admin/?group_id=' . $group_id];
+    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'gen_sett'),
+                       'url'   => '/svn/admin/?func=general_settings&group_id=' . $group_id];
+    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'immutable_tags'),
+                       'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id];
+    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'access'),
+                       'url'   => '/svn/admin/?func=access_control&group_id=' . $group_id];
+    $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
+                       'url'   => '/svn/admin/?func=notification&group_id=' . $group_id];
 
     if (! $params['help']) {
         $params['help'] = "svn.html#subversion-administration-interface";
     }
-    $toolbar[] = array('title' => $Language->getText('global', 'help'),
-                       'url' => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');');
+    $toolbar[] = ['title' => $Language->getText('global', 'help'),
+                       'url' => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
 
-    $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id=' . $group_id)), $toolbar);
+    $service->displayHeader($params['title'], [['title' => $params['title'], 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
 }
 
 
@@ -195,7 +195,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
         $text = $Language->getText('svn_utils', 'acti');
     }
 
-    echo $Language->getText('svn_utils', 'multi_sort', array($url_alternate_sort,$text)) . "\n";
+    echo $Language->getText('svn_utils', 'multi_sort', [$url_alternate_sort, $text]) . "\n";
 
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
@@ -214,7 +214,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     $nav_bar .= '</td>';
 
     $offset_last = min($offset + $chunksz - 1, $total_rows - 1);
-    $nav_bar .= '<td width= "60% " align = "center" class="small">' . $Language->getText('svn_utils', 'items', array(($offset + 1),($offset_last + 1))) . "</td>\n";
+    $nav_bar .= '<td width= "60% " align = "center" class="small">' . $Language->getText('svn_utils', 'items', [($offset + 1), ($offset_last + 1)]) . "</td>\n";
 
     $nav_bar .= '<td width="20%" align ="right">';
 
@@ -252,13 +252,13 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     }
 
     $url .= "&order=";
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = $Language->getText('svn_browse_revision', 'rev');
     $title_arr[] = $Language->getText('svn_utils', 'desc');
     $title_arr[] = $Language->getText('svn_utils', 'date');
     $title_arr[] = $Language->getText('svn_browse_revision', 'commiter');
 
-    $links_arr = array();
+    $links_arr = [];
     $links_arr[] = $url . 'revision#results';
     $links_arr[] = $url . 'description#results';
     $links_arr[] = $url . 'date#results';
@@ -412,14 +412,14 @@ function svn_utils_show_revision_detail($result, $group_id, $group_name, $commit
     }
 
     echo '<h3> ' . $Language->getText('svn_utils', 'impacted_files') . '</h3>';
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = $Language->getText('svn_utils', 'file');
     $title_arr[] = $Language->getText('svn_browse_revision', 'rev');
     $title_arr[] = $Language->getText('svn_utils', 'type');
     //$title_arr[]='AddedLines'; To be implemented
     //$title_arr[]='RemovedLines'; To be implemented
 
-    $links_arr = array();
+    $links_arr = [];
     $links_arr[] = $url . 'filename';
     $links_arr[] = $url . '';
     $links_arr[] = $url . 'type';
@@ -481,7 +481,7 @@ function svn_utils_format_svn_history($group_id)
     if (! $res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
         print '<P>' . $Language->getText('svn_utils', 'no_hist');
     } else {
-        $svnhist = array();
+        $svnhist = [];
         while ($row_svnfullhist = db_fetch_array($res_svnfullhist)) {
             $svnhist[$row_svnfullhist['user_name']]['full'] = $row_svnfullhist['commits'];
             $svnhist[$row_svnfullhist['user_name']]['last'] = 0;
@@ -595,8 +595,8 @@ function svn_utils_parse_access_file($project_svnroot)
 {
     global $SVNACCESS, $SVNGROUPS,$Language;
     $filename = "$project_svnroot/.SVNAccessFile";
-    $SVNACCESS = array();
-    $SVNGROUPS = array();
+    $SVNACCESS = [];
+    $SVNGROUPS = [];
 
     $f = @fopen($filename, "rb");
     if ($f === false) {
@@ -650,7 +650,7 @@ function svn_utils_parse_access_file($project_svnroot)
                         if (array_key_exists(strtolower(substr($who, 1)), $SVNGROUPS)) {
                             foreach ($SVNGROUPS[strtolower(substr($who, 1))] as $user) {
                                 if (array_key_exists($user, $SVNACCESS) === false) {
-                                    $SVNACCESS[$user] = array();
+                                    $SVNACCESS[$user] = [];
                                 }
                                       $SVNACCESS[$user][$path] = $perm;
                                       //echo "SVNACCESS[$user][$path] = $perm <br>\n";
@@ -658,7 +658,7 @@ function svn_utils_parse_access_file($project_svnroot)
                         }
                     } else {
                         if (array_key_exists(strtolower($who), $SVNACCESS) === false) {
-                            $SVNACCESS[strtolower($who)] = array();
+                            $SVNACCESS[strtolower($who)] = [];
                         }
                         $SVNACCESS[strtolower($who)][$path] = $perm;
                       //echo "SVNACCESS[$who][$path] = $perm <br>\n";
@@ -682,10 +682,10 @@ function svn_utils_get_forbidden_paths($username, $project_svnroot)
     }
 
     $em = EventManager::instance();
-    $em->processEvent('svn_check_access_username', array('username'        => &$username,
-                                                         'project_svnroot' => $project_svnroot));
+    $em->processEvent('svn_check_access_username', ['username'        => &$username,
+                                                         'project_svnroot' => $project_svnroot]);
 
-    $forbidden = array();
+    $forbidden = [];
     if (! user_is_super_user()) {   // super user have all the rights (no forbidden paths)
         if (array_key_exists('*', $SVNACCESS)) {
             foreach ($SVNACCESS['*'] as $path => $perm) {
@@ -737,8 +737,8 @@ function svn_utils_check_access($username, $project_svnroot, $svnpath)
     }
 
     $em = EventManager::instance();
-    $em->processEvent('svn_check_access_username', array('username'        => &$username,
-                                                       'project_svnroot' => $project_svnroot));
+    $em->processEvent('svn_check_access_username', ['username'        => &$username,
+                                                       'project_svnroot' => $project_svnroot]);
     $username = strtolower($username);
 
     if ($SVNACCESS == "None") {
@@ -876,5 +876,5 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
         }
     }
 
-    return array($result, $totalrows);
+    return [$result, $totalrows];
 }

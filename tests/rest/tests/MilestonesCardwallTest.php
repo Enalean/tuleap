@@ -29,7 +29,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET(): void
     {
         $response = $this->getResponse($this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSCardwallWithRESTReadOnlyUser(): void
@@ -91,8 +91,8 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
         $this->assertEquals("Open", $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
         $this->assertEquals("2", $first_swimlane_card['column_id']);
-        $this->assertEquals(array(1, 2, 4), $first_swimlane_card['allowed_column_ids']);
-        $this->assertEquals(array(), $first_swimlane_card['values']);
+        $this->assertEquals([1, 2, 4], $first_swimlane_card['allowed_column_ids']);
+        $this->assertEquals([], $first_swimlane_card['values']);
 
         $first_swimlane_card_project_reference = $first_swimlane_card['project'];
         $this->assertEquals($this->project_private_member_id, $first_swimlane_card_project_reference['id']);

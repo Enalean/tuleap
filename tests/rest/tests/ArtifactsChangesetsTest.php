@@ -43,7 +43,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     public function testOptionsArtifactId()
     {
         $response = $this->getResponse($this->client->options($this->artifact_resource['uri'] . '/changesets'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**

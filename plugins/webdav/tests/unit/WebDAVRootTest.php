@@ -84,8 +84,8 @@ final class WebDAVRootTest extends TestCase
     public function testGetChildrenWithNoPublicProjects(): void
     {
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
-        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns(array());
-        $this->assertEquals($this->webDAVRoot->getChildren(), array());
+        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns([]);
+        $this->assertEquals($this->webDAVRoot->getChildren(), []);
     }
 
     /**
@@ -102,7 +102,7 @@ final class WebDAVRootTest extends TestCase
 
         $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
         $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturnFalse();
-        $this->assertEquals($this->webDAVRoot->getChildren(), array());
+        $this->assertEquals($this->webDAVRoot->getChildren(), []);
     }
 
     /**
@@ -115,9 +115,9 @@ final class WebDAVRootTest extends TestCase
         $webDAVProject = \Mockery::spy(\WebDAVProject::class);
 
         $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns(array($webDAVProject));
+        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns([$webDAVProject]);
 
-        $this->assertEquals($this->webDAVRoot->getChildren(), array($webDAVProject));
+        $this->assertEquals($this->webDAVRoot->getChildren(), [$webDAVProject]);
     }
 
     /**
@@ -129,7 +129,7 @@ final class WebDAVRootTest extends TestCase
 
 
         $this->webDAVRoot->shouldReceive('getUserProjectList')->andReturns([]);
-        $this->assertEquals($this->webDAVRoot->getChildren(), array());
+        $this->assertEquals($this->webDAVRoot->getChildren(), []);
     }
 
     /**
@@ -147,7 +147,7 @@ final class WebDAVRootTest extends TestCase
         $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
         $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->with(101)->andReturnFalse();
 
-        $this->assertEquals($this->webDAVRoot->getChildren(), array());
+        $this->assertEquals($this->webDAVRoot->getChildren(), []);
     }
 
     /**
@@ -160,9 +160,9 @@ final class WebDAVRootTest extends TestCase
         $webDAVProject = \Mockery::spy(\WebDAVProject::class);
 
         $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('getUserProjectList')->andReturns(array($webDAVProject));
+        $this->webDAVRoot->shouldReceive('getUserProjectList')->andReturns([$webDAVProject]);
 
-        $this->assertEquals($this->webDAVRoot->getChildren(), array($webDAVProject));
+        $this->assertEquals($this->webDAVRoot->getChildren(), [$webDAVProject]);
     }
 
     /**

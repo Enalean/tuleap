@@ -128,12 +128,12 @@ class WikiMethodCb extends WikiCallback
     {
         $method = &$this->methodName;
 
-        return call_user_func_array(array(&$this->object, $method), $args);
+        return call_user_func_array([&$this->object, $method], $args);
     }
 
     public function toPearCb()
     {
-        return array($this->object, $this->methodName);
+        return [$this->object, $this->methodName];
     }
 }
 

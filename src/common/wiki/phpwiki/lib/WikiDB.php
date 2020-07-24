@@ -217,7 +217,7 @@ class WikiDB
                     $body              = $subject . "\n" .
                                          sprintf(_("Removed by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') .
                                          "\n\n";
-                    $goto_link         = WikiURL($pagename, array('action' => 'PageHistory'), true);
+                    $goto_link         = WikiURL($pagename, ['action' => 'PageHistory'], true);
                     $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
                     if ($wiki_notification->send()) {
                         trigger_error(
@@ -281,11 +281,11 @@ class WikiDB
         return new WikiDB_PageIterator(
             $this,
             $result,
-            array(
+            [
                 'include_empty' => $include_empty,
                 'exclude' => $exclude,
                 'limit' => $limit
-            )
+            ]
         );
     }
 
@@ -329,10 +329,10 @@ class WikiDB
         return new WikiDB_PageIterator(
             $this,
             $result,
-            array(
+            [
                 'exclude' => $exclude,
                 'limit' => $limit
-            )
+            ]
         );
     }
 
@@ -358,11 +358,11 @@ class WikiDB
         return new WikiDB_PageIterator(
             $this,
             $result,
-            array(
+            [
                 'exclude' => $exclude,
                 'limit' => $limit,
                 'stoplisted' => $result->stoplisted
-            )
+            ]
         );
     }
 
@@ -516,7 +516,7 @@ class WikiDB
     public function touch()
     {
         $ts = $this->get('_timestamp');
-        $this->set('_timestamp', array(time(), $ts[1] + 1));
+        $this->set('_timestamp', [time(), $ts[1] + 1]);
     }
 
 
@@ -577,7 +577,7 @@ class WikiDB
         $gd = $this->getPage('global_data');
         $data = $gd->get('__global');
         if ($data === false) {
-            $data = array();
+            $data = [];
         }
 
         if (empty($newval)) {
@@ -730,16 +730,16 @@ class WikiDB_Page
             return;
         }
 
-        $backend->lock(array('page','version'));
+        $backend->lock(['page', 'version']);
         $latestversion = $cache->get_latest_version($pagename);
         if ($latestversion && ($version == $latestversion)) {
-            $backend->unlock(array('page','version'));
+            $backend->unlock(['page', 'version']);
             trigger_error(sprintf("Attempt to delete most recent revision of '%s'", $pagename), E_USER_ERROR);
             return;
         }
 
         $cache->delete_versiondata($pagename, $version);
-        $backend->unlock(array('page','version'));
+        $backend->unlock(['page', 'version']);
     }
 
     /*
@@ -780,10 +780,10 @@ class WikiDB_Page
             return;
         }
 
-        $backend->lock(array('version'));
+        $backend->lock(['version']);
         $latestversion = $cache->get_latest_version($pagename);
         if ($latestversion && $version == $latestversion) {
-            $backend->unlock(array('version'));
+            $backend->unlock(['version']);
             trigger_error(sprintf("Attempt to merge most recent revision of '%s'", $pagename), E_USER_ERROR);
             return;
         }
@@ -791,7 +791,7 @@ class WikiDB_Page
         $versiondata = $cache->get_versiondata($pagename, $version, true);
         if (! $versiondata) {
             // Not there? ... we're done!
-            $backend->unlock(array('version'));
+            $backend->unlock(['version']);
             return;
         }
 
@@ -806,14 +806,14 @@ class WikiDB_Page
                     $cache->update_versiondata(
                         $pagename,
                         $previous,
-                        array('%content' => $versiondata['%content'], '_supplanted' => $versiondata['_supplanted'])
+                        ['%content' => $versiondata['%content'], '_supplanted' => $versiondata['_supplanted']]
                     );
                 }
             }
         }
 
         $cache->delete_versiondata($pagename, $version);
-        $backend->unlock(array('version'));
+        $backend->unlock(['version']);
     }
 
 
@@ -845,14 +845,14 @@ class WikiDB_Page
         $pagename = &$this->_pagename;
         $cache->invalidate_cache($pagename);
 
-        $backend->lock(array('version','page','recent','link','nonempty'));
+        $backend->lock(['version', 'page', 'recent', 'link', 'nonempty']);
 
         $latestversion = $backend->get_latest_version($pagename);
         $newversion = ($latestversion ? $latestversion : 0) + 1;
         assert($newversion >= 1);
 
         if ($version != WIKIDB_FORCE_CREATE and $version != $newversion) {
-            $backend->unlock(array('version','page','recent','link','nonempty'));
+            $backend->unlock(['version', 'page', 'recent', 'link', 'nonempty']);
             return false;
         }
 
@@ -884,7 +884,7 @@ class WikiDB_Page
 
         // FIXME: use (possibly user specified) 'mtime' time or
         // time()?
-            $cache->update_versiondata($pagename, $latestversion, array('_supplanted' => $data['mtime']));
+            $cache->update_versiondata($pagename, $latestversion, ['_supplanted' => $data['mtime']]);
         }
 
         $data['%content'] = &$content;
@@ -896,7 +896,7 @@ class WikiDB_Page
 
         $backend->set_links($pagename, $links);
 
-        $backend->unlock(array('version','page','recent','link','nonempty'));
+        $backend->unlock(['version', 'page', 'recent', 'link', 'nonempty']);
 
         return new WikiDB_PageRevision($this->_wikidb, $pagename, $newversion, $data);
     }
@@ -947,8 +947,8 @@ class WikiDB_Page
 
     public function getPageChangeEmails($notify)
     {
-        $emails = array();
-        $userids = array();
+        $emails = [];
+        $userids = [];
         foreach ($notify as $page => $users) {
             if (glob_match($page, $this->_pagename)) {
                 foreach ($users as $userid => $user) {
@@ -1037,7 +1037,7 @@ class WikiDB_Page
         }
         $emails = array_unique($emails);
         $userids = array_unique($userids);
-        return array($emails, $userids);
+        return [$emails, $userids];
     }
 
     /**
@@ -1050,7 +1050,7 @@ class WikiDB_Page
         if (@is_array($request->_deferredPageChangeNotification)) {
             // collapse multiple changes (loaddir) into one email
             $request->_deferredPageChangeNotification[]
-            = array($this->_pagename, $emails, $userids);
+            = [$this->_pagename, $emails, $userids];
             return;
         }
         $backend = &$this->_wikidb->_backend;
@@ -1061,7 +1061,7 @@ class WikiDB_Page
             $meta['mtime'] = time();
         }
         if ($previous) {
-            $difflink = WikiURL($this->_pagename, array('action' => 'diff'), true);
+            $difflink = WikiURL($this->_pagename, ['action' => 'diff'], true);
             $difflink .= "&versions%5b%5d=" . $previous . "&versions%5b%5d=" . $version;
             $cache = &$this->_wikidb->_cache;
             //$cache = &$request->_dbi->_cache;
@@ -1083,7 +1083,7 @@ class WikiDB_Page
                 Iso8601DateTime($meta['mtime']) . "\n";
             $content .= $fmt->format($diff2);
         } else {
-            $difflink = WikiURL($this->_pagename, array(), true);
+            $difflink = WikiURL($this->_pagename, [], true);
             $content = $this->_pagename . " " . $version . " " .
                 Iso8601DateTime($meta['mtime']) . "\n";
             $content .= _("New page");
@@ -1113,13 +1113,13 @@ class WikiDB_Page
     {
         global $request;
         if (@is_array($request->_deferredPageRenameNotification)) {
-            $request->_deferredPageRenameNotification[] = array($this->_pagename,
-                                                                $to, $meta, $emails, $userids);
+            $request->_deferredPageRenameNotification[] = [$this->_pagename,
+                                                                $to, $meta, $emails, $userids];
         } else {
             $oldname = $this->_pagename;
             // Codendi specific
             $user              = UserManager::instance()->getCurrentUser();
-            $goto_link         = WikiURL($to, array(), true);
+            $goto_link         = WikiURL($to, [], true);
             $subject           = sprintf(_("Page rename %s to %s"), $oldname, $to);
             $body              = $subject . "\n" .
                                  sprintf(_("Edited by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
@@ -1271,12 +1271,12 @@ class WikiDB_Page
         return new WikiDB_PageIterator(
             $this->_wikidb,
             $result,
-            array(
+            [
                 'include_empty' => $include_empty,
                 'sortby' => $sortby,
                 'limit' => $limit,
                 'exclude' => $exclude
-            )
+            ]
         );
     }
 
@@ -1370,7 +1370,7 @@ class WikiDB_Page
     {
         $cache = &$this->_wikidb->_cache;
         $data = $cache->get_pagedata($this->_pagename);
-        $meta = array();
+        $meta = [];
         foreach ($data as $key => $val) {
             if (/*!empty($val) &&*/ $key[0] != '%') {
                 $meta[$key] = $val;
@@ -1417,7 +1417,7 @@ class WikiDB_Page
             }
         }
 
-        $cache->update_pagedata($pagename, array($key => $newval));
+        $cache->update_pagedata($pagename, [$key => $newval]);
     }
 
     /**
@@ -1549,7 +1549,7 @@ class WikiDB_PageRevision
         $this->_wikidb = &$wikidb;
         $this->_pagename = $pagename;
         $this->_version = $version;
-        $this->_data = $versiondata ? $versiondata : array();
+        $this->_data = $versiondata ? $versiondata : [];
         $this->_transformedContent = false; // set by WikiDB_Page::save()
     }
 
@@ -1733,7 +1733,7 @@ class WikiDB_PageRevision
             if (
                 defined('FORTUNE_DIR')
                 and is_dir(FORTUNE_DIR)
-                and in_array($GLOBALS['request']->getArg('action'), array('create','edit'))
+                and in_array($GLOBALS['request']->getArg('action'), ['create', 'edit'])
             ) {
                 include_once("lib/fortune.php");
                 $fortune = new Fortune();
@@ -1841,7 +1841,7 @@ class WikiDB_PageRevision
      */
     public function getMetaData()
     {
-        $meta = array();
+        $meta = [];
         foreach ($this->_data as $key => $val) {
             if (! empty($val) && $key[0] != '%') {
                 $meta[$key] = $val;
@@ -1950,7 +1950,7 @@ class WikiDB_PageIterator
 
     public function asArray()
     {
-        $result = array();
+        $result = [];
         while ($page = $this->next()) {
             $result[] = $page;
         }
@@ -1970,7 +1970,7 @@ class WikiDB_PageIterator
             $options = $this->_options;
         }
         if (isset($options['sortby'])) {
-            $array = array();
+            $array = [];
             /* this is destructive */
             while ($page = $this->next()) {
                 $result[] = $page->getName();
@@ -1980,7 +1980,7 @@ class WikiDB_PageIterator
         /* the rest is not destructive.
          * reconstruct a new iterator
          */
-        $pagenames = array();
+        $pagenames = [];
         $i = 0;
         if (isset($options['limit'])) {
             $limit = $options['limit'];
@@ -2103,7 +2103,7 @@ class WikiDB_PageRevisionIterator
 
     public function asArray()
     {
-        $result = array();
+        $result = [];
         while ($rev = $this->next()) {
             $result[] = $rev;
         }
@@ -2153,7 +2153,7 @@ class WikiDB_Array_generic_iter
         } elseif (is_object($result)) {
             $this->_array = $result->asArray();
         } else {
-            $this->_array = array();
+            $this->_array = [];
         }
         if (! empty($this->_array)) {
             reset($this->_array);
@@ -2196,19 +2196,19 @@ class WikiDB_cache
     {
         $this->_backend = &$backend;
 
-        $this->_pagedata_cache = array();
-        $this->_versiondata_cache = array();
-        array_push($this->_versiondata_cache, array());
-        $this->_glv_cache = array();
-        $this->_id_cache = array(); // formerly ->_dbi->_iwpcache (nonempty pages => id)
+        $this->_pagedata_cache = [];
+        $this->_versiondata_cache = [];
+        array_push($this->_versiondata_cache, []);
+        $this->_glv_cache = [];
+        $this->_id_cache = []; // formerly ->_dbi->_iwpcache (nonempty pages => id)
     }
 
     public function close()
     {
-        $this->_pagedata_cache = array();
-        $this->_versiondata_cache = array();
-        $this->_glv_cache = array();
-        $this->_id_cache = array();
+        $this->_pagedata_cache = [];
+        $this->_versiondata_cache = [];
+        $this->_glv_cache = [];
+        $this->_id_cache = [];
     }
 
     public function get_pagedata($pagename)
@@ -2219,7 +2219,7 @@ class WikiDB_cache
             if (! isset($cache[$pagename]) || ! is_array($cache[$pagename])) {
                 $cache[$pagename] = $this->_backend->get_pagedata($pagename);
                 if (empty($cache[$pagename])) {
-                    $cache[$pagename] = array();
+                    $cache[$pagename] = [];
                 }
             }
             return $cache[$pagename];

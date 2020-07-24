@@ -37,7 +37,7 @@ class ProjectHistoryResultsPresenter
 
     private function getHistoryResultPresenter($history)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($history as $row) {
             $field = $row['field_name'];
@@ -65,16 +65,16 @@ class ProjectHistoryResultsPresenter
             $value = $this->getEventValue($row, $msg_key);
             $user  = UserManager::instance()->getUserByUserName($row['user_name']);
 
-            $presenters[] = array(
+            $presenters[] = [
                 'event' => $msg,
                 'value' => $value,
                 'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
-                'user'  => array(
+                'user'  => [
                     'id'           => $user->getId(),
                     'display_name' => UserHelper::instance()->getDisplayNameFromUser($user),
                     'is_none'      => $user->isNone()
-                )
-            );
+                ]
+            ];
         }
 
         return $presenters;

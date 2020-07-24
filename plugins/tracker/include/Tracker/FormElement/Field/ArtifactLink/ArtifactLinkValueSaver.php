@@ -233,12 +233,12 @@ class ArtifactLinkValueSaver
         array $submitted_value
     ) {
         $nature_by_plugin = null;
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED, array(
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED, [
             'project_id'      => $artifactlinkinfo->getGroupId(),
             'to_artifact'     => $to_artifact,
             'submitted_value' => $submitted_value,
             'nature'          => &$nature_by_plugin
-        ));
+        ]);
 
         if (! empty($nature_by_plugin) && $existing_nature !== $nature_by_plugin) {
             $this->warnOverrideOfExistingNature(
@@ -294,7 +294,7 @@ class ArtifactLinkValueSaver
 
     private function getAddedArtifactIds(array $values)
     {
-        $ids = array();
+        $ids = [];
         foreach ($values['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
             $ids[] = (int) $artifactlinkinfo->getArtifactId();
         }
@@ -307,7 +307,7 @@ class ArtifactLinkValueSaver
         if (array_key_exists('removed_values', $values)) {
             return array_map('intval', array_keys($values['removed_values']));
         }
-        return array();
+        return [];
     }
 
     private function insertCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id)
@@ -333,7 +333,7 @@ class ArtifactLinkValueSaver
         Tracker_Artifact $artifact,
         array $submitted_value
     ) {
-        $all_artifact_to_be_linked = array();
+        $all_artifact_to_be_linked = [];
         foreach ($submitted_value['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
             $artifact_to_link = $artifactlinkinfo->getArtifact();
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
@@ -341,14 +341,14 @@ class ArtifactLinkValueSaver
                 $nature  = $this->getNature($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
-                    $all_artifact_to_be_linked[$tracker->getId()] = array(
+                    $all_artifact_to_be_linked[$tracker->getId()] = [
                         'tracker' => $tracker,
-                        'natures' => array()
-                    );
+                        'natures' => []
+                    ];
                 }
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature])) {
-                    $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature] = array();
+                    $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature] = [];
                 }
 
                 $all_artifact_to_be_linked[$tracker->getId()]['natures'][$nature][] = $artifact_to_link->getId();

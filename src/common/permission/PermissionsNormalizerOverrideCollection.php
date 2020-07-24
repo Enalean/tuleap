@@ -21,12 +21,12 @@
 
 class PermissionsNormalizerOverrideCollection
 {
-    private $override_by = array();
+    private $override_by = [];
 
     public function addOverrideBy($override_id, $catch_all_id)
     {
         if (! isset($this->override_by[$catch_all_id])) {
-            $this->override_by[$catch_all_id] = array();
+            $this->override_by[$catch_all_id] = [];
         }
         $this->override_by[$catch_all_id][] = $override_id;
     }
@@ -53,11 +53,11 @@ class PermissionsNormalizerOverrideCollection
                 $GLOBALS['Language']->getText(
                     'project_admin_permissions',
                     'override',
-                    array(
+                    [
                         permission_get_name($permission_type),
                         $this->getUGroupNameImplode($override_ids),
                         $this->getUGroupNameById($catch_all_ugroup_id)
-                    )
+                    ]
                 )
             );
         }
@@ -65,7 +65,7 @@ class PermissionsNormalizerOverrideCollection
 
     private function getUGroupNameImplode(array $ugroup_ids)
     {
-        return implode(', ', array_map(array($this, 'getUGroupNameById'), $ugroup_ids));
+        return implode(', ', array_map([$this, 'getUGroupNameById'], $ugroup_ids));
     }
 
     private function getUGroupNameById($ugroup_id)

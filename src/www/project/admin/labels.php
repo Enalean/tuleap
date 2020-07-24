@@ -35,7 +35,7 @@ require_once __DIR__ . '/../../include/pre.php';
 $event_manager = EventManager::instance();
 $request       = HTTPRequest::instance();
 $project       = $request->getProject();
-session_require(array('group' => $project->getID(), 'admin_flags' => 'A'));
+session_require(['group' => $project->getID(), 'admin_flags' => 'A']);
 
 $event = new CanProjectUseLabels($project);
 $event_manager->processEvent($event);

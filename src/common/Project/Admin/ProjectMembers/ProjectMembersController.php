@@ -280,7 +280,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         TemplateRendererFactory::build()
             ->getRenderer(__DIR__ . '/../../../../templates/project')
-            ->renderToPage('end-project-admin-content', array());
+            ->renderToPage('end-project-admin-content', []);
         site_project_footer([]);
     }
 
@@ -334,7 +334,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
     {
         $database_results = $this->members_dao->searchProjectMembers($project->getID());
 
-        $project_members = array();
+        $project_members = [];
 
         foreach ($database_results as $member) {
             $user = new \PFUser($member);
@@ -357,7 +357,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     private function getUGroupsPresenters(Project $project, array $member)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         if ($member['admin_flags'] === UserPermissionsDao::PROJECT_ADMIN_FLAG) {
             $ugroups[] = new MinimalUGroupPresenter(
@@ -374,7 +374,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         }
 
         if (
-            in_array($member['news_flags'], array(UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG))
+            in_array($member['news_flags'], [UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG])
             && $project->usesNews()
         ) {
             $this->appendUgroups($ugroups, $project, ProjectUGroup::NEWS_WRITER);

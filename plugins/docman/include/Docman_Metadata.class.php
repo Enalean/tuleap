@@ -425,7 +425,7 @@ class Docman_ListMetadata extends Docman_Metadata
     public function __construct()
     {
         parent::__construct();
-        $this->defaultValue = array();
+        $this->defaultValue = [];
     }
 
     /**

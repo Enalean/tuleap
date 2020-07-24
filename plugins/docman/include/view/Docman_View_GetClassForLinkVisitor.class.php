@@ -11,33 +11,33 @@
 class Docman_View_GetClassForLinkVisitor /* implements Visitor*/
 {
 
-    public function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = [])
     {
         return $params['view']->getClassForFolderLink();
     }
 
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         return '';
     }
-    public function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

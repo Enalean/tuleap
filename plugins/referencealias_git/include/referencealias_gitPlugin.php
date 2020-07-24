@@ -42,7 +42,7 @@ class referencealias_gitPlugin extends Plugin //phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('git');
+        return ['git'];
     }
 
     /**

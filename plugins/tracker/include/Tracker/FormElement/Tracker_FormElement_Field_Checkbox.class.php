@@ -95,7 +95,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      */
     public function changeType($type)
     {
-        if (in_array($type, array('sb', 'msb', 'rb'))) {
+        if (in_array($type, ['sb', 'msb', 'rb'])) {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;

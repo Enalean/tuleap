@@ -37,7 +37,7 @@ class Docman_View_Edit extends Docman_View_Details
         $force    = isset($params['force_item']) ? $params['force_item'] : null;
         $token = isset($params['token']) ? $params['token'] : null;
         $updateConfirmed = isset($params['updateConfirmed']) ? $params['updateConfirmed'] : true;
-        $recurse = isset($params['recurse']) ? $params['recurse'] : array();
+        $recurse = isset($params['recurse']) ? $params['recurse'] : [];
         $recurseOnDocs = isset($params['recurseOnDocs']) ? $params['recurseOnDocs'] : false;
 
         $section = new Docman_View_ItemDetailsSectionEditProperties($params['item'], $params['default_url'], $params['theme_path'], $force, $token, $updateConfirmed, $recurse, $recurseOnDocs);

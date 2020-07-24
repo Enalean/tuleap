@@ -28,7 +28,7 @@ class FolderHierarchicalRepresentationCollection
     public const DEFAULT_PREFIX = ' ';
 
     /** @var FolderHierarchicalRepresentation[] */
-    private $collection = array();
+    private $collection = [];
 
     public function add(FolderHierarchicalRepresentation $folder_hierarchical_representation)
     {

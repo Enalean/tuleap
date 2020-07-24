@@ -147,7 +147,7 @@ class ArtifactReportHtml extends ArtifactReport
     public function criteriaListToText($criteria_list, $url)
     {
         global $art_field_fact;
-        $arr_text = array();
+        $arr_text = [];
         if ($criteria_list) {
             $arr = explode(',', $criteria_list);
             $morder = '';
@@ -357,10 +357,10 @@ class ArtifactReportHtml extends ArtifactReport
         // Used to trigger sort on that column
         $result_fields = $this->getResultFields();
 
-        $links_arr = array();
-        $title_arr = array();
-        $width_arr = array();
-        $id_arr    = array();
+        $links_arr = [];
+        $title_arr = [];
+        $width_arr = [];
+        $id_arr    = [];
 
         if (count($result_fields) == 0) {
             return;
@@ -520,7 +520,7 @@ class ArtifactReportHtml extends ArtifactReport
                     $html_result .= '</div>';
                     if ($field->userCanUpdate($group_id, $ath->getId())) {
                         $field_values = $field->getFieldPredefinedValues($ath->getId(), false, false, true, false);
-                        $array_values = array();
+                        $array_values = [];
                         while ($row = db_fetch_array($field_values)) {
                             $array_values[]  = "[" . $row['value_id'] . ", '" . addslashes($row['value']) . "']";
                         }
@@ -580,7 +580,7 @@ class ArtifactReportHtml extends ArtifactReport
                            ' - <a href="javascript:checkAll(0)">' . $Language->getText('tracker_include_report', 'clear_all_items') . ' </a><p>';
 
                     $html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="' . $Language->getText('tracker_masschange_detail', 'selected_items', array(1,(int) $total_rows)) . '">';
+                    $html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="' . $Language->getText('tracker_masschange_detail', 'selected_items', [1, (int) $total_rows]) . '">';
                 }
             }
             $html_result .= '</td></tr></table>';
@@ -657,7 +657,7 @@ class ArtifactReportHtml extends ArtifactReport
         }
             $url .= "&morder=" .  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML);
 
-            $params = array('url' => &$url);
+            $params = ['url' => &$url];
             $em = EventManager::instance();
             $em->processEvent('tracker_urlparam_processing', $params);
             $url_nomorder = $url;
@@ -769,7 +769,7 @@ class ArtifactReportHtml extends ArtifactReport
                 }
 
                 if ($pv == 0) {
-                        $html_result .= $Language->getText('tracker_include_report', 'multicolumn_sort', array($url_alternate_sort,$text)) . '&nbsp;&nbsp;&nbsp;&nbsp;' .
+                        $html_result .= $Language->getText('tracker_include_report', 'multicolumn_sort', [$url_alternate_sort, $text]) . '&nbsp;&nbsp;&nbsp;&nbsp;' .
                             '(<a href="' . $url . '&pv=1"> <img src="' . util_get_image_theme("ic/printer.png") . '" border="0">' .
                             '&nbsp;' . $Language->getText('global', 'printer_version') . '</a>)' . "\n";
                 }
@@ -795,7 +795,7 @@ class ArtifactReportHtml extends ArtifactReport
             echo $html_result;
 
             $em = EventManager::instance();
-            $em->processEvent('tracker_after_report', array('group_id' => $group_id, 'atid' => (int) $this->group_artifact_id, 'url' => $url));
+            $em->processEvent('tracker_after_report', ['group_id' => $group_id, 'atid' => (int) $this->group_artifact_id, 'url' => $url]);
     }
 
         /**
@@ -861,8 +861,8 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'report_mgmt'),
-                                'help' => 'tracker-v3.html#tracker-report-management'));
+            $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'report_mgmt'),
+                                'help' => 'tracker-v3.html#tracker-report-management']);
             $trackerName = $ath->getName();
 
             echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">';
@@ -871,7 +871,7 @@ class ArtifactReportHtml extends ArtifactReport
 
         if ($reports) {
        // Loop through the list of all artifact report
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('tracker_include_report', 'id');
             $title_arr[] = $Language->getText('tracker_include_report', 'report_name');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
@@ -922,7 +922,7 @@ class ArtifactReportHtml extends ArtifactReport
             echo '<p><h3>' . $Language->getText('tracker_include_report', 'no_rep_def') . '</h3>';
         }
 
-        echo '<P> ' . $Language->getText('tracker_include_report', 'create_report', array('/tracker/admin/?func=report&group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&new_report=1'));
+        echo '<P> ' . $Language->getText('tracker_include_report', 'create_report', ['/tracker/admin/?func=report&group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&new_report=1']);
     }
 
         /**
@@ -939,13 +939,13 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'create_rep'),
-                                'help' => 'tracker-v3.html#tracker-report-setting'));
+            $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'create_rep'),
+                                'help' => 'tracker-v3.html#tracker-report-setting']);
 
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\'  - ' . $Language->getText('tracker_include_report', 'create_rep') . ' </H2>';
 
         // display the table of all fields that can be included in the report
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_report', 'search_crit');
@@ -1051,14 +1051,14 @@ class ArtifactReportHtml extends ArtifactReport
             $group_id = $g->getID();
             $atid = $ath->getID();
 
-            $ath->adminHeader(array ('title' => $Language->getText('tracker_include_report', 'modify_report'),
-                                'help' => 'tracker-v3.html#tracker-report-setting'));
+            $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'modify_report'),
+                                'help' => 'tracker-v3.html#tracker-report-setting']);
 
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' -  ' . $Language->getText('tracker_include_report', 'modify_report') . ' \'' . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '\'</H2>';
 
         // display the table of all fields that can be included in the report
         // along with their current state in this report
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_report', 'search_crit');

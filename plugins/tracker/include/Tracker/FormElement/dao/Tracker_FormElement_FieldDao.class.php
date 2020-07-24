@@ -82,7 +82,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
         if (is_array($type)) {
-            $type_stm = ' IN (' . implode(',', array_map(array($this->da, 'quoteSmart'), $type)) . ') ';
+            $type_stm = ' IN (' . implode(',', array_map([$this->da, 'quoteSmart'], $type)) . ') ';
         } else {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";
@@ -191,7 +191,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
-            $type_stm = ' IN (' . implode(',', array_map(array($this->da, 'quoteSmart'), $type)) . ') ';
+            $type_stm = ' IN (' . implode(',', array_map([$this->da, 'quoteSmart'], $type)) . ') ';
         } else {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";
@@ -212,7 +212,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject
     {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
-            $type_stm = ' IN (' . implode(',', array_map(array($this->da, 'quoteSmart'), $type)) . ') ';
+            $type_stm = ' IN (' . implode(',', array_map([$this->da, 'quoteSmart'], $type)) . ') ';
         } else {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";

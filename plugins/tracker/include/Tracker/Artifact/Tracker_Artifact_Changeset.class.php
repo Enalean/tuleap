@@ -147,7 +147,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     public function forceFetchAllValues()
     {
-        $this->values = array();
+        $this->values = [];
         $factory = $this->getFormElementFactory();
         foreach ($this->getValueDao()->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
@@ -320,13 +320,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     {
         return $GLOBALS['HTML']->getImage(
             'ic/comment.png',
-            array(
+            [
                 'border' => 0,
                 'alt'   => 'permalink',
                 'class' => 'tracker_artifact_followup_permalink',
                 'style' => 'vertical-align:middle',
                 'title' => 'Link to this followup - #' . (int) $this->id
-            )
+            ]
         );
     }
 
@@ -504,10 +504,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                     $this->artifact->getTracker()->getItemName()
                 );
 
-                $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
+                $params = ['group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
                                 'artifact'     => $this->getArtifact(),
                                 'changeset_id' => $this->getId(),
-                                'text'         => $body);
+                                'text'         => $body];
 
                 EventManager::instance()->processEvent('tracker_followup_event_update', $params);
 
@@ -828,14 +828,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $changeset_representation->build(
             $this,
             $comment,
-            $fields  == self::FIELDS_COMMENTS  ? array() : $this->getRESTFieldValues($user)
+            $fields  == self::FIELDS_COMMENTS  ? [] : $this->getRESTFieldValues($user)
         );
         return $changeset_representation;
     }
 
     private function getRESTFieldValues(PFUser $user)
     {
-        $values = array();
+        $values = [];
         $factory = $this->getFormElementFactory();
 
         foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {
@@ -873,7 +873,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     private function getFullRESTFieldValuesWithoutPermissions(PFUser $user)
     {
-        $values = array();
+        $values = [];
         $factory = $this->getFormElementFactory();
 
         foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {

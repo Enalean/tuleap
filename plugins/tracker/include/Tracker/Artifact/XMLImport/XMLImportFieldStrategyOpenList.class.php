@@ -52,7 +52,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $values = array();
+        $values = [];
         $bind   = (string) $field_change['bind'];
 
         foreach ($field_change->value as $value) {

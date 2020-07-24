@@ -58,11 +58,11 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      */
     public function fetchFormattedForJson()
     {
-        return array(
+        return [
             'id'        => $this->getId(),
             'label'     => $this->getLabel(),
             'is_hidden' => (bool) $this->isHidden(),
-        );
+        ];
     }
 
     /**
@@ -76,12 +76,12 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      */
     public function fetchForOpenListJson(): array
     {
-        return array(
+        return [
             'id'         => $this->getId(),
             'value'      => $this->getJsonId(),
             'caption'    => $this->getLabel(),
             'rest_value' => $this->getAPIValue(),
-        );
+        ];
     }
 
     abstract public function getJsonId();
@@ -122,9 +122,9 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
-        return array(
+        return [
             'label' => $this->getLabel()
-        );
+        ];
     }
 
     public function getRESTId()

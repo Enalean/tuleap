@@ -90,8 +90,8 @@ class Docman_MetadataValueDao extends DataAccessObject
 
     public function create($itemId, $fieldId, $type, $value)
     {
-        $fields = array('field_id', 'item_id');
-        $types  = array('%d', '%d');
+        $fields = ['field_id', 'item_id'];
+        $types  = ['%d', '%d'];
 
         $val     = null;
         $dtype   = null;
@@ -222,7 +222,7 @@ class Docman_MetadataValueDao extends DataAccessObject
     public function delete($fieldId, $itemId)
     {
         if (! is_array($itemId)) {
-            $itemId = array($itemId);
+            $itemId = [$itemId];
         }
         $sql = sprintf(
             'DELETE FROM plugin_docman_metadata_value' .

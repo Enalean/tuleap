@@ -58,7 +58,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         }
         $sql = 'SELECT ' . $fields . ' p.ugroup_id, p.permission_type' .
                ' FROM permissions p ' . $joins .
-               ' WHERE p.object_id = ' . $this->da->quoteSmart($objectId, array('force_string' => true)) .
+               ' WHERE p.object_id = ' . $this->da->quoteSmart($objectId, ['force_string' => true]) .
                ' AND p.permission_type LIKE ' . $this->da->quoteSmart($permissionType) .
                ' ORDER BY ugroup_id';
         return $this->retrieve($sql);
@@ -66,7 +66,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     public function getUgroupsByObjectIdAndPermissionType($object_id, $permission_type)
     {
-        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $permission_type = $this->da->quoteSmart($permission_type);
 
         $sql = "SELECT ugroup.*
@@ -110,10 +110,10 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     public function searchPermissionsByObjectId($object_id, $ptype = null)
     {
         if (is_array($object_id)) {
-            $object_ids_where = $this->da->quoteSmartImplode(',', $object_id, array('force_string' => true));
+            $object_ids_where = $this->da->quoteSmartImplode(',', $object_id, ['force_string' => true]);
             $_where_clause    = " object_id IN ($object_ids_where)";
         } else {
-            $object_id_where = $this->da->quoteSmart($object_id, array('force_string' => true));
+            $object_id_where = $this->da->quoteSmart($object_id, ['force_string' => true]);
             $_where_clause   = " object_id = $object_id_where";
         }
         if ($ptype !== null) {
@@ -153,7 +153,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
             "DELETE FROM permissions " .
                         " WHERE object_id = %s " .
                         "   AND permission_type IN (%s) ",
-            $this->da->quoteSmart($target, array('force_string' => true)),
+            $this->da->quoteSmart($target, ['force_string' => true]),
             $this->da->quoteSmartImplode(',', $perms)
         );
         $this->update($sql);
@@ -163,9 +163,9 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
                         " FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)" .
                         " WHERE object_id = %s " .
                         "   AND permission_type IN (%s) ",
-            $this->da->quoteSmart($target, array('force_string' => true)),
+            $this->da->quoteSmart($target, ['force_string' => true]),
             $this->da->escapeInt($toGroupId),
-            $this->da->quoteSmart($source, array('force_string' => true)),
+            $this->da->quoteSmart($source, ['force_string' => true]),
             $this->da->quoteSmartImplode(',', $perms)
         );
         return $this->update($sql);
@@ -189,8 +189,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     */
     public function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false)
     {
-        $from            = $this->da->quoteSmart($from, array('force_string' => true));
-        $to              = $this->da->quoteSmart($to, array('force_string' => true));
+        $from            = $this->da->quoteSmart($from, ['force_string' => true]);
+        $to              = $this->da->quoteSmart($to, ['force_string' => true]);
         $permission_type = '(' . $this->da->quoteSmartImplode(',', $permission_type) . ')';
 
         //Duplicate static perms
@@ -225,7 +225,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     public function addPermission($permission_type, $object_id, $ugroup_id)
     {
         $permission_type = $this->da->quoteSmart($permission_type);
-        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
         $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
                 VALUES ($object_id, $permission_type, $ugroup_id)";
@@ -235,7 +235,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     public function removePermission($permission_type, $object_id, $ugroup_id)
     {
         $permission_type = $this->da->quoteSmart($permission_type);
-        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
         $sql = "DELETE FROM permissions
                 WHERE permission_type = $permission_type
@@ -255,7 +255,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     public function clearPermission($permissionType, $objectId)
     {
         $sql = ' DELETE FROM permissions ' .
-               ' WHERE object_id = ' . $this->da->quoteSmart($objectId, array('force_string' => true)) .
+               ' WHERE object_id = ' . $this->da->quoteSmart($objectId, ['force_string' => true]) .
                ' AND permission_type = ' . $this->da->quoteSmart($permissionType);
         return $this->update($sql);
     }
@@ -322,7 +322,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     {
         $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
         $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
-        $object_id              = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $object_id              = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $permission_type        = $this->da->quoteSmartImplode(',', $permission_type);
 
         $sql =

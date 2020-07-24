@@ -67,8 +67,8 @@ class WikiPlugin_EditMetaData extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('page'       => '[pagename]'
-                    );
+        return ['page'       => '[pagename]'
+                    ];
     }
 
 
@@ -80,8 +80,8 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             return '';
         }
 
-        $hidden_pagemeta = array ('_cached_html');
-        $readonly_pagemeta = array ('hits');
+        $hidden_pagemeta =  ['_cached_html'];
+        $readonly_pagemeta =  ['hits'];
         $dbi = $request->getDbh();
         $p = $dbi->getPage($page);
         $pagemeta = $p->getMetaData();
@@ -104,7 +104,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             $dbi->touch();
             $url = $request->getURLtoSelf(
                 false,
-                array('metaedit','metafield','metavalue')
+                ['metaedit', 'metafield', 'metavalue']
             );
             $request->redirect($url);
             // The rest of the output will not be seen due to the
@@ -143,7 +143,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             } elseif (in_array($key, $hidden_pagemeta)) {
             } elseif (in_array($key, $readonly_pagemeta)) {
                 $dl->pushContent(HTML::dt(
-                    array('style' => 'background: #dddddd'),
+                    ['style' => 'background: #dddddd'],
                     "$key => $val\n"
                 ));
             } else {
@@ -156,13 +156,13 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             $action = $request->getPostURL();
             $hiddenfield = HiddenInputs($request->getArgs());
             $instructions = _("Add or change a page-level metadata 'key=>value' pair. Note that you can remove a key by leaving the value-box empty.");
-            $keyfield = HTML::input(array('name' => 'metafield'), '');
-            $valfield = HTML::input(array('name' => 'metavalue'), '');
+            $keyfield = HTML::input(['name' => 'metafield'], '');
+            $valfield = HTML::input(['name' => 'metavalue'], '');
             $button = Button('submit:metaedit', _("Submit"), false);
             $form = HTML::form(
-                array('action' => $action,
+                ['action' => $action,
                                      'method' => 'post',
-                                     'accept-charset' => $GLOBALS['charset']),
+                                     'accept-charset' => $GLOBALS['charset']],
                 $hiddenfield,
                 $instructions,
                 HTML::br(),

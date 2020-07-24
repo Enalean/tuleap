@@ -56,14 +56,14 @@ class UserFinderGetUgroupsTest extends TestCase
         $ugroup_id_120 = 120;
         $ugroup_id_115 = 115;
         $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
-            ->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => $ugroup_id_115), array('ugroup_id' => $ugroup_id_120)));
+            ->andReturns(\TestHelper::arrayToDar(['ugroup_id' => $ugroup_id_115], ['ugroup_id' => $ugroup_id_120]));
 
         $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
         $this->assertEquals(
-            array(
+            [
                 $ugroup_id_115,
                 $ugroup_id_120,
-            ),
+            ],
             $ugroups
         );
     }
@@ -72,7 +72,7 @@ class UserFinderGetUgroupsTest extends TestCase
     {
         $project_admin_group_id = ProjectUGroup::PROJECT_ADMIN;
 
-        $expected_ugroups = array($project_admin_group_id);
+        $expected_ugroups = [$project_admin_group_id];
         $ugroups          = $this->user_finder->getUgroups('whatever', Git::SPECIAL_PERM_ADMIN);
 
         $this->assertEquals($expected_ugroups, $ugroups);

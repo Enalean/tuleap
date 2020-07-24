@@ -24,7 +24,7 @@ class RepositoryBuilder
 {
     public function build(array $repositories)
     {
-        $repository_list = array();
+        $repository_list = [];
         foreach ($repositories as $repository) {
             $repository_list[] = new RepositoryPresenter($repository['repository'], $repository['commit_date']);
         }

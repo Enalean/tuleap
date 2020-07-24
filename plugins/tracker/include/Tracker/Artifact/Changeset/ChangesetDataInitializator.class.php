@@ -33,7 +33,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
 
     public function process(Tracker_Artifact $artifact, array $fields_data)
     {
-        $tracker_data = array();
+        $tracker_data = [];
 
         //only when a previous changeset exists
         if (! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {

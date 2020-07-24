@@ -61,13 +61,13 @@ class WikiPlugin_CategoryPage extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array(// Assume the categories are listed on the HomePage
+        return [// Assume the categories are listed on the HomePage
                      'exclude'              => false,
                      'pagename'             => '[pagename]',
                      'plural'               => false,
                      'singular'             => false,
                      'self_on_create'       => true,
-                     'showbuds'             => false);
+                     'showbuds'             => false];
     }
 
     public function run($dbi, $argstr, &$request)
@@ -84,12 +84,12 @@ class WikiPlugin_CategoryPage extends WikiPlugin
         return new Template(
             'categorypage',
             $request,
-            array('EXCLUDE' => $args['exclude'],
+            ['EXCLUDE' => $args['exclude'],
                                   'PAGENAME' => $args['pagename'],
                                   'PLURAL' => $args['plural'],
                                   'SHOWBUDS' => $args['showbuds'],
                                   'SELF_ON_CREATE' => $args['self_on_create'],
-            'SINGULAR' => $args['singular'])
+            'SINGULAR' => $args['singular']]
         );
     }
 }

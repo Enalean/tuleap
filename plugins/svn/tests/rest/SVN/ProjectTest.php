@@ -71,9 +71,9 @@ class ProjectTest extends TestBase
     public function testGETRepositoriesWithQuery()
     {
         $query = http_build_query(
-            array(
-                'query' => json_encode(array('name' => 'repo01'))
-            )
+            [
+                'query' => json_encode(['name' => 'repo01'])
+            ]
         );
 
         $response  = $this->getResponse($this->client->get(
@@ -98,7 +98,7 @@ class ProjectTest extends TestBase
             'projects/' . $this->svn_project_id . '/svn'
         ));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithRESTReadOnlyUser()

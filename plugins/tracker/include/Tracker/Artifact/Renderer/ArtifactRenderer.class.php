@@ -92,7 +92,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
 
     public function fetchFieldsForCopy(Tracker_Artifact $artifact)
     {
-        return $artifact->getTracker()->fetchFormElementsForCopy($artifact, array());
+        return $artifact->getTracker()->fetchFormElementsForCopy($artifact, []);
     }
 
     /**

@@ -64,10 +64,10 @@ class WikiPlugin_RedirectTo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'href' => '',
+        return [ 'href' => '',
                       // 'type' => 'Temp' // or 'Permanent' // so far ignored
                       'page' => false,
-                      );
+                      ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -95,7 +95,7 @@ class WikiPlugin_RedirectTo extends WikiPlugin
         } elseif ($page) {
             $url = WikiURL(
                 $page,
-                array('redirectfrom' => $request->getArg('pagename')),
+                ['redirectfrom' => $request->getArg('pagename')],
                 'abs_path'
             );
         } else {

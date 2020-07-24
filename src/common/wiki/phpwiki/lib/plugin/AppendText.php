@@ -52,12 +52,12 @@ class WikiPlugin_AppendText extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('page'     => '[pagename]',
+        return ['page'     => '[pagename]',
                      's'        => '',  // Text to append.
                      'before'   => '',  // Add before (ignores after if defined)
                      'after'    => '',  // Add after line beginning with this
                      'redirect' => false // Redirect to modified page
-                     );
+                     ];
     }
 
     public function _fallback($addtext, $oldtext, $notfound, &$message)

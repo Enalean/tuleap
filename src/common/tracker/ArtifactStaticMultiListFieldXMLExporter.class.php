@@ -157,7 +157,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
     private function getListValueLabels(array $field_value_row, $tracker_id)
     {
         $field_name        = $field_value_row['field_name'];
-        $labels            = array();
+        $labels            = [];
         $values_label_rows = $this->dao->searchFieldValuesList($tracker_id, $field_name);
         foreach ($values_label_rows as $values_label_row) {
             $labels[$values_label_row['value_id']] = $values_label_row['value'];

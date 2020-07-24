@@ -26,11 +26,11 @@ use PFUser;
 class MappingFileOptimusPrimeTransformer
 {
 
-    private static $ALLOWED_ACTIONS = array(
+    private static $ALLOWED_ACTIONS = [
         ToBeActivatedUser::ACTION,
         ToBeCreatedUser::ACTION,
         ToBeMappedUser::ACTION
-    );
+    ];
 
     /**
      * @var UserManager
@@ -212,7 +212,7 @@ class MappingFileOptimusPrimeTransformer
         }
 
         $header = fgetcsv($csv);
-        $lines  = array();
+        $lines  = [];
 
         while (($data = fgetcsv($csv)) !== false) {
             $username = $data[0];

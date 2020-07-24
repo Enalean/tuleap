@@ -38,7 +38,7 @@ EOT;
 
     public function dependsOn()
     {
-        return array('b201010191436_add_table_frs_file_deleted');
+        return ['b201010191436_add_table_frs_file_deleted'];
     }
 
     public function up()

@@ -339,10 +339,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_anonymous->shouldReceive('getId')->andReturns(1);
         $t_access_anonymous->shouldReceive('getGroupId')->andReturns(101);
         $t_access_anonymous->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            1 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_anonymous->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_anonymous->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_anonymous->shouldReceive('getUserManager')->andReturns($this->user_manager);
@@ -368,10 +368,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_registered->shouldReceive('getProject')->andReturns($this->project);
         $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_registered->shouldReceive('getUserManager')->andReturns($this->user_manager);
-        $perms = array(
-            2 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            2 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_registered->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -393,10 +393,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_members->shouldReceive('getId')->andReturns(3);
         $t_access_members->shouldReceive('getGroupId')->andReturns(101);
         $t_access_members->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            3 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            3 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_members->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_members->shouldReceive('getUserManager')->andReturns($this->user_manager);
@@ -420,10 +420,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_members->shouldReceive('getId')->andReturns(3);
         $t_access_members->shouldReceive('getGroupId')->andReturns(101);
         $t_access_members->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            3 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            3 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
         $tracker_manager = \Mockery::spy(\TrackerManager::class);
@@ -443,10 +443,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_admin->shouldReceive('getId')->andReturns(4);
         $t_access_admin->shouldReceive('getGroupId')->andReturns(101);
         $t_access_admin->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            4 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            4 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_admin->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_admin->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_admin->shouldReceive('getUserManager')->andReturns($this->user_manager);
@@ -470,11 +470,11 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_submitter->shouldReceive('getId')->andReturns(5);
         $t_access_submitter->shouldReceive('getGroupId')->andReturns(101);
         $t_access_submitter->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            4   => array(101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            138 => array(101 => 'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            4   => [101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            138 => [101 => 'PLUGIN_TRACKER_ACCESS_SUBMITTER'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_submitter->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_submitter->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_submitter->shouldReceive('getUserManager')->andReturns($this->user_manager);
@@ -498,11 +498,11 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_assignee->shouldReceive('getId')->andReturns(6);
         $t_access_assignee->shouldReceive('getGroupId')->andReturns(101);
         $t_access_assignee->shouldReceive('getProject')->andReturns($this->project);
-        $perms = array(
-            4   => array(101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            196 => array(101 => 'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            4   => [101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            196 => [101 => 'PLUGIN_TRACKER_ACCESS_ASSIGNEE'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_assignee->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_assignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_assignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
@@ -529,12 +529,12 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_submitterassignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
         $t_access_submitterassignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
-        $perms = array(
-            4   => array(101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            138 => array(101 => 'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
-            196 => array(101 => 'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            4   => [101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            138 => [101 => 'PLUGIN_TRACKER_ACCESS_SUBMITTER'],
+            196 => [101 => 'PLUGIN_TRACKER_ACCESS_ASSIGNEE'],
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
         $t_access_submitterassignee->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -557,10 +557,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_registered->shouldReceive('getGroupId')->andReturns(102);
         $t_access_registered->shouldReceive('getProject')->andReturns($this->project_private);
 
-        $perms = array(
-            2    => array( 102 => 'PLUGIN_TRACKER_ACCESS_FULL'),
-            1003 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
-        );
+        $perms = [
+            2    => [ 102 => 'PLUGIN_TRACKER_ACCESS_FULL'],
+            1003 => [ 102 => 'PLUGIN_TRACKER_ADMIN'],
+        ];
 
         $t_access_registered->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
         $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
@@ -627,7 +627,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         // $submitter, $u_sub should have the right to see it.
         // $other, $assignee, $u_ass and $u should not have the right to see it
 
-        $permissions = array("PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub));
+        $permissions = ["PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
@@ -652,7 +652,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         // $artifact_assignee has been submitted by $u and assigned to $assignee
         // $assignee and $u_ass should have the right to see it.
         // $other, $submitter, $u_sub and $u should not have the right to see it
-        $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE" => array(0 => $ugroup_ass));
+        $permissions = ["PLUGIN_TRACKER_ACCESS_ASSIGNEE" => [0 => $ugroup_ass]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -662,7 +662,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_assignee->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_assignee->shouldReceive('getSubmittedBy')->andReturns(120);
         $user_changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-        $contributors = array(121);
+        $contributors = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_assignee->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
@@ -684,9 +684,9 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $assignee, $u_ass, $submitter, $u_sub should have the right to see it.
         // $other and $u should not have the right to see it
-        $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => array(0 => $ugroup_ass),
-                             "PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub)
-                            );
+        $permissions = ["PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => [0 => $ugroup_ass],
+                             "PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub]
+                            ];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -696,7 +696,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
         $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
-        $contributors = array(121);
+        $contributors = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
@@ -753,7 +753,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $u should have the right to see it.
         // $other, $submitter and assigned should not have the right to see it
-        $permissions = array("PLUGIN_TRACKER_ACCESS_FULL" => array(0 => $ugroup_ful));
+        $permissions = ["PLUGIN_TRACKER_ACCESS_FULL" => [0 => $ugroup_ful]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -763,7 +763,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
         $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
-        $contributors = array(121);
+        $contributors = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 

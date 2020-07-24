@@ -30,7 +30,7 @@ class BackendFactory
     public static function getBackend()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_backend', $params);
         if ($backend === null) {
             $backend = Backend::instance();
@@ -48,7 +48,7 @@ class BackendFactory
     public static function getSystem()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_system', $params);
         if ($backend === null) {
             $backend = BackendSystem::instance();
@@ -66,7 +66,7 @@ class BackendFactory
     public static function getAliases()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_aliases', $params);
         if ($backend === null) {
             $backend = BackendAliases::instance();
@@ -84,7 +84,7 @@ class BackendFactory
     public static function getMailingList()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_mailinglist', $params);
         if ($backend === null) {
             $backend = BackendMailingList::instance();
@@ -102,7 +102,7 @@ class BackendFactory
     public static function getCVS()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_cvs', $params);
         if ($backend === null) {
             $backend = BackendCVS::instance();
@@ -120,7 +120,7 @@ class BackendFactory
     public static function getSVN()
     {
         $backend = null;
-        $params  = array('backend' => &$backend);
+        $params  = ['backend' => &$backend];
         EventManager::instance()->processEvent('backend_factory_get_svn', $params);
         if ($backend === null) {
             $backend = BackendSVN::instance();

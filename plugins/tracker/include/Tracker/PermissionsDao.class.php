@@ -26,7 +26,7 @@ class Tracker_PermissionsDao extends DataAccessObject
 {
 
     /**
-     * @return int[]
+     * @return Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|int[]
      */
     public function getAuthorizedStaticUgroupIds($tracker_id)
     {
@@ -61,7 +61,7 @@ class Tracker_PermissionsDao extends DataAccessObject
                WHERE ugroup_id > $dynamic_upper_boundary
                ";
 
-        return $this->retrieve($sql)->instanciateWith(array($this, 'extractUgroupID'));
+        return $this->retrieve($sql)->instanciateWith([$this, 'extractUgroupID']);
     }
 
     /**

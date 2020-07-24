@@ -39,7 +39,7 @@ class HtmlElement extends XmlElement
         if ($args && is_array($args[0])) {
             $this->_attr = array_shift($args);
         } else {
-            $this->_attr = array();
+            $this->_attr = [];
             if ($args && $args[0] === false) {
                 array_shift($args);
             }
@@ -553,7 +553,7 @@ HTML::_setTagProperty(
  *
  * @return object An XmlContent object containing the inputs.
  */
-function HiddenInputs($query_args, $pfx = false, $exclude = array())
+function HiddenInputs($query_args, $pfx = false, $exclude = [])
 {
     $inputs = HTML();
 
@@ -565,9 +565,9 @@ function HiddenInputs($query_args, $pfx = false, $exclude = array())
         if (is_array($val)) {
             $inputs->pushContent(HiddenInputs($val, $name));
         } else {
-            $inputs->pushContent(HTML::input(array('type' => 'hidden',
+            $inputs->pushContent(HTML::input(['type' => 'hidden',
                                                    'name' => $name,
-                                                   'value' => $val)));
+                                                   'value' => $val]));
         }
     }
     return $inputs;
@@ -583,8 +583,8 @@ function HiddenInputs($query_args, $pfx = false, $exclude = array())
  */
 function JavaScript($js, $script_args = false)
 {
-    $default_script_args = array(//'version' => 'JavaScript', // not xhtml conformant
-                                 'type' => 'text/javascript');
+    $default_script_args = [//'version' => 'JavaScript', // not xhtml conformant
+                                 'type' => 'text/javascript'];
     $script_args = $script_args ? array_merge($default_script_args, $script_args)
                                 : $default_script_args;
     if (empty($js)) {
@@ -618,7 +618,7 @@ function JavaScript($js, $script_args = false)
  */
 function IfJavaScript($if_content = false, $else_content = false)
 {
-    $html = array();
+    $html = [];
     if ($if_content) {
         $xml = AsXML($if_content);
         $js = sprintf(

@@ -81,8 +81,8 @@ if ($request->valid($vFrm)) {
     $forum_name = db_result($result, 0, 'forum_name');
 
     $pm = ProjectManager::instance();
-    $params = array('title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
-                      'pv'   => isset($pv) ? $pv : false);
+    $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
+                      'pv'   => isset($pv) ? $pv : false];
     forum_header($params);
 
     $sql = sprintf(
@@ -101,7 +101,7 @@ if ($request->valid($vFrm)) {
         //empty forum
         $ret_val = $GLOBALS['Language']->getText('forum_forum', 'no_msg', $forum_name) . '<P>' . db_error();
     } else {
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $GLOBALS['Language']->getText('forum_monitor_thread', 'tmonitor');
         $title_arr[] = $GLOBALS['Language']->getText('forum_forum', 'thread');
         $title_arr[] = $GLOBALS['Language']->getText('forum_forum', 'author');
@@ -168,7 +168,7 @@ if ($request->valid($vFrm)) {
 
     forum_footer($params);
 } else {
-    forum_header(array('title' => $GLOBALS['Language']->getText('global', 'error')));
+    forum_header(['title' => $GLOBALS['Language']->getText('global', 'error')]);
     $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_forum', 'choose_forum_first');
-    forum_footer(array());
+    forum_footer([]);
 }

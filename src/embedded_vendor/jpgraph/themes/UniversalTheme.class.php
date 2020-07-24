@@ -11,7 +11,7 @@ class UniversalTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#61a9f3',// blue
             '#f381b9',// red
             '#61E3A9',// green
@@ -28,7 +28,7 @@ class UniversalTheme extends Theme
             '#EC8833',
             '#FFF100',
             '#87C9A5',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

@@ -28,7 +28,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function testOPTIONSCards()
     {
         $response = $this->getResponse($this->client->options('cards'));
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testPUTCardsWithId()
@@ -103,6 +103,6 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function testOPTIONSCardsWithId()
     {
         $response = $this->getResponse($this->client->options('cards/' . $this->sprint_artifact_ids[1] . '_' . $this->story_artifact_ids[1]));
-        $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
     }
 }

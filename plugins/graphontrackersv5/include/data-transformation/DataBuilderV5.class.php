@@ -46,9 +46,9 @@ class DataBuilderV5
         $this->field_Y = $field_Y;
         $this->atid = $atid;
         $this->artifacts = $artifacts;
-        $this->data = array();
-        $this->x_values = array();
-        $this->y_values = array();
+        $this->data = [];
+        $this->x_values = [];
+        $this->y_values = [];
     }
 
     /**
@@ -64,9 +64,9 @@ class DataBuilderV5
         // $af_x->isStandardField())
         // $af_x->isUsername()
 
-        $result['field1'] = array();
-        $result['field2'] = array();
-        $result['c'] = array();
+        $result['field1'] = [];
+        $result['field2'] = [];
+        $result['c'] = [];
 
         if (! is_null($this->field_Y)) {
             $ff = Tracker_FormElementFactory::instance();
@@ -168,7 +168,7 @@ class DataBuilderV5
             }
             $user  = UserManager::instance()->getCurrentUser();
             if ($group_id !== null) {
-                $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
+                $ugroups = $user->getUgroups($group_id, ['artifact_type' => $this->atid]);
             } else {
                 $ugroups = ['NULL'];
             }

@@ -93,7 +93,7 @@ class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->options_provider->shouldReceive('getSelectboxOptions')
             ->with($this->task_tracker, Mockery::any(), $this->user)
-            ->andReturns(array());
+            ->andReturns([]);
 
         $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')
             ->andReturnFalse();
@@ -107,7 +107,7 @@ class MilestoneReportCriterionProviderTest extends TestCase
 
         $this->options_provider->shouldReceive('getSelectboxOptions')
             ->with($this->task_tracker, Mockery::any(), $this->user)
-            ->andReturns(array('<option>1','<option>2'));
+            ->andReturns(['<option>1', '<option>2']);
 
         $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')
             ->andReturnFalse();

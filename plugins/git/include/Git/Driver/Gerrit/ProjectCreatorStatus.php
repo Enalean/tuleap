@@ -25,7 +25,7 @@ class Git_Driver_Gerrit_ProjectCreatorStatus
     private $dao;
 
     /** @var array */
-    private $cache = array();
+    private $cache = [];
 
     public const ERROR = 'ERROR';
     public const QUEUE = 'QUEUE';

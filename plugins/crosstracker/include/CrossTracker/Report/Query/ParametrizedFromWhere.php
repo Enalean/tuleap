@@ -21,7 +21,7 @@ namespace Tuleap\CrossTracker\Report\Query;
 
 class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
-    /** @var array */
+    /** @var ParametrizedFrom */
     private $parametrized_from;
 
     /** @var array */
@@ -50,7 +50,7 @@ class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragme
      */
     public function getAllParametrizedFrom()
     {
-        return array($this->parametrized_from);
+        return [$this->parametrized_from];
     }
 
     /**

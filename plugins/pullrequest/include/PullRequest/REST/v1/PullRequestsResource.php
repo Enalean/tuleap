@@ -495,9 +495,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->sendAllowHeadersForLabels();
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
-        return array(
+        return [
             'labels' => $labels_representation
-        );
+        ];
     }
 
     /**
@@ -691,7 +691,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         if ($charset === "binary" || $special_format !== '') {
             $diff = new FileUniDiff();
-            $inline_comments = array();
+            $inline_comments = [];
         } else {
             $executor_repo_destination = $this->getExecutor($git_repository_destination);
             $unidiff_builder           = new FileUniDiffBuilder();

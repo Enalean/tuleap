@@ -25,7 +25,7 @@ use Tuleap\SVN\Admin\MailNotification;
 
 class ProjectHistoryFormatter
 {
-    private $messages = array();
+    private $messages = [];
 
     public function getFullHistory(Repository $repository)
     {

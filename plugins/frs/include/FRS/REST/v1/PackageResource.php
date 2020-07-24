@@ -115,13 +115,13 @@ class PackageResource extends AuthenticatedResource
             throw new RestException(409, "Package with the same label already exists in this project");
         }
 
-        $package_array  = array(
+        $package_array  = [
             'group_id'        => $project->getID(),
             'name'            => $label,
             'status_id'       => \FRSPackage::STATUS_ACTIVE,
             'rank'            => 'beginning',
             'approve_license' => 1
-        );
+        ];
         $new_package_id = $this->package_factory->create($package_array);
         if (! $new_package_id) {
             throw new RestException(500, "Unable to create the package");
@@ -209,7 +209,7 @@ class PackageResource extends AuthenticatedResource
         );
         $total_size         = $paginated_releases->getTotalSize();
 
-        $releases = array();
+        $releases = [];
         foreach ($paginated_releases->getReleases() as $release) {
             $representation = new ReleaseRepresentation();
             $representation->build($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder);

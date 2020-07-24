@@ -59,7 +59,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testSetParentProjectReturnsTrueIfItUpdatesParent(): void
     {
-        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns(array());
+        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns([]);
         $this->dao->shouldReceive('updateParentProject')->andReturns(true)->once();
 
         $parent_project_already_saved = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(52)->getMock();
@@ -75,7 +75,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testSetParentProjectReturnsTrueIfItDeletesParent(): void
     {
-        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns(array());
+        $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns([]);
         $this->dao->shouldReceive('removeParentProject')->andReturns(true)->once();
 
         $parent_project_already_saved = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(52)->getMock();
@@ -94,7 +94,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $hierarchy_manager = \Mockery::mock(\Project_HierarchyManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->dao->shouldReceive('addParentProject')->andReturns(true);
-        $hierarchy_manager->shouldReceive('getAllParents')->with(185)->andReturns(array(135));
+        $hierarchy_manager->shouldReceive('getAllParents')->with(185)->andReturns([135]);
         $hierarchy_manager->shouldReceive('getParentProject')->with(135)->andReturns(null);
 
         $this->expectException(\Project_HierarchyManagerAlreadyAncestorException::class);
@@ -130,7 +130,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->hierarchy_manager->shouldReceive('getParentProject')->with(247)->andReturns(false);
 
         $result   = $this->hierarchy_manager->getAllParents($project_id);
-        $expected = array(247);
+        $expected = [247];
 
         $this->assertNotEmpty($result);
         $this->assertEquals($expected, $result);
@@ -149,11 +149,11 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->hierarchy_manager->shouldReceive('getParentProject')->with(444)->andReturns(false);
 
         $result   = $this->hierarchy_manager->getAllParents($project_id);
-        $expected = array(
+        $expected = [
             222,
             333,
             444,
-        );
+        ];
 
         $this->assertNotEmpty($result);
         $this->assertEquals($expected, $result);

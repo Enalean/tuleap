@@ -62,7 +62,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         } else {
             $pref = $user->getPreferences();
         }
-        $prefs = array();
+        $prefs = [];
         //we need a hash of pref => default_value
         foreach ($pref->_prefs as $name => $obj) {
             $prefs[$name] = $obj->default_value;
@@ -80,8 +80,8 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         if (
             (! $request->isActionPage($request->getArg('pagename'))
              and (! isset($user->_prefs->_method)
-                  or ! in_array($user->_prefs->_method, array('ADODB','SQL'))))
-            or (in_array($request->getArg('action'), array('zip','ziphtml')))
+                  or ! in_array($user->_prefs->_method, ['ADODB', 'SQL'])))
+            or (in_array($request->getArg('action'), ['zip', 'ziphtml']))
             or (isa($user, '_ForbiddenUser'))
         ) {
             $no_args = $this->getDefaultArguments();
@@ -121,9 +121,9 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                     return;
                 } elseif ($delete and ! $request->getArg('verify')) {
                     return HTML::form(
-                        array('action' => $request->getPostURL(),
-                                            'method' => 'post'),
-                        HiddenInputs(array('verify' => 1)),
+                        ['action' => $request->getPostURL(),
+                                            'method' => 'post'],
+                        HiddenInputs(['verify' => 1]),
                         HiddenInputs($request->getArgs()),
                         HTML::p(_("Do you really want to delete all your UserPreferences?")),
                         HTML::p(

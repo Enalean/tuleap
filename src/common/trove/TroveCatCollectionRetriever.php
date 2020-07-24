@@ -38,7 +38,7 @@ class TroveCatCollectionRetriever
 
     public function getCollection($project_id)
     {
-        $categories = array();
+        $categories = [];
 
         foreach ($this->dao->getProjectCategories($project_id) as $row) {
             $folders     = explode(" :: ", $row['fullpath']);

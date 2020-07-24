@@ -51,7 +51,7 @@ class AdminDelegationBuilder
 
     private function retrievePermissionsByUsers()
     {
-        $users = array();
+        $users = [];
 
         foreach ($this->user_delegation_manager->getGrantedUsers() as $user) {
             $users[$user['user_id']][] = AdminDelegation_Service::getLabel(
@@ -64,18 +64,18 @@ class AdminDelegationBuilder
 
     private function enhancePermissionsWithUserInformations(array $permissions_by_users)
     {
-        $user_list   = array();
+        $user_list   = [];
 
         foreach ($permissions_by_users as $key => $permissions) {
             $user = $this->user_manager->getUserById($key);
 
-            $user_list[] = array(
+            $user_list[] = [
                 'user_id'          => $user->getId(),
                 'has_avatar'       => $user->hasAvatar(),
                 'user_avatar'      => $user->getAvatarUrl(),
                 'user_name'        => $user->getName(),
                 'user_permissions' => implode(', ', $permissions)
-            );
+            ];
         }
 
         return $user_list;
@@ -83,13 +83,13 @@ class AdminDelegationBuilder
 
     public function buildServices()
     {
-        $service_list = array();
+        $service_list = [];
 
         foreach (AdminDelegation_Service::getAllServices() as $service) {
-            $built_service = array(
+            $built_service = [
                 'id' => $service,
                 'label' => AdminDelegation_Service::getLabel($service),
-            );
+            ];
             $service_list[] = $built_service;
         }
 

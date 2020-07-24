@@ -198,7 +198,7 @@ class JpGraphExceptionL extends JpGraphException
 
 // Setup the default handler
 global $__jpg_OldHandler;
-$__jpg_OldHandler = set_exception_handler(array('JpGraphException','defaultHandler'));
+$__jpg_OldHandler = set_exception_handler(['JpGraphException', 'defaultHandler']);
 
 // First of all set up a default error handler
 //=============================================================

@@ -234,7 +234,7 @@ class LdapPlugin extends Plugin
 
     private function getLDAPParams()
     {
-        $ldap_params = array();
+        $ldap_params = [];
         $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
         foreach ($keys as $k) {
             $nk = str_replace('sys_ldap_', '', $k);
@@ -286,21 +286,21 @@ class LdapPlugin extends Plugin
                     $tuleap_user_id = null;
                     $tuleap_user    = $user_manager->getUserByLdapId($lr->getEdUid());
                     if ($tuleap_user !== null) {
-                        $params['userList'][] = array(
+                        $params['userList'][] = [
                             'display_name' => $tuleap_user->getRealName() . ' (' . $tuleap_user->getUserName() . ')',
                             'login'        => $tuleap_user->getUserName(),
                             'user_id'      => $tuleap_user->getId(),
                             'has_avatar'   => $tuleap_user->hasAvatar(),
                             'avatar_url'   => $tuleap_user->getAvatarUrl()
-                        );
+                        ];
                     } else {
-                        $params['userList'][] = array(
+                        $params['userList'][] = [
                             'display_name' => $sync->getCommonName($lr) . ' (' . $lr->getLogin() . ')',
                             'login'        => $lr->getLogin(),
                             'user_id'      => $tuleap_user_id,
                             'has_avatar'   => false,
                             'avatar_url'   => ''
-                        );
+                        ];
                     }
                 }
             }
@@ -331,10 +331,10 @@ class LdapPlugin extends Plugin
     public function getSearchTemplateRenderer()
     {
         return TemplateRendererFactory::build()->getRenderer(
-            array(
+            [
                 dirname(__FILE__) . '/../templates',
                 ForgeConfig::get('codendi_dir') . '/src/templates/search',
-            )
+            ]
         );
     }
 
@@ -414,7 +414,7 @@ class LdapPlugin extends Plugin
                 $GLOBALS['feedback'] .= ' ' . $GLOBALS['Language']->getText(
                     'plugin_ldap',
                     'login_pls_use_ldap',
-                    array(ForgeConfig::get('sys_name'))
+                    [ForgeConfig::get('sys_name')]
                 );
             } else {
                 $params['allow_codendi_login'] = true;
@@ -441,7 +441,7 @@ class LdapPlugin extends Plugin
         if ($this->isLDAPUserManagementEnabled()) {
             $ldap = $this->getLdap();
             // First, test if its provided by autocompleter: "Common Name (login name)"
-            $matches = array();
+            $matches = [];
             if (preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
                 if (trim($matches[2]) != '') {
                     $lri  = $ldap->searchLogin($matches[2]);
@@ -528,13 +528,13 @@ class LdapPlugin extends Plugin
                 $login_info     = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
             }
 
-            $params['additional_details'][] = array(
+            $params['additional_details'][] = [
                 'login_label'    => $login_label,
                 'login_info'     => $login_info,
                 'ldap_id_label'  => $ldap_id_label,
                 'ldap_id'        => $ldap_id,
                 'has_login_info' => $has_login_info
-            );
+            ];
         }
     }
 
@@ -785,7 +785,7 @@ class LdapPlugin extends Plugin
 
             $modal_button = $mustache_renderer->renderToString(
                 'project-members-ldap-link-modal-button',
-                array('label' => $action_label)
+                ['label' => $action_label]
             );
 
             $modal_content = $mustache_renderer->renderToString(
@@ -881,7 +881,7 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
-            $params['setup'] = array($this->getLdap());
+            $params['setup'] = [$this->getLdap()];
         }
     }
 
@@ -1041,12 +1041,12 @@ class LdapPlugin extends Plugin
             case 'PLUGIN_LDAP_UPDATE_LOGIN':
                 include_once dirname(__FILE__) . '/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     UserManager::instance(),
                     Backend::instance(Backend::SVN),
                     ProjectManager::instance(),
                     new LDAP_ProjectManager()
-                );
+                ];
                 break;
         }
     }

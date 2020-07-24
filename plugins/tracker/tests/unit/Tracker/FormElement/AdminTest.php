@@ -46,13 +46,13 @@ final class Tracker_FormElement_View_AdminTest extends \PHPUnit\Framework\TestCa
 
         $element = Mockery::mock(Tracker_FormElement_Field_String::class, [null, null, null, null, null, null, null, null, null, null, null, $original])->makePartial()->shouldAllowMockingProtectedMethods();
 
-        return new Tracker_FormElement_View_Admin($element, array());
+        return new Tracker_FormElement_View_Admin($element, []);
     }
 
     public function testSharedUsageShouldDisplayAllTrackershatShareMe(): void
     {
         $element = $this->givenAnElementWithManyCopies();
-        $admin   = new Tracker_FormElement_View_Admin($element, array());
+        $admin   = new Tracker_FormElement_View_Admin($element, []);
         $content = $admin->fetchSharedUsage();
         $this->assertMatchesRegularExpression('/Canard/', $content);
         $this->assertMatchesRegularExpression('/Saucisse/', $content);
@@ -84,7 +84,7 @@ final class Tracker_FormElement_View_AdminTest extends \PHPUnit\Framework\TestCa
         $copy3 = $this->getStringFileWithId(30, $element);
         $copy3->shouldReceive('getTracker')->andReturn($tracker3);
 
-        $factory->shouldReceive('getSharedTargets')->with($element)->andReturns(array($copy1, $copy2, $copy3));
+        $factory->shouldReceive('getSharedTargets')->with($element)->andReturns([$copy1, $copy2, $copy3]);
         return $element;
     }
 

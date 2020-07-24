@@ -39,7 +39,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
         } else {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title))
+                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', [$this->title])
             );
 
             return false;
@@ -83,13 +83,13 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
 
     public function toArray()
     {
-        return parent::toArray() + array(
+        return parent::toArray() + [
             'type'   => 'pie',
             'title'  => $this->title,
             'height' => $this->height,
             'width'  => $this->width,
             'legend' => $this->legend,
             'data'   => $this->data,
-        );
+        ];
     }
 }

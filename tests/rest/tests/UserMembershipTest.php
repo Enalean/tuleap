@@ -54,11 +54,11 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
 
     private function assertGET(Response $response): void
     {
-        $user2_groups = array(
+        $user2_groups = [
             "site_active",
             "private-member_project_members",
             "ug_102"
-        );
+        ];
 
         $this->assertEquals(200, $response->getStatusCode());
 

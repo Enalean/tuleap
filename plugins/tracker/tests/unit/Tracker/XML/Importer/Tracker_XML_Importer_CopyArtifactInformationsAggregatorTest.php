@@ -39,7 +39,7 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
 
     public function testItDoesNotContainsAnyMessageIfThereAreNone(): void
     {
-        $this->assertEquals(array(), $this->logger->getAllLogs());
+        $this->assertEquals([], $this->logger->getAllLogs());
     }
 
     public function testItContainsAllTheLoggedMessages(): void
@@ -47,10 +47,10 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
         $this->logger->error("this is an error");
         $this->logger->warning("this is a warning");
 
-        $expected_logs = array(
+        $expected_logs = [
             "[error] this is an error",
             "[warning] this is a warning"
-        );
+        ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
 
@@ -70,10 +70,10 @@ final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends 
         $this->logger->info("this is an info");
         $this->logger->debug("this is a debug");
 
-        $expected_logs = array(
+        $expected_logs = [
             "[error] this is an error",
             "[warning] this is a warning"
-        );
+        ];
         $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
 }

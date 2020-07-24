@@ -60,7 +60,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
     public function getTrackers(Tracker $tracker)
     {
         $trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        return array_diff($trackers, array($tracker));
+        return array_diff($trackers, [$tracker]);
     }
 
     /**
@@ -70,7 +70,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
      */
     public function getMappings(Tracker $tracker, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $mappings = array();
+        $mappings = [];
         foreach ($this->dao->searchMappingFields($tracker->getId()) as $row) {
             $this->instantiateMappingFromRow($tracker, $mappings, $row, $columns);
         }

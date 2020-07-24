@@ -40,7 +40,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
         $loveDetailsHtml = new Docman_View_LoveDetails($md);
 
-        $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_update_love'));
+        $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_update_love']);
 
         $html .= '<form name="md_update_love" method="POST" action="' . $act_url . '" class="docman_form">';
         $html .= $loveDetailsHtml->getHiddenFields($love->getId());
@@ -57,8 +57,8 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
         $backUrl  = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
-            array('action' => 'admin_md_details',
-            'md' => $md->getLabel())
+            ['action' => 'admin_md_details',
+            'md' => $md->getLabel()]
         );
         $html .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';
 

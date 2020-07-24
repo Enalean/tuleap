@@ -149,7 +149,7 @@ class TransitionFactory
         return null;
     }
 
-    protected $cache_transition_id = array();
+    protected $cache_transition_id = [];
 
     public function getTransitionId(Tracker $tracker, $from, $to)
     {
@@ -257,7 +257,7 @@ class TransitionFactory
         Tracker_FormElement_Field_List_Value $to_value
     ) {
         $transition = new Transition(0, 0, $from_value, $to_value);
-        $postactions = array();
+        $postactions = [];
         if ($xml->postactions) {
             $postactions = $this->getPostActionFactory()->getInstanceFromXML(
                 $xml->postactions,
@@ -321,7 +321,7 @@ class TransitionFactory
      */
     public function getTransitions(Workflow $workflow)
     {
-        $transitions = array();
+        $transitions = [];
         foreach ($this->getDao()->searchByWorkflow($workflow->getId()) as $row) {
             $transitions[] = $this->getInstanceFromRow($row, $workflow);
         }

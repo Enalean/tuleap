@@ -42,7 +42,7 @@ class SiteContentRenderer
     {
         try {
             $template_cache    = new TemplateCache();
-            $mustache_renderer = new \Mustache_Engine(array('cache' => $template_cache->getPath()));
+            $mustache_renderer = new \Mustache_Engine(['cache' => $template_cache->getPath()]);
             $content_loader    = new CustomizableContentLoader();
             return $mustache_renderer->render(
                 $content_loader->getContent($user, $template_name),

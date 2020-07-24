@@ -60,8 +60,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('s'     => false,
-                     'debug' => false);
+        return ['s'     => false,
+                     'debug' => false];
     }
 
     public function spelling_similarity($subject)
@@ -124,14 +124,14 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
             $link = $this->_searchterm;
         }
         $caption = fmt("These page titles match fuzzy with '%s'", $link);
-        $table->pushContent(HTML::caption(array('align' => 'top'), $caption));
+        $table->pushContent(HTML::caption(['align' => 'top'], $caption));
     }
 
     public function addTableHead(&$table)
     {
         $row = HTML::tr(
             HTML::th(_("Name")),
-            HTML::th(array('align' => 'right'), _("Score"))
+            HTML::th(['align' => 'right'], _("Score"))
         );
         if ($this->debug) {
             $this->_pushDebugHeadingTDinto($row);
@@ -149,12 +149,12 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $tbody = HTML::tbody();
         foreach ($list as $found_pagename => $score) {
             $row = HTML::tr(
-                array('class' =>
+                ['class' =>
                                   $score > HIGHLIGHT_ROWS_CUTOFF_SCORE
-                                  ? 'evenrow' : 'oddrow'),
+                                  ? 'evenrow' : 'oddrow'],
                 HTML::td(WikiLink($found_pagename)),
                 HTML::td(
-                    array('align' => 'right'),
+                    ['align' => 'right'],
                     round($score)
                 )
             );
@@ -170,10 +170,10 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
 
     public function formatTable(&$list, &$dbi)
     {
-        $table = HTML::table(array('cellpadding' => 2,
+        $table = HTML::table(['cellpadding' => 2,
                                    'cellspacing' => 1,
                                    'border'      => 0,
-                                   'class' => 'pagelist'));
+                                   'class' => 'pagelist']);
         $this->addTableCaption($table, $dbi);
         $this->addTableHead($table);
         $this->addTableBody($list, $table);
@@ -191,7 +191,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $this->debug = $debug;
 
         $this->_searchterm = $s;
-        $this->_list = array();
+        $this->_list = [];
 
         $this->collectSimilarPages($this->_list, $dbi);
         $this->sortCollectedPages($this->_list);
@@ -222,8 +222,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         );
 
         $row->pushcontent(
-            HTML::td(array('align' => 'center'), $debug_spelling),
-            HTML::td(array('align' => 'center'), $debug_sound),
+            HTML::td(['align' => 'center'], $debug_spelling),
+            HTML::td(['align' => 'center'], $debug_sound),
             HTML::td($debug_metaphone)
         );
     }

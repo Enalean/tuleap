@@ -55,8 +55,8 @@ final class SourceOfAssociationDetectorTest extends TestCase
         $this->sprint->shouldReceive('getTrackerId')->andReturn(565);
 
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $hierarchy_factory->shouldReceive('getChildren')->with(123)->andReturns(array($sprint_tracker));
-        $hierarchy_factory->shouldReceive('getChildren')->with(565)->andReturns(array());
+        $hierarchy_factory->shouldReceive('getChildren')->with(123)->andReturns([$sprint_tracker]);
+        $hierarchy_factory->shouldReceive('getChildren')->with(565)->andReturns([]);
 
         $this->detector = new SourceOfAssociationDetector($hierarchy_factory);
     }

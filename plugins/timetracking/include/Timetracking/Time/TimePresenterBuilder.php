@@ -49,22 +49,22 @@ class TimePresenterBuilder
     {
         $user = $this->user_manager->getUserById($time->getUserId());
 
-        return array(
+        return [
             'id'                   => $time->getId(),
             'day'                  => $time->getDay(),
             'user'                 => $this->getUserPresenter($user),
             'time'                 => $this->date_formatter->formatMinutes($time->getMinutes()),
             'step'                 => $time->getStep(),
             'time_belongs_to_user' => $time->getUserId() === (int) $current_user->getId()
-        );
+        ];
     }
 
     private function getUserPresenter(PFUser $user)
     {
-        return array(
+        return [
             'avatar_url' => $user->getAvatarUrl(),
             'has_avatar' => $user->hasAvatar(),
             'label'      => UserHelper::instance()->getDisplayName($user->getUserName(), $user->getRealName())
-        );
+        ];
     }
 }

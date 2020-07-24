@@ -37,11 +37,11 @@ abstract class ACLBuilder
     protected function getACLList($http_user, $writers, $readers)
     {
         return array_filter(
-            array(
+            [
                 $this->getACLUserWriter($http_user),
                 $this->getACLGroupWriters($writers),
                 $this->getACLGroupReaders($readers)
-            )
+            ]
         );
     }
 

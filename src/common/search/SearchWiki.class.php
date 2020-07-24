@@ -70,7 +70,7 @@ class Search_SearchWiki
         return new Search_SearchTypePresenter(
             Search_SearchWiki::NAME,
             $GLOBALS['Language']->getText('project_admin_editservice', 'service_wiki_lbl_key'),
-            array(),
+            [],
             $this->getRedirectUrl($project_id, $this->getSearchPageName($project_id), $words)
         );
     }

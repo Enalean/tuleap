@@ -42,7 +42,7 @@ class Git_Backend_GitoliteTest extends TestCase
 
         mkdir($this->fixtureRenamePath . '/legacy', 0770, true);
 
-        $this->forkPermissions = array();
+        $this->forkPermissions = [];
     }
 
     public function testRenameProjectOk()

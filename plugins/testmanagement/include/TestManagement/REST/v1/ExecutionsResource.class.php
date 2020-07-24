@@ -509,7 +509,7 @@ class ExecutionsResource
         }
 
         try {
-            $this->artifact_updater->update($user, $issue_artifact, array(), $comment);
+            $this->artifact_updater->update($user, $issue_artifact, [], $comment);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -567,7 +567,7 @@ class ExecutionsResource
             $user
         );
 
-        $values = array();
+        $values = [];
 
         if ($status_field) {
             $status_field_binds = [];
@@ -609,9 +609,9 @@ class ExecutionsResource
         if ($artifact_links_field) {
             $values[] = $this->createArtifactValuesRepresentation(
                 intval($artifact_links_field->getId()),
-                array(
-                    array('id' => $definition_id)
-                ),
+                [
+                    ['id' => $definition_id]
+                ],
                 'links'
             );
         }

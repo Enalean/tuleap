@@ -159,7 +159,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
         $start_date_field->shouldReceive('userCanRead')->andReturnTrue();
         $this->tracker->shouldReceive('hasFormElementWithNameAndType')
-            ->with('start_date', array('date'))
+            ->with('start_date', ['date'])
             ->andReturnTrue();
     }
 
@@ -185,7 +185,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
         $duration_field->shouldReceive('userCanRead')->andReturnTrue();
         $this->tracker->shouldReceive('hasFormElementWithNameAndType')
-            ->with('duration', array('int', 'float', 'computed'))
+            ->with('duration', ['int', 'float', 'computed'])
             ->andReturnTrue();
     }
 
@@ -327,9 +327,9 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
     public function testProcessMustNotBuildBurndownWhenSrcAidIsNotValid(): void
     {
-        $request = new Codendi_Request(array('formElement' => 1234,
+        $request = new Codendi_Request(['formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'src_aid'     => '; DROP DATABASE mouuahahahaha!'));
+                                             'src_aid'     => '; DROP DATABASE mouuahahahaha!']);
 
 
 
@@ -345,9 +345,9 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
     public function testProcessMustNotBuildBurndownWhenArtifactDoesNotExist(): void
     {
-        $request = new Codendi_Request(array('formElement' => 1234,
+        $request = new Codendi_Request(['formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'src_aid'     => 999));
+                                             'src_aid'     => 999]);
 
         $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
         $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);

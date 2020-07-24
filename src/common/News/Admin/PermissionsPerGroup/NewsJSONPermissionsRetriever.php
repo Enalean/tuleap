@@ -43,11 +43,11 @@ class NewsJSONPermissionsRetriever
     {
         if (! $project->usesService(Service::NEWS)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => _(
                         "Service news is disabled for this project."
                     )
-                )
+                ]
             );
         }
 

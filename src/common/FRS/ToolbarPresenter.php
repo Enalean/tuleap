@@ -25,7 +25,7 @@ use Project;
 
 class ToolbarPresenter extends BaseFrsPresenter
 {
-    /** @var SectionsPresenter */
+    /** @var SectionsPresenter|array */
     public $sections;
     /** @var Project */
     private $project;
@@ -37,7 +37,7 @@ class ToolbarPresenter extends BaseFrsPresenter
         parent::__construct();
 
         $this->project  = $project;
-        $this->sections = array();
+        $this->sections = [];
 
         $this->title_frs_administration = _('Files Administration');
     }

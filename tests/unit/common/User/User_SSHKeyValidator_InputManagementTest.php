@@ -55,7 +55,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
 
     public function testItUpdatesWithOneKey(): void
     {
-        $keys = $this->validator->validateAllKeys(array($this->key1));
+        $keys = $this->validator->validateAllKeys([$this->key1]);
 
         $this->assertCount(1, $keys);
         $this->assertEquals($this->key1, $keys[0]);
@@ -63,10 +63,10 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
 
     public function testItUpdatesWithTwoKeys(): void
     {
-        $keys = $this->validator->validateAllKeys(array(
+        $keys = $this->validator->validateAllKeys([
             $this->key1,
             $this->key2
-        ));
+        ]);
 
         $this->assertCount(2, $keys);
         $this->assertEquals($this->key1, $keys[0]);
@@ -75,10 +75,10 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
 
     public function testItUpdatesWithAnExtraSpaceAfterFirstKey(): void
     {
-        $keys = $this->validator->validateAllKeys(array(
+        $keys = $this->validator->validateAllKeys([
             $this->key1 . " ",
             $this->key2
-        ));
+        ]);
 
         $this->assertCount(2, $keys);
         $this->assertEquals($this->key1, $keys[0]);
@@ -87,11 +87,11 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
 
     public function testItUpdatesWithAnEmptyKey(): void
     {
-        $keys = $this->validator->validateAllKeys(array(
+        $keys = $this->validator->validateAllKeys([
             $this->key1,
             '',
             $this->key2
-        ));
+        ]);
 
         $this->assertCount(2, $keys);
         $this->assertEquals($this->key1, $keys[0]);

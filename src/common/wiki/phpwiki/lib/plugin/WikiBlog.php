@@ -113,11 +113,11 @@ class WikiPlugin_WikiBlog extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('pagename'   => '[pagename]',
+        return ['pagename'   => '[pagename]',
                      'order'      => 'normal',
                      'mode'       => 'show,add',
                      'noheader'   => false
-                    );
+                    ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -186,21 +186,21 @@ class WikiPlugin_WikiBlog extends WikiPlugin
          *    updates are atomic with the version creation.
          */
 
-        $blog_meta = array('ctime'      => $now,
+        $blog_meta = ['ctime'      => $now,
                            'creator'    => $user->getId(),
                            'creator_id' => $user->getAuthenticatedId(),
-                           );
+                           ];
 
         // Version meta-data
         $summary = trim($blog['summary']);
-        $version_meta = array('author'    => $blog_meta['creator'],
+        $version_meta = ['author'    => $blog_meta['creator'],
                               'author_id' => $blog_meta['creator_id'],
                               'markup'    => 2.0,   // assume new markup
                               'summary'   => $summary ? $summary : _("New comment."),
                               'mtime'     => $now,
                               'pagetype'  => $type,
                               $type       => $blog_meta,
-                              );
+                              ];
         if ($type == 'comment') {
             unset($version_meta['summary']);
         }
@@ -229,21 +229,21 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             $redirected = $prefix . $pagename;
             if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
-                $pageinfo = array('pagename' => $redirected,
+                $pageinfo = ['pagename' => $redirected,
                                   'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
-                                  'pagedata' => array(),
-                                  'versiondata' => array('author' => $blog_meta['creator']),
-                                  );
+                                  'pagedata' => [],
+                                  'versiondata' => ['author' => $blog_meta['creator']],
+                                  ];
                 SavePage($request, $pageinfo, '', '');
             }
             $redirected = $prefix . $pagename . SUBPAGE_SEPARATOR . preg_replace("/T.*/", "", "$time");
             if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
-                $pageinfo = array('pagename' => $redirected,
+                $pageinfo = ['pagename' => $redirected,
                                   'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
-                                  'pagedata' => array(),
-                                  'versiondata' => array('author' => $blog_meta['creator']),
-                                  );
+                                  'pagedata' => [],
+                                  'versiondata' => ['author' => $blog_meta['creator']],
+                                  ];
                 SavePage($request, $pageinfo, '', '');
             }
 
@@ -295,8 +295,8 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         $html = HTML();
         if ($blogs) {
             // First reorder
-            usort($blogs, array("WikiPlugin_WikiBlog",
-                                "cmp"));
+            usort($blogs, ["WikiPlugin_WikiBlog",
+                                "cmp"]);
             if ($args['order'] == 'reverse') {
                 $blogs = array_reverse($blogs);
             }
@@ -304,7 +304,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             $name = $this->_blogPrefix($type);
             if (! $args['noheader']) {
                 $html->pushContent(HTML::h4(
-                    array('class' => "$type-heading"),
+                    ['class' => "$type-heading"],
                     fmt("%s on %s:", $name, WikiLink($parent))
                 ));
             }
@@ -337,8 +337,8 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     public function _transformOldFormatBlog($rev, $type = 'wikiblog')
     {
         $page = $rev->getPage();
-        $metadata = array();
-        foreach (array('ctime', 'creator', 'creator_id') as $key) {
+        $metadata = [];
+        foreach (['ctime', 'creator', 'creator_id'] as $key) {
             $metadata[$key] = $page->get($key);
         }
         if (empty($metadata) and $type != 'wikiblog') {
@@ -354,7 +354,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         $prefix = (empty($parent) ? "" :  $parent . SUBPAGE_SEPARATOR) . $this->_blogPrefix($type);
         $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
 
-        $blogs = array();
+        $blogs = [];
         while ($page = $pages->next()) {
             if (! string_starts_with($page->getName(), $prefix)) {
                 continue;
@@ -381,7 +381,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         return new Template(
             $template,
             $request,
-            array('PAGENAME' => $args['pagename'])
+            ['PAGENAME' => $args['pagename']]
         );
     }
 
@@ -399,14 +399,14 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         if (preg_match("/^(.*Blog)\/(\d\d\d\d-\d\d)-(\d\d)\/(.*)/", $pagename, $m)) {
             list(,$prefix,$month,$day,$time) = $m;
         }
-        return array('pagename' => $pagename,
+        return ['pagename' => $pagename,
                      // page (list pages per month) or revision (list months)?
                      //'title' => isa($rev_or_page,'WikiDB_PageRevision') ? $rev_or_page->get('summary') : '',
                      //'monthtitle' => $this->_monthTitle($month),
                      'month'   => $month,
                      'day'     => $day,
                      'time'    => $time,
-                     'prefix'  => $prefix);
+                     'prefix'  => $prefix];
     }
 
     public function _nonDefaultArgs($args)

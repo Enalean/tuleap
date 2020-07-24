@@ -36,7 +36,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
 
         $this->factory = \Mockery::mock(
             \GitRepositoryFactory::class,
-            array($this->dao, $this->project_manager)
+            [$this->dao, $this->project_manager]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -44,7 +44,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $this->project_id = 320;
         $this->ugroup_id = 115;
 
-        $this->user_ugroups = array(404, 416);
+        $this->user_ugroups = [404, 416];
         $this->user         = \Mockery::spy(\PFUser::class)->shouldReceive('getUgroups')->with($this->project_id, null)->andReturns($this->user_ugroups)->getMock();
 
         $this->project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
@@ -53,7 +53,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
 
     public function testItCallsDaoWithArguments(): void
     {
-        $ugroups = array(404, 416, 115);
+        $ugroups = [404, 416, 115];
         $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')
             ->with($this->project_id, $ugroups)
             ->andReturn([])
@@ -64,8 +64,8 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
 
     public function testItHydratesTheRepositoriesWithFactory(): void
     {
-        $db_row_for_repo_12 = array('repository_id' => 12, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
-        $db_row_for_repo_23 = array('repository_id' => 23, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
+        $db_row_for_repo_12 = ['repository_id' => 12, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115];
+        $db_row_for_repo_23 = ['repository_id' => 23, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115];
 
         $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar($db_row_for_repo_12, $db_row_for_repo_23));
         $this->factory->shouldReceive('instanciateFromRow')->with($db_row_for_repo_12)->andReturns(\Mockery::spy(\GitRepository::class));
@@ -76,11 +76,11 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
 
     public function testItReturnsOneRepositoryWithOnePermission(): void
     {
-        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
             'ugroup_id'       => 115
-        )));
+        ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
 
@@ -89,32 +89,32 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEquals(
-            array(
+            [
                 12 => new GitRepositoryWithPermissions(
                     $repository,
-                    array(
-                        Git::PERM_READ          => array(115),
-                        Git::PERM_WRITE         => array(),
-                        Git::PERM_WPLUS         => array(),
-                        Git::SPECIAL_PERM_ADMIN => array(),
-                    )
+                    [
+                        Git::PERM_READ          => [115],
+                        Git::PERM_WRITE         => [],
+                        Git::PERM_WPLUS         => [],
+                        Git::SPECIAL_PERM_ADMIN => [],
+                    ]
                 )
-            ),
+            ],
             $git_with_permission
         );
     }
 
     public function testItReturnsOneRepositoryWithTwoPermissions(): void
     {
-        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
             'ugroup_id'       => 115
-        ), array(
+        ], [
             'repository_id'   => 12,
             'permission_type' => Git::PERM_WRITE,
             'ugroup_id'       => 115
-        )));
+        ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
 
@@ -123,32 +123,32 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEquals(
-            array(
+            [
                 12 => new GitRepositoryWithPermissions(
                     $repository,
-                    array(
-                        Git::PERM_READ          => array(115),
-                        Git::PERM_WRITE         => array(115),
-                        Git::PERM_WPLUS         => array(),
-                        Git::SPECIAL_PERM_ADMIN => array(),
-                    )
+                    [
+                        Git::PERM_READ          => [115],
+                        Git::PERM_WRITE         => [115],
+                        Git::PERM_WPLUS         => [],
+                        Git::SPECIAL_PERM_ADMIN => [],
+                    ]
                 )
-            ),
+            ],
             $git_with_permission
         );
     }
 
     public function testItReturnsOneRepositoryWithTwoGroupsForOnePermissionType(): void
     {
-        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(\TestHelper::arrayToDar([
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
             'ugroup_id'       => 115
-        ), array(
+        ], [
             'repository_id'   => 12,
             'permission_type' => Git::PERM_READ,
             'ugroup_id'       => 120
-        )));
+        ]));
 
         $repository = \Mockery::spy(\GitRepository::class);
 
@@ -157,27 +157,27 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEquals(
-            array(
+            [
                 12 => new GitRepositoryWithPermissions(
                     $repository,
-                    array(
-                        Git::PERM_READ          => array(115, 120),
-                        Git::PERM_WRITE         => array(),
-                        Git::PERM_WPLUS         => array(),
-                        Git::SPECIAL_PERM_ADMIN => array()
-                    )
+                    [
+                        Git::PERM_READ          => [115, 120],
+                        Git::PERM_WRITE         => [],
+                        Git::PERM_WPLUS         => [],
+                        Git::SPECIAL_PERM_ADMIN => []
+                    ]
                 )
-            ),
+            ],
             $git_with_permission
         );
 
         $this->assertEquals(
-            array(
-                Git::PERM_READ          => array(115, 120),
-                Git::PERM_WRITE         => array(),
-                Git::PERM_WPLUS         => array(),
-                Git::SPECIAL_PERM_ADMIN => array()
-            ),
+            [
+                Git::PERM_READ          => [115, 120],
+                Git::PERM_WRITE         => [],
+                Git::PERM_WPLUS         => [],
+                Git::SPECIAL_PERM_ADMIN => []
+            ],
             $git_with_permission[12]->getPermissions()
         );
     }

@@ -80,7 +80,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_token      = 'token';
         $session_identifier = "$session_id.$session_token";
 
-        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array('session_hash' => 'expected_token'));
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(['session_hash' => 'expected_token']);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
@@ -95,10 +95,10 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $hashed_session_token = hash(SessionManager::HASH_ALGORITHM, $session_token);
         $session_identifier   = "$session_id.$session_token";
 
-        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array(
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns([
             'session_hash' => $hashed_session_token,
             'user_id'      => '101'
-        ));
+        ]);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
@@ -114,10 +114,10 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_identifier   = "$session_id.$session_token";
         $user_id              = '101';
 
-        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(array(
+        $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns([
             'session_hash' => $hashed_session_token,
             'user_id'      => $user_id
-        ));
+        ]);
         $user = \Mockery::spy(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->with($user_id)->andReturns($user);
 

@@ -28,26 +28,26 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         parent::setUp();
 
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => 321
-            )
+            ]
         ));
 
-        $existing_mappings = array(
-            42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, array(), array(), $this->status_field),
+        $existing_mappings = [
+            42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, [], [], $this->status_field),
             69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle(
                 $this->story_tracker,
-                array(),
-                array(
+                [],
+                [
                     9001 => new Cardwall_OnTop_Config_ValueMapping($this->buildStaticListFieldValue(9001), 11),
                     9002 => new Cardwall_OnTop_Config_ValueMapping($this->buildStaticListFieldValue(9002), 11),
                     9007 => new Cardwall_OnTop_Config_ValueMapping($this->buildStaticListFieldValue(9007), 12),
-                ),
+                ],
                 $this->stage_field
             ),
-        );
+        ];
 
         $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields(
             $this->tracker,
@@ -64,17 +64,17 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '69' => array(
+            [
+                '69' => [
                     'field' => '321',
-                    'values' => array(
-                        '11' => array(
+                    'values' => [
+                        '11' => [
                             '9001',
                             '9002'
-                        ),
-                    )
-                ),
-            )
+                        ],
+                    ]
+                ],
+            ]
         );
         $this->value_dao->shouldReceive('deleteAllFieldValues')->never();
         $this->value_dao->shouldReceive('save')->never();
@@ -86,18 +86,18 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '69' => array(
+            [
+                '69' => [
                     'field' => '321',
-                    'values' => array(
-                        '11' => array(
+                    'values' => [
+                        '11' => [
                             '9001',
                             '9002',
                             '9003'
-                        ),
-                    )
-                )
-            )
+                        ],
+                    ]
+                ]
+            ]
         );
         $this->value_dao->shouldReceive('deleteAllFieldValues')->once();
         $this->value_dao->shouldReceive('save')->times(3);
@@ -109,16 +109,16 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '69' => array(
+            [
+                '69' => [
                     'field' => '321',
-                    'values' => array(
-                        '11' => array(
+                    'values' => [
+                        '11' => [
                             '9001',
-                        ),
-                    )
-                ),
-            )
+                        ],
+                    ]
+                ],
+            ]
         );
         $this->value_dao->shouldReceive('deleteAllFieldValues')->once();
         $this->value_dao->shouldReceive('save')->once();

@@ -415,9 +415,9 @@ function html_build_multiple_select_box($result, $name, $checked_array, $size = 
     if (is_array($result)) {
         $array =& $result;
     } else {
-        $array = array();
+        $array = [];
         while ($row = db_fetch_array($result)) {
-            $array[] = array('value' => $row[0], 'text' => $row[1]);
+            $array[] = ['value' => $row[0], 'text' => $row[1]];
         }
     }
     return html_build_multiple_select_box_from_array($array, $name, $checked_array, $size, $show_100, $text_100, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value, $purify_level, $disabled);
@@ -618,7 +618,7 @@ function site_project_header($params)
     //group is private
     if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
      //if its a private group, you must be a member of that group
-        session_require(array('group' => $group_id));
+        session_require(['group' => $group_id]);
     }
 
     //for dead projects must be member of admin project

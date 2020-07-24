@@ -48,10 +48,10 @@ class WikiPlugin_BackLinks extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('include_self' => false,
+            ['include_self' => false,
                    'noheader'     => false,
                    'page'         => '[pagename]',
-            )
+            ]
         );
     }
 
@@ -68,7 +68,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
         }
         // exclude is now already expanded in WikiPlugin::getArgs()
         if (empty($exclude)) {
-            $exclude = array();
+            $exclude = [];
         }
         if (! $include_self) {
             $exclude[] = $page;

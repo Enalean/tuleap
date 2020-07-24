@@ -101,16 +101,16 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getReadUGroups(Project $project)
     {
         $user_groups  = $this->user_group_factory->getAllForProject($project);
-        $read_ugroups = array();
+        $read_ugroups = [];
 
         $selected_ugroups = $this->manager->getReadAccessControl($project);
 
         foreach ($user_groups as $ugroup) {
-            $read_ugroups[] = array(
+            $read_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
                 'selected' => in_array($ugroup->getId(), $selected_ugroups)
-            );
+            ];
         }
 
         return $read_ugroups;
@@ -119,16 +119,16 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getWriteUGroups(Project $project)
     {
         $user_groups  = $this->user_group_factory->getAllForProject($project);
-        $write_ugroups = array();
+        $write_ugroups = [];
 
         $selected_ugroups = $this->manager->getWriteAccessControl($project);
 
         foreach ($user_groups as $ugroup) {
-            $write_ugroups[] = array(
+            $write_ugroups[] = [
                 'label'    => $ugroup->getName(),
                 'value'    => $ugroup->getId(),
                 'selected' => in_array($ugroup->getId(), $selected_ugroups)
-            );
+            ];
         }
 
         return $write_ugroups;
@@ -136,7 +136,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getMappedGroupPresenter(Project $project)
     {
-        $group_mapper_presenters = array();
+        $group_mapper_presenters = [];
         $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
         $all_ugroups     = $this->getIndexedUgroups($project);
         foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
@@ -147,11 +147,11 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getIndexedUgroups(Project $project)
     {
-        $ugroups        = array();
+        $ugroups        = [];
         $ugroup_manager = new UGroupManager();
-        $excluded_groups = array_merge(ProjectUGroup::$legacy_ugroups, array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS));
+        $excluded_groups = array_merge(ProjectUGroup::$legacy_ugroups, [ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS]);
         if (! $project->isPublic()) {
-            $excluded_groups = array_merge($excluded_groups, array(ProjectUGroup::REGISTERED));
+            $excluded_groups = array_merge($excluded_groups, [ProjectUGroup::REGISTERED]);
         }
         $all_ugroups    = $ugroup_manager->getUGroups($project, $excluded_groups);
         foreach ($all_ugroups as $ugroup) {
@@ -162,8 +162,8 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getGroupPresenters($mw_group_name, array $current_mapping, array $all_ugroups)
     {
-        $mapped_groups    = array();
-        $available_groups = array();
+        $mapped_groups    = [];
+        $available_groups = [];
         foreach ($all_ugroups as $ugroup_id => $ugroup) {
             if (in_array($ugroup_id, $current_mapping[$mw_group_name])) {
                 $mapped_groups[] = $ugroup;
@@ -211,10 +211,10 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
 
         $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(
-            array(
+            [
                 'group_id'   => $request->get('group_id'),
                 'pane'       => 'language',
-            )
+            ]
         ));
     }
 
@@ -258,9 +258,9 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
 
         $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(
-            array(
+            [
                 'group_id'   => $request->get('group_id'),
-            )
+            ]
         ));
     }
 
@@ -270,7 +270,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             return $this->mapper->getDefaultMappingsForProject($project);
         }
 
-        $list = array();
+        $list = [];
         foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
             $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_' . $mw_group_name)));
         }

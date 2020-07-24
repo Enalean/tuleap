@@ -23,7 +23,7 @@
  */
 class Tracker_Workflow_Trigger_TriggerValidator
 {
-    private $triggering_fields = array();
+    private $triggering_fields = [];
     private $rules_manager;
 
     public function __construct(Tracker_Workflow_Trigger_RulesManager $rules_manager)
@@ -63,10 +63,10 @@ class Tracker_Workflow_Trigger_TriggerValidator
         if (! isset($json->condition)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('condition is missing');
         }
-        $valid_condition = new Valid_WhiteList('condition', array(
+        $valid_condition = new Valid_WhiteList('condition', [
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-        ));
+        ]);
         $valid_condition->required();
         $valid_condition->disableFeedback();
         if (! $valid_condition->validate($json->condition)) {

@@ -55,7 +55,7 @@ class ArtifactInNatureTablePresenter
         $this->artifactlink_field_id = $field->getId();
 
         $assignees      = $artifact->getAssignedTo($current_user);
-        $assignee_links = array();
+        $assignee_links = [];
         foreach ($assignees as $assignee) {
             $assignee_links[] = $user_helper->getLinkOnUser($assignee);
         }

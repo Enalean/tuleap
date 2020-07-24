@@ -119,7 +119,7 @@ final class WorkflowFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         $workflow_factory->shouldReceive('getDao')->andReturns($dao);
         $workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns($tracker_rules_manager);
         $tracker_factory->shouldReceive('getTrackerById')->andReturn(Mockery::mock(Tracker::class));
-        $dao->shouldReceive('searchByTrackerId')->with(112)->andReturns(\TestHelper::arrayToDar(array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1)));
+        $dao->shouldReceive('searchByTrackerId')->with(112)->andReturns(\TestHelper::arrayToDar(['tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1]));
         $this->assertSame(
             $workflow_factory->getWorkflowByTrackerId(112),
             $workflow_factory->getWorkflowByTrackerId(112)

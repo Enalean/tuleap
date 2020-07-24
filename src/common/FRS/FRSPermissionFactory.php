@@ -40,7 +40,7 @@ class FRSPermissionFactory
      */
     public function getFrsUGroupsByPermission(Project $project, $permission_type)
     {
-        $admins = array();
+        $admins = [];
         $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), $permission_type);
 
         foreach ($permissions as $permission) {

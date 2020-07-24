@@ -67,7 +67,7 @@ class Git_Ci
             $project = $this->getProjectManager()->getProject($params['group_id']);
             if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
                 $repositoryId = '';
-                $used         = array();
+                $used         = [];
                 $checked      = '';
                 if (isset($params['job_id']) && ! empty($params['job_id'])) {
                     $res = $this->getDao()->retrieveTrigger($params['job_id']);
@@ -87,9 +87,9 @@ class Git_Ci
 
                 $warning = "";
                 $intalled = false;
-                $parameters = array(
+                $parameters = [
                     'installed' => &$intalled
-                );
+                ];
 
                 $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);
                 if ($intalled) {
@@ -136,11 +136,11 @@ class Git_Ci
                                  </script>
                              </p>';
                 $editForm = $warning . '<label for="hudson_use_plugin_git_trigger">' . dgettext('tuleap-git', 'Trigger a build after Git pushes in repository') . ': </label>' . $selectBox;
-                return array('service'       => GitPlugin::SERVICE_SHORTNAME,
+                return ['service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => dgettext('tuleap-git', 'Git trigger'),
                              'used'          => $used,
                              'add_form'      => $addForm,
-                             'edit_form'     => $editForm);
+                             'edit_form'     => $editForm];
             }
         }
     }

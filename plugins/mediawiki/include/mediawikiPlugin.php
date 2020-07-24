@@ -183,14 +183,14 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         $project = $this->getProjectFromRequest();
         if ($this->isSearchEntryAvailable($project)) {
-            $params['search_entries'][] = array(
+            $params['search_entries'][] = [
                 'value'    => $this->getName(),
                 'selected' => $this->isSearchEntrySelected($params['type_of_search']),
-            );
-            $params['hidden_fields'][] = array(
+            ];
+            $params['hidden_fields'][] = [
                 'name'  => 'group_id',
                 'value' => $project->getID()
-            );
+            ];
         }
     }
 
@@ -218,7 +218,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 $this->getName(),
                 "Mediawiki",
-                array(),
+                [],
                 $this->getMediawikiSearchURI($params['project'], $params['words'])
             );
         }
@@ -261,7 +261,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
          */
     private function getProjectFromRequest()
     {
-        $matches = array();
+        $matches = [];
         preg_match('%' . $this->getPluginPath() . '/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
         if (isset($matches[1])) {
             $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
@@ -486,9 +486,9 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $start_date      = $params['start_date'];
         $end_date        = $params['end_date'];
 
-        $number_of_page                   = array();
-        $number_of_page_between_two_dates = array();
-        $number_of_page_since_a_date      = array();
+        $number_of_page                   = [];
+        $number_of_page_between_two_dates = [];
+        $number_of_page_since_a_date      = [];
         foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             if ($project->usesService('plugin_mediawiki') && $dao->hasDatabase($project)) {
                 $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
@@ -526,10 +526,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent(UserAndProjectUGroupRelationshipEvent $event)
     {
         $this->updateUserGroupMapping(
-            array(
+            [
                 'user_id'  => $event->getUser()->getId(),
                 'group_id' => $event->getProject()->getID(),
-            )
+            ]
         );
     }
 
@@ -710,10 +710,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => 'Mediawiki',
             'href'  => $this->getPluginPath() . '/forge_admin.php?action=site_index'
-        );
+        ];
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
@@ -725,10 +725,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function system_event_get_types_for_default_queue(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['types'] = array_merge($params['types'], array(
+        $params['types'] = array_merge($params['types'], [
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
             SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME
-        ));
+        ]);
     }
 
     public function getSystemEventClass($params)
@@ -736,7 +736,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         switch ($params['type']) {
             case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
                 $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getMediawikiMigrator(),
                     $this->getProjectManager(),
                     $this->getMediawikiVersionManager(),
@@ -745,13 +745,13 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                         new MediawikiSiteAdminResourceRestrictorDao(),
                         $this->getProjectManager()
                     )
-                );
+                ];
                 break;
             case SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME:
                 $params['class'] = 'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     new MoveToCentralDbDao($this->getCentralDatabaseNameProperty()),
-                );
+                ];
                 break;
 
             default:
@@ -885,10 +885,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-mediawiki', 'Mediawiki'),
                 $this->getPluginPath() . '/forge_admin.php?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID(),
                         'pane'     => 'permissions'
-                    )
+                    ]
                 )
             )
         );

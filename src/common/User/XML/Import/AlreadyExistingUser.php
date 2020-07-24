@@ -26,7 +26,7 @@ use UserManager;
 class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser
 {
 
-    private static $ALLOWED_ACTIONS = array(ToBeActivatedUser::ACTION, ToBeMappedUser::ACTION);
+    private static $ALLOWED_ACTIONS = [ToBeActivatedUser::ACTION, ToBeMappedUser::ACTION];
 
     /** @var PFUser */
     private $user;
@@ -47,7 +47,7 @@ class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImp
     /** @return array */
     public function getCSVData()
     {
-        return array();
+        return [];
     }
 
     public function isActionAllowed($action)

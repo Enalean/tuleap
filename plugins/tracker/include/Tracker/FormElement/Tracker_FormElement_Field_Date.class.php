@@ -31,28 +31,28 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public const DEFAULT_VALUE_TYPE_TODAY    = 0;
     public const DEFAULT_VALUE_TYPE_REALDATE = 1;
 
-    public $default_properties = array(
-        'default_value_type' => array(
+    public $default_properties = [
+        'default_value_type' => [
             'type'    => 'radio',
             'value'   => 0,      //default value is today
-            'choices' => array(
-                'default_value_today' => array(
+            'choices' => [
+                'default_value_today' => [
                     'radio_value' => 0,
                     'type'        => 'label',
                     'value'       => 'today',
-                ),
-                'default_value' => array(
+                ],
+                'default_value' => [
                     'radio_value' => 1,
                     'type'  => 'date',
                     'value' => '',
-                ),
-            )
-        ),
-        'display_time' => array(
+                ],
+            ]
+        ],
+        'display_time' => [
             'value' => 0,
             'type'  => 'checkbox',
-        ),
-    );
+        ],
+    ];
 
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
@@ -103,19 +103,19 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 break;
             default:
                 throw new Tracker_Report_InvalidRESTCriterionException("Invalid operator for criterion field '$this->name' ($this->id). "
-                    . "Allowed operators: [" . implode(' | ', array(
+                    . "Allowed operators: [" . implode(' | ', [
                         Tracker_Report_REST::OPERATOR_EQUALS,
                         Tracker_Report_REST::OPERATOR_GREATER_THAN,
                         Tracker_Report_REST::OPERATOR_LESS_THAN,
                         Tracker_Report_REST::OPERATOR_BETWEEN,
-                    )) . "]");
+                    ]) . "]");
         }
 
-        $criteria_value = array(
+        $criteria_value = [
             'op'        => $op,
             'from_date' => $from_date,
             'to_date'   => $to_date,
-        );
+        ];
         $formatted_criteria_value = $this->getFormattedCriteriaValue($criteria_value);
 
         $this->setCriteriaValue($formatted_criteria_value, $criteria->report->id);
@@ -297,11 +297,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function getCriteriaValue($criteria)
     {
         if (! isset($this->criteria_value)) {
-            $this->criteria_value = array();
+            $this->criteria_value = [];
         }
 
         if (! isset($this->criteria_value[$criteria->report->id])) {
-            $this->criteria_value[$criteria->report->id] = array();
+            $this->criteria_value[$criteria->report->id] = [];
             $dao = $this->getCriteriaDao();
             if ($dao && $row = $dao->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->report->id]['op'] = $row['op'];
@@ -465,8 +465,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             "criteria_" . $this->id . "_from",
             "criteria[" . $this->id . "][from_date]",
             $value,
-            array(),
-            array(),
+            [],
+            [],
             false
         );
         $html .= '</label>';
@@ -477,8 +477,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             "criteria_" . $this->id . "_to",
             "criteria[" . $this->id . "][to_date]",
             $value,
-            array(),
-            array(),
+            [],
+            [],
             false
         );
         $html .= '</label>';
@@ -510,24 +510,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             }
             $html .= '<div style="white-space:nowrap;">';
 
-            $criteria_selector = array(
+            $criteria_selector = [
                 "name"      => 'criteria[' . $this->id . '][op]',
-                "criterias" => array(
-                    ">" => array(
+                "criterias" => [
+                    ">" => [
                         "html_value" => dgettext('tuleap-tracker', 'After'),
                         "selected"   => $gt_selected
 
-                    ),
-                    "=" => array(
+                    ],
+                    "=" => [
                         "html_value" => dgettext('tuleap-tracker', 'As of'),
                         "selected"   => $eq_selected
-                    ),
-                    "<" => array(
+                    ],
+                    "<" => [
                         "html_value" => dgettext('tuleap-tracker', 'Before'),
                         "selected"   => $lt_selected
-                    ),
-                )
-            );
+                    ],
+                ]
+            ];
 
             $value = $criteria_value ? $this->formatDateForReport($criteria_value['to_date']) : '';
 
@@ -536,7 +536,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 "criteria[" . $this->id . "][to_date]",
                 $value,
                 $criteria_selector,
-                array(),
+                [],
                 false
             );
             $html .= '</div>';
@@ -673,7 +673,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
-        $errors = $this->has_errors ? array('has_error') : array();
+        $errors = $this->has_errors ? ['has_error'] : [];
 
         return $this->getFormatter()->fetchArtifactValue($value, $submitted_values, $errors);
     }
@@ -773,8 +773,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             "tracker_admin_field_" . $this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
-            array(),
-            array(),
+            [],
+            [],
             $this->isTimeDisplayed()
         );
     }
@@ -905,7 +905,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function explodeXlsDateFmt($date)
     {
         $user_preference = $this->_getUserCSVDateFormat();
-        $match           = array();
+        $match           = [];
 
         if (preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)(?::(\d+))?/", $date, $match)) {
             return $this->getCSVDateComponantsWithHours($match, $user_preference);
@@ -922,10 +922,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     private function getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second)
     {
         if (checkdate($month, $day, $year) && $this->_nbDigits($year) ===  4) {
-            return array($year, $month, $day, $hour, $minute, $second);
+            return [$year, $month, $day, $hour, $minute, $second];
         }
 
-        return array();
+        return [];
     }
 
     private function getCSVDateComponantsWithoutHours(array $match, $user_preference)
@@ -1062,7 +1062,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      */
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
-        $artifacts = array();
+        $artifacts = [];
         $dao = new Tracker_FormElement_Field_Value_DateDao();
         $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
         if ($dar && ! $dar->isError()) {

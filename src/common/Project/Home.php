@@ -75,10 +75,10 @@ class Home implements DispatchableWithRequest
             if ($request->isAjax() && ! $request->existAndNonEmpty('action')) {
                 header('Content-type: application/json');
                 echo json_encode(
-                    array(
+                    [
                         'id' => $group_id,
                         'name' => $project->getPublicName(),
-                    )
+                    ]
                 );
                 exit;
             }

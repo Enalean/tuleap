@@ -31,7 +31,7 @@ use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 
 $console    = new Log_ConsoleLogger();
 $logger     = \BackendLogger::getDefaultLogger(GitPlugin::LOG_IDENTIFIER);
-$broker_log = new BrokerLogger(array($logger, $console));
+$broker_log = new BrokerLogger([$logger, $console]);
 
 $detector = new VersionDetector();
 if (! $detector->isGitolite3()) {

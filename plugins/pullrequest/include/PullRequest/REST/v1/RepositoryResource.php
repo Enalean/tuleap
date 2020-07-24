@@ -83,7 +83,7 @@ class RepositoryResource
         $result     = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
         $total_size = (int) $this->pull_request_dao->foundRows();
 
-        $collection = array();
+        $collection = [];
         foreach ($result as $row) {
             $pull_request      = $this->pull_request_factory->getInstanceFromRow($row);
 

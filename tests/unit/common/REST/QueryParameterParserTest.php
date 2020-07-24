@@ -69,7 +69,7 @@ class QueryParameterParserTest extends TestCase
     {
         $result = $this->query_parser->getArrayOfInt('{"labels_id": [21, 74]}', 'labels_id');
 
-        $this->assertEquals(array(21, 74), $result);
+        $this->assertEquals([21, 74], $result);
     }
 
     public function testGetIntWithAnEmptyString()

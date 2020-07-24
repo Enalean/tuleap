@@ -168,17 +168,17 @@ class PluginFileInfo extends PluginInfo
     protected function getVariablesFromConfigurationFile($file)
     {
         if (! is_file($file)) {
-            return array();
+            return [];
         }
 
         $tokens = token_get_all(file_get_contents($file));
 
-        $variables = array();
+        $variables = [];
         $current   = 0;
         foreach ($tokens as $token) {
             switch ($token[0]) {
                 case T_VARIABLE:
-                    $variables[$current] = array('name' => substr($token[1], 1), 'value' => '');
+                    $variables[$current] = ['name' => substr($token[1], 1), 'value' => ''];
                     break;
                 case T_STRING:
                 case T_CONSTANT_ENCAPSED_STRING:

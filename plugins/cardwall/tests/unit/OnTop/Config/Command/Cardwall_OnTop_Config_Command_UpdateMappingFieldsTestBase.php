@@ -52,10 +52,10 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
         $this->element_factory->shouldReceive('getFieldById')->with(321)->andReturns($this->assignto_field);
         $this->element_factory->shouldReceive('getFieldById')->with(322)->andReturns($this->stage_field);
 
-        $existing_mappings = array(
-            42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, array(), array(), $this->status_field),
-            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($this->story_tracker, array(), array(), $this->stage_field),
-        );
+        $existing_mappings = [
+            42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, [], [], $this->status_field),
+            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($this->story_tracker, [], [], $this->stage_field),
+        ];
 
         $this->dao       = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);

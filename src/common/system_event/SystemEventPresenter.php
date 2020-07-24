@@ -27,14 +27,14 @@ class SystemEventPresenter
 {
     private static $NULL_DATE = '0000-00-00 00:00:00';
 
-    private static $BADGES_PER_STATUS = array(
+    private static $BADGES_PER_STATUS = [
         SystemEvent::STATUS_RUNNING => 'info',
         SystemEvent::STATUS_DONE    => 'success',
         SystemEvent::STATUS_WARNING => 'warning',
         SystemEvent::STATUS_ERROR   => 'danger',
         SystemEvent::STATUS_NONE    => 'secondary',
         SystemEvent::STATUS_NEW     => 'secondary'
-    );
+    ];
 
     public $id;
     public $full_type;

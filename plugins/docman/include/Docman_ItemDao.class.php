@@ -67,10 +67,10 @@ class Docman_ItemDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    public function searchById($id, $params = array())
+    public function searchById($id, $params = [])
     {
         $_id = (int) $id;
-        return $this->_searchWithCurrentVersion(' i.item_id = ' . $_id, '', '', array(), $params);
+        return $this->_searchWithCurrentVersion(' i.item_id = ' . $_id, '', '', [], $params);
     }
 
     public function searchByIdList($idList)
@@ -164,16 +164,16 @@ class Docman_ItemDao extends DataAccessObject
         $limit    = $this->da->escapeInt($limit);
         $offset   = $this->da->escapeInt($offset);
 
-        $params = array(
+        $params = [
             'limit'           => $limit,
             'offset'          => $offset,
             'ignore_deleted'  => true,
             'ignore_obselete' => true
-        );
+        ];
 
         $where = " i.group_id = $groupId AND i.delete_date IS NULL";
 
-        return $this->_searchWithCurrentVersion($where, '', '', array(), $params);
+        return $this->_searchWithCurrentVersion($where, '', '', [], $params);
     }
 
     /**
@@ -191,7 +191,7 @@ class Docman_ItemDao extends DataAccessObject
         // Order clause
         $sql_order = '';
 
-        $fromStmts = array();
+        $fromStmts = [];
 
         // Report
         if ($report !== null) {
@@ -249,7 +249,7 @@ class Docman_ItemDao extends DataAccessObject
 
     public function _getItemSearchSelectStmt()
     {
-        $sql = 'SELECT i.*, ' . implode(', ', array(
+        $sql = 'SELECT i.*, ' . implode(', ', [
                 'v.id as version_id',
                 'v.number as version_number',
                 'v.user_id as version_user_id',
@@ -267,7 +267,7 @@ class Docman_ItemDao extends DataAccessObject
                 'lv.changelog as link_version_changelog',
                 'lv.date      as link_version_date',
                 'lv.link_url  as link_version_link_url',
-            )) .
+            ]) .
             ', 1 as folder_nb_of_children ';
         return $sql;
     }
@@ -297,7 +297,7 @@ class Docman_ItemDao extends DataAccessObject
      * $params['ignore_deleted'] boolean By default the query *exclude* deleted items.
      * $params['ignore_obsolete'] boolean By default the query *include* obsolete items.
      */
-    public function _searchWithCurrentVersion($where, $group = '', $order = '', $from = array(), $params = array())
+    public function _searchWithCurrentVersion($where, $group = '', $order = '', $from = [], $params = [])
     {
         $sql = '';
         $sql .= $this->_getItemSearchSelectStmt();
@@ -343,7 +343,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function _getCommonItemFilters($table = 'i', $ignoreDeleted = true, $ignoreObsolete = true)
     {
-        $filters = array();
+        $filters = [];
         if ($ignoreDeleted) {
             $filters['del'] = $this->getExcludeDeletedItemsStmt($table);
         }
@@ -412,9 +412,9 @@ class Docman_ItemDao extends DataAccessObject
             $row['item_id'] = $item_id;
         }
 
-        $arg    = array();
-        $values = array();
-        $cols   = array('item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
+        $arg    = [];
+        $values = [];
+        $cols   = ['item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -458,7 +458,7 @@ class Docman_ItemDao extends DataAccessObject
         $wiki_page = null,
         $file_is_embedded = null
     ) {
-        $argArray = array();
+        $argArray = [];
 
         if ($parent_id !== null) {
             $argArray[] = 'parent_id=' . ((int) $parent_id);
@@ -537,7 +537,7 @@ class Docman_ItemDao extends DataAccessObject
         }
 
         if ($id) {
-            $set_array = array();
+            $set_array = [];
             foreach ($row as $key => $value) {
                 if ($key !== 'id') {
                     $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);
@@ -791,7 +791,7 @@ class Docman_ItemDao extends DataAccessObject
      * @param array $parentIds List of parent ids
      * @return DataAccessResult
      */
-    public function searchSubFolders($parentIds = array())
+    public function searchSubFolders($parentIds = [])
     {
         if (is_array($parentIds) && count($parentIds) > 0) {
             $sql = sprintf(
@@ -819,7 +819,7 @@ class Docman_ItemDao extends DataAccessObject
     public function searchChildren($parentIds, $params)
     {
         $where = " i.parent_id in (" . implode(',', $parentIds) . ")";
-        return $this->_searchWithCurrentVersion($where, '', '', array(), $params);
+        return $this->_searchWithCurrentVersion($where, '', '', [], $params);
     }
 
     /*
@@ -884,7 +884,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function getItemIdByWikiPageAndGroupId($wikipage, $group_id)
     {
-        $ids = array();
+        $ids = [];
         $sql = sprintf(
             'SELECT item_id' .
             ' FROM plugin_docman_item i' .
@@ -1002,7 +1002,7 @@ class Docman_ItemDao extends DataAccessObject
 
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
-                        $pendings = array();
+                        $pendings = [];
             foreach ($dar as $row) {
                 $pendings[] = $row;
             }
@@ -1013,9 +1013,9 @@ class Docman_ItemDao extends DataAccessObject
                 return [];
             }
             $row = $resNumrows->getRow();
-            return array('items' => $pendings, 'nbItems' => $row['nb']);
+            return ['items' => $pendings, 'nbItems' => $row['nb']];
         }
-        return array();
+        return [];
     }
 
     /**

@@ -34,7 +34,7 @@ class GetStateVisitorTest extends TestCase
         $node    = $this->givenANodeInAparent($root);
         $visitor = $this->givenAVisitor($root);
 
-        $this->assertNodeHasState($visitor, $node, array(self::STATE_LAST));
+        $this->assertNodeHasState($visitor, $node, [self::STATE_LAST]);
     }
 
     public function testTwoNodesOnSameHierarchyShouldHaveStatesNodeThenLast(): void
@@ -45,8 +45,8 @@ class GetStateVisitorTest extends TestCase
 
         $visitor = $this->givenAVisitor($root);
 
-        $this->assertNodeHasState($visitor, $node1, array(self::STATE_NODE));
-        $this->assertNodeHasState($visitor, $node2, array(self::STATE_LAST));
+        $this->assertNodeHasState($visitor, $node1, [self::STATE_NODE]);
+        $this->assertNodeHasState($visitor, $node2, [self::STATE_LAST]);
     }
 
     public function testDeeperHierarchyShouldReturnLastThenEmptyLast(): void
@@ -57,8 +57,8 @@ class GetStateVisitorTest extends TestCase
 
         $visitor = $this->givenAVisitor($root);
 
-        $this->assertNodeHasState($visitor, $node1, array(self::STATE_LAST));
-        $this->assertNodeHasState($visitor, $node2, array(self::STATE_BLANK, self::STATE_LAST));
+        $this->assertNodeHasState($visitor, $node1, [self::STATE_LAST]);
+        $this->assertNodeHasState($visitor, $node2, [self::STATE_BLANK, self::STATE_LAST]);
     }
 
     public function testComplexHierarchy(): void
@@ -79,10 +79,10 @@ class GetStateVisitorTest extends TestCase
 
         $visitor = $this->givenAVisitor($root);
 
-        $this->assertNodeHasState($visitor, $story_7, array(self::STATE_NODE));
-        $this->assertNodeHasState($visitor, $task_5, array(self::STATE_PIPE, self::STATE_LAST));
-        $this->assertNodeHasState($visitor, $risk_11, array(self::STATE_PIPE, self::STATE_BLANK, self::STATE_LAST));
-        $this->assertNodeHasState($visitor, $story_6, array(self::STATE_LAST));
+        $this->assertNodeHasState($visitor, $story_7, [self::STATE_NODE]);
+        $this->assertNodeHasState($visitor, $task_5, [self::STATE_PIPE, self::STATE_LAST]);
+        $this->assertNodeHasState($visitor, $risk_11, [self::STATE_PIPE, self::STATE_BLANK, self::STATE_LAST]);
+        $this->assertNodeHasState($visitor, $story_6, [self::STATE_LAST]);
     }
 
     private function givenAVisitor($node): TreeNode_GetStateVisitor

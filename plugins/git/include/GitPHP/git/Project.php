@@ -146,7 +146,7 @@ class Project
      *
      * @access protected
      */
-    protected $tags = array();
+    protected $tags = [];
 
     /**
      * heads
@@ -155,7 +155,7 @@ class Project
      *
      * @access protected
      */
-    protected $heads = array();
+    protected $heads = [];
 
     /**
      * readRefs
@@ -229,7 +229,7 @@ class Project
      *
      * @access protected
      */
-    protected $commitCache = array();
+    protected $commitCache = [];
 
 /* packfile internal variables {{{2*/
 
@@ -240,7 +240,7 @@ class Project
      *
      * @access protected
      */
-    protected $packs = array();
+    protected $packs = [];
 
     /**
      * packsRead
@@ -909,7 +909,7 @@ class Project
      */
     private function ListDir($dir) // @codingStandardsIgnoreLine
     {
-        $files = array();
+        $files = [];
         if ($dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
                 if (($file == '.') || ($file == '..')) {
@@ -962,7 +962,7 @@ class Project
     private function GetTagsRaw($count = 0) // @codingStandardsIgnoreLine
     {
         $tags = $this->tags;
-        usort($tags, array(Tag::class, 'CompareCreationEpoch'));
+        usort($tags, [Tag::class, 'CompareCreationEpoch']);
 
         if (($count > 0) && (count($tags) > $count)) {
             $tags = array_slice($tags, 0, $count);
@@ -1050,7 +1050,7 @@ class Project
     private function GetHeadsRaw($count = 0) // @codingStandardsIgnoreLine
     {
         $heads = $this->heads;
-        usort($heads, array(Head::class, 'CompareAge'));
+        usort($heads, [Head::class, 'CompareAge']);
 
         if (($count > 0) && (count($heads) > $count)) {
             $heads = array_slice($heads, 0, $count);
@@ -1159,9 +1159,9 @@ class Project
     {
         $total = $count + $skip;
 
-        $inc = array();
+        $inc = [];
         $num = 0;
-        $queue = array($this->GetCommit($hash));
+        $queue = [$this->GetCommit($hash)];
         while (($commit = array_shift($queue)) !== null) {
             $parents = $commit->GetParents();
             foreach ($parents as $parent) {
@@ -1178,8 +1178,8 @@ class Project
             }
         }
 
-        $queue = array($this->GetCommit($hash));
-        $log = array();
+        $queue = [$this->GetCommit($hash)];
+        $log = [];
         $num = 0;
         while (($commit = array_pop($queue)) !== null) {
             array_push($log, $commit);
@@ -1346,7 +1346,7 @@ class Project
             return;
         }
 
-        $args = array();
+        $args = [];
 
         $args[] = '--regexp-ignore-case';
         $args[] = '--grep=' . escapeshellarg($pattern);
@@ -1378,7 +1378,7 @@ class Project
             return;
         }
 
-        $args = array();
+        $args = [];
 
         $args[] = '--regexp-ignore-case';
         $args[] = '--author=' . escapeshellarg($pattern);
@@ -1410,7 +1410,7 @@ class Project
             return;
         }
 
-        $args = array();
+        $args = [];
 
         $args[] = '--regexp-ignore-case';
         $args[] = '--committer=' . escapeshellarg($pattern);

@@ -37,7 +37,7 @@ $group_id = $request->getValidated('group_id', 'GroupId', 0);
 
 $ugroup_delete_token = new CSRFSynchronizerToken('/project/admin/ugroup.php');
 
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 if ($request->existAndNonEmpty('func')) {
     $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
@@ -96,4 +96,4 @@ TemplateRendererFactory::build()
         $presenter_builder->build($project, $ugroup_delete_token, $synchronized_membership_token)
     );
 
-project_admin_footer(array());
+project_admin_footer([]);

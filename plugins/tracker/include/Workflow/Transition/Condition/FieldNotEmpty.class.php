@@ -27,7 +27,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     public $identifier = 'notempty';
 
     /** @var Tracker_FormElement_Field[] */
-    private $fields = array();
+    private $fields = [];
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
     private $dao;
@@ -71,7 +71,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     public function getFieldIds()
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->fields as $field) {
             $ids[] = $field->getId();
         }

@@ -23,7 +23,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
 {
 
     /** @var array of Workflow_Transition_Condition */
-    private $conditions = array();
+    private $conditions = [];
 
     // {{{ ArrayAccess
     public function offsetSet($offset, $value)

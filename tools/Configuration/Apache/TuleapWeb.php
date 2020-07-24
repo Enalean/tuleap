@@ -56,14 +56,14 @@ class TuleapWeb
         $httpd_conf = file_get_contents($this->httpd_conf_path . '/conf/httpd.conf');
 
         $conf = preg_replace(
-            array(
+            [
                 '/^Include conf\/ssl\.conf$/m',
                 '/^Listen .*$/m',
-            ),
-            array(
+            ],
+            [
                 '#Include conf/ssl.conf',
                 'Listen 127.0.0.1:8080',
-            ),
+            ],
             $httpd_conf
         );
 
@@ -116,14 +116,14 @@ class TuleapWeb
     private function turnHttpVhostOn8080($content)
     {
         return preg_replace(
-            array(
+            [
                 '/^NameVirtualHost .*:80$/m',
                 '/^<VirtualHost .*:80>/m',
-            ),
-            array(
+            ],
+            [
                 'NameVirtualHost 127.0.0.1:8080',
                 '<VirtualHost 127.0.0.1:8080>',
-            ),
+            ],
             $content
         );
     }

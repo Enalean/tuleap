@@ -71,7 +71,7 @@ class CrossTrackerReport
      */
     public function getProjects()
     {
-        $projects = array();
+        $projects = [];
         foreach ($this->getTrackers() as $tracker) {
             $project = $tracker->getProject();
             $projects[$project->getID()] = $project;
@@ -120,12 +120,12 @@ class CrossTrackerReport
      */
     public function getColumnFields()
     {
-        $fields = array();
+        $fields = [];
         foreach ($this->getTrackers() as $tracker) {
             $title_field       = $tracker->getTitleField();
             $status_field      = $tracker->getStatusField();
             $assigned_to_field = $tracker->getContributorField();
-            foreach (array($title_field, $status_field, $assigned_to_field) as $field) {
+            foreach ([$title_field, $status_field, $assigned_to_field] as $field) {
                 if ($field !== null) {
                     $fields[$field->getId()] = $field;
                 }
@@ -139,7 +139,7 @@ class CrossTrackerReport
      */
     public function getSearchFields()
     {
-        $fields = array();
+        $fields = [];
         foreach ($this->getTrackers() as $tracker) {
             $field = $tracker->getStatusField();
             if ($field !== null) {

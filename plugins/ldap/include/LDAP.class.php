@@ -308,7 +308,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    public function search($baseDn, $filter, $scope = self::SCOPE_SUBTREE, $attributes = array(), $attrsOnly = 0, $sizeLimit = 0, $timeLimit = 0, $deref = LDAP_DEREF_NEVER)
+    public function search($baseDn, $filter, $scope = self::SCOPE_SUBTREE, $attributes = [], $attrsOnly = 0, $sizeLimit = 0, $timeLimit = 0, $deref = LDAP_DEREF_NEVER)
     {
         $this->trapErrors();
 
@@ -347,13 +347,13 @@ class LDAP
 
     public function getDefaultAttributes()
     {
-        return array(
+        return [
             $this->ldapParams['mail'],
             $this->ldapParams['cn'],
             $this->ldapParams['uid'],
             $this->ldapParams['eduid'],
             'dn'
-        );
+        ];
     }
 
     /**
@@ -364,7 +364,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    public function searchDn($dn, $attributes = array())
+    public function searchDn($dn, $attributes = [])
     {
         $attributes = count($attributes) > 0 ? $attributes : $this->getDefaultAttributes();
         return $this->search($dn, 'objectClass=*', self::SCOPE_BASE, $attributes);
@@ -379,7 +379,7 @@ class LDAP
      *
      * @return LDAPResultIterator|false
      */
-    public function searchLogin($name, $attributes = array())
+    public function searchLogin($name, $attributes = [])
     {
         if (! $attributes) {
             $attributes = $this->getDefaultAttributes();
@@ -459,7 +459,7 @@ class LDAP
      */
     public function searchGroupMembers($groupDn)
     {
-        return $this->search($groupDn, 'objectClass=*', self::SCOPE_SUBTREE, array($this->ldapParams['grp_member']));
+        return $this->search($groupDn, 'objectClass=*', self::SCOPE_SUBTREE, [$this->ldapParams['grp_member']]);
     }
 
     /**
@@ -492,7 +492,7 @@ class LDAP
             if (isset($this->ldapParams['tooltip_search_attrs'])) {
                 $attrs = explode(';', $this->ldapParams['tooltip_search_attrs']);
             } else {
-                $attrs  = array($this->ldapParams['cn'], $this->ldapParams['uid']);
+                $attrs  = [$this->ldapParams['cn'], $this->ldapParams['uid']];
             }
 
             if (! in_array($this->ldapParams['eduid'], $attrs)) {
@@ -556,9 +556,9 @@ class LDAP
                 $filter = '(' . $this->ldapParams['grp_cn'] . '=*' . $name . '*)';
             }
             if (isset($this->ldapParams['grp_display_name'])) {
-                $attrs = array($this->ldapParams['grp_cn'], $this->ldapParams['grp_display_name']);
+                $attrs = [$this->ldapParams['grp_cn'], $this->ldapParams['grp_display_name']];
             } else {
-                $attrs = array($this->ldapParams['grp_cn']);
+                $attrs = [$this->ldapParams['grp_cn']];
             }
             // We want types and values
             $attrsOnly = 0;
@@ -568,7 +568,7 @@ class LDAP
             $lri = $this->search($this->ldapParams['grp_dn'], $filter, $this->getSearchGroupScope(), $attrs, $attrsOnly, $sizeLimit);
         }
         if ($lri === false) {
-            return new LDAPResultIterator(array(), array());
+            return new LDAPResultIterator([], []);
         } else {
             return $lri;
         }

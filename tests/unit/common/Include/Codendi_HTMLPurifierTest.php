@@ -98,14 +98,14 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
     {
         $p = $this->getHTMLPurifier();
 
-        $vRef = array('<script>alert(1);</script>',
+        $vRef = ['<script>alert(1);</script>',
                       'toto',
                       '<h1>title</h1>',
-                      '<b>bold</b>');
-        $vExpect = array('&lt;script&gt;alert(1);&lt;/script&gt;',
+                      '<b>bold</b>'];
+        $vExpect = ['&lt;script&gt;alert(1);&lt;/script&gt;',
                          'toto',
                          '&lt;h1&gt;title&lt;/h1&gt;',
-                         '&lt;b&gt;bold&lt;/b&gt;');
+                         '&lt;b&gt;bold&lt;/b&gt;'];
         $this->assertSame($vExpect, $p->purifyMap($vRef));
     }
 

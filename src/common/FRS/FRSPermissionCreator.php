@@ -58,7 +58,7 @@ class FRSPermissionCreator
 
         $this->permission_dao->savePermissions($project->getId(), $permission_type, $normalized_ugroup_ids);
 
-        $this->project_history_dao->groupAddHistory('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), array($permission_type));
+        $this->project_history_dao->groupAddHistory('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), [$permission_type]);
 
         $override_collection->emitFeedback("");
     }
@@ -71,10 +71,10 @@ class FRSPermissionCreator
     private function getUGroupNames(array $ugroup_ids)
     {
         if (! $ugroup_ids) {
-            return array();
+            return [];
         }
 
-        $ugroup_name = array();
+        $ugroup_name = [];
         $ugroups     = $this->ugroup_dao->searchByListOfUGroupsId($ugroup_ids);
 
         foreach ($ugroups as $ugroup) {

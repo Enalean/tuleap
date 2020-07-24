@@ -47,7 +47,7 @@ class UserLogBuilder
         list($timelogs, $total_count) = $this->getLogsByHour($date['start_date'], $date['end_date'], $offset, $count);
         $logs = $this->groupLogsByTimestamp($timelogs);
 
-        return array($logs, $total_count);
+        return [$logs, $total_count];
     }
 
     private function buildDates($selected_day)
@@ -65,21 +65,21 @@ class UserLogBuilder
         $start = mktime(0, 0, 0, $month, $day, $year);
         $end   = mktime(23, 59, 59, $month, $day, $year);
 
-        return array(
+        return [
             'start_date' => $start,
             'end_date'   => $end
-        );
+        ];
     }
 
     private function groupLogsByTimestamp(array $timelogs)
     {
-        $enhanced_logs = array();
+        $enhanced_logs = [];
         foreach ($timelogs as $hour => $logs) {
             $timestamp_day   = $logs[0]['timestamp'];
-            $enhanced_logs[] = array(
+            $enhanced_logs[] = [
                 'hour'     => $this->getLabelForDate($timestamp_day),
                 'timelogs' => $logs
-            );
+            ];
         }
 
         return $enhanced_logs;
@@ -91,13 +91,13 @@ class UserLogBuilder
         $GLOBALS['Language']->getText(
             'plugin_userlog',
             'label_between',
-            array(date('H', $timestamp), (date('H', $timestamp) + 1))
+            [date('H', $timestamp), (date('H', $timestamp) + 1)]
         );
     }
 
     private function getLogsByHour($start, $end, $offset, $count)
     {
-        $timelogs = array();
+        $timelogs = [];
         $last_uri = '';
 
         $logs        = $this->log_dao->search($start, $end, $offset, $count);
@@ -113,14 +113,14 @@ class UserLogBuilder
             $last_uri = $log['http_request_uri'];
         }
 
-        return array($timelogs, $total_count);
+        return [$timelogs, $total_count];
     }
 
     private function enhanceLogsWithFullValues(array $log)
     {
         $user = $this->user_manager->getUserById($log['user_id']);
 
-        return array(
+        return [
             'date'                => date('Y-m-d H:i:s', $log['time']),
             'timestamp'           => $log['time'],
             'hour'                => date('H:i:s', $log['time']),
@@ -130,12 +130,12 @@ class UserLogBuilder
             'http_request_uri'    => $log['http_request_uri'],
             'http_remote_addr'    => $log['http_remote_addr'],
             'http_referrer'       => $log['http_referer']
-        );
+        ];
     }
 
     private function enhanceLogsWithShortValues(array $log)
     {
-        return array(
+        return [
             'timestamp'           => $log['time'],
             'hour'                => date('H:i:s', $log['time']),
             'group_id'            => '-',
@@ -144,12 +144,12 @@ class UserLogBuilder
             'http_request_uri'    => '-',
             'http_remote_addr'    => '-',
             'http_referrer'       => '-'
-        );
+        ];
     }
 
     public function buildExportLogs($day)
     {
-        $timelogs = array();
+        $timelogs = [];
         $date     = $this->buildDates($day);
         $logs     = $this->log_dao->getLogsForDay($date['start_date'], $date['end_date']);
 

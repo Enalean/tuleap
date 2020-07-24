@@ -21,11 +21,11 @@
 
 session_write_close();
 
-$sparklines = array();
+$sparklines = [];
 $reference_manager = ReferenceManager::instance();
 $project_manager   = ProjectManager::instance();
 
-$json = array();
+$json = [];
 
 $sparkline_urls = $request->get('sparklines');
 if (is_array($sparkline_urls)) {
@@ -79,13 +79,13 @@ if (is_array($sparkline_urls)) {
                         $event_manager = EventManager::instance();
                         $event_manager->processEvent(
                             Event::AJAX_REFERENCE_SPARKLINE,
-                            array(
+                            [
                             'reference' => $ref,
                             'keyword'  => $key,
                             'group_id' => $group_id,
                             'val'      => $val,
                             'sparkline' => &$res_sparkline
-                            )
+                            ]
                         );
                         if ($res_sparkline) {
                             $json[$url] = $res_sparkline;

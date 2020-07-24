@@ -144,7 +144,7 @@ class Docman_WikiController extends Docman_Controller
                 null
             );
 
-            $event_manager->processEvent('plugin_docman_event_wikipage_update', array(
+            $event_manager->processEvent('plugin_docman_event_wikipage_update', [
                     'group_id'       => $group_id,
                     'item'           => $document,
                     'user'           => $user,
@@ -152,9 +152,9 @@ class Docman_WikiController extends Docman_Controller
                     'wiki_page'      => $wiki_page_name,
                     'old_value'      => $version,
                     'new_value'      => $version + 1
-                ));
+                ]);
         }
-        $event_manager->processEvent('send_notifications', array());
+        $event_manager->processEvent('send_notifications', []);
     }
 
     public function getPermsLabelForWiki()
@@ -257,7 +257,7 @@ class Docman_WikiController extends Docman_Controller
                 }
             }
                 ';
-        $docman_references->pushContent(HTML::script(array('type' => 'text/javascript'), $js_code));
+        $docman_references->pushContent(HTML::script(['type' => 'text/javascript'], $js_code));
 
         if ($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
             $docman_item_id = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
@@ -266,13 +266,13 @@ class Docman_WikiController extends Docman_Controller
             }
             if (isset($docman_item_id) && $docman_item_id) {
                 $content = HTML();
-                $script  = HTML::script(array('type' => 'text/javascript'), "toggle_documents('documents');");
+                $script  = HTML::script(['type' => 'text/javascript'], "toggle_documents('documents');");
                 $user    = $this->getUser();
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')));
-                    $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
+                    $icon = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')]);
+                    $linked_icon = HTML::a(['href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
 
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
@@ -290,7 +290,7 @@ class Docman_WikiController extends Docman_Controller
 
                     //create Full legend of the section
                     $legend = HTML::legend(
-                        array('class' => 'docman_md_frame'),
+                        ['class' => 'docman_md_frame'],
                         count($docman_item_id) > 1 ? $linked_icon : "",
                         $title,
                         isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : ""
@@ -309,7 +309,7 @@ class Docman_WikiController extends Docman_Controller
                     foreach ($docman_item_id as $index => $value) {
                         $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
                     }
-                    $content->pushContent(HTML::div(array('id' => 'documents'), $details));
+                    $content->pushContent(HTML::div(['id' => 'documents'], $details));
 
                     if (count($docman_item_id) == 1) {
                         $id = array_pop($docman_item_id);
@@ -318,7 +318,7 @@ class Docman_WikiController extends Docman_Controller
                         $docman_references->pushContent(HTML::br());
                     } else {
                         $docman_references->pushContent(HTML::br());
-                        $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
+                        $docman_references->pushContent(HTML::fieldset(['class' => 'docman_md_frame'], $legend, $content, $script));
                     }
                 } else {
                     if ($dpm->userCanAccess($user, $docman_item_id)) {
@@ -374,7 +374,7 @@ class Docman_WikiController extends Docman_Controller
 
     public function showReferrerPath($referrer_id, $group_id)
     {
-        $parents      = array();
+        $parents      = [];
         $html         = HTML();
         $item_factory = $this->getItemFactory();
         $item         = $item_factory->getItemFromDb($referrer_id);
@@ -382,25 +382,25 @@ class Docman_WikiController extends Docman_Controller
 
         while ($item->getParentId() != 0) {
             $item = $item_factory->getItemFromDb($item->getParentId());
-            $parents[] = array(
+            $parents[] = [
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
-            );
+            ];
         }
 
         $parents = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
 
         foreach ($parents as $parent) {
-            $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'), HTML::strong($parent['title'])));
+            $html->pushContent(HTML::a(['href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'], HTML::strong($parent['title'])));
             $html->pushContent(' / ');
         }
 
         $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $referrer_id;
 
-        $pen_icon = HTML::a(array('href' => $md_uri), HTML::img(array('src' => util_get_image_theme("ic/edit.png"))));
+        $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme("ic/edit.png")]));
 
-        $html->pushContent(HTML::a(array('href' => $item_url . $reference->getId()), HTML::strong($reference->getTitle())));
+        $html->pushContent(HTML::a(['href' => $item_url . $reference->getId()], HTML::strong($reference->getTitle())));
         $html->pushContent($pen_icon);
 
         return $html;
@@ -408,7 +408,7 @@ class Docman_WikiController extends Docman_Controller
 
     public function getDocumentPath($id, $group_id, $referrer_id = null)
     {
-        $parents      = array();
+        $parents      = [];
         $html         = HTML();
         $item_factory = $this->getItemFactory();
         $item         = $item_factory->getItemFromDb($id);
@@ -416,24 +416,24 @@ class Docman_WikiController extends Docman_Controller
         if ($reference && $referrer_id != $id) {
             while ($item && $item->getParentId() != 0) {
                 $item = $item_factory->getItemFromDb($item->getParentId());
-                $parents[] = array(
+                $parents[] = [
                     'id'    => $item->getId(),
                     'title' => $item->getTitle()
-                );
+                ];
             }
             $parents = array_reverse($parents);
             $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
             foreach ($parents as $parent) {
-                $html->pushContent(HTML::a(array('href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'), HTML::strong($parent['title'])));
+                $html->pushContent(HTML::a(['href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'], HTML::strong($parent['title'])));
                 $html->pushContent(' / ');
             }
 
             $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $id;
 
             //Add a pen icon linked to document properties.
-            $pen_icon = HTML::a(array('href' => $md_uri), HTML::img(array('src' => util_get_image_theme("ic/edit.png"))));
+            $pen_icon = HTML::a(['href' => $md_uri], HTML::img(['src' => util_get_image_theme("ic/edit.png")]));
 
-            $html->pushContent(HTML::a(array('href' => $item_url . $reference->getId()), HTML::strong($reference->getTitle())));
+            $html->pushContent(HTML::a(['href' => $item_url . $reference->getId()], HTML::strong($reference->getTitle())));
             $html->pushContent($pen_icon);
             $html->pushContent(HTML::br());
         }

@@ -136,7 +136,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
     public function testInternalCachingById(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
-        $dar = TestHelper::arrayToDar(array('user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123));
+        $dar = TestHelper::arrayToDar(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
         $dao->shouldReceive('searchByUserId')->andReturns($dar);
 
         $dao->shouldReceive('searchByUserName')->never();
@@ -161,7 +161,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
     public function testInternalCachingByUserName(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
-        $dar = TestHelper::arrayToDar(array('user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123));
+        $dar = TestHelper::arrayToDar(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
         $dao->shouldReceive('searchByUserName')->andReturns($dar);
 
         $dao->shouldReceive('searchByUserId')->never();

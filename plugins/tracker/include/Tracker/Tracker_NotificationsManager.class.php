@@ -352,7 +352,7 @@ class Tracker_NotificationsManager
      */
     public function getGlobalNotifications()
     {
-        $notifs = array();
+        $notifs = [];
         foreach ($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
             $notifs[$row['id']] = new Tracker_GlobalNotification(
                 $row['id'],
@@ -392,7 +392,7 @@ class Tracker_NotificationsManager
     private function notificationAddUsers($notification_id, RequestFromAutocompleter $autocompleter)
     {
         $users           = $autocompleter->getUsers();
-        $users_not_added = array();
+        $users_not_added = [];
         $user_ids        = [];
         foreach ($users as $user) {
             $user_ids[] = $user->getId();
@@ -421,7 +421,7 @@ class Tracker_NotificationsManager
     private function notificationAddUgroups($notification_id, RequestFromAutocompleter $autocompleter)
     {
         $ugroups           = $autocompleter->getUgroups();
-        $ugroups_not_added = array();
+        $ugroups_not_added = [];
         foreach ($ugroups as $ugroup) {
             if (! $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId())) {
                 $ugroups_not_added[] = $ugroup->getTranslatedName();
@@ -459,12 +459,12 @@ class Tracker_NotificationsManager
      */
     public function getAllAddresses($update = false)
     {
-        $addresses = array();
+        $addresses = [];
         $notifs = $this->getGlobalNotifications();
         foreach ($notifs as $key => $nop) {
             if (! $update || $notifs[$key]->isAllUpdates()) {
                 foreach (preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {
-                    $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
+                    $addresses[] = ['address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions()];
                 }
             }
         }

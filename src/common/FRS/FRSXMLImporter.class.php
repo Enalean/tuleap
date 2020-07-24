@@ -134,7 +134,7 @@ class FRSXMLImporter
 
         $this->importRights($project, $xml_frs);
 
-        $created_id_map = array( 'package' => array() );
+        $created_id_map = ['package' => []];
         foreach ($xml_frs->package as $xml_pkg) {
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
@@ -143,14 +143,14 @@ class FRSXMLImporter
 
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
-            array(
+            [
                 'logger'          => $this->logger,
                 'created_refs'    => $created_id_map,
                 'service_name'    => 'frs',
                 'xml_content'     => $xml->frs->references,
                 'project'         => $project,
                 'configuration'   => $configuration,
-            )
+            ]
         );
 
         $this->logger->debug("Import completed");
@@ -180,7 +180,7 @@ class FRSXMLImporter
 
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
     {
-        $ugroup_ids = array();
+        $ugroup_ids = [];
         foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string) $ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
@@ -214,7 +214,7 @@ class FRSXMLImporter
         $package->setPackageID($this->package_factory->create($package->toArray()));
 
         $this->logger->debug('Start import of package ' . $package->getName());
-        $read_perms = array();
+        $read_perms = [];
         foreach ($xml_pkg->{'read-access'} as $perm) {
             $ugroup_name = (string) $perm->ugroup;
             $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
@@ -271,7 +271,7 @@ class FRSXMLImporter
             $frs_release_mapping[$created_release_id] = (string) $attrs['artifact_id'];
         }
 
-        $read_perms = array();
+        $read_perms = [];
         foreach ($xml_rel->{'read-access'} as $perm) {
             $ugroup_name = (string) $perm->ugroup;
             $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
@@ -381,12 +381,12 @@ class FRSXMLImporter
 
         $user = empty($xml_link->user) ? $user : $this->user_finder->getUser($xml_link->user);
 
-        $release_links = array(
-            array(
+        $release_links = [
+            [
                 'link' => (string) $attrs['url'],
                 'name' => (string) $attrs['name']
-            )
-        );
+            ]
+        ];
 
         $this->links_updater->update($release_links, $user, $release, strtotime((string) $attrs['release-time']));
     }

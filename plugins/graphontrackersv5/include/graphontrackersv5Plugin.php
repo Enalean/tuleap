@@ -78,7 +78,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         }
-        $this->allowedForProject = array();
+        $this->allowedForProject = [];
     }
 
     /**
@@ -86,7 +86,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
 
@@ -119,7 +119,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             }
             $f = GraphOnTrackersV5_ChartFactory::instance();
             if (isset($params['row']['charts']) && isset($params['row']['mapping'])) {
-                $charts = array();
+                $charts = [];
                 foreach ($params['row']['charts']->chart as $chart) {
                     $charts[] = $f->getInstanceFromXML($chart, $params['instance'], $params['row']['mapping'], $params['store_in_session']);
                 }
@@ -238,7 +238,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array('my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart'));
+        $this->removeOrphanWidgets(['my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart']);
     }
 
 
@@ -288,37 +288,37 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         require_once('data-access/GraphOnTrackersV5_Chart_Gantt.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Burndown.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_CumulativeFlow.class.php');
-        $params['factories']['pie'] = array(
+        $params['factories']['pie'] = [
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'pie'),
-        );
-        $params['factories']['bar'] = array(
+        ];
+        $params['factories']['bar'] = [
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'bar'),
-        );
-        $params['factories']['gantt'] = array(
+        ];
+        $params['factories']['gantt'] = [
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'gantt'),
-        );
-        $params['factories']['burndown'] = array(
+        ];
+        $params['factories']['burndown'] = [
             //The type of the chart
             'chart_type'      => 'burndown',
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_Burndown',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burndown'),
-        );
-        $params['factories']['cumulative_flow'] = array(
+        ];
+        $params['factories']['cumulative_flow'] = [
             //The type of the chart
             'chart_type'      => 'cumulative_flow',
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'cumulative_flow'),
-        );
+        ];
     }
 
     /**

@@ -52,7 +52,7 @@ $csrf_token      = new CSRFSynchronizerToken('/admin/approve-pending.php');
 // group public choice
 if ($action == 'activate') {
     $csrf_token->check();
-    $groups = array();
+    $groups = [];
     if ($request->exist('list_of_groups')) {
         $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
     }
@@ -73,7 +73,7 @@ if ($action == 'activate') {
         // Do nothing
     }
 
-    $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));
+    $event_manager->processEvent('project_is_deleted', ['group_id' => $group_id]);
     $GLOBALS['Response']->redirect('/admin/approve-pending.php');
 }
 

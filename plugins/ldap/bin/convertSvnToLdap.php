@@ -20,7 +20,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
  */
 function extract_params($argv)
 {
-    $arguments = array();
+    $arguments = [];
     for ($i = 1; $i < count($argv); ++$i) {
         $arg = $argv[$i];
         // If arg start by "--" this is the beginning of a new option
@@ -101,7 +101,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         $users = $matches[2];
 
                         $uarray = array_map('trim', explode(",", strtolower($users)));
-                        $ldapLogins = array();
+                        $ldapLogins = [];
                         foreach ($uarray as $user) {
                             if (strpos($user, '@') === 0) {
                                 $ldapLogins[] = $user;

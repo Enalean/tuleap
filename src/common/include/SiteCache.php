@@ -128,7 +128,7 @@ class SiteCache
             $language_cache_directory,
             ForgeConfig::getApplicationUserLogin(),
             ForgeConfig::getApplicationUserLogin(),
-            array('php')
+            ['php']
         );
 
         \Tuleap\Request\FrontRouter::restoreOwnership($this->logger, $backend);

@@ -37,11 +37,11 @@ class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand
     {
         $milestone = $this->findNearestMilestoneWithBacklogTracker($parent_tracker, $source_artifact, $user);
         if ($milestone) {
-            $linked_artifacts = array();
+            $linked_artifacts = [];
             foreach ($milestone->getPlannedArtifacts($user)->getChildren() as $child) {
                 $linked_artifacts[] = $child->getObject();
             }
-            array_walk($linked_artifacts, array($this, 'keepOnlyArtifactsBelongingToParentTracker'), $parent_tracker);
+            array_walk($linked_artifacts, [$this, 'keepOnlyArtifactsBelongingToParentTracker'], $parent_tracker);
             return array_values(array_filter($linked_artifacts));
         }
     }

@@ -136,7 +136,7 @@ class FRSPackageFactory
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByGroupId($_id);
 
-        $packages = array();
+        $packages = [];
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $data_array) {
                 $packages[] = $this->getFRSPackageFromArray($data_array);
@@ -167,7 +167,7 @@ class FRSPackageFactory
      */
     private function instantiateActivePackagesForUserFromDar($group_id, PFUser $user, LegacyDataAccessResultInterface $dar)
     {
-        $packages = array();
+        $packages = [];
         if ($dar && ! $dar->isError()) {
             $frsrf = new FRSReleaseFactory();
 
@@ -240,8 +240,8 @@ class FRSPackageFactory
         if ($dao->updateFromArray($data)) {
             $this->getEventManager()->processEvent(
                 'frs_update_package',
-                array('group_id' => $data['group_id'],
-                'item_id'    => $data['package_id'])
+                ['group_id' => $data['group_id'],
+                'item_id'    => $data['package_id']]
             );
             return true;
         }
@@ -264,8 +264,8 @@ class FRSPackageFactory
             $this->setDefaultPermissions($package);
             $this->getEventManager()->processEvent(
                 'frs_create_package',
-                array('group_id' => $data_array['group_id'],
-                'item_id' => $id)
+                ['group_id' => $data_array['group_id'],
+                'item_id' => $id]
             );
         }
         return $id;
@@ -295,8 +295,8 @@ class FRSPackageFactory
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_package',
-                array('group_id' => $package->getGroupID(),
-                'item_id'    => $_id)
+                ['group_id' => $package->getGroupID(),
+                'item_id'    => $_id]
             );
             return true;
         }
@@ -404,7 +404,7 @@ class FRSPackageFactory
     {
         $global_permission_manager = $this->getPermissionsManager();
 
-        $user_groups = $user->getUgroups($project_id, array());
+        $user_groups = $user->getUgroups($project_id, []);
 
         return $global_permission_manager->userHasPermission($package_id, FRSPackage::PERM_READ, $user_groups)
             || ! $global_permission_manager->isPermissionExist($package_id, FRSPackage::PERM_READ);

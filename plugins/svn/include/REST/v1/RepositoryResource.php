@@ -674,7 +674,7 @@ class RepositoryResource extends AuthenticatedResource
         try {
             $repository_settings       = $this->getPOSTSettings($repository_to_create, $settings);
             $has_initial_layout        = $settings !== null && $settings->layout !== null;
-            $initial_repository_layout = $has_initial_layout ? $settings->layout : array();
+            $initial_repository_layout = $has_initial_layout ? $settings->layout : [];
 
             $copy_from_core = false;
             $this->repository_creator->createWithSettings(
@@ -735,7 +735,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function extractSettingsFromRepresentation(Repository $repository, ?SettingsRepresentationInterface $settings = null)
     {
-        $commit_rules = array();
+        $commit_rules = [];
         if ($settings && $settings->commit_rules) {
             $commit_rules = $settings->commit_rules->toArray();
         }
@@ -753,10 +753,10 @@ class RepositoryResource extends AuthenticatedResource
             $access_file = $settings->access_file;
         }
 
-        $mail_notification = array();
+        $mail_notification = [];
         if ($settings && $settings->email_notifications) {
             foreach ($settings->email_notifications as $notification) {
-                $users_notification = array();
+                $users_notification = [];
                 if ($notification->users) {
                     foreach ($notification->users as $user_id) {
                         $user = $this->user_manager->getUserById($user_id);
@@ -767,7 +767,7 @@ class RepositoryResource extends AuthenticatedResource
                     }
                 }
 
-                $user_groups_notification = array();
+                $user_groups_notification = [];
                 if ($notification->user_groups) {
                     foreach ($notification->user_groups as $group_id) {
                         $group = $this->user_group_id_retriever->getExistingUserGroup($group_id);
@@ -801,7 +801,7 @@ class RepositoryResource extends AuthenticatedResource
             }
         }
 
-        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification, array(), 1, false);
+        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification, [], 1, false);
     }
 
     private function isAnAuthorizedDynamicUgroup(ProjectUGroup $group)

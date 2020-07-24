@@ -166,7 +166,7 @@ class Router
             $controller,
             'misconfiguration',
             $request,
-            array($request)
+            [$request]
         );
     }
 
@@ -195,7 +195,7 @@ class Router
         $controller,
         $action_name,
         Codendi_Request $request,
-        array $args = array()
+        array $args = []
     ): void {
         $content = $this->executeAction($controller, $action_name, $args);
 
@@ -217,9 +217,9 @@ class Router
     private function executeAction(
         $controller,
         $action_name,
-        array $args = array()
+        array $args = []
     ) {
-        return call_user_func_array(array($controller, $action_name), $args);
+        return call_user_func_array([$controller, $action_name], $args);
     }
 
     /**
@@ -234,14 +234,14 @@ class Router
      */
     private function getHeaderTitle($action_name)
     {
-        $header_title = array(
+        $header_title = [
             'index' => dgettext('tuleap-testmanagement', 'Test Management'),
             'admin' => $GLOBALS['Language']->getText('global', 'Admin'),
             'misconfiguration' => dgettext(
                 'tuleap-testmanagement',
                 'Configuration incomplete'
             )
-        );
+        ];
 
         return $header_title[$action_name];
     }
@@ -291,19 +291,19 @@ class Router
         }
 
         $project     = $request->getProject();
-        $toolbar     = array();
+        $toolbar     = [];
         $breadcrumbs = $controller->getBreadcrumbs();
         if ($this->userIsAdmin($request)) {
-            $toolbar[] = array(
+            $toolbar[] = [
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(array(
+                'url'   => TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
                     'group_id' => $request->get('group_id'),
                     'action'   => 'admin',
-                ))
-            );
+                ])
+            ];
         }
 
-        $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, array('body_class' => array('testmanagement')));
+        $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, ['body_class' => ['testmanagement']]);
     }
 
     private function userIsAdmin(Codendi_Request $request): bool

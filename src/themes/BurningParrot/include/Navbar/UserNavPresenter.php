@@ -119,7 +119,7 @@ class UserNavPresenter
 
     public function user_nav_items() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return array(
+        return [
             new MenuItemPresenter(
                 $GLOBALS['Language']->getText('my_index', 'account_maintenance'),
                 '/account/',
@@ -127,7 +127,7 @@ class UserNavPresenter
                 'only-icon',
                 []
             )
-        );
+        ];
     }
 
     public function logout_menu_item() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

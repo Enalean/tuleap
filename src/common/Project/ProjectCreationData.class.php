@@ -174,7 +174,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function fromForm(TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
     {
-        $project = isset($data['project']) ? $data['project'] : array();
+        $project = isset($data['project']) ? $data['project'] : [];
 
         $this->unix_name           = isset($project['form_unix_name'])         ? $project['form_unix_name']         : null;
         $this->full_name           = isset($project['form_full_name'])         ? $project['form_full_name']         : null;
@@ -183,7 +183,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
         $this->setAccessFromProjectData($project);
         $this->trove_data          = isset($project['trove']) ? $project['trove'] : [];
-        $this->data_services       = isset($project['services'])               ? $project['services']               : array();
+        $this->data_services       = isset($project['services'])               ? $project['services']               : [];
         $this->data_fields         = $project;
     }
 
@@ -267,11 +267,11 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->short_description   = (string) $attrs['description'];
         $this->built_from_template = TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate();
         $this->is_test       = (bool) false;
-        $this->trove_data    = array();
-        $this->data_services = array();
-        $this->data_fields   = array(
+        $this->trove_data    = [];
+        $this->data_services = [];
+        $this->data_fields   = [
             'form_101' => (string) $xml->$long_description_tagname
-        );
+        ];
         $this->is_built_from_xml = true;
 
         switch ($attrs['access']) {

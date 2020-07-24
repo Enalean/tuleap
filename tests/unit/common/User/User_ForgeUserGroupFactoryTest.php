@@ -52,23 +52,23 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsArrayOfUserGroups(): void
     {
-        $data = array(
-            array(
+        $data = [
+            [
                 'ugroup_id'     => 10,
                 'name'          => 'thom thumbs',
                 'description'   => 'whatever',
-            ),
-            array(
+            ],
+            [
                 'ugroup_id'     => 12,
                 'name'          => 'wild rover',
                 'description'   => 'whatttttt',
-            ),
-            array(
+            ],
+            [
                 'ugroup_id'     => 15,
                 'name'          => 'nb,er',
                 'description'   => 'whatever gbgf',
-            ),
-        );
+            ],
+        ];
 
         $this->dao->shouldReceive('getAllForgeUGroups')->andReturns($data);
         $all = $this->factory->getAllForgeUserGroups();
@@ -99,11 +99,11 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
     public function testItGetsForgeUGroup(): void
     {
         $user_group_id = 105;
-        $row = array(
+        $row = [
             'ugroup_id'   => 105,
             'name'        => 'my name',
             'description' => 'user group'
-        );
+        ];
 
         $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns($row);
 

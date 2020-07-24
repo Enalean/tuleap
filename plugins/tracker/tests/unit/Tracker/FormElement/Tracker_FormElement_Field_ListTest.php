@@ -457,16 +457,16 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItAddsACriterion(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn(array(101 => 101, 102 => 102, 103 => 103));
+        $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
         $criteria   = Mockery::mock(Tracker_Report_Criteria::class);
         $report     = Mockery::mock(Tracker_Report::class);
         $criteria->shouldReceive('getReport')->andReturn($report);
         $report->shouldReceive('getId')->andReturn(1);
 
-        $rest_criteria_value  = array(
+        $rest_criteria_value  = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
-        );
+        ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
         $this->assertTrue($set);
@@ -479,16 +479,16 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItAddsCriteria(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn(array(101 => 101, 102 => 102, 103 => 103));
+        $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
         $criteria   = Mockery::mock(Tracker_Report_Criteria::class);
         $report     = Mockery::mock(Tracker_Report::class);
         $criteria->shouldReceive('getReport')->andReturn($report);
         $report->shouldReceive('getId')->andReturn(1);
 
-        $rest_criteria_value  = array(
-            Tracker_Report_REST::VALUE_PROPERTY_NAME    => array('101', 103),
+        $rest_criteria_value  = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => ['101', 103],
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
-        );
+        ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
         $this->assertTrue($set);
@@ -513,7 +513,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $this->assertFalse($this->list_field->isValid($artifact, 9999));
-        $this->assertFalse($this->list_field->isValid($artifact, array(9998, 9999)));
-        $this->assertFalse($this->list_field->isValid($artifact, array(101, 9999)));
+        $this->assertFalse($this->list_field->isValid($artifact, [9998, 9999]));
+        $this->assertFalse($this->list_field->isValid($artifact, [101, 9999]));
     }
 }

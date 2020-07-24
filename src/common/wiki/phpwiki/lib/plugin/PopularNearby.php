@@ -61,12 +61,12 @@ class WikiPlugin_PopularNearby extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('pagename' => '[pagename]',
+        return ['pagename' => '[pagename]',
                      'mode'     => 'nearby', // or 'incoming' or 'outgoing'
                      //'exclude'  => false,  // not yet
                      'limit'    => 5,
                      'noheader' => 0,
-                    );
+                    ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -127,9 +127,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
      */
     public function sortedLinks($pages, $direction = false, $limit = 5)
     {
-        $links = array();
+        $links = [];
         if (is_array($pages)) {
-            $already = array(); // need special duplicate check
+            $already = []; // need special duplicate check
             foreach ($pages as $page) {
                 if (isset($already[$page->_pagename])) {
                     continue;
@@ -141,9 +141,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                 if (! $hits) {
                     continue;
                 }
-                $links[] = array('hits' => $hits,
+                $links[] = ['hits' => $hits,
                                  'pagename' => $page->_pagename,
-                                 'format' => HTML(WikiLink($page->_pagename), ' (' . $hits . ')'));
+                                 'format' => HTML(WikiLink($page->_pagename), ' (' . $hits . ')')];
             }
         } else {
             while ($page = $pages->next()) {
@@ -155,9 +155,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                     continue;
                 }
                 $name = $page->_pagename;
-                $links[] = array('hits' => $score,
+                $links[] = ['hits' => $score,
                                  'pagename' => $name,
-                                 'format' => HTML(WikiLink($name), ' (' . $score . ')'));
+                                 'format' => HTML(WikiLink($name), ' (' . $score . ')')];
             }
             $pages->free();
         }
@@ -170,7 +170,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
     public function sortByHits($links)
     {
         if (! $links) {
-            return array();
+            return [];
         }
         usort($links, 'cmp_by_hits'); // php-4.0.6 cannot use methods
         reset($links);

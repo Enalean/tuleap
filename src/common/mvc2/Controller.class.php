@@ -119,6 +119,6 @@ abstract class MVC2_Controller
 
     public function getHeaderOptions()
     {
-        return array();
+        return [];
     }
 }

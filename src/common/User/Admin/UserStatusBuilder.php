@@ -44,13 +44,13 @@ class UserStatusBuilder
         $labels[PFUser::STATUS_SUSPENDED] = $GLOBALS['Language']->getText('admin_usergroup', 'suspended');
         $labels[PFUser::STATUS_DELETED]   = $GLOBALS['Language']->getText('admin_usergroup', 'deleted');
 
-        $all_status = array();
+        $all_status = [];
         foreach ($labels as $key => $status) {
-            $all_status[] = array(
+            $all_status[] = [
                 'key'        => $key,
                 'status'     => $status,
                 'is_current' => $user->getStatus() === $key
-            );
+            ];
         }
 
         return $all_status;

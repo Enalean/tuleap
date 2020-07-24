@@ -32,7 +32,7 @@ class AccessKeyTest extends RestBase
     {
         $response = $this->getResponse($this->client->options('access_keys'));
 
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 

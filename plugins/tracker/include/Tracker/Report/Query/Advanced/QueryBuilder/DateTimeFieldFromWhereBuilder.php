@@ -101,10 +101,10 @@ class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapp
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $values = array(
+        $values = [
             'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
             'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters)
-        );
+        ];
 
         return $values;
     }

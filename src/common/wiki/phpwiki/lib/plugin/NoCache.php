@@ -56,7 +56,7 @@ class WikiPlugin_NoCache extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'nocache' => 1 );
+        return ['nocache' => 1];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

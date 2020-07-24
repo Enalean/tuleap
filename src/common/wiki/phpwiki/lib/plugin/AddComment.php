@@ -70,13 +70,13 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
 
     public function getDefaultArguments()
     {
-        return array('pagename'   => '[pagename]',
+        return ['pagename'   => '[pagename]',
                      'order'      => 'normal',
                      'mode'       => 'add,show',
                      'jshide'     => '0',
                      'noheader'   => false,
                      //'sortby'     => '-pagename' // oldest first. reverse by order=reverse
-                    );
+                    ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -102,7 +102,7 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
         // for new comments
         $html = HTML();
         if ($args['jshide']) {
-            $div = HTML::div(array('id' => 'comments','style' => 'display:none;'));
+            $div = HTML::div(['id' => 'comments', 'style' => 'display:none;']);
             //$list->setAttr('style','display:none;');
             $div->pushContent(Javascript("
 function togglecomments(a) {
@@ -116,14 +116,14 @@ function togglecomments(a) {
   }
 }"));
             $html->pushContent(HTML::h4(HTML::a(
-                array('name' => 'comment-header',
+                ['name' => 'comment-header',
                                                       'class' => 'wikiaction',
                                                       'title' => _("Click to display"),
-                                                      'onclick' => "togglecomments(this)"),
+                                                      'onclick' => "togglecomments(this)"],
                 _("Comments")
             )));
         } else {
-            $div = HTML::div(array('id' => 'comments'));
+            $div = HTML::div(['id' => 'comments']);
         }
         foreach (explode(',', $args['mode']) as $show) {
             if (! empty($seen[$show])) {

@@ -64,16 +64,16 @@ class ConnectorPresenterBuilder
     private function getProvidersWithRequestUri($return_to)
     {
         $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
-        $providers_authorization_request_uri = array();
+        $providers_authorization_request_uri = [];
         foreach ($providers as $provider) {
             $authorization_request = $this->authorization_request_creator->createAuthorizationRequest($provider, $return_to);
 
-            $providers_authorization_request_uri[] = array(
+            $providers_authorization_request_uri[] = [
                 'name'                      => $provider->getName(),
                 'icon'                      => $provider->getIcon(),
                 'color'                     => $provider->getColor(),
                 'authorization_request_uri' => $authorization_request->getURL()
-            );
+            ];
         }
 
         return $providers_authorization_request_uri;

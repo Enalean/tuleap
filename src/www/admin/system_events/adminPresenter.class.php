@@ -96,15 +96,15 @@ class SystemEvents_adminPresenter
 
     private function groupByCreatedDate(array $events)
     {
-        $grouped_events = array();
+        $grouped_events = [];
         foreach ($events as $event) {
             \assert($event instanceof \Tuleap\SystemEvent\SystemEventPresenter);
             $prefix = substr($event->raw_create_date, 0, 10);
             if (! isset($grouped_events[$prefix])) {
-                $grouped_events[$prefix] = array(
+                $grouped_events[$prefix] = [
                     'label'  => $this->getSectionLabel($event->raw_create_date),
-                    'events' => array()
-                );
+                    'events' => []
+                ];
             }
 
             $grouped_events[$prefix]['events'][] = $event;

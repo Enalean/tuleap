@@ -39,16 +39,16 @@ class FRSReleaseDao extends DataAccessObject
     public function searchById($id, $extraFlags = 0)
     {
         $_id = (int) $id;
-        return $this->_search(' r.release_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC LIMIT 1', array(), $extraFlags);
+        return $this->_search(' r.release_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC LIMIT 1', [], $extraFlags);
     }
 
     public function searchInGroupById($id, $group_id, $extraFlags = 0)
     {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        return $this->_search(' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) . ' AND r.package_id=p.package_id AND p.status_id!=' . db_ei($this->STATUS_DELETED), '', ' ORDER BY release_date DESC LIMIT 1', array (
+        return $this->_search(' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) . ' AND r.package_id=p.package_id AND p.status_id!=' . db_ei($this->STATUS_DELETED), '', ' ORDER BY release_date DESC LIMIT 1', [
             'frs_package AS p'
-        ), $extraFlags);
+        ], $extraFlags);
     }
 
     public function searchByGroupPackageReleaseID($release_id, $group_id, $package_id, $extraFlags = 0)
@@ -58,9 +58,9 @@ class FRSReleaseDao extends DataAccessObject
         $_package_id = (int) $package_id;
 
         return $this->_search(' p.package_id=' . $this->da->escapeInt($_package_id) . ' AND p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) .
-        ' AND r.package_id=p.package_id AND p.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED), '', 'ORDER BY release_date DESC LIMIT 1', array (
+        ' AND r.package_id=p.package_id AND p.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED), '', 'ORDER BY release_date DESC LIMIT 1', [
             'frs_package AS p'
-        ), $extraFlags);
+        ], $extraFlags);
     }
 
     public function searchByGroupPackageID($group_id, $package_id = null)
@@ -124,7 +124,7 @@ class FRSReleaseDao extends DataAccessObject
      * @param $from
      * @param $extraFlags
      */
-    public function _search($where, $group = '', $order = '', $from = array (), $extraFlags = 0)
+    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0)
     {
         $sql = 'SELECT r.* ' .
         ' FROM frs_release AS r ' .
@@ -166,7 +166,7 @@ class FRSReleaseDao extends DataAccessObject
     {
         $_package_id = (int) $package_id;
         return $this->_search(' package_id=' . $_package_id .
-        ' AND name=' . $this->da->quoteSmart(htmlspecialchars($release_name), array('force_string' => true)), '', '');
+        ' AND name=' . $this->da->quoteSmart(htmlspecialchars($release_name), ['force_string' => true]), '', '');
     }
 
     /**
@@ -176,8 +176,8 @@ class FRSReleaseDao extends DataAccessObject
      */
     public function create($package_id = null, $name = null, $notes = null, $changes = null, $status_id = null, $preformatted = 1, $release_date = null)
     {
-        $arg = array ();
-        $values = array ();
+        $arg =  [];
+        $values =  [];
 
         if ($package_id !== null) {
             $arg[] = 'package_id';
@@ -186,7 +186,7 @@ class FRSReleaseDao extends DataAccessObject
 
         if ($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name, array('force_string' => true));
+            $values[] = $this->da->quoteSmart($name, ['force_string' => true]);
         }
 
         if ($notes !== null) {
@@ -230,16 +230,16 @@ class FRSReleaseDao extends DataAccessObject
 
     public function createFromArray($data_array)
     {
-        $arg = array ();
-        $values = array ();
-        $cols = array (
+        $arg =  [];
+        $values =  [];
+        $cols =  [
             'package_id',
             'name',
             'notes',
             'changes',
             'status_id',
             'release_date'
-        );
+        ];
         $is_date = false;
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
@@ -247,7 +247,7 @@ class FRSReleaseDao extends DataAccessObject
                     $is_date = true;
                 }
                 $arg[] = $key;
-                $values[] = $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
+                $values[] = $this->da->quoteSmart($value, ['force_string' => ($key == 'name')]);
             }
         }
 
@@ -285,14 +285,14 @@ class FRSReleaseDao extends DataAccessObject
      */
     public function updateById($release_id, $package_id = null, $name = null, $notes = null, $changes = null, $status_id = null, $preformatted = null, $release_date = null)
     {
-        $argArray = array ();
+        $argArray =  [];
 
         if ($package_id !== null) {
             $argArray[] = 'package_id=' . ($this->da->escapeInt($package_id));
         }
 
         if ($name !== null) {
-            $argArray[] = 'name=' . $this->da->quoteSmart($name, array('force_string' => true));
+            $argArray[] = 'name=' . $this->da->quoteSmart($name, ['force_string' => true]);
         }
 
         if ($notes !== null) {
@@ -334,7 +334,7 @@ class FRSReleaseDao extends DataAccessObject
             $dar = $this->searchById($release_id);
             if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
-                $set_array = array ();
+                $set_array =  [];
                 foreach ($data_array as $key => $value) {
                     if ($key != 'release_id' && $key != 'released_by' && $value != $current[$key]) {
                         $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);

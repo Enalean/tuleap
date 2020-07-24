@@ -63,7 +63,7 @@ class MembershipManagerListGroupsCacheTest extends TestCase
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->remote_server_factory->shouldReceive('getServer')->andReturns($this->remote_server);
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
@@ -83,7 +83,7 @@ class MembershipManagerListGroupsCacheTest extends TestCase
 
     public function testItFetchesGroupsFromDriverOnlyOncePerServer(): void
     {
-        $this->driver->shouldReceive('getAllGroups')->andReturns(array())->once();
+        $this->driver->shouldReceive('getAllGroups')->andReturns([])->once();
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
     }
@@ -92,8 +92,8 @@ class MembershipManagerListGroupsCacheTest extends TestCase
     {
         $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(37)->getMock();
 
-        $this->driver->shouldReceive('getAllGroups')->with($this->remote_server)->andReturns(array());
-        $this->driver->shouldReceive('getAllGroups')->with($remote_server2)->andReturns(array());
+        $this->driver->shouldReceive('getAllGroups')->with($this->remote_server)->andReturns([]);
+        $this->driver->shouldReceive('getAllGroups')->with($remote_server2)->andReturns([]);
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
         $this->membership_manager->doesGroupExistOnServer($remote_server2, $this->u_group);
     }

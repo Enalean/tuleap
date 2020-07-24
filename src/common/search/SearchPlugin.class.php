@@ -36,10 +36,10 @@ class Search_SearchPlugin
 
     public function search(Search_SearchQuery $query, Search_SearchResults $results)
     {
-        $params   = array(
+        $params   = [
             'query'   => $query,
             'results' => $results,
-        );
+        ];
 
         $this->event_manager->processEvent(Event::SEARCH_TYPE, $params);
     }

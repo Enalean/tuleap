@@ -16,10 +16,10 @@ if (! $group_id) {
 }
 
 
-commits_header(array(
+commits_header([
     'title' => $GLOBALS['Language']->getText('cvs_intro', 'title'),
     'group' => $group_id
-));
+]);
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
@@ -52,4 +52,4 @@ print $HTML->box1_bottom();
 
 print '</TD></TR></TABLE>';
 
-commits_footer(array());
+commits_footer([]);

@@ -188,13 +188,13 @@ class Tracker_FormElement_Field_List_BindDecorator
     public function toJSON()
     {
         return json_encode(
-            array(
+            [
                 'field_id' => $this->field_id,
                 'value_id' => $this->value_id,
                 'r'        => $this->r,
                 'g'        => $this->g,
                 'b'        => $this->b
-            )
+            ]
         );
     }
 

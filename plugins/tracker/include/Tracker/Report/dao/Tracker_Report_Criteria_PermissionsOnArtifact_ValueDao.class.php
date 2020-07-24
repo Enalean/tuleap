@@ -36,7 +36,7 @@ class Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao extends Tracker_Rep
             $this->update($sql);
 
             //Then fill it with new values
-            $new_values = array();
+            $new_values = [];
             if (is_array($values)) {
                 foreach ($values as $val) {
                     if ($v = $this->da->escapeInt($val)) {

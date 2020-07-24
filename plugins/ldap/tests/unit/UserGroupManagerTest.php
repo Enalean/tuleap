@@ -96,15 +96,15 @@ final class UserGroupManagerTest extends TestCase
 
     public function testItRemovesNonProjectMembersFromUserToAddInPrivateProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns(array(
+        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
             102 => 102
-        ));
+        ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(array('101' => '101'));
+        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns(array(101));
+        $this->project->shouldReceive('getMembersId')->andReturns([101]);
 
         $users_to_be_added = $this->manager->getUsersToBeAdded($this->bind_option);
 
@@ -113,56 +113,56 @@ final class UserGroupManagerTest extends TestCase
 
     public function testItDoesNotRemoveNonProjectMembersFromUserToAddInPublicProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns(array(
+        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
             102 => 102
-        ));
+        ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(array('101' => '101'));
+        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(['101' => '101']);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('getMembersId')->andReturns(array(101));
+        $this->project->shouldReceive('getMembersId')->andReturns([101]);
 
         $users_to_be_added = $this->manager->getUsersToBeAdded($this->bind_option);
-        $expected_result   = array(102 => 102);
+        $expected_result   = [102 => 102];
 
         $this->assertEquals($expected_result, $users_to_be_added);
     }
 
     public function testItAddsNonProjectMembersIntoUserToRemoveInPrivateProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns(array(
+        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
             102 => 102
-        ));
+        ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(array(
+        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
             '101' => '101',
             '102' => '102'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns(array(101));
+        $this->project->shouldReceive('getMembersId')->andReturns([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->bind_option);
-        $expected_result     = array(102 => 102);
+        $expected_result     = [102 => 102];
 
         $this->assertEquals($expected_result, $users_to_be_removed);
     }
 
     public function testItDoesNotAddNonProjectMembersIntoUserToRemoveInPublicProject(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns(array(
+        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
             102 => 102
-        ));
+        ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(array(
+        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
             '101' => '101',
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(true);
-        $this->project->shouldReceive('getMembersId')->andReturns(array(101));
+        $this->project->shouldReceive('getMembersId')->andReturns([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->bind_option);
 
@@ -171,21 +171,21 @@ final class UserGroupManagerTest extends TestCase
 
     public function testItAddsNonProjectMembersIntoUserToRemoveInPrivateProjectEvenWithPreserveMembers(): void
     {
-        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns(array(
+        $this->ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturns([
             101 => 101,
             102 => 102
-        ));
+        ]);
 
-        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns(array(
+        $this->ldap_user_dao->shouldReceive('getMembersId')->andReturns([
             '101' => '101',
             '102' => '102'
-        ));
+        ]);
 
         $this->project->shouldReceive('isPublic')->andReturns(false);
-        $this->project->shouldReceive('getMembersId')->andReturns(array(101));
+        $this->project->shouldReceive('getMembersId')->andReturns([101]);
 
         $users_to_be_removed = $this->manager->getUsersToBeRemoved($this->preserve_option);
-        $expected_result     = array(102 => 102);
+        $expected_result     = [102 => 102];
 
         $this->assertEquals($expected_result, $users_to_be_removed);
     }

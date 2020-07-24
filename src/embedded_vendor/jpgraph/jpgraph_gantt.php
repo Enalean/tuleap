@@ -141,8 +141,8 @@ class GanttActivityInfo
     private $iFStyle = FS_NORMAL;
     private $iFSize = 10;
     private $iFontColor = 'black';
-    private $iTitles = array();
-    private $iWidth = array();
+    private $iTitles = [];
+    private $iWidth = [];
     private $iHeight = -1;
     private $iTopHeaderMargin = 4;
     private $iStyle = 1;
@@ -245,7 +245,7 @@ class GanttActivityInfo
     {
         $n = count($this->iTitles);
         $adj = $aAddLeftMargin ? $this->iLeftColMargin : 0;
-        $aStart = array($aImg->left_margin + $adj);
+        $aStart = [$aImg->left_margin + $adj];
         for ($i = 1; $i < $n; ++$i) {
             $aStart[$i] = $aStart[$i - 1] + $this->iLeftColMargin + $this->iWidth[$i - 1];
         }
@@ -322,7 +322,7 @@ class GanttActivityInfo
         $aImg->Line($aXLeft, $yTop, $aXRight, $yTop);
 
         // Stroke vertical column dividers
-        $cols = array();
+        $cols = [];
         $this->GetColStart($aImg, $cols);
         $n = count($cols);
         for ($i = 1; $i < $n; ++$i) {
@@ -346,7 +346,7 @@ class GanttGraph extends Graph
 {
     public $scale;  // Public accessible
     public $hgrid = null;
-    private $iObj = array();    // Gantt objects
+    private $iObj = [];    // Gantt objects
     private $iLabelVMarginFactor = 0.4; // 40% margin on top and bottom of label
     private $iLayout = GANTT_FROMTOP; // Could also be GANTT_EVEN
     private $iSimpleFont = FF_FONT1;
@@ -404,7 +404,7 @@ class GanttGraph extends Graph
     }
 
     // A utility function to help create basic Gantt charts
-    public function CreateSimple($data, $constrains = array(), $progress = array())
+    public function CreateSimple($data, $constrains = [], $progress = [])
     {
         $num = count($data);
         for ($i = 0; $i < $num; ++$i) {
@@ -687,7 +687,7 @@ class GanttGraph extends Graph
         $min = strtotime($minDate);
         $maxDate = date("Y-m-d 23:59", $max);
         $max = strtotime($maxDate);
-        return array($min,$max);
+        return [$min, $max];
     }
 
     // Create a new auto sized canvas if the user hasn't specified a size
@@ -972,7 +972,7 @@ class GanttGraph extends Graph
         if ($n == 0) {
             return;
         }
-        $w = array();
+        $w = [];
         $m = $this->scale->actinfo->iLeftColMargin + $this->scale->actinfo->iRightColMargin;
 
         for ($i = 0; $i < $n; ++$i) {
@@ -1622,7 +1622,7 @@ class TextProperty
     private $iFFamily = FF_FONT1;
     private $iFStyle = FS_NORMAL;
     private $iFSize = 10;
-    private $iFontArray = array();
+    private $iFontArray = [];
     private $iColor = "black";
     private $iText = "";
     private $iHAlign = "left";
@@ -1645,17 +1645,17 @@ class TextProperty
     public function SetCSIMTarget($aTarget, $aAltText = '', $aWinTarget = '')
     {
         if (is_string($aTarget)) {
-            $aTarget = array($aTarget);
+            $aTarget = [$aTarget];
         }
         $this->csimtarget = $aTarget;
 
         if (is_string($aWinTarget)) {
-            $aWinTarget = array($aWinTarget);
+            $aWinTarget = [$aWinTarget];
         }
         $this->csimwintarget = $aWinTarget;
 
         if (is_string($aAltText)) {
-            $aAltText = array($aAltText);
+            $aAltText = [$aAltText];
         }
         $this->csimalt = $aAltText;
     }
@@ -1663,7 +1663,7 @@ class TextProperty
     public function SetCSIMAlt($aAltText)
     {
         if (is_string($aAltText)) {
-            $aAltText = array($aAltText);
+            $aAltText = [$aAltText];
         }
         $this->csimalt = $aAltText;
     }
@@ -1752,7 +1752,7 @@ class TextProperty
                     $res[$i] = $aImg->GetTextWidth($tmp[$i]);
                     $tot += $res[$i] * $aTabExtraMargin;
                 }
-                return array(round($tot),$res);
+                return [round($tot), $res];
             }
         } elseif (is_object($this->iText)) {
             // A single icon
@@ -1793,7 +1793,7 @@ class TextProperty
         if (is_array($this->iText)) {
             $n = count($this->iText);
             $nf = count($this->iFontArray);
-            for ($i = 0, $w = array(); $i < $n; ++$i) {
+            for ($i = 0, $w = []; $i < $n; ++$i) {
                 $tmp = $this->iText[$i];
                 if (is_string($tmp)) {
                     if ($i < $nf) {
@@ -1811,7 +1811,7 @@ class TextProperty
             }
             return $w;
         } else {
-            return array($this->GetWidth($aImg));
+            return [$this->GetWidth($aImg)];
         }
     }
 
@@ -2421,8 +2421,8 @@ class GanttScale
     // Return number of days in a year
     public function GetNumDaysInMonth($aMonth, $aYear)
     {
-        $days = array(31,28,31,30,31,30,31,31,30,31,30,31);
-        $daysl = array(31,29,31,30,31,30,31,31,30,31,30,31);
+        $days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        $daysl = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         if ($this->IsLeap($aYear)) {
             return $daysl[$aMonth];
         } else {
@@ -3262,9 +3262,9 @@ class GanttPlotObject
     public $csimtarget = '';
     public $csimwintarget = '';
     public $csimalt = '';
-    public $constraints = array();
+    public $constraints = [];
     public $iCaptionMargin = 5;
-    public $iConstrainPos = array();
+    public $iConstrainPos = [];
     protected $iStart = "";    // Start date
     public $iVPos = 0;     // Vertical position
     protected $iLabelLeftMargin = 2; // Title margin
@@ -3316,7 +3316,7 @@ class GanttPlotObject
 
     public function SetConstrainPos($xt, $yt, $xb, $yb)
     {
-        $this->iConstrainPos = array($xt,$yt,$xb,$yb);
+        $this->iConstrainPos = [$xt, $yt, $xb, $yb];
     }
 
     public function GetMinDate()
@@ -3351,7 +3351,7 @@ class GanttPlotObject
 
     public function StrokeActInfo($aImg, $aScale, $aYPos)
     {
-        $cols = array();
+        $cols = [];
         $aScale->actinfo->GetColStart($aImg, $cols, true);
         $this->title->Stroke($aImg, $cols, $aYPos);
     }
@@ -3633,7 +3633,7 @@ class GanttBar extends GanttPlotObject
         // CSIM for title
         if (! empty($this->title->csimtarget)) {
             $colwidth = $this->title->GetColWidth($aImg);
-            $colstarts = array();
+            $colstarts = [];
             $aScale->actinfo->GetColStart($aImg, $colstarts, true);
             $n = min(count($colwidth), count($this->title->csimtarget));
             for ($i = 0; $i < $n; ++$i) {
@@ -3820,7 +3820,7 @@ class MileStone extends GanttPlotObject
             $yb = round($y + $this->title->GetHeight($aImg) / 2);
 
             $colwidth = $this->title->GetColWidth($aImg);
-            $colstarts = array();
+            $colstarts = [];
             $aScale->actinfo->GetColStart($aImg, $colstarts, true);
             $n = min(count($colwidth), count($this->title->csimtarget));
             for ($i = 0; $i < $n; ++$i) {
@@ -3883,7 +3883,7 @@ class TextPropertyBelow extends TextProperty
     {
         // Since we are not stroking the title in the columns
         // but rather under the graph we want this to return 0.
-        return array(0);
+        return [0];
     }
 }
 
@@ -3977,8 +3977,8 @@ class LinkArrow
 {
     private $ix;
     private $iy;
-    private $isizespec = array(
-    array(2,3),array(3,5),array(3,8),array(6,15),array(8,22));
+    private $isizespec = [
+    [2,3],[3,5],[3,8],[6,15],[8,22]];
     private $iDirection = ARROW_DOWN;
     private $iType = ARROWT_SOLID;
     private $iSize = ARROW_S2;
@@ -4015,16 +4015,16 @@ class LinkArrow
         $y = $this->iy;
         switch ($this->iDirection) {
             case ARROW_DOWN:
-                $c = array($x,$y,$x - $dx,$y - $dy,$x + $dx,$y - $dy,$x,$y);
+                $c = [$x, $y, $x - $dx, $y - $dy, $x + $dx, $y - $dy, $x, $y];
                 break;
             case ARROW_UP:
-                $c = array($x,$y,$x - $dx,$y + $dy,$x + $dx,$y + $dy,$x,$y);
+                $c = [$x, $y, $x - $dx, $y + $dy, $x + $dx, $y + $dy, $x, $y];
                 break;
             case ARROW_LEFT:
-                $c = array($x,$y,$x + $dy,$y - $dx,$x + $dy,$y + $dx,$x,$y);
+                $c = [$x, $y, $x + $dy, $y - $dx, $x + $dy, $y + $dx, $x, $y];
                 break;
             case ARROW_RIGHT:
-                $c = array($x,$y,$x - $dy,$y - $dx,$x - $dy,$y + $dx,$x,$y);
+                $c = [$x, $y, $x - $dy, $y - $dx, $x - $dy, $y + $dx, $x, $y];
                 break;
             default:
                 JpGraphError::RaiseL(6030);
@@ -4133,12 +4133,12 @@ class GanttLink
             if ($x2 > $x1) {
                 switch ($this->iPathType) {
                     case 0:
-                        $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                        $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         break;
                     case 1:
                     case 2:
                     case 3:
-                        $c = array($x1,$y1,$x2,$y1,$x2,$y2);
+                        $c = [$x1, $y1, $x2, $y1, $x2, $y2];
                         break;
                     default:
                         JpGraphError::RaiseL(6032, $this->iPathType);
@@ -4150,26 +4150,26 @@ class GanttLink
                 switch ($this->iPathType) {
                     case 0:
                     case 1:
-                        $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                        $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         break;
                     case 2:
                         // Always extend out horizontally a bit from the first point
                         // If we draw a link back in time (end to start) and the bars
                         // are very close we also change the path so it comes in from
                         // the left on the activity
-                        $c = array($x1,$y1,$x1 + $this->iPathExtend,$y1,
+                        $c = [$x1,$y1,$x1 + $this->iPathExtend,$y1,
                         $x1 + $this->iPathExtend,$midy,
-                        $x2,$midy,$x2,$y2);
+                        $x2,$midy,$x2,$y2];
                         break;
                     case 3:
                         if ($y2 - $midy < 6) {
-                            $c = array($x1,$y1,$x1,$midy,
+                            $c = [$x1,$y1,$x1,$midy,
                             $x2 - $this->iPathExtend,$midy,
                             $x2 - $this->iPathExtend,$y2,
-                            $x2,$y2);
+                            $x2,$y2];
                             $arrowtype = ARROW_RIGHT;
                         } else {
-                            $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                            $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         }
                         break;
                     default:
@@ -4188,14 +4188,14 @@ class GanttLink
                 switch ($this->iPathType) {
                     case 0:
                     case 1:
-                        $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                        $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         break;
                     case 3:
                         if ($midy - $y2 < 8) {
                             $arrowtype = ARROW_RIGHT;
-                            $c = array($x1,$y1,$x1,$y2,$x2,$y2);
+                            $c = [$x1, $y1, $x1, $y2, $x2, $y2];
                         } else {
-                            $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                            $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         }
                         break;
                     default:
@@ -4207,22 +4207,22 @@ class GanttLink
                 switch ($this->iPathType) {
                     case 0:
                     case 1:
-                        $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                        $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         break;
                     case 2:
                         // Always extend out horizontally a bit from the first point
-                        $c = array($x1,$y1,$x1 + $this->iPathExtend,$y1,
+                        $c = [$x1,$y1,$x1 + $this->iPathExtend,$y1,
                         $x1 + $this->iPathExtend,$midy,
-                        $x2,$midy,$x2,$y2);
+                        $x2,$midy,$x2,$y2];
                         break;
                     case 3:
                         if ($midy - $y2 < 16) {
                             $arrowtype = ARROW_RIGHT;
-                            $c = array($x1,$y1,$x1,$midy,$x2 - $this->iPathExtend,$midy,
+                            $c = [$x1,$y1,$x1,$midy,$x2 - $this->iPathExtend,$midy,
                             $x2 - $this->iPathExtend,$y2,
-                            $x2,$y2);
+                            $x2,$y2];
                         } else {
-                            $c = array($x1,$y1,$x1,$midy,$x2,$midy,$x2,$y2);
+                            $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         }
                         break;
                     default:

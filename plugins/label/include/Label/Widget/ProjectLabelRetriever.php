@@ -37,7 +37,7 @@ class ProjectLabelRetriever
 
     public function getLabelsByProject(Project $project)
     {
-        $labels = array();
+        $labels = [];
         foreach ($this->dao->searchLabelsUsedByProject($project->getID()) as $label) {
             $labels[] = $label;
         }

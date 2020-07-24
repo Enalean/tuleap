@@ -50,7 +50,7 @@ class Tracker_UgroupMappingBuilder
         $template_ugroups = $this->permissions_retriever->getListOfInvolvedStaticUgroups($template_tracker);
         $target_ugroups   = $this->ugroup_manager->getStaticUGroups($target_project);
 
-        $ugroups = array();
+        $ugroups = [];
         foreach ($template_ugroups as $template_ugroup) {
             foreach ($target_ugroups as $target_ugroup) {
                 if ($template_ugroup->getName() == $target_ugroup->getName()) {

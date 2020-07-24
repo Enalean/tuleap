@@ -45,7 +45,7 @@ class Tracker_FileInfoFactory
 
     public function getById(int $id): ?Tracker_FileInfo
     {
-        static $cache = array();
+        static $cache = [];
 
         if (isset($cache[$id])) {
             return $cache[$id];
@@ -124,7 +124,7 @@ class Tracker_FileInfoFactory
      */
     public function getArtifactByFileInfoId($id)
     {
-        static $cache = array();
+        static $cache = [];
         if (! isset($cache[$id])) {
             $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
             if (! $row) {
@@ -139,7 +139,7 @@ class Tracker_FileInfoFactory
 
     public function buildFileInfoData(Tracker_Artifact_Attachment_TemporaryFile $file, $path)
     {
-        return array(
+        return [
             'id'           => $file->getTemporaryName(),
             'submitted_by' => $file->getCreatorId(),
             'description'  => $file->getDescription(),
@@ -149,6 +149,6 @@ class Tracker_FileInfoFactory
             'type'         => $file->getType(),
             'error'        => UPLOAD_ERR_OK,
             'action'       => ''
-        );
+        ];
     }
 }

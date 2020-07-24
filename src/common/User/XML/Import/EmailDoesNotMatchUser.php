@@ -44,7 +44,7 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
     /** @return array */
     public function getCSVData()
     {
-        return array(
+        return [
             $this->username,
             self::$ACTION . ':',
             sprintf(
@@ -54,7 +54,7 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
                 $this->email_found_in_xml,
                 self::$ACTION . ':' . $this->username
             )
-        );
+        ];
     }
 
     public function isActionAllowed($action)

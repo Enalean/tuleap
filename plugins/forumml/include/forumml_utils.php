@@ -231,7 +231,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
 
             // Get the number of messages in thread
             // nb of children + message
-            $count = 1 + plugin_forumml_nb_children(array($msg['id_message']), $list_id);
+            $count = 1 + plugin_forumml_nb_children([$msg['id_message']], $list_id);
 
             // all threads
             print "<tr class='" . $class . "'><a name='" . $msg['id_message'] . "'></a>
@@ -291,7 +291,7 @@ function plugin_forumml_nb_children($parents, $list_id)
         //echo $sql.'<br>';
         $result = db_query($sql);
         if ($result && ! db_error($result)) {
-            $p = array();
+            $p = [];
             while (($row = db_fetch_array($result))) {
                 $p[] = $row['id_message'];
             }
@@ -310,12 +310,12 @@ function plugin_forumml_nb_children($parents, $list_id)
 function plugin_forumml_new_attach($row)
 {
     if (isset($row['id_attachment']) && $row['id_attachment']) {
-        return array('id_attachment' => $row['id_attachment'],
+        return ['id_attachment' => $row['id_attachment'],
                      'file_name' => $row['file_name'],
                      'file_type' => $row['file_type'],
                      'file_size' => $row['file_size'],
                      'file_path' => $row['file_path'],
-                     'content_id' => $row['content_id']);
+                     'content_id' => $row['content_id']];
     } else {
         return null;
     }
@@ -344,14 +344,14 @@ function plugin_forumml_insert_in_thread(&$thread, $row)
  */
 function plugin_forumml_insert_msg_attach(&$thread, $result)
 {
-    $parents = array();
+    $parents = [];
     $prev    = -1;
     while (($row = db_fetch_array($result))) {
         if ($row['id_message'] != $prev) {
             // new message
             $parents[] = $row['id_message'];
             $curMsg = plugin_forumml_insert_in_thread($thread, $row);
-            $thread[$curMsg]['attachments'] = array();
+            $thread[$curMsg]['attachments'] = [];
         }
 
         $attch = plugin_forumml_new_attach($row);
@@ -419,7 +419,7 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
  */
 function plugin_forumml_build_flattened_thread($topic, $list_id)
 {
-    $thread = array();
+    $thread = [];
     $sql = 'SELECT
                 m.*,
                 mh_d.value AS date,
@@ -508,7 +508,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
         if (empty($cc_info)) {
             $ccs = $hp->purify($cc, CODENDI_PURIFIER_CONVERT_HTML);
         } else {
-            $ccs = array();
+            $ccs = [];
             foreach ($cc_info as $c) {
                 if ($c['address'] === $c['display']) {
                     $ccs[] = $hp->purify($c['address'], CODENDI_PURIFIER_CONVERT_HTML);
@@ -629,7 +629,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     $vMess = new Valid_UInt('id_mess');
     $vMess->required();
     if ($request->valid($vMess) && $request->get('id_mess') == $msg['id_message']) {
-        $vReply = new Valid_WhiteList('reply', array(0,1));
+        $vReply = new Valid_WhiteList('reply', [0, 1]);
         $vReply->required();
         if ($request->valid($vReply) && $request->get('reply') == 1) {
             if ($is_html) {
@@ -710,8 +710,8 @@ function plugin_forumml_reply($hp, $subject, $in_reply_to, $id_parent, $body, $a
 function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_parent, $body)
 {
     if (preg_match_all('/"cid:([^"]*)"/m', $body, $matches)) {
-        $search_parts  = array();
-        $replace_parts = array();
+        $search_parts  = [];
+        $replace_parts = [];
         foreach ($matches[1] as $match) {
             $sql = 'SELECT id_attachment FROM plugin_forumml_attachment WHERE id_message=' . db_ei($id_message) . ' and content_id="<' . db_es($match) . '>"';
             $res = db_query($sql);
@@ -764,7 +764,7 @@ function plugin_forumml_process_mail($reply = false)
     $continue = true;
 
     if ($request->validArray(new Valid_Email('ccs')) && $request->exist('ccs')) {
-        $cc_array = array();
+        $cc_array = [];
         $idx = 0;
         foreach ($request->get('ccs') as $cc) {
             if (trim($cc) != "") {

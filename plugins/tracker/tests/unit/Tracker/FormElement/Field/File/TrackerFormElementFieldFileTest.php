@@ -612,24 +612,24 @@ final class TrackerFormElementFieldFileTest extends TestCase
     public function testIsValidOneFileOkAndOneEmpty()
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
-        $value    = array(
-            array(
+        $value    = [
+            [
                 'description' => "Capture d'ecran",
                 'name'        => 'Screenshot.png',
                 'type'        => 'image/png',
                 'tmp_name'    => $this->tmp_name,
                 'error'       => UPLOAD_ERR_OK,
                 'size'        => 123,
-            ),
-            array(
+            ],
+            [
                 'description' => '',
                 'name'        => '',
                 'type'        => '',
                 'tmp_name'    => '',
                 'error'       => UPLOAD_ERR_NO_FILE,
                 'size'        => 0,
-            )
-        );
+            ]
+        ];
 
         $required_file = Mockery::mock(Tracker_FormElement_Field_File::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();

@@ -385,7 +385,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
                     GROUP BY artifact_group_list.group_id";
             return $this->retrieve($sql);
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -400,7 +400,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
                     GROUP BY artifact_group_list.group_id";
             return $this->retrieve($sql);
         } else {
-            return array();
+            return [];
         }
     }
 

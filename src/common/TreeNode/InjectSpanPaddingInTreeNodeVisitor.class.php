@@ -32,7 +32,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
      */
     protected $collapsable;
 
-    protected $showTreeTpl = array(
+    protected $showTreeTpl = [
         self::STATE_NODE => '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>',
@@ -45,9 +45,9 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         self::STATE_PIPE => '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>'
-    );
+    ];
 
-    protected $showNormalTpl = array(
+    protected $showNormalTpl = [
         self::STATE_NODE => '
         	<span class="node-indent node-pipe">&nbsp;</span>
         	<span class="node-indent node-minus">&nbsp;</span>',
@@ -60,7 +60,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         self::STATE_PIPE => '
         	<span class="node-indent node-pipe">&nbsp;</span>
         	<span class="node-blank">&nbsp;</span>'
-    );
+    ];
 
     public function __construct($collapsable = false)
     {

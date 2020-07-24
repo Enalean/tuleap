@@ -56,7 +56,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 $dpm  = $this->_getPermissionsManager();
                 if ($dpm->userCanRead($user, $params['item']->getId()) && ($dpm->userCanAccess($user, $params['parent']->getId()) || $dpm->userCanAccess($user, $params['item']->getParentId())) && ($u['item_id'] == $params['item']->getId() || $dpm->userCanAccess($user, $u['item_id']))) {
                     if (! isset($this->do_not_send_notifications_to[$user->getId()])) {
-                        $this->_buildMessage(array_merge($params, array('user_monitor' => &$user)), $user, $type);
+                        $this->_buildMessage(array_merge($params, ['user_monitor' => &$user]), $user, $type);
                         $this->do_not_send_notifications_to[$user->getId()] = true;
                     }
                 }

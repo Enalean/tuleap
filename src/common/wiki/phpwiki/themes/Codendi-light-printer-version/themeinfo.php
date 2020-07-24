@@ -34,8 +34,8 @@ $WikiTheme = new Theme('Codendi-light-printer-version');
 // printing or print-previewing with style "PhpWiki" or "MacOSX" selected.
 $WikiTheme->setDefaultCSS(
     'PhpWiki',
-    array(''      => 'phpwiki.css',
-    'print' => 'phpwiki-printer.css')
+    [''      => 'phpwiki.css',
+    'print' => 'phpwiki-printer.css']
 );
 
 // This allows one to manually select "Printer" style (when browsing page)

@@ -108,17 +108,17 @@ class ExplorerController
             $this->repository_creator->create($repository_to_create, $user);
 
             $GLOBALS['Response']->addFeedback('info', $repo_name . ' ' . dgettext('tuleap-svn', 'Successfully Updated'));
-            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getid())));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(['group_id' => $request->getProject()->getid()]));
         } catch (CannotCreateRepositoryException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $repo_name . ' ' . dgettext('tuleap-svn', 'Unable to update Repository data'));
-            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getid(), 'name' => $repo_name)));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(['group_id' => $request->getProject()->getid(), 'name' => $repo_name]));
         } catch (UserIsNotSVNAdministratorException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', "User doesn't have permission to create a repository"));
-            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getid(), 'name' => $repo_name)));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(['group_id' => $request->getProject()->getid(), 'name' => $repo_name]));
         } catch (RepositoryNameIsInvalidException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', 'The repository name is invalid'));
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
-            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getid(), 'name' => $repo_name)));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(['group_id' => $request->getProject()->getid(), 'name' => $repo_name]));
         }
     }
 }

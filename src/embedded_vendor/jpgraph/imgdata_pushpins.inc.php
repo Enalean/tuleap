@@ -11,12 +11,12 @@
 class ImgData_PushPins extends ImgData
 {
     protected $name = 'Push pins';
-    protected $an = array(MARK_IMG_PUSHPIN => 'imgdata_small',
+    protected $an = [MARK_IMG_PUSHPIN => 'imgdata_small',
     MARK_IMG_SPUSHPIN => 'imgdata_small',
-    MARK_IMG_LPUSHPIN => 'imgdata_large');
+    MARK_IMG_LPUSHPIN => 'imgdata_large'];
 
-    protected $colors = array('blue','green','orange','pink','red');
-    protected $index  = array('red' => 0, 'orange' => 1, 'pink' => 2, 'blue' => 3, 'green' => 4 );
+    protected $colors = ['blue', 'green', 'orange', 'pink', 'red'];
+    protected $index  = ['red' => 0, 'orange' => 1, 'pink' => 2, 'blue' => 3, 'green' => 4];
     protected $maxidx = 4;
     protected $imgdata_large;
     protected $imgdata_small;

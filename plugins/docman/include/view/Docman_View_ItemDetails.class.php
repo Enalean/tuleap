@@ -34,7 +34,7 @@ class Docman_View_ItemDetails
         $this->item             = $item;
         $this->url              = $url;
         $this->current_section  = null;
-        $this->sections         = array();
+        $this->sections         = [];
     }
 
     public function addSection($section)

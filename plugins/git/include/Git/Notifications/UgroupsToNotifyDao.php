@@ -82,7 +82,7 @@ class UgroupsToNotifyDao extends DataAccessObject
     {
         $this->updateNotificationUgroups(
             $project_id,
-            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::PROJECT_MEMBERS
         );
     }
@@ -91,7 +91,7 @@ class UgroupsToNotifyDao extends DataAccessObject
     {
         $this->updateNotificationUgroups(
             $project_id,
-            array(ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::REGISTERED
         );
     }

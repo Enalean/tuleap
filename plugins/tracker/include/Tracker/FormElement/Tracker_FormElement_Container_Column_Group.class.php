@@ -29,7 +29,7 @@ class Tracker_FormElement_Container_Column_Group
 
     public function fetchArtifactForOverlay($columns, Tracker_Artifact $artifact)
     {
-        return $this->fetchGroupNoColumns($columns, 'fetchArtifactInGroup', array($artifact));
+        return $this->fetchGroupNoColumns($columns, 'fetchArtifactInGroup', [$artifact]);
     }
 
     public function fetchArtifactReadOnly($columns, Tracker_Artifact $artifact, array $submitted_values)
@@ -64,16 +64,16 @@ class Tracker_FormElement_Container_Column_Group
 
     public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
-        return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
+        return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', [$recipient, $artifact, $format, $ignore_perms], $format);
     }
 
     protected function fetchGroup($columns, $method, $params)
     {
         $output = '';
         if (is_array($columns) && $columns) {
-            $cells = array();
+            $cells = [];
             foreach ($columns as $c) {
-                if ($content = call_user_func_array(array($c, $method), $params)) {
+                if ($content = call_user_func_array([$c, $method], $params)) {
                     $cells[] = '<td>' . $content . '</td>';
                 }
             }
@@ -92,7 +92,7 @@ class Tracker_FormElement_Container_Column_Group
         $output = '';
         if (is_array($columns) && $columns) {
             foreach ($columns as $c) {
-                if ($content = call_user_func_array(array($c, $method), $params)) {
+                if ($content = call_user_func_array([$c, $method], $params)) {
                     if ($format == 'html') {
                         $output .= $content;
                     } else {
@@ -107,9 +107,9 @@ class Tracker_FormElement_Container_Column_Group
     private function fetchGroupNoColumns($columns, $method, $params)
     {
         if (is_array($columns) && $columns) {
-            $rows = array();
+            $rows = [];
             foreach ($columns as $column) {
-                $content = call_user_func_array(array($column, $method), $params);
+                $content = call_user_func_array([$column, $method], $params);
                 if ($content) {
                     $rows[] = $content;
                 }

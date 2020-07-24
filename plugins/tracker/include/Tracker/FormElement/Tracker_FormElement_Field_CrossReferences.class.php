@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public const REST_REF_DIRECTION_OUT  = 'out';
     public const REST_REF_DIRECTION_BOTH = 'both';
 
-    public $default_properties = array();
+    public $default_properties = [];
 
     public function getCriteriaFrom($criteria)
     {
@@ -78,33 +78,33 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         );
         $crf->fetchDatas();
 
-        $list = array();
+        $list = [];
         $refs = $crf->getFormattedCrossReferences();
         if (! empty($refs['target'])) {
             foreach ($refs['target'] as $refTgt) {
-                $list[] = array(
+                $list[] = [
                     self::REST_REF_INDEX     => $refTgt['ref'],
                     self::REST_REF_URL       => $refTgt['url'],
                     self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_OUT,
-                );
+                ];
             }
         }
         if (! empty($refs['source'])) {
             foreach ($refs['source'] as $refSrc) {
-                $list[] = array(
+                $list[] = [
                     self::REST_REF_INDEX     => $refSrc['ref'],
                     self::REST_REF_URL       => $refSrc['url'],
                     self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_IN,
-                );
+                ];
             }
         }
         if (! empty($refs['both'])) {
             foreach ($refs['both'] as $refBoth) {
-                $list[] = array(
+                $list[] = [
                     self::REST_REF_INDEX     => $refBoth['ref'],
                     self::REST_REF_URL       => $refBoth['url'],
                     self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_BOTH,
-                );
+                ];
             }
         }
 

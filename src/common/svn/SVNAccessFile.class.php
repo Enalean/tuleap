@@ -88,7 +88,7 @@ class SVNAccessFile
                             $GLOBALS['Language']->getText(
                                 'svn_admin_access_control',
                                 'ugroup_name_case_sensitivity',
-                                array($match, $group)
+                                [$match, $group]
                             )
                         );
 
@@ -193,7 +193,7 @@ class SVNAccessFile
     private function parseGroup($svn_dir, $contents, $verbose = false)
     {
         $defaultLines = explode("\n", $this->getPlatformBlock($svn_dir));
-        $groups = array();
+        $groups = [];
         $currentSection = -1;
         foreach ($defaultLines as $line) {
             $currentSection = $this->getCurrentSection($line, $currentSection);

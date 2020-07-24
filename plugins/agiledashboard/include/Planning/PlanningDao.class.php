@@ -156,7 +156,7 @@ class PlanningDao extends DataAccessObject
          *   return $this->retrieveIds($sql);
          *   (needs trunk merge)
          */
-        $ids = array();
+        $ids = [];
         foreach ($this->retrieve($sql) as $row) {
             $ids[] = $row['id'];
         }

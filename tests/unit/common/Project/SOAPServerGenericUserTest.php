@@ -67,7 +67,7 @@ class SOAPServerGenericUserTest extends TestCase
 
         $this->server = \Mockery::mock(
             \Project_SOAPServer::class,
-            array(
+            [
                 $project_manager,
                 $project_creator,
                 $user_manager,
@@ -80,7 +80,7 @@ class SOAPServerGenericUserTest extends TestCase
                 $service_usage_manager,
                 $forge_ugroup_perm_manager,
                 $this->permission_checker,
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

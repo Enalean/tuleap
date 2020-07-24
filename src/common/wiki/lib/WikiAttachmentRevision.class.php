@@ -92,10 +92,10 @@ class WikiAttachmentRevision
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',
                     'err_multi_id',
-                    array(ForgeConfig::get('sys_email_admin'),
+                    [ForgeConfig::get('sys_email_admin'),
                                                               $this->attachmentId,
                                                               $this->revision,
-                          ForgeConfig::get('sys_fullname'))
+                          ForgeConfig::get('sys_fullname')]
                 ),
                 E_USER_ERROR
             );
@@ -120,7 +120,7 @@ class WikiAttachmentRevision
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',
                     'err_upl_mv',
-                    array($this->filename)
+                    [$this->filename]
                 ),
                 E_USER_ERROR
             );
@@ -338,7 +338,7 @@ class WikiAttachmentRevision
      */
     public function getRevisionIterator($gid = null, $id = null)
     {
-        $warArray = array();
+        $warArray = [];
         if ($id !== null) {
             $id  = (int) $id;
             $gid = (int) $gid;

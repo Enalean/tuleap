@@ -164,11 +164,11 @@ class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml
 class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
 {
 
-    public function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
-        return array();
+        return [];
     }
-    public function visitWiki(Docman_Wiki $item, $params = array())
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         $pagename = '';
         if (isset($params['force_item'])) {
@@ -178,10 +178,10 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
         } else {
             $pagename = $item->getPagename();
         }
-        return array(new Docman_MetadataHtmlWiki($pagename));
+        return [new Docman_MetadataHtmlWiki($pagename)];
     }
 
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         $link_url = '';
         if (isset($params['force_item'])) {
@@ -191,27 +191,27 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
         } else {
             $link_url = $item->getUrl();
         }
-        return array(new Docman_MetadataHtmlLink($link_url));
+        return [new Docman_MetadataHtmlLink($link_url)];
     }
 
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
-        return array(new Docman_MetadataHtmlFile($params['request']));
+        return [new Docman_MetadataHtmlFile($params['request'])];
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         $content = '';
         $version = $item->getCurrentVersion();
         if ($version) {
             $content = $version->getContent();
         }
-        return array(new Docman_MetadataHtmlEmbeddedFile($content));
+        return [new Docman_MetadataHtmlEmbeddedFile($content)];
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
-        return array(new Docman_MetadataHtmlEmpty());
+        return [new Docman_MetadataHtmlEmpty()];
     }
 
     public function visitItem(Docman_Item $item, array $params = [])

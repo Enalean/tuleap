@@ -55,24 +55,24 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
         $this->tracker = \Mockery::spy(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturns($tracker_id);
         $this->tracker->shouldReceive('getGroupId')->andReturns($project_id);
-        $this->permissions = array(
-            ProjectUGroup::ANONYMOUS => array(
-                'ugroup'      => array('name' => 'whatever'),
-                'permissions' => array()
-            ),
-            ProjectUGroup::REGISTERED => array(
-                'ugroup'      => array('name' => 'whatever'),
-                'permissions' => array()
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
-                'ugroup'      => array('name' => 'whatever'),
-                'permissions' => array()
-            ),
-            ProjectUGroup::PROJECT_ADMIN => array(
-                'ugroup'      => array('name' => 'whatever'),
-                'permissions' => array()
-            ),
-        );
+        $this->permissions = [
+            ProjectUGroup::ANONYMOUS => [
+                'ugroup'      => ['name' => 'whatever'],
+                'permissions' => []
+            ],
+            ProjectUGroup::REGISTERED => [
+                'ugroup'      => ['name' => 'whatever'],
+                'permissions' => []
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
+                'ugroup'      => ['name' => 'whatever'],
+                'permissions' => []
+            ],
+            ProjectUGroup::PROJECT_ADMIN => [
+                'ugroup'      => ['name' => 'whatever'],
+                'permissions' => []
+            ],
+        ];
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         $this->permission_setter    = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
         $this->permission_manager   = new Tracker_Permission_PermissionManager();
@@ -81,11 +81,11 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
     public function testItDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined(): void
     {
         $this->tracker->shouldReceive('getContributorField')->andReturns(null);
-        $request = new Tracker_Permission_PermissionRequest(array(
+        $request = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::PROJECT_MEMBERS  => Tracker_Permission_Command::PERMISSION_ASSIGNEE,
-        ));
+        ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->never();
         $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
@@ -98,11 +98,11 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
     {
         $field = Mockery::mock(Tracker_FormElement_Field::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($field);
-        $request = new Tracker_Permission_PermissionRequest(array(
+        $request = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::PROJECT_MEMBERS  => Tracker_Permission_Command::PERMISSION_ASSIGNEE,
-        ));
+        ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->once();
         $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::INFO, \Mockery::any())->once();
@@ -112,11 +112,11 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
     public function testItDoesNotApplyPermissionsOnProjectAdmins(): void
     {
-        $request = new Tracker_Permission_PermissionRequest(array(
+        $request = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::PROJECT_ADMIN    => Tracker_Permission_Command::PERMISSION_FULL,
-        ));
+        ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->never();
         $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();

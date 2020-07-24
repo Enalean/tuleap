@@ -52,7 +52,7 @@ class GitGerritRouteTest extends TestCase
             ->andReturn(\Mockery::spy(\Project::class))
             ->getMock();
 
-        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns(array());
+        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns([]);
 
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getId')->andReturns($this->group_id);
@@ -101,7 +101,7 @@ class GitGerritRouteTest extends TestCase
 
         $git = Mockery::mock(
             Git::class,
-            array(
+            [
                 \Mockery::mock(GitPlugin::class),
                 $gerrit_server_factory,
                 \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($gerrit_driver)->getMock(),
@@ -142,7 +142,7 @@ class GitGerritRouteTest extends TestCase
                 \Mockery::spy(\UGroupManager::class),
                 \Mockery::spy(\Tuleap\Git\GitViews\Header\HeaderRenderer::class),
                 \Mockery::spy(\ThemeManager::class)
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -192,7 +192,7 @@ class GitGerritRouteTest extends TestCase
         $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($repo)->getMock();
         $git     = $this->getGitDisconnect($request, $factory);
 
-        $git->shouldReceive('addAction')->with('disconnectFromGerrit', array($repo))->ordered();
+        $git->shouldReceive('addAction')->with('disconnectFromGerrit', [$repo])->ordered();
         $git->shouldReceive('addAction')->with('redirectToRepoManagement', \Mockery::any())->ordered();
         $git->request();
     }
@@ -238,7 +238,7 @@ class GitGerritRouteTest extends TestCase
 
         $this->repository->shouldReceive('getId')->andReturn($repo_id);
 
-        $git->shouldReceive('addAction')->with('migrateToGerrit', array($this->repository, $server_id, $gerrit_template_id, $this->admin))->ordered();
+        $git->shouldReceive('addAction')->with('migrateToGerrit', [$this->repository, $server_id, $gerrit_template_id, $this->admin])->ordered();
         $git->shouldReceive('addAction')->with('redirectToRepoManagementWithMigrationAccessRightInformation', \Mockery::any())->ordered();
 
         $git->request();
@@ -295,7 +295,7 @@ class GitGerritRouteTest extends TestCase
 
         $template_id      = 3;
         $template         = \Mockery::spy(\Git_Driver_Gerrit_Template_Template::class)->shouldReceive('getId')->andReturns($template_id)->getMock();
-        $template_factory = \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class)->shouldReceive('getTemplatesAvailableForRepository')->andReturns(array($template))->getMock();
+        $template_factory = \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class)->shouldReceive('getTemplatesAvailableForRepository')->andReturns([$template])->getMock();
         $template_factory->shouldReceive('getTemplate')->with($template_id)->andReturns($template);
 
         $request   = new HTTPRequest();

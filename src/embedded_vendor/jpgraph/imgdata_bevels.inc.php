@@ -11,10 +11,10 @@
 class ImgData_Bevels extends ImgData
 {
     protected $name = 'Round Bevels';
-    protected $an = array(MARK_IMG_BEVEL => 'imgdata');
+    protected $an = [MARK_IMG_BEVEL => 'imgdata'];
 
-    protected $colors = array('green','purple','orange','red','yellow');
-    protected $index  = array('green' => 1,'purple' => 4,'orange' => 2,'red' => 0,'yellow' => 3);
+    protected $colors = ['green', 'purple', 'orange', 'red', 'yellow'];
+    protected $index  = ['green' => 1, 'purple' => 4, 'orange' => 2, 'red' => 0, 'yellow' => 3];
     protected $maxidx = 4;
 
     protected $imgdata;

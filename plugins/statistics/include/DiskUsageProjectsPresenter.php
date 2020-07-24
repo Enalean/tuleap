@@ -96,10 +96,10 @@ class DiskUsageProjectsPresenter
 
     private function buildUrlParams($menu, $order)
     {
-        $params = array(
+        $params = [
             'menu'  => $menu,
             'order' => $order
-        );
+        ];
         return array_merge($this->search_fields->fields_values_url, $params);
     }
 }

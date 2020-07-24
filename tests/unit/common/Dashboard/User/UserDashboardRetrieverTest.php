@@ -46,11 +46,11 @@ class UserDashboardRetrieverTest extends TestCase
         $this->user_without_dashboard = \Mockery::spy(\PFUser::class);
         $this->user_without_dashboard->shouldReceive('getId')->andReturns(2);
 
-        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_with_a_dashboard)->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_with_a_dashboard)->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'user_id' => 1,
             'name'    => 'dashboard_one'
-        )));
+        ]));
         $dao->shouldReceive('searchAllUserDashboards')->with($this->user_without_dashboard)->andReturns(\TestHelper::emptyDar());
 
         $this->user_retriever = new UserDashboardRetriever($dao);
@@ -60,9 +60,9 @@ class UserDashboardRetrieverTest extends TestCase
     {
         $result = $this->user_retriever->getAllUserDashboards($this->user_with_a_dashboard);
 
-        $expected_result = array(
+        $expected_result = [
             new UserDashboard(1, 1, 'dashboard_one')
-        );
+        ];
 
         $this->assertEquals($expected_result, $result);
     }

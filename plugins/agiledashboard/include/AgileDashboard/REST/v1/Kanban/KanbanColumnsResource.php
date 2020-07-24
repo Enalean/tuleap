@@ -186,11 +186,11 @@ class KanbanColumnsResource
                 throw new \RuntimeException('Tracker does not exist');
             }
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
-            $data    = array(
+            $data    = [
                 'id'        => $id,
                 'label'     => $updated_column_properties->label,
                 'wip_limit' => $updated_column_properties->wip_limit
-            );
+            ];
             $message = new MessageDataPresenter(
                 $current_user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],

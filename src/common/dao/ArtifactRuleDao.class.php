@@ -187,7 +187,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     public function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types)
     {
-        $quoted_types = array();
+        $quoted_types = [];
         foreach ($rule_types as $type) {
             $quoted_types[] = $this->da->quoteSmart($type);
         }

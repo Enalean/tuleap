@@ -31,7 +31,7 @@ if (! defined('CODENDI_DB_NOT_NULL')) {
 function db_query($sql)
 {
     /** @psalm-suppress DeprecatedFunction */
-    return db_query_params($sql, array());
+    return db_query_params($sql, []);
 }
 
 /**
@@ -112,7 +112,7 @@ function db_fetch_array($qhandle = 0)
         if ($GLOBALS['db_qhandle']) {
             return CodendiDataAccess::instance()->fetchArray($GLOBALS['db_qhandle']);
         } else {
-            return (array());
+            return ([]);
         }
     }
 }
@@ -188,7 +188,7 @@ function db_es($string, $qhandle = false)
  */
 function db_escape_int($val, $null = CODENDI_DB_NOT_NULL)
 {
-    $match = array();
+    $match = [];
     if ($null === CODENDI_DB_NULL && $val === '') {
         return 'NULL';
     }

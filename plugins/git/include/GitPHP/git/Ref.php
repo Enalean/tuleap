@@ -107,7 +107,7 @@ abstract class Ref extends GitObject
     protected function FindHash() // @codingStandardsIgnoreLine
     {
         $exe = new GitExe($this->GetProject());
-        $args = array();
+        $args = [];
         $args[] = '--hash';
         $args[] = '--verify';
         $args[] = escapeshellarg($this->GetRefPath());

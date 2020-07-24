@@ -105,7 +105,7 @@ class MailGatewayInsecureTest extends TestCase
 
         $this->tracker->shouldReceive('getTitleField')->andReturns($title_field);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($description_field);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns(array($title_field, $description_field));
+        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$title_field, $description_field]);
 
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(666)->getMock();
         $filter = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class);
@@ -132,7 +132,7 @@ class MailGatewayInsecureTest extends TestCase
         $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
         $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->with(array(), $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
+        $this->artifact->shouldReceive('createNewChangeset')->with([], $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
 
         $this->mailgateway->process($this->incoming_mail);
     }

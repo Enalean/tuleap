@@ -70,21 +70,21 @@ class ArtifactImportHtml extends ArtifactImport
             $number_updates
         );
 
-        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
         'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import'));
+        'help' => 'tracker-v3.html#tracker-artifact-import']);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         echo '<h2>' . $Language->getText('tracker_import', 'parse_report') . '</h2>';
         if (! $ok) {
             $this->showErrors();
         } else {
-            echo $Language->getText('tracker_import', 'ready', array(($number_inserts + $number_updates),$number_inserts, $number_updates)) . "<br><br>\n";
+            echo $Language->getText('tracker_import', 'ready', [($number_inserts + $number_updates), $number_inserts, $number_updates]) . "<br><br>\n";
             echo $Language->getText('tracker_import', 'check_data');
             $this->showParseResults($this->parsed_labels, $artifacts_data);
         }
 
-        $this->ath->footer(array());
+        $this->ath->footer([]);
     }
 
 
@@ -284,9 +284,9 @@ class ArtifactImportHtml extends ArtifactImport
 
       // project_export_utils is using $at instead of $ath
         $at = $this->ath;
-        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
         'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import'));
+        'help' => 'tracker-v3.html#tracker-artifact-import']);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         $fields = $col_list = $multiple_queries = $all_queries = [];
@@ -337,7 +337,7 @@ class ArtifactImportHtml extends ArtifactImport
         echo '<br>';
         echo build_csv_record($col_list, $record);
 
-        $this->ath->footer(array());
+        $this->ath->footer([]);
     }
 
 
@@ -350,13 +350,13 @@ class ArtifactImportHtml extends ArtifactImport
     {
         global $Language,$sys_max_size_upload;
 
-        $this->ath->header(array ('title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
+        $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
         'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import'));
+        'help' => 'tracker-v3.html#tracker-artifact-import']);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         echo '<h3>' . $Language->getText('tracker_import', 'import_new_hdr') . '</h3>';
-        echo '<p>' . $Language->getText('tracker_import', 'import_new_msg', array('/tracker/index.php?group_id=' . (int) $this->group->group_id . '&atid=' . (int) $atid . '&user_id=' . (int) $user_id . '&mode=showformat&func=import')) . '</p>';
+        echo '<p>' . $Language->getText('tracker_import', 'import_new_msg', ['/tracker/index.php?group_id=' . (int) $this->group->group_id . '&atid=' . (int) $atid . '&user_id=' . (int) $user_id . '&mode=showformat&func=import']) . '</p>';
 
         $_pref_notify  = user_get_preference('tracker_import_notify_' . $atid);
         $notifychecked = '';
@@ -397,6 +397,6 @@ class ArtifactImportHtml extends ArtifactImport
 			<input class="btn btn-primary" type="submit" value="' . $Language->getText('tracker_import', 'submit_info') . '">
 
 	    </FORM> ';
-        $this->ath->footer(array());
+        $this->ath->footer([]);
     }
 }

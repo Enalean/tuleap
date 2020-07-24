@@ -37,13 +37,13 @@ abstract class Tracker_Permission_Command
     public const PERMISSION_NONE                   = 'NONE';
     public const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
 
-    protected static $non_admin_permissions = array(
+    protected static $non_admin_permissions = [
         Tracker_Permission_Command::PERMISSION_FULL,
         Tracker_Permission_Command::PERMISSION_ASSIGNEE,
         Tracker_Permission_Command::PERMISSION_SUBMITTER,
         Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER
-    );
+    ];
 
     /** @var Tracker_Permission_Command */
     private $next_command;

@@ -74,7 +74,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     private function fetchArtifactLinks(PFUser $current_user)
     {
         $linked_artifacts = $this->artifact->getLinkedArtifacts($current_user);
-        $links = array();
+        $links = [];
 
         foreach ($linked_artifacts as $artifact) {
             $artifact_title = $artifact->getTitle();
@@ -106,7 +106,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
 
         $followups_content = array_merge($followups_content, $this->getPriorityHistory($artifact));
 
-        usort($followups_content, array($this, "compareFollowupsByDate"));
+        usort($followups_content, [$this, "compareFollowupsByDate"]);
 
         return array_reverse($followups_content);
     }
@@ -163,7 +163,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
 
     private function sendErrorsAsJson($exception_message)
     {
-        $feedback            = array();
+        $feedback            = [];
         $feedback['message'] = $exception_message;
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {

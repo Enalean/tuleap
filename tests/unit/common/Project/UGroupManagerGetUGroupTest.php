@@ -35,20 +35,20 @@ class UGroupManagerGetUGroupTest extends TestCase
         $this->project        = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(123)->getMock();
         $dao = \Mockery::spy(\UGroupDao::class);
 
-        $ugroup_definitions = array(
-            array('ugroup_id' => "1",   'name' => "ugroup_anonymous_users_name_key",    'description' => "ugroup_anonymous_users_desc_key",     'group_id' => "100"),
-            array('ugroup_id' => "2",   'name' => "ugroup_registered_users_name_key",   'description' => "ugroup_registered_users_desc_key",    'group_id' => "100"),
-            array('ugroup_id' => "3",   'name' => "ugroup_project_members_name_key",    'description' => "ugroup_project_members_desc_key",     'group_id' => "100"),
-            array('ugroup_id' => "4",   'name' => "ugroup_project_admins_name_key",     'description' => "ugroup_project_admins_desc_key",      'group_id' => "100"),
-            array('ugroup_id' => "11",  'name' => "ugroup_file_manager_admin_name_key", 'description' => "ugroup_file_manager_admin_desc_key",  'group_id' => "100"),
-            array('ugroup_id' => "12",  'name' => "ugroup_document_tech_name_key",      'description' => "ugroup_document_tech_desc_key",       'group_id' => "100"),
-            array('ugroup_id' => "13",  'name' => "ugroup_document_admin_name_key",     'description' => "ugroup_document_admin_desc_key",      'group_id' => "100"),
-            array('ugroup_id' => "14",  'name' => "ugroup_wiki_admin_name_key",         'description' => "ugroup_wiki_admin_desc_key",          'group_id' => "100"),
-            array('ugroup_id' => "15",  'name' => "ugroup_tracker_admins_name_key",     'description' => "ugroup_tracker_admins_desc_key",      'group_id' => "100"),
-            array('ugroup_id' => "100", 'name' => "ugroup_nobody_name_key",             'description' => "ugroup_nobody_desc_key",              'group_id' => "100"),
-            array('ugroup_id' => "103", 'name' => "Integrators",                        'description' => "",                                    'group_id' => "123"),
-            array('ugroup_id' => "103", 'name' => "ugroup_supra_name_key",              'description' => "",                                    'group_id' => "123"),
-        );
+        $ugroup_definitions = [
+            ['ugroup_id' => "1",   'name' => "ugroup_anonymous_users_name_key",    'description' => "ugroup_anonymous_users_desc_key",     'group_id' => "100"],
+            ['ugroup_id' => "2",   'name' => "ugroup_registered_users_name_key",   'description' => "ugroup_registered_users_desc_key",    'group_id' => "100"],
+            ['ugroup_id' => "3",   'name' => "ugroup_project_members_name_key",    'description' => "ugroup_project_members_desc_key",     'group_id' => "100"],
+            ['ugroup_id' => "4",   'name' => "ugroup_project_admins_name_key",     'description' => "ugroup_project_admins_desc_key",      'group_id' => "100"],
+            ['ugroup_id' => "11",  'name' => "ugroup_file_manager_admin_name_key", 'description' => "ugroup_file_manager_admin_desc_key",  'group_id' => "100"],
+            ['ugroup_id' => "12",  'name' => "ugroup_document_tech_name_key",      'description' => "ugroup_document_tech_desc_key",       'group_id' => "100"],
+            ['ugroup_id' => "13",  'name' => "ugroup_document_admin_name_key",     'description' => "ugroup_document_admin_desc_key",      'group_id' => "100"],
+            ['ugroup_id' => "14",  'name' => "ugroup_wiki_admin_name_key",         'description' => "ugroup_wiki_admin_desc_key",          'group_id' => "100"],
+            ['ugroup_id' => "15",  'name' => "ugroup_tracker_admins_name_key",     'description' => "ugroup_tracker_admins_desc_key",      'group_id' => "100"],
+            ['ugroup_id' => "100", 'name' => "ugroup_nobody_name_key",             'description' => "ugroup_nobody_desc_key",              'group_id' => "100"],
+            ['ugroup_id' => "103", 'name' => "Integrators",                        'description' => "",                                    'group_id' => "123"],
+            ['ugroup_id' => "103", 'name' => "ugroup_supra_name_key",              'description' => "",                                    'group_id' => "123"],
+        ];
         foreach ($ugroup_definitions as $def) {
             $dao->shouldReceive('searchByGroupIdAndUGroupId')->with((int) $def['group_id'], (int) $def['ugroup_id'])->andReturns(\TestHelper::arrayToDar($def));
             $dao->shouldReceive('searchByGroupIdAndName')->with((int) $def['group_id'], $def['name'])->andReturns(\TestHelper::arrayToDar($def));
@@ -86,7 +86,7 @@ class UGroupManagerGetUGroupTest extends TestCase
 
     public function testItExcludesGivenUgroups(): void
     {
-        $ugroups = $this->ugroup_manager->getUGroups($this->project, array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS));
+        $ugroups = $this->ugroup_manager->getUGroups($this->project, [ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS]);
         $this->assertCount(10, $ugroups);
     }
 

@@ -25,8 +25,8 @@ use Rule_Email;
 class MailReceivedFromUserExtractor
 {
 
-    private $valid_adresses   = array();
-    private $invalid_adresses = array();
+    private $valid_adresses   = [];
+    private $invalid_adresses = [];
 
     public function __construct($addresses)
     {

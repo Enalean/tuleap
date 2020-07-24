@@ -72,11 +72,11 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
 
         EventManager::instance()->processEvent(
             Event::NAVBAR_ITEMS,
-            array(
+            [
                 'items'            => $collection,
                 'selected_top_tab' => $this->selected_top_tab,
                 'request_uri'      => $this->request_uri
-            )
+            ]
         );
 
         return $collection;
@@ -98,7 +98,7 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
     {
         $collection->addItem(new FlamingParrot_NavBarItemProjectsPresenter(
             'project',
-            $this->isNavBarItemActive(array('/softwaremap/', '/projects/', '/project/')),
+            $this->isNavBarItemActive(['/softwaremap/', '/projects/', '/project/']),
             $this->registration_user_permission_checker->isUserAllowedToCreateProjects($this->user),
             $this->user,
             $this->projects
@@ -107,8 +107,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
 
     private function addMoarItem(FlamingParrot_NavBarItemPresentersCollection $collection)
     {
-        $items = array();
-        $links = array();
+        $items = [];
+        $links = [];
         foreach ($this->extra_tabs as $tab) {
             $items[] = new FlamingParrot_NavBarItemLinkPresenter(
                 self::$NO_ID,
@@ -138,13 +138,13 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
     {
         $item = new FlamingParrot_NavBarItemDropdownPresenter(
             'help',
-            $this->isNavBarItemActive(array('/help/', '/contact.php', '/help/api.php'), 'help'),
+            $this->isNavBarItemActive(['/help/', '/contact.php', '/help/api.php'], 'help'),
             $GLOBALS['Language']->getText('include_menu', 'help')
         );
 
         $item->addSection(
             new FlamingParrot_NavBarItemDropdownSectionPresenter(
-                array(
+                [
                     new FlamingParrot_NavBarItemLinkPresenter(
                         self::$NO_ID,
                         self::$NOT_ACTIVE,
@@ -157,19 +157,19 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
                         '/help/api.php',
                         $GLOBALS['Language']->getText('include_menu', 'api')
                     ),
-                )
+                ]
             )
         );
         $item->addSection(
             new FlamingParrot_NavBarItemDropdownSectionPresenter(
-                array(
+                [
                     new FlamingParrot_NavBarItemLinkPresenter(
                         self::$NO_ID,
                         self::$NOT_ACTIVE,
                         '/contact.php',
                         $GLOBALS['Language']->getText('include_menu', 'contact_us')
                     )
-                )
+                ]
             )
         );
 
@@ -183,7 +183,7 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
         }
 
         if (! is_array($paths_to_detect)) {
-            $paths_to_detect = array($paths_to_detect);
+            $paths_to_detect = [$paths_to_detect];
         }
 
         foreach ($paths_to_detect as $path) {

@@ -116,11 +116,11 @@ class PHPWikiPermissionPerGroupPaneBuilder
         $formatted_group = $this->formatter->getFormattedUgroups($project, $ugroups);
 
         $permissions->addPermissions(
-            array(
+            [
                 'name'    => _('Administrator'),
                 'groups'  => $formatted_group,
                 'url'     => ''
-            )
+            ]
         );
     }
 
@@ -149,11 +149,11 @@ class PHPWikiPermissionPerGroupPaneBuilder
         $formatted_group = $this->formatter->getFormattedUgroups($project, $ugroups);
 
         $permissions->addPermissions(
-            array(
+            [
                 'name'    => _('Global access'),
                 'groups'  => $formatted_group,
                 'url'     => $this->getGlobalAdminLink($project)
-            )
+            ]
         );
     }
 

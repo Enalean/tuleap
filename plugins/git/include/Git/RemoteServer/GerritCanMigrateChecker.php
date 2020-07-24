@@ -52,9 +52,9 @@ class GerritCanMigrateChecker
 
         $this->event_manager->processEvent(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            array(
+            [
                 'platform_can_use_gerrit' => &$platform_can_use_gerrit
-            )
+            ]
         );
 
         $gerrit_servers = $this->gerrit_server_factory->getAvailableServersForProject($project);

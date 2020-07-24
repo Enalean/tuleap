@@ -82,17 +82,17 @@ final class GitActionsForkTests extends TestCase
 
     public function testItDelegatesForkToGitManager(): void
     {
-        $repositories = array(
+        $repositories = [
             Mockery::mock(GitRepository::class),
             Mockery::mock(GitRepository::class)
-        );
+        ];
         $to_project   = \Mockery::spy(\Project::class);
         $namespace    = 'namespace';
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
         $user         = \Mockery::spy(\PFUser::class);
         $response     = \Mockery::spy(\Layout::class);
         $redirect_url = '/stuff';
-        $forkPermissions = array();
+        $forkPermissions = [];
 
         $this->manager->shouldReceive('forkRepositories')->with($repositories, $to_project, $user, $namespace, $scope, $forkPermissions)->once();
 

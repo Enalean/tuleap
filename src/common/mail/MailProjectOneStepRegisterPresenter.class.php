@@ -49,12 +49,12 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 
     public function get_thanks()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'thanks', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('mail_outline', 'thanks', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_signature()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'signature', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('mail_outline', 'signature', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_project_full_name()
@@ -89,27 +89,27 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 
     public function get_section_one()
     {
-        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_one', array($this->getUrlDocumentationSite(), ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_one', [$this->getUrlDocumentationSite(), ForgeConfig::get('sys_name')]);
     }
 
     public function get_section_two()
     {
-        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_two', array($this->getUrlSummaryLink()));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_two', [$this->getUrlSummaryLink()]);
     }
 
     public function get_section_three()
     {
-        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_three', array($this->getUrlProjectAdministration()));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_three', [$this->getUrlProjectAdministration()]);
     }
 
     public function get_section_four()
     {
-        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_four', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_four', [ForgeConfig::get('sys_name')]);
     }
 
     public function get_help()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'help', array(ForgeConfig::get('sys_email_admin')));
+        return $GLOBALS['Language']->getText('mail_outline', 'help', [ForgeConfig::get('sys_email_admin')]);
     }
 
     public function getUrlSummaryLink()

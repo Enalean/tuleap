@@ -40,10 +40,10 @@ class ACLUpdater
     public function __construct(Backend $backend)
     {
         $this->backend = $backend;
-        $this->builder_map = array(
+        $this->builder_map = [
             self::FILE      => new ACLBuilderForFile(),
             self::DIRECTORY => new ACLBuilderForDirectory(),
-        );
+        ];
     }
 
     public function recursivelyApplyACL($path, $http_user, $writers, $readers)

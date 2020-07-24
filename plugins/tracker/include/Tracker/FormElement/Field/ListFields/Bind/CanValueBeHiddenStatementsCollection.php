@@ -34,7 +34,7 @@ class CanValueBeHiddenStatementsCollection implements Dispatchable
     /**
      * @var array
      */
-    private $statements = array();
+    private $statements = [];
 
     /**
      * @var Tracker_FormElement_Field

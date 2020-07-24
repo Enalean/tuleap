@@ -181,7 +181,7 @@ class RepositoryCreatorTest extends TestCase
             1,
             false
         );
-        $initial_layout      = array();
+        $initial_layout      = [];
 
         $this->repository_creator->createWithSettings(
             $this->repository,
@@ -220,7 +220,7 @@ class RepositoryCreatorTest extends TestCase
             1,
             true
         );
-        $initial_layout      = array();
+        $initial_layout      = [];
 
         $this->repository_creator->createWithSettings(
             $this->repository,
@@ -254,11 +254,11 @@ class RepositoryCreatorTest extends TestCase
             $immutable_tag,
             $access_file,
             $mail_notifications,
-            array(),
+            [],
             1,
             false
         );
-        $initial_layout     = array();
+        $initial_layout     = [];
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
     }
@@ -282,11 +282,11 @@ class RepositoryCreatorTest extends TestCase
             $immutable_tag,
             $access_file,
             $mail_notifications,
-            array(),
+            [],
             1,
             false
         );
-        $initial_layout     = array();
+        $initial_layout     = [];
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout, false);
     }

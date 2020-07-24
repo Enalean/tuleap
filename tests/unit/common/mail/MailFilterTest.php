@@ -86,7 +86,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->user_active->shouldReceive('getEmail')->andReturns('user-active@example.com');
         $this->user_suspended->shouldReceive('getEmail')->andReturns('user-suspended@example.com');
 
-        $this->unknown_user = array();
+        $this->unknown_user = [];
 
         $this->user_manager           = \Mockery::spy(\UserManager::class);
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
@@ -101,10 +101,10 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
     private function initializeMails(): void
     {
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-registered@example.com')->andReturns(array($this->user_registered));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-suspended@example.com')->andReturns(array($this->user_suspended));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-active@example.com')->andReturns(array($this->user_active));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('unknown-user@example.com')->andReturns(array($this->unknown_user));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-registered@example.com')->andReturns([$this->user_registered]);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-suspended@example.com')->andReturns([$this->user_suspended]);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-active@example.com')->andReturns([$this->user_active]);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('unknown-user@example.com')->andReturns([$this->unknown_user]);
     }
 
     public function testItFilterPeopleWhoCanNotReadProject(): void
@@ -119,9 +119,9 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_active->getEmail()));
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_active->getEmail()]);
 
-        $expected_mails = array();
+        $expected_mails = [];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
@@ -135,8 +135,8 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_suspended->getEmail()));
-        $expected_mails = array();
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_suspended->getEmail()]);
+        $expected_mails = [];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
@@ -150,15 +150,15 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->mail_logger->shouldReceive('warn')->never();
         $this->mail_logger->shouldReceive('info')->once();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
-        $expected_mails = array($this->user_registered->getEmail());
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
+        $expected_mails = [$this->user_registered->getEmail()];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
     public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMail(): void
     {
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns([$this->user_registered, $this->user_registered_bis]);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered, $this->project);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -167,15 +167,15 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->mail_logger->shouldReceive('warn')->never();
         $this->mail_logger->shouldReceive('info')->once();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
-        $expected_mails = array($this->user_registered->getEmail());
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
+        $expected_mails = [$this->user_registered->getEmail()];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
     public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMailEvenOneAccountCanNotAccessToProject(): void
     {
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns([$this->user_registered, $this->user_registered_bis]);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered, $this->project);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -185,21 +185,21 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->mail_logger->shouldReceive('warn')->never();
         $this->mail_logger->shouldReceive('info')->once();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
-        $expected_mails = array($this->user_registered->getEmail());
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
+        $expected_mails = [$this->user_registered->getEmail()];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
     public function testItFilterPeopleWhoAreNotMemberOfProject(): void
     {
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array());
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns([]);
 
         $this->mail_logger->shouldReceive('warning')->once();
         $this->mail_logger->shouldReceive('info')->never();
 
-        $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
-        $expected_mails = array();
+        $filtered_mails = $this->mail_filter->filter($this->project, [$this->user_registered->getEmail()]);
+        $expected_mails = [];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
@@ -218,12 +218,12 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $filtered_mails = $this->mail_filter->filter(
             $this->project,
-            array(
+            [
                 $this->user_registered->getEmail(),
                 $this->user_active->getEmail()
-            )
+            ]
         );
-        $expected_mails = array($this->user_registered->getEmail(), $this->user_active->getEmail());
+        $expected_mails = [$this->user_registered->getEmail(), $this->user_active->getEmail()];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
@@ -238,12 +238,12 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $filtered_mails = $this->mail_filter->filter(
             $this->project,
-            array(
+            [
                 $this->user_registered->getEmail(),
                 $this->user_active->getEmail()
-            )
+            ]
         );
-        $expected_mails = array($this->user_registered->getEmail(), $this->user_active->getEmail());
+        $expected_mails = [$this->user_registered->getEmail(), $this->user_active->getEmail()];
 
         $this->assertEquals($expected_mails, $filtered_mails);
     }
@@ -254,13 +254,13 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $filtered_emails = $this->mail_filter->filter(
             $this->project,
-            array(
+            [
                 'user1@example.com',
                 'user1@example.com'
-            )
+            ]
         );
 
-        $this->assertEquals(array('user1@example.com'), array_values($filtered_emails));
+        $this->assertEquals(['user1@example.com'], array_values($filtered_emails));
     }
 
     public function testItManageWhenEmailsAreNull(): void
@@ -269,14 +269,14 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $filtered_emails = $this->mail_filter->filter(
             $this->project,
-            array(
+            [
                 null,
                 'user-active@example.com',
                 'user1@example.com'
-            )
+            ]
         );
 
-        $this->assertEquals(array('user-active@example.com', 'user1@example.com'), array_values($filtered_emails));
+        $this->assertEquals(['user-active@example.com', 'user1@example.com'], array_values($filtered_emails));
     }
 
     public function testItManageWhenEmailsAreFalse(): void
@@ -285,13 +285,13 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
 
         $filtered_emails = $this->mail_filter->filter(
             $this->project,
-            array(
+            [
                 false,
                 'user-active@example.com',
                 'user1@example.com'
-            )
+            ]
         );
 
-        $this->assertEquals(array('user-active@example.com', 'user1@example.com'), array_values($filtered_emails));
+        $this->assertEquals(['user-active@example.com', 'user1@example.com'], array_values($filtered_emails));
     }
 }

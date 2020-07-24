@@ -42,7 +42,7 @@ class PaginatedCommentsRepresentationsBuilder
     public function getPaginatedCommentsRepresentations($pull_request_id, $project_id, $limit, $offset, $order)
     {
         $paginated_comments       = $this->comment_factory->getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order);
-        $comments_representations = array();
+        $comments_representations = [];
 
         foreach ($paginated_comments->getComments() as $comment) {
             $user = $this->user_manager->getUserById($comment->getUserId());

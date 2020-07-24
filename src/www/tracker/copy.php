@@ -25,11 +25,11 @@ if (! $request->exist('pv')) {
     }
 }
 
-$params = array('title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
+$params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
               'pagename' => 'tracker',
               'atid' => $ath->getID(),
               'pv' => $pv,
-              'help' => 'tracker-v3.html#artifact-update');
+              'help' => 'tracker-v3.html#artifact-update'];
 
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';

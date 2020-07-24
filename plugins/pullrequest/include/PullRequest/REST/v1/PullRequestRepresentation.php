@@ -157,47 +157,47 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->raw_title       = $pull_request->getTitle();
         $this->raw_description = $pull_request->getDescription();
 
-        $this->resources = array(
-            self::COMMENTS_ROUTE => array(
+        $this->resources = [
+            self::COMMENTS_ROUTE => [
                 'uri' => $this->uri . '/' . self::COMMENTS_ROUTE
-            ),
-            self::INLINE_ROUTE => array(
+            ],
+            self::INLINE_ROUTE => [
                 'uri' => $this->uri . '/' . self::INLINE_ROUTE
-            ),
-            self::LABELS_ROUTE => array(
+            ],
+            self::LABELS_ROUTE => [
                 'uri' => $this->uri . '/' . self::LABELS_ROUTE
-            ),
-            self::FILES_ROUTE => array(
+            ],
+            self::FILES_ROUTE => [
                 'uri' => $this->uri . '/' . self::FILES_ROUTE
-            ),
-            self::DIFF_ROUTE => array(
+            ],
+            self::DIFF_ROUTE => [
                 'uri' => $this->uri . '/' . self::DIFF_ROUTE
-            ),
-            self::TIMELINE_ROUTE => array(
+            ],
+            self::TIMELINE_ROUTE => [
                 'uri' => $this->uri . '/' . self::TIMELINE_ROUTE
-            ),
-        );
+            ],
+        ];
     }
 
     private function expandStatusName($status_acronym)
     {
-        $status_name = array(
+        $status_name = [
             PullRequest::STATUS_ABANDONED => self::STATUS_ABANDON,
             PullRequest::STATUS_MERGED    => self::STATUS_MERGE,
             PullRequest::STATUS_REVIEW    => self::STATUS_REVIEW
-        );
+        ];
 
         return $status_name[$status_acronym];
     }
 
     private function expandMergeStatusName($merge_status_acronym)
     {
-        $status_name = array(
+        $status_name = [
             PullRequest::NO_FASTFORWARD_MERGE => self::NO_FASTFORWARD_MERGE,
             PullRequest::FASTFORWARD_MERGE    => self::FASTFORWARD_MERGE,
             PullRequest::CONFLICT_MERGE       => self::CONFLICT_MERGE,
             PullRequest::UNKNOWN_MERGE        => self::UNKNOWN_MERGE
-        );
+        ];
 
         return $status_name[$merge_status_acronym];
     }

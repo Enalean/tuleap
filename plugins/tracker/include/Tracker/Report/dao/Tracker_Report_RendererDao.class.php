@@ -123,7 +123,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
     public function forceOrder($report_id, $renderers_order)
     {
         $report_id = $this->da->escapeInt($report_id);
-        $case = array();
+        $case = [];
         foreach ($renderers_order as $rank => $id) {
             $rank = $this->da->escapeInt($rank);
             $id   = $this->da->escapeInt($id);

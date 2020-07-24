@@ -76,7 +76,7 @@ class PermissionsManagerSavePermissionsCommonTest extends TestCase
             ->with($this->project_id, $this->permission_type, $this->object_id)
             ->once();
 
-        $this->savePermissions(array(104));
+        $this->savePermissions([104]);
     }
 
     public function testItSavesTheValueForSeveralStaticUGroupIds()
@@ -98,7 +98,7 @@ class PermissionsManagerSavePermissionsCommonTest extends TestCase
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(104, 201));
+        $this->savePermissions([104, 201]);
     }
 
     public function testItSavesOnlyOneInstanceOfGroups()
@@ -114,6 +114,6 @@ class PermissionsManagerSavePermissionsCommonTest extends TestCase
             ->ordered()
             ->andReturns(true);
 
-        $this->savePermissions(array(104, 201, 104));
+        $this->savePermissions([104, 201, 104]);
     }
 }

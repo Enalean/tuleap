@@ -63,7 +63,7 @@ class TrackerSemanticContributorTest extends TestCase
     {
         $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml'));
         $root          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_mapping = array('F13' => '102');
+        $array_mapping = ['F13' => '102'];
 
         $this->semantic->exportToXML($root, $array_mapping);
 
@@ -76,7 +76,7 @@ class TrackerSemanticContributorTest extends TestCase
     public function testItDoesNotExportIfFieldIsNotExported()
     {
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_xml_mapping = array();
+        $array_xml_mapping = [];
 
         $this->semantic->exportToXML($root, $array_xml_mapping);
 

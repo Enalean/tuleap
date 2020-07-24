@@ -121,7 +121,7 @@ class RepositoryCreator
         $svn_repository = $this->createRepository($svn_repository);
         $this->logCreation($svn_repository);
 
-        $initial_repository_layout = array();
+        $initial_repository_layout = [];
 
         return $this->sendEvent($svn_repository, $committer, $initial_repository_layout, $copy_from_core);
     }

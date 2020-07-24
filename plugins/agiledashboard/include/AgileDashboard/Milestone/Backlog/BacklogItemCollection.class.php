@@ -27,10 +27,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     Countable
 {
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItem[] */
-    private $rows = array();
+    private $rows = [];
 
     /** @var int[] */
-    private $index = array();
+    private $index = [];
 
     /** @var string */
     private $parent_item_name = '';

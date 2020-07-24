@@ -34,10 +34,10 @@ class User_ForgeUserGroupUsersFactory
         $rows = $this->users_dao->getUsersByForgeUserGroupId($user_group->getId());
 
         if (! $rows) {
-            return array();
+            return [];
         }
 
-        return $rows->instanciateWith(array($this, 'instantiateFromRow'));
+        return $rows->instanciateWith([$this, 'instantiateFromRow']);
     }
 
     public function instantiateFromRow(array $row)

@@ -77,7 +77,7 @@ class RegexpPermissionFilterTest extends TestCase
         $patterns = $this->buildPatterns();
 
         $this->permission_factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturns($patterns);
-        $this->permission_factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturns(array());
+        $this->permission_factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturns([]);
         $this->permission_destructor->shouldReceive('deleteRepositoryPermissions')->times(16);
 
         $this->permission_filter->filterNonRegexpPermissions($this->repository);
@@ -85,7 +85,7 @@ class RegexpPermissionFilterTest extends TestCase
 
     private function buildPatterns(): array
     {
-        $patterns = array(
+        $patterns = [
             '*',
             '/*',
             'master',
@@ -107,17 +107,17 @@ class RegexpPermissionFilterTest extends TestCase
             "\n",
             "\v",
             "\f"
-        );
+        ];
 
-        $built_pattern = array();
+        $built_pattern = [];
 
         foreach ($patterns as $key => $pattern) {
             $built_pattern[] = new FineGrainedPermission(
                 $key,
                 $this->repository->getId(),
                 $pattern,
-                array(NameTranslator::PROJECT_ADMINS),
-                array(NameTranslator::PROJECT_MEMBERS)
+                [NameTranslator::PROJECT_ADMINS],
+                [NameTranslator::PROJECT_MEMBERS]
             );
         }
 

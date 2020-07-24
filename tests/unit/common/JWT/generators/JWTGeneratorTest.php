@@ -66,7 +66,7 @@ class JWTGeneratorTest extends TestCase
         $this->user_manager = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
-        $u_groups = array('@site_active');
+        $u_groups = ['@site_active'];
 
         $this->ugroup_literalizer = \Mockery::mock(UGroupLiteralizer::class);
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
@@ -86,10 +86,10 @@ class JWTGeneratorTest extends TestCase
 
     public function testContentJWT(): void
     {
-        $expected = array(
+        $expected = [
             'user_id'     => 9,
-            'user_rights' => array('@site_active')
-        );
+            'user_rights' => ['@site_active']
+        ];
 
         $token        = $this->jwt_generator->getToken();
         $decoded      = (new Parser())->parse($token);

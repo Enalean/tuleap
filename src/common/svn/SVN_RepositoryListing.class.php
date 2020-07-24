@@ -47,7 +47,7 @@ class SVN_RepositoryListing
 
     public function getSvnPaths(PFUser $user, Project $project, $svn_path)
     {
-        $paths            = array();
+        $paths            = [];
         $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
 
         foreach ($content as $line) {
@@ -73,7 +73,7 @@ class SVN_RepositoryListing
         $paths = $this->getSvnPaths($user, $project, $svn_path);
 
         if (empty($paths)) {
-            return array();
+            return [];
         }
 
         return $this->sortSvnPathByTimestamp($project, $svn_path, $sort, $paths);
@@ -81,7 +81,7 @@ class SVN_RepositoryListing
 
     private function sortSvnPathByTimestamp(Project $project, $svn_path, $sort, array $paths)
     {
-        $date_based_path = array();
+        $date_based_path = [];
         foreach ($paths as $path) {
             $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path . '/' . $path);
             $date_based_path[$path_info->getTimestamp()][] = $path_info;
@@ -106,14 +106,14 @@ class SVN_RepositoryListing
 
     private function splitHistory(array $output)
     {
-        $history = array();
+        $history = [];
         for ($i = 2; $i < count($output); $i++) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/\s*(\d+)\s*(.*)/', $output[$i], $matches)) {
-                $history[] = array(
+                $history[] = [
                     'revision' => $matches[1],
                     'path'     => $matches[2],
-                );
+                ];
             }
         }
         return $history;
@@ -121,7 +121,7 @@ class SVN_RepositoryListing
 
     private function flattenTimestampBasedArrayOfPathInfo($date_based_path)
     {
-        $data = array();
+        $data = [];
         foreach ($date_based_path as $list_of_path) {
             $data = array_merge($data, $list_of_path);
         }

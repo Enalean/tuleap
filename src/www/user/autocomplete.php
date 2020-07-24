@@ -72,19 +72,19 @@ if ($request->get('return_type') === 'json_for_select_2') {
 
 // Number of user to display
 $limit = 15;
-$userList = array();
+$userList = [];
 
 // Raise an evt
 $pluginAnswered = false;
 $has_more = false;
-$evParams = array('searchToken'     => $userName,
+$evParams = ['searchToken'     => $userName,
                   'limit'           => $limit,
                   'codendiUserOnly' => $codendiUserOnly,
                   'json_format'     => $json_format,
                   'userList'        => &$userList,
                   'has_more'        => &$has_more,
                   'pluginAnswered'  => &$pluginAnswered
-);
+];
 
 $em = EventManager::instance();
 $em->processEvent("ajax_search_user", $evParams);
@@ -101,13 +101,13 @@ if (count($userList) < $limit) {
 
         $is_user_restricted = $user->isRestricted();
         if (! $is_user_restricted || ($is_user_restricted && $display_restricted_user)) {
-            $userList[] = array(
+            $userList[] = [
                 'display_name' => $row['realname'] . " (" . $row['user_name'] . ")",
                 'login'        => $row['user_name'],
                 'has_avatar'   => $row['has_avatar'],
                 'avatar_url'   => $user->getAvatarUrl(),
                 'user_id'      => $row['user_id'],
-            );
+            ];
         }
 
         $dar->next();
@@ -122,7 +122,7 @@ $userList = $post_search_event->getUserList();
 
 // Display
 if ($json_format) {
-    $json_entries = array();
+    $json_entries = [];
     $with_groups_of_user_in_project_id = $request->get('with-groups-of-user-in-project-id');
     if ($with_groups_of_user_in_project_id) {
         $ugroup_dao = new UGroupDao();
@@ -142,7 +142,7 @@ if ($json_format) {
         foreach ($ugroups_dar as $row) {
             if (
                 $row['ugroup_id'] > 100
-                || in_array($row['ugroup_id'], array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN))
+                || in_array($row['ugroup_id'], [ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN])
             ) {
                 $ugroup = new ProjectUGroup($row);
                 $id     = $ugroup->getNormalizedName();
@@ -152,17 +152,17 @@ if ($json_format) {
                     mb_stripos($text, $userName) !== false
                     || mb_stripos($id, $userName) !== false
                 ) {
-                    $json_entries[] = array(
+                    $json_entries[] = [
                         'type' => 'group',
                         'id'   => RequestFromAutocompleter::UGROUP_PREFIX . $id,
                         'text' => $text
-                    );
+                    ];
                 }
             }
         }
     }
 
-    $users_already_seen = array();
+    $users_already_seen = [];
     foreach ($userList as $user_info) {
         $user_id = $user_info['user_id'];
         if ($user_id && in_array($user_id, $users_already_seen)) {
@@ -183,12 +183,12 @@ if ($json_format) {
         ];
     }
 
-    $output = array(
+    $output = [
         'results' => array_values($json_entries),
-        'pagination' => array(
+        'pagination' => [
             'more' => $has_more
-        )
-    );
+        ]
+    ];
 
     $GLOBALS['Response']->sendJSON($output);
 } else {

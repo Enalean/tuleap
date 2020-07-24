@@ -20,11 +20,11 @@ class RssWriter extends XmlElement
     {
         parent::__construct(
             'rdf:RDF',
-            array('xmlns' => "http://purl.org/rss/1.0/",
-            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+            ['xmlns' => "http://purl.org/rss/1.0/",
+            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#']
         );
 
-        $this->_modules = array(
+        $this->_modules = [
             //Standards
         'content'    => "http://purl.org/rss/1.0/modules/content/",
         'dc'    => "http://purl.org/dc/elements/1.1/",
@@ -39,10 +39,10 @@ class RssWriter extends XmlElement
         'slash'    => "http://purl.org/rss/1.0/modules/slash/",
         'taxo'    => "http://purl.org/rss/1.0/modules/taxonomy/",
         'thr'    => "http://purl.org/rss/1.0/modules/threading/"
-        );
+        ];
 
-        $this->_uris_seen = array();
-        $this->_items = array();
+        $this->_uris_seen = [];
+        $this->_items = [];
     }
 
     public function registerModule($alias, $uri)
@@ -173,7 +173,7 @@ class RssWriter extends XmlElement
      */
     protected function elementize($elements)
     {
-        $out = array();
+        $out = [];
         foreach ($elements as $prop => $val) {
             $this->check_predicate($prop);
             $out[] = new XmlElement($prop, false, $val);

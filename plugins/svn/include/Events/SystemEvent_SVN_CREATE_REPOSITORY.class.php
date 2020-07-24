@@ -93,7 +93,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         $system_path    = $this->getRequiredParameter(0);
         $project_id     = (int) $this->getRequiredParameter(1);
         $repository_id  = $this->getRequiredParameter(3);
-        $initial_layout = $this->getParameter(4) ?: array();
+        $initial_layout = $this->getParameter(4) ?: [];
         $user           = $this->user_manager->getUserById($this->getParameter(5));
         $copy_from_core = $this->getParameter(6);
         if ($user === null) {

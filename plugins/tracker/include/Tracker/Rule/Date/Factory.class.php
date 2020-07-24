@@ -132,10 +132,10 @@ class Tracker_Rule_Date_Factory
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
         if (! $rules) {
-            return array();
+            return [];
         }
 
-        $rules_array = array();
+        $rules_array = [];
 
         while ($rule = $rules->getRow()) {
             $rules_array[] = $this->populate(

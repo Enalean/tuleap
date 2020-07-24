@@ -59,7 +59,7 @@ class SVN_TokenHandler
     public function getSVNTokensForUser(PFUser $user): array
     {
         $rows       = $this->token_dao->getSVNTokensForUser($user->getId());
-        $svn_tokens = array();
+        $svn_tokens = [];
 
         foreach ($rows as $row) {
             $svn_tokens[] = $this->instantiateFromRow($user, $row);

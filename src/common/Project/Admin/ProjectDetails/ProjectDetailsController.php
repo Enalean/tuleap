@@ -152,7 +152,7 @@ class ProjectDetailsController
         $parent_project_info               = $this->getParentProjectInfo($current_user, $project);
         $purified_project_children         = $this->buildProjectChildren($current_user, $project);
 
-        $project_trove_categories  = array();
+        $project_trove_categories  = [];
         $are_trove_categories_used = (ForgeConfig::get('sys_use_trove') != 0);
         if ($are_trove_categories_used) {
             $project_trove_categories = $this->buildProjectTroveCategories($project);
@@ -278,7 +278,7 @@ class ProjectDetailsController
             $this->description_fields_factory->getAllDescriptionFields()
         );
 
-        $previous_values = array();
+        $previous_values = [];
 
         foreach ($description_fields as $description_field_id => $description_field) {
             $current_form = trim($request->get("form_" . $description_field_id));
@@ -338,16 +338,16 @@ class ProjectDetailsController
         );
 
         // Raise an event
-        $this->event_manager->processEvent('project_admin_edition', array(
+        $this->event_manager->processEvent('project_admin_edition', [
             'group_id' => $group_id
-        ));
+        ]);
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Update successful'));
     }
 
     private function getDescriptionFieldsRepresentation()
     {
-        $description_fields_representations = array();
+        $description_fields_representations = [];
         $description_fields                 = $this->reindexRowsByDescriptionId(
             $this->description_fields_factory->getAllDescriptionFields()
         );
@@ -366,7 +366,7 @@ class ProjectDetailsController
             $translated_field_description = DescriptionFieldLabelBuilder::getFieldTranslatedDescription($description_field["desc_description"]);
             $purified_field_description   = Codendi_HTMLPurifier::instance()->purify($translated_field_description, CODENDI_PURIFIER_LIGHT);
 
-            $description_fields_representations[] = array(
+            $description_fields_representations[] = [
                 'field_name'                 => "form_" . $description_field["group_desc_id"],
                 'field_value'                => $field_value,
                 'field_label'                => DescriptionFieldLabelBuilder::getFieldTranslatedName($description_field["desc_name"]),
@@ -374,7 +374,7 @@ class ProjectDetailsController
                 'is_field_line_typed'        => $description_field["desc_type"] === 'line',
                 'is_field_text_typed'        => $description_field["desc_type"] === 'text',
                 'purified_field_description' => $purified_field_description
-            );
+            ];
         }
 
         return $description_fields_representations;
@@ -399,7 +399,7 @@ class ProjectDetailsController
     {
         $parent = $this->project_manager->getParentProject($project->getID());
 
-        $parent_project_info = array();
+        $parent_project_info = [];
 
         if (! $parent) {
             return $parent_project_info;
@@ -437,7 +437,7 @@ class ProjectDetailsController
         $children = $this->project_manager->getChildProjects($project->getID());
 
         $purifier          = Codendi_HTMLPurifier::instance();
-        $children_projects = array();
+        $children_projects = [];
 
         foreach ($children as $child) {
             if ($current_user->isMember($child->getId(), 'A')) {
@@ -456,7 +456,7 @@ class ProjectDetailsController
 
     private function reindexRowsByDescriptionId($rows)
     {
-        $result = array();
+        $result = [];
         foreach ($rows as $row) {
             $result[$row['group_desc_id']] = $row;
         }
@@ -491,9 +491,9 @@ class ProjectDetailsController
 
     private function buildProjectTroveCategories(Project $project)
     {
-        $project_trove_categories = array();
+        $project_trove_categories = [];
         foreach ($this->trove_cat_link_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
-            $project_trove_categories[] = array('trove_category_full_path' => $row_trovecat['fullpath']);
+            $project_trove_categories[] = ['trove_category_full_path' => $row_trovecat['fullpath']];
         }
 
         return $project_trove_categories;
@@ -501,12 +501,12 @@ class ProjectDetailsController
 
     private function getProjectsCreatedFromTemplate(Project $project)
     {
-        $projects = array();
+        $projects = [];
         foreach ($project->getProjectsCreatedFrom() as $subproject) {
-            $projects[] = array(
+            $projects[] = [
                 'unix_group_name' => $subproject['unix_group_name'],
                 'group_name'      => $subproject['group_name']
-            );
+            ];
         }
         return $projects;
     }

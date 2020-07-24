@@ -58,9 +58,9 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
     {
         $field_id = $this->da->escapeInt($field_id);
         if (! is_array($default_values)) {
-            $default_values = array($default_values);
+            $default_values = [$default_values];
         }
-        $values = array();
+        $values = [];
         foreach ($default_values as $v) {
             $v = (int) $v;
             if ($v) {

@@ -41,13 +41,13 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
         parent::__construct();
         $this->phptype = 'mysql';
         $this->dbsyntax = 'mysql';
-        $this->features = array(
+        $this->features = [
             'prepare' => false,
             'pconnect' => true,
             'transactions' => true,
             'limit' => 'alter'
-        );
-        $this->errorcode_map = array(
+        ];
+        $this->errorcode_map = [
             1004 => DB_ERROR_CANNOT_CREATE,
             1005 => DB_ERROR_CANNOT_CREATE,
             1006 => DB_ERROR_CANNOT_CREATE,
@@ -65,7 +65,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
             1146 => DB_ERROR_NOSUCHTABLE,
             1048 => DB_ERROR_CONSTRAINT,
             1216 => DB_ERROR_CONSTRAINT
-        );
+        ];
     }
 
     public function connect()

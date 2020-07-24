@@ -79,7 +79,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
 
     public function testItRetrievesRawMailThatCreatedArtifact(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(array('changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation), array('changeset_id' => 2, 'raw_mail' => $this->raw_mail_update)));
+        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
         $raw_mail = $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
 
         $this->assertEquals($this->raw_mail_creation, $raw_mail);
@@ -95,7 +95,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
 
     public function testItRetrievesRawMailThatCreatedChangeset(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(array('changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation), array('changeset_id' => 2, 'raw_mail' => $this->raw_mail_update)));
+        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);
 
         $this->assertEquals($this->raw_mail_creation, $raw_mail);
@@ -103,7 +103,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
 
     public function testItRetrievesRawMailThatCreatedOtherChangeset(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(array('changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation), array('changeset_id' => 2, 'raw_mail' => $this->raw_mail_update)));
+        $this->dao->shouldReceive('searchByArtifactId')->with(123)->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->other_changeset_by_mail);
 
         $this->assertEquals($this->raw_mail_update, $raw_mail);
@@ -119,7 +119,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
 
     public function testItCachesResultsToSaveTheRainForestAndKittens(): void
     {
-        $this->dao->shouldReceive('searchByArtifactId')->with(123)->once()->andReturns(\TestHelper::arrayToDar(array('changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation), array('changeset_id' => 2, 'raw_mail' => $this->raw_mail_update)));
+        $this->dao->shouldReceive('searchByArtifactId')->with(123)->once()->andReturns(\TestHelper::arrayToDar(['changeset_id' => 1, 'raw_mail' => $this->raw_mail_creation], ['changeset_id' => 2, 'raw_mail' => $this->raw_mail_update]));
 
         $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
         $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);

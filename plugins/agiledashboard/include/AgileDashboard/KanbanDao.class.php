@@ -43,7 +43,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
     private function duplicateReports($old_kanban_id, $new_kanban_id, array $report_mapping)
     {
-        array_walk($report_mapping, array($this, 'convertValueIdToWhenThenStatement'));
+        array_walk($report_mapping, [$this, 'convertValueIdToWhenThenStatement']);
         $new_report_id = "CASE report_id " . implode(' ', $report_mapping) . " END";
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_tracker_reports (kanban_id, report_id)
@@ -55,7 +55,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
     private function duplicateColumns($old_kanban_id, $new_kanban_id, array $field_mapping)
     {
-        $value_mapping = array();
+        $value_mapping = [];
         foreach ($field_mapping as $mapping) {
             $value_mapping += $mapping['values'];
         }

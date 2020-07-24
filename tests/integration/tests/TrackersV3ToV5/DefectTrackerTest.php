@@ -152,11 +152,11 @@ class DefectTrackerTest extends TestCase
 
     public function testItGivesFullAccessToAllUsers()
     {
-        $this->assertEquals($this->defect_tracker->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($this->defect_tracker->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker::PERMISSION_FULL
-            )
-        ));
+            ]
+        ]);
     }
 
     public function testItHasATitleSemantic()
@@ -167,17 +167,17 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Summary");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::REGISTERED => array(
+            ],
+            ProjectUGroup::REGISTERED => [
                 Tracker_FormElement::PERMISSION_SUBMIT
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasAStatusSemantic()
@@ -188,14 +188,14 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Status");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasOnlyOneOpenValueForStatusSemantic()
@@ -216,17 +216,17 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertFalse($field->isMultiple());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::REGISTERED => array(
+            ],
+            ProjectUGroup::REGISTERED => [
                 Tracker_FormElement::PERMISSION_SUBMIT
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasSubmittedBy()
@@ -237,11 +237,11 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Submitted by");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasATextFieldDescription()
@@ -252,17 +252,17 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Original Submission");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::REGISTERED => array(
+            ],
+            ProjectUGroup::REGISTERED => [
                 Tracker_FormElement::PERMISSION_SUBMIT
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasAnUnusedDateFieldCloseDate()
@@ -273,14 +273,14 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Close Date");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(0, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasAnUnusedField()
@@ -301,7 +301,7 @@ class DefectTrackerTest extends TestCase
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
 
-        $this->compareValuesToLabel($field->getAllValues(), array('Fixed', 'Invalid', 'Wont Fix', 'Later', 'Remind', 'Works for me', 'Duplicate'));
+        $this->compareValuesToLabel($field->getAllValues(), ['Fixed', 'Invalid', 'Wont Fix', 'Later', 'Remind', 'Works for me', 'Duplicate']);
     }
 
     private function compareValuesToLabel(array $values, array $labels)
@@ -328,7 +328,7 @@ class DefectTrackerTest extends TestCase
     public function testItHasFourCriteria()
     {
         $criteria = $this->bugs_report->getCriteria();
-        $this->thereAreCriteriaForFields($criteria, array('Category', 'Group', 'Assigned to', 'Status'));
+        $this->thereAreCriteriaForFields($criteria, ['Category', 'Group', 'Assigned to', 'Status']);
     }
 
     protected function thereAreCriteriaForFields(array $criteria, array $field_labels)
@@ -358,7 +358,7 @@ class DefectTrackerTest extends TestCase
         $this->assertInstanceOf(Tracker_Report_Renderer_Table::class, $renderer);
 
         $columns = $renderer->getTableColumns(false, true, false);
-        $this->thereAreColumnsForFields($columns, array('Submitted by', 'Submitted on', 'Artifact ID', 'Summary', 'Assigned to'));
+        $this->thereAreColumnsForFields($columns, ['Submitted by', 'Submitted on', 'Artifact ID', 'Summary', 'Assigned to']);
     }
 
     public function thereAreColumnsForFields($columns, $field_labels)

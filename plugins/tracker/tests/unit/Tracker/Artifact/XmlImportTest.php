@@ -204,7 +204,7 @@ class XmlImportTest extends TestCase
 
         $this->user_manager = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('getUserByIdentifier')->withArgs(['john_doe'])->andReturn($this->john_doe);
-        $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(new PFUser(array('language_id' => 'en_US', 'user_id' => 0)));
+        $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(new PFUser(['language_id' => 'en_US', 'user_id' => 0]));
 
         $this->xml_import_helper = Mockery::mock(XMLImportHelper::class);
         $this->xml_import_helper->shouldReceive('getUser')->andReturn($this->john_doe);
@@ -255,9 +255,9 @@ class XmlImportTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInNewArtifact.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'OK'
-        );
+        ];
 
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
@@ -273,9 +273,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Again'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -293,9 +293,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_2)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Value'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -357,9 +357,9 @@ class XmlImportTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInNewArtifact.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'OK'
-        );
+        ];
 
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
@@ -375,9 +375,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Again'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -395,9 +395,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_2)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Value'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -452,9 +452,9 @@ class XmlImportTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__ . '/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'OK'
-        );
+        ];
 
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
@@ -470,9 +470,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Again'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -490,9 +490,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_2)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Value'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -544,9 +544,9 @@ class XmlImportTest extends TestCase
         $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml');
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'OK'
-        );
+        ];
 
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
@@ -562,9 +562,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_1)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Again'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -582,9 +582,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_2)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Value'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -646,9 +646,9 @@ class XmlImportTest extends TestCase
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Again', 1);
         $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Value', 2);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'OK'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -666,9 +666,9 @@ class XmlImportTest extends TestCase
             ->once()
             ->andReturn($changeset_1);
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Again'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')
@@ -686,9 +686,9 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_2)
             ->once();
 
-        $data = array(
+        $data = [
             $this->summary_field_id => 'Value'
-        );
+        ];
 
         $this->new_changeset_creator
             ->shouldReceive('create')

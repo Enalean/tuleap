@@ -55,20 +55,20 @@ class UserAccountManagerTest extends TestCase
         );
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
 
-        $this->original_keys = array(
+        $this->original_keys = [
             'Im a key',
             'Im a key',
             'Im another key',
             'Im an identical key',
             'Im an additional key',
-        );
+        ];
 
-        $this->new_keys = array(
+        $this->new_keys = [
             'Im a new key',
             'Im another new key',
             'Im another new key',
             'Im an identical key',
-        );
+        ];
     }
 
     public function testItThrowsAnExceptionIfGerritSynchFails(): void

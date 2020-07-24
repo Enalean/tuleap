@@ -31,9 +31,9 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $use_perm = $this->da->escapeInt($use_perm);
-        $values = array();
+        $values = [];
         if (! is_array($value_ids)) {
-            $value_ids = array($value_ids);
+            $value_ids = [$value_ids];
         }
         foreach ($value_ids as $v) {
             $values[] = "($changeset_value_id, $use_perm, $v)";

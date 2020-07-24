@@ -22,20 +22,20 @@
 class PermissionsUGroupMapper
 {
 
-    private $mapping = array(
+    private $mapping = [
         ProjectUGroup::ANONYMOUS     => ProjectUGroup::ANONYMOUS,
         ProjectUGroup::AUTHENTICATED => ProjectUGroup::REGISTERED,
         ProjectUGroup::REGISTERED    => ProjectUGroup::REGISTERED,
-    );
+    ];
 
     public function __construct(Project $project)
     {
         if (! $project->isPublic()) {
-            $this->mapping = array(
+            $this->mapping = [
                 ProjectUGroup::ANONYMOUS     => ProjectUGroup::PROJECT_MEMBERS,
                 ProjectUGroup::AUTHENTICATED => ProjectUGroup::PROJECT_MEMBERS,
                 ProjectUGroup::REGISTERED    => ProjectUGroup::PROJECT_MEMBERS,
-            );
+            ];
         } else {
             if (! ForgeConfig::areAnonymousAllowed()) {
                 if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {

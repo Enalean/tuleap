@@ -37,7 +37,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
 
     public function getCollectionOfUserToBeNotifiedPresenter(MailNotification $notification)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($this->dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $user = new \PFUser($row);
             $presenters[] = new UserInvolvedInNotificationPresenter(

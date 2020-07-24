@@ -74,7 +74,7 @@ class PostReceiveMailSender
         if (count($notified_mails) === 0) {
             return true;
         }
-        $mail_raw_output  = array();
+        $mail_raw_output  = [];
         $exit_status_code = 0;
         exec('GIT_DIR=' . escapeshellarg($repository->getFullPath()) .
             ' /usr/share/tuleap/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .

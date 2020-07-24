@@ -251,7 +251,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
      */
     private function getDescendantPlannifiableItems()
     {
-        $item_list = array();
+        $item_list = [];
         foreach ($this->getHierarchiesToSearchIn() as $hierarchy) {
             reset($hierarchy);
 
@@ -284,7 +284,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         $hierarchy_factory                          = Tracker_HierarchyFactory::instance();
         $types_in_submilestone_but_not_in_milestone = array_diff($this->descendant_tracker_ids, $this->backlog_tracker_ids);
 
-        $hierarchies = array();
+        $hierarchies = [];
         foreach ($types_in_submilestone_but_not_in_milestone as $tracker_id) {
             $submilestone_backlog_tracker_hierarchy_tree = array_reverse($hierarchy_factory->getUpwardsHierarchyForTracker($tracker_id));
 

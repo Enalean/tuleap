@@ -47,7 +47,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @throws DeleteFailedException
      */
-    public function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
         //delete all sub items before
         $items = $item->getAllItems();
@@ -81,7 +81,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
@@ -114,7 +114,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         ))->deleteWiki($wiki, $user, $should_propagate_deletion);
     }
 
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
@@ -122,7 +122,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             if (isset($params['version']) && $params['version'] !== false) {
@@ -138,7 +138,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitFile($item, $params);
     }
@@ -146,7 +146,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

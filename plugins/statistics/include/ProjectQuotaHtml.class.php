@@ -110,7 +110,7 @@ class ProjectQuotaHtml
     {
         $validSort = new Valid_String('sort');
         $sortBy    = null;
-        $validRequest = array();
+        $validRequest = [];
         if ($request->valid($validSort)) {
             $sortBy  = $request->get('sort');
             $validRequest['sort'] = $sortBy;
@@ -129,7 +129,7 @@ class ProjectQuotaHtml
 
     public function getListOfProjectQuotaPresenters(HTTPRequest $request)
     {
-        $quotas       = array();
+        $quotas       = [];
         $count        = 25;
         $offset       = $this->validateOffset($request);
         $filter       = $this->validateProjectFilter($request);
@@ -146,7 +146,7 @@ class ProjectQuotaHtml
             $project_name = (empty($project)) ? '' : $project->getPublicName();
             $user         = $this->user_manager->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
 
-            $quotas[] = array(
+            $quotas[] = [
                 'project_id'              => $row[Statistics_ProjectQuotaDao::GROUP_ID],
                 'project_name'            => $project_name,
                 'user_name'               => UserHelper::instance()->getDisplayNameFromUser($user),
@@ -164,7 +164,7 @@ class ProjectQuotaHtml
                     sprintf(dgettext('tuleap-statistics', 'Wow, wait a minute. You are about to delete the quota for <b>%1$s</b> project. Please confirm your action.'), $project_name),
                     CODENDI_PURIFIER_LIGHT
                 )
-            );
+            ];
         }
 
         $pagination = new \Tuleap\Layout\PaginationPresenter(
@@ -173,13 +173,13 @@ class ProjectQuotaHtml
             count($quotas),
             $total_size,
             '/plugins/statistics/project_quota.php',
-            array()
+            []
         );
 
-        return array(
+        return [
             'pagination' => $pagination,
             'quotas'     => $quotas
-        );
+        ];
     }
 
     /**
@@ -191,7 +191,7 @@ class ProjectQuotaHtml
      */
     private function getListOfProjectsIds($filter)
     {
-        $list = array();
+        $list = [];
         if (! $filter) {
             return $list;
         }
@@ -218,7 +218,7 @@ class ProjectQuotaHtml
      */
     public function handleRequest(HTTPRequest $request)
     {
-        $validAction = new Valid_WhiteList('action', array('add', 'delete'));
+        $validAction = new Valid_WhiteList('action', ['add', 'delete']);
         if ($request->valid($validAction)) {
             $action = $request->get('action');
             switch ($action) {
@@ -303,7 +303,7 @@ class ProjectQuotaHtml
     private function enhanceWithModalValues(array $exceeding_projects): array
     {
         $new_values['csrf_token']  = new CSRFSynchronizerToken('');
-        $enhanced_projects         = array();
+        $enhanced_projects         = [];
 
         foreach ($exceeding_projects as $project) {
             $new_values['subject_content'] = sprintf(dgettext('tuleap-statistics', '[Disk quota] [Warning] Project %1$s is exceeding allowed disk quota'), $project['project_name']);

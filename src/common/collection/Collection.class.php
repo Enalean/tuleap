@@ -30,7 +30,7 @@ class Collection
         if (is_array($initial_array)) {
             $this->elements = $initial_array;
         } else {
-            $this->elements = array();
+            $this->elements = [];
         }
     }
 

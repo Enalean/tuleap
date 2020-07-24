@@ -119,13 +119,13 @@ class IndexController extends TestManagementController
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $execution_tracker);
-        return array(
-            "permissions" => array(
+        return [
+            "permissions" => [
                 "create" => $issue_tracker->userCanSubmitArtifact($current_user),
                 "link"   => $link_field && $link_field->userCanUpdate($current_user)
-            ),
+            ],
             "xref_color" => $issue_tracker->getColor()->getName()
-        );
+        ];
     }
 
     private function recordVisit(PFUser $current_user): void

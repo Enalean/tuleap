@@ -276,7 +276,7 @@ class LDAPResult implements Iterator, Countable
             unset($members['count']);
             return $members;
         } else {
-            return array();
+            return [];
         }
     }
 

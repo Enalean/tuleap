@@ -44,7 +44,7 @@ class BaseLanguageFactory
      */
     public function __construct()
     {
-        $this->languages           = array();
+        $this->languages           = [];
         $this->supported_languages = ForgeConfig::get('sys_supported_languages');
         $this->default_language    = ForgeConfig::get('sys_lang');
     }
@@ -99,7 +99,7 @@ class BaseLanguageFactory
 
     public function getAvailableLanguages()
     {
-        $languages = array();
+        $languages = [];
         foreach ($this->getSupportedLanguages() as $lang) {
             $languages[$lang] = $this->getBaseLanguage($lang)->getText('system', 'locale_label');
         }

@@ -98,9 +98,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $dpm  = Docman_PermissionsManager::instance($this->groupId);
         $isAdmin = $dpm->userCanAdmin($user);
 
-        $html .= html_build_list_table_top(array(dgettext('tuleap-docman', 'Report'),
+        $html .= html_build_list_table_top([dgettext('tuleap-docman', 'Report'),
                                                  dgettext('tuleap-docman', 'Scope:'),
-                                                 dgettext('tuleap-docman', 'Delete'),));
+                                                 dgettext('tuleap-docman', 'Delete'),]);
 
         $reportFactory = new Docman_ReportFactory($this->groupId);
 
@@ -133,9 +133,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $r != null
             && $r->getGroupId() == $this->groupId
         ) {
-            $txts = array(dgettext('tuleap-docman', 'Personal'),
-                          dgettext('tuleap-docman', 'Project'));
-            $vals = array('I', 'P');
+            $txts = [dgettext('tuleap-docman', 'Personal'),
+                          dgettext('tuleap-docman', 'Project')];
+            $vals = ['I', 'P'];
 
             $html .= '<p>' . dgettext('tuleap-docman', 'You can customize your report by adding text and an image. Note: an image is just a reference on any valid image available in documentation manager (across projects).') . '</p>';
 

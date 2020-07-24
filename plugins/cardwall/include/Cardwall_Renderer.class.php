@@ -102,7 +102,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      */
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
     {
-        $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
+        $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), ['sb']);
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->field, $used_sb);
         return $this->fetchCards($matching_ids, $user, $form);
     }
@@ -130,7 +130,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $redirect_parameter = 'cardwall[renderer][' . $this->report->id . ']=' . $this->id;
 
         if ($this->field === null) {
-            $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
+            $board = new Cardwall_Board([], new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
             $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($this->field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
@@ -155,7 +155,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             $column_autostack->setAutostack($columns, $column_preferences);
             $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
             $mapping_collection  = $this->config->getCardwallMappings(
-                array($this->field->getId() => $this->field),
+                [$this->field->getId() => $this->field],
                 $columns
             );
             $background_color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());

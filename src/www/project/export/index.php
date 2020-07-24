@@ -42,7 +42,7 @@ if (! $group_id) {
     exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
 }
 
-session_require(array('group' => $group_id,'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 //  get the Group object
 $pm = ProjectManager::instance();
@@ -59,7 +59,7 @@ $project = $pm->getProject($group_id);
 $groupname = $project->getUnixName();
 $pg_title = $Language->getText('project_admin_utils', 'project_data_export') . ' ' . $groupname;
 
-$em->processEvent('project_export', array('export' => $export, 'project' => $project));
+$em->processEvent('project_export', ['export' => $export, 'project' => $project]);
 
 switch ($export) {
     case 'artifact':
@@ -67,9 +67,9 @@ switch ($export) {
         break;
 
     case 'artifact_format':
-        project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_export.php');
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 
     case 'artifact_history':
@@ -77,9 +77,9 @@ switch ($export) {
         break;
 
     case 'artifact_history_format':
-        project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_history_export.php');
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 
     case 'artifact_deps':
@@ -87,9 +87,9 @@ switch ($export) {
         break;
 
     case 'artifact_deps_format':
-        project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_deps_export.php');
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 
     case 'access_logs':
@@ -97,9 +97,9 @@ switch ($export) {
         break;
 
     case 'access_logs_format':
-        project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./access_logs_export.php');
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 
     case 'user_groups':
@@ -107,34 +107,34 @@ switch ($export) {
         break;
 
     case 'user_groups_format':
-        project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./user_groups_export.php');
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 
     default:
-        project_admin_header(array('title' => $pg_title, 'help' => 'project-admin.html#project-data-export'), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
+        project_admin_header(['title' => $pg_title, 'help' => 'project-admin.html#project-data-export'], NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
      // Display the welcome screen
         echo '
-<h3> ' . $Language->getText('project_export_index', 'export_to_csv_hdr', array(help_button('project-admin.html#text-file-export'))) . '</h3>';
+<h3> ' . $Language->getText('project_export_index', 'export_to_csv_hdr', [help_button('project-admin.html#text-file-export')]) . '</h3>';
 
         echo '
 <p> ' . $Language->getText('project_export_index', 'export_to_csv_msg') . '</p>';
 
      // Show all the fields currently available in the system
-        $entry_label                           = array();
-        $entry_data_export_links               = array();
-        $entry_data_export_format_links        = array();
-        $history_data_export_links             = array();
-        $history_data_export_format_links      = array();
-        $dependencies_data_export_links        = array();
-        $dependencies_data_export_format_links = array();
+        $entry_label                           = [];
+        $entry_data_export_links               = [];
+        $entry_data_export_format_links        = [];
+        $history_data_export_links             = [];
+        $history_data_export_format_links      = [];
+        $dependencies_data_export_links        = [];
+        $dependencies_data_export_format_links = [];
         $iu = 0;
 
-        $titles = array('',
+        $titles = ['',
                      $Language->getText('project_export_index', 'art_data'),
                      $Language->getText('project_export_index', 'history'),
-                     $Language->getText('project_export_index', 'dependencies'));
+                     $Language->getText('project_export_index', 'dependencies')];
         echo html_build_list_table_top($titles);
 
         if ($project->usesTracker()) {
@@ -173,7 +173,7 @@ switch ($export) {
         $dependencies_data_export_format_links['user_groups'] = null;
 
     // Plugins entries
-        $exportable_items = array(
+        $exportable_items = [
                         'group_id' => $group_id,
                         'labels' => &$entry_label,
                         'data_export_links' => &$entry_data_export_links,
@@ -181,7 +181,7 @@ switch ($export) {
                         'history_export_links' => &$history_data_export_links,
                         'history_export_format_links' => &$history_data_export_format_links,
                         'dependencies_export_links' => &$dependencies_data_export_links,
-                        'dependencies_export_format_links' => &$dependencies_data_export_format_links);
+                        'dependencies_export_format_links' => &$dependencies_data_export_format_links];
         $em->processEvent('project_export_entry', $exportable_items);
 
         function key_exists_and_value_not_null($key, array $array)
@@ -238,6 +238,6 @@ switch ($export) {
 
         echo '</TABLE>';
 
-        site_project_footer(array());
+        site_project_footer([]);
         break;
 }

@@ -32,17 +32,17 @@ abstract class PluginController
      * List of PluginViews method name to execute
      * @var Array
      */
-    protected $views = array('header' => array(), 'footer' => array());
+    protected $views = ['header' => [], 'footer' => []];
     /**
      * List of PluginActions method name to execute
      * @var Array
      */
-    protected $actions = array();
+    protected $actions = [];
     /**
      * This array allows data storage and sharing between Actions and Views
      * @var Array
      */
-    protected $actionResultData = array('dummy' => 'dummy');
+    protected $actionResultData = ['dummy' => 'dummy'];
     /**
      * Logical actions, they allow one to control execution of user stories which usually call several PluginActions at one time
      * @var Array
@@ -167,12 +167,12 @@ abstract class PluginController
         return $this->actionResultData;
     }
 
-    public function addView($viewName, $params = array())
+    public function addView($viewName, $params = [])
     {
         $this->views[$viewName] = $params;
     }
 
-    public function addAction($actionName, $params = array())
+    public function addAction($actionName, $params = [])
     {
         $this->actions[$actionName] = $params;
     }
@@ -214,7 +214,7 @@ abstract class PluginController
         if (empty($this->actions)) {
             return false;
         }
-        $results       = array();
+        $results       = [];
         $className     = static::class . 'Actions';
         if (! class_exists($className)) {
             throw new LogicException("$className does not exist");

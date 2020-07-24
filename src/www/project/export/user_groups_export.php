@@ -44,17 +44,17 @@ if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
 }
 
-$vExport = new Valid_WhiteList('export', array('user_groups', 'user_groups_format'));
+$vExport = new Valid_WhiteList('export', ['user_groups', 'user_groups_format']);
 $vExport->required();
 if ($request->valid($vExport)) {
     $export = $request->get('export');
 
-    $col_list = array('group', 'username', 'realname', 'email', 'status');
-    $lbl_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group'),
-                      'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', array(ForgeConfig::get('sys_name'))),
+    $col_list = ['group', 'username', 'realname', 'email', 'status'];
+    $lbl_list = ['group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group'),
+                      'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', [ForgeConfig::get('sys_name')]),
                       'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname'),
                       'email'    => _('Email'),
-                      'status'   => _('Status'));
+                      'status'   => _('Status')];
     $um  = UserManager::instance();
 
     switch ($export) {
@@ -68,7 +68,7 @@ if ($request->valid($vExport)) {
             echo build_csv_header($col_list, $lbl_list) . $eol;
 
             /** @psalm-suppress DeprecatedFunction */
-            $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
+            $ugs = ugroup_db_get_existing_ugroups($group_id, [$GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']]);
             while ($ugrp = db_fetch_array($ugs)) {
                 if ($ugrp['ugroup_id'] <= 100) {
                     $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id, false, null, true, true);
@@ -81,11 +81,11 @@ if ($request->valid($vExport)) {
                 $users = db_query($sqlUsers);
                 while ($user = db_fetch_array($users)) {
                     $user_status_presenter = new StatusPresenter($user['status']);
-                    $r = array('group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugrp['name']),
+                    $r = ['group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugrp['name']),
                                'username' => $user['user_name'],
                                'realname' => $um->getUserById($user['user_id'])->getRealname(),
                                'email'    => $user['email'],
-                               'status'   => $user_status_presenter->status_label);
+                               'status'   => $user_status_presenter->status_label];
                     echo build_csv_record($col_list, $r) . $eol;
                 }
             }
@@ -104,17 +104,17 @@ if ($request->valid($vExport)) {
             $uRow = db_fetch_array($users);
             $user = $um->getUserById($uRow['user_id']);
 
-            $dsc_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group_desc'),
-                              'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username_desc', array(ForgeConfig::get('sys_name'))),
+            $dsc_list = ['group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group_desc'),
+                              'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username_desc', [ForgeConfig::get('sys_name')]),
                               'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname_desc'),
                               'email'    => _('User email address'),
-                              'status'   => _('User status'));
+                              'status'   => _('User status')];
             $user_status_presenter = new StatusPresenter($user->getStatus());
-            $record   = array('group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_members'),
+            $record   = ['group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_members'),
                               'username' => $user->getName(),
                               'realname' => $user->getRealName(),
                               'email'    => $user->getEmail(),
-                              'status'   => $user_status_presenter->status_label);
+                              'status'   => $user_status_presenter->status_label];
             display_exported_fields($col_list, $lbl_list, $dsc_list, $record);
             break;
     }

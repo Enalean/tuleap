@@ -45,15 +45,15 @@ class WikiServiceViews extends WikiViews
             $this->html_params['title']  = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_page_title',
-                array( $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
-                $pm->getProject($this->gid)->getPublicName())
+                [ $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
+                $pm->getProject($this->gid)->getPublicName()]
             );
             $this->base_url = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
         } else {
             $this->html_params['title']  = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_title',
-                array($pm->getProject($this->gid)->getPublicName())
+                [$pm->getProject($this->gid)->getPublicName()]
             );
             $this->base_url = '/wiki/index.php?group_id=' . $this->gid;
         }
@@ -77,7 +77,7 @@ class WikiServiceViews extends WikiViews
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', array($hurl));
+        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', [$hurl]);
         if (! $hideFlag) {
             $this->_browseWikiDocuments();
         }
@@ -99,21 +99,21 @@ class WikiServiceViews extends WikiViews
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', array($hurl));
+        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', [$hurl]);
         if (! $hideFlag) {
             $this->_browseProjectWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', array($hurl));
+        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', [$hurl]);
         if (! $hideFlag) {
             $this->_browseEmptyWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', array($hurl));
+        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', [$hurl]);
         if (! $hideFlag) {
             $this->_newPageForm($this->wikiLink . '&view=browsePages');
         }
@@ -130,7 +130,7 @@ class WikiServiceViews extends WikiViews
             $href = $this->_buildPageLink($we->wikiPage, $we->getName());
             if (! empty($href)) {
                 $description = $this->purifier->purify($we->getDesc());
-                print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $description));
+                print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', [$href, $description]);
             }
 
             $wei->next();
@@ -397,7 +397,7 @@ class WikiServiceViews extends WikiViews
         echo $GLOBALS['Language']->getText(
             'wiki_views_wikiserviceviews',
             'install_intro',
-            array($GLOBALS['Language']->getText('global', 'btn_create'))
+            [$GLOBALS['Language']->getText('global', 'btn_create')]
         );
       // Display creation form
         echo '<form name="WikiCreation" method="post" action="' . $this->wikiLink . '">

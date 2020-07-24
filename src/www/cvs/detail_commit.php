@@ -59,18 +59,18 @@ $result = db_query($sql);
 
 if (db_numrows($result) > 0) {
     if (get_group_id_from_repository(db_result($result, 0, 'repository')) != $group_id) {
-        exit_error('Error', $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', array($commit_id)));
+        exit_error('Error', $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', [$commit_id]));
     }
 
-    commits_header(array(
-        'title' => $GLOBALS['Language']->getText('cvs_detail_commit', 'title', array($commit_id)),
+    commits_header([
+        'title' => $GLOBALS['Language']->getText('cvs_detail_commit', 'title', [$commit_id]),
         'help'  => 'cvs.html#querying-cvs',
         'group' => $group_id
-    ));
+    ]);
 
     show_commit_details($group_id, $commit_id, $result);
 
-    commits_footer(array());
+    commits_footer([]);
 } else {
-    exit_error('Error', $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', array($commit_id)));
+    exit_error('Error', $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', [$commit_id]));
 }

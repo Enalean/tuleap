@@ -60,7 +60,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
     /**
      * @var array | null {@type Tuleap\Tracker\REST\FieldValueRepresentation }
      */
-    public $values = array();
+    public $values = [];
 
     /**
      *
@@ -77,12 +77,12 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
     /**
      * @var array
      */
-    public $bindings = array();
+    public $bindings = [];
 
     /**
      * @var array {@type string} One of (read, update, submit)
      */
-    public $permissions = array();
+    public $permissions = [];
 
     /**
      * @var PermissionsForGroupsRepresentation | null
@@ -126,18 +126,18 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         $this->values = $values;
 
         $bindings = $rest_binding_properties;
-        $this->bindings = array(
+        $this->bindings = [
             self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY],
             self::BIND_LIST => array_map(
                 function ($binding) {
-                    return array(
+                    return [
                         Tracker_REST_FormElementRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_ID],
                         Tracker_REST_FormElementRepresentation::BIND_LABEL => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_LABEL]
-                    );
+                    ];
                 },
                 $bindings[Tracker_FormElement_Field_List_Bind::REST_LIST_KEY]
             )
-        );
+        ];
 
         $this->permissions = array_map(
             function ($permission) {

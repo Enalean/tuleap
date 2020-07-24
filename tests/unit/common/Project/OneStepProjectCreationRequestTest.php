@@ -59,9 +59,9 @@ class OneStepProjectCreationRequestTest extends TestCase
         $text_content = 'bla bla bla';
         $custom_id    = 101;
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
-        );
+        ];
 
         $creation_request = $this->aCreationRequest($request_data);
         $this->assertEquals($text_content, $creation_request->getCustomProjectDescription($custom_id));
@@ -72,9 +72,9 @@ class OneStepProjectCreationRequestTest extends TestCase
         $text_content = 'bla bla bla';
         $custom_id    = 'name';
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
-        );
+        ];
 
         $creation_request = $this->aCreationRequest($request_data);
         $this->assertNull($creation_request->getCustomProjectDescription($custom_id));
@@ -85,9 +85,9 @@ class OneStepProjectCreationRequestTest extends TestCase
         $text_content = 'bla bla bla';
         $custom_id    = 101;
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
-        );
+        ];
 
         $creation_request = $this->aCreationRequest($request_data);
 
@@ -100,7 +100,7 @@ class OneStepProjectCreationRequestTest extends TestCase
 
     public function testItForcesTheProjectToNotBeATest()
     {
-        $request_data     = array('whatever');
+        $request_data     = ['whatever'];
         $creation_request = $this->aCreationRequest($request_data);
 
         $values = $creation_request->getProjectValues();
@@ -109,9 +109,9 @@ class OneStepProjectCreationRequestTest extends TestCase
 
     public function testItIncludesTheUsedServicesOfTheChoosenTemplate()
     {
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
-        );
+        ];
 
         $creation_request = $this->aCreationRequest($request_data);
         $values = $creation_request->getProjectValues();
@@ -122,16 +122,16 @@ class OneStepProjectCreationRequestTest extends TestCase
 
     public function testItIncludesMandatoryTroveCats()
     {
-        $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::TROVE_CAT_PREFIX => array(
+        $request_data = [
+            Project_OneStepCreation_OneStepCreationPresenter::TROVE_CAT_PREFIX => [
                 1 => 235
-            )
-        );
+            ]
+        ];
 
         $creation_request = $this->aCreationRequest($request_data);
         $values           = $creation_request->getProjectValues();
 
         $this->assertNotNull($values['project']['trove'][1]);
-        $this->assertEquals(array(235), $values['project']['trove'][1]);
+        $this->assertEquals([235], $values['project']['trove'][1]);
     }
 }

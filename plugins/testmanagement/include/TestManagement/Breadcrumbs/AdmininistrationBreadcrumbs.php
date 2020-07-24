@@ -29,24 +29,24 @@ class AdmininistrationBreadcrumbs implements Breadcrumbs
      */
     public function getCrumbs(Project $project): array
     {
-        $home_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(array(
+        $home_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
             'group_id' => $project->getID()
-        ));
+        ]);
 
-        $administration_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(array(
+        $administration_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
            'group_id' => $project->getID(),
             'action'  => 'admin'
-        ));
+        ]);
 
-        return array(
-            array(
+        return [
+            [
                 'title' => 'TestManagement',
                 'url'   => $home_url
-            ),
-            array(
+            ],
+            [
                 'title' => 'Administration',
                 'url'   => $administration_url
-            )
-        );
+            ]
+        ];
     }
 }

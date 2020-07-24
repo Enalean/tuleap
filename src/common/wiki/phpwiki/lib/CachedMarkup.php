@@ -26,7 +26,7 @@ class CacheableMarkup extends XmlContent
     {
         $this->_basepage = $basepage;
         $this->_buf = '';
-        $this->_content = array();
+        $this->_content = [];
         $this->_append($content);
         if ($this->_buf != '') {
             $this->_content[] = $this->_buf;
@@ -95,7 +95,7 @@ class CacheableMarkup extends XmlContent
         include_once('lib/WikiPlugin.php');
         $ploader = new WikiPluginLoader();
 
-        $links = array();
+        $links = [];
         foreach ($this->_content as $item) {
             if (! isa($item, 'Cached_DynamicContent')) {
                 continue;
@@ -304,7 +304,7 @@ class Cached_WikiLink extends Cached_Link
             return false;
         }
         if ($link = $this->getPagename($basepage)) {
-            return array($link);
+            return [$link];
         } else {
             return false;
         }
@@ -536,14 +536,14 @@ class Cached_PluginInvocation extends Cached_DynamicContent
         $loader = $this->_getLoader();
 
         $xml = $loader->expandPI($this->_pi, $GLOBALS['request'], $markup, $basepage);
-        $div = HTML::div(array('class' => 'plugin'));
+        $div = HTML::div(['class' => 'plugin']);
         if (is_array($plugin_cmdline = $loader->parsePI($this->_pi)) and $plugin_cmdline[1]) {
             $id = GenerateId($plugin_cmdline[1]->getName() . 'Plugin');
         }
 
         if (isset($this->_tightenable)) {
             if ($this->_tightenable == 3) {
-                $span = HTML::span(array('class' => 'plugin'), $xml);
+                $span = HTML::span(['class' => 'plugin'], $xml);
                 if (! empty($id)) {
                     $span->setAttr('id', $id);
                 }

@@ -98,10 +98,10 @@ class AdminDelegationPlugin extends Plugin
      */
     public function site_admin_option_hook($params) // @codingStandardsIgnoreLine
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => 'Admin delegation',
             'href'  => $this->getPluginPath() . '/'
-        );
+        ];
     }
 
     /**
@@ -138,7 +138,7 @@ class AdminDelegationPlugin extends Plugin
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array('admindelegation', 'admindelegation_projects'));
+        $this->removeOrphanWidgets(['admindelegation', 'admindelegation_projects']);
     }
 
     public function routeAdmin(): \Tuleap\Request\DispatchableWithRequest

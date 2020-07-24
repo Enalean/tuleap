@@ -63,7 +63,7 @@ class TmpDir
      *
      * @access protected
      */
-    protected $files = array();
+    protected $files = [];
 
     /**
      * GetInstance

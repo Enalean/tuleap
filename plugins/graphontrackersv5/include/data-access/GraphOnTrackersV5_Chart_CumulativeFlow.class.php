@@ -158,12 +158,12 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      */
     public function getSpecificRow()
     {
-        return array(
+        return [
             'field_id'   => $this->getFieldId(),
             'start_date' => $this->getStartDate(),
             'stop_date'  => $this->getStopDate(),
             'scale'      => $this->getScale(),
-        );
+        ];
     }
 
     /**
@@ -236,14 +236,14 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
             'chart[scale]',
             'value'
         );
-        $scaleSelect->addMultipleOptions(array(
+        $scaleSelect->addMultipleOptions([
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_day'),
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_week'),
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_month'),
-                                              ), $this->getScale());
+                                              ], $this->getScale());
         return array_merge(
             parent::getProperties(),
-            array(
+            [
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
                     $this->getTracker(),
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_field'),
@@ -262,7 +262,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
                     $this->getStopDate()
                 ),
 
-            )
+            ]
         );
     }
 
@@ -316,10 +316,10 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      */
     public function arrayOfSpecificProperties()
     {
-        return array('start_date' => $this->getStartDate(),
+        return ['start_date' => $this->getStartDate(),
                      'field_id'   => $this->getFieldId(),
                      'scale'      => $this->getScale(),
-                     'stop_date'  => $this->getStopDate());
+                     'stop_date'  => $this->getStopDate()];
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

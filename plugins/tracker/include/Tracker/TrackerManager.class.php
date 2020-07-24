@@ -125,8 +125,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             } elseif ($request->get('func') == 'new-artifact-link') {
                 echo '<html>';
                 echo '<head>';
-                $GLOBALS['HTML']->displayStylesheetElements(array());
-                $GLOBALS['HTML']->displayJavascriptElements(array());
+                $GLOBALS['HTML']->displayStylesheetElements([]);
+                $GLOBALS['HTML']->displayJavascriptElements([]);
                 echo '</head>';
 
                 echo '<body>';
@@ -212,12 +212,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                             case 'permissions-per-group':
                                 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                                     $GLOBALS['Response']->send400JSONErrors(
-                                        array(
+                                        [
                                             'error' => dgettext(
                                                 "tuleap-tracker",
                                                 "You don't have permissions to see user groups."
                                             )
-                                        )
+                                        ]
                                     );
                                 }
 
@@ -264,9 +264,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     private function getTrackerHomepageURL($project_id)
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(array(
+        return TRACKER_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id
-        ));
+        ]);
     }
 
     /**
@@ -388,12 +388,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             return;
         }
 
-        $breadcrumbs = array(
-            array(
+        $breadcrumbs = [
+            [
                 'title' => dgettext('tuleap-tracker', 'Create a New Tracker'),
                 'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create'
-            )
-        );
+            ]
+        ];
         $toolbar = [];
         $params  = [];
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
@@ -514,13 +514,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     public function displayAllTrackers($project, $user)
     {
         $hp          = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = array();
+        $breadcrumbs = [];
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
 
         $toolbar = [];
 
-        $params = array();
+        $params = [];
 
         if ($this->userIsTrackerAdmin($project, $user)) {
             $this->informUserOfOngoingMigrations($project);
@@ -553,12 +553,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                 <a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '&amp;func=delete"
                                    onclick="return confirm(\'Do you want to delete this tracker?\');"
                                    title=" ' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '">';
-                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
+                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', ['alt' => 'delete']);
                         $html .= '</a></div>';
                     } else {
                         $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
                         $html .= '<div style="float:right;" class="tracker-cant-delete">';
-                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
+                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', ['title' => $cannot_delete_message]);
                         $html .= '</div>';
                     }
                 }
@@ -601,13 +601,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $deleted_trackers = $this->getTrackerFactory()->getDeletedTrackers();
 
-        $deleted_trackers_presenters = array();
-        $tracker_ids_warning         = array();
+        $deleted_trackers_presenters = [];
+        $tracker_ids_warning         = [];
         $restore_token               = new CSRFSynchronizerToken('/tracker/admin/restore.php');
 
         foreach ($deleted_trackers as $tracker) {
             $project             = $tracker->getProject();
-            $tracker_ids_warning = array();
+            $tracker_ids_warning = [];
 
             if (! $project || $project->getID() === null) {
                 $tracker_ids_warning[] = $tracker->getId();
@@ -672,9 +672,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     protected function displayCSVImportOverview($project, $group_id, $user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = array();
-        $toolbar     = array();
-        $params      = array();
+        $breadcrumbs = [];
+        $toolbar     = [];
+        $params      = [];
         $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
 
         $html = '';
@@ -724,10 +724,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 }
             }
             if (! $found) {
-                $projects[] = array(
+                $projects[] = [
                     'group_id'   => $include_project->getGroupId(),
                     'group_name' => $include_project->getPublicName(),
-                );
+                ];
             }
         }
 
@@ -916,7 +916,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      */
     protected function getTrackersHavingDateReminders()
     {
-        $trackers = array();
+        $trackers = [];
         $dao = new Tracker_DateReminderDao();
         $dar = $dao->getTrackersHavingDateReminders();
         if ($dar && ! $dar->isError()) {

@@ -176,7 +176,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         }
 
         return $artifact->createNewChangeset(
-            array(),
+            [],
             $body,
             $user,
             true,
@@ -201,10 +201,10 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
             throw new Tracker_Artifact_MailGateway_TrackerMissingSemanticException();
         }
 
-        $field_data = array(
+        $field_data = [
             $title_field->getId()       => $title,
             $description_field->getId() => $body
-        );
+        ];
         $field_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $field_data, $user);
 
         UserManager::instance()->setCurrentUser($user);

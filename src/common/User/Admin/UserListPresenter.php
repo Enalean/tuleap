@@ -53,10 +53,10 @@ class UserListPresenter
             $GLOBALS['Language']->getText(
                 'admin_userlist',
                 'pending_users_text',
-                array(
+                [
                     '/admin/approve_pending_users.php?page=pending',
                     $pending_users_count
-                )
+                ]
             ),
             CODENDI_PURIFIER_LIGHT
         );

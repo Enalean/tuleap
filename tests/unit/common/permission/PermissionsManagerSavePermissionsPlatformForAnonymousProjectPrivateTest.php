@@ -69,28 +69,28 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPrivateTest ex
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
     public function testItSavesProjectMembersWhenSelectedAuthenticated(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
     public function testItSavesProjectMembersSelectedRegistered(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED));
+        $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
     public function testItSavesProjectMembersSelectedProjectMembers(): void
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS]);
     }
 
     public function testItSavesProjectMembersAndStaticGroup(): void
@@ -104,6 +104,6 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPrivateTest ex
             ->once()
             ->andReturns(true);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
+        $this->savePermissions([ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 }

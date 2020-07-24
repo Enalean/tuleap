@@ -47,7 +47,7 @@ class FilterValidSubmilestones implements IFilterValidElementsToUnkink
 
     public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
-        $submilestones = array();
+        $submilestones = [];
 
         foreach ($artifact_ids_to_be_removed as $artifact_to_be_removed) {
             $candidate_submilestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $artifact_to_be_removed);

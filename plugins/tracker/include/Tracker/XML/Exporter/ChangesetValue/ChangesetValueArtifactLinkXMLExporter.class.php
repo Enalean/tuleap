@@ -63,11 +63,11 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
                 function (Tracker_ArtifactLinkInfo $artifact_link_info, $index, $userdata) {
                     $this->appendValueToFieldChangeNode($artifact_link_info, $index, $userdata);
                 },
-                array(
+                [
                     'field_xml'         => $field_xml,
                     'children_trackers' => $children_trackers,
                     'artifact'          => $artifact
-                )
+                ]
             );
         }
     }

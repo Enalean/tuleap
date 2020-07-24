@@ -74,7 +74,7 @@ class KanbanCumulativeFlowDiagramDao extends DataAccessObject
      */
     private function generateTableDates(array $dates)
     {
-        $table_dates_sql_parts = array();
+        $table_dates_sql_parts = [];
         foreach ($dates as $date) {
             $table_dates_sql_parts[] = 'SELECT UNIX_TIMESTAMP(' . $this->getDa()->quoteSmart($date) . ') AS day';
         }

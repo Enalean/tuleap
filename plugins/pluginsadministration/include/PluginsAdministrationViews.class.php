@@ -58,12 +58,12 @@ class PluginsAdministrationViews extends Views
     public function header()
     {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
+        $GLOBALS['HTML']->header(['title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => ['tlp-framed']]);
     }
 
     public function footer()
     {
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
     }
 
     public function display($view = '')
@@ -170,7 +170,7 @@ class PluginsAdministrationViews extends Views
         $dependencies           = implode(', ', $plugin->getDependencies());
         $are_there_dependencies = ! empty($dependencies);
 
-        $properties = array();
+        $properties = [];
         if (ForgeConfig::get('sys_plugins_editable_configuration')) {
             $descs = $plugin_info->getPropertyDescriptors();
             $keys  = $descs->getKeys();
@@ -180,11 +180,11 @@ class PluginsAdministrationViews extends Views
                 $desc      = $descs->get($key);
                 $prop_name = $desc->getName();
 
-                $properties[] = array(
+                $properties[] = [
                     'name' => $prop_name,
                     'is_bool' => is_bool($desc->getValue()),
                     'value' => $desc->getValue()
-                );
+                ];
 
                 $iter->next();
             }
@@ -257,13 +257,13 @@ class PluginsAdministrationViews extends Views
     public function _searchPlugins()
     {
         if (! $this->_plugins) {
-            $this->_plugins    = array();
+            $this->_plugins    = [];
 
             $plugin_manager               = $this->plugin_manager;
             try {
                 $forgeUpgradeConfig = new ForgeUpgradeConfig(new System_Command());
                 $forgeUpgradeConfig->loadDefaults();
-                $noFUConfig = array();
+                $noFUConfig = [];
             } catch (Exception $e) {
                 $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
             }
@@ -280,7 +280,7 @@ class PluginsAdministrationViews extends Views
                 $dont_touch    = ! $this->plugin_disabler_verifier->canPluginBeDisabled($plugin);
                 $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;
 
-                $this->_plugins[] = array(
+                $this->_plugins[] = [
                     'id'            => $plugin->getId(),
                     'name'          => $name,
                     'description'   => $descriptor->getDescription(),
@@ -288,10 +288,10 @@ class PluginsAdministrationViews extends Views
                     'available'     => $available,
                     'scope'         => $plugin->getScope(),
                     'dont_touch'    => $dont_touch,
-                    'dont_restrict' => $dont_restrict);
+                    'dont_restrict' => $dont_restrict];
 
                 if (isset($noFUConfig, $forgeUpgradeConfig) && ! $forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
-                    $noFUConfig[] = array('name' => $name, 'plugin' => $plugin);
+                    $noFUConfig[] = ['name' => $name, 'plugin' => $plugin];
                 }
             }
 
@@ -315,7 +315,7 @@ class PluginsAdministrationViews extends Views
             }
         );
 
-        $plugins = array();
+        $plugins = [];
         foreach ($this->_plugins as $plugin) {
             $is_there_unmet_dependencies = false;
             $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies(
@@ -325,7 +325,7 @@ class PluginsAdministrationViews extends Views
             if ($unmet_dependencies) {
                 $is_there_unmet_dependencies = true;
             }
-            $plugins[] = array(
+            $plugins[] = [
                 'id'                          => $plugin['id'],
                 'name'                        => $plugin['name'],
                 'version'                     => $plugin['version'],
@@ -338,7 +338,7 @@ class PluginsAdministrationViews extends Views
                 'unmet_dependencies'          => $unmet_dependencies,
                 'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
                 'is_enabled'                  => $plugin['available']
-            );
+            ];
         }
 
         return new PluginsAdministration_Presenter_InstalledPluginsPresenter($plugins);

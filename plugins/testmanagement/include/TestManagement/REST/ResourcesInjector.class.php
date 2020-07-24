@@ -43,11 +43,11 @@ class ResourcesInjector
 
     public function declareProjectResource(array &$resources, Project $project): void
     {
-        $routes = array(
+        $routes = [
             CampaignRepresentation::ROUTE,
             DefinitionRepresentation::ROUTE,
             NodeReferenceRepresentation::ROUTE,
-        );
+        ];
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();
             $resource_reference->build($project, $route);

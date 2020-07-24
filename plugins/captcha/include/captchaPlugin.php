@@ -172,10 +172,10 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function addSiteAdministrationOptionHook(array $params)
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
             'href'  => CAPTCHA_BASE_URL . '/admin/'
-        );
+        ];
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

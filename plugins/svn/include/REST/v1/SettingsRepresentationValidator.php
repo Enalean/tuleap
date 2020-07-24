@@ -28,8 +28,8 @@ class SettingsRepresentationValidator
      */
     private function getNonUniquePath(?SettingsRepresentation $settings = null)
     {
-        $already_seen_path = array();
-        $non_unique_path   = array();
+        $already_seen_path = [];
+        $non_unique_path   = [];
 
         if (isset($settings->email_notifications)) {
             foreach ($settings->email_notifications as $notification) {
@@ -46,7 +46,7 @@ class SettingsRepresentationValidator
 
     private function getNonUniqueEmail(SettingsRepresentation $settings)
     {
-        $non_unique_mail = array();
+        $non_unique_mail = [];
 
         if (! isset($settings->email_notifications)) {
             return $non_unique_mail;
@@ -99,7 +99,7 @@ class SettingsRepresentationValidator
 
     private function validateAtLeastOneNotificationSent(?SettingsRepresentation $settings = null)
     {
-        $empty_notification = array();
+        $empty_notification = [];
         if ($settings && $settings->email_notifications) {
             foreach ($settings->email_notifications as $notification) {
                 if (count($notification->emails) === 0 && count($notification->users) === 0) {
@@ -120,7 +120,7 @@ class SettingsRepresentationValidator
     {
         $non_unique_mail = $this->getNonUniqueEmail($settings);
 
-        $exceptions = array();
+        $exceptions = [];
         foreach ($non_unique_mail as $path => $mail) {
             $exceptions[] = $path . ' : ' . implode(', ', $mail);
         }

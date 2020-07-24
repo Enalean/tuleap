@@ -25,7 +25,7 @@ require_once 'Trees.class.php';
 class XMLDocmanUpdate extends XMLDocmanImport
 {
 
-    private $remoteItems = array();
+    private $remoteItems = [];
     private $continue = false;
 
     public function updatePath($xmlDoc, $parentId, $path)
@@ -84,8 +84,8 @@ class XMLDocmanUpdate extends XMLDocmanImport
         if (isset($this->reorder) && ($this->reorder == true)) {
             uksort($array, 'strnatcasecmp');
 
-            $docArray = array();
-            $folderArray = array();
+            $docArray = [];
+            $folderArray = [];
 
             foreach ($array as $k => $v) {
                 if ($v['xmlElement']['type'] == 'folder') {
@@ -112,7 +112,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function tagCount($tree)
     {
-        $counts = array('IN_BOTH' => 0, 'IN_FIRST' => 0, 'IN_SECOND' => 0);
+        $counts = ['IN_BOTH' => 0, 'IN_FIRST' => 0, 'IN_SECOND' => 0];
         if (isset($tree['tag']) && isset($counts[$tree['tag']])) {
             $counts[$tree['tag']]++;
         }
@@ -187,7 +187,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function buildDistantTreeFromSoapArray()
     {
-        $listOfNodes = array();
+        $listOfNodes = [];
         foreach ($this->remoteItems as $id => $itemInfo) {
             $listOfNodes[$itemInfo->parent_id][] = $id;
         }
@@ -271,7 +271,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
     private function getTreeFromItemElement($itemElement)
     {
         $title = (string) $itemElement->properties->title;
-        return array($title => $this->getTreeFromItemElement_rec($itemElement));
+        return [$title => $this->getTreeFromItemElement_rec($itemElement)];
     }
 
     /**
@@ -299,7 +299,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function getAllVersionsMD5sum($node)
     {
-        $md5sums = array();
+        $md5sums = [];
 
         foreach ($node->xpath('versions/version') as $version) {
             $file = (string) $version->content;

@@ -145,14 +145,14 @@ class Tracker_Hierarchy_Presenter
 
     public function getPossibleChildren()
     {
-        $possible_children = array();
+        $possible_children = [];
 
         foreach ($this->possible_children as $possible_child) {
             $selected = $this->getSelectedAttribute($possible_child);
 
-            $possible_children[] = array('id'       => $possible_child->getId(),
+            $possible_children[] = ['id'       => $possible_child->getId(),
                                          'name'     => $possible_child->getName(),
-                                         'selected' => $selected);
+                                         'selected' => $selected];
         }
 
         return $possible_children;

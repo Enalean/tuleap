@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../src/themes/BurningParrot/vendor/autoload.php';
 require_once __DIR__ . '/../../src/vendor/squizlabs/php_codesniffer/autoload.php';
 
 $plugins_directory = __DIR__ . '/../../plugins/';
-foreach (array_diff(scandir($plugins_directory), array('..', '.')) as $plugin_name) {
+foreach (array_diff(scandir($plugins_directory), ['..', '.']) as $plugin_name) {
     $plugin_class_path = $plugins_directory . $plugin_name . "/include/${plugin_name}Plugin.php";
     if (is_file($plugin_class_path)) {
         require_once $plugin_class_path;

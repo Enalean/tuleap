@@ -71,7 +71,7 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
-        $values   = array();
+        $values   = [];
         $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
         $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
 

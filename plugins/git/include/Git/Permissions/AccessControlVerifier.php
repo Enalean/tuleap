@@ -60,7 +60,7 @@ class AccessControlVerifier
      */
     private function canWriteAccordingToGitolite(PFUser $user, GitRepository $repository, $reference)
     {
-        $repository_name = escapeshellarg(PathJoinUtil::unixPathJoin(array($repository->getProject()->getUnixName(), $repository->getFullName())));
+        $repository_name = escapeshellarg(PathJoinUtil::unixPathJoin([$repository->getProject()->getUnixName(), $repository->getFullName()]));
         $user_name       = escapeshellarg($user->getUserName());
         $reference       = escapeshellarg($reference);
 

@@ -45,7 +45,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 
         $this->_not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
         if ($this->_not_monitored_jobs === false) {
-            $this->_not_monitored_jobs = array();
+            $this->_not_monitored_jobs = [];
         } else {
             $this->_not_monitored_jobs = explode(",", $this->_not_monitored_jobs);
         }
@@ -72,7 +72,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
             $user = UserManager::instance()->getCurrentUser();
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $job_dao->searchByUserID($user->getId());
-            $not_monitored_jobs = array();
+            $not_monitored_jobs = [];
             while ($dar->valid()) {
                 $row = $dar->current();
                 if (! in_array($row['job_id'], $monitored_jobs)) {
@@ -206,7 +206,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByUserID($user->getId());
-        $monitored_jobs = array();
+        $monitored_jobs = [];
         while ($dar->valid()) {
             $row = $dar->current();
             if (! in_array($row['job_id'], $this->_not_monitored_jobs)) {

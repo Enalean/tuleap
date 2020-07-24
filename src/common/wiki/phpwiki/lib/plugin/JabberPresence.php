@@ -42,10 +42,10 @@ class WikiPlugin_JabberPresence extends WikiPlugin
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return array('scripturl' => "http://edgar.netflint.net/status.php",
+        return ['scripturl' => "http://edgar.netflint.net/status.php",
                      'jid'       => MY_JABBER_ID,
         'type'      => 'image',
-                     'iconset'   => "gabber");
+                     'iconset'   => "gabber"];
     }
 
     public function run($dbi, $argstr, $request)
@@ -56,10 +56,10 @@ class WikiPlugin_JabberPresence extends WikiPlugin
         if (empty($jid)) {
             $html = HTML();
         } else {
-            $html = HTML::img(array('src' => urlencode($scripturl) .
+            $html = HTML::img(['src' => urlencode($scripturl) .
             '&jid=' . urlencode($jid) .
             '&type=' . urlencode($type) .
-            '&iconset=' . ($iconset)));
+            '&iconset=' . ($iconset)]);
         }
         return $html;
     }

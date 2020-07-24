@@ -100,7 +100,7 @@ class Git_Hook_PostReceive
         if ($repository !== null) {
             $user = $this->user_manager->getUserByUserName($user_name);
             if ($user === null) {
-                $user = new PFUser(array('user_id' => 0));
+                $user = new PFUser(['user_id' => 0]);
             }
 
             $technical_reference_event = new MarkTechnicalReference($refname);

@@ -48,7 +48,7 @@ if ($request->exist('wsdl')) {
 $event_manager = EventManager::instance();
 
 try {
-    $server = new TuleapSOAPServer($uri . '/soap/codendi.wsdl.php?wsdl', array('trace' => 1));
+    $server = new TuleapSOAPServer($uri . '/soap/codendi.wsdl.php?wsdl', ['trace' => 1]);
 
     require_once __DIR__ .  '/../include/utils_soap.php';
     require_once __DIR__ . '/common/session.php';
@@ -58,7 +58,7 @@ try {
     require_once __DIR__ . '/frs/frs.php';
 
     // include the <Plugin> API (only if plugin is available)
-    $event_manager->processEvent('soap', array());
+    $event_manager->processEvent('soap', []);
 } catch (Exception $e) {
     header('Content-Type: text/plain', true, 500);
     echo $e->getMessage();
@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $server->handle();
     $xml_security->disableExternalLoadOfEntities();
 } else {
-    site_header(array('title' => "SOAP API"));
+    site_header(['title' => "SOAP API"]);
     $renderer = new MustacheRenderer(new TemplateCache(), 'templates');
-    $renderer->renderToPage('soap_index', array());
-    site_footer(array());
+    $renderer->renderToPage('soap_index', []);
+    site_footer([]);
 }

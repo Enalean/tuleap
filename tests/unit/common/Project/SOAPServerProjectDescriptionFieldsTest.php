@@ -82,24 +82,24 @@ class SOAPServerProjectDescriptionFieldsTest extends TestCase
         $field2->shouldReceive('getName')->andReturns('champs 2');
         $field2->shouldReceive('isRequired')->andReturns(false);
 
-        $project_desc_fields = array(
+        $project_desc_fields = [
             $field1,
             $field2
-        );
+        ];
 
-        $expected = array(
-            0 => array(
+        $expected = [
+            0 => [
                 'id' => 145,
                 'name' => 'champs 1',
                 'is_mandatory' => true
-            ),
+            ],
 
-            1 => array(
+            1 => [
                 'id' => 255,
                 'name' => 'champs 2',
                 'is_mandatory' => false
-            )
-        );
+            ]
+        ];
 
         $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns($project_desc_fields);
         $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
@@ -109,7 +109,7 @@ class SOAPServerProjectDescriptionFieldsTest extends TestCase
 
     public function testItThrowsASOAPFaultIfNoDescriptionField(): void
     {
-        $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns(array());
+        $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns([]);
         $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
 
         $this->expectException(SoapFault::class);
@@ -148,17 +148,17 @@ class SOAPServerProjectDescriptionFieldsTest extends TestCase
 
         $group_id = 101;
 
-        $expected = array(
-            0 => array(
+        $expected = [
+            0 => [
                 'id' => 145,
                 'value' => 'valeur 1',
-            ),
+            ],
 
-            1 => array(
+            1 => [
                 'id' => 255,
                 'value' => 'valeur 2',
-            )
-        );
+            ]
+        ];
 
         $this->description_value_factory->shouldReceive('getDescriptionFieldsValue')->with($this->project)->andReturns($expected);
 

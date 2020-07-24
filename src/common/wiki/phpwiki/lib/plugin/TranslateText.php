@@ -61,10 +61,10 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
 
     public function getDefaultArguments()
     {
-        return array( 'lang'      => false,
+        return [ 'lang'      => false,
                    'pagename'  => '[pagename]',
                    'translate' => false,
-                 );
+                 ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -100,8 +100,8 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
                     $meta = $current->_data;
                 } else {
                     $text = '';
-                    $meta = array('markup' => 2.0,
-                                  'author' => $user->getId());
+                    $meta = ['markup' => 2.0,
+                                  'author' => $user->getId()];
                 }
                 $text .= $user->getId() . " " . Iso8601DateTime() . "\n" .
                          "* " . sprintf(
@@ -143,26 +143,26 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
             Button('submit:translate[cancel]', _("Cancel"), 'button')
         );
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             HTML::textarea(
-                array('class' => 'wikiedit',
+                ['class' => 'wikiedit',
                                                'name' => 'translate[content]',
                                                'id'   => 'translate[content]',
                                                'rows' => 4,
                                                'cols' => $request->getPref('editWidth'),
-                                               'wrap' => 'virtual'),
+                                               'wrap' => 'virtual'],
                 $trans
             ),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('translate')
+                ['translate']
             ),
-            HiddenInputs(array('translate[action]' => $pagename,
+            HiddenInputs(['translate[action]' => $pagename,
                                              'require_authority_for_post' => WIKIAUTH_BOGO,
-                                             )),
+                                             ]),
             $buttons
         );
     }

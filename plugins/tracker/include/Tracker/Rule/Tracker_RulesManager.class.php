@@ -320,7 +320,7 @@ class Tracker_RulesManager
 
     public function getAllTargetFields($source_id)
     {
-        $targets     = array();
+        $targets     = [];
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
         foreach ($used_fields as $field) {
             if (! $source_id || ! $this->fieldIsAForbiddenTarget($this->tracker->id, $field->getId(), $source_id)) {
@@ -369,7 +369,7 @@ class Tracker_RulesManager
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Non authorized dependency.Please, select other fields.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array('tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies')));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies']));
                 } else {
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
                 }
@@ -384,13 +384,13 @@ class Tracker_RulesManager
                 $field_target = $this->form_element_factory->getFormElementById($request->get('target_field'));
                 $field_target_values = $field_target->getVisibleValuesPlusNoneIfAny();
 
-                $currMatrix = array();
+                $currMatrix = [];
 
                 foreach ($field_source_values as $field_source_value_id => $field_source_value) {
                     foreach ($field_target_values as $field_target_value_id => $field_target_value) {
                         $dependency = $field_source_value_id . '_' . $field_target_value_id;
                         if ($request->existAndNonEmpty($dependency)) {
-                            $currMatrix[] = array($field_source_value_id, $field_target_value_id);
+                            $currMatrix[] = [$field_source_value_id, $field_target_value_id];
                             $this->getTrackerRuleListFactory()->create(
                                 $field_source->getId(),
                                 $field_target->getId(),
@@ -402,7 +402,7 @@ class Tracker_RulesManager
                     }
                 }
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Transitions updated'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array('tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies')));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']));
             }
         } else {
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, null);
@@ -464,17 +464,17 @@ class Tracker_RulesManager
         //Shortcut
         $sources_targets = $this->getRuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
         if (count($sources_targets)) {
-            $dependencies = array();
+            $dependencies = [];
             foreach ($sources_targets as $row) {
                 if ($source = $this->form_element_factory->getFormElementById($row['source_field_id'])) {
                     if ($target = $this->form_element_factory->getFormElementById($row['target_field_id'])) {
                         $d = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
-                            array(
+                            [
                                 'tracker'      => (int) $this->tracker->id,
                                 'func'         => 'admin-dependencies',
                                 'source_field' => $row['source_field_id'],
                                 'target_field' => $row['target_field_id'],
-                            )
+                            ]
                         ) . '">';
                         $d .= $hp->purify($source->getLabel()) . ' &rarr; ' . $hp->purify($target->getLabel());
                         $d .= '</a>';
@@ -516,7 +516,7 @@ class Tracker_RulesManager
         $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
         $purifier = Codendi_HTMLPurifier::instance();
-        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(array('tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) . '" method="POST">';
+        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies']) . '" method="POST">';
         echo '<table id="tracker_field_dependencies_matrix">';
 
         echo "<tr class=\"" . util_get_alt_row_color(1) . "\">\n";
@@ -543,10 +543,10 @@ class Tracker_RulesManager
 
         echo '</table>';
         echo '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'tracker' => (int) $this->tracker->id,
                 'func'    => 'admin-dependencies',
-            )
+            ]
         ) . '">';
         echo '&laquo; ' . $GLOBALS['Language']->getText('global', 'btn_cancel');
         echo '</a> ';

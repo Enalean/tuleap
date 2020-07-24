@@ -89,7 +89,7 @@ class WikiGroup
         $user = (! empty($this->user)) ? $this->user : $request->getUser();
         $username = $user->getID();
         if ($username != $this->username) {
-            $this->membership = array();
+            $this->membership = [];
             $this->username = $username;
         }
         if (! $this->not_current) {
@@ -124,7 +124,7 @@ class WikiGroup
     /** translated */
     public function specialGroups()
     {
-        return array(
+        return [
                      GROUP_EVERY,
                      GROUP_ANONYMOUS,
                      GROUP_BOGOUSER,
@@ -132,12 +132,12 @@ class WikiGroup
                      GROUP_AUTHENTICATED,
                      GROUP_ADMIN,
                      GROUP_OWNER,
-                     GROUP_CREATOR);
+                     GROUP_CREATOR];
     }
     /** untranslated */
     public function _specialGroups()
     {
-        return array(
+        return [
                      "_EVERY",
                      "_ANONYMOUS",
                      "_BOGOUSER",
@@ -145,7 +145,7 @@ class WikiGroup
                      "_AUTHENTICATED",
                      "_ADMIN",
                      "_OWNER",
-                     "_CREATOR");
+                     "_CREATOR"];
     }
 
     /**
@@ -232,12 +232,12 @@ class WikiGroup
             ),
             E_USER_WARNING
         );
-        return array();
+        return [];
     }
 
     public function _allUsers()
     {
-        static $result = array();
+        static $result = [];
         if (! empty($result)) {
             return $result;
         }
@@ -246,7 +246,7 @@ class WikiGroup
         /* WikiPage users: */
         $dbh = $request->_dbi;
         $page_iter = $dbh->getAllPages();
-        $users = array();
+        $users = [];
         while ($page = $page_iter->next()) {
             if ($page->isUserPage()) {
                 $users[] = $page->_pagename;
@@ -301,7 +301,7 @@ class WikiGroup
         }
 
         // remove empty and duplicate users
-        $result = array();
+        $result = [];
         foreach ($users as $u) {
             if (empty($u) or in_array($u, $result)) {
                 continue;
@@ -332,14 +332,14 @@ class WikiGroup
             ),
             E_USER_WARNING
         );
-        return array();
+        return [];
     }
 
     public function getSpecialMembersOf($group)
     {
         //$request = &$this->request;
         $all = $this->_allUsers();
-        $users = array();
+        $users = [];
         switch ($group) {
             case GROUP_EVERY:
                 return $all;
@@ -479,7 +479,7 @@ class GroupNone extends WikiGroup
      */
     public function getAllGroupsIn()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -491,7 +491,7 @@ class GroupNone extends WikiGroup
      */
     public function getMembersOf($group)
     {
-        return array();
+        return [];
     }
 }
 

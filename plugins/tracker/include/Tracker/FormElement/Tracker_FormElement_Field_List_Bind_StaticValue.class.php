@@ -147,21 +147,21 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         if (! empty($decorators) && isset($decorators[$this->getId()])) {
             $decorator = $decorators[$this->getId()];
             if ($decorator->isUsingOldPalette()) {
-                $color = array(
+                $color = [
                     'r' => (int) $decorator->r,
                     'g' => (int) $decorator->g,
                     'b' => (int) $decorator->b
-                );
+                ];
             } else {
                 $tlp_color_name = $decorator->tlp_color_name;
             }
         }
 
-        return array(
+        return [
             'id'        => $this->getId(),
             'label'     => $this->getLabel(),
             'color'     => $color,
             'tlp_color' => $tlp_color_name
-        );
+        ];
     }
 }

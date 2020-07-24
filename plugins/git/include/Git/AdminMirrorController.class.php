@@ -144,7 +144,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      */
     private function getMirrorPresenters(array $mirrors)
     {
-        $mirror_presenters = array();
+        $mirror_presenters = [];
         foreach ($mirrors as $mirror) {
             $mirror_presenters[] = new MirrorPresenter(
                 $mirror,

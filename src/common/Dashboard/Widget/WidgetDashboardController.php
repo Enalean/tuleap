@@ -90,8 +90,8 @@ class WidgetDashboardController
         $new_line_rank   = $request->get('new-line-rank');
         $new_column_rank = $request->get('new-column-rank');
 
-        $new_ids     = array();
-        $deleted_ids = array();
+        $new_ids     = [];
+        $deleted_ids = [];
 
         if ($dashboard_id === false || $widget_id === false || $new_widget_rank === false) {
             return;
@@ -143,7 +143,7 @@ class WidgetDashboardController
         $deleted_ids = $this->deleteColumnIfEmpty($old_column, $deleted_ids);
         $deleted_ids = $this->deleteLineIfEmpty($old_column, $deleted_ids);
 
-        $GLOBALS['Response']->sendJSON(array('new_ids' => $new_ids, 'deleted_ids' => $deleted_ids));
+        $GLOBALS['Response']->sendJSON(['new_ids' => $new_ids, 'deleted_ids' => $deleted_ids]);
     }
 
     /**
@@ -193,7 +193,7 @@ class WidgetDashboardController
             );
             $new_ids['new_line_id'] = $new_line_id;
         }
-        return array($new_line_id, $new_ids);
+        return [$new_line_id, $new_ids];
     }
 
     /**
@@ -216,7 +216,7 @@ class WidgetDashboardController
             );
             $new_ids['new_column_id'] = $new_column_id;
         }
-        return array($new_column_id, $new_ids);
+        return [$new_column_id, $new_ids];
     }
 
     /**

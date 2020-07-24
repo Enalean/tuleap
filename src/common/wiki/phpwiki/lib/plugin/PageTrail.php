@@ -64,10 +64,10 @@ class WikiPlugin_PageTrail extends WikiPlugin
     // default values
     public function getDefaultArguments()
     {
-        return array('numberlinks' => $this->def_numberlinks,
+        return ['numberlinks' => $this->def_numberlinks,
                      'invisible'   => false,
                      'duplicates'  => false,
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -82,7 +82,7 @@ class WikiPlugin_PageTrail extends WikiPlugin
         $thispage = $request->getArg('pagename');
         $Pages = $request->session->get("PageTrail");
         if (! is_array($Pages)) {
-            $Pages = array();
+            $Pages = [];
         }
 
         if ($duplicates || ($thispage != $Pages[0])) {

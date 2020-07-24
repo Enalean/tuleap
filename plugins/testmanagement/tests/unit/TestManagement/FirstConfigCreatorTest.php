@@ -85,12 +85,12 @@ class FirstConfigCreatorTest extends TestCase
         $this->project = Mockery::spy(\Project::class);
         $this->project->shouldReceive('getID')->andReturn($this->project_id);
 
-        $this->tracker_mapping = array(
+        $this->tracker_mapping = [
             $this->campaign_tracker_id   => $this->new_campaign_tracker_id,
             $this->definition_tracker_id => $this->new_definition_tracker_id,
             $this->execution_tracker_id  => $this->new_execution_tracker_id,
             $this->issue_tracker_id      => $this->new_issue_tracker_id
-        );
+        ];
 
         $this->config          = \Mockery::spy(\Tuleap\TestManagement\Config::class);
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);

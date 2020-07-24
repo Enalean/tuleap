@@ -37,7 +37,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
 
     public function getCollectionOfUserToBeNotifiedPresenter(GitRepository $repository)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($this->dao->searchUsersByRepositoryId($repository->getId()) as $row) {
             $user = new \PFUser($row);
             $presenters[] = new UserInvolvedInNotificationPresenter(

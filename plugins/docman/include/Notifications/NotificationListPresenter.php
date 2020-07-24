@@ -60,12 +60,12 @@ class NotificationListPresenter
     private function buildNotificationsFromUsers(array $users, Docman_Item $item)
     {
         $user_manager    = UserManager::instance();
-        $users_to_notify = array();
+        $users_to_notify = [];
 
         foreach ($users as $user_id => $monitored_item) {
             $user = $user_manager->getUserById($user_id);
 
-            $users_to_notify[] = array(
+            $users_to_notify[] = [
                 'can_be_deleted' => $monitored_item == $item,
                 'item_title'     => $item->getTitle(),
                 'user'           => new UserInvolvedInNotificationPresenter(
@@ -75,7 +75,7 @@ class NotificationListPresenter
                     $user->hasAvatar(),
                     $user->getAvatarUrl()
                 )
-            );
+            ];
         }
 
         return $users_to_notify;
@@ -83,16 +83,16 @@ class NotificationListPresenter
 
     private function buildNotificationsFromUGroups(array $ugroups, Docman_Item $item)
     {
-        $groups_to_notify = array();
+        $groups_to_notify = [];
 
         foreach ($ugroups as $ugroup_monitored_item) {
             $monitored_item     = $ugroup_monitored_item->getMonitoredItem();
             $monitoring_ugroup  = $ugroup_monitored_item->getUgroupPresenter();
-            $groups_to_notify[] = array(
+            $groups_to_notify[] = [
                 'can_be_deleted' => ($monitored_item == $item),
                 'item_title'     => $monitored_item->getTitle(),
                 'ugroup'         => $monitoring_ugroup
-            );
+            ];
         }
 
         return $groups_to_notify;

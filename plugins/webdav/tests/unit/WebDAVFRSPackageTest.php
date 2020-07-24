@@ -46,9 +46,9 @@ class WebDAVFRSPackageTest extends TestCase
     public function testGetChildrenNoReleases(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array());
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([]);
 
-        $this->assertEquals($webDAVFRSPackage->getChildren(), array());
+        $this->assertEquals($webDAVFRSPackage->getChildren(), []);
     }
 
     /**
@@ -64,9 +64,9 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $FRSRelease = \Mockery::spy(FRSRelease::class);
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array($FRSRelease));
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([$FRSRelease]);
 
-        $this->assertEquals($webDAVFRSPackage->getChildren(), array());
+        $this->assertEquals($webDAVFRSPackage->getChildren(), []);
     }
 
     /**
@@ -82,9 +82,9 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $FRSRelease = \Mockery::spy(FRSRelease::class);
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array($FRSRelease));
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([$FRSRelease]);
 
-        $this->assertEquals($webDAVFRSPackage->getChildren(), array($release));
+        $this->assertEquals($webDAVFRSPackage->getChildren(), [$release]);
     }
 
     /**
@@ -350,7 +350,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
         $release = \Mockery::spy(FRSRelease::class);
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array($release));
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([$release]);
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
@@ -363,7 +363,7 @@ class WebDAVFRSPackageTest extends TestCase
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array());
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([]);
         $webDAVFRSPackage->shouldReceive('getPackageId')->andReturns(1);
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
         $packageFactory->shouldReceive('delete_package')->andReturns(0);
@@ -385,7 +385,7 @@ class WebDAVFRSPackageTest extends TestCase
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
-        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array());
+        $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([]);
         $webDAVFRSPackage->shouldReceive('getPackageId')->andReturns(1);
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
         $packageFactory->shouldReceive('delete_package')->andReturns(1);
@@ -493,11 +493,11 @@ class WebDAVFRSPackageTest extends TestCase
     public function testCreateDirectorysucceed(): void
     {
         // Values we expect for the package to create
-        $refPackageToCreate = array('name'       => 'release',
+        $refPackageToCreate = ['name'       => 'release',
                                     'package_id' => 42,
                                     'notes'      => '',
                                     'changes'    => '',
-                                    'status_id'  => 1);
+                                    'status_id'  => 1];
         // Values we expect for the package once created
         $refPackage = $refPackageToCreate;
         $refPackage['release_id'] = 15;

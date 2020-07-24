@@ -134,7 +134,7 @@ class Codendi_Session extends PHP_Session
             }
             if (! isset($session[$path])) {
                 if ($create_path) {
-                    $session[$path] = array();
+                    $session[$path] = [];
                 } else {
                //path does not exist and we do not want to create it
                     $r = null;

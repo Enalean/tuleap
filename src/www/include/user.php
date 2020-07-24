@@ -20,7 +20,7 @@
  */
 
 
-$USER_RES = array();
+$USER_RES = [];
 
 
 //Deprecated. Use User->isLoggedIn() instead

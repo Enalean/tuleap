@@ -34,7 +34,7 @@ class SkinTuleap extends SkinTemplate
     {
             $tc = new $classname();
 
-            $tc->params = array();
+            $tc->params = [];
         if (
             ($tc->project = $project =
                 group_get_object_by_name($GLOBALS['fusionforgeproject']))
@@ -274,8 +274,8 @@ class TuleapTemplate extends BaseTemplate
 
             <?php
         }
-        wfRunHooks('MonoBookTemplateToolboxEnd', array( &$this ));
-        wfRunHooks('SkinTemplateToolboxEnd', array( &$this, true ));
+        wfRunHooks('MonoBookTemplateToolboxEnd', [&$this]);
+        wfRunHooks('SkinTemplateToolboxEnd', [&$this, true]);
         ?>
             </ul>
         </div>
@@ -304,7 +304,7 @@ class TuleapTemplate extends BaseTemplate
 
     public function customBox($bar, $cont)
     {
-        $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar") );
+        $portletAttribs = ['class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar")];
         $tooltip = Linker::titleAttrib("p-$bar");
         if ($tooltip !== false) {
             $portletAttribs['title'] = $tooltip;

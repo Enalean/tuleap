@@ -48,7 +48,7 @@ class ValueFormatter
 
     public function fetchFormattedValue(PFUser $user, array $values, $nature, $format)
     {
-        $arr = array();
+        $arr = [];
         preg_match_all('/%(?P<names>[a-z_]+)/i', $format, $matches);
         foreach ($values as $artifact_link_info) {
             if ($artifact_link_info->getNature() != $nature) {
@@ -85,8 +85,8 @@ class ValueFormatter
             return '';
         }
 
-        $search  = array();
-        $replace = array();
+        $search  = [];
+        $replace = [];
         try {
             $this->fillSearchAndReplace(
                 $search,

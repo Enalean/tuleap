@@ -107,13 +107,13 @@ class CardwallConfigXmlImport
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
-            array(
+            [
                 'project_id'          => $this->group_id,
                 'xml_content'         => $xml_input,
                 'mapping'             => $this->mapping,
                 'logger'              => $this->logger,
                 'artifact_id_mapping' => $this->artifact_id_mapping
-            )
+            ]
         );
 
         $this->cardwall_ontop_dao->commit();
@@ -271,7 +271,7 @@ class CardwallConfigXmlImport
      */
     private function importColumns(SimpleXMLElement $xml_columns, $cardwall_tracker_id)
     {
-        $column_mapping = array();
+        $column_mapping = [];
 
         foreach ($xml_columns->{CardwallConfigXml::NODE_COLUMN} as $xml_column) {
             $label         = (string) $xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL];

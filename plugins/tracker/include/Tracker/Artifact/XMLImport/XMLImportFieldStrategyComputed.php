@@ -35,7 +35,7 @@ class XMLImportFieldStrategyComputed implements Tracker_Artifact_XMLImport_XMLIm
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $computed_value = array();
+        $computed_value = [];
 
         if (isset($field_change->manual_value)) {
             $computed_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL] = (string) $field_change->manual_value;

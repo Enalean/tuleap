@@ -46,26 +46,26 @@ class UGroupManagerUpdateUgroupBindingEventTest extends TestCase
         $this->event_manager  = \Mockery::spy(\EventManager::class);
         $this->ugroup_manager = \Mockery::mock(
             \UGroupManager::class,
-            array($this->dao, $this->event_manager)
+            [$this->dao, $this->event_manager]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->ugroup_12 = new ProjectUGroup(array('ugroup_id' => 12));
-        $this->ugroup_24 = new ProjectUGroup(array('ugroup_id' => 24));
+        $this->ugroup_12 = new ProjectUGroup(['ugroup_id' => 12]);
+        $this->ugroup_24 = new ProjectUGroup(['ugroup_id' => 24]);
         $this->ugroup_manager->shouldReceive('getById')->with(12)->andReturns($this->ugroup_12);
         $this->ugroup_manager->shouldReceive('getById')->with(24)->andReturns($this->ugroup_24);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsAdded(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_add', array('ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24))->once();
+        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_add', ['ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24])->once();
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 
     public function testItRaiseAnEventWithGroupsWhenOneIsRemoved(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_remove', array('ugroup' => $this->ugroup_12))->once();
+        $this->event_manager->shouldReceive('processEvent')->with('ugroup_manager_update_ugroup_binding_remove', ['ugroup' => $this->ugroup_12])->once();
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 }

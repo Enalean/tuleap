@@ -74,7 +74,7 @@ class MailFilter
             return $mails;
         }
 
-        $filtered_mails = array();
+        $filtered_mails = [];
         foreach ($mails as $email) {
             $users = $this->user_manager->getAllUsersByEmail($email);
             foreach ($users as $user) {

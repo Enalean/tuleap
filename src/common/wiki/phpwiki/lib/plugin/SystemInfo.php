@@ -212,7 +212,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         while (prev($hits) > $maxtreshold) {
             $nmax++;
         }
-        return array('n'     => $n,
+        return ['n'     => $n,
                      'sum'   => $sum,
                      'min'   => $min,
                      'max'   => $max,
@@ -223,7 +223,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                      'nmin'        => $nmin,
                      'mintreshold' => $mintreshold,
                      'nmax'        => $nmax,
-                     'maxtreshold' => $maxtreshold);
+                     'maxtreshold' => $maxtreshold];
     }
 
     // only absolute numbers, not for any time interval. see accessstats
@@ -234,7 +234,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     public function hitstats()
     {
         $dbi = $this->_dbi;
-        $hits = array();
+        $hits = [];
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
             if (
@@ -325,10 +325,10 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         if (! empty($availableargs[$arg])) {
             return $availableargs[$arg]();
         } elseif (method_exists($this, $arg)) { // any defined SystemInfo->method()
-            return call_user_func_array(array(&$this, $arg), '');
+            return call_user_func_array([&$this, $arg], '');
         } elseif (
             defined($arg) && // any defined constant
-                ! in_array($arg, array('ADMIN_PASSWD','DBAUTH_AUTH_DSN'))
+                ! in_array($arg, ['ADMIN_PASSWD', 'DBAUTH_AUTH_DSN'])
         ) {
             return constant($arg);
         } else {
@@ -343,9 +343,9 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         $this->_dbi = $dbi;
         $args['seperator'] = ' ';
         $availableargs = // name => callback + 0 args
-            array ('appname' => function () {
+             ['appname' => function () {
                 return 'PhpWiki';
-            },
+             },
                    'version' => function () {
                     return PHPWIKI_VERSION;
                    },
@@ -371,12 +371,12 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                    '' => function () {
                     return 'dummy';
                    }
-                   );
+                   ];
         // split the argument string by any number of commas or space
         // characters, which include " ", \r, \t, \n and \f
         $allargs = preg_split("/[\s,]+/", $argstr, -1, PREG_SPLIT_NO_EMPTY);
         if (in_array('all', $allargs) || in_array('table', $allargs)) {
-            $allargs = array('appname'          => _("Application name"),
+            $allargs = ['appname'          => _("Application name"),
                              'version'          => _("PhpWiki engine version"),
                              'cachestats'       => _("Cache statistics"),
                              'pagestats'        => _("Page statistics"),
@@ -393,9 +393,9 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
                              'supported_themes'    => _("Supported themes"),
 //                           '' => _(""),
                              '' => ""
-                             );
-            $table = HTML::table(array('border' => 1,'cellspacing' => 3,
-                                       'cellpadding' => 3));
+                             ];
+            $table = HTML::table(['border' => 1,'cellspacing' => 3,
+                                       'cellpadding' => 3]);
             foreach ($allargs as $arg => $desc) {
                 if (! $arg) {
                     continue;

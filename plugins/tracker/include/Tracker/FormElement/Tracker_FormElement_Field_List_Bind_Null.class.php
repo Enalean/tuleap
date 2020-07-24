@@ -27,7 +27,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 
     public function __construct($field)
     {
-        parent::__construct($field, array(), array());
+        parent::__construct($field, [], []);
     }
 
     /**
@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getAllValues()
     {
-        return array();
+        return [];
     }
     /**
      * Get available values of this field for REST usage
@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getRESTAvailableValues()
     {
-        return array();
+        return [];
     }
     /**
      * Get the field data for artifact submission
@@ -57,21 +57,21 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getFieldData($submitted_value, $is_multiple)
     {
-        return array();
+        return [];
     }
     /**
      * @return array
      */
     public function getValue($value_id)
     {
-        return array();
+        return [];
     }
     /**
      * @return array
      */
     public function getChangesetValues($changeset_id)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -200,7 +200,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getBindtableSqlFragment()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -274,12 +274,12 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function getBindValues($bindvalue_ids = null)
     {
-        return array();
+        return [];
     }
 
     public function getBindValuesForIds(array $bindvalue_ids)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -289,22 +289,22 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
     public function fixOriginalValueIds(array $value_mapping)
     {
-        return array();
+        return [];
     }
 
     public function getQuerySelectAggregate($functions)
     {
-        return array();
+        return [];
     }
 
     protected function getRESTBindingList()
     {
-        return array();
+        return [];
     }
 
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
     {
-        return array();
+        return [];
     }
 
     public function getType()

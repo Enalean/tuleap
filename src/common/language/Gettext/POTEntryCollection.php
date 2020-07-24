@@ -30,7 +30,7 @@ class POTEntryCollection
     public function __construct($domain)
     {
         $this->domain  = $domain;
-        $this->entries = array();
+        $this->entries = [];
     }
 
     public function add($domain, POTEntry $entry)

@@ -37,7 +37,7 @@ class NavigationDropdownQuickLinksCollector implements Dispatchable
     public function __construct(Project $projet)
     {
         $this->project                = $projet;
-        $this->quick_links_collection = array();
+        $this->quick_links_collection = [];
     }
 
     public function addQuickLink(NavigationDropdownItemPresenter $quick_link)

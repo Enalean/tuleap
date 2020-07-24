@@ -89,7 +89,7 @@ class RepositoryManager
      */
     public function getRepositoriesInProject(Project $project)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->searchByProject($project) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
@@ -102,7 +102,7 @@ class RepositoryManager
      */
     public function getRepositoryPaginatedCollection(Project $project, $limit, $offset)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
@@ -118,7 +118,7 @@ class RepositoryManager
      */
     public function getRepositoryPaginatedCollectionByName(Project $project, $repository_name, $limit, $offset)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->searchPaginatedByProjectAndByName($project, $repository_name, $limit, $offset) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
@@ -131,12 +131,12 @@ class RepositoryManager
 
     public function getRepositoriesInProjectWithLastCommitInfo(Project $project)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->searchByProject($project) as $row) {
-            $repositories[] = array(
+            $repositories[] = [
                 'repository'  => $this->instantiateFromRow($row, $project),
                 'commit_date' => $row['commit_date']
-            );
+            ];
         }
 
         return $repositories;
@@ -244,7 +244,7 @@ class RepositoryManager
     {
         $deleted_repositories              = $this->dao->getRestorableRepositoriesByProject($project->getID());
         $deleted_repositories_instantiated = $this->instantiateRepositoriesFromRow($deleted_repositories);
-        $deleted_existed_repositories      = array();
+        $deleted_existed_repositories      = [];
         foreach ($deleted_repositories_instantiated as $delete_repository) {
             $archive = $delete_repository->getBackupPath();
             if (file_exists($archive)) {
@@ -256,7 +256,7 @@ class RepositoryManager
 
     private function instantiateRepositoriesFromRow($deleted_repositories)
     {
-        $archived_repositories = array();
+        $archived_repositories = [];
         foreach ($deleted_repositories as $deleted_repository) {
             $repository = $this->instantiateFromRowWithoutProject($deleted_repository);
             array_push($archived_repositories, $repository);

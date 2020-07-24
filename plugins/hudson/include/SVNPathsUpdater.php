@@ -25,7 +25,7 @@ class SVNPathsUpdater
     {
         $submitted_content_lines = explode(PHP_EOL, $submitted_content);
 
-        $transformed_content = array();
+        $transformed_content = [];
         foreach ($submitted_content_lines as $line) {
             $line = trim($line);
 

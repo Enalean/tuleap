@@ -40,13 +40,13 @@ $request->checkUserIsSuperUser();
 */
 function get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset)
 {
-    $sort_order_hash = array(
+    $sort_order_hash = [
         'sort_header'    => $current_sort_header,
         'user_name_icon' => '',
         'realname_icon'  => '',
         'status_icon'    => '',
         'order'          => 'DESC'
-    );
+    ];
     $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
 
     if ($offset === 0) {
@@ -81,21 +81,21 @@ if ($request->exist('export')) {
         }
     }
     //Get current sort header
-    $header_whitelist = array('user_name', 'realname', 'status');
+    $header_whitelist = ['user_name', 'realname', 'status'];
     if (in_array($request->get('current_sort_header'), $header_whitelist)) {
         $current_sort_header = $request->get('current_sort_header');
     } else {
         $current_sort_header = 'user_name';
     }
     //Get current sort order
-    $sort_order_whitelist = array('ASC','DESC');
+    $sort_order_whitelist = ['ASC', 'DESC'];
     if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
         $sort_order = $request->get('sort_order');
     } else {
         $sort_order = 'ASC';
     }
     //Get status values
-    $status_values = array();
+    $status_values = [];
     if ($request->exist('status_values')) {
         $status_submitted = $request->get('status_values');
         foreach ($status_submitted as $status) {
@@ -134,7 +134,7 @@ if ($request->valid($vUserNameSearch)) {
     }
 }
 
-$header_whitelist = array('user_name', 'realname', 'status');
+$header_whitelist = ['user_name', 'realname', 'status'];
 if (in_array($request->get('previous_sort_header'), $header_whitelist)) {
     $previous_sort_header = $request->get('previous_sort_header');
 } else {
@@ -146,7 +146,7 @@ if (in_array($request->get('current_sort_header'), $header_whitelist)) {
     $current_sort_header = 'user_name';
 }
 
-$sort_order_whitelist = array('ASC','DESC');
+$sort_order_whitelist = ['ASC', 'DESC'];
 if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
     $sort_order = $request->get('sort_order');
 } else {
@@ -163,7 +163,7 @@ if ($request->valid($vGroupId)) {
 }
 
 $sort_params = get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset);
-$status_values = array();
+$status_values = [];
 $anySelect     = "selected";
 if ($request->exist('status_values')) {
     $status_values = $request->get('status_values');
@@ -171,7 +171,7 @@ if ($request->exist('status_values')) {
         $status_values = explode(",", $status_values);
     }
     if (in_array('ANY', $status_values)) {
-        $status_values = array();
+        $status_values = [];
     } else {
         $anySelect = "";
     }

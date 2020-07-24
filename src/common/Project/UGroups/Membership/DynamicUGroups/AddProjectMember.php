@@ -97,7 +97,7 @@ class AddProjectMember
             ]
         );
 
-        $this->history_dao->groupAddHistory('added_user', $user->getUserName(), $project->getID(), array($user->getUserName()));
+        $this->history_dao->groupAddHistory('added_user', $user->getUserName(), $project->getID(), [$user->getUserName()]);
 
         $this->ugroup_binding->reloadUgroupBindingInProject($project);
     }

@@ -27,7 +27,7 @@ class AdminScrumPresenter
     public $group_id;
 
     /** @var array */
-    public $plannings = array();
+    public $plannings = [];
 
     /** @var bool */
     public $scrum_activated;
@@ -54,7 +54,7 @@ class AdminScrumPresenter
     public $does_configuration_allows_planning_creation;
 
     private $root_planning_name;
-    private $planning_hierarchy = array();
+    private $planning_hierarchy = [];
     private $can_create_planning;
     private $additional_content;
 

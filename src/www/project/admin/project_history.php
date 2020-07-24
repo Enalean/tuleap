@@ -36,7 +36,7 @@ if ($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$eventsList = array('any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others');
+$eventsList = ['any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others'];
 $validEvents = new Valid_WhiteList('events_box', $eventsList);
 $event = $request->getValidated('events_box', $validEvents, null);
 if (! $event) {
@@ -46,7 +46,7 @@ if (! $event) {
 }
 $validSubEvents = new Valid_String('sub_events_box');
 if ($request->validArray($validSubEvents)) {
-    $subEvents      = array();
+    $subEvents      = [];
     $subEventsArray = $request->get('sub_events_box');
     foreach ($subEventsArray as $element) {
         $subEvents[$element] = true;
@@ -54,7 +54,7 @@ if ($request->validArray($validSubEvents)) {
 } elseif ($request->exist('subEventsBox')) {
     $validPaginationSubEvents = new Valid_String('subEventsBox');
     if ($request->valid($validPaginationSubEvents)) {
-        $subEvents       = array();
+        $subEvents       = [];
         $subEventsString = $request->get('subEventsBox');
         $subEventsBox    = explode(",", $subEventsString);
         foreach ($subEventsBox as $element) {

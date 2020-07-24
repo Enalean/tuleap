@@ -49,7 +49,7 @@ class referencealias_svnPlugin extends Plugin //phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('svn');
+        return ['svn'];
     }
 
     /**

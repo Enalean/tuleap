@@ -188,7 +188,7 @@ if ($func == 'gotoid') {
                         $addresses = $agnf->getAllAddresses($ath->getID());
                         $ah->mailFollowupWithPermissions($addresses);
 
-                        $em->processEvent('tracker_postadd', array('ah' => $ah, 'ath' => $ath));
+                        $em->processEvent('tracker_postadd', ['ah' => $ah, 'ath' => $ath]);
 
                         $itemname = $ath->getItemName();
                         $GLOBALS['Response']->addFeedback('info', $Language->getText(
@@ -274,7 +274,7 @@ if ($func == 'gotoid') {
                         $follow_up_comment = $request->get('follow_up_comment');
                         $comment_type_id = $request->get('comment_type_id');
                         $canned_response = $request->get('canned_response');
-                        $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                        $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
                         $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                         $ah->addFollowUpComment($follow_up_comment, $comment_type_id, $canned_response, $changes, $comment_format);
 
@@ -283,7 +283,7 @@ if ($func == 'gotoid') {
                             $addresses = $agnf->getAllAddresses($ath->getID());
                             $ah->mailFollowupWithPermissions($addresses);
 
-                            $em->processEvent('postcopy', array('ah' => $ah, 'ath' => $ath));
+                            $em->processEvent('postcopy', ['ah' => $ah, 'ath' => $ath]);
 
                             $itemname = $ath->getItemName();
                             $GLOBALS['Response']->addFeedback('info', $Language->getText(
@@ -514,7 +514,7 @@ if ($func == 'gotoid') {
                     // Update the 'last_update_date' artifact field
                     $res_last_up = $ah->update_last_update_date();
 
-                    $em->processEvent('tracker_postmod', array('ah' => $ah, 'ath' => $ath));
+                    $em->processEvent('tracker_postmod', ['ah' => $ah, 'ath' => $ath]);
 
                     //      Show just one feedback entry if no errors
                 if (! isset($was_error) || ! $was_error) {
@@ -695,7 +695,7 @@ if ($func == 'gotoid') {
             $email   = $request->get('email');
             $changes = [];
             if ($comment) {
-                $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                 if (! $ah->addComment($comment, $email, $changes, $comment_format)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_saved_comment'));
@@ -816,7 +816,7 @@ if ($func == 'gotoid') {
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
                 $ah = new ArtifactHtml($ath, $artifact_id);
-                $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                 $changes        = [];
                 if ($ah->updateFollowupComment($request->get('artifact_history_id'), $followup_update, $changes, $comment_format)) {
@@ -947,8 +947,8 @@ if ($func == 'gotoid') {
             }
             break;
         case 'toggle_section':
-            $collapsable_sections = array('results', 'query');
-            $em->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
+            $collapsable_sections = ['results', 'query'];
+            $em->processEvent('tracker_collapsable_sections', ['sections' => &$collapsable_sections]);
             if (in_array($request->get('section'), $collapsable_sections)) {
                 $current_user = UserManager::instance()->getCurrentUser();
                 $pref_name = 'tracker_' . (int) $atid . '_hide_section_' . $request->get('section');
@@ -1018,7 +1018,7 @@ if ($func == 'gotoid') {
                 echo '
                         <a href="/tracker/?atid=' . (int) ($at_arr[$j]->getID()) .
                     '&group_id=' . (int) $group_id . '&func=browse">' .
-                    html_image("ic/tracker20w.png", array("border" => "0","width" => "20","height" => "20"), 0) .
+                    html_image("ic/tracker20w.png", ["border" => "0", "width" => "20", "height" => "20"], 0) .
                     '&nbsp;' .
                      $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML)  . '</a> ';
                 // Only show number of artifacts if the user has full access on the tracker.

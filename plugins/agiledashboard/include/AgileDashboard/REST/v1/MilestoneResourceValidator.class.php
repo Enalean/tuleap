@@ -156,7 +156,7 @@ class MilestoneResourceValidator
         ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
         ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null
     ) {
-        $artifacts = array();
+        $artifacts = [];
 
         foreach ($ids as $potential_backlog_item_id) {
             $artifact = $this->tracker_artifact_factory->getArtifactById($potential_backlog_item_id);
@@ -267,7 +267,7 @@ class MilestoneResourceValidator
     private function filterArtifactIdsAlreadyInBacklog(array $ids, Planning_Milestone $milestone, PFUser $user)
     {
         $indexed_backlog_items = $this->getIndexedBacklogItems($user, $milestone);
-        $to_add = array();
+        $to_add = [];
         foreach ($ids as $id) {
             if (! isset($indexed_backlog_items[$id])) {
                 $to_add[] = $id;
@@ -278,7 +278,7 @@ class MilestoneResourceValidator
 
     private function getIndexedChildrenBacklogTrackers(Planning_Milestone $milestone)
     {
-        $children_backlog_trackers = array();
+        $children_backlog_trackers = [];
         $children_planning = $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
         if ($children_planning) {
             foreach ($children_planning->getBacklogTrackersIds() as $id) {
@@ -290,7 +290,7 @@ class MilestoneResourceValidator
 
     private function getIndexedBacklogItems(PFUser $user, Planning_Milestone $milestone)
     {
-        $index = array();
+        $index = [];
         $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
         foreach ($backlog_items as $item) {
             $index[$item->id()] = true;
@@ -375,7 +375,7 @@ class MilestoneResourceValidator
 
     private function getIndexedLinkedArtifactIds(PFUser $user, Planning_Milestone $milestone)
     {
-        $linked_artifacts_index = array();
+        $linked_artifacts_index = [];
         foreach ($milestone->getArtifact()->getLinkedArtifacts($user) as $artifact) {
             $linked_artifacts_index[$artifact->getId()] = true;
         }

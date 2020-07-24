@@ -36,7 +36,7 @@ class Docman_SystemCheckProjectRetriever
     {
         $result = $this->dao->getActiveProjectUnixNamesThatUseDocman();
 
-        $project_shortnames = array();
+        $project_shortnames = [];
         while ($row = $result->getRow()) {
             $project_shortnames[] = $row['shortname'];
         }

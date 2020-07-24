@@ -65,7 +65,7 @@ class LockResponseBuilder
 
     private function generateLocksRepresentations(Lock ...$locks): array
     {
-        $locks_representations = array();
+        $locks_representations = [];
 
         foreach ($locks as $lock) {
             $locks_representations[] = new LockResponseLockRepresentation($lock);

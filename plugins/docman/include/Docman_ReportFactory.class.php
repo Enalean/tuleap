@@ -214,11 +214,11 @@ class Docman_ReportFactory
         $useStatus = $settingsBo->getMetadataUsage('status');
 
         if ($useStatus) {
-            $columnsOnReport = array('status', 'title', 'description', 'location', 'owner', 'update_date');
+            $columnsOnReport = ['status', 'title', 'description', 'location', 'owner', 'update_date'];
             // report with a dynamic field:
             //$columnsOnReport = array('status', 'title', 'description', 'field_2', 'location', 'owner', 'update_date');
         } else {
-            $columnsOnReport = array('title', 'description', 'location', 'owner', 'update_date');
+            $columnsOnReport = ['title', 'description', 'location', 'owner', 'update_date'];
         }
         $keepRefOnUpdateDate = null;
         $thereIsAsort = false;
@@ -260,7 +260,7 @@ class Docman_ReportFactory
 
     public function getProjectReportsForGroup()
     {
-        $ra = array();
+        $ra = [];
         $dao = $this->getDao();
         $dar = $dao->searchProjectReportByGroupId($this->groupId);
         $i = 0;
@@ -276,7 +276,7 @@ class Docman_ReportFactory
 
     public function getPersonalReportsForUser($user)
     {
-        $ra = array();
+        $ra = [];
         $dao = $this->getDao();
         $dar = $dao->searchPersonalReportByUserId($this->groupId, $user->getId());
         $i = 0;
@@ -298,7 +298,7 @@ class Docman_ReportFactory
      */
     public function getReportsItems($reportId = null)
     {
-        $itemArray = array();
+        $itemArray = [];
         $itemFactory = new Docman_ItemFactory($this->groupId);
         $dao = $this->getDao();
         foreach ($dao->searchItemsInReports($this->groupId, $reportId) as $row) {
@@ -372,7 +372,7 @@ class Docman_ReportFactory
      * @param $forceScopeToI   Force scope of the new reports to I (individual).
      * @param $itemMapping     Mapping between $srcReport project items and $dstGroupId items (for folders associated to report).
      */
-    public function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping = array())
+    public function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping = [])
     {
         $dstReportFactory = new Docman_ReportFactory($dstGroupId);
         $srcFilterFactory = new Docman_FilterFactory($this->groupId);
@@ -415,7 +415,7 @@ class Docman_ReportFactory
     /**
      * Clone reports from a project to another one
      */
-    public function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping = array())
+    public function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping = [])
     {
         $ri = $this->getProjectReportsForGroup();
         $ri->rewind();

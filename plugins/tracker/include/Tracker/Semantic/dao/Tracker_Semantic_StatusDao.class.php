@@ -49,7 +49,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
         $this->update($sql);
 
         // Now save the new values
-        $values = array();
+        $values = [];
         foreach ($open_value_ids as $vid) {
             $vid = $this->da->escapeInt($vid);
             $values[] = "($tracker_id, $field_id, $vid)";

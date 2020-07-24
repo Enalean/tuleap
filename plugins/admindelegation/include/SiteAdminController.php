@@ -78,7 +78,7 @@ class SiteAdminController implements DispatchableWithRequest, DispatchableWithBu
         }
 
         if ($request->isPost()) {
-            $vFunc = new Valid_WhiteList('func', array('grant_user_service', 'revoke_user'));
+            $vFunc = new Valid_WhiteList('func', ['grant_user_service', 'revoke_user']);
             $vFunc->required();
             if ($request->valid($vFunc)) {
                 $func = $request->get('func');

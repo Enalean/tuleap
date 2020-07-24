@@ -140,7 +140,7 @@ class Tracker_Action_UpdateArtifact
 
     private function calculateRedirectParams($stay, $from_aid)
     {
-        $redirect_params = array();
+        $redirect_params = [];
         if ($stay) {
             $redirect_params['aid']       = $this->artifact->getId();
             $redirect_params['from_aid']  = $from_aid;
@@ -166,7 +166,7 @@ class Tracker_Action_UpdateArtifact
 
     private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user)
     {
-        $card_info               = array();
+        $card_info               = [];
         $tracker_id              = $artifact->getTracker()->getId();
         $remaining_effort_field  = $this->form_element_factory->getComputableFieldByNameForUser(
             $tracker_id,
@@ -177,9 +177,9 @@ class Tracker_Action_UpdateArtifact
             $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
             $remaining_effort = $this->addAutocomputeLabelIfFieldIsAutcocomputed($artifact, $remaining_effort_field, $remaining_effort);
 
-            $card_info[$artifact->getId()] = array(
+            $card_info[$artifact->getId()] = [
                 Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
-            );
+            ];
         }
         return $card_info;
     }
@@ -190,7 +190,7 @@ class Tracker_Action_UpdateArtifact
         $remaining_effort
     ) {
         if (
-            $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), array('computed'))
+            $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), ['computed'])
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
             $remaining_effort .= " (" . dgettext('tuleap-tracker', 'autocomputed') . ")";

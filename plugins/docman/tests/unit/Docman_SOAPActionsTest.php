@@ -59,7 +59,7 @@ class Docman_SOAPActionsTest extends TestCase
         $this->fileStorage = \Mockery::spy(\Docman_FileStorage::class);
 
         // Item MD5 Map: id => md5sum
-        $this->MD5Map = array(128000 => '99999999999999999999999999999999');
+        $this->MD5Map = [128000 => '99999999999999999999999999999999'];
         foreach ($this->MD5Map as $itemId => $md5) {
             $file = M::spy(Docman_File::class, ['getID' => $itemId, 'getCurrentVersion' => $version]);
             $this->itemFactory->shouldReceive('getItemFromDb')->with($itemId)->andReturn($file);
@@ -127,10 +127,10 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
+        $params  = [
             'item_id'  => 128000,
             'group_id' => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('item_id')->andReturns(true);
         $request->shouldReceive('get')->with('item_id')->andReturns($params['item_id']);
@@ -149,11 +149,11 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
+        $params  = [
             'item_id'  => 128000,
             'group_id' => 2,
             'version'  => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('item_id')->andReturns(true);
         $request->shouldReceive('get')->with('item_id')->andReturns($params['item_id']);
@@ -171,11 +171,11 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params                          = array(
+        $params                          = [
             'item_id'      => 128000,
             'group_id'     => 2,
             'all_versions' => true,
-        );
+        ];
         $request                         = new SOAPRequest($params);
         $action->getControler()->request = $request;
 
@@ -190,7 +190,7 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array();
+        $params  = [];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->andReturns(false);
 
@@ -211,7 +211,7 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array('item_id' => 0);
+        $params  = ['item_id' => 0];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->andReturns(true);
         $request->shouldReceive('get')->with('item_id')->andReturns(0);
@@ -230,13 +230,13 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
-            'item'     => array(
+        $params  = [
+            'item'     => [
                 'owner' => 'testuser',
                 'id'    => 128000,
-            ),
+            ],
             'group_id' => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('item')->andReturns(true);
         $request->shouldReceive('get')->with('item')->andReturns($params['item']);
@@ -263,10 +263,10 @@ class Docman_SOAPActionsTest extends TestCase
 
         $this->lockFactory->shouldReceive('itemIsLocked')->andReturns(false);
 
-        $params  = array(
+        $params  = [
             'id'       => 128000,
             'group_id' => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('id')->andReturns(true);
         $request->shouldReceive('exist')->with('upload_content')->andReturns(true);
@@ -288,11 +288,11 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
+        $params  = [
             'id'       => 128000,
             'group_id' => 2,
             'date'     => 1,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('id')->andReturns(true);
         $request->shouldReceive('exist')->with('upload_content')->andReturns(true);
@@ -316,16 +316,16 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
-            'item'     => array(
+        $params  = [
+            'item'     => [
                 'parent_id'   => 128001,
                 'title'       => 'test',
                 'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
                 'create_date' => 1,
                 'update_date' => 2,
-            ),
+            ],
             'group_id' => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('item')->andReturns(true);
         $request->shouldReceive('get')->with('item')->andReturns($params['item']);
@@ -363,14 +363,14 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
-            'item'     => array(
+        $params  = [
+            'item'     => [
                 'parent_id' => 128001,
                 'title'     => 'test',
                 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
-            ),
+            ],
             'group_id' => 2,
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('item')->andReturns(true);
         $request->shouldReceive('get')->with('item')->andReturns($params['item']);
@@ -398,13 +398,13 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
+        $params  = [
             'group_id'       => 10,
             'item_id'        => 128000,
             'chunk_offset'   => 10,
             'chunk_size'     => 64,
             'upload_content' => 'abcdef'
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('group_id')->andReturns(true);
         $request->shouldReceive('exist')->with('item_id')->andReturns(true);
@@ -450,13 +450,13 @@ class Docman_SOAPActionsTest extends TestCase
     {
         $action = $this->action;
 
-        $params  = array(
+        $params  = [
             'group_id'       => 10,
             'item_id'        => 128000,
             'chunk_offset'   => 10,
             'chunk_size'     => 64,
             'version_number' => 2
-        );
+        ];
         $request = \Mockery::spy(\SOAPRequest::class);
         $request->shouldReceive('exist')->with('group_id')->andReturns(true);
         $request->shouldReceive('exist')->with('item_id')->andReturns(true);

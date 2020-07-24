@@ -334,9 +334,9 @@ class WikiRequest extends Request
         }
         $action = $this->getArg('action');
         if (! empty($_GET['start_debug'])) { // zend ide support
-            return WikiURL($pagename, array('action' => $action, 'start_debug' => 1));
+            return WikiURL($pagename, ['action' => $action, 'start_debug' => 1]);
         } else {
-            return WikiURL($pagename, array('action' => $action));
+            return WikiURL($pagename, ['action' => $action]);
         }
     }
 
@@ -399,7 +399,7 @@ class WikiRequest extends Request
                 $this->_user = new _PassUser($userid);
             }
         }
-        $user = $this->_user->AuthCheck(array('userid' => $userid));
+        $user = $this->_user->AuthCheck(['userid' => $userid]);
         if (isa($user, WikiUserClassname())) {
             $this->_setUser($user); // success!
         }
@@ -436,12 +436,12 @@ class WikiRequest extends Request
     {
         static $levels = false;
         if (! $levels) { // This looks like a Visual Basic hack. For the very same reason. "0"
-            $levels = array('x-1' => _("FORBIDDEN"),
+            $levels = ['x-1' => _("FORBIDDEN"),
                             'x0'  => _("ANON"),
                             'x1'  => _("BOGO"),
                             'x2'  => _("USER"),
                             'x10' => _("ADMIN"),
-                            'x100' => _("UNOBTAINABLE"));
+                            'x100' => _("UNOBTAINABLE")];
         }
         if (! empty($level)) {
             $level = '0';
@@ -528,7 +528,7 @@ class WikiRequest extends Request
         static $actionDescriptions;
         if (! $actionDescriptions) {
             $actionDescriptions
-            = array('browse'     => _("view this page"),
+            = ['browse'     => _("view this page"),
                     'diff'       => _("diff this page"),
                     'edit'       => _("edit this page"),
                     'revert'     => _("revert to a previous version of this page"),
@@ -542,7 +542,7 @@ class WikiRequest extends Request
                     'viewsource' => _("view the source of this page"),
                     'zip'        => _("download a zip dump from this wiki"),
                     'ziphtml'    => _("download an html zip dump from this wiki")
-                    );
+                    ];
         }
         if (in_array($action, array_keys($actionDescriptions))) {
             return $actionDescriptions[$action];
@@ -567,7 +567,7 @@ class WikiRequest extends Request
 
         if (! $disallowedActionDescriptions) {
             $disallowedActionDescriptions
-            = array('browse'     => _("Browsing pages"),
+            = ['browse'     => _("Browsing pages"),
                     'diff'       => _("Diffing pages"),
                     'edit'       => _("Editing pages"),
                     'revert'     => _("Reverting to a previous version of pages"),
@@ -581,7 +581,7 @@ class WikiRequest extends Request
                     'viewsource' => _("Viewing the source of pages"),
                     'zip'        => _("Downloading zip dumps"),
                     'ziphtml'    => _("Downloading html zip dumps")
-                    );
+                    ];
         }
         if (in_array($action, array_keys($disallowedActionDescriptions))) {
             return $disallowedActionDescriptions[$action];
@@ -722,7 +722,7 @@ class WikiRequest extends Request
                 $plugin = $loader->getPlugin("ModeratedPage");
                 if ($plugin->handler($this, $page)) {
                     $CONTENT = HTML::div(
-                        array('class' => 'wiki-edithelp'),
+                        ['class' => 'wiki-edithelp'],
                         fmt(
                             "%s: action forwarded to a moderator.",
                             $action
@@ -1037,7 +1037,7 @@ class WikiRequest extends Request
         }
         $this->redirect(WikiURL(
             $search_page,
-            array('s' => $this->getArg('searchterm')),
+            ['s' => $this->getArg('searchterm')],
             'absolute_url'
         ));
     }
@@ -1048,12 +1048,12 @@ class WikiRequest extends Request
         $em = EventManager::instance();
         $response = false;
         $html = HTML();
-        $em->processEvent('isWikiPageEditable', array(
+        $em->processEvent('isWikiPageEditable', [
                         'action'    => 'is_wiki_page_editable',
                         'group_id'  => GROUP_ID,
                         'wiki_page' => $this->getArg('pagename'),
                         'response'  => &$response,
-            ));
+            ]);
         // }}} /Codendi hook
 
         if ($response) {
@@ -1264,13 +1264,13 @@ function main()
     // http://www.procata.com/blog/archives/2004/05/27/rephlux-and-php-memory-usage/
     // kill the global PEAR _PEAR_destructor_object_list
     if (! empty($_PEAR_destructor_object_list)) {
-        $_PEAR_destructor_object_list = array();
+        $_PEAR_destructor_object_list = [];
     }
     $request->possiblyDeflowerVirginWiki();
 
-    $validators = array('wikiname' => WIKI_NAME,
+    $validators = ['wikiname' => WIKI_NAME,
                         'args'     => wikihash($request->getArgs()),
-                        'prefs'    => wikihash($request->getPrefs()));
+                        'prefs'    => wikihash($request->getPrefs())];
     if (CACHE_CONTROL == 'STRICT') {
         $dbi = $request->getDbh();
         $timestamp = $dbi->getTimestamp();

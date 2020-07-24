@@ -308,7 +308,7 @@ class ArtifactsResource extends AuthenticatedResource
         }
 
         $user                     = $this->user_manager->getCurrentUser();
-        $artifact_representations = array();
+        $artifact_representations = [];
 
         $artifacts = $this->artifact_factory->getArtifactsByArtifactIdList(
             array_slice($requested_artifact_ids, $offset, $limit)
@@ -316,7 +316,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         if (! count($artifacts) > 0) {
             Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
-            return array(self::VALUES_FORMAT_COLLECTION => $artifact_representations);
+            return [self::VALUES_FORMAT_COLLECTION => $artifact_representations];
         }
 
         $first_artifact = $artifacts[0];
@@ -335,7 +335,7 @@ class ArtifactsResource extends AuthenticatedResource
         }
 
         Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
-        return array(self::VALUES_FORMAT_COLLECTION => $artifact_representations);
+        return [self::VALUES_FORMAT_COLLECTION => $artifact_representations];
     }
 
     /**
@@ -539,9 +539,9 @@ class ArtifactsResource extends AuthenticatedResource
             );
         }
 
-        return array(
+        return [
             self::VALUES_FORMAT_COLLECTION => $artifact_representations
-        );
+        ];
     }
 
     /**
@@ -770,8 +770,8 @@ class ArtifactsResource extends AuthenticatedResource
      */
     protected function post(
         TrackerReference $tracker,
-        array $values = array(),
-        array $values_by_field = array(),
+        array $values = [],
+        array $values_by_field = [],
         ?ArtifactReference $from_artifact = null
     ) {
         $this->options();

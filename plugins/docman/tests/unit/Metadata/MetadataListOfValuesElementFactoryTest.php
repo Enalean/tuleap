@@ -72,7 +72,7 @@ class MetadataListOfValuesElementFactoryTest extends TestCase
         $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // Parameters
-        $valuesMapping = array();
+        $valuesMapping = [];
         $srcMd = new Docman_ListMetadata();
         $srcMd->setId(123);
         $srcMd->setLabel('field_123');
@@ -105,7 +105,7 @@ class MetadataListOfValuesElementFactoryTest extends TestCase
         $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         // Parameters
-        $valuesMapping = array(101 => 201);
+        $valuesMapping = [101 => 201];
         $srcMd = new Docman_ListMetadata();
         $srcMd->setId(123);
         $srcMd->setLabel('field_123');

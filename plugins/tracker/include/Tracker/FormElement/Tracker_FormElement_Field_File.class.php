@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, array());
+        $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, []);
         return $html;
     }
 
@@ -136,7 +136,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         if ($v = $changeset->getValue($this)) {
             assert($v instanceof Tracker_Artifact_ChangesetValue_File);
             if (isset($v['value_id'])) {
-                $v = array($v);
+                $v = [$v];
             }
             /** @psalm-var array{value_id:int} $val */
             foreach ($v as $val) {
@@ -237,7 +237,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, array());
+        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, []);
         return $html;
     }
 
@@ -311,7 +311,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         }
         if (count($to_values)) {
             $submitter_needed = false;
-            $html .= 'Added: ' . $this->fetchAllAttachment($artifact->id, $to_values, $submitter_needed, array());
+            $html .= 'Added: ' . $this->fetchAllAttachment($artifact->id, $to_values, $submitter_needed, []);
         }
         return $html;
     }
@@ -331,7 +331,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         if ($values !== null && count($values) > 0) {
             $hp = Codendi_HTMLPurifier::instance();
             $uh = UserHelper::instance();
-            $added = array();
+            $added = [];
             foreach ($values as $fileinfo) {
                 $query_link = $this->getFileHTMLUrl($fileinfo);
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -450,7 +450,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $txt = '';
         if (count($values)) {
-            $filenames = array();
+            $filenames = [];
             foreach ($values as $fileinfo) {
                 $filenames[] = $fileinfo->getFilename();
             }
@@ -529,7 +529,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             }
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $added = array();
+            $added = [];
             foreach ($values as $fileinfo) {
                 $query_link = $this->getFileHTMLUrl($fileinfo);
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -560,7 +560,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $da = CodendiDataAccess::instance();
         if (! $this->file_values_by_changeset) {
-            $this->file_values_by_changeset = array();
+            $this->file_values_by_changeset = [];
             $field_id     = $da->escapeInt($this->id);
             $sql = "SELECT c.changeset_id, c.has_changed, f.id
                     FROM tracker_fileinfo as f
@@ -576,7 +576,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 $this->file_values_by_changeset[$row['changeset_id']][] = $file_info_factory->getById($row['id']);
             }
         }
-        return isset($this->file_values_by_changeset[$changeset_id]) ? $this->file_values_by_changeset[$changeset_id] : array();
+        return isset($this->file_values_by_changeset[$changeset_id]) ? $this->file_values_by_changeset[$changeset_id] : [];
     }
 
     public function previewAttachment($attachment_id)
@@ -677,7 +677,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
                 $hp = Codendi_HTMLPurifier::instance();
 
-                $added = array();
+                $added = [];
                 foreach ($files_info as $file_info) {
                     $add = '';
 
@@ -825,14 +825,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function augmentDataFromRequest(&$fields_data)
     {
         if (! isset($fields_data[$this->getId()]) || ! is_array($fields_data[$this->getId()])) {
-            $fields_data[$this->getId()] = array();
+            $fields_data[$this->getId()] = [];
         }
         $files_infos = $this->getSubmittedInfoFromFILES();
         if (isset($files_infos['name'][$this->getId()])) {
             $info_keys = array_keys($files_infos); //name, type, error, ...
             $nb = count($files_infos['name'][$this->getId()]);
             for ($i = 0; $i < $nb; ++$i) {
-                $tab = array();
+                $tab = [];
                 foreach ($info_keys as $key) {
                     $tab[$key] = $files_infos[$key][$this->getId()][$i]['file'];
                 }
@@ -935,7 +935,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $file_info_factory = $this->getTrackerFileInfoFactory();
 
-        $files = array();
+        $files = [];
         $file_value = $this->getValueDao()->searchById($value_id);
         foreach ($file_value as $row) {
             $file = $file_info_factory->getById($row['fileinfo_id']);
@@ -990,7 +990,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      */
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
     {
-        return array();
+        return [];
     }
 
     public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null)

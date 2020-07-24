@@ -31,7 +31,7 @@ class ProjectGetSvn implements Dispatchable
     /**
      * @var SvnRepositoryRepresentationBase[]
      */
-    private $repositories_representations = array();
+    private $repositories_representations = [];
 
     /**
      * @var int

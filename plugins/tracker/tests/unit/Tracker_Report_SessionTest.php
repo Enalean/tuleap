@@ -31,7 +31,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     {
         $report_id                              = 111;
         $this->tracker_report_session           = new Tracker_Report_Session($report_id);
-        $_SESSION['Tracker_Report_SessionTest'] = array();
+        $_SESSION['Tracker_Report_SessionTest'] = [];
         $this->tracker_report_session->setSessionNamespace($_SESSION['Tracker_Report_SessionTest']);
     }
 
@@ -43,7 +43,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     public function testRemovesCriterion(): void
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $session['criteria']['1'] = array('tintinlachipo');
+        $session['criteria']['1'] = ['tintinlachipo'];
         $this->tracker_report_session->removeCriterion('1');
         $this->assertEquals(1, $session['criteria']['1']['is_removed']);
     }
@@ -59,18 +59,18 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     public function testStoreCriterionNoOpts(): void
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $this->tracker_report_session->storeCriterion('4', array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
+        $this->tracker_report_session->storeCriterion('4', ['tintin' => 'lachipo', 'kiki' => 'labrouette']);
         $this->assertTrue(isset($session['criteria']['4']['value']));
-        $this->assertEquals(array('tintin' => 'lachipo', 'kiki' => 'labrouette'), $session['criteria']['4']['value']);
+        $this->assertEquals(['tintin' => 'lachipo', 'kiki' => 'labrouette'], $session['criteria']['4']['value']);
         $this->assertEquals(0, $session['criteria']['4']['is_removed']);
     }
 
     public function testStoreCriterionWithOpts(): void
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $this->tracker_report_session->storeCriterion('4', array('tintin' => 'lachipo', 'kiki' => 'labrouette'), $opts = array('is_advanced' => 1));
+        $this->tracker_report_session->storeCriterion('4', ['tintin' => 'lachipo', 'kiki' => 'labrouette'], $opts = ['is_advanced' => 1]);
         $this->assertTrue(isset($session['criteria']['4']['value']));
-        $this->assertEquals(array('tintin' => 'lachipo', 'kiki' => 'labrouette'), $session['criteria']['4']['value']);
+        $this->assertEquals(['tintin' => 'lachipo', 'kiki' => 'labrouette'], $session['criteria']['4']['value']);
         $this->assertTrue(isset($session['criteria']['4']['is_advanced']));
         $this->assertEquals(1, $session['criteria']['4']['is_advanced']);
         $this->assertEquals(0, $session['criteria']['4']['is_removed']);
@@ -79,7 +79,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     public function testItStoresAdditionalCriterion(): void
     {
         $session = &$this->tracker_report_session->getSessionNamespace();
-        $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', array('tintin' => 'lachipo', 'kiki' => 'labrouette'));
+        $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', ['tintin' => 'lachipo', 'kiki' => 'labrouette']);
         $this->tracker_report_session->storeAdditionalCriterion($additional_criterion);
         $this->assertEquals(
             $session['additional_criteria']['agiledashboard_milestone']['value'],
@@ -110,7 +110,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session[1]['value']       = 'tutu';
         $session['criteria'][1]['is_advanced'] = 1;
-        $this->tracker_report_session->updateCriterion(1, '', array('is_advanced' => 0));
+        $this->tracker_report_session->updateCriterion(1, '', ['is_advanced' => 0]);
         $this->assertEquals('tutu', $session[1]['value']);
         $this->assertEquals(0, $session['criteria'][1]['is_advanced']);
     }
@@ -122,7 +122,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
          $this->tracker_report_session->getSessionNamespace();
          $this->tracker_report_session->changeSessionNamespace('.Tracker_Report_SessionTest');
          $new_session = $this->tracker_report_session->getSessionNamespace();
-         $this->assertEquals(array('fifi' => array('riri' => array())), $new_session);
+         $this->assertEquals(['fifi' => ['riri' => []]], $new_session);
     }
 
     public function testUpdateCriterionWithValueWithOpts(): void
@@ -130,7 +130,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria'][1]['value'] = 'tutu';
         $session['criteria'][1]['is_advanced'] = 1;
-        $this->tracker_report_session->updateCriterion(1, 'toto', array('is_advanced' => 0));
+        $this->tracker_report_session->updateCriterion(1, 'toto', ['is_advanced' => 0]);
         $this->assertEquals('toto', $session['criteria'][1]['value']);
         $this->assertEquals(0, $session['criteria'][1]['is_advanced']);
     }
@@ -139,9 +139,9 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
-        $charts    = array('1' => array('titi','toto','tata'), '2' => array('titi','toto','tata') );
-        $renderers = array('0' => array('id' => 0, 'charts' => $charts), '1' => array('id' => 1, 'charts' => $charts), '-3' => array('id' => -3, 'charts' => $charts));
-        $session   = array('trackers' => array('reports' => array('1' => array('renderers' => $renderers ))));
+        $charts    = ['1' => ['titi', 'toto', 'tata'], '2' => ['titi', 'toto', 'tata']];
+        $renderers = ['0' => ['id' => 0, 'charts' => $charts], '1' => ['id' => 1, 'charts' => $charts], '-3' => ['id' => -3, 'charts' => $charts]];
+        $session   = ['trackers' => ['reports' => ['1' => ['renderers' => $renderers]]]];
         $this->tracker_report_session->copy(1, 2);
 
         $this->assertEquals(count($_SESSION['trackers']['reports']['1']['renderers']), count($_SESSION['trackers']['reports']['2']['renderers']));
@@ -160,9 +160,9 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
     {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
-        $charts    = array('2' => array('titi','toto','tata'), '-1' => array('titi','toto','tata') );
-        $renderers = array('4' => array('id' => 4, 'charts' => $charts), '5' => array('id' => 5, 'charts' => $charts), '3' => array('id' => 3, 'charts' => $charts));
-        $session   = array('trackers' => array('reports' => array('1' => array('renderers' => $renderers ))));
+        $charts    = ['2' => ['titi', 'toto', 'tata'], '-1' => ['titi', 'toto', 'tata']];
+        $renderers = ['4' => ['id' => 4, 'charts' => $charts], '5' => ['id' => 5, 'charts' => $charts], '3' => ['id' => 3, 'charts' => $charts]];
+        $session   = ['trackers' => ['reports' => ['1' => ['renderers' => $renderers]]]];
         $this->tracker_report_session->copy(1, 2);
         $this->assertEquals(count($_SESSION['trackers']['reports']['1']['renderers']), count($_SESSION['trackers']['reports']['2']['renderers']));
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-1]));

@@ -50,7 +50,7 @@ class Config
      *
      * @access protected
      */
-    protected $values = array();
+    protected $values = [];
 
     /**
      * configs
@@ -59,7 +59,7 @@ class Config
      *
      * @access protected
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * GetInstance
@@ -113,8 +113,8 @@ class Config
      */
     public function ClearConfig() // @codingStandardsIgnoreLine
     {
-        $this->values = array();
-        $this->configs = array();
+        $this->values = [];
+        $this->configs = [];
     }
 
     /**

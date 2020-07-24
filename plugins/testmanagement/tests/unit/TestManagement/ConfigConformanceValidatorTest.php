@@ -101,15 +101,15 @@ class ConfigConformanceAsserterTest extends TestCase
         $this->artifact_outside_of_project = \Mockery::spy(\Tracker_Artifact::class);
 
         $this->campaign_artifact->shouldReceive('getTracker')->andReturn($campaign_tracker);
-        $this->campaign_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn(array($this->execution_artifact));
+        $this->campaign_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([$this->execution_artifact]);
 
         $this->definition_artifact->shouldReceive('getTracker')->andReturn($definition_tracker);
 
         $this->execution_artifact->shouldReceive('getTracker')->andReturn($execution_tracker);
-        $this->execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn(array());
+        $this->execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([]);
 
         $this->another_execution_artifact->shouldReceive('getTracker')->andReturn($another_execution_tracker);
-        $this->another_execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn(array($this->campaign_artifact));
+        $this->another_execution_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([$this->campaign_artifact]);
 
         $tracker = Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(111);

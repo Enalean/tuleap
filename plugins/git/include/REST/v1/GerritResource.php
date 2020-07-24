@@ -126,14 +126,14 @@ class GerritResource extends AuthenticatedResource
             $servers = $this->server_factory->getUnrestrictedServers();
         }
 
-        $representations = array();
+        $representations = [];
         foreach ($servers as $server) {
             $representation = new GerritServerRepresentation($server);
             $representations[] = $representation;
         }
 
         $this->sendAllowHeaders();
-        return array('servers' => $representations);
+        return ['servers' => $representations];
     }
 
     /**

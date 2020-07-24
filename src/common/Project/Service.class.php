@@ -159,7 +159,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function isAbsolute(string $url): bool
     {
-        $components = array();
+        $components = [];
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return (isset($components[1]) && $components[1]);
     }
@@ -169,7 +169,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return '';
     }
 
-    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = array()): void
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));
 
@@ -187,7 +187,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $params['toptab'] = $this->getId();
 
         if (! isset($params['body_class'])) {
-            $params['body_class'] = array();
+            $params['body_class'] = [];
         }
         $params['body_class'][] = 'service-' . $this->getShortName();
 
@@ -212,9 +212,9 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function displayFooter(): void
     {
-        $params = array(
+        $params = [
             'group' => $this->project->group_id,
-        );
+        ];
         if ($pv = (int) HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int) $pv;
         }

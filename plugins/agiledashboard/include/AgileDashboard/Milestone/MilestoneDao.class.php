@@ -163,12 +163,12 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
         list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
 
-        return array(
+        return [
             'from_statement'         => $from_status_statement,
             'where_status_statement' => $where_status_statement,
             'order'                  => $order,
             'limit_statement'        => $limit_statement
-        );
+        ];
     }
 
     public function searchPaginatedTopMilestones(
@@ -267,7 +267,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             }
         }
 
-        return array($from_status_statement, $where_status_statement);
+        return [$from_status_statement, $where_status_statement];
     }
 
     public function searchSubMilestones($milestone_artifact_id)

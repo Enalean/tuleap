@@ -11,7 +11,7 @@ class PastelTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#FFAACC',
             '#AAEECC',
             '#AACCFF',
@@ -24,7 +24,7 @@ class PastelTheme extends Theme
             '#FFEEDD',
             '#FFCCEE',
             '#BFECFA',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

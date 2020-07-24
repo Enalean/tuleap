@@ -45,7 +45,7 @@ class Git_Hook_ParseLog_CountPushesTest extends \PHPUnit\Framework\TestCase
 
     public function testItLogPush(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
         $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();
         $this->parse_log->execute($push_details);
     }

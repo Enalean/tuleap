@@ -106,7 +106,7 @@ class ArtifactReport
     public function __construct($report_id, $atid)
     {
         $this->group_artifact_id = $atid;
-        $this->fields = array();
+        $this->fields = [];
 
         if (! $this->fetchData($report_id, $atid)) {
             return false;
@@ -163,7 +163,7 @@ class ArtifactReport
         $this->description = $description;
         $this->scope = $scope;
         $this->is_default = $is_default;
-        $this->fields = array();
+        $this->fields = [];
         return true;
     }
 
@@ -186,7 +186,7 @@ class ArtifactReport
         $this->description = '';
         $this->scope = '';
         $this->is_default = '';
-        $this->fields = array();
+        $this->fields = [];
         return true;
     }
 
@@ -251,7 +251,7 @@ class ArtifactReport
             $this->scope = $scope;
             $this->is_default = $is_default;
 
-            $this->fields = array();
+            $this->fields = [];
             return true;
         }
     }
@@ -323,7 +323,7 @@ class ArtifactReport
         }
 
      // Store the fields in $this->fields
-        $this->fields = array();
+        $this->fields = [];
         $i = 0;
         while ($field_array = db_fetch_array($res)) {
          // ArtifactReportField inherits from ArtifactField
@@ -368,7 +368,7 @@ class ArtifactReport
      */
     public function getQueryFields()
     {
-        $query_fields = array();
+        $query_fields = [];
 
         if (count($this->fields) == 0) {
             return $query_fields;
@@ -393,7 +393,7 @@ class ArtifactReport
      */
     public function getResultFields()
     {
-        $result_fields = array();
+        $result_fields = [];
 
         if (count($this->fields) == 0) {
             return $result_fields;
@@ -419,7 +419,7 @@ class ArtifactReport
     public function getSortedFields()
     {
         global $group;
-        $result_fields = array();
+        $result_fields = [];
 
         if (count($this->fields) == 0) {
             return $result_fields;
@@ -442,7 +442,7 @@ class ArtifactReport
      */
     public function getSingleMultiBoxFields()
     {
-        $result_fields = array();
+        $result_fields = [];
 
         if (count($this->fields) == 0) {
             return $result_fields;
@@ -472,7 +472,7 @@ class ArtifactReport
 
             $um = UserManager::instance();
             $u  = $um->getCurrentUser();
-            $instances = array('artifact_type' => $this->group_artifact_id);
+            $instances = ['artifact_type' => $this->group_artifact_id];
             $group_id = $ath->Group->getID();
             $ugroups = $u->getUgroups($group_id, $instances);
 
@@ -493,7 +493,7 @@ class ArtifactReport
                        ) ";
         }
 
-            $aids = array();
+            $aids = [];
             //Does the user member of at least one group which has ACCESS_FULL ?
         if ($u->isSuperUser() || $u->isTrackerAdmin($group_id, $this->group_artifact_id) || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
             $sql = "SELECT a.artifact_id " .
@@ -569,7 +569,7 @@ class ArtifactReport
                 //Get only once the field_id of assigned_to/multi_assigned_to
                 $field_dao = new ArtifactFieldDao(CodendiDataAccess::instance());
                 $dar = $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
-                $assigned_to = array();
+                $assigned_to = [];
                 while ($row = $dar->getRow()) {
                     $assigned_to[] = $row['field_id'];
                 }
@@ -647,7 +647,7 @@ class ArtifactReport
 
     public function _ExecuteQueryForSelectReportItems($sql)
     {
-        $ret = array();
+        $ret = [];
         $res = db_query($sql);
         while ($arr = db_fetch_array($res)) {
             $ret[] = $arr['artifact_id'];
@@ -793,7 +793,7 @@ class ArtifactReport
     {
         global $art_field_fact;
 
-        $fields_order = array();
+        $fields_order = [];
 
         $arr = explode(',', $morder);
         foreach ($arr as $attr) {
@@ -994,7 +994,7 @@ class ArtifactReport
         $fields_order = $this->getFieldsOrder($morder);
       //echo "morder=$morder, fields_order: ".implode(",",array_keys($fields_order))."<br>\n";
 
-        $fields_order_result = array();
+        $fields_order_result = [];
 
         $select_count = 0;
 
@@ -1134,12 +1134,12 @@ class ArtifactReport
         $fields_sb = $this->getSingleMultiBoxFields();
 
         $result = db_query($query);
-        $res = array();
+        $res = [];
         for ($i = 0; $i < db_numrows($result); $i++) {
             $res[$i] = db_fetch_array($result);
             if ($res[$i]['artifact_id']) {
                 foreach ($fields_sb as $field_name => $field) {
-                    $values = array();
+                    $values = [];
                     if ($field->isStandardField()) {
                         $values[] = $res[$i][$field_name];
                     } else {

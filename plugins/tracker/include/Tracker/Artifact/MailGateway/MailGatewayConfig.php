@@ -77,6 +77,6 @@ class MailGatewayConfig
 
     private function isAllowedEmailgatewayMode($emailgateway_mode)
     {
-        return in_array($emailgateway_mode, array(self::$DISABLED, self::$TOKEN, self::$INSECURE));
+        return in_array($emailgateway_mode, [self::$DISABLED, self::$TOKEN, self::$INSECURE]);
     }
 }

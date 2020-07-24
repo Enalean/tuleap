@@ -85,11 +85,11 @@ class Git_GitoliteDriver
     /** @var GitDao */
     private $git_dao;
 
-    public static $permissions_types = array(
+    public static $permissions_types = [
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
         Git::PERM_WPLUS => ' RW+'
-    );
+    ];
 
     public const OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
     public const NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
@@ -362,8 +362,8 @@ class Git_GitoliteDriver
 
     public function fork($repo, $old_ns, $new_ns)
     {
-        $source = PathJoinUtil::unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) . '.git';
-        $target = PathJoinUtil::unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) . '.git';
+        $source = PathJoinUtil::unixPathJoin([$this->getRepositoriesPath(), $old_ns, $repo]) . '.git';
+        $target = PathJoinUtil::unixPathJoin([$this->getRepositoriesPath(), $new_ns, $repo]) . '.git';
 
         $this->executeShellCommand('sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh ' . escapeshellarg($source) . ' ' . escapeshellarg($target));
     }

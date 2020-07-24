@@ -102,7 +102,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    public function getContent($params = array())
+    public function getContent($params = [])
     {
         $html = '<div class="docman_help">' . dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>') . '</div>';
         $html .= $this->_getStatisticsFields($params);
@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
 
     private function convertBytesToHumanReadable($bytes)
     {
-        $s = array('', 'k', 'M', 'G', 'T', 'P');
+        $s = ['', 'k', 'M', 'G', 'T', 'P'];
 
         if ($bytes > 0) {
             $e = (int) floor(log($bytes) / log(1024));

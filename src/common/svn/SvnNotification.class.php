@@ -99,7 +99,7 @@ class SvnNotification
     {
         if (is_array($selectedPaths) && ! empty($selectedPaths)) {
             $dao = $this->_getDao();
-            $paths = array();
+            $paths = [];
             foreach ($selectedPaths as $pathToDelete) {
                 if ($dao->deleteSvnMailingList($projectId, $pathToDelete)) {
                     $paths[] = $pathToDelete;
@@ -108,7 +108,7 @@ class SvnNotification
                 }
             }
             if (! empty($paths)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_success', array(implode(',', $paths))));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_success', [implode(',', $paths)]));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('svn_admin_notification', 'retrieve_paths_fail'));

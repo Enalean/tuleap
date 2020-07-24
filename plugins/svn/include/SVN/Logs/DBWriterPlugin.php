@@ -32,8 +32,8 @@ class DBWriterPlugin
      */
     private $user_cache;
 
-    private $repositories_cache = array();
-    private $day_accesses_cache = array();
+    private $repositories_cache = [];
+    private $day_accesses_cache = [];
 
 
     public function __construct(DBWriterPluginDao $dao, DBWriterUserCache $user_cache)

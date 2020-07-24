@@ -66,7 +66,7 @@ abstract class Theme
 
     public function GetThemeColors($num = 30)
     {
-        $result_list = array();
+        $result_list = [];
 
         $old_index = $this->color_index;
         $this->color_index = 0;

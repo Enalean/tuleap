@@ -107,7 +107,7 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
         $t1  = new Transition(1, 1, $field_value_new, $field_value_analyzed);
         $t2  = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
         $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
-        $transitions = array($t1, $t2, $t3);
+        $transitions = [$t1, $t2, $t3];
 
         $tf = \Mockery::mock(
             \TransitionFactory::class,
@@ -120,27 +120,27 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $values = array(
+        $values = [
             2066  => 3066,
             2067  => 3067,
             2068  => 3068
-        );
+        ];
 
         $tf->shouldReceive('addTransition')->with(1, 3066, 3067)->once()->andReturn(101);
         $tf->shouldReceive('addTransition')->with(1, 3067, 3068)->once()->andReturn(102);
         $tf->shouldReceive('addTransition')->with(1, 3067, 3066)->once()->andReturn(103);
 
-        $this->condition_factory->shouldReceive('duplicate')->with($t1, 101, array(), false, false)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, array(), false, false)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, array(), false, false)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t1, 101, [], false, false)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, [], false, false)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, [], false, false)->once();
 
         $tpaf = \Mockery::spy(\Transition_PostActionFactory::class);
         $tpaf->shouldReceive('duplicate')->times(3);
-        $tpaf->shouldReceive('duplicate')->with($t1, 101, array())->ordered();
-        $tpaf->shouldReceive('duplicate')->with($t2, 102, array())->ordered();
-        $tpaf->shouldReceive('duplicate')->with($t3, 103, array())->ordered();
+        $tpaf->shouldReceive('duplicate')->with($t1, 101, [])->ordered();
+        $tpaf->shouldReceive('duplicate')->with($t2, 102, [])->ordered();
+        $tpaf->shouldReceive('duplicate')->with($t3, 103, [])->ordered();
         $tf->shouldReceive('getPostActionFactory')->andReturns($tpaf);
 
-        $tf->duplicate($values, 1, $transitions, array(), false, false);
+        $tf->duplicate($values, 1, $transitions, [], false, false);
     }
 }

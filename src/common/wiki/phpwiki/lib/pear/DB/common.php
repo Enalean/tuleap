@@ -38,13 +38,13 @@ class DB_common extends PEAR
      *                        false     => skip rows
      * @var array
      */
-    public $features = array();
+    public $features = [];
 
     /**
      * assoc mapping native error codes to DB ones
      * @var array
      */
-    public $errorcode_map = array();
+    public $errorcode_map = [];
 
     /**
      * DB type (mysql, oci8, odbc etc.)
@@ -96,7 +96,7 @@ class DB_common extends PEAR
      * @see DB_common::setOption()
      * @var array
      */
-    public $options = array(
+    public $options = [
         'persistent' => false,
         'ssl' => false,
         'debug' => 0,
@@ -104,7 +104,7 @@ class DB_common extends PEAR
         'autofree' => false,
         'portability' => DB_PORTABILITY_NONE,
         'optimize' => 'performance',  // Deprecated.  Use 'portability'.
-    );
+    ];
 
     /**
      * DB handle
@@ -789,8 +789,8 @@ class DB_common extends PEAR
             PREG_SPLIT_DELIM_CAPTURE
         );
         $token     = 0;
-        $types     = array();
-        $newtokens = array();
+        $types     = [];
+        $newtokens = [];
 
         foreach ($tokens as $val) {
             switch ($val) {
@@ -952,7 +952,7 @@ class DB_common extends PEAR
      * @see DB_common::prepare()
      * @access public
      */
-    public function execute($stmt, $data = array())
+    public function execute($stmt, $data = [])
     {
         $realquery = $this->executeEmulateQuery($stmt, $data);
         if (DB::isError($realquery)) {
@@ -987,10 +987,10 @@ class DB_common extends PEAR
      * @see DB_common::execute()
      * @access private
      */
-    public function executeEmulateQuery($stmt, $data = array())
+    public function executeEmulateQuery($stmt, $data = [])
     {
         if (! is_array($data)) {
-            $data = array($data);
+            $data = [$data];
         }
 
         if (count($this->prepare_types[$stmt]) != count($data)) {
@@ -1139,7 +1139,7 @@ class DB_common extends PEAR
      * @see DB_result, DB_common::prepare(), DB_common::execute()
      * @access public
      */
-    public function query($query, $params = array())
+    public function query($query, $params = [])
     {
         if (sizeof($params) > 0) {
             $sth = $this->prepare($query);
@@ -1175,7 +1175,7 @@ class DB_common extends PEAR
      *
      * @access public
      */
-    public function limitQuery($query, $from, $count, $params = array())
+    public function limitQuery($query, $from, $count, $params = [])
     {
         $query = $this->modifyLimitQuery($query, $from, $count);
         if (DB::isError($query)) {
@@ -1209,7 +1209,7 @@ class DB_common extends PEAR
      *
      * @access public
      */
-    public function getOne($query, $params = array())
+    public function getOne($query, $params = [])
     {
         settype($params, 'array');
         if (sizeof($params) > 0) {
@@ -1259,7 +1259,7 @@ class DB_common extends PEAR
      */
     public function getRow(
         $query,
-        $params = array(),
+        $params = [],
         $fetchmode = DB_FETCHMODE_DEFAULT
     ) {
         // compat check, the params and fetchmode parameters used to
@@ -1275,7 +1275,7 @@ class DB_common extends PEAR
                 $fetchmode = $tmp;
             } elseif ($params !== null) {
                 $fetchmode = $params;
-                $params = array();
+                $params = [];
             }
         }
 
@@ -1327,7 +1327,7 @@ class DB_common extends PEAR
      * @see DB_common::query()
      * @access public
      */
-    public function getCol($query, $col = 0, $params = array())
+    public function getCol($query, $col = 0, $params = [])
     {
         settype($params, 'array');
         if (sizeof($params) > 0) {
@@ -1348,7 +1348,7 @@ class DB_common extends PEAR
         }
 
         $fetchmode = is_int($col) ? DB_FETCHMODE_ORDERED : DB_FETCHMODE_ASSOC;
-        $ret = array();
+        $ret = [];
 
         while (is_array($row = $res->fetchRow($fetchmode))) {
             $ret[] = $row[$col];
@@ -1453,7 +1453,7 @@ class DB_common extends PEAR
     public function getAssoc(
         $query,
         $force_array = false,
-        $params = array(),
+        $params = [],
         $fetchmode = DB_FETCHMODE_DEFAULT,
         $group = false
     ) {
@@ -1484,7 +1484,7 @@ class DB_common extends PEAR
             return $tmp;
         }
 
-        $results = array();
+        $results = [];
 
         if ($cols > 2 || $force_array) {
             // return array values
@@ -1563,7 +1563,7 @@ class DB_common extends PEAR
      */
     public function getAll(
         $query,
-        $params = array(),
+        $params = [],
         $fetchmode = DB_FETCHMODE_DEFAULT
     ) {
         // compat check, the params and fetchmode parameters used to
@@ -1579,7 +1579,7 @@ class DB_common extends PEAR
                 $fetchmode = $tmp;
             } elseif ($params !== null) {
                 $fetchmode = $params;
-                $params = array();
+                $params = [];
             }
         }
 
@@ -1600,7 +1600,7 @@ class DB_common extends PEAR
             return $res;
         }
 
-        $results = array();
+        $results = [];
         while (DB_OK === $res->fetchInto($row, $fetchmode)) {
             if ($fetchmode & DB_FETCHMODE_FLIPPED) {
                 foreach ($row as $key => $val) {

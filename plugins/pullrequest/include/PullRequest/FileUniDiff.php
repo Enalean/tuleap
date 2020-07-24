@@ -27,7 +27,7 @@ class FileUniDiff
 
     public function __construct()
     {
-        $this->lines = array();
+        $this->lines = [];
     }
 
     public function addLine($type, $unidiff_offset, $old_offset, $new_offset, $content)

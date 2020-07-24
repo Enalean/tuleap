@@ -53,8 +53,8 @@ class ArtifactNodeBuilder
 
     public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact): NodeRepresentation
     {
-        $nodes        = array();
-        $artifact_ids = array($artifact->getId());
+        $nodes        = [];
+        $artifact_ids = [$artifact->getId()];
 
         $node = new NodeRepresentation(
             $this->getLinks($user, $artifact->getId(), $nodes, $artifact_ids),
@@ -74,7 +74,7 @@ class ArtifactNodeBuilder
      */
     private function getLinks(PFUser $user, int $id, array &$nodes, array &$artifact_ids): array
     {
-        $links = array();
+        $links = [];
         $this->appendNodeReferenceRepresentations(
             $links,
             $this->artifact_dao->getLinkedArtifacts($id),
@@ -101,7 +101,7 @@ class ArtifactNodeBuilder
      */
     private function getReverseLinks(PFUser $user, int $id, array &$nodes, array &$artifact_ids): array
     {
-        $links = array();
+        $links = [];
         $this->appendNodeReferenceRepresentations(
             $links,
             $this->dao->getReverseLinkedArtifacts($id),
@@ -138,7 +138,7 @@ class ArtifactNodeBuilder
      */
     private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids): array
     {
-        $artifact_ids = array();
+        $artifact_ids = [];
         foreach ($dar as $row) {
             try {
                 if ($this->notAlreadyLinked($already_linked_ids, $row['id'])) {

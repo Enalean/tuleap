@@ -41,8 +41,8 @@ class Statistics_Services_UsageFormatter
     public function __construct(Statistics_Formatter $stats_formatter)
     {
         $this->stats_formatter = $stats_formatter;
-        $this->datas           = array();
-        $this->title           = array();
+        $this->datas           = [];
+        $this->title           = [];
     }
 
     /**
@@ -80,7 +80,7 @@ class Statistics_Services_UsageFormatter
      */
     public function formatSizeInMegaBytes($query_results)
     {
-        $resized_results = array();
+        $resized_results = [];
         foreach ($query_results as $result) {
             $result[self::VALUES] = round($result[self::VALUES] / self::BYTES_NUMBER_IN_MB);
             $resized_results[]    = $result;
@@ -113,7 +113,7 @@ class Statistics_Services_UsageFormatter
         }
 
         foreach ($query_result as $data) {
-            $this->datas[$data[self::GROUP_ID]] = array();
+            $this->datas[$data[self::GROUP_ID]] = [];
         }
     }
 

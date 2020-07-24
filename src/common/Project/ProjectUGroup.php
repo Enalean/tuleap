@@ -62,7 +62,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::AUTHENTICATED,
     ];
 
-    public static $legacy_ugroups = array(
+    public static $legacy_ugroups = [
         self::FILE_MANAGER_ADMIN,
         self::DOCUMENT_ADMIN,
         self::DOCUMENT_TECH,
@@ -72,9 +72,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::NEWS_ADMIN,
         self::NEWS_WRITER,
         self::SVN_ADMIN,
-    );
+    ];
 
-    public const NORMALIZED_NAMES = array(
+    public const NORMALIZED_NAMES = [
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
         self::REGISTERED         => 'registered_users',
@@ -90,7 +90,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::NEWS_ADMIN         => 'news_admins',
         self::NEWS_WRITER        => 'news_editors',
         self::SVN_ADMIN          => 'svn_admins',
-    );
+    ];
 
     protected $id    = 0;
     protected $group_id     = 0;
@@ -278,7 +278,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getMembersUserName()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getMembers() as $member) {
             $names[] = $member->getUserName();
         }
@@ -311,7 +311,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     {
         if ($this->is_dynamic) {
             $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($this->id, $group_id);
-            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+            return $dar->instanciateWith([$this, 'newUserFromIncompleteRow']);
         }
         $dar   = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspendedAndDeleted($this->id);
         $users = [];
@@ -346,7 +346,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         $dar = $this->getUGroupUserDao()->searchUsersByDynamicUGroupIdPaginated($this->id, $group_id, $limit, $offset);
 
         if (! $dar) {
-            return array();
+            return [];
         }
 
         $users = [];

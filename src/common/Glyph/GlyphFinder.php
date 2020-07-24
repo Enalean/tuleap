@@ -40,7 +40,7 @@ class GlyphFinder
      */
     public function get($name)
     {
-        static $symbol_cache = array();
+        static $symbol_cache = [];
 
         if (isset($symbol_cache[$name])) {
             return $symbol_cache[$name];

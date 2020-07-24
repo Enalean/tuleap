@@ -32,7 +32,7 @@ class GetEditableTypesInProject implements Dispatchable
     /**
      * @var array
      */
-    private $types = array();
+    private $types = [];
 
     /**
      * @var Project

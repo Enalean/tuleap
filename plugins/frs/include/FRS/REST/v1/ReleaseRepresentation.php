@@ -40,11 +40,11 @@ class ReleaseRepresentation
     public const STATUS_DELETED = 'deleted';
     public const STATUS_HIDDEN  = 'hidden';
 
-    public static $STATUS = array(
+    public static $STATUS = [
         FRSRelease::STATUS_ACTIVE  => self::STATUS_ACTIVE,
         FRSRelease::STATUS_DELETED => self::STATUS_DELETED,
         FRSRelease::STATUS_HIDDEN  => self::STATUS_HIDDEN
-    );
+    ];
 
     /**
      * @var id {@type int}
@@ -62,14 +62,14 @@ class ReleaseRepresentation
     public $name;
 
     /**
-     * @var $files {@type array}
+     * @var array $files {@type array}
      */
-    public $files = array();
+    public $files = [];
 
     /**
-     * @var $links {@type array}
+     * @var array $links {@type array}
      */
-    public $links = array();
+    public $links = [];
 
     /**
      * @var $changelog {@type string}
@@ -128,11 +128,11 @@ class ReleaseRepresentation
         $this->package->build($release->getPackage());
 
         $this->artifact  = $this->getArtifactRepresentation($release, $link_retriever, $user);
-        $this->resources = array(
-            "artifacts" => array(
+        $this->resources = [
+            "artifacts" => [
                 "uri" => $this->uri . "/artifacts"
-            )
-        );
+            ]
+        ];
         $this->project = new ProjectReference($release->getProject());
 
         foreach ($release->getFiles() as $file) {

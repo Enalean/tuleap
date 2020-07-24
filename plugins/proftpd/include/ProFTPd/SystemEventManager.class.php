@@ -78,29 +78,29 @@ class SystemEventManager
 
     public function getTypes()
     {
-        return array(
+        return [
             SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME,
             SystemEvent\PROFTPD_UPDATE_ACL::NAME,
-        );
+        ];
     }
 
     public function instanciateEvents($type, &$dependencies)
     {
         switch ($type) {
             case \Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME:
-                $dependencies = array(
+                $dependencies = [
                     $this->backend,
                     new Admin\ACLUpdater($this->backend),
                     $this->proftpd_base_directory
-                );
+                ];
                 break;
             case \Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL::NAME:
-                $dependencies = array(
+                $dependencies = [
                     new Admin\ACLUpdater($this->backend),
                     $this->permissions_manager,
                     $this->project_manager,
                     $this->proftpd_base_directory
-                );
+                ];
                 break;
             default:
                 break;

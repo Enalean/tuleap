@@ -124,11 +124,11 @@ class LDAP_UserDao extends DataAccessObject
     {
         $sql = 'SELECT user_name' .
             ' FROM user' .
-            ' WHERE user_name LIKE ' . $this->da->quoteSmart($name, array('force_string'));
+            ' WHERE user_name LIKE ' . $this->da->quoteSmart($name, ['force_string']);
         if ($this->retrieve($sql)->rowCount() === 0) {
             $sql = 'SELECT group_id' .
                 ' FROM groups' .
-                ' WHERE unix_group_name LIKE ' . $this->da->quoteSmart($name, array('force_string'));
+                ' WHERE unix_group_name LIKE ' . $this->da->quoteSmart($name, ['force_string']);
             if ($this->retrieve($sql)->rowCount() === 0) {
                 return true;
             }
@@ -147,7 +147,7 @@ class LDAP_UserDao extends DataAccessObject
     public function updateLdapUid($userId, $ldapUid)
     {
         $user_id  = $this->da->quoteSmart($userId);
-        $ldap_uid = $this->da->quoteSmart($ldapUid, array('force_string'));
+        $ldap_uid = $this->da->quoteSmart($ldapUid, ['force_string']);
 
         $sql = "INSERT INTO plugin_ldap_user(user_id, ldap_uid) VALUES ($user_id, $ldap_uid)
                 ON DUPLICATE KEY UPDATE ldap_uid = $ldap_uid";

@@ -58,10 +58,10 @@ class FRSRouter
                 $admin_ugroups_ids  = $request->get('permission_frs_admins');
                 $reader_ugroups_ids = $request->get('permission_frs_readers');
                 if (! $admin_ugroups_ids) {
-                    $admin_ugroups_ids = array();
+                    $admin_ugroups_ids = [];
                 }
                 if (! $reader_ugroups_ids) {
-                    $reader_ugroups_ids = array();
+                    $reader_ugroups_ids = [];
                 }
 
                 if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
@@ -82,10 +82,10 @@ class FRSRouter
     private function redirectToDefaultRoute(Project $project)
     {
         $GLOBALS['Response']->redirect('/file/admin/?' . http_build_query(
-            array(
+            [
                 'group_id' => $project->getId(),
                 'action'   => 'edit-permissions'
-            )
+            ]
         ));
     }
 

@@ -87,7 +87,7 @@ class PermissionController extends BaseFrsPresenter
 
     private function getFrsUGroupsByPermission(Project $project, $permission_type, array $project_ugroups)
     {
-        $options     = array();
+        $options     = [];
         $frs_ugroups = $this->permission_factory->getFrsUGroupsByPermission($project, $permission_type);
 
         foreach ($project_ugroups as $project_ugroup) {
@@ -95,11 +95,11 @@ class PermissionController extends BaseFrsPresenter
                 continue;
             }
 
-            $options[] = array(
+            $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
                 'selected' => $this->isUgroupSelected($frs_ugroups, $project_ugroup)
-            );
+            ];
         }
 
         return $options;

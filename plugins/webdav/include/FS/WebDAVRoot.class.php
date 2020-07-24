@@ -214,7 +214,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
     public function getUserProjectList($user): array
     {
         $res = $user->getProjects();
-        $projects = array();
+        $projects = [];
         foreach ($res as $groupId) {
             if ($this->isWebDAVAllowedForProject($groupId)) {
                 $project = $this->getWebDAVProject($groupId);

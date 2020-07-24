@@ -76,12 +76,12 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                     <value>100</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(array()));
+        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  array("new_values" => '2,1', 'removed_values' => array(), 'natures' => array('1' => '', '2' => ''));
+        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '', '2' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -103,12 +103,12 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                     <value nature="_in_folder">100</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(array()));
+        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  array("new_values" => '2,1', 'removed_values' => array(), 'natures' => array('1' => '_in_folder', '2' => '_is_child'));
+        $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '_in_folder', '2' => '_is_child']];
 
         $this->assertEquals($expected_res, $res);
     }
@@ -134,11 +134,11 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                   </field_change>');
 
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(array('titi')));
+        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['titi']));
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  array("new_values" => '2,1,3', 'removed_values' => array(), 'natures' => array('1' => 'titi', '2' => 'toto', '3' => ''));
+        $expected_res =  ["new_values" => '2,1,3', 'removed_values' => [], 'natures' => ['1' => 'titi', '2' => 'toto', '3' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
@@ -156,7 +156,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                     <value>101</value>
                   </field_change>');
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(array()));
+        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar([]));
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
@@ -183,15 +183,15 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                   </field_change>');
 
         $changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $changeset_value->shouldReceive('getArtifactIds')->andReturns(array(1, 2, 3));
+        $changeset_value->shouldReceive('getArtifactIds')->andReturns([1, 2, 3]);
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $changeset->shouldReceive('getValues')->andReturns(array($changeset_value));
+        $changeset->shouldReceive('getValues')->andReturns([$changeset_value]);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
-        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(array('toto')));
+        $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['toto']));
         $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
-        $expected_res =  array("new_values" => '1', 'removed_values' => array(2 => 2, 3 => 3), 'natures' => array('1' => 'toto'));
+        $expected_res =  ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'natures' => ['1' => 'toto']];
 
         $this->assertEquals($expected_res, $res);
     }

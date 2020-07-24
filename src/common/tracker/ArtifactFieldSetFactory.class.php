@@ -69,7 +69,7 @@ class ArtifactFieldSetFactory
                 return false;
             }
             $this->ArtifactType = $ArtifactType;
-            $this->ArtifactFieldSets = array();
+            $this->ArtifactFieldSets = [];
             $this->fetchData($this->ArtifactType->getID());
         }
 
@@ -102,7 +102,7 @@ class ArtifactFieldSetFactory
         //echo $sql;
 
         $res = db_query($sql);
-        $this->ArtifactFieldSets = array();
+        $this->ArtifactFieldSets = [];
         while ($fieldset_array = db_fetch_array($res)) {
             // create a new ArtifactFieldSet (empty)
             $fieldset = new ArtifactFieldSet();
@@ -135,7 +135,7 @@ class ArtifactFieldSetFactory
 
         $result = db_query($sql);
         $rows = db_numrows($result);
-        $myArtifactFieldSets = array();
+        $myArtifactFieldSets = [];
 
         if (! $result || $rows < 1) {
             $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
@@ -193,7 +193,7 @@ class ArtifactFieldSetFactory
     public function getAllFieldSetsContainingUsedFields()
     {
         $fieldsets = $this->ArtifactFieldSets;
-        $used_fieldsets = array();
+        $used_fieldsets = [];
         foreach ($fieldsets as $fieldset) {
             $fields = $fieldset->getArtifactFields();
             $fieldset_contains_used_field = false;
@@ -226,7 +226,7 @@ class ArtifactFieldSetFactory
     public function getAllFieldSetsContainingUnusedFields()
     {
         $fieldsets = $this->ArtifactFieldSets;
-        $unused_fieldsets = array();
+        $unused_fieldsets = [];
         foreach ($fieldsets as $fieldset) {
             $fields = $fieldset->getArtifactFields();
             $fieldset_contains_unused_field = false;
@@ -277,7 +277,7 @@ class ArtifactFieldSetFactory
 
         $res_insert = db_query($sql);
         if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-            $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
+            $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', [$field_id, $this->ArtifactType->getID(), db_error()]));
             return false;
         }
 
@@ -355,7 +355,7 @@ class ArtifactFieldSetFactory
     {
         global $Language;
         // Copy the field_sets
-        $fieldset_id_source_dest_array = array();
+        $fieldset_id_source_dest_array = [];
         $sql_source_fieldset = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
         $res_source_fieldset = db_query($sql_source_fieldset);
         while ($fieldset_source_array = db_fetch_array($res_source_fieldset)) {
@@ -369,7 +369,7 @@ class ArtifactFieldSetFactory
                 db_ei($fieldset_source_array['rank']) . ")";
             $res_insert_fieldset = db_query($sql_insert_fieldset);
             if (! $res_insert_fieldset || db_affected_rows($res_insert_fieldset) <= 0) {
-                $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', array($fieldset_source_array["field_set_id"],$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', [$fieldset_source_array["field_set_id"], $atid_dest, db_error()]));
                 return false;
             }
             $dest_fieldset_id = db_insertid($res_insert_fieldset);

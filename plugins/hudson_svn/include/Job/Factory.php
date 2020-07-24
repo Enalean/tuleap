@@ -61,7 +61,7 @@ class Factory
     public function getJobsByRepository(Repository $repository)
     {
         $rows = $this->dao->getJobByRepositoryId($repository->getId());
-        $jobs = array();
+        $jobs = [];
 
         foreach ($rows as $row) {
             $jobs[] = new Job(

@@ -53,11 +53,11 @@ final class Tracker_Report_RESTTest extends \PHPUnit\Framework\TestCase //phpcs:
     {
         $this->expectException(\Tracker_Report_InvalidRESTCriterionException::class);
 
-        $query = new ArrayObject(array(
-            "my_field" => new ArrayObject(array(
+        $query = new ArrayObject([
+            "my_field" => new ArrayObject([
                 Tracker_Report_REST::VALUE_PROPERTY_NAME => "true"
-            ))
-        ));
+            ])
+        ]);
 
         $this->report->setRESTCriteria(json_encode($query));
     }
@@ -66,11 +66,11 @@ final class Tracker_Report_RESTTest extends \PHPUnit\Framework\TestCase //phpcs:
     {
         $this->expectException(\Tracker_Report_InvalidRESTCriterionException::class);
 
-        $query = new ArrayObject(array(
-            "my_field" => new ArrayObject(array(
+        $query = new ArrayObject([
+            "my_field" => new ArrayObject([
                 Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR
-            ))
-        ));
+            ])
+        ]);
 
         $this->report->setRESTCriteria(json_encode($query));
     }
@@ -79,25 +79,25 @@ final class Tracker_Report_RESTTest extends \PHPUnit\Framework\TestCase //phpcs:
     {
         $this->expectException(\Tracker_Report_InvalidRESTCriterionException::class);
 
-        $query = new ArrayObject(array(
-            "my_field" => new ArrayObject(array(
+        $query = new ArrayObject([
+            "my_field" => new ArrayObject([
                 Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
                 Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR . 'xxx'
-            ))
-        ));
+            ])
+        ]);
 
         $this->report->setRESTCriteria(json_encode($query));
     }
 
     public function testItTransformsBasicCriteriaToTheCorrectFormat(): void
     {
-        $query = new ArrayObject(array(
-            "my_field" => new ArrayObject(array(
+        $query = new ArrayObject([
+            "my_field" => new ArrayObject([
                 Tracker_Report_REST::VALUE_PROPERTY_NAME    => "true",
                 Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::DEFAULT_OPERATOR
-            )),
+            ]),
             "my_other_field" => "bla"
-        ));
+        ]);
 
         $this->formelement_factory->shouldReceive('getFormElementById')->twice();
         $this->formelement_factory->shouldReceive('getFormElementByName')->twice();

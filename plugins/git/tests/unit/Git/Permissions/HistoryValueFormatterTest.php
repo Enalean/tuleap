@@ -79,20 +79,20 @@ class HistoryValueFormatterTest extends TestCase
             $this->factory
         );
 
-        $this->ugroup_manager->shouldReceive('getUgroupsById')->with($this->project)->andReturns(array(
+        $this->ugroup_manager->shouldReceive('getUgroupsById')->with($this->project)->andReturns([
             101 => $this->ugroup_01,
             102 => $this->ugroup_02,
             103 => $this->ugroup_03,
-        ));
+        ]);
     }
 
     public function testItExportsValueWithoutFineGrainedPermissionsForRepository(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WRITE)->andReturns(array(102));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WRITE)->andReturns([102]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WPLUS)->andReturns(array(103));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WPLUS)->andReturns([103]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -107,7 +107,7 @@ EOS;
 
     public function testItDoesNotExportWriteAndRewindIfRepositoryIsMigratedOnGerrit(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -120,11 +120,11 @@ EOS;
 
     public function testItExportsValueWithoutFineGrainedPermissionsForProject(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns([101]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WRITE)->andReturns(array(102));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WRITE)->andReturns([102]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WPLUS)->andReturns(array(103));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WPLUS)->andReturns([103]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -139,7 +139,7 @@ EOS;
 
     public function testItExportsValueWithFineGrainedPermissionsForRepository(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns([101]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -152,23 +152,23 @@ EOS;
             1,
             1,
             'refs/heads/master',
-            array($this->ugroup_02),
-            array($this->ugroup_03)
+            [$this->ugroup_02],
+            [$this->ugroup_03]
         );
 
         $tag_fine_grained_permission = new FineGrainedPermission(
             2,
             1,
             'refs/tags/*',
-            array($this->ugroup_01),
-            array()
+            [$this->ugroup_01],
+            []
         );
 
         $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->migrated_repository)->andReturns(true);
 
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns(array(1 => $branch_fine_grained_permission));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns([1 => $branch_fine_grained_permission]);
 
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns(array(2 => $tag_fine_grained_permission));
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns([2 => $tag_fine_grained_permission]);
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
@@ -177,7 +177,7 @@ EOS;
 
     public function testItExportsValueWithFineGrainedPermissionsForProject(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns([101]);
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -190,23 +190,23 @@ EOS;
             1,
             101,
             'refs/heads/master',
-            array($this->ugroup_02),
-            array($this->ugroup_03)
+            [$this->ugroup_02],
+            [$this->ugroup_03]
         );
 
         $tag_fine_grained_permission = new DefaultFineGrainedPermission(
             2,
             101,
             'refs/tags/*',
-            array($this->ugroup_01),
-            array()
+            [$this->ugroup_01],
+            []
         );
 
         $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
-        $this->default_factory->shouldReceive('getBranchesFineGrainedPermissionsForProject')->with($this->project)->andReturns(array(1 => $branch_fine_grained_permission));
+        $this->default_factory->shouldReceive('getBranchesFineGrainedPermissionsForProject')->with($this->project)->andReturns([1 => $branch_fine_grained_permission]);
 
-        $this->default_factory->shouldReceive('getTagsFineGrainedPermissionsForProject')->with($this->project)->andReturns(array(2 => $tag_fine_grained_permission));
+        $this->default_factory->shouldReceive('getTagsFineGrainedPermissionsForProject')->with($this->project)->andReturns([2 => $tag_fine_grained_permission]);
 
         $result = $this->formatter->formatValueForProject($this->project);
 

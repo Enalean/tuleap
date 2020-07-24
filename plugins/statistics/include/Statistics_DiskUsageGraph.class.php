@@ -44,7 +44,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
-        $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
+        $graph->yaxis->setLabelFormatCallback([$this, 'sizeReadable']);
         if ($absolute) {
             $graph->yaxis->scale->SetAutoMin(0);
         }
@@ -53,11 +53,11 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
         if (is_array($data) && ! empty($data)) {
-            $lineplots = array();
-            $dates = array();
+            $lineplots = [];
+            $dates = [];
             foreach ($data as $service => $values) {
                 $color = $this->_dum->getServiceColor($service);
-                $ydata = array();
+                $ydata = [];
                 foreach ($values as $date => $size) {
                     $dates[] = $date;
                     $ydata[] = $size;
@@ -71,7 +71,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
                 //$lineplot->value->show();
                 $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-                $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+                $lineplot->value->setFormatCallback([$this, 'sizeReadable']);
                 if ($accumulative) {
                     //$lineplots[] = $lineplot;
                     // Reverse order
@@ -112,15 +112,15 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
-        $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
+        $graph->yaxis->setLabelFormatCallback([$this, 'sizeReadable']);
         if ($absolute) {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
         $data = $this->_dum->getWeeklyEvolutionUserData($userId, $groupBy, $startDate, $endDate);
         if (is_array($data) && count($data) > 1) {
-            $dates = array();
-            $ydata = array();
+            $dates = [];
+            $ydata = [];
             foreach ($data as $xdate => $values) {
                 $dates[] = $xdate;
                 $ydata[] = (float) $values;
@@ -130,7 +130,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $lineplot->SetColor('blue');
 
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+            $lineplot->value->setFormatCallback([$this, 'sizeReadable']);
             $graph->Add($lineplot);
 
             $graph->xaxis->title->Set($this->getXaxisTitle($groupBy));
@@ -175,7 +175,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
-        $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
+        $graph->yaxis->setLabelFormatCallback([$this, 'sizeReadable']);
         if ($absolute) {
             $graph->yaxis->scale->SetAutoMin(0);
         }
@@ -184,13 +184,13 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
         if (is_array($data) && ! empty($data)) {
-            $lineplots = array();
-            $dates = array();
+            $lineplots = [];
+            $dates = [];
             $lineAdded = false;
             foreach ($servicesList as $service => $serviceName) {
                 if (array_key_exists($service, $data) && is_array($data[$service]) && count($data[$service]) > 1) {
                     $values = $data[$service];
-                    $ydata = array();
+                    $ydata = [];
                     foreach ($values as $date => $size) {
                         $dates[] = $date;
                         $ydata[] = $size;
@@ -204,7 +204,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
                     //$lineplot->value->show();
                     $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-                    $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+                    $lineplot->value->setFormatCallback([$this, 'sizeReadable']);
                     if ($accumulative) {
                         //$lineplots[] = $lineplot;
                         // Reverse order
@@ -256,15 +256,15 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
         $graph->yaxis->title->Set("Size");
         $graph->yaxis->SetTitleMargin(60);
-        $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
+        $graph->yaxis->setLabelFormatCallback([$this, 'sizeReadable']);
         if ($absolute) {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
         $data = $this->_dum->getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate);
         if (is_array($data) && count($data) > 1) {
-            $dates = array();
-            $ydata = array();
+            $dates = [];
+            $ydata = [];
             foreach ($data as $xdate => $values) {
                 $dates[] = $xdate;
                 $ydata[] = (float) $values;
@@ -277,7 +277,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $lineplot->SetFillColor($color . ':1.5');
 
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+            $lineplot->value->setFormatCallback([$this, 'sizeReadable']);
             $graph->Add($lineplot);
 
             $graph->xaxis->title->Set("Weeks");

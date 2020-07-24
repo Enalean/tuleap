@@ -267,122 +267,122 @@ class TTF
     public function __construct()
     {
             // String names for font styles to be used in error messages
-        $this->style_names = array(
+        $this->style_names = [
         FS_NORMAL => 'normal',
         FS_BOLD => 'bold',
         FS_ITALIC => 'italic',
-        FS_BOLDITALIC => 'bolditalic');
+        FS_BOLDITALIC => 'bolditalic'];
 
         // File names for available fonts
-        $this->font_files = array(
-        FF_COURIER => array(FS_NORMAL => 'cour.ttf',
+        $this->font_files = [
+        FF_COURIER => [FS_NORMAL => 'cour.ttf',
         FS_BOLD  => 'courbd.ttf',
         FS_ITALIC => 'couri.ttf',
-        FS_BOLDITALIC => 'courbi.ttf' ),
-        FF_GEORGIA => array(FS_NORMAL => 'georgia.ttf',
+        FS_BOLDITALIC => 'courbi.ttf' ],
+        FF_GEORGIA => [FS_NORMAL => 'georgia.ttf',
         FS_BOLD  => 'georgiab.ttf',
         FS_ITALIC => 'georgiai.ttf',
-        FS_BOLDITALIC => '' ),
-        FF_TREBUCHE => array(FS_NORMAL => 'trebuc.ttf',
+        FS_BOLDITALIC => '' ],
+        FF_TREBUCHE => [FS_NORMAL => 'trebuc.ttf',
         FS_BOLD  => 'trebucbd.ttf',
         FS_ITALIC => 'trebucit.ttf',
-        FS_BOLDITALIC => 'trebucbi.ttf' ),
-        FF_VERDANA  => array(FS_NORMAL => 'verdana.ttf',
+        FS_BOLDITALIC => 'trebucbi.ttf' ],
+        FF_VERDANA  => [FS_NORMAL => 'verdana.ttf',
         FS_BOLD  => 'verdanab.ttf',
         FS_ITALIC => 'verdanai.ttf',
-        FS_BOLDITALIC => '' ),
-        FF_TIMES =>   array(FS_NORMAL => 'times.ttf',
+        FS_BOLDITALIC => '' ],
+        FF_TIMES =>   [FS_NORMAL => 'times.ttf',
         FS_BOLD  => 'timesbd.ttf',
         FS_ITALIC => 'timesi.ttf',
-        FS_BOLDITALIC => 'timesbi.ttf' ),
-        FF_COMIC =>   array(FS_NORMAL => 'comic.ttf',
+        FS_BOLDITALIC => 'timesbi.ttf' ],
+        FF_COMIC =>   [FS_NORMAL => 'comic.ttf',
         FS_BOLD  => 'comicbd.ttf',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
-        FF_ARIAL =>   array(FS_NORMAL => 'arial.ttf',
+        FS_BOLDITALIC => '' ],
+        FF_ARIAL =>   [FS_NORMAL => 'arial.ttf',
         FS_BOLD  => 'arialbd.ttf',
         FS_ITALIC => 'ariali.ttf',
-        FS_BOLDITALIC => 'arialbi.ttf' ) ,
-        FF_VERA =>    array(FS_NORMAL => 'Vera.ttf',
+        FS_BOLDITALIC => 'arialbi.ttf' ] ,
+        FF_VERA =>    [FS_NORMAL => 'Vera.ttf',
         FS_BOLD  => 'VeraBd.ttf',
         FS_ITALIC => 'VeraIt.ttf',
-        FS_BOLDITALIC => 'VeraBI.ttf' ),
-        FF_VERAMONO => array(FS_NORMAL => 'VeraMono.ttf',
+        FS_BOLDITALIC => 'VeraBI.ttf' ],
+        FF_VERAMONO => [FS_NORMAL => 'VeraMono.ttf',
         FS_BOLD => 'VeraMoBd.ttf',
         FS_ITALIC => 'VeraMoIt.ttf',
-        FS_BOLDITALIC => 'VeraMoBI.ttf' ),
-        FF_VERASERIF => array(FS_NORMAL => 'VeraSe.ttf',
+        FS_BOLDITALIC => 'VeraMoBI.ttf' ],
+        FF_VERASERIF => [FS_NORMAL => 'VeraSe.ttf',
         FS_BOLD => 'VeraSeBd.ttf',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ) ,
+        FS_BOLDITALIC => '' ] ,
 
         /* Chinese fonts */
-        FF_SIMSUN  =>  array(
+        FF_SIMSUN  =>  [
         FS_NORMAL => 'simsun.ttc',
         FS_BOLD => 'simhei.ttf',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
-        FF_CHINESE  =>   array(
+        FS_BOLDITALIC => '' ],
+        FF_CHINESE  =>   [
         FS_NORMAL => CHINESE_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
-        FF_BIG5  =>   array(
+        FS_BOLDITALIC => '' ],
+        FF_BIG5  =>   [
         FS_NORMAL => CHINESE_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
         /* Japanese fonts */
-        FF_MINCHO  =>  array(
+        FF_MINCHO  =>  [
         FS_NORMAL => MINCHO_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_PMINCHO  =>  array(
+        FF_PMINCHO  =>  [
         FS_NORMAL => PMINCHO_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_GOTHIC   =>  array(
+        FF_GOTHIC   =>  [
         FS_NORMAL => GOTHIC_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_PGOTHIC  =>  array(
+        FF_PGOTHIC  =>  [
         FS_NORMAL => PGOTHIC_TTF_FONT,
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
         /* Hebrew fonts */
-        FF_DAVID  =>  array(
+        FF_DAVID  =>  [
         FS_NORMAL => 'DAVIDNEW.TTF',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_MIRIAM  =>  array(
+        FF_MIRIAM  =>  [
         FS_NORMAL => 'MRIAMY.TTF',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_AHRON  =>  array(
+        FF_AHRON  =>  [
         FS_NORMAL => 'ahronbd.ttf',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
         /* Misc fonts */
-        FF_DIGITAL =>   array(
+        FF_DIGITAL =>   [
         FS_NORMAL => 'DIGIRU__.TTF',
         FS_BOLD => 'Digirtu_.ttf',
         FS_ITALIC => 'Digir___.ttf',
-        FS_BOLDITALIC => 'DIGIRT__.TTF' ),
+        FS_BOLDITALIC => 'DIGIRT__.TTF' ],
 
         /* This is an experimental font for the speedometer development
         FF_SPEEDO =>    array(
@@ -392,69 +392,69 @@ class TTF
         FS_BOLDITALIC =>'' ),
         */
 
-        FF_COMPUTER  =>  array(
+        FF_COMPUTER  =>  [
         FS_NORMAL => 'COMPUTER.TTF',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_CALCULATOR => array(
+        FF_CALCULATOR => [
         FS_NORMAL => 'Triad_xs.ttf',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
         /* Dejavu fonts */
-        FF_DV_SANSSERIF => array(
-        FS_NORMAL => array('DejaVuSans.ttf'),
-        FS_BOLD => array('DejaVuSans-Bold.ttf','DejaVuSansBold.ttf'),
-        FS_ITALIC => array('DejaVuSans-Oblique.ttf','DejaVuSansOblique.ttf'),
-        FS_BOLDITALIC => array('DejaVuSans-BoldOblique.ttf','DejaVuSansBoldOblique.ttf') ),
+        FF_DV_SANSSERIF => [
+        FS_NORMAL => ['DejaVuSans.ttf'],
+        FS_BOLD => ['DejaVuSans-Bold.ttf','DejaVuSansBold.ttf'],
+        FS_ITALIC => ['DejaVuSans-Oblique.ttf','DejaVuSansOblique.ttf'],
+        FS_BOLDITALIC => ['DejaVuSans-BoldOblique.ttf','DejaVuSansBoldOblique.ttf'] ],
 
-        FF_DV_SANSSERIFMONO => array(
-        FS_NORMAL => array('DejaVuSansMono.ttf','DejaVuMonoSans.ttf'),
-        FS_BOLD => array('DejaVuSansMono-Bold.ttf','DejaVuMonoSansBold.ttf'),
-        FS_ITALIC => array('DejaVuSansMono-Oblique.ttf','DejaVuMonoSansOblique.ttf'),
-        FS_BOLDITALIC => array('DejaVuSansMono-BoldOblique.ttf','DejaVuMonoSansBoldOblique.ttf') ),
+        FF_DV_SANSSERIFMONO => [
+        FS_NORMAL => ['DejaVuSansMono.ttf','DejaVuMonoSans.ttf'],
+        FS_BOLD => ['DejaVuSansMono-Bold.ttf','DejaVuMonoSansBold.ttf'],
+        FS_ITALIC => ['DejaVuSansMono-Oblique.ttf','DejaVuMonoSansOblique.ttf'],
+        FS_BOLDITALIC => ['DejaVuSansMono-BoldOblique.ttf','DejaVuMonoSansBoldOblique.ttf'] ],
 
-        FF_DV_SANSSERIFCOND => array(
-        FS_NORMAL => array('DejaVuSansCondensed.ttf','DejaVuCondensedSans.ttf'),
-        FS_BOLD => array('DejaVuSansCondensed-Bold.ttf','DejaVuCondensedSansBold.ttf'),
-        FS_ITALIC => array('DejaVuSansCondensed-Oblique.ttf','DejaVuCondensedSansOblique.ttf'),
-        FS_BOLDITALIC => array('DejaVuSansCondensed-BoldOblique.ttf','DejaVuCondensedSansBoldOblique.ttf') ),
+        FF_DV_SANSSERIFCOND => [
+        FS_NORMAL => ['DejaVuSansCondensed.ttf','DejaVuCondensedSans.ttf'],
+        FS_BOLD => ['DejaVuSansCondensed-Bold.ttf','DejaVuCondensedSansBold.ttf'],
+        FS_ITALIC => ['DejaVuSansCondensed-Oblique.ttf','DejaVuCondensedSansOblique.ttf'],
+        FS_BOLDITALIC => ['DejaVuSansCondensed-BoldOblique.ttf','DejaVuCondensedSansBoldOblique.ttf'] ],
 
-        FF_DV_SERIF => array(
-        FS_NORMAL => array('DejaVuSerif.ttf'),
-        FS_BOLD => array('DejaVuSerif-Bold.ttf','DejaVuSerifBold.ttf'),
-        FS_ITALIC => array('DejaVuSerif-Italic.ttf','DejaVuSerifItalic.ttf'),
-        FS_BOLDITALIC => array('DejaVuSerif-BoldItalic.ttf','DejaVuSerifBoldItalic.ttf') ),
+        FF_DV_SERIF => [
+        FS_NORMAL => ['DejaVuSerif.ttf'],
+        FS_BOLD => ['DejaVuSerif-Bold.ttf','DejaVuSerifBold.ttf'],
+        FS_ITALIC => ['DejaVuSerif-Italic.ttf','DejaVuSerifItalic.ttf'],
+        FS_BOLDITALIC => ['DejaVuSerif-BoldItalic.ttf','DejaVuSerifBoldItalic.ttf'] ],
 
-        FF_DV_SERIFCOND => array(
-        FS_NORMAL => array('DejaVuSerifCondensed.ttf','DejaVuCondensedSerif.ttf'),
-        FS_BOLD => array('DejaVuSerifCondensed-Bold.ttf','DejaVuCondensedSerifBold.ttf'),
-        FS_ITALIC => array('DejaVuSerifCondensed-Italic.ttf','DejaVuCondensedSerifItalic.ttf'),
-        FS_BOLDITALIC => array('DejaVuSerifCondensed-BoldItalic.ttf','DejaVuCondensedSerifBoldItalic.ttf') ),
+        FF_DV_SERIFCOND => [
+        FS_NORMAL => ['DejaVuSerifCondensed.ttf','DejaVuCondensedSerif.ttf'],
+        FS_BOLD => ['DejaVuSerifCondensed-Bold.ttf','DejaVuCondensedSerifBold.ttf'],
+        FS_ITALIC => ['DejaVuSerifCondensed-Italic.ttf','DejaVuCondensedSerifItalic.ttf'],
+        FS_BOLDITALIC => ['DejaVuSerifCondensed-BoldItalic.ttf','DejaVuCondensedSerifBoldItalic.ttf'] ],
 
         /* Placeholders for defined fonts */
-        FF_USERFONT1 => array(
+        FF_USERFONT1 => [
         FS_NORMAL => '',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_USERFONT2 => array(
+        FF_USERFONT2 => [
         FS_NORMAL => '',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        FF_USERFONT3 => array(
+        FF_USERFONT3 => [
         FS_NORMAL => '',
         FS_BOLD => '',
         FS_ITALIC => '',
-        FS_BOLDITALIC => '' ),
+        FS_BOLDITALIC => '' ],
 
-        );
+        ];
     }
 
     //---------------
@@ -471,7 +471,7 @@ class TTF
         // There are several optional file names. They are tried in order
         // and the first one found is used
         if (! is_array($ff)) {
-            $ff = array($ff);
+            $ff = [$ff];
         }
 
         $jpgraph_font_dir = dirname(__FILE__) . '/fonts/';
@@ -514,37 +514,37 @@ class TTF
     public function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT] =
-            array(FS_NORMAL     => $aNormal,
+            [FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
                   FS_ITALIC => $aItalic,
-                  FS_BOLDITALIC => $aBoldIt );
+                  FS_BOLDITALIC => $aBoldIt ];
     }
 
     public function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT1] =
-            array(FS_NORMAL     => $aNormal,
+            [FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
                   FS_ITALIC => $aItalic,
-                  FS_BOLDITALIC => $aBoldIt );
+                  FS_BOLDITALIC => $aBoldIt ];
     }
 
     public function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT2] =
-            array(FS_NORMAL     => $aNormal,
+            [FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
                   FS_ITALIC => $aItalic,
-                  FS_BOLDITALIC => $aBoldIt );
+                  FS_BOLDITALIC => $aBoldIt ];
     }
 
     public function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT3] =
-            array(FS_NORMAL     => $aNormal,
+            [FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
                   FS_ITALIC => $aItalic,
-                  FS_BOLDITALIC => $aBoldIt );
+                  FS_BOLDITALIC => $aBoldIt ];
     }
 }
 
@@ -559,55 +559,55 @@ class SymChar
 {
     public static function Get($aSymb, $aCapital = false)
     {
-        $iSymbols = array(
+        $iSymbols = [
         /* Greek */
-        array('alpha','03B1','0391'),
-        array('beta','03B2','0392'),
-        array('gamma','03B3','0393'),
-        array('delta','03B4','0394'),
-        array('epsilon','03B5','0395'),
-        array('zeta','03B6','0396'),
-        array('ny','03B7','0397'),
-        array('eta','03B8','0398'),
-        array('theta','03B8','0398'),
-        array('iota','03B9','0399'),
-        array('kappa','03BA','039A'),
-        array('lambda','03BB','039B'),
-        array('mu','03BC','039C'),
-        array('nu','03BD','039D'),
-        array('xi','03BE','039E'),
-        array('omicron','03BF','039F'),
-        array('pi','03C0','03A0'),
-        array('rho','03C1','03A1'),
-        array('sigma','03C3','03A3'),
-        array('tau','03C4','03A4'),
-        array('upsilon','03C5','03A5'),
-        array('phi','03C6','03A6'),
-        array('chi','03C7','03A7'),
-        array('psi','03C8','03A8'),
-        array('omega','03C9','03A9'),
+        ['alpha','03B1','0391'],
+        ['beta','03B2','0392'],
+        ['gamma','03B3','0393'],
+        ['delta','03B4','0394'],
+        ['epsilon','03B5','0395'],
+        ['zeta','03B6','0396'],
+        ['ny','03B7','0397'],
+        ['eta','03B8','0398'],
+        ['theta','03B8','0398'],
+        ['iota','03B9','0399'],
+        ['kappa','03BA','039A'],
+        ['lambda','03BB','039B'],
+        ['mu','03BC','039C'],
+        ['nu','03BD','039D'],
+        ['xi','03BE','039E'],
+        ['omicron','03BF','039F'],
+        ['pi','03C0','03A0'],
+        ['rho','03C1','03A1'],
+        ['sigma','03C3','03A3'],
+        ['tau','03C4','03A4'],
+        ['upsilon','03C5','03A5'],
+        ['phi','03C6','03A6'],
+        ['chi','03C7','03A7'],
+        ['psi','03C8','03A8'],
+        ['omega','03C9','03A9'],
         /* Money */
-        array('euro','20AC'),
-        array('yen','00A5'),
-        array('pound','20A4'),
+        ['euro','20AC'],
+        ['yen','00A5'],
+        ['pound','20A4'],
         /* Math */
-        array('approx','2248'),
-        array('neq','2260'),
-        array('not','2310'),
-        array('def','2261'),
-        array('inf','221E'),
-        array('sqrt','221A'),
-        array('int','222B'),
+        ['approx','2248'],
+        ['neq','2260'],
+        ['not','2310'],
+        ['def','2261'],
+        ['inf','221E'],
+        ['sqrt','221A'],
+        ['int','222B'],
         /* Misc */
-        array('copy','00A9'),
-        array('para','00A7'),
-        array('tm','2122'),   /* Trademark symbol */
-        array('rtm','00AE'),   /* Registered trademark */
-        array('degree','00b0'),
-        array('lte','2264'), /* Less than or equal */
-        array('gte','2265'), /* Greater than or equal */
+        ['copy','00A9'],
+        ['para','00A7'],
+        ['tm','2122'],   /* Trademark symbol */
+        ['rtm','00AE'],   /* Registered trademark */
+        ['degree','00b0'],
+        ['lte','2264'], /* Less than or equal */
+        ['gte','2265'], /* Greater than or equal */
 
-        );
+        ];
 
         $n = count($iSymbols);
         $i = 0;

@@ -36,7 +36,7 @@ class MovedArtifactValueBuilder
         $representation->field_id = (int) $tracker_destination->getTitleField()->getId();
         $representation->value    = $artifact->getTitle();
 
-        return array($representation);
+        return [$representation];
     }
 
     private function checkSemantic(Tracker_Artifact $artifact, Tracker $tracker)

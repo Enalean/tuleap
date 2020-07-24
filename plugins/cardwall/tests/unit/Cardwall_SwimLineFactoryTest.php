@@ -44,17 +44,17 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters(): void
     {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
-        $presenters = array();
+        $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $this->assertSame(array(), $swimlines);
+        $this->assertSame([], $swimlines);
     }
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters(): void
     {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
-        $presenters = array(\Mockery::spy(\Cardwall_CardInCellPresenter::class));
+        $presenters = [\Mockery::spy(\Cardwall_CardInCellPresenter::class)];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $this->assertSame(array(), $swimlines);
+        $this->assertSame([], $swimlines);
     }
 
     public function testItReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters(): void
@@ -63,11 +63,11 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $mocked_column->shouldReceive('getId')->andReturns(44);
         $mocked_column->shouldReceive('isAutostacked')->andReturns(true);
 
-        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection(array($mocked_column));
-        $presenters = array();
+        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection([$mocked_column]);
+        $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $expected   = array(
-                          array('column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => array()));
+        $expected   = [
+                          ['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []]];
         $this->assertSame($expected, $swimlines);
     }
 
@@ -78,7 +78,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $label = $bgcolor = null;
         $column1   = new Cardwall_Column(55, $label, $bgcolor);
         $column2   = new Cardwall_Column(100, $label, $bgcolor);
-        $columns   = new Cardwall_OnTop_Config_ColumnCollection(array($column1, $column2));
+        $columns   = new Cardwall_OnTop_Config_ColumnCollection([$column1, $column2]);
         $cardincell_presenter1 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact1)->getMock();
         $cardincell_presenter2 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact2)->getMock();
 
@@ -87,10 +87,10 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->config->shouldReceive('isInColumn')->with($artifact2, \Mockery::any(), $column1)->andReturns(false);
         $this->config->shouldReceive('isInColumn')->with($artifact2, \Mockery::any(), $column2)->andReturns(true);
 
-        $swimlines = $this->factory->getCells($columns, array($cardincell_presenter1, $cardincell_presenter2));
-        $expected  = array(
-                        array('column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => array($cardincell_presenter1)),
-                        array('column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => array($cardincell_presenter2)));
+        $swimlines = $this->factory->getCells($columns, [$cardincell_presenter1, $cardincell_presenter2]);
+        $expected  = [
+                        ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter1]],
+                        ['column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter2]]];
         $this->assertSame($expected, $swimlines);
     }
 
@@ -104,9 +104,9 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 
         $this->config->shouldReceive('isInColumn')->with($artifact, \Mockery::any(), $column)->andReturns(false);
 
-        $swimlines = $this->factory->getCells($columns, array($cardincell_presenter));
-        $expected  = array(
-                        array('column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => array()));
+        $swimlines = $this->factory->getCells($columns, [$cardincell_presenter]);
+        $expected  = [
+                        ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => []]];
         $this->assertSame($expected, $swimlines);
     }
 }

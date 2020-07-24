@@ -28,7 +28,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     private $tasks;
     private $stories;
 
-    private $stories_ids = array();
+    private $stories_ids = [];
 
     public function setUp(): void
     {
@@ -46,7 +46,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('backlog_items/' . $this->stories_ids[0]));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin()
@@ -87,7 +87,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     public function testOPTIONSChildren()
     {
         $response = $this->getResponse($this->client->options('backlog_items/' . $this->stories_ids[0] . '/children'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSChildrenWithUserRESTReadOnlyAdmin()
@@ -156,13 +156,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
 
-        $patch_body = json_encode(array(
-            'order' => array(
-                'ids'         => array($second_id),
+        $patch_body = json_encode([
+            'order' => [
+                'ids'         => [$second_id],
                 'direction'   => 'before',
                 'compared_to' => $first_id
-            )
-        ));
+            ]
+        ]);
 
         // invert order of the two tasks
         $response = $this->getResponse(
@@ -186,13 +186,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $second_id = $backlog_items[1]['id'];
 
         // invert order of the two tasks
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($second_id),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$second_id],
                 'direction'   => 'before',
                 'compared_to' => $first_id
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         // assert that the two tasks are in the order
@@ -206,13 +206,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $second_id = $backlog_items[1]['id'];
 
         // re-invert order of the two tasks
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($first_id),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$first_id],
                 'direction'   => 'after',
                 'compared_to' => $second_id
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         // assert that the two tasks are in the order
@@ -235,13 +235,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($second_id, $second_id),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$second_id, $second_id],
                 'direction'   => 'before',
                 'compared_to' => $first_id
-            )
-        ))));
+            ]
+        ])));
 
         $this->assertEquals(409, $response->getStatusCode());
     }
@@ -258,13 +258,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
         $first_id  = $backlog_items[0]['id'];
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array(9999),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [9999],
                 'direction'   => 'before',
                 'compared_to' => $first_id
-            )
-        ))));
+            ]
+        ])));
 
         $this->assertEquals(409, $response->getStatusCode());
     }
@@ -285,26 +285,26 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $second_id = $backlog_items[1]['id'];
         $third_id  = $this->tasks['My loneliness is killing me'];
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($third_id),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$third_id],
                 'direction'   => 'after',
                 'compared_to' => $first_id
-            ),
-            'add' => array(
-                array(
+            ],
+            'add' => [
+                [
                     'id' => $third_id,
-                )
-            )
-        ))));
+                ]
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $first_id,
                 $third_id,
                 $second_id,
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
     }
@@ -321,30 +321,30 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $another_story_id = $this->stories['Another story'];
 
         try {
-            $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($task_in_another_story_id),
+            $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$task_in_another_story_id],
                 'direction'   => 'after',
                 'compared_to' => $first_id
-            ),
-            'add' => array(
-                array(
+            ],
+            'add' => [
+                [
                     'id'          => $task_in_another_story_id,
                     'remove_from' => $another_story_id,
-                )
-            )
-            ))));
+                ]
+            ]
+            ])));
             $this->assertEquals($response->getStatusCode(), 200);
         } catch (Exception $e) {
             $res = $e->getResponse();
             var_dump($res->getStatusCode(), $res->getBody(true));
         }
         $this->assertEquals(
-            array(
+            [
                 $first_id,
                 $task_in_another_story_id,
                 $second_id,
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
 
@@ -354,7 +354,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     private function getIdsOrderedByPriority($uri)
     {
         $response = $this->getResponse($this->client->get($uri));
-        $actual_order = array();
+        $actual_order = [];
         foreach ($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];
         }

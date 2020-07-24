@@ -45,7 +45,7 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
 
     public function testItExecutesExtractOnEachCommit(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
 
         $this->extract_cross_ref->shouldReceive('execute')->with($push_details, '469eaa9')->once();
 
@@ -54,7 +54,7 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesntAttemptToExtractWhenBranchIsDeleted(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->extract_cross_ref->shouldReceive('execute')->never();
 
@@ -64,14 +64,14 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
     public function testItExecutesExtractEvenWhenThereAreErrors(): void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class);
-        $push_details->shouldReceive('getRevisionList')->andReturns(array('0fb0737', '469eaa9'));
+        $push_details->shouldReceive('getRevisionList')->andReturns(['0fb0737', '469eaa9']);
         $push_details->shouldReceive('getRepository')->andReturns(\Mockery::spy(\GitRepository::class));
 
         $this->extract_cross_ref->shouldReceive('execute')->with($push_details, '0fb0737');
         $this->logger->shouldReceive('error')->once();
         $this->extract_cross_ref->shouldReceive('execute')
             ->with($push_details, '469eaa9')
-            ->andThrows(new Git_Command_Exception('whatever', array('whatever'), '234'));
+            ->andThrows(new Git_Command_Exception('whatever', ['whatever'], '234'));
 
         $this->parse_log->execute($push_details);
     }

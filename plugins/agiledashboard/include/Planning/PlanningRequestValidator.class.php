@@ -55,7 +55,7 @@ class Planning_RequestValidator
         $planning_parameters = $request->get('planning');
 
         if (! $planning_parameters) {
-            $planning_parameters = array();
+            $planning_parameters = [];
         }
 
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);

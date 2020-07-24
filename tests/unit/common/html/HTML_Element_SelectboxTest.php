@@ -46,7 +46,7 @@ class HTML_Element_SelectboxTest extends TestCase
     {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->setId('id-add-options-test');
-        $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
+        $selectbox->addMultipleOptions(['one' => '1', 'two' => '2'], 'two');
         $this->assertEquals(
             '<select id="id-add-options-test" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>',
             $selectbox->renderValue()

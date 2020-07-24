@@ -66,10 +66,10 @@ class NotificationsBuilder
      */
     public function getNotifications(array $mail_notifications)
     {
-        $notifications_representation = array();
+        $notifications_representation = [];
 
         foreach ($mail_notifications as $notification) {
-            $extracted_notifications            = array();
+            $extracted_notifications            = [];
             $extracted_notifications['emails']  = $this->extractMails($notification);
             $extracted_notifications['users']   = $this->extractUsers($notification);
             $extracted_notifications['ugroups'] = $this->extractUGroups($notification);
@@ -88,7 +88,7 @@ class NotificationsBuilder
      */
     private function extractMails(MailNotification $notification)
     {
-        $mails = array();
+        $mails = [];
         foreach ($notification->getNotifiedMails() as $mail) {
             $mails[] = $mail;
         }
@@ -101,7 +101,7 @@ class NotificationsBuilder
      */
     private function extractUsers(MailNotification $notification)
     {
-        $users = array();
+        $users = [];
 
         foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $user = $this->user_manager->getUserById($row['user_id']);
@@ -119,7 +119,7 @@ class NotificationsBuilder
      */
     private function extractUGroups(MailNotification $notification)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
             $group = $this->ugroup_manager->getById($row['ugroup_id']);

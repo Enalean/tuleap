@@ -90,7 +90,7 @@ class ServiceActivatorTest extends TestCase
     public function testItActivatesPluginInsteadOfLegacyService(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
 
         $this->svn_core_service->shouldReceive('isUsed')->andReturn(true);
@@ -106,7 +106,7 @@ class ServiceActivatorTest extends TestCase
     public function testItActivatesOnlyPluginWhenBothServicesAreActivatedIntoTemplate(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
 
         $this->svn_core_service->shouldReceive('isUsed')->andReturn(true);
@@ -122,7 +122,7 @@ class ServiceActivatorTest extends TestCase
     public function testItUnsetsSVNCoreEvenIfItsTheOnlySVNServiceInTemplate(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service)
+            [$this->svn_core_service]
         );
 
         $this->data->shouldReceive('projectShouldInheritFromTemplate')->andReturn(true);
@@ -136,7 +136,7 @@ class ServiceActivatorTest extends TestCase
     public function testItDoesNothingIfSVNPluginIsTheOnlySVNServiceInTemplate(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_plugin_service)
+            [$this->svn_plugin_service]
         );
 
         $this->data->shouldReceive('projectShouldInheritFromTemplate')->andReturn(true);
@@ -150,7 +150,7 @@ class ServiceActivatorTest extends TestCase
     public function testItDoesNotActivatePluginIfBothSVNServicesAreNotActivatedIntoTemplate(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
 
         $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
@@ -166,7 +166,7 @@ class ServiceActivatorTest extends TestCase
     public function testItDoesNothingIfServicesAreNotInheritedFromTemplate(): void
     {
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
 
         $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
@@ -183,7 +183,7 @@ class ServiceActivatorTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $legacy  = array(Service::SVN => false);
+        $legacy  = [Service::SVN => false];
 
         $this->template->shouldReceive('isSystem')->andReturnFalse();
         $this->template->shouldReceive('getUnixName')->andReturn('unix-name');
@@ -192,10 +192,10 @@ class ServiceActivatorTest extends TestCase
         $this->svn_core_service->shouldReceive('isActive')->andReturn(false);
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service)
+            [$this->svn_core_service]
         );
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$project])->andReturn(
-            array()
+            []
         );
 
         $this->service_creator->shouldReceive('createService')->once();
@@ -207,7 +207,7 @@ class ServiceActivatorTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $legacy  = array(Service::SVN => false);
+        $legacy  = [Service::SVN => false];
 
         $this->template->shouldReceive('isSystem')->andReturnFalse();
         $this->template->shouldReceive('getUnixName')->andReturn('unix-name');
@@ -218,10 +218,10 @@ class ServiceActivatorTest extends TestCase
         $this->svn_plugin_service->shouldReceive('isActive')->andReturn(false);
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$project])->andReturn(
-            array()
+            []
         );
 
         $this->service_creator->shouldReceive('createService')->once();
@@ -233,13 +233,13 @@ class ServiceActivatorTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $legacy  = array(Service::SVN => false);
+        $legacy  = [Service::SVN => false];
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$project])->andReturn(
-            array($this->svn_plugin_service)
+            [$this->svn_plugin_service]
         );
 
         $this->service_creator->shouldReceive('createService')->never();
@@ -251,13 +251,13 @@ class ServiceActivatorTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $legacy  = array(Service::SVN => true);
+        $legacy  = [Service::SVN => true];
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array($this->svn_core_service, $this->svn_plugin_service)
+            [$this->svn_core_service, $this->svn_plugin_service]
         );
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$project])->andReturn(
-            array($this->svn_plugin_service)
+            [$this->svn_plugin_service]
         );
 
         $this->service_creator->shouldReceive('createService')->never();
@@ -269,13 +269,13 @@ class ServiceActivatorTest extends TestCase
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $legacy  = array(Service::SVN => false);
+        $legacy  = [Service::SVN => false];
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$this->template])->andReturn(
-            array()
+            []
         );
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->withArgs([$project])->andReturn(
-            array()
+            []
         );
 
         $this->service_creator->shouldReceive('createService')->never();

@@ -36,10 +36,10 @@ class ReferencesImporter
     public const XREF_PKG = 'pkg';
     public const XREF_REL = 'rel';
 
-    private $xref_kind = array(
+    private $xref_kind = [
         self::XREF_PKG => 'package',
         self::XREF_REL => 'release',
-    );
+    ];
 
     public function __construct(Dao $dao, LoggerInterface $logger)
     {
@@ -91,7 +91,7 @@ class ReferencesImporter
 
     private function crossRefKind($xref)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^([a-zA-Z]*)/', $xref, $matches)) {
             return $matches[1];
         } else {

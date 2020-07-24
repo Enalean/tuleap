@@ -26,7 +26,7 @@ function doMeshInterpolate(&$aData, $aFactor)
  */
 class MeshInterpolate
 {
-    private $data = array();
+    private $data = [];
 
    /**
     * Calculate the mid points of the given rectangle which has its top left

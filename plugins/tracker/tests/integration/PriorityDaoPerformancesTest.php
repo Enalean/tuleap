@@ -48,17 +48,17 @@ class PriorityDaoPerformancesTest extends TestCase
 
     public function testBenchmark()
     {
-        $csv = array(
-            'labels' => array('')
-        );
+        $csv = [
+            'labels' => ['']
+        ];
         foreach (
-            array(
+            [
             100,
             10000,
             100000,
             500000,
             1000000
-            ) as $n
+            ] as $n
         ) {
             $csv['labels'][] = $n;
             $this->addToCSV($csv, $this->benchmarkPutAtTheEnd($n));
@@ -78,7 +78,7 @@ class PriorityDaoPerformancesTest extends TestCase
     {
         list($title, $avg) = $data;
         if (! isset($csv[$title])) {
-            $csv[$title] = array($title);
+            $csv[$title] = [$title];
         }
         $csv[$title][] = $avg;
     }
@@ -88,7 +88,7 @@ class PriorityDaoPerformancesTest extends TestCase
         $title = "Time taken for put at the end";
         echo "$title for $n artifacts\n";
         $k = 10;
-        $times = array();
+        $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
@@ -98,41 +98,41 @@ class PriorityDaoPerformancesTest extends TestCase
             $times[] = $end - $start;
         }
         echo "\n";
-        return array($title, $this->displayStats($times));
+        return [$title, $this->displayStats($times)];
     }
 
     private function benchmarkMove10Before1rank($n)
     {
         $title = "Time taken for move 10 before (1 rank)";
         echo "$title for $n artifacts\n";
-        return array($title, $this->benchmarkMove10BeforeRank($n, $n - 10 - 2));
+        return [$title, $this->benchmarkMove10BeforeRank($n, $n - 10 - 2)];
     }
 
     private function benchmarkMoveBefore1rank($n)
     {
         $title = "Time taken for move before (1 rank)";
         echo "$title for $n artifacts\n";
-        return array($title, $this->benchmarkMoveBeforeRank($n, $n - 2));
+        return [$title, $this->benchmarkMoveBeforeRank($n, $n - 2)];
     }
 
     private function benchmarkMoveBeforeMiddle($n)
     {
         $title = "Time taken for move before (middle)";
         echo "$title for $n artifacts\n";
-        return array($title, $this->benchmarkMoveBeforeRank($n, floor($n / 2)));
+        return [$title, $this->benchmarkMoveBeforeRank($n, floor($n / 2))];
     }
 
     private function benchmarkMoveBeforeAll($n)
     {
         $title = "Time taken for move before (all)";
         echo "$title for $n artifacts\n";
-        return array($title, $this->benchmarkMoveBeforeRank($n, 1));
+        return [$title, $this->benchmarkMoveBeforeRank($n, 1)];
     }
 
     private function benchmarkMoveBeforeRank($n, $new_rank)
     {
         $k = 10;
-        $times = array();
+        $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
@@ -141,7 +141,7 @@ class PriorityDaoPerformancesTest extends TestCase
             $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
             $start = microtime(true);
-            $this->dao->moveListOfArtifactsBefore(array($artifact_id), $successor_id);
+            $this->dao->moveListOfArtifactsBefore([$artifact_id], $successor_id);
             $end = microtime(true);
             $times[] = $end - $start;
         }
@@ -152,11 +152,11 @@ class PriorityDaoPerformancesTest extends TestCase
     private function benchmarkMove10BeforeRank($n, $new_rank)
     {
         $k = 10;
-        $times = array();
+        $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
-            $artifact_ids = array();
+            $artifact_ids = [];
             foreach ($this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank >= $n - 10") as $row) {
                 $artifact_ids[] = $row['artifact_id'];
             }
@@ -189,7 +189,7 @@ class PriorityDaoPerformancesTest extends TestCase
         $artifact_ids = range(1, $n);
         shuffle($artifact_ids);
 
-        $inserts = array();
+        $inserts = [];
         for ($i = 0; $i < count($artifact_ids); $i++) {
             $inserts[] = "($artifact_ids[$i], $i)";
         }

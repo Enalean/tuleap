@@ -214,7 +214,7 @@ class MailNotificationManager
      */
     public function getByRepository(Repository $repository)
     {
-        $mail_notification = array();
+        $mail_notification = [];
         foreach ($this->dao->searchByRepositoryId($repository->getId()) as $row) {
             $mail_notification[] = $this->instantiateFromRow($row, $repository);
         }
@@ -239,7 +239,7 @@ class MailNotificationManager
      */
     public function getByPath(Repository $repository, $path)
     {
-        $mail_notification = array();
+        $mail_notification = [];
         foreach ($this->dao->searchByPath($repository->getId(), $path) as $row) {
             $mail_notification[] = $this->instantiateFromRow($row, $repository);
         }
@@ -253,7 +253,7 @@ class MailNotificationManager
      */
     public function getByPathStrictlyEqual(Repository $repository, $path)
     {
-        $mail_notification = array();
+        $mail_notification = [];
         foreach ($this->dao->searchByPathStrictlyEqual($repository->getId(), $path) as $row) {
             $mail_notification[] = $this->instantiateFromRow($row, $repository);
         }
@@ -277,7 +277,7 @@ class MailNotificationManager
 
     private function getUsersForNotification($notification_id)
     {
-        $users_to_be_notified = array();
+        $users_to_be_notified = [];
         foreach ($this->user_to_notify_dao->searchUsersByNotificationId($notification_id) as $user_row) {
             $users_to_be_notified[] = new PFUser($user_row);
         }
@@ -287,7 +287,7 @@ class MailNotificationManager
 
     private function getUgroupsForNotification(Project $project, $notification_id)
     {
-        $ugroups_to_be_notified = array();
+        $ugroups_to_be_notified = [];
         foreach ($this->ugroup_to_notify_dao->searchUgroupsByNotificationId($notification_id) as $ugroup_row) {
             $ugroups_to_be_notified[] = $this->ugroup_manager->instanciateGroupForProject($project, $ugroup_row);
         }
@@ -320,7 +320,7 @@ class MailNotificationManager
     private function notificationAddUsers(MailNotification $notification): bool
     {
         $users           = $notification->getNotifiedUsers();
-        $users_not_added = array();
+        $users_not_added = [];
         foreach ($users as $user) {
             if (! $this->user_to_notify_dao->insert($notification->getId(), $user->getId())) {
                 $users_not_added[] = $user->getName();
@@ -342,7 +342,7 @@ class MailNotificationManager
     private function notificationAddUgroups(MailNotification $notification)
     {
         $ugroups           = $notification->getNotifiedUgroups();
-        $ugroups_not_added = array();
+        $ugroups_not_added = [];
         foreach ($ugroups as $ugroup) {
             if (! $this->ugroup_to_notify_dao->insert($notification->getId(), $ugroup->getId())) {
                 $ugroups_not_added[] = $ugroup->getTranslatedName();

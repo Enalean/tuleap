@@ -39,12 +39,12 @@ class GettextExtractor
      */
     private $collector;
 
-    private static $GETTEXT_NODE_NAMES = array(
+    private static $GETTEXT_NODE_NAMES = [
         GettextHelper::GETTEXT,
         GettextHelper::NGETTEXT,
         GettextHelper::DGETTEXT,
         GettextHelper::DNGETTEXT
-    );
+    ];
 
     public function __construct(
         Mustache_Parser $parser,
@@ -93,7 +93,7 @@ class GettextExtractor
     {
         return in_array(
             $node[Mustache_Tokenizer::TYPE],
-            array(Mustache_Tokenizer::T_SECTION, Mustache_Tokenizer::T_INVERTED),
+            [Mustache_Tokenizer::T_SECTION, Mustache_Tokenizer::T_INVERTED],
             true
         );
     }

@@ -65,12 +65,12 @@ class RepositoryDisplayController
 
             $has_plugin_intro  = false;
             $plugin_intro_info = '';
-            $this->event_manager->processEvent(Event::SVN_INTRO, array(
+            $this->event_manager->processEvent(Event::SVN_INTRO, [
                 'svn_intro_in_plugin' => &$has_plugin_intro,
                 'svn_intro_info'      => &$plugin_intro_info,
                 'group_id'            => $repository->getProject()->getID(),
                 'user_id'             => $request->getCurrentUser()->getId()
-            ));
+            ]);
             $username = $request->getCurrentUser()->getUserName();
             if ($plugin_intro_info) {
                 $username = $plugin_intro_info->getLogin();
@@ -92,7 +92,7 @@ class RepositoryDisplayController
         } catch (CannotFindRepositoryException $e) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Repository not found.'));
             $GLOBALS['Response']->redirect(
-                SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getID()))
+                SVN_BASE_URL . '/?' . http_build_query(['group_id' => $request->getProject()->getID()])
             );
         }
     }

@@ -28,7 +28,7 @@ class SourceOfAssociationCollection implements \Countable
     /**
      * @var Tracker_Artifact[]
      */
-    private $artifacts = array();
+    private $artifacts = [];
 
     public function add(Tracker_Artifact $artifact)
     {

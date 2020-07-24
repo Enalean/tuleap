@@ -78,7 +78,7 @@ class BindingPresenterBuilder
      */
     private function getClones(ProjectUGroup $ugroup)
     {
-        $ugroups        = array();
+        $ugroups        = [];
         $nb_not_visible = 0;
         foreach ($this->ugroup_binding->getUGroupsByBindingSource($ugroup->getId()) as $id => $clone) {
             $project = $this->project_manager->getProject($clone['group_id']);
@@ -89,18 +89,18 @@ class BindingPresenterBuilder
             }
         }
 
-        return array(
+        return [
             'ugroups'        => $ugroups,
             'has_ugroups'    => count($ugroups) > 0,
             'nb_not_visible' => $nb_not_visible
-        );
+        ];
     }
 
     private function getCurrentBinding(ProjectUGroup $ugroup)
     {
         $source = $ugroup->getSourceGroup();
         if (! $source) {
-            return array();
+            return [];
         }
 
         $project = $source->getProject();
@@ -113,40 +113,40 @@ class BindingPresenterBuilder
 
     private function getUgroupBindingPresenter(Project $project, $id, $name)
     {
-        return array(
+        return [
             'project_url'  => '/projects/' . $project->getUnixName(),
             'project_name' => $project->getPublicName(),
             'ugroup_url'   => '/project/admin/editugroup.php?' . http_build_query(
-                array(
+                [
                     'group_id'  => $project->getID(),
                     'ugroup_id' => $id,
-                )
+                ]
             ),
             'ugroup_name'  => $name,
-        );
+        ];
     }
 
     private function getEmptyUgroupBindingPresenter()
     {
-        return array(
+        return [
             'project_url'  => '',
             'project_name' => '',
             'ugroup_url'   => '',
             'ugroup_name'  => '',
-        );
+        ];
     }
 
     private function getAddBinding(ProjectUGroup $ugroup)
     {
-        return array(
+        return [
             'projects' => $this->getProjectsPresentersForBinding($ugroup),
-        );
+        ];
     }
 
     private function getProjectsPresentersForBinding(ProjectUGroup $ugroup)
     {
         $current_user       = $this->user_manager->getCurrentUser();
-        $projects           = array();
+        $projects           = [];
         $current_project_id = $ugroup->getProjectId();
         $projects_of_user   = $current_user->getProjects(true);
         foreach ($projects_of_user as $project_as_row) {
@@ -164,11 +164,11 @@ class BindingPresenterBuilder
                 continue;
             }
 
-            $projects[] = array(
+            $projects[] = [
                 'id'                   => $project->getID(),
                 'name'                 => $project->getPublicName(),
                 'json_encoded_ugroups' => json_encode($ugroup_list)
-            );
+            ];
         }
 
         return $projects;
@@ -176,12 +176,12 @@ class BindingPresenterBuilder
 
     private function getUgroupPresenterList($project_id)
     {
-        $ugroupList = array();
+        $ugroupList = [];
         $ugroups    = ugroup_db_get_existing_ugroups($project_id);
         while ($ugroup_row = db_fetch_array($ugroups)) {
-            $user_group = new ProjectUGroup(array('ugroup_id' => $ugroup_row['ugroup_id']));
+            $user_group = new ProjectUGroup(['ugroup_id' => $ugroup_row['ugroup_id']]);
             if (! $user_group->isBound()) {
-                $ugroupList[] = array('id' => $ugroup_row['ugroup_id'], 'name' => $ugroup_row['name']);
+                $ugroupList[] = ['id' => $ugroup_row['ugroup_id'], 'name' => $ugroup_row['name']];
             }
         }
 

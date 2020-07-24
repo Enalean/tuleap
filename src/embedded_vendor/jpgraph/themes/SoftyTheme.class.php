@@ -11,7 +11,7 @@ class SoftyTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#CFE7FB',
             '#F9D76F',
             '#B9D566',
@@ -39,7 +39,7 @@ class SoftyTheme extends Theme
             '#9D080D',
             '#A186BE',
             */
-        );
+        ];
     }
 
     public function SetupGraph($graph)

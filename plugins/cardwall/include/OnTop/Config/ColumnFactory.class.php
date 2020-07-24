@@ -95,7 +95,7 @@ class Cardwall_OnTop_Config_ColumnFactory
             return $field->getVisibleValuesPlusNoneIfAny();
         }
 
-        $field_values = array();
+        $field_values = [];
 
         foreach ($filter as $value_id) {
             if ($field->isNone($value_id)) {

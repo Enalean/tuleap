@@ -25,7 +25,7 @@ class Tracker_Artifact_View_ViewCollection
 {
 
     /** @var Tracker_Artifact_View_View[] */
-    private $views = array();
+    private $views = [];
 
     public function add(Tracker_Artifact_View_View $view)
     {

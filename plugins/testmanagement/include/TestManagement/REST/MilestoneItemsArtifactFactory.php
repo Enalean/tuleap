@@ -58,7 +58,7 @@ class MilestoneItemsArtifactFactory
 
     public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, int $milestone_id): array
     {
-        $test_definitions = array();
+        $test_definitions = [];
 
         $event = new GetItemsFromMilestone($user, $milestone_id);
         $this->event_manager->processEvent($event);

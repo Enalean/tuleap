@@ -77,7 +77,7 @@ class XML_RNGValidator
         } catch (System_Command_CommandException $ex) {
             $errors = [];
             foreach ($ex->getOutput() as $o) {
-                $matches = array();
+                $matches = [];
                 if (preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches)) {
                     //1 line
                     //2 column

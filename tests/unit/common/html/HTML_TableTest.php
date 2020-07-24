@@ -46,7 +46,7 @@ final class HTML_TableTest extends TestCase
 
     public function testItBuildsTableWithTitles(): void
     {
-        $this->assertMatchesRegularExpression('/<th>Bla<\/th>/', $this->html_table->setColumnsTitle(array('Bla'))->render());
+        $this->assertMatchesRegularExpression('/<th>Bla<\/th>/', $this->html_table->setColumnsTitle(['Bla'])->render());
     }
 
     public function testItBuildsTableWithBody(): void

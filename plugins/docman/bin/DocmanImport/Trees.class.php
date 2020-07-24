@@ -69,7 +69,7 @@ class Trees
         if ($root === null) {
             return null;
         } else {
-            return array($root => self::nodeListToTreeRec($listOfNodes, $root));
+            return [$root => self::nodeListToTreeRec($listOfNodes, $root)];
         }
     }
 

@@ -53,10 +53,10 @@ class DirectoryParser
      */
     public function parseDirectory($path, $remove_parent_directory_listing)
     {
-        $items = array(
-            'folders' => array(),
-            'files'   => array(),
-        );
+        $items = [
+            'folders' => [],
+            'files'   => [],
+        ];
         $directory_iterator = $this->getDirectoryOperator($this->base_dir . DIRECTORY_SEPARATOR . $path);
 
         if ($directory_iterator == null) {
@@ -120,7 +120,7 @@ class DirectoryParser
     {
         $parent_item = new DirectoryItem('..', 'dir', null, null);
 
-        $directory_contents = new DirectoryItemCollection(array($parent_item), array());
+        $directory_contents = new DirectoryItemCollection([$parent_item], []);
         $directory_contents->setAsForbidden();
 
         return $directory_contents;

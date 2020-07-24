@@ -71,16 +71,16 @@ class UserListResultsPresenter
         $this->matching_users        = $this->getMatchingUsers($result);
 
         $base_url       = '/admin/userlist.php';
-        $default_params = array(
+        $default_params = [
             'user_name_search'     => $user_name_search,
             'previous_sort_header' => $sort_params["sort_header"],
             'current_sort_header'  => $sort_params["sort_header"],
             'sort_order'           => $sort_params['order'],
             'status_values'        => $user_status
-        );
+        ];
 
         if (! $default_params['status_values']) {
-            $default_params['status_values'] = array('ANY');
+            $default_params['status_values'] = ['ANY'];
         }
 
         if ($group_id) {
@@ -93,7 +93,7 @@ class UserListResultsPresenter
         $this->sortby_name_url      = $base_url . '?' . http_build_query($this->getSortUrlParams('user_name', $default_params));
         $this->sortby_realname_url  = $base_url . '?' . http_build_query($this->getSortUrlParams('realname', $default_params));
         $this->sortby_status_url    = $base_url . '?' . http_build_query($this->getSortUrlParams('status', $default_params));
-        $this->export_url           = $base_url . '?' . http_build_query(array('export'   => 1) + $default_params);
+        $this->export_url           = $base_url . '?' . http_build_query(['export'   => 1] + $default_params);
 
         $this->login_name_header  = $GLOBALS['Language']->getText('admin_userlist', 'login');
         $this->real_nam_header    = $GLOBALS['Language']->getText('admin_userlist', 'name');
@@ -124,12 +124,12 @@ class UserListResultsPresenter
         if ($sort !== $default_params['current_sort_header']) {
             $default_params['sort_order'] = 'ASC';
         }
-        return array('current_sort_header' => $sort) + $default_params;
+        return ['current_sort_header' => $sort] + $default_params;
     }
 
     private function getMatchingUsers($result)
     {
-        $matching_users = array();
+        $matching_users = [];
         foreach ($result as $row) {
             $nb_member_of = 0;
             if (isset($row['member_of'])) {

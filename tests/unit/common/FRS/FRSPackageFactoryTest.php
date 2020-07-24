@@ -50,7 +50,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     public function testGetFRSPackageFromDb()
     {
-        $packageArray1 = array('package_id'       => 1,
+        $packageArray1 = ['package_id'       => 1,
                                'group_id'         => 1,
                                'name'             => 'pkg1',
                                'status_id'        => 2,
@@ -60,11 +60,11 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
                                'package_releases' => null,
                                'error_state'      => null,
                                'error_message'    => null
-                               );
+                               ];
         $frs_package_factory = new FRSPackageFactory();
         $package1            = $frs_package_factory->getFRSPackageFromArray($packageArray1);
 
-        $packageArray2 = array('package_id'       => 2,
+        $packageArray2 = ['package_id'       => 2,
                                'group_id'         => 2,
                                'name'             => 'pkg2',
                                'status_id'        => 1,
@@ -74,7 +74,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
                                'package_releases' => null,
                                'error_state'      => null,
                                'error_message'    => null
-                               );
+                               ];
         $package2 = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 
         $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
@@ -106,10 +106,10 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     {
         $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
-        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, [])->once()->andReturns([1, 2, 76]);
 
         $this->permission_manager->shouldReceive('isPermissionExist')->andReturns(true);
-        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', array(1,2,76))->once()->andReturns($can_read_package);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->once()->andReturns($can_read_package);
         $this->frs_package_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
 
         return $this->frs_package_factory;
@@ -133,11 +133,11 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     public function testUserCanReadWhenNoPermissionsSet()
     {
         $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
-        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, [])->once()->andReturns([1, 2, 76]);
 
         $this->permission_manager = \Mockery::spy(PermissionsManager::class);
         $this->permission_manager->shouldReceive('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->once()->andReturns(false);
-        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', array(1,2,76))->once()->andReturns(false);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->once()->andReturns(false);
         $this->frs_package_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
 
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
@@ -171,7 +171,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $package = \Mockery::spy(FRSPackage::class);
-        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns(array($package, $package, $package));
+        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns([$package, $package, $package]);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(false);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
@@ -182,7 +182,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $package = \Mockery::spy(FRSPackage::class);
-        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns(array($package, $package, $package));
+        $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns([$package, $package, $package]);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);

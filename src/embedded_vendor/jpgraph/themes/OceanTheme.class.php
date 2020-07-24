@@ -11,7 +11,7 @@ class OceanTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#0066FF',
             '#CCCCFF',
             '#0000FF',
@@ -30,7 +30,7 @@ class OceanTheme extends Theme
             '#7744EE',
             '#002288',
             '#6666FF',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

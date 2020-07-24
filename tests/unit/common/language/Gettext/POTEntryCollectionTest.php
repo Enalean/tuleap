@@ -40,7 +40,7 @@ final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
         $collection->add('mydomain', $entry1);
         $collection->add('mydomain', $entry2);
 
-        $this->assertEquals(array($entry1, $entry2), $collection->getEntries());
+        $this->assertEquals([$entry1, $entry2], $collection->getEntries());
     }
 
     public function testItDoesNotAddEntryIfNotSameDomain(): void
@@ -62,6 +62,6 @@ final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
         $collection->add('mydomain', $entry1);
         $collection->add('mydomain', $entry2);
 
-        $this->assertEquals(array($entry1), $collection->getEntries());
+        $this->assertEquals([$entry1], $collection->getEntries());
     }
 }

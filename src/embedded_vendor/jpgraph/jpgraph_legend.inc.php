@@ -21,12 +21,12 @@ DEFINE('_DEFAULT_LPM_SIZE', 8); // Default Legend Plot Mark size
 
 class Legend
 {
-    public $txtcol = array();
+    public $txtcol = [];
     public $font_family = FF_DEFAULT;
     private $font_style = FS_NORMAL;
     private $font_size = 8; // old. 12
-    private $color = array(120,120,120); // Default frame color
-    private $fill_color = array(245,245,245); // Default fill color
+    private $color = [120, 120, 120]; // Default frame color
+    private $fill_color = [245, 245, 245]; // Default fill color
     private $shadow = false; // Shadow around legend "box"
     private $shadow_color = 'darkgray';
     private $mark_abs_hsize = _DEFAULT_LPM_SIZE;
@@ -187,12 +187,12 @@ class Legend
 
     public function Clear()
     {
-        $this->txtcol = array();
+        $this->txtcol = [];
     }
 
     public function Add($aTxt, $aColor, $aPlotmark = '', $aLinestyle = 0, $csimtarget = '', $csimalt = '', $csimwintarget = '')
     {
-        $this->txtcol[] = array($aTxt,$aColor,$aPlotmark,$aLinestyle,$csimtarget,$csimalt,$csimwintarget);
+        $this->txtcol[] = [$aTxt, $aColor, $aPlotmark, $aLinestyle, $csimtarget, $csimalt, $csimwintarget];
     }
 
     public function GetCSIMAreas()

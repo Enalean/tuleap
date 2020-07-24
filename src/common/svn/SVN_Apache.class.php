@@ -24,7 +24,7 @@
  */
 abstract class SVN_Apache
 {
-    private $project = array();
+    private $project = [];
 
     /**
      * Takes a project DB row

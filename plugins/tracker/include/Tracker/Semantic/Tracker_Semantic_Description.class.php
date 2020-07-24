@@ -109,7 +109,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
             $purifier = Codendi_HTMLPurifier::instance();
             $content  =  sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be described by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
 
-            if (Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $field->getId(), array('string', 'ref'))) {
+            if (Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $field->getId(), ['string', 'ref'])) {
                 $warning = '<p class="alert alert-warning">' .
                             dgettext('tuleap-tracker', 'String fields are no longer supported for description semantic. Please update.') .
                             '</p>';
@@ -143,7 +143,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
-        $text_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType($this->tracker, array('text'));
+        $text_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType($this->tracker, ['text']);
 
         if ($text_fields) {
             $html .= '<form method="POST" action="' . $this->getUrl() . '">';
@@ -204,7 +204,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
     ) {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
-            if ($field = Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $request->get('text_field_id'), array('text'))) {
+            if ($field = Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $request->get('text_field_id'), ['text'])) {
                 $this->text_field = $field;
                 if ($this->save()) {
                     $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The description is now: %1$s'), $field->getLabel()));

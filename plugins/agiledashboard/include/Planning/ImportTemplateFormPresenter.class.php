@@ -48,7 +48,7 @@ class Planning_ImportTemplateFormPresenter
 
     public function importInstructions()
     {
-        return $GLOBALS['Language']->getOverridableText('plugin_agiledashboard', 'import_instructions', array(self::TULEAP_TEMPLATE_URL));
+        return $GLOBALS['Language']->getOverridableText('plugin_agiledashboard', 'import_instructions', [self::TULEAP_TEMPLATE_URL]);
     }
 
     public function importNotes()

@@ -26,7 +26,7 @@ class GlyphLocationsCollector implements Dispatchable
 {
     public const NAME = 'collect_glyph_locations';
 
-    private $glyph_locations = array();
+    private $glyph_locations = [];
 
     public function addLocation($namespace_name, GlyphLocation $glyph_location)
     {

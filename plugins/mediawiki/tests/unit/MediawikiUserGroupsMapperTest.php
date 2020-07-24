@@ -76,20 +76,20 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     public function testItAddsProjectMembersAsBots(): void
     {
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
-            array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
+            ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS]
         ]);
 
-        $new_mapping = array(
-            'anonymous'  => array(
+        $new_mapping = [
+            'anonymous'  => [
                 '1',
-            ),
-            'bot'        => array(
+            ],
+            'bot'        => [
                 '3'
-            ),
-            'user'       => array(),
-            'sysop'      => array(),
-            'bureaucrat' => array()
-        );
+            ],
+            'user'       => [],
+            'sysop'      => [],
+            'bureaucrat' => []
+        ];
 
         $this->dao->shouldReceive('addMediawikiUserGroupMapping')
             ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')
@@ -103,22 +103,22 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     public function testItRemovesRegisteredUsersFromBot(): void
     {
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
-            array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
-            array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER),
-            array('group_id' => '104', 'ugroup_id' => '3', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT)
+            ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
+            ['group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER],
+            ['group_id' => '104', 'ugroup_id' => '3', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT]
         ]);
 
-        $new_mapping = array(
-            'anonymous'  => array(
+        $new_mapping = [
+            'anonymous'  => [
                 '1'
-            ),
-            'user'       => array(
+            ],
+            'user'       => [
                 '2'
-            ),
-            'bot'        => array(),
-            'sysop'      => array(),
-            'bureaucrat' => array(),
-        );
+            ],
+            'bot'        => [],
+            'sysop'      => [],
+            'bureaucrat' => [],
+        ];
 
         $this->dao->shouldReceive('removeMediawikiUserGroupMapping')
             ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')
@@ -132,16 +132,16 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     public function testItIgnoresAnonymousModifications(): void
     {
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
-            array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
+            ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS]
         ]);
 
-        $new_mapping = array(
-            'anonymous'  => array(),
-            'bot'        => array(),
-            'user'       => array(),
-            'sysop'      => array(),
-            'bureaucrat' => array()
-        );
+        $new_mapping = [
+            'anonymous'  => [],
+            'bot'        => [],
+            'user'       => [],
+            'sysop'      => [],
+            'bureaucrat' => []
+        ];
 
         $this->dao->shouldReceive('removeMediawikiUserGroupMapping')->never();
         $this->dao->shouldReceive('addMediawikiUserGroupMapping')->never();
@@ -152,17 +152,17 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     public function testItIgnoresUserModifications(): void
     {
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
-            array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
-            array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER)
+            ['group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS],
+            ['group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER]
         ]);
 
-        $new_mapping = array(
-            'anonymous'  => array(),
-            'bot'        => array(),
-            'user'       => array(),
-            'sysop'      => array(),
-            'bureaucrat' => array()
-        );
+        $new_mapping = [
+            'anonymous'  => [],
+            'bot'        => [],
+            'user'       => [],
+            'sysop'      => [],
+            'bureaucrat' => []
+        ];
 
         $this->dao->shouldReceive('removeMediawikiUserGroupMapping')->never();
         $this->dao->shouldReceive('addMediawikiUserGroupMapping')->never();
@@ -173,47 +173,47 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     public function testItCallsRemoveAndAddDAOMethodsDuringSave(): void
     {
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn([
-            array(
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 1,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 2,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
-            )
+            ]
         ]);
 
-        $new_mapping = array(
-            'anonymous'  => array(
+        $new_mapping = [
+            'anonymous'  => [
                 '1'
-            ),
-            'user'       => array(
+            ],
+            'user'       => [
                 '2',
-            ),
-            'bot'        => array(
+            ],
+            'bot'        => [
                 '3',
                 '2',
                 '4'
-            ),
-            'sysop'      => array(
+            ],
+            'sysop'      => [
                 '1'
-            ),
-            'bureaucrat' => array(
+            ],
+            'bureaucrat' => [
                 '1'
-            )
-        );
+            ]
+        ];
 
         $this->dao->shouldReceive('removeMediawikiUserGroupMapping')
             ->with($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP, 4)
@@ -230,33 +230,33 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
     public function testItReturnsTrueIfCurrentMappingEqualsDefaultOneForPublicProject(): void
     {
-        $current_mapping = array (
-            array(
+        $current_mapping =  [
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 1,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 2,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 3,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
-            )
-        );
+            ]
+        ];
 
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
         $this->project->shouldReceive('isPublic')->andReturnTrue();
@@ -267,28 +267,28 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
     public function testItReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPublicProject(): void
     {
-        $current_mapping = array (
-            array(
+        $current_mapping =  [
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 1,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 2,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
-            )
-        );
+            ]
+        ];
 
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
         $this->project->shouldReceive('isPublic')->andReturnTrue();
@@ -299,23 +299,23 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
     public function testItReturnsTrueIfCurrentMappingEqualsDefaultOneForPrivateProject(): void
     {
-        $current_mapping = array (
-            array(
+        $current_mapping =  [
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 3,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
-            )
-        );
+            ]
+        ];
 
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
         $this->project->shouldReceive('isPublic')->andReturnFalse();
@@ -326,18 +326,18 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
     public function testItReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPrivateProject(): void
     {
-        $current_mapping = array (
-            array(
+        $current_mapping =  [
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT
-            ),
-            array(
+            ],
+            [
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
-            )
-        );
+            ]
+        ];
 
         $this->dao->shouldReceive('getMediawikiUserGroupMapping')->andReturn($current_mapping);
         $this->project->shouldReceive('isPublic')->andReturnFalse();
@@ -356,23 +356,23 @@ final class MediawikiUserGroupsMapperTest extends TestCase
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
             ->andReturn([
-                array('real_name' => 'sysop'),
-                array('real_name' => 'bureaucrat')
+                ['real_name' => 'sysop'],
+                ['real_name' => 'bureaucrat']
             ]);
 
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals($mediawiki_groups, array(
-            'added' => array(
+        $this->assertEquals($mediawiki_groups, [
+            'added' => [
                 '*',
                 'sysop',
                 'bureaucrat'
-            ),
-            'removed' => array(
-            )
-        ));
+            ],
+            'removed' => [
+            ]
+        ]);
     }
 
     public function testItSetsAnonymousUsersAsAnonymous(): void
@@ -385,13 +385,13 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals($mediawiki_groups, array(
-            'added' => array(
+        $this->assertEquals($mediawiki_groups, [
+            'added' => [
                 '*',
-            ),
-            'removed' => array(
-            )
-        ));
+            ],
+            'removed' => [
+            ]
+        ]);
     }
 
     public function testItSetsAnonymousWhenNothingIsAvailable(): void
@@ -410,13 +410,13 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals($mediawiki_groups, array(
-            'added' => array(
+        $this->assertEquals($mediawiki_groups, [
+            'added' => [
                 '*',
-            ),
-            'removed' => array(
-            )
-        ));
+            ],
+            'removed' => [
+            ]
+        ]);
     }
 
     public function testItReturnsUnconsistantMediawikiGroupsToBeDeleted(): void
@@ -434,13 +434,13 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
-        $first_row = array('ug_group' => 'ForgeRole:forge_admin');
+        $first_row = ['ug_group' => 'ForgeRole:forge_admin'];
         $groups_dar->shouldReceive('valid')->andReturn(true, false);
         $groups_dar->shouldReceive('current')->andReturn($first_row);
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals(array('ForgeRole:forge_admin'), $mediawiki_groups['removed']);
+        $this->assertEquals(['ForgeRole:forge_admin'], $mediawiki_groups['removed']);
     }
 
     public function testItRevokesGroupsTheUserIsNoLongerMemberOf(): void
@@ -453,7 +453,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
-        $first_row = array('ug_group' => 'bureaucrat');
+        $first_row = ['ug_group' => 'bureaucrat'];
         $groups_dar->shouldReceive('valid')->andReturn(true, false);
         $groups_dar->shouldReceive('current')->andReturn($first_row);
 
@@ -464,7 +464,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals($mediawiki_groups['removed'], array('bureaucrat'));
+        $this->assertEquals($mediawiki_groups['removed'], ['bureaucrat']);
     }
 
     public function testItDoesNotAddGroupsTheUserAlreadyHave(): void
@@ -477,7 +477,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
-        $first_row = array('ug_group' => '*');
+        $first_row = ['ug_group' => '*'];
         $groups_dar->shouldReceive('valid')->andReturn(true, false);
         $groups_dar->shouldReceive('current')->andReturn($first_row);
 
@@ -486,12 +486,12 @@ final class MediawikiUserGroupsMapperTest extends TestCase
             ->with($this->tuleap_user, $this->project)
             ->andReturn($mapped_dar);
 
-        $first_row = array('real_name' => '*');
+        $first_row = ['real_name' => '*'];
         $mapped_dar->shouldReceive('valid')->andReturn(true, false);
         $mapped_dar->shouldReceive('current')->andReturn($first_row);
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertEquals($mediawiki_groups, array('added' => array(), 'removed' => array()));
+        $this->assertEquals($mediawiki_groups, ['added' => [], 'removed' => []]);
     }
 }

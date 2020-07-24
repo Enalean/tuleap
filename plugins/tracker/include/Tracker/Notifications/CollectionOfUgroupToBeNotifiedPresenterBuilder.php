@@ -38,7 +38,7 @@ class CollectionOfUgroupToBeNotifiedPresenterBuilder
 
     public function getCollectionOfUgroupToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($this->dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
             $presenters[] = new UgroupToBeNotifiedPresenter(new ProjectUGroup($row));
         }

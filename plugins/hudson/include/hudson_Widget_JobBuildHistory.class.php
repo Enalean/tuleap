@@ -62,7 +62,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
     {
         $title = '';
         if ($this->job) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory', array($this->job->getName()));
+            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory', [$this->job->getName()]);
         } else {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory');
         }

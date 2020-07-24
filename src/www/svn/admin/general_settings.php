@@ -28,12 +28,12 @@
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
-    $vTracked = new Valid_WhiteList('form_tracked', array('0', '1'));
+    $vTracked = new Valid_WhiteList('form_tracked', ['0', '1']);
     $vTracked->required();
-    $vMandatoryRef = new Valid_WhiteList('form_mandatory_ref', array('0', '1'));
+    $vMandatoryRef = new Valid_WhiteList('form_mandatory_ref', ['0', '1']);
     $vMandatoryRef->required();
     $vPreamble = new Valid_Text('form_preamble');
-    $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
+    $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', ['0', '1']);
     $vCanChangeSVNLog->required();
 
     if (
@@ -57,7 +57,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         );
 
         if ($ret) {
-            EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
+            EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, ['group_id' => $group_id]);
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings', 'upd_success'));
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings', 'upd_fail'));
@@ -72,8 +72,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 // htmlcharized and displayed with the entities.
 
 // Display the form
-svn_header_admin(array ('title' => $Language->getText('svn_admin_general_settings', 'gen_settings'),
-                        'help' => 'svn.html#general-settings'));
+svn_header_admin(['title' => $Language->getText('svn_admin_general_settings', 'gen_settings'),
+                        'help' => 'svn.html#general-settings']);
 
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
@@ -90,4 +90,4 @@ $renderer->renderToPage(
     $presenter
 );
 
-svn_footer(array());
+svn_footer([]);

@@ -28,21 +28,21 @@ class LogCache
     public const WRITE = 'write';
     public const READ  = 'read';
 
-    private $cache         = array();
-    private $cache_core    = array();
-    private $project_names = array();
-    private $user_names    = array();
-    private $last_access_date_cache = array();
+    private $cache         = [];
+    private $cache_core    = [];
+    private $project_names = [];
+    private $user_names    = [];
+    private $last_access_date_cache = [];
 
     public function add($project_name, $repository_name, $user_name, $action_type, DateTime $date)
     {
         $this->updateLastDate($user_name, $date);
         $day = $this->getDay($date);
         if (! isset($this->cache[$project_name][$repository_name][$user_name][$day])) {
-            $this->cache[$project_name][$repository_name][$user_name][$day] = array(
+            $this->cache[$project_name][$repository_name][$user_name][$day] = [
                 self::READ  => 0,
                 self::WRITE => 0,
-            );
+            ];
         }
         $this->cache[$project_name][$repository_name][$user_name][$day][$action_type]++;
         $this->project_names[$project_name] = 1;
@@ -94,7 +94,7 @@ class LogCache
 
     public function getLastAccessTimestamps()
     {
-        $users = array();
+        $users = [];
         foreach ($this->last_access_date_cache as $username => $date) {
             $users[$username] = $date->format('U');
         }

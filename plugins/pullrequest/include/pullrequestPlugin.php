@@ -159,7 +159,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('git');
+        return ['git'];
     }
 
     public function service_classnames($params) // phpcs:ignore
@@ -435,16 +435,16 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $params['keywords'] = array_merge(
             $params['keywords'],
-            array(self::PR_REFERENCE_KEYWORD, self::PULLREQUEST_REFERENCE_KEYWORD)
+            [self::PR_REFERENCE_KEYWORD, self::PULLREQUEST_REFERENCE_KEYWORD]
         );
     }
 
     public function get_available_reference_natures($params) // phpcs:ignore
     {
-        $nature = array(self::REFERENCE_NATURE => array(
+        $nature = [self::REFERENCE_NATURE => [
             'keyword' => 'pullrequest',
             'label'   => 'Git Pull Request'
-        ));
+        ]];
 
         $params['natures'] = array_merge($params['natures'], $nature);
     }

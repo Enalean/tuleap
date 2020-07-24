@@ -46,7 +46,7 @@ class FuncGenerator
             JpGraphError::RaiseL(24002);//('FuncGenerator : Syntax error in function specification ');
         }
 
-        return array($xa,$ya);
+        return [$xa, $ya];
     }
 }
 
@@ -83,8 +83,8 @@ class DateScaleUtils
     private static $endmonth;
     private static $endyear;
     private static $endday;
-    private static $tickPositions = array();
-    private static $minTickPositions = array();
+    private static $tickPositions = [];
+    private static $minTickPositions = [];
     private static $iUseWeeks = true;
 
     public static function UseWeekFormat($aFlg)
@@ -337,7 +337,7 @@ class DateScaleUtils
             self::$tickPositions[$i++] = mktime(0, 0, 0, self::$startmonth + 1, 1, self::$startyear);
         }
 
-        return array(self::$tickPositions,self::$minTickPositions);
+        return [self::$tickPositions, self::$minTickPositions];
     }
 
     public static function GetTicks($aData, $aType = 1, $aMinor = false, $aEndPoints = false)
@@ -363,11 +363,11 @@ class DateScaleUtils
         // Decision table for suitable scales
         // First value: Main decision point
         // Second value: Array of formatting depending on divisor for wanted max number of ticks. <divisor><formatting><format-string>,..
-        $tt = array(
-            array($spw, array(1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',-1,DSUTILS_DAY4,'d M')),
-            array($spm, array(1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',4,DSUTILS_DAY4,'d M',7,DSUTILS_WEEK1,$w,-1,DSUTILS_WEEK2,$w)),
-            array($spy, array(1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',4,DSUTILS_DAY4,'d M',7,DSUTILS_WEEK1,$w,14,DSUTILS_WEEK2,$w,30,DSUTILS_MONTH1,'M',60,DSUTILS_MONTH2,'M',-1,DSUTILS_MONTH3,'M')),
-            array(-1, array(30,DSUTILS_MONTH1,'M-Y',60,DSUTILS_MONTH2,'M-Y',90,DSUTILS_MONTH3,'M-Y',180,DSUTILS_MONTH6,'M-Y',352,DSUTILS_YEAR1,'Y',704,DSUTILS_YEAR2,'Y',-1,DSUTILS_YEAR5,'Y')));
+        $tt = [
+            [$spw, [1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',-1,DSUTILS_DAY4,'d M']],
+            [$spm, [1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',4,DSUTILS_DAY4,'d M',7,DSUTILS_WEEK1,$w,-1,DSUTILS_WEEK2,$w]],
+            [$spy, [1,DSUTILS_DAY1,'d M',2,DSUTILS_DAY2,'d M',4,DSUTILS_DAY4,'d M',7,DSUTILS_WEEK1,$w,14,DSUTILS_WEEK2,$w,30,DSUTILS_MONTH1,'M',60,DSUTILS_MONTH2,'M',-1,DSUTILS_MONTH3,'M']],
+            [-1, [30,DSUTILS_MONTH1,'M-Y',60,DSUTILS_MONTH2,'M-Y',90,DSUTILS_MONTH3,'M-Y',180,DSUTILS_MONTH6,'M-Y',352,DSUTILS_YEAR1,'Y',704,DSUTILS_YEAR2,'Y',-1,DSUTILS_YEAR5,'Y']]];
 
         $ntt = count($tt);
         $nd = floor($diff / $spd);
@@ -380,7 +380,7 @@ class DateScaleUtils
                         $type = $t[3 * $j + 1];
                         $fs = $t[3 * $j + 2];
                         list($tickPositions,$minTickPositions) = self::GetTicksFromMinMax($aMin, $aMax, $type, $aMinor);
-                        return array($fs,$tickPositions,$minTickPositions,$type);
+                        return [$fs, $tickPositions, $minTickPositions, $type];
                     }
                 }
             }
@@ -420,7 +420,7 @@ class DateScaleUtils
             $tickPositions[$i] = $aData[$n - 1];
         }
 
-        return array(self::$tickPositions,self::$minTickPositions);
+        return [self::$tickPositions, self::$minTickPositions];
     }
 }
 
@@ -447,7 +447,7 @@ class ReadFileData
         if ($rh === false) {
                 return false;
         }
-        $tmp = array();
+        $tmp = [];
         $lineofdata = fgetcsv($rh, 1000, ',');
         while ($lineofdata !== false) {
             $tmp = array_merge($tmp, $lineofdata);
@@ -458,7 +458,7 @@ class ReadFileData
         // Now make sure that all data is numeric. By default
         // all data is read as strings
         $n = count($tmp);
-        $aData = array();
+        $aData = [];
         $cnt = 0;
         for ($i = 0; $i < $n; ++$i) {
             if ($tmp[$i] !== "") {
@@ -488,20 +488,20 @@ class ReadFileData
     // Returns:
     // The number of lines read on success, FALSE on failure
     //----------------------------------------------------------------------------
-    public static function FromCSV2($aFile, &$aData, $aOptions = array())
+    public static function FromCSV2($aFile, &$aData, $aOptions = [])
     {
-        $aDefaults = array(
+        $aDefaults = [
             'separator'     => ',',
             'enclosure'     => chr(34),
             'escape'        => chr(92),
             'readlength'    => 1024,
             'ignore_first'  => false,
             'first_as_key'  => false
-            );
+            ];
 
         $aOptions = array_merge(
             $aDefaults,
-            is_array($aOptions) ? $aOptions : array()
+            is_array($aOptions) ? $aOptions : []
         );
 
         if ($aOptions['first_as_key']) {
@@ -514,7 +514,7 @@ class ReadFileData
             return false;
         }
 
-        $aData  = array();
+        $aData  = [];
         $aLine  = fgetcsv(
             $rh,
             $aOptions['readlength'],
@@ -610,7 +610,7 @@ class ReadFileData
         if ($lines === false) {
                 return false;
         }
-        $mat = array();
+        $mat = [];
         $reg = '/' . $aSepChar . '/';
         foreach ($lines as $line => $datarow) {
                 $row = preg_split($reg, trim($datarow));
@@ -629,8 +629,8 @@ define('__LR_EPSILON', 1.0e-8);
 //=============================================================================
 class LinearRegression
 {
-    private $ix = array();
-    private $iy = array();
+    private $ix = [];
+    private $iy = [];
     private $ib = 0;
     private $ia = 0;
     private $icalculated = false;
@@ -692,7 +692,7 @@ class LinearRegression
         if ($this->icalculated == false) {
                 $this->Calc();
         }
-            return array($this->ia, $this->ib);
+            return [$this->ia, $this->ib];
     }
 
     public function GetStat()
@@ -700,7 +700,7 @@ class LinearRegression
         if ($this->icalculated == false) {
                 $this->Calc();
         }
-            return array($this->iStdErr, $this->iCorr, $this->iDet);
+            return [$this->iStdErr, $this->iCorr, $this->iDet];
     }
 
     public function GetY($aMinX, $aMaxX, $aStep = 1)
@@ -709,13 +709,13 @@ class LinearRegression
                 $this->Calc();
         }
 
-            $yy = array();
+            $yy = [];
             $i = 0;
         for ($x = $aMinX; $x <= $aMaxX; $x += $aStep) {
                 $xx[$i] = $x;
                 $yy[$i++] = $this->ia + $this->ib * $x;
         }
 
-            return array($xx,$yy);
+            return [$xx, $yy];
     }
 }

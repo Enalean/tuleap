@@ -35,7 +35,7 @@ class BacklogItemRepresentationFactory
     {
         $current_user         = UserManager::instance()->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
-        $card_fields          = array();
+        $card_fields          = [];
 
         foreach ($card_fields_semantic->getFields() as $field) {
             if ($field->userCanRead($current_user)) {
@@ -52,10 +52,10 @@ class BacklogItemRepresentationFactory
 
         EventManager::instance()->processEvent(
             AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
-            array(
+            [
                 'tracker'              => $backlog_item->getArtifact()->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic
-            )
+            ]
         );
 
         return $card_fields_semantic;

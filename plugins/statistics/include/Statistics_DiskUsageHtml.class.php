@@ -72,7 +72,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
 
             $colors_for_charts = new ColorsForCharts();
 
-            $titles = array('Service', 'Start size', 'End size', 'Size evolution', 'Rate evolution');
+            $titles = ['Service', 'Start size', 'End size', 'Size evolution', 'Rate evolution'];
 
             echo html_build_list_table_top($titles);
             $totalStartSize = 0;

@@ -117,7 +117,7 @@ class RepositoryResourceUpdaterTest extends TestCase
 
         $access_file = "[/] * = rw";
 
-        $mail_notifications = array();
+        $mail_notifications = [];
 
         $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
 
@@ -158,7 +158,7 @@ class RepositoryResourceUpdaterTest extends TestCase
 
         $access_file = "[/] * = rw\n";
 
-        $mail_notifications = array();
+        $mail_notifications = [];
 
         $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
 
@@ -199,7 +199,7 @@ class RepositoryResourceUpdaterTest extends TestCase
 
         $access_file = "[/] * = rw";
 
-        $mail_notifications = array();
+        $mail_notifications = [];
 
         $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
 
@@ -240,9 +240,9 @@ class RepositoryResourceUpdaterTest extends TestCase
 
         $access_file = "[/] * = rw";
 
-        $mail_notifications = array();
+        $mail_notifications = [];
 
-        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, array(), 1, false);
+        $settings = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications, [], 1, false);
 
         $current_access_file = new AccessFileHistory(
             $this->repository,

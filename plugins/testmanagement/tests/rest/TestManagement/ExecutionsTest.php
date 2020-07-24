@@ -39,10 +39,10 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse(
-            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
                 'status' => $new_value,
                 'time'   => 0
-            ))),
+            ])),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());
@@ -51,10 +51,10 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $updated_execution['status']);
 
         $response2 = $this->getResponse(
-            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
                 'status' => $initial_value,
                 'time'   => 0
-            ))),
+            ])),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -69,20 +69,20 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
             'status' => $new_value,
             'time'   => 0
-        ))));
+        ])));
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $updated_execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($new_value, $updated_execution['status']);
 
-        $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+        $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
             'status' => $initial_value,
             'time'   => 0
-        ))));
+        ])));
     }
 
     public function testPutExecutionsReturnErrorIfWeAddFilesWithoutFileField(): void
@@ -93,11 +93,11 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
             'status' => $new_value,
             'time'   => 0,
             'uploaded_file_ids' => [12]
-        ))));
+        ])));
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -114,13 +114,13 @@ final class ExecutionsTest extends BaseTest
             $this->client->patch(
                 'testmanagement_executions/' . $execution['id'] . '/issues',
                 null,
-                json_encode(array(
+                json_encode([
                     'issue_id' => $issue_id,
-                    'comment'  => array(
+                    'comment'  => [
                         'body'     => 'test result',
                         'format'   => 'html'
-                    )
-                ))
+                    ]
+                ])
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -139,13 +139,13 @@ final class ExecutionsTest extends BaseTest
         $response  = $this->getResponse($this->client->patch(
             'testmanagement_executions/' . $execution['id'] . '/issues',
             null,
-            json_encode(array(
+            json_encode([
                 'issue_id' => $issue_id,
-                'comment'  => array(
+                'comment'  => [
                     'body'     => 'test result',
                     'format'   => 'html'
-                )
-            ))
+                ]
+            ])
         ));
 
         $this->assertEquals($response->getStatusCode(), 200);

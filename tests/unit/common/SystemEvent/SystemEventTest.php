@@ -45,7 +45,7 @@ class SystemEventTest extends TestCase
 
     public function testItProperlyEncodesAndDecodesData(): void
     {
-        $data = array('coin' => 'String that contains :: (the param separator)');
+        $data = ['coin' => 'String that contains :: (the param separator)'];
         $this->assertEquals($data, SystemEvent::decode(SystemEvent::encode($data)));
     }
 

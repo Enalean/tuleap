@@ -26,12 +26,12 @@ class AdminDelegation_Service //phpcs:ignore
 
     public static function getAllServices()
     {
-        return array(self::SHOW_PROJECT_ADMINS, self::SHOW_PROJECTS);
+        return [self::SHOW_PROJECT_ADMINS, self::SHOW_PROJECTS];
     }
 
     public static function getAllLabels()
     {
-        $a = array();
+        $a = [];
         foreach (self::getAllServices() as $service) {
             $a[] = self::getLabel($service);
         }

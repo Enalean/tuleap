@@ -113,7 +113,7 @@ class Tracker_ReferenceManager
             $keyword
         );
 
-        $reference->replaceLink(array($artifact->getId()));
+        $reference->replaceLink([$artifact->getId()]);
 
         return $reference;
     }

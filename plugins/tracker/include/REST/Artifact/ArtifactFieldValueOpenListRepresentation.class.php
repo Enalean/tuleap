@@ -27,13 +27,13 @@ class ArtifactFieldValueOpenListRepresentation extends ArtifactFieldValueReprese
     /**
      * @var mixed
      */
-    public $bind_value_objects = array();
+    public $bind_value_objects = [];
 
     /**
      * @deprecated
      * @var string[]
      */
-    public $bind_value_ids = array();
+    public $bind_value_ids = [];
 
     public $bind_type;
 

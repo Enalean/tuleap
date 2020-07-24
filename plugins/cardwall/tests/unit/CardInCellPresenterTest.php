@@ -47,7 +47,7 @@ final class CardInCellPresenterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $swimline_field_values   = array(100, 221);
+        $swimline_field_values   = [100, 221];
         $swimline_id             = 3;
         $this->artifact          = \Mockery::mock(\Tracker_Artifact::class);
         $this->card_presenter    = \Mockery::mock(\Cardwall_CardPresenter::class)->shouldReceive('getArtifact')->andReturns($this->artifact)->getMock();

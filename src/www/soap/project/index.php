@@ -69,7 +69,7 @@ if ($request->exist('wsdl')) {
 
     $server = new TuleapSOAPServer(
         $uri . '/?wsdl',
-        array('cache_wsdl' => WSDL_CACHE_NONE)
+        ['cache_wsdl' => WSDL_CACHE_NONE]
     );
     $server->setClass(
         $serviceClass,

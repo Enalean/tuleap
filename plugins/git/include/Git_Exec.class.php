@@ -190,7 +190,7 @@ class Git_Exec
 
     private function canRemove($file)
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput('status --porcelain ' . escapeshellarg(realpath($file)), $output);
         return count($output) == 0;
     }
@@ -205,7 +205,7 @@ class Git_Exec
      */
     public function revList($oldrev, $newrev)
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput('rev-list ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
         return $output;
     }
@@ -220,7 +220,7 @@ class Git_Exec
      */
     public function revListSinceStart($refname, $newrev)
     {
-        $output = array();
+        $output = [];
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
         $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --stdin ' . escapeshellarg($newrev), $output);
         return $output;
@@ -239,7 +239,7 @@ class Git_Exec
 
     private function getAllBranches(): array
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput("for-each-ref --format='%(refname)' refs/heads", $output);
         return $output;
     }
@@ -253,7 +253,7 @@ class Git_Exec
      */
     public function catFile($rev)
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput('cat-file -p ' . escapeshellarg($rev), $output);
         return implode(PHP_EOL, $output);
     }
@@ -267,7 +267,7 @@ class Git_Exec
      */
     public function getObjectType($rev)
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput('cat-file -t ' . escapeshellarg($rev), $output);
         if (count($output) == 1) {
             return $output[0];
@@ -277,7 +277,7 @@ class Git_Exec
 
     public function doesObjectExists($rev)
     {
-        $output = array();
+        $output = [];
         try {
             $this->gitCmdWithOutput('cat-file -e ' . escapeshellarg($rev), $output);
         } catch (Git_Command_Exception $exception) {
@@ -356,7 +356,7 @@ class Git_Exec
      */
     public function isThereAnythingToCommit()
     {
-        $output = array();
+        $output = [];
         $this->gitCmdWithOutput('status --porcelain', $output);
         foreach ($output as $status_line) {
             if (preg_match('/^[ADMR]/', $status_line)) {
@@ -394,7 +394,7 @@ class Git_Exec
 
     protected function gitCmd($cmd)
     {
-        $output = array();
+        $output = [];
         return $this->gitCmdWithOutput($cmd, $output);
     }
 

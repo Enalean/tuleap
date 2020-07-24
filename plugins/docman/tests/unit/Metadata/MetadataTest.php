@@ -36,7 +36,7 @@ class MetadataTest extends TestCase
         $srcMd = new Docman_Metadata();
         $srcMd->setId(301);
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $metadataMapping = array();
+        $metadataMapping = [];
 
         // Factory to test
         $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -65,7 +65,7 @@ class MetadataTest extends TestCase
         $srcMd = new Docman_ListMetadata();
         $srcMd->setId(301);
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadataMapping = array();
+        $metadataMapping = [];
 
         // Factory to test
         $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -82,7 +82,7 @@ class MetadataTest extends TestCase
         $srcMdF->shouldReceive('_getMetadataFactory')->with($dstGroupId)->once()->andReturns($dstMdF);
 
         $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $valuesMapping = array(101 => 201, 102 => 202);
+        $valuesMapping = [101 => 201, 102 => 202];
         $dstLoveF->shouldReceive('cloneValues')->once()->andReturns($valuesMapping);
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->with(301)->once()->andReturns($dstLoveF);
 
@@ -99,8 +99,8 @@ class MetadataTest extends TestCase
     {
         // Common params
         $dstGroupId = '321';
-        $metadataMapping = array();
-        $metadataMapping['love'] = array();
+        $metadataMapping = [];
+        $metadataMapping['love'] = [];
 
         $findIter = \Mockery::spy(ArrayIterator::class);
         $findIter->shouldReceive('count')->andReturns(0);
@@ -122,7 +122,7 @@ class MetadataTest extends TestCase
         $srcMdF->shouldReceive('_getMetadataFactory')->once()->andReturns($dstMdF1);
 
         $dstLoveF1 = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF1->shouldReceive('cloneValues')->andReturns(array(101 => 201, 102 => 202));
+        $dstLoveF1->shouldReceive('cloneValues')->andReturns([101 => 201, 102 => 202]);
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->once()->andReturns($dstLoveF1);
 
         // Second call setup
@@ -136,7 +136,7 @@ class MetadataTest extends TestCase
         $srcMdF->shouldReceive('_getMetadataFactory')->once()->andReturns($dstMdF2);
 
         $dstLoveF2 = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF2->shouldReceive('cloneValues')->andReturns(array(103 => 203, 104 => 204));
+        $dstLoveF2->shouldReceive('cloneValues')->andReturns([103 => 203, 104 => 204]);
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->once()->andReturns($dstLoveF2);
 
         // Run test
@@ -155,7 +155,7 @@ class MetadataTest extends TestCase
     {
         // Parameters
         $dstGroupId = '321';
-        $metadataMapping = array();
+        $metadataMapping = [];
 
         // Factory to test
         $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -166,7 +166,7 @@ class MetadataTest extends TestCase
         $srcMd2 = new Docman_Metadata();
         $srcMd2->setId(302);
         $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $srcMdF->shouldReceive('getRealMetadataList')->with(false)->once()->andReturns(array($srcMd1, $srcMd2));
+        $srcMdF->shouldReceive('getRealMetadataList')->with(false)->once()->andReturns([$srcMd1, $srcMd2]);
 
         $srcMdF->shouldReceive('_cloneOneMetadata')->times(2);
         $srcMdF->shouldReceive('_cloneOneMetadata')->with($dstGroupId, $srcMd1, $metadataMapping)->ordered();

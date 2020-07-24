@@ -74,9 +74,9 @@ class WikiPluginCached extends WikiPlugin
         global $request;
         //$cacheparams = $GLOBALS['CacheParams'];
 
-        $plugincall = serialize(array(
+        $plugincall = serialize([
             'pluginname' => $this->getName(),
-            'arguments'  => $argarray ));
+            'arguments'  => $argarray ]);
         $id = $cache->generateId($plugincall);
         $plugincall_arg = rawurlencode($plugincall);
         //$plugincall_arg = md5($plugincall); // will not work if plugin has to recreate content and cache is lost
@@ -109,7 +109,7 @@ class WikiPluginCached extends WikiPlugin
         if ($request->getArg("start_debug")) {
             $url .= "&start_debug=1";
         }
-        return array($id, $url);
+        return [$id, $url];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -289,12 +289,12 @@ class WikiPluginCached extends WikiPlugin
         // id is not unique if the same map is produced twice
         $key = substr($id, 0, 8) . substr(microtime(), 0, 6);
         return HTML(
-            HTML::map(array( 'name' => $key ), $map),
-            HTML::img(array(
+            HTML::map(['name' => $key], $map),
+            HTML::img([
                    'src'    => $url,
                    'border' => 0,
                    //  'alt'    => htmlspecialchars($this->getAlt($dbi,$argarray,$request))
-                   'usemap' => '#' . $key ))
+                   'usemap' => '#' . $key ])
         );
     }
 
@@ -316,10 +316,10 @@ class WikiPluginCached extends WikiPlugin
      */
     public function embedImg($url, $dbi, $argarray, $request)
     {
-        return HTML::img(array(
+        return HTML::img([
             'src' => $url,
             'border' => 0,
-            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)) ));
+            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)) ]);
     }
 
     /**
@@ -342,9 +342,9 @@ class WikiPluginCached extends WikiPlugin
     public function embedObject($url, $type, $args = false, $params = false)
     {
         if (! $args) {
-            $args = array();
+            $args = [];
         }
-        $object = HTML::object(array_merge($args, array('src' => $url, 'type' => $type)));
+        $object = HTML::object(array_merge($args, ['src' => $url, 'type' => $type]));
         if ($params) {
             $object->pushContent($params);
         }

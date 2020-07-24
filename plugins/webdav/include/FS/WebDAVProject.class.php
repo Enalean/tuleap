@@ -59,15 +59,15 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     public function getChildren()
     {
-        $children = array();
+        $children = [];
         if ($this->usesFile()) {
             $children[$GLOBALS['Language']->getText('plugin_webdav_common', 'files')] = $this->getWebDAFRS();
         }
 
         $em    = $this->getUtils()->getEventManager();
-        $roots = array();
-        $em->processEvent('webdav_root_for_service', array('project' => $this->getProject(),
-                                                           'roots'    => &$roots));
+        $roots = [];
+        $em->processEvent('webdav_root_for_service', ['project' => $this->getProject(),
+                                                           'roots'    => &$roots]);
         foreach ($roots as $service => $root) {
             if ($service == 'docman') {
                 $docman = new WebDAVDocmanFolder($this->getUser(), $this->getProject(), $root);

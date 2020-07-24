@@ -29,11 +29,11 @@ $request = HTTPRequest::instance();
 if ($request->isPost() && $request->existAndNonEmpty('destination')) {
     $validDestination = new Valid_WhiteList(
         'destination',
-        array('preview', 'comm', 'sf', 'all', 'admin', 'sfadmin', 'devel')
+        ['preview', 'comm', 'sf', 'all', 'admin', 'sfadmin', 'devel']
     );
     $destination      = $request->getValidated('destination', $validDestination);
 
-    $validFormat = new Valid_WhiteList('comment_format', array('html', 'text'));
+    $validFormat = new Valid_WhiteList('comment_format', ['html', 'text']);
     $bodyFormat  = $request->getValidated('comment_format', $validFormat, 'text');
 
     $mailMessage  = '';
@@ -52,11 +52,11 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
             Event::MASSMAIL,
-            array(
+            [
                 'destination' => $destination,
                 'message'     => $mailMessage,
                 'subject'     => $mailSubject
-            )
+            ]
         );
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -75,7 +75,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         $mail->setSubject($mailSubject);
 
         // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
-        $validMails = array();
+        $validMails = [];
         $addresses  = array_filter(
             array_map('trim', preg_split('/[,;]/', $request->get('preview-destination-external')))
         );
@@ -106,10 +106,10 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         $previewDestination = implode(', ', $validMails);
         if (! $previewDestination) {
             $GLOBALS['Response']->sendJSON(
-                array(
+                [
                     'success' => false,
                     'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'no_mails')
-                )
+                ]
             );
             exit;
         }
@@ -117,17 +117,17 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
 
         if ($mail->send()) {
             $GLOBALS['Response']->sendJSON(
-                array(
+                [
                     'success' => true,
                     'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'sending')
-                )
+                ]
             );
         } else {
             $GLOBALS['Response']->sendJSON(
-                array(
+                [
                     'success' => false,
                     'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'no_sending')
-                )
+                ]
             );
         }
     }

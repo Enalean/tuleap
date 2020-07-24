@@ -112,7 +112,7 @@ class FRSReleaseFactory
     {
         $dao = $this->_getFRSReleaseDao();
 
-        $releases = array ();
+        $releases =  [];
         foreach ($dao->searchByPackageId($package_id) as $data_array) {
             $releases[] = $this->getFRSReleaseFromArray($data_array);
         }
@@ -137,7 +137,7 @@ class FRSReleaseFactory
      */
     private function instantiateActivePackagesFromDar($package_id, $group_id, LegacyDataAccessResultInterface $dar, PFUser $user)
     {
-        $releases = array();
+        $releases = [];
         foreach ($dar as $data_array) {
             if ($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())) {
                 $releases[] = $this->getFRSReleaseFromArray($data_array);
@@ -182,7 +182,7 @@ class FRSReleaseFactory
         }
 
         if ($dar && ! $dar->isError()) {
-            $releases = array ();
+            $releases =  [];
             foreach ($dar as $row) {
                 $releases[] = $row;
             }
@@ -255,8 +255,8 @@ class FRSReleaseFactory
             $release = $this->getFRSReleaseFromDb($data_array['release_id']);
             $this->getEventManager()->processEvent(
                 'frs_update_release',
-                array('group_id' => $release->getGroupID(),
-                'item_id'    => $data_array['release_id'])
+                ['group_id' => $release->getGroupID(),
+                'item_id'    => $data_array['release_id']]
             );
             return true;
         }
@@ -270,8 +270,8 @@ class FRSReleaseFactory
             $release = $this->getFRSReleaseFromDb($id);
             $this->getEventManager()->processEvent(
                 'frs_create_release',
-                array('group_id' => $release->getGroupID(),
-                'item_id'    => $id)
+                ['group_id' => $release->getGroupID(),
+                'item_id'    => $id]
             );
             return $id;
         }
@@ -286,8 +286,8 @@ class FRSReleaseFactory
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_release',
-                array('group_id' => $release->getGroupID(),
-                'item_id' => $_id)
+                ['group_id' => $release->getGroupID(),
+                'item_id' => $_id]
             );
             return true;
         }
@@ -407,7 +407,7 @@ class FRSReleaseFactory
             return $pm->userHasPermission(
                 $release_id,
                 FRSRelease::PERM_READ,
-                $user->getUgroups($project->getID(), array())
+                $user->getUgroups($project->getID(), [])
             );
         }
 
@@ -496,7 +496,7 @@ class FRSReleaseFactory
             $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($release->getPackageID());
 
             // To
-            $array_emails = array ();
+            $array_emails =  [];
             foreach ($result as $res) {
                 $user = $user_manager->getUserById($res['user_id']);
                 $user_can_read = $this->userCanRead(
@@ -532,7 +532,7 @@ class FRSReleaseFactory
         $subject = ' ' . $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'file_rel_notice_subject',
-            array(ForgeConfig::get('sys_name'), $release->getProject()->getPublicName(), $package->getName())
+            [ForgeConfig::get('sys_name'), $release->getProject()->getPublicName(), $package->getName()]
         );
 
         $body_text    = $this->getEmailBody($release, $package);
@@ -579,16 +579,16 @@ class FRSReleaseFactory
         $fileUrl  = $server_url . "/file/showfiles.php?group_id=" . $package->getGroupID() . "&release_id=" . $release->getReleaseID();
         $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=" . $package->getPackageID() . "&group_id=" . $package->getGroupID();
 
-        $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
+        $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', [$release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl]);
 
         if ($release->getNotes() != '') {
-            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', array($release->getNotes()));
+            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', [$release->getNotes()]);
         }
         if ($release->getChanges() != '') {
-            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_changes', array($release->getChanges()));
+            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_changes', [$release->getChanges()]);
         }
 
-        $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array($notifUrl));
+        $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', [$notifUrl]);
 
         return $body;
     }

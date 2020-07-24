@@ -168,7 +168,7 @@ class Chart
     public function __call($method, $args)
     {
         try {
-            $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
+            $result = call_user_func_array([$this->jpgraph_instance, $method], $args);
         } catch (\Exception $exc) {
             $error_message = sprintf(
                 _('JpGraph error for graph "%s": %s'),

@@ -114,13 +114,13 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
             return;
         }
 
-        $build_parameters = array(
+        $build_parameters = [
             self::BUILD_PARAMETER_USER                => $changeset->getSubmittedBy(),
             self::BUILD_PARAMETER_PROJECT_ID          => $changeset->getArtifact()->getTracker()->getProject()->getID(),
             self::BUILD_PARAMETER_ARTIFACT_ID         => $changeset->getArtifact()->getId(),
             self::BUILD_PARAMETER_TRACKER_ID          => $changeset->getArtifact()->getTracker()->getId(),
             self::BUILD_PARAMETER_TRIGGER_FIELD_VALUE => $this->getTransition()->getFieldValueTo()->getLabel(),
-        );
+        ];
 
         try {
             $this->ci_client->launchJobBuild($this->job_url, $build_parameters);

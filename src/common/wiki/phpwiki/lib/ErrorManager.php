@@ -78,10 +78,10 @@ class ErrorManager
      */
     public function __construct()
     {
-        $this->_handlers = array();
+        $this->_handlers = [];
         $this->_fatal_handler = false;
         $this->_postpone_mask = 0;
-        $this->_postponed_errors = array();
+        $this->_postponed_errors = [];
 
         set_error_handler('ErrorManager_errorHandler');
     }
@@ -158,9 +158,9 @@ class ErrorManager
         }
         $class = $worst_err->getHtmlClass();
         $html = HTML::div(
-            array('style' => 'border: none', 'class' => $class),
+            ['style' => 'border: none', 'class' => $class],
             HTML::h4(
-                array('class' => 'errors'),
+                ['class' => 'errors'],
                 "PHP " . $worst_err->getDescription()
             )
         );
@@ -525,7 +525,7 @@ class PhpError
             );
         }
 
-        $html = HTML::div(array('class' => $this->getHtmlClass()), HTML::p($msg));
+        $html = HTML::div(['class' => $this->getHtmlClass()], HTML::p($msg));
         // The class is now used for the div container.
         // $html = HTML::div(HTML::p($msg));
         if ($lines) {
@@ -599,7 +599,7 @@ class PhpWikiError extends PhpError
     public function _getDetail()
     {
         return HTML::div(
-            array('class' => $this->getHtmlClass()),
+            ['class' => $this->getHtmlClass()],
             HTML::p($this->getDescription() . ": $this->errstr")
         );
     }
@@ -667,7 +667,7 @@ class PhpErrorOnce extends PhpError
         if (is_string($this->errstr)) {
             $lines = explode("\n", $this->errstr);
         } elseif (is_object($this->errstr)) {
-            $lines = array($this->errstr->asXML());
+            $lines = [$this->errstr->asXML()];
         }
         $errtype = (DEBUG & _DEBUG_VERBOSE) ? sprintf("%s[%d]", $this->getDescription(), $this->errno)
                                             : sprintf("%s", $this->getDescription());
@@ -680,7 +680,7 @@ class PhpErrorOnce extends PhpError
             $count > 1 ? sprintf(" (...repeated %d times)", $count) : ""
         );
         $html = HTML::div(
-            array('class' => $this->getHtmlClass()),
+            ['class' => $this->getHtmlClass()],
             HTML::p($msg)
         );
         if ($lines) {

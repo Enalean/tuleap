@@ -52,13 +52,13 @@ class Tracker_Workflow_Trigger_FieldValue
      */
     public function fetchFormattedForJson()
     {
-        return array(
+        return [
             'tracker_name' => $this->getField()->getTracker()->getName(),
             'field_id' => $this->getField()->getId(),
             'field_label' => $this->getField()->getLabel(),
             'field_value_id' => $this->getValue()->getId(),
             'field_value_label' => $this->getValue()->getLabel(),
-        );
+        ];
     }
 
     /**
@@ -68,9 +68,9 @@ class Tracker_Workflow_Trigger_FieldValue
      */
     public function getFieldData()
     {
-        return array(
+        return [
             $this->getField()->getId() => $this->getValue()->getId()
-        );
+        ];
     }
 
     /**
@@ -81,7 +81,7 @@ class Tracker_Workflow_Trigger_FieldValue
     public function isSetForArtifact(Tracker_Artifact $artifact)
     {
         $artifact_value = $artifact->getValue($this->getField());
-        if ($artifact_value && $artifact_value->getValue() == array($this->getValue()->getId())) {
+        if ($artifact_value && $artifact_value->getValue() == [$this->getValue()->getId()]) {
             return true;
         }
         return false;

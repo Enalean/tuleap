@@ -69,27 +69,27 @@ class PermissionsManagerSavePermissionsPlatformForRegularProjectPublicTest exten
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
+        $this->savePermissions([ProjectUGroup::ANONYMOUS]);
     }
 
     public function testItSavesRegisteredWhenSelectedAuthenticated()
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
+        $this->savePermissions([ProjectUGroup::AUTHENTICATED]);
     }
 
     public function testItSavesRegisteredWhenSelectedRegistered()
     {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
-        $this->savePermissions(array(ProjectUGroup::REGISTERED));
+        $this->savePermissions([ProjectUGroup::REGISTERED]);
     }
 
     public function testItSavesProjectMembersWhenSelectedProjectMembers()
     {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS]);
     }
 }

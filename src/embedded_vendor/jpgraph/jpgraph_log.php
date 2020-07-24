@@ -129,7 +129,7 @@ class LogScale extends LinearScale
 class LogTicks extends Ticks
 {
     private $label_logtype = LOGLABELS_MAGNITUDE;
-    private $ticklabels_pos = array();
+    private $ticklabels_pos = [];
     //---------------
     // CONSTRUCTOR
     public function __construct()

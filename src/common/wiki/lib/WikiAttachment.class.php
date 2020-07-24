@@ -107,7 +107,7 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function getAttachmentIterator($gid = null)
     {
-        $waArray = array();
+        $waArray = [];
         if ($gid !== null) {
             $gid = (int) $gid;
         } else {
@@ -162,7 +162,7 @@ class WikiAttachment /* implements UGroupPermission */
 
         $i = 0;
         $j = 0; // count viewable attch for offset
-        $waArray = array();
+        $waArray = [];
         $stop = false;
         while (($row = $dar->getRow()) && ! $stop) {
             if ($max !== null && $i >= $max) {
@@ -207,7 +207,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function setFilename($name = "")
     {
         if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', array($name)), E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', [$name]), E_USER_ERROR);
         }
 
         $this->filename = $name;

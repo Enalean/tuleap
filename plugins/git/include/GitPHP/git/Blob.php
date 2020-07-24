@@ -63,7 +63,7 @@ class Blob extends FilesystemObject
      *
      * @access protected
      */
-    protected $history = array();
+    protected $history = [];
 
     /**
      * blame
@@ -72,7 +72,7 @@ class Blob extends FilesystemObject
      *
      * @access protected
      */
-    protected $blame = array();
+    protected $blame = [];
 
     /**
      * blameRead
@@ -411,7 +411,7 @@ class Blob extends FilesystemObject
 
         $exe = new GitExe($this->GetProject());
 
-        $args = array();
+        $args = [];
         $args[] = '-s';
         $args[] = '-l';
         $args[] = '--root';

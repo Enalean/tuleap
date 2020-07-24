@@ -37,7 +37,7 @@ function generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn
     }
     if (($atn) && (strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn) != "art") && (strtolower($atn) != "artifact")) {
-            $feed .= urlencode($Language->getText('tracker_gotoid', 'art_is_a', array($art_name,$atn)));
+            $feed .= urlencode($Language->getText('tracker_gotoid', 'art_is_a', [$art_name, $atn]));
         }
     }
 

@@ -38,7 +38,7 @@ class Tracker_Permission_PermissionRetrieveAssignee
                 return $assignee->getValue();
             }
         }
-        return array();
+        return [];
     }
 
     /**
@@ -48,7 +48,7 @@ class Tracker_Permission_PermissionRetrieveAssignee
      */
     public function getAssignees(Tracker_Artifact $artifact)
     {
-        $user_collection = array();
+        $user_collection = [];
         foreach ($this->getAssigneeIds($artifact) as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
             if ($user) {

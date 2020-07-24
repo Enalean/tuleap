@@ -82,10 +82,10 @@ class CleanUnused
             $database_name = $this->mediawiki_dao->getMediawikiDatabaseName($project);
             $this->purgeOneProject(
                 $project,
-                array(
+                [
                     'project_id'    => $project_id,
                     'database_name' => $database_name,
-                ),
+                ],
                 false
             );
         }

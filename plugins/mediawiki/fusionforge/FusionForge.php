@@ -193,8 +193,8 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
                     // perfluous and conflicts with an accesskey (Ctrl-E) often
                     // used for editing in Safari.
             if (
-                in_array($action, array( 'edit', 'submit'))
-                && in_array($key, array('edit', 'watch', 'unwatch'))
+                in_array($action, ['edit', 'submit'])
+                && in_array($key, ['edit', 'watch', 'unwatch'])
             ) {
                 echo $skin->tooltip("ca-$key");
             } else {
@@ -266,11 +266,11 @@ echo htmlspecialchars($item['class']) ?>"
         <?php	}
 
      // Generate additional footer links
-        $footerlinks = array(
+        $footerlinks = [
         'lastmod', 'viewcount', 'numberofwatchingusers', 'credits', 'copyright',
         'privacy', 'about', 'disclaimer', 'tagline',
-        );
-        $validFooterLinks = array();
+        ];
+        $validFooterLinks = [];
         foreach ($footerlinks as $aLink) {
             if (isset($this->data[$aLink]) && $this->data[$aLink]) {
                 $validFooterLinks[] = $aLink;
@@ -364,7 +364,7 @@ echo htmlspecialchars($item['class']) ?>"
                     echo htmlspecialchars($feed['href']) ?>" rel="alternate" type="application/<?php echo $key ?>+xml" class="feedlink"<?php echo $this->skin->tooltipAndAccesskey('feed-' . $key) ?>><?php echo htmlspecialchars($feed['text'])?></a>&nbsp;
             <?php } // phpcs:ignore Squiz.WhiteSpace.ScopeClosingBrace.Indent ?></li><?php
         }
-        foreach (array('contributions', 'log', 'blockip', 'emailuser', 'upload', 'specialpages') as $special) {
+        foreach (['contributions', 'log', 'blockip', 'emailuser', 'upload', 'specialpages'] as $special) {
             if ($this->data['nav_urls'][$special]) {
                 ?><li id="t-<?php echo $special ?>"><a href="<?php echo htmlspecialchars($this->data['nav_urls'][$special]['href'])
 ?>"<?php echo $this->skin->tooltipAndAccesskey('t-' . $special) ?>><?php $this->msg($special) ?></a></li>
@@ -383,8 +383,8 @@ echo htmlspecialchars($item['class']) ?>"
                 <li id="t-ispermalink"<?php echo $this->skin->tooltip('t-ispermalink') ?>><?php $this->msg('permalink') ?></li><?php
         }
 
-        wfRunHooks('FusionForgeTemplateToolboxEnd', array(&$this));
-        wfRunHooks('SkinTemplateToolboxEnd', array(&$this));
+        wfRunHooks('FusionForgeTemplateToolboxEnd', [&$this]);
+        wfRunHooks('SkinTemplateToolboxEnd', [&$this]);
         ?>
             </ul>
         </div>

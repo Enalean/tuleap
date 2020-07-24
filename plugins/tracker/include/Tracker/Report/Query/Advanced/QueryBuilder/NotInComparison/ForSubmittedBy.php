@@ -46,7 +46,7 @@ class ForSubmittedBy implements ListReadOnlyConditionBuilder
 
     private function getUsersIdByUserNames($values)
     {
-        $users_id = array();
+        $users_id = [];
         foreach ($values as $value) {
             $users_id[] = $this->user_manager->getUserByUserName($value)->getId();
         }

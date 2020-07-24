@@ -35,7 +35,7 @@ class PaginatedWikiPagesFactory
     /** @return PaginatedWikiPages */
     public function getPaginatedUserPages(PFUser $user, $project_id, $limit, $offset, $pagename)
     {
-        $pages = array();
+        $pages = [];
 
         if ($pagename !== '') {
             $row_pages = $this->dao->searchPaginatedUserWikiPagesByPagename(

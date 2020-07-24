@@ -111,7 +111,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         ?ProjectDao $dao = null
     ) {
         $this->_dao                   = $dao;
-        $this->_cached_projects       = array();
+        $this->_cached_projects       = [];
         $this->project_history_dao    = $project_history_dao;
         $this->project_access_checker = $project_access_checker;
     }
@@ -256,7 +256,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     public function getProjectsByStatus($status)
     {
-        $projects = array();
+        $projects = [];
         $dao = new ProjectDao(CodendiDataAccess::instance());
         foreach ($dao->searchByStatus($status) as $row) {
             $projects[$row['group_id']] = $this->getAndCacheProject($row);
@@ -290,7 +290,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getAllPrivateProjects()
     {
-        $private_projects = array();
+        $private_projects = [];
         foreach ($this->_getDao()->searchByPublicStatus(false) as $row) {
             $private_projects[] = $this->getAndCacheProject($row);
         }
@@ -302,7 +302,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getAllPendingProjects()
     {
-        $pending_projects = array();
+        $pending_projects = [];
         foreach ($this->_getDao()->searchByStatus(Project::STATUS_PENDING) as $row) {
             $pending_projects[] = $this->createProjectInstance($row);
         }
@@ -328,7 +328,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         if ($user === null) {
             return [];
         }
-        $projects = array();
+        $projects = [];
         $dao = new ProjectDao(CodendiDataAccess::instance());
         $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate, $offset);
         $nbFound = $dao->foundRows();
@@ -350,7 +350,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getProjectFromAutocompleter($name)
     {
-        $matches = array();
+        $matches = [];
         $dao = new ProjectDao(CodendiDataAccess::instance());
         if (preg_match('/^(.*) \((.*)\)$/', $name, $matches)) {
             // Autocompleter "normal" form: Public Name (unix_name); {
@@ -421,7 +421,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         if ($this->activateWithoutNotifications($project)) {
             if (! send_new_project_email($project)) {
-                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName() . " - " . $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))));
+                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName() . " - " . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]));
             }
             return true;
         }
@@ -438,7 +438,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $this->project_history_dao->groupAddHistory('approved', 'x', $project->getId());
 
             $em = $this->getEventManager();
-            $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
+            $em->processEvent('approve_pending_project', ['group_id' => $project->getId()]);
 
             $this->launchWebhooksProjectCreated($project);
 
@@ -505,11 +505,11 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $event_manager = EventManager::instance();
             $event_manager->processEvent(
                 Event::RENAME_PROJECT,
-                array(
+                [
                     'project'     => $project,
                     'success'     => &$success,
                     'new_name'    => $new_name,
-                )
+                ]
             );
 
             return $success;
@@ -574,15 +574,15 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         }
 
         $this->project_history_dao->groupAddHistory('access', $access_level, $project_id);
-        $this->getEventManager()->processEvent('project_is_private', array(
+        $this->getEventManager()->processEvent('project_is_private', [
             'group_id'           => $project_id,
             'project_is_private' => $is_private,
-        ));
-        $this->getEventManager()->processEvent(Event::PROJECT_ACCESS_CHANGE, array(
+        ]);
+        $this->getEventManager()->processEvent(Event::PROJECT_ACCESS_CHANGE, [
             'project_id'         => $project_id,
             'access'             => $access_level,
             'old_access'         => $old_access,
-        ));
+        ]);
 
         $this->getFrsPermissionsCreator()->updateProjectAccess($project, $old_access, $access_level);
         if ($is_private) {
@@ -903,7 +903,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         return $this->_getDao()
             ->searchAllActiveProjectsForUser($user->getId())
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+            ->instanciateWith([$this, 'getProjectFromDbRow']);
     }
 
     private function instantiateProjectsForUser(LegacyDataAccessResultInterface $projects_results, PFUser $user)
@@ -981,7 +981,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     private function getPaginatedProjects(LegacyDataAccessResultInterface $result, PFUser $user, $total_size)
     {
-        $projects = array();
+        $projects = [];
         foreach ($result as $row) {
             $project = $this->getProjectFromDbRow($row);
             try {
@@ -1009,10 +1009,10 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $result        = $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
 
         if ($result) {
-            $event_manager->processEvent(Event::PROJECT_SET_PARENT_PROJECT, array(
+            $event_manager->processEvent(Event::PROJECT_SET_PARENT_PROJECT, [
                 'group_id'  => $group_id,
                 'parent_id' => $parent_group_id
-            ));
+            ]);
         }
 
         return $result;
@@ -1028,9 +1028,9 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $result        = $this->getHierarchyManager()->removeParentProject($group_id);
 
         if ($result) {
-            $event_manager->processEvent(Event::PROJECT_UNSET_PARENT_PROJECT, array(
+            $event_manager->processEvent(Event::PROJECT_UNSET_PARENT_PROJECT, [
                 'group_id'  => $group_id
-            ));
+            ]);
         }
 
         return $result;
@@ -1051,7 +1051,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getAllParentsProjects($group_id)
     {
-        $projects   = array();
+        $projects   = [];
         $parent_ids = $this->getHierarchyManager()->getAllParents($group_id);
 
         foreach ($parent_ids as $parent_id) {
@@ -1107,10 +1107,10 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         $dar = $this->_getDao()->getProjectMembers($project_id);
         if (! $dar) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         while ($row = $dar->getRow()) {
             $result[$row['user_id']] = $row;
         }

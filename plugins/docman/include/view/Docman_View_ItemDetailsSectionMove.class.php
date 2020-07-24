@@ -41,13 +41,13 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content .= '<form action="' . $this->url . '" method="POST">';
 
         $parents_tree = new Docman_View_ParentsTree($this->_controller);
-        $content .= $parents_tree->fetch(array(
+        $content .= $parents_tree->fetch([
             'docman_icons' => $this->params['docman_icons'],
             'current'      => $this->item->getParentId(),
             'hierarchy'    => $this->params['hierarchy'],
             'input_name'   => 'id',
-            'excludes'     => array($this->item->getId())
-        ));
+            'excludes'     => [$this->item->getId()]
+        ]);
         $content .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
         $content .=  '<br />';
 
@@ -66,6 +66,6 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
     }
     /* protected */ public function _getJSDocmanParameters()
     {
-        return array('action' => 'move');
+        return ['action' => 'move'];
     }
 }

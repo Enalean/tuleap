@@ -27,7 +27,7 @@ class URL
     */
     /* static */ public function parse($url)
     {
-        $components = array();
+        $components = [];
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return $components;
     }
@@ -141,12 +141,12 @@ class URL
 
         EventManager::instance()->processEvent(
             Event::GET_PROJECTID_FROM_URL,
-            array(
+            [
                 'url'         => $req_uri,
                 'project_id'  => &$group_id,
                 'project_dao' => $this->getProjectDao(),
                 'request'     => new Codendi_Request($_REQUEST)
-            )
+            ]
         );
 
         if (isset($group_id) && $group_id) {

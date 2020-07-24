@@ -49,7 +49,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItDoesNotAcceptInvalidFromHeader(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -69,7 +69,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItDoesNotAcceptInvalidToHeader(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -91,7 +91,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItFindsUserAndTrackerToHeader(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -116,7 +116,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItFindsUserAndTrackerCcHeader(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -141,7 +141,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItFindsUserAndTrackerMultipleUsers(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
             $this->tracker_factory,
@@ -166,7 +166,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     {
         $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -190,7 +190,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     {
         $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -214,7 +214,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     {
         $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -259,7 +259,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItRejectsMailWithMultipleUsers(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class), \Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class), \Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -281,7 +281,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItRejectsUnknownTracker(): void
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -303,7 +303,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
     public function testItRejectsUnknownArtifact(): void
     {
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker_Artifact::class));
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,

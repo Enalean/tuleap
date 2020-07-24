@@ -33,7 +33,7 @@ class Docman_EmbeddedFile extends Docman_File
         parent::__construct($data);
     }
 
-    public function accept($visitor, $params = array())
+    public function accept($visitor, $params = [])
     {
         return $visitor->visitEmbeddedFile($this, $params);
     }

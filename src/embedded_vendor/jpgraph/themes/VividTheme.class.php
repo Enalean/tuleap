@@ -11,7 +11,7 @@ class VividTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#FFFB11',
             '#005EBC',
             '#9AEB67',
@@ -24,7 +24,7 @@ class VividTheme extends Theme
             '#2E97E0',
             '#02927F',
             '#FF005A',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

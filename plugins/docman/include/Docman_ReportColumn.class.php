@@ -76,13 +76,13 @@ class Docman_ReportColumn
         }
 
         // URL
-        $toggleParam = array();
+        $toggleParam = [];
         $sortParam = $this->getSortParameter();
         if ($sortParam !== null) {
             $toggleParam[$sortParam] = $toggleValue;
         }
 
-        $url = $view->_buildSearchUrl($viewParams, array($sortParam => $toggleValue));
+        $url = $view->_buildSearchUrl($viewParams, [$sortParam => $toggleValue]);
         $title = dgettext('tuleap-docman', 'Click on title to toggle table sort');
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -110,7 +110,7 @@ class Docman_ReportColumn
         $mdHtml = null;
         $md = $item->getMetadataFromLabel($this->md->getLabel());
         if ($md !== null) {
-            $mdHtml = Docman_MetadataHtmlFactory::getFromMetadata($md, array());
+            $mdHtml = Docman_MetadataHtmlFactory::getFromMetadata($md, []);
         }
         return $mdHtml;
     }
@@ -162,7 +162,7 @@ class Docman_ReportColumnLocation extends Docman_ReportColumn
         $hp = Codendi_HTMLPurifier::instance();
         $pathTitle = $item->getPathTitle();
         $pathId    = $item->getPathId();
-        $pathUrl   = array();
+        $pathUrl   = [];
         foreach ($pathTitle as $key => $title) {
             $id  = $pathId[$key];
 

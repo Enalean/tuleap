@@ -187,11 +187,11 @@ class CSVBuilder
         // Let plugins add their own data
         $this->event_manager->processEvent(
             'plugin_statistics_service_usage',
-            array(
+            [
                 'csv_exporter' => $this->services_usage_formatter,
                 'start_date'   => $start_date,
                 'end_date'     => $end_date
-            )
+            ]
         );
 
         return $this->services_usage_formatter->exportCSV();

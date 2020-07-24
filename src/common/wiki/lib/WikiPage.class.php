@@ -121,7 +121,7 @@ class WikiPage
     public function getMetadata()
     {
         if ($this->isEmpty()) {
-            return array('mtime' => time());
+            return ['mtime' => time()];
         }
 
         $current_revision_metadata = $this->wrapper->getRequest()->getPage($this->pagename)
@@ -129,12 +129,12 @@ class WikiPage
 
         $this->convertAuthorIdToUserId($current_revision_metadata);
 
-        $content = array(
+        $content = [
             'content' => $this->getLastVersionContent()
-        );
-        $summary = array(
+        ];
+        $summary = [
             'summary' => $this->getSummaryForCurrentRevision()
-        );
+        ];
 
         return $current_revision_metadata + $content + $summary;
     }
@@ -289,11 +289,11 @@ class WikiPage
         $eM = EventManager::instance();
         $eM->processEvent(
             'isWikiPageReferenced',
-            array(
+            [
                 'referenced' => &$referenced,
                 'wiki_page'  => $this->pagename,
                 'group_id'   => self::$gid
-            )
+            ]
         );
 
         return $referenced;
@@ -304,11 +304,11 @@ class WikiPage
         if ($this->referenced == true) {
             $userCanAccess = false;
             $eM = EventManager::instance();
-            $eM->processEvent('userCanAccessWikiDocument', array(
+            $eM->processEvent('userCanAccessWikiDocument', [
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
                             'group_id' => self::$gid
-                            ));
+                            ]);
             if (! $userCanAccess) {
                 return false;
             }
@@ -424,7 +424,7 @@ class WikiPage
             $admin_pages_db_escaped[] = '"' . db_es($admin_page) . '"';
         }
 
-        $allPages = array();
+        $allPages = [];
 
         $res = db_query(' SELECT pagename'
                         . ' FROM wiki_page, wiki_nonempty'
@@ -449,7 +449,7 @@ class WikiPage
             $default_pages_db_escaped[] = '"' . db_es($default_page) . '"';
         }
 
-        $allPages = array();
+        $allPages = [];
 
         $res = db_query(' SELECT pagename'
                         . ' FROM wiki_page, wiki_nonempty'
@@ -474,7 +474,7 @@ class WikiPage
             $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
         }
 
-        $allPages = array();
+        $allPages = [];
 
         $res = db_query(' SELECT pagename'
                         . ' FROM wiki_page, wiki_nonempty'
@@ -492,7 +492,7 @@ class WikiPage
     {
         $this->setGid($project_id);
 
-        $indexable_pages = array();
+        $indexable_pages = [];
         $this->getIndexablePageFromAllUserPages($indexable_pages);
         $this->getIndexablePageFromDefaultAndAdminPages($indexable_pages);
 
@@ -535,8 +535,7 @@ class WikiPage
    */
     public static function getDefaultPages()
     {
-        return array
-            ( // Plugin documentation pages
+        return [ // Plugin documentation pages
              "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
              ,"CalendarListPlugin","CommentPlugin","CreatePagePlugin"
              ,"CreateTocPlugin","EditMetaDataPlugin","FrameIncludePlugin"
@@ -605,7 +604,7 @@ class WikiPage
              ,"ProjectSummary","RecentVisitors","ReleaseNotes","SystemInfoPlugin"
              ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin"
 
-             );
+             ];
     }
 
   /**
@@ -616,7 +615,7 @@ class WikiPage
    */
     public static function getAdminPages()
     {
-        return array(
+        return [
             "HomePage" ,"PhpWikiAdministration","WikiAdminSelect"
             ,"PhpWikiAdministration/Remove"
             ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
@@ -627,6 +626,6 @@ class WikiPage
             ,"AdministrationDePhpWiki/Remplacer"
             ,"AdministrationDePhpWiki/Renommer", "AdministrationDePhpWiki/Droits"
             ,"BacÀSable",
-        );
+        ];
     }
 }

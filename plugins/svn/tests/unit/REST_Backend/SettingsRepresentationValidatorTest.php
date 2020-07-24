@@ -40,16 +40,16 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = array('test@example.com');
-        $notification_representation_01->users  = array();
+        $notification_representation_01->emails = ['test@example.com'];
+        $notification_representation_01->users  = [];
 
         $notification_representation_02         = new NotificationRepresentation();
         $notification_representation_02->path   = "/tags";
-        $notification_representation_02->emails = array('user@example.com');
-        $notification_representation_02->users  = array();
+        $notification_representation_02->emails = ['user@example.com'];
+        $notification_representation_02->users  = [];
 
         $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
 
         $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
         $this->validator->validateForPOSTRepresentation($settings);
@@ -59,16 +59,16 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = array('test@example.com');
-        $notification_representation_01->users  = array();
+        $notification_representation_01->emails = ['test@example.com'];
+        $notification_representation_01->users  = [];
 
         $notification_representation_02         = new NotificationRepresentation();
         $notification_representation_02->path   = "/trunks";
-        $notification_representation_02->emails = array('user@example.com');
-        $notification_representation_02->users  = array();
+        $notification_representation_02->emails = ['user@example.com'];
+        $notification_representation_02->users  = [];
 
         $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
 
         $this->addToAssertionCount(1);
 
@@ -104,11 +104,11 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = array();
-        $notification_representation_01->users  = array();
+        $notification_representation_01->emails = [];
+        $notification_representation_01->users  = [];
 
         $settings                      = new SettingsPOSTRepresentation();
-        $settings->email_notifications = array($notification_representation_01);
+        $settings->email_notifications = [$notification_representation_01];
 
         $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
         $this->validator->validateForPOSTRepresentation($settings);
@@ -118,10 +118,10 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01 = new NotificationRepresentation();
         $notification_representation_01->path = "/tags";
-        $notification_representation_01->emails = array('test@example.com', 'test1@example.com', 'test@example.com');
+        $notification_representation_01->emails = ['test@example.com', 'test1@example.com', 'test@example.com'];
 
         $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = array($notification_representation_01);
+        $settings->email_notifications = [$notification_representation_01];
 
         $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
         $this->validator->validateForPOSTRepresentation($settings);
@@ -131,14 +131,14 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01 = new NotificationRepresentation();
         $notification_representation_01->path = "/tags";
-        $notification_representation_01->emails = array('test@example.com');
+        $notification_representation_01->emails = ['test@example.com'];
 
         $notification_representation_02 = new NotificationRepresentation();
         $notification_representation_02->path = "/trunks";
-        $notification_representation_02->emails = array('test@example.com');
+        $notification_representation_02->emails = ['test@example.com'];
 
         $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
 
         $this->addToAssertionCount(1);
 
@@ -149,13 +149,13 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = array('test@example.com', 'test1@example.com', 'test@example.com');
+        $notification_representation_01->emails = ['test@example.com', 'test1@example.com', 'test@example.com'];
 
         $settings                      = new SettingsPUTRepresentation();
-        $settings->email_notifications = array($notification_representation_01);
+        $settings->email_notifications = [$notification_representation_01];
         $settings->access_file         = "";
-        $settings->immutable_tags      = array();
-        $settings->commit_rules        = array();
+        $settings->immutable_tags      = [];
+        $settings->commit_rules        = [];
 
         $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
         $this->validator->validateForPUTRepresentation($settings);
@@ -165,17 +165,17 @@ class SettingsRepresentationValidatorTest extends TestCase
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = array('test@example.com');
+        $notification_representation_01->emails = ['test@example.com'];
 
         $notification_representation_02         = new NotificationRepresentation();
         $notification_representation_02->path   = "/trunks";
-        $notification_representation_02->emails = array('test@example.com');
+        $notification_representation_02->emails = ['test@example.com'];
 
         $settings                      = new SettingsPUTRepresentation();
-        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
         $settings->access_file         = "";
-        $settings->immutable_tags      = array();
-        $settings->commit_rules        = array();
+        $settings->immutable_tags      = [];
+        $settings->commit_rules        = [];
 
         $this->addToAssertionCount(1);
 

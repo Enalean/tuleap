@@ -60,7 +60,7 @@ class DelegationController
                     'ugroup_membership_management_updated',
                     (int) $has_membership_management,
                     $ugroup->getProjectId(),
-                    array($ugroup->getName())
+                    [$ugroup->getName()]
                 );
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,

@@ -29,7 +29,7 @@ class LinePlot extends Plot
     protected $step_style = false;
     protected $center = false;
     protected $line_style = 1; // Default to solid
-    protected $filledAreas = array(); // array of arrays(with min,max,col,filled in them)
+    protected $filledAreas = []; // array of arrays(with min,max,col,filled in them)
     public $barcenter = false;  // When we mix line and bar. Should we center the line in the bar.
     protected $fillFromMin = false;
     protected $fillFromMax = false;
@@ -116,7 +116,7 @@ class LinePlot extends Plot
                     $this->legendcsimwintarget
                 );
             } elseif ($this->fillgrad) {
-                $color = array($this->fillgrad_fromcolor,$this->fillgrad_tocolor);
+                $color = [$this->fillgrad_fromcolor, $this->fillgrad_tocolor];
                 // In order to differentiate between gradients and cooors specified as an RGB triple
                 $graph->legend->Add(
                     $this->legend,
@@ -149,7 +149,7 @@ class LinePlot extends Plot
             $aMin = $aMax;
             $aMax = $tmp;
         }
-        $this->filledAreas[] = array($aMin,$aMax,$aColor,$aFilled,$aBorder);
+        $this->filledAreas[] = [$aMin, $aMax, $aColor, $aFilled, $aBorder];
     }
 
     // Gets called before any axis are stroked
@@ -447,7 +447,7 @@ class LinePlot extends Plot
                     $img->Polygon($cord);
                 }
 
-                $areaCoords = array();
+                $areaCoords = [];
             }
         }
 
@@ -549,7 +549,7 @@ class AccLinePlot extends Plot
             $ymax[$i] = $y;
         }
         $ymax = max($ymax);
-        return array($xmax,$ymax);
+        return [$xmax, $ymax];
     }
 
     public function Min()
@@ -577,7 +577,7 @@ class AccLinePlot extends Plot
             $ymin[$i] = $y;
         }
         $ymin = Min($ysetmin, Min($ymin));
-        return array($xmin,$ymin);
+        return [$xmin, $ymin];
     }
 
     // Gets called before any axis are stroked

@@ -78,7 +78,7 @@ class ReferencesImporter
 
     private function getReferenceKeyword($reference)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^([a-zA-Z]*)/', $reference, $matches)) {
             return $matches[1];
         } else {

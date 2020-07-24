@@ -41,7 +41,7 @@ class PlanningPermissionsManager
     public function savePlanningPermissionForUgroups($planning_id, $group_id, $permission, $ugroup_ids)
     {
         if (empty($ugroup_ids)) {
-            $ugroup_ids = array();
+            $ugroup_ids = [];
         }
 
         /** @psalm-suppress DeprecatedFunction */

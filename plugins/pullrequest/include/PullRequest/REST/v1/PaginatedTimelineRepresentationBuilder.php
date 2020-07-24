@@ -50,7 +50,7 @@ class PaginatedTimelineRepresentationBuilder
     public function getPaginatedTimelineRepresentation(PullRequest $pull_request, $project_id, $limit, $offset)
     {
         $paginated_events        = $this->timeline_factory->getPaginatedTimelineByPullRequestId($pull_request, $limit, $offset);
-        $timeline_representation = array();
+        $timeline_representation = [];
 
         foreach ($paginated_events->getEvents() as $event) {
             $timeline_representation[] = $this->buildEventRepresentation($event, $project_id);

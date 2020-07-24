@@ -30,7 +30,7 @@ class PermissionsCache
     /**
      * @var bool[][]
      */
-    private static $can_view_cache = array();
+    private static $can_view_cache = [];
 
     public static function userCanView(
         Tracker_Artifact $artifact,

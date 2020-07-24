@@ -65,7 +65,7 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($user_01);
         $this->user_manager->shouldReceive('getUserById')->with(102)->andReturns($user_02);
 
-        $this->formelement_factory->shouldReceive('getUsedFileFields')->andReturns(array());
+        $this->formelement_factory->shouldReceive('getUsedFileFields')->andReturns([]);
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -97,30 +97,30 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $value_07 = new Tracker_Artifact_ChangesetValue_Text(7, $changeset_04, $text_field_02, true, 'value_07', 'text');
 
         $value_dao = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
-        $value_dao->shouldReceive('searchById')->andReturns(array());
+        $value_dao->shouldReceive('searchById')->andReturns([]);
 
         $changeset_01->shouldReceive('getId')->andReturns(10001);
         $changeset_01->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_01->shouldReceive('getSubmittedOn')->andReturns($timestamp_01);
-        $changeset_01->shouldReceive('getValues')->andReturns(array($value_01, $value_02));
+        $changeset_01->shouldReceive('getValues')->andReturns([$value_01, $value_02]);
         $changeset_01->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $changeset_02->shouldReceive('getId')->andReturns(10002);
         $changeset_02->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_02->shouldReceive('getSubmittedOn')->andReturns($timestamp_02);
-        $changeset_02->shouldReceive('getValues')->andReturns(array($value_03, $value_04));
+        $changeset_02->shouldReceive('getValues')->andReturns([$value_03, $value_04]);
         $changeset_02->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $changeset_03->shouldReceive('getId')->andReturns(10003);
         $changeset_03->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_03->shouldReceive('getSubmittedOn')->andReturns($timestamp_03);
-        $changeset_03->shouldReceive('getValues')->andReturns(array($value_05, $value_06));
+        $changeset_03->shouldReceive('getValues')->andReturns([$value_05, $value_06]);
         $changeset_03->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $changeset_04->shouldReceive('getId')->andReturns(10004);
         $changeset_04->shouldReceive('getSubmittedBy')->andReturns(102);
         $changeset_04->shouldReceive('getSubmittedOn')->andReturns($timestamp_04);
-        $changeset_04->shouldReceive('getValues')->andReturns(array($value_07));
+        $changeset_04->shouldReceive('getValues')->andReturns([$value_07]);
         $changeset_04->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $artifact_01 = $this->buildArtifact(101, $tracker, [$changeset_01, $changeset_02]);
@@ -185,10 +185,10 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $changeset_04->shouldReceive('getComment')->andReturns($comment_04);
 
         $rng_validator    = new XML_RNGValidator();
-        $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->with(101)->andReturns(array(
+        $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->with(101)->andReturns([
             $artifact_01,
             $artifact_02
-        ))->getMock();
+        ])->getMock();
         $can_bypass_threshold = true;
 
         $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));

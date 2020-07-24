@@ -59,57 +59,57 @@ class UGroupLiteralizerTest extends TestCase
     public function testItIsProjectMember(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
-        $userProjects = array(
-                array('group_id' => 101, 'unix_group_name' => 'gpig1')
-        );
+        $userProjects = [
+                ['group_id' => 101, 'unix_group_name' => 'gpig1']
+        ];
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(false);
         $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
 
-        $this->assertUserGroupsForUser(array('site_active','gpig1_project_members'));
+        $this->assertUserGroupsForUser(['site_active', 'gpig1_project_members']);
     }
 
     public function testItIsProjectAdmin(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
-        $userProjects = array(
-                array('group_id' => 102, 'unix_group_name' => 'gpig2')
-        );
+        $userProjects = [
+                ['group_id' => 102, 'unix_group_name' => 'gpig2']
+        ];
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(true);
         $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
 
-        $this->assertUserGroupsForUser(array('site_active','gpig2_project_members', 'gpig2_project_admin'));
+        $this->assertUserGroupsForUser(['site_active', 'gpig2_project_members', 'gpig2_project_admin']);
     }
 
     public function testItIsMemberOfAStaticUgroup(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
-        $this->user->shouldReceive('getProjects')->andReturns(array());
+        $this->user->shouldReceive('getProjects')->andReturns([]);
         $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 304)));
+        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 304]));
 
-        $this->assertUserGroupsForUser(array('site_active','ug_304'));
+        $this->assertUserGroupsForUser(['site_active', 'ug_304']);
     }
 
     public function testItIsRestricted(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('R');
-        $this->user->shouldReceive('getProjects')->andReturns(array());
+        $this->user->shouldReceive('getProjects')->andReturns([]);
         $this->user->shouldReceive('isMember')->andReturns(false);
         $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
 
-        $this->assertUserGroupsForUser(array('site_restricted'));
+        $this->assertUserGroupsForUser(['site_restricted']);
     }
 
     public function testItIsNeitherRestrictedNorActive(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('Not exists');
-        $this->user->shouldReceive('getProjects')->andReturns(array());
+        $this->user->shouldReceive('getProjects')->andReturns([]);
         $this->user->shouldReceive('isMember')->andReturns(false);
         $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::emptyDar());
 
-        $this->assertUserGroupsForUser(array());
+        $this->assertUserGroupsForUser([]);
     }
 
     private function assertUserGroupsForUser(array $expected): void
@@ -120,15 +120,15 @@ class UGroupLiteralizerTest extends TestCase
 
     public function testItCanTransformAnArrayWithUGroupMembersConstantIntoString(): void
     {
-        $ugroup_ids = array(ProjectUGroup::PROJECT_MEMBERS);
-        $expected   = array('@gpig_project_members');
+        $ugroup_ids = [ProjectUGroup::PROJECT_MEMBERS];
+        $expected   = ['@gpig_project_members'];
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
 
     public function testItDoesntIncludeTwiceProjectMemberIfSiteActive(): void
     {
-        $ugroup_ids = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS);
-        $expected   = array('@site_active', '@gpig_project_members');
+        $ugroup_ids = [ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS];
+        $expected   = ['@site_active', '@gpig_project_members'];
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
 
@@ -144,7 +144,7 @@ class UGroupLiteralizerTest extends TestCase
     public function testItCanReturnUgroupIdsFromAnItemAndItsPermissionTypes(): void
     {
         $object_id = 100;
-        $expected  = array(ProjectUGroup::PROJECT_MEMBERS);
+        $expected  = [ProjectUGroup::PROJECT_MEMBERS];
         $project   = \Mockery::spy(\Project::class);
         $permissions_manager = \Mockery::spy(\PermissionsManager::class);
         $permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($project, $object_id, self::PERMISSIONS_TYPE)->andReturns($expected);
@@ -157,12 +157,12 @@ class UGroupLiteralizerTest extends TestCase
     public function testItReturnsOnlyProjectUserUgroups(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
-        $user_projects = array(
-            array('group_id' => 102, 'unix_group_name' => 'gpig2')
-        );
-        $user_groups = array(
-            array('ugroup_id' => 105)
-        );
+        $user_projects = [
+            ['group_id' => 102, 'unix_group_name' => 'gpig2']
+        ];
+        $user_groups = [
+            ['ugroup_id' => 105]
+        ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);
         $this->user->shouldReceive('isMember')->andReturns(true);
         $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);
@@ -178,12 +178,12 @@ class UGroupLiteralizerTest extends TestCase
     public function testItReturnsOnlyProjectUserUgroupsIds(): void
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
-        $user_projects = array(
-            array('group_id' => 102, 'unix_group_name' => 'gpig2')
-        );
-        $user_groups = array(
-            array('ugroup_id' => 105)
-        );
+        $user_projects = [
+            ['group_id' => 102, 'unix_group_name' => 'gpig2']
+        ];
+        $user_groups = [
+            ['ugroup_id' => 105]
+        ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);
         $this->user->shouldReceive('isMember')->andReturns(true);
         $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);

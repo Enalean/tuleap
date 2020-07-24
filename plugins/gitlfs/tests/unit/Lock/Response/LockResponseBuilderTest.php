@@ -83,7 +83,7 @@ class LockResponseBuilderTest extends TestCase
             1547662695
         );
 
-        $locks = array($lock_1, $lock_2);
+        $locks = [$lock_1, $lock_2];
 
         $response            = $this->lock_response_builder->buildSuccessfulLockList($locks);
         $serialized_response = json_decode(json_encode($response));
@@ -125,8 +125,8 @@ class LockResponseBuilderTest extends TestCase
             1547662695
         );
 
-        $ours   = array($our_lock);
-        $theirs = array($their_lock);
+        $ours   = [$our_lock];
+        $theirs = [$their_lock];
 
         $response            = $this->lock_response_builder->buildSuccessfulLockVerify($ours, $theirs);
         $serialized_response = json_decode(json_encode($response));

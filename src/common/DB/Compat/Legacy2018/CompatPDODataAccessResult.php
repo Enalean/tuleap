@@ -153,7 +153,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
         }
 
         if ($this->instance_callback) {
-            return call_user_func_array($this->instance_callback, array($row));
+            return call_user_func_array($this->instance_callback, [$row]);
         }
 
         return $row;

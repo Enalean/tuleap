@@ -192,7 +192,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
             echo '<H3>' . $Language->getText('tracker_include_type', 'manage') . '</H3>';
             echo $Language->getText('tracker_include_type', 'admin_or_del') . '<p>';
 
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('tracker_include_report', 'id');
             $title_arr[] = $Language->getText('tracker_import_admin', 'tracker');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
@@ -279,18 +279,18 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
     public function displayPermissionsGeneralMenu()
     {
         $this->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type', 'manage_permissions_title'));
-        $permissions = array(
-                             array(
+        $permissions = [
+                             [
                                    'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=tracker',
                                    'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_tracker_permissions'),
                                    'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_tracker_permissions')
-                                   ),
-                             array(
+                                   ],
+                             [
                                    'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=fields',
                                    'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_fields_tracker_permissions'),
                                    'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_fields_tracker_permissions')
-                                   )
-                             );
+                                   ]
+                             ];
         $this->_displayAdminMenu($permissions);
     }
 
@@ -404,28 +404,28 @@ EOS;
         if ($group_first) {
             //We reorganize the associative array
             $tablo = $ugroups_permissions;
-            $ugroups_permissions = array();
+            $ugroups_permissions = [];
             foreach ($tablo as $key_field => $value_field) {
                 foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
                     if (! isset($ugroups_permissions[$key_ugroup])) {
-                        $ugroups_permissions[$key_ugroup] = array(
+                        $ugroups_permissions[$key_ugroup] = [
                                                                   'values'              => $value_ugroup['ugroup'],
-                                                                  'related_parts'       => array(),
+                                                                  'related_parts'       => [],
                                                                   'tracker_permissions' => $value_ugroup['tracker_permissions']
-                                                                  );
+                                                                  ];
                     }
-                    $ugroups_permissions[$key_ugroup]['related_parts'][$key_field] = array(
+                    $ugroups_permissions[$key_ugroup]['related_parts'][$key_field] = [
                                                                                     'values'       => $value_field['field'],
                                                                                     'permissions' => $value_ugroup['permissions']
-                                                                                    );
+                                                                                    ];
                 }
             }
             ksort($ugroups_permissions);
-            $header = array(
+            $header = [
                             $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
                             $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
                             $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
-                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions'));
+                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')];
         } else {
             foreach ($ugroups_permissions as $key_field => $value_field) {
                 $ugroups_permissions[$key_field]['values']        = $ugroups_permissions[$key_field]['field'];
@@ -436,11 +436,11 @@ EOS;
                 ksort($ugroups_permissions[$key_field]['related_parts']);
                 reset($ugroups_permissions[$key_field]['related_parts']);
             }
-            $header = array(
+            $header = [
                            $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
-                           $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions'));
+                           $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')];
         }
         reset($ugroups_permissions);
         $key = key($ugroups_permissions);
@@ -598,9 +598,9 @@ EOS;
         $html .= $GLOBALS['Language']->getText(
             'project_admin_permissions',
             'admins_create_modify_ug',
-            array(
+            [
                 "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
-            )
+            ]
         );
         $html .= "</p>";
         print $html;
@@ -630,9 +630,9 @@ EOS;
         $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'tracker_intro');
 
         //header
-        $html .= html_build_list_table_top(array(
+        $html .= html_build_list_table_top([
                                                  $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')));
+                                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')]);
 
         //body
         ksort($ugroups_permissions);
@@ -680,9 +680,9 @@ EOS;
         $html .= $GLOBALS['Language']->getText(
             'project_admin_permissions',
             'admins_create_modify_ug',
-            array(
+            [
                 "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
-            )
+            ]
         );
         $html .= "</p>";
         print $html;
@@ -719,7 +719,7 @@ EOS;
         $rows = db_numrows($result);
 
         if ($rows > 0) {
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('tracker_include_type', 'user');
             $title_arr[] = $Language->getText('tracker_include_type', 'perm');
             $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
@@ -840,7 +840,7 @@ EOS;
 
         // Show all the fields currently available in the system
         $i = 0;
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_type', 'type');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
@@ -1327,7 +1327,7 @@ EOS;
 
         // Show all the fields currently available in the system
         $i = 0;
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_type', 'fieldset');
@@ -1642,7 +1642,7 @@ EOS;
             return;
         }
 
-        $values = $field->getFieldValues($this->getID(), array('A','P'));
+        $values = $field->getFieldValues($this->getID(), ['A', 'P']);
         $rows = db_numrows($values);
 
         if (! $values || ($rows == 0)) {
@@ -1656,7 +1656,7 @@ EOS;
 
         // Show all the fields currently available in the system
         $i = 0;
-        $title_arr = array();
+        $title_arr = [];
         if ($field->getName() == "severity") {
             $title_arr[] = $Language->getText('tracker_include_report', 'id');
         }
@@ -1719,7 +1719,7 @@ EOS;
 
         // Build HTML ouput for Unused fields
         $iu = 0;
-        $values = $field->getFieldValues($this->getID(), array('H'));
+        $values = $field->getFieldValues($this->getID(), ['H']);
         $html = "";
 
         while ($row = db_fetch_array($values)) {
@@ -1800,7 +1800,7 @@ EOS;
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . $group_artifact_id . '">' . $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' - ' . $Language->getText('tracker_include_type', 'mail_notif') . '</h2>';
         // Build Wachees UI
         $res = $this->getWatchees($user_id);
-        $arr_watchees = array();
+        $arr_watchees = [];
         while ($row_watchee = db_fetch_array($res)) {
             $arr_watchees[] = user_getname($row_watchee['watchee_id']);
         }
@@ -1920,7 +1920,7 @@ EOS;
 		';
 
             $res = $this->getWatchers($user_id);
-            $arr_watchers = array();
+            $arr_watchers = [];
             $watchers = "";
             while ($row_watcher = db_fetch_array($res)) {
                 $watcher_name = user_getname($row_watcher['user_id']);
@@ -2012,7 +2012,7 @@ EOS;
         echo "</table>\n";
 
         $em = EventManager::instance();
-        $em->processEvent('artifact_type_html_display_notification_form', array('at' => $this, 'group_id' => $group_id, 'art_field_fact' => $GLOBALS['art_field_fact']));
+        $em->processEvent('artifact_type_html_display_notification_form', ['at' => $this, 'group_id' => $group_id, 'art_field_fact' => $GLOBALS['art_field_fact']]);
 
         echo '<P align="center"><INPUT type="submit" name="submit" value="' . $Language->getText('tracker_include_artifact', 'submit') . '">
 		</FORM>';
@@ -2046,7 +2046,7 @@ EOS;
 
         if ($field->isSelectBox() || $field->isMultiSelectBox()) {
             echo $Language->getText('tracker_include_type', 'val') . ': ';
-            echo html_build_select_box($field->getFieldValues($this->getID(), array('A','P')), "default_value", $default_value);
+            echo html_build_select_box($field->getFieldValues($this->getID(), ['A', 'P']), "default_value", $default_value);
         } elseif ($field->isDateField()) {
             echo '<input type="radio" name="default_date_type" value="current_date"' . ($default_value == "" ? " checked=\"checked\"" : "") . '>' . $Language->getText('tracker_include_type', 'current_date') . '</input><br />';
             echo '<input type="radio" name="default_date_type" value="selected_date"' . ($default_value != "" ? " checked=\"checked\"" : "") . '>' . $Language->getText('tracker_include_type', 'date_value') . '</input> ';
@@ -2460,7 +2460,7 @@ EOS;
         $result = $this->getCC($change_ids);
 
         if (db_numrows($result) > 0) {
-            $title_arr = array();
+            $title_arr = [];
                         $title_arr[] = $Language->getText('tracker_include_artifact', 'cc_address');
                         $title_arr[] = $Language->getText('tracker_include_type', 'occurrence');
                         $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
@@ -2531,7 +2531,7 @@ EOS;
         $result = $this->getAttachedFiles($change_ids);
 
         if (db_numrows($result) > 0) {
-            $title_arr = array();
+            $title_arr = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'name');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'size_kb');
                     $title_arr[] = $Language->getText('tracker_include_type', 'occurrence');
@@ -2601,7 +2601,7 @@ EOS;
         $out = '';
         // Nobody in the dependencies list -> return now
         if ($rows > 0) {
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('tracker_include_artifact', 'artifact');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'summary');
             $title_arr[] = $Language->getText('tracker_import_admin', 'tracker');
@@ -2757,7 +2757,7 @@ EOS;
 
         // Show all the fields currently available in the system
         $i = 0;
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('tracker_include_type', 'fieldset_name');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_type', 'fields_inside');

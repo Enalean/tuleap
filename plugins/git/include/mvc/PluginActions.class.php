@@ -61,7 +61,7 @@ class PluginActions
     public function process($actionName, $actionParams)
     {
         if ($this->check()) {
-            return call_user_func_array(array($this,$actionName), $actionParams);
+            return call_user_func_array([$this, $actionName], $actionParams);
         }
     }
 }

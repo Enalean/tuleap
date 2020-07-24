@@ -153,11 +153,11 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $data = $this->agiledashboard_xml_importer->toArray($xml, $this->request->get('mapping'));
 
         foreach ($data['plannings'] as $planning) {
-            $request_params = array(
+            $request_params = [
                 'planning'    => $planning,
                 'group_id'    => $this->group_id,
                 'planning_id' => ''
-            );
+            ];
 
             $request = new Codendi_Request($request_params);
 

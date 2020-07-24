@@ -45,11 +45,11 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
 
         $content .= dgettext('tuleap-docman', '<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>') . "\n";
 
-        $content .= html_build_list_table_top(array(dgettext('tuleap-docman', 'Name'),
+        $content .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
                                                     dgettext('tuleap-docman', 'Description'),
                                                     dgettext('tuleap-docman', 'Status'),
                                                     dgettext('tuleap-docman', 'Delete')
-                                                    ));
+                                                    ]);
         $altRowClass = 0;
 
         $mdIter->rewind();
@@ -66,8 +66,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
 
             $nameUrl  = DocmanViewURLBuilder::buildUrl(
                 $defaultUrl,
-                array('action' => 'admin_md_details',
-                'md'     => $md->getLabel())
+                ['action' => 'admin_md_details',
+                'md'     => $md->getLabel()]
             );
             $nameHref = '<a href="' . $nameUrl . '">' . $this->hp->purify($md->getName()) . '</a>';
             $content .= '<td>' . $nameHref . '</td>';
@@ -90,8 +90,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
             if ($canDelete) {
                 $link = DocmanViewURLBuilder::buildUrl(
                     $defaultUrl,
-                    array('action' => 'admin_delete_metadata',
-                    'md' => $md->getLabel())
+                    ['action' => 'admin_delete_metadata',
+                    'md' => $md->getLabel()]
                 );
 
                 $warn  = sprintf(dgettext('tuleap-docman', 'Are you sure you want to delete the property \'%1$s\'?'), $this->hp->purify($md->getName()));

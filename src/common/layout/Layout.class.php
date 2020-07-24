@@ -46,7 +46,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     private $version;
 
     //Define all the icons for this theme
-    public $icons = array('Summary' => 'ic/anvil24.png',
+    public $icons = ['Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
         'Forums' => 'ic/notes.png',
         'Bugs' => 'ic/bug.png',
@@ -59,21 +59,21 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',
         'Trackers' => 'ic/tracker20w.png'
-        );
+        ];
 
     public const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
     /**
      * Background for priorities
      */
-    private $bgpri = array();
+    private $bgpri = [];
 
     /**
      * Store custom css added on the fly
      *
      * @var Array of path to CSS files
      */
-    protected $stylesheets = array();
+    protected $stylesheets = [];
 
     /**
      * Constuctor
@@ -86,7 +86,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         $this->imgroot = $root . '/images/';
 
-        $this->javascript  = array();
+        $this->javascript  = [];
 
         /*
             Set up the priority color array one time only
@@ -104,7 +104,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
-    public function iframe($url, $html_options = array())
+    public function iframe($url, $html_options = [])
     {
         $url_purified = $this->purifier->purify($this->uri_sanitizer->sanitizeForHTMLAttribute($url));
 
@@ -185,7 +185,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                 $html .= '</option>';
             }
         }
-        return array($html, $optgroups);
+        return [$html, $optgroups];
     }
 
     /**
@@ -204,7 +204,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      */
     public function includeJavascriptFile($file)
     {
-        $this->javascript[] = array('file' => $file);
+        $this->javascript[] = ['file' => $file];
         return $this;
     }
 
@@ -222,7 +222,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      */
     public function includeJavascriptSnippet($snippet)
     {
-        $this->javascript[] = array('snippet' => $snippet);
+        $this->javascript[] = ['snippet' => $snippet];
         return $this;
     }
 
@@ -715,9 +715,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     /**
      * @return string
      */
-    protected function getClassnamesForBodyTag($params = array())
+    protected function getClassnamesForBodyTag($params = [])
     {
-        $body_class = isset($params['body_class']) ? $params['body_class'] : array();
+        $body_class = isset($params['body_class']) ? $params['body_class'] : [];
 
         if ($this->getUser()->useLabFeatures()) {
             $body_class[] = 'lab-mode';
@@ -736,8 +736,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
               <html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-        echo $this->displayJavascriptElements(array());
-        echo $this->displayStylesheetElements(array());
+        echo $this->displayJavascriptElements([]);
+        echo $this->displayStylesheetElements([]);
         echo $this->displaySyndicationElements();
         echo '    </head>
                      <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
@@ -801,62 +801,62 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $type_of_search = $request->get('type_of_search');
         $group_id       = $request->get('group_id');
 
-        $search_entries = array();
-        $hidden = array();
+        $search_entries = [];
+        $hidden = [];
 
         if ($group_id) {
-            $hidden[] = array(
+            $hidden[] = [
                 'name'  => 'group_id',
                 'value' => $group_id
-            );
+            ];
 
             if ($request->exist('forum_id')) {
-                $search_entries[] = array(
+                $search_entries[] = [
                     'value'    => 'forums',
                     'selected' => true,
-                );
-                $hidden[] = array(
+                ];
+                $hidden[] = [
                     'name'  => 'forum_id',
                     'value' => $this->purifier->purify($request->get('forum_id'))
-                );
+                ];
             }
             if ($request->exist('atid')) {
-                $search_entries[] = array(
+                $search_entries[] = [
                     'value'    => 'tracker',
                     'selected' => true,
-                );
-                $hidden[] = array(
+                ];
+                $hidden[] = [
                     'name'  => 'atid',
                     'value' => $this->purifier->purify($request->get('atid'))
-                );
+                ];
             }
             if (strpos($_SERVER['REQUEST_URI'], '/wiki/') === 0) {
-                $search_entries[] = array(
+                $search_entries[] = [
                     'value'    => 'wiki',
                     'selected' => true,
-                );
+                ];
             }
         }
 
         if (ForgeConfig::get('sys_use_trove')) {
-            $search_entries[] = array(
+            $search_entries[] = [
                 'value' => 'soft',
                 'selected' => false,
-            );
+            ];
         }
 
-        $search_entries[] = array(
+        $search_entries[] = [
             'value' => 'people',
             'selected' => false,
-        );
+        ];
 
         $em->processEvent(
             Event::LAYOUT_SEARCH_ENTRY,
-            array(
+            [
                 'type_of_search' => $type_of_search,
                 'search_entries' => &$search_entries,
                 'hidden_fields'  => &$hidden,
-            )
+            ]
         );
 
         $selected_entry = $this->getSelectedOption($search_entries);

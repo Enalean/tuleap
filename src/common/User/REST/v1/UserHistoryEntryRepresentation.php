@@ -88,7 +88,7 @@ class UserHistoryEntryRepresentation
         $project_representation = new MinimalProjectRepresentation($entry->getProject());
         $this->project = $project_representation;
 
-        $this->quick_links = array();
+        $this->quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
             $quick_link_representation = new UserHistoryQuickLinkRepresentation();
             $quick_link_representation->build($quick_link);

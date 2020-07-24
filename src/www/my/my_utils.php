@@ -76,7 +76,7 @@ function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
         $hide_now = false;
     }
 
-    return array($hide_now, $count - $old_count, $hide_url);
+    return [$hide_now, $count - $old_count, $hide_url];
 }
 
 function my_hide($svc, $db_item_id, $item_id, $hide)
@@ -122,7 +122,7 @@ function my_format_as_flag2($assignee, $submitter)
 function my_item_count($total, $new)
 {
     global $Language;
-    return '[' . $total . ($new ? ", <b>" . $Language->getText('my_utils', 'new_items', array($new)) . "</b>]" : ']');
+    return '[' . $total . ($new ? ", <b>" . $Language->getText('my_utils', 'new_items', [$new]) . "</b>]" : ']');
 }
 
 function my_check_bookmark_URL($bookmark_url, $redirect_url)

@@ -121,23 +121,23 @@ class SOAPServerProjectServicesUsageTest extends TestCase
         $service_usage2->shouldReceive('getShortName')->andReturns('tracker');
         $service_usage2->shouldReceive('isUsed')->andReturns(false);
 
-        $services_usages = array(
+        $services_usages = [
             $service_usage1,
             $service_usage2
-        );
+        ];
 
-        $expected = array(
-            0 => array (
+        $expected = [
+            0 =>  [
                 'id'         => 170,
                 'short_name' => 'git',
                 'is_used'    => 1
-            ),
-            1 => array (
+            ],
+            1 =>  [
                 'id'         => 171,
                 'short_name' => 'tracker',
                 'is_used'    => 0
-            )
-        );
+            ]
+        ];
 
         $this->service_usage_factory->shouldReceive('getAllServicesUsage')->with($this->project)->andReturns($services_usages);
         $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);

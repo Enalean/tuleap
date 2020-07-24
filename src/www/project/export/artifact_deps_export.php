@@ -53,11 +53,11 @@ $sql = 'SELECT ad.artifact_id,' .
 'WHERE ad.artifact_id = a.artifact_id AND a.group_artifact_id = ' . $atid . ' AND ' .
 'ad.is_dependent_on_artifact_id <> 100';
 
-$col_list = array('artifact_id','is_dependent_on_artifact_id');
-$lbl_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
-         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art'));
-$dsc_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'art_id_desc'),
-         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art'));
+$col_list = ['artifact_id', 'is_dependent_on_artifact_id'];
+$lbl_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
+         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art')];
+$dsc_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'art_id_desc'),
+         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art')];
 
 $eol = "\n";
 
@@ -84,7 +84,7 @@ if ($export == 'artifact_deps') {
         }
     } else {
         assert(isset($pg_title));
-        project_admin_header(array('title' => $pg_title), 'data');
+        project_admin_header(['title' => $pg_title], 'data');
 
         echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'art_deps_export') . '</h3>';
         if ($result) {
@@ -93,7 +93,7 @@ if ($export == 'artifact_deps') {
             echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'db_access_err', ForgeConfig::get('sys_name'));
             echo '<br>' . db_error();
         }
-        site_project_footer(array());
+        site_project_footer([]);
     }
 } elseif ($export == "artifact_deps_format") {
     echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'deps_export_format') . '</h3>';

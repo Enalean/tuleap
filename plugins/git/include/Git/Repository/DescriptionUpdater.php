@@ -85,12 +85,12 @@ class DescriptionUpdater
         $project_id    = $repository->getProjectId();
         $repository_id = $repository->getId();
 
-        $query_parts = array(
+        $query_parts = [
             'action'   => 'repo_management',
             'group_id' => $project_id,
             'repo_id'  => $repository_id,
             'pane'     => 'settings'
-        );
+        ];
 
         $url = "/plugins/git/?" . http_build_query($query_parts);
 

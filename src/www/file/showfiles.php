@@ -63,7 +63,7 @@ $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
 
-$packages        = array();
+$packages        = [];
 $num_packages    = 0;
 $show_release_id = $request->getValidated('show_release_id', 'uint', false);
 
@@ -115,7 +115,7 @@ foreach ($res as $package) {
                 }
             }
 
-            $packages[$package->getPackageID()] = array('package' => $package, 'is_collapsed' => $is_collapsed);
+            $packages[$package->getPackageID()] = ['package' => $package, 'is_collapsed' => $is_collapsed];
             $num_packages++;
         }
     }
@@ -124,12 +124,12 @@ foreach ($res as $package) {
 $hp = Codendi_HTMLPurifier::instance();
 
 
-$params = array (
+$params =  [
     'title' => $Language->getText(
         'file_showfiles',
         'file_p_for',
         $hp->purify($project_manager->getProject($group_id)->getPublicName())
-), 'pv' => $pv);
+    ), 'pv' => $pv];
 $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
 
 if ($num_packages < 1) {
@@ -161,7 +161,7 @@ $proj_stats['packages'] = $num_packages;
 $pm   = PermissionsManager::instance();
 $fmmf = new FileModuleMonitorFactory();
 
-$javascript_packages_array = array();
+$javascript_packages_array = [];
 
 if (! $pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id=' . $group_id . '" data-test="create-new-package">[' . $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') . ']</a></p>';
@@ -208,7 +208,7 @@ foreach ($packages as $package_id => $package_for_display) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id=' . $group_id . '&amp;id=' .
                     $package_id . '" data-test="update-package" title="' .
                     $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  . '">';
-                $html .= '       ' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
+                $html .= '       ' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML), 'title' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)]);
                 $html .= '</a>';
             }
             $html .= ' &nbsp; ';
@@ -221,7 +221,7 @@ foreach ($packages as $package_id => $package_for_display) {
             $html .= '</a>';
             if ($permission_manager->isAdmin($project, $user)) {
                 $html .= '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id=' . $group_id . '&amp;id=' . $package_id . '" title="' .  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  . '" onclick="return confirm(\'' .  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), CODENDI_PURIFIER_CONVERT_HTML)  . '\');" data-test="remove-package">'
-                            . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title' =>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) . '</a>';
+                            . $GLOBALS['HTML']->getImage('ic/trash.png', ['alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML), 'title' =>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)]) . '</a>';
             }
         }
         $html .= '</legend>';
@@ -241,7 +241,7 @@ foreach ($packages as $package_id => $package_for_display) {
         }
         $proj_stats['releases'] += $num_releases;
 
-        $javascript_releases_array = array();
+        $javascript_releases_array = [];
         $package_class_collapsed   = $package_for_display['is_collapsed'] ? 'frs_collapsed' : '';
         $html .= '<div class="' . $package_class_collapsed . '" id="p_' . $package_id . '">';
         if (! $pv && $permission_manager->isAdmin($project, $user)) {
@@ -300,7 +300,7 @@ foreach ($packages as $package_id => $package_for_display) {
                             title="' .  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  . '"
                             data-test="edit-release"
                             >'
-                            . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) . '</a>';
+                            . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML), 'title' => $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)]) . '</a>';
                         }
                         $html .= '&nbsp;';
                         $html .= buildReleaseNotesLink($package_release);
@@ -319,7 +319,7 @@ foreach ($packages as $package_id => $package_for_display) {
                         data-test="release-delete-button"
                         onclick="return confirm(\'' .  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), CODENDI_PURIFIER_JS_QUOTE) . '\');"
                         >'
-                        . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title' =>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) . '</a>';
+                        . $GLOBALS['HTML']->getImage('ic/trash.png', ['alt' => $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML), 'title' =>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)]) . '</a>';
                     }
                     $html .= '</TD></TR>' . "\n";
                     $html .= '</table>';
@@ -337,7 +337,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     }
                     $proj_stats['files'] += $num_files;
 
-                    $javascript_files_array  = array();
+                    $javascript_files_array  = [];
                     $release_class_collapsed = $is_release_collapsed && ! $pv ? 'frs_collapsed' : '';
                     if ((! $res_file && ! $uploaded_links) || ($num_files < 1 && count($uploaded_links) < 1)) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_' . $package_id . 'r_' . $package_release->getReleaseID() . 'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
@@ -360,7 +360,7 @@ foreach ($packages as $package_id => $package_for_display) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_' . $package_id . 'r_' . $package_release->getReleaseID() . 'f_0">';
 
                         if ($res_file) {
-                            $title_arr = array();
+                            $title_arr = [];
                             $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
                             $title_arr[] = $Language->getText('file_showfiles', 'size');
                             $title_arr[] = $Language->getText('file_showfiles', 'd_l');

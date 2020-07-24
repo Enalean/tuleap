@@ -74,13 +74,13 @@ class ServiceSvn extends Service
 
     private function displaySVNHeader(HTTPRequest $request, $title, $body_class): void
     {
-        $params = array(
-            'body_class' => array($body_class)
-        );
+        $params = [
+            'body_class' => [$body_class]
+        ];
         $GLOBALS['HTML']->includeJavascriptSnippet(
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
-        $toolbar = array();
+        $toolbar = [];
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
             $toolbar[] = [
                 'title'     => "Administration",
@@ -90,18 +90,18 @@ class ServiceSvn extends Service
             ];
         }
         $title       = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
-        $breadcrumbs = array(
-            array(
+        $breadcrumbs = [
+            [
                 'title' => "Repository List",
                 'url'   => SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId()
-            )
-        );
+            ]
+        ];
         $this->displayHeader($title, $breadcrumbs, $toolbar, $params);
     }
 
     public static function getDefaultServiceData($project_id)
     {
-        return array(
+        return [
             'label'        => 'plugin_svn:service_lbl_key',
             'description'  => 'plugin_svn:service_desc_key',
             'link'         => "/plugins/svn/?group_id=$project_id",
@@ -111,7 +111,7 @@ class ServiceSvn extends Service
             'location'     => 'master',
             'is_in_iframe' => 0,
             'server_id'    => 0,
-        );
+        ];
     }
 
     public function getInternationalizedName(): string

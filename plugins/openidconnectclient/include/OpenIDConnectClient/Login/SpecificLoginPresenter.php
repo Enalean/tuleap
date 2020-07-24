@@ -46,12 +46,12 @@ class SpecificLoginPresenter
 
     public function help_subject()
     {
-        return $GLOBALS['Language']->getText('account_login', 'help_subject', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('account_login', 'help_subject', [ForgeConfig::get('sys_name')]);
     }
 
     public function account_login_login_with_tuleap()
     {
-        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', [ForgeConfig::get('sys_name')]);
     }
 
     public function login_intro()

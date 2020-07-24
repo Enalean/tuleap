@@ -194,7 +194,7 @@ class UserResource extends AuthenticatedResource
             throw new RestException(400, 'You can only search on "username"');
         }
         $user  = $this->user_manager->getUserByUserName($json_query['username']);
-        $users = array();
+        $users = [];
         if ($user !== null) {
             $users[] = $user;
         }
@@ -225,7 +225,7 @@ class UserResource extends AuthenticatedResource
             self::MAX_LIMIT
         );
 
-        $list_of_user_representation = array();
+        $list_of_user_representation = [];
         foreach ($user_collection->getUsers() as $user) {
             $user_representation = ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
             $list_of_user_representation[] = $user_representation;

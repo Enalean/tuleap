@@ -118,7 +118,7 @@ class EditController
             return;
         }
 
-        $label_ids_to_merge = array();
+        $label_ids_to_merge = [];
         foreach ($other_labels as $row) {
             $label_ids_to_merge[] = $row['id'];
         }

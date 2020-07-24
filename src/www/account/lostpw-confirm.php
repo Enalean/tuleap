@@ -24,7 +24,7 @@
 require_once __DIR__ . '/../include/pre.php';
 
 $event_manager = EventManager::instance();
-$event_manager->processEvent('before_lostpw-confirm', array());
+$event_manager->processEvent('before_lostpw-confirm', []);
 
 $number_generator = new RandomNumberGenerator();
 $confirm_hash     = $number_generator->getNumber();
@@ -53,24 +53,24 @@ if ($reset_token !== null) {
     $message = stripcslashes($Language->getText(
         'account_lostpw-confirm',
         'mail_body',
-        array(ForgeConfig::get('sys_name'),
-              $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
+        [ForgeConfig::get('sys_name'),
+              $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier)]
     ));
 
     $mail = new Codendi_Mail();
     $mail->setTo($user->getEmail(), true);
-    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array(ForgeConfig::get('sys_name'))));
+    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', [ForgeConfig::get('sys_name')]));
     $mail->setBodyText($message);
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail_is_sent = $mail->send();
     if (! $mail_is_sent) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))), CODENDI_PURIFIER_FULL);
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]), CODENDI_PURIFIER_FULL);
     }
 }
 
-site_header(array('title' => $Language->getText('account_lostpw-confirm', 'title')));
+site_header(['title' => $Language->getText('account_lostpw-confirm', 'title')]);
 if ($reset_token === null || $mail_is_sent) {
     echo '<p>' . $Language->getText('account_lostpw-confirm', 'msg_confirm') . '</p>';
 }
 echo '<p><a href="/">[' . $Language->getText('global', 'back_home') . ']</a></p>';
-site_footer(array());
+site_footer([]);

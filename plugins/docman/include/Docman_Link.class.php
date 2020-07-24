@@ -63,7 +63,7 @@ class Docman_Link extends Docman_Document
         return $row;
     }
 
-    public function accept($visitor, $params = array())
+    public function accept($visitor, $params = [])
     {
         return $visitor->visitLink($this, $params);
     }

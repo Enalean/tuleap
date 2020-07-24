@@ -32,8 +32,8 @@ class MailReceivedFromUserExtractorTest extends TestCase
         $list_mails = 'validmail@example.com;avalid+&mail1@example.com,mail_with-authorised.values@example.com';
 
         $mail = new MailReceivedFromUserExtractor($list_mails);
-        $this->assertEquals($mail->getValidAdresses(), array('validmail@example.com', 'avalid+&mail1@example.com', 'mail_with-authorised.values@example.com'));
-        $this->assertEquals($mail->getInvalidAdresses(), array());
+        $this->assertEquals($mail->getValidAdresses(), ['validmail@example.com', 'avalid+&mail1@example.com', 'mail_with-authorised.values@example.com']);
+        $this->assertEquals($mail->getInvalidAdresses(), []);
     }
 
     public function testItVerifyThatMailListIsInvalid(): void
@@ -41,7 +41,7 @@ class MailReceivedFromUserExtractorTest extends TestCase
         $list_mails = 'aninvalidmailexample.com;invalid¤mail@example.com,notvalid';
 
         $mail = new MailReceivedFromUserExtractor($list_mails);
-        $this->assertEquals($mail->getValidAdresses(), array());
-        $this->assertEquals($mail->getInvalidAdresses(), array('aninvalidmailexample.com', 'invalid¤mail@example.com', 'notvalid'));
+        $this->assertEquals($mail->getValidAdresses(), []);
+        $this->assertEquals($mail->getInvalidAdresses(), ['aninvalidmailexample.com', 'invalid¤mail@example.com', 'notvalid']);
     }
 }

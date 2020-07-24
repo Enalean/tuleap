@@ -81,7 +81,7 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
             </formElement>'
         );
 
-        $mapping = array();
+        $mapping = [];
 
         $a_formelement = Mockery::mock(Tracker_FormElement_Field_Date::class);
 
@@ -106,7 +106,7 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
             $this->feedback_collector
         );
 
-        $container_should_load_child = array($a_formelement);
+        $container_should_load_child = [$a_formelement];
         $this->assertEquals($container_should_load_child, $container_fieldset->getFormElements());
     }
 

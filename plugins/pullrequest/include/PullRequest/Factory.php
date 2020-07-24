@@ -119,7 +119,7 @@ class Factory
      */
     public function getInstancesFromRows($rows)
     {
-        $prs = array();
+        $prs = [];
 
         if ($rows) {
             foreach ($rows as $row) {

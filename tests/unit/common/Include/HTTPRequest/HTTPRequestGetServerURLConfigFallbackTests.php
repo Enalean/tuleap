@@ -27,7 +27,7 @@ class HTTPRequestGetServerURLConfigFallbackTests extends HTTPRequestGetServerURL
     {
         parent::setUp();
 
-        $this->request->setTrustedProxies(array('17.18.19.20'));
+        $this->request->setTrustedProxies(['17.18.19.20']);
         ForgeConfig::set('sys_default_domain', 'example.clear.test');
         ForgeConfig::set('sys_https_host', 'example.ssl.test');
     }

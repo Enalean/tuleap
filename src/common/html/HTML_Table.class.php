@@ -25,8 +25,8 @@
 class HTML_Table
 {
     private $id            = '';
-    private $titles        = array();
-    private $table_classes = array();
+    private $titles        = [];
+    private $table_classes = [];
     private $body          = '';
 
     public function __construct()
@@ -73,7 +73,7 @@ class HTML_Table
 
     private function getTableAttributes()
     {
-        $attributes = array();
+        $attributes = [];
         if (count($this->table_classes)) {
             $attributes[] = 'class="' . implode(' ', $this->table_classes) . '"';
         }

@@ -187,7 +187,7 @@ class Tracker_FormElement_View_Admin
         $html = '';
         $html .= '<p>';
         $html .= '<label for="formElement_rank">' . dgettext('tuleap-tracker', 'Rank') . ': <font color="red">*</font></label>';
-        $items = array();
+        $items = [];
         foreach ($this->allUsedElements as $field) {
             $items[] = $field->getRankSelectboxDefinition();
         }
@@ -195,10 +195,10 @@ class Tracker_FormElement_View_Admin
             $this->formElement->id,
             $this->formElement->rank,
             $items,
-            array(
+            [
                 'id'   => 'formElement_rank',
                 'name' => 'formElement_data[rank]'
-            )
+            ]
         );
         $html .= '</p>';
         return $html;
@@ -356,9 +356,9 @@ class Tracker_FormElement_View_Admin
         $html = '';
         $html .= '<p>';
         $html .= '<a href="' . ByFieldController::getUrl($tracker) . '?selected_id=' . $this->formElement->id . '">';
-        $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
+        $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', [
             'style' => 'vertical-align:middle;',
-        ));
+        ]);
         $html .= ' ';
         $html .= dgettext('tuleap-tracker', 'Edit permissions of this field') . '</a>';
         $html .= '</p>';
@@ -371,7 +371,7 @@ class Tracker_FormElement_View_Admin
         $html = '';
         $fields = $this->formElement->getSharedTargets();
         if ($fields) {
-            $trackers = array();
+            $trackers = [];
             foreach ($fields as $field) {
                 $t = $field->getTracker();
                 $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $t->getId() . '&func=admin-formElements">' . $t->getName() . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';

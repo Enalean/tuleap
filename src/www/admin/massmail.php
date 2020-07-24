@@ -43,44 +43,44 @@ $res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_grou
     . "user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
 $count_sfadmin = db_result($res_count, 0, null);
 
-$recipients = array(
-    array(
+$recipients = [
+    [
         'key'      => 'comm',
         'label'    => $Language->getText('admin_massmail', 'to_additional', $count_comm),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_comm),
         'nb_users' => $count_comm
-    ),
-    array(
+    ],
+    [
         'key'      => 'sf',
         'label'    => $Language->getText('admin_massmail', 'to_update', $count_sf),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_sf),
         'nb_users' => $count_sf
-    ),
-    array(
+    ],
+    [
         'key'      => 'devel',
         'label'    => $Language->getText('admin_massmail', 'to_devel', $count_devel),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_devel),
         'nb_users' => $count_devel
-    ),
-    array(
+    ],
+    [
         'key'      => 'admin',
         'label'    => $Language->getText('admin_massmail', 'to_proj_admin', $count_admin),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_admin),
         'nb_users' => $count_admin
-    ),
-    array(
+    ],
+    [
         'key'      => 'sfadmin',
         'label'    => $Language->getText('admin_massmail', 'to_site_admin', $count_sfadmin),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_sfadmin),
         'nb_users' => $count_sfadmin
-    ),
-    array(
+    ],
+    [
         'key'      => 'all',
         'label'    => $Language->getText('admin_massmail', 'to_all', $count_all),
         'warning'  => $Language->getText('admin_massmail', 'warning', $count_all),
         'nb_users' => $count_all
-    )
-);
+    ]
+];
 
 $include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
 

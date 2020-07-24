@@ -84,7 +84,7 @@ class SVN_Svnlook
 
     private function execute($command)
     {
-        $output  = array();
+        $output  = [];
         $ret_val = 1;
         exec("$this->timeout $this->svnlook $command 2>&1", $output, $ret_val);
         if ($ret_val == 0) {

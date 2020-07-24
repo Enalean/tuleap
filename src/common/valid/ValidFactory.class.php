@@ -89,7 +89,7 @@ class Valid_Pv extends Valid
 
     public function validate($value)
     {
-        $this->addRule(new Rule_WhiteList(array(0,1,2)));
+        $this->addRule(new Rule_WhiteList([0, 1, 2]));
         return parent::validate($value);
     }
 }

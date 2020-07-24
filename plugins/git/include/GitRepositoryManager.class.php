@@ -254,7 +254,7 @@ class GitRepositoryManager
         $clone->setParent($repository);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = PathJoinUtil::unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())) . '.git';
+        $path = PathJoinUtil::unixPathJoin([$to_project->getUnixName(), $namespace, $repository->getName()]) . '.git';
         $clone->setPath($path);
         $clone->setScope($scope);
 
@@ -275,7 +275,7 @@ class GitRepositoryManager
                 'perm_granted_for_git_repository',
                 $this->history_value_formatter->formatValueForRepository($clone),
                 $to_project->getID(),
-                array($clone->getName())
+                [$clone->getName()]
             );
 
             $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
@@ -295,7 +295,7 @@ class GitRepositoryManager
         $project_destination               = $forked_repository->getProject();
         $allowed_mirrors_forked_repository = $this->mirror_data_mapper->fetchAllForProject($project_destination);
 
-        $repository_mirrors_ids            = array();
+        $repository_mirrors_ids            = [];
         foreach ($base_repository_mirrors as $mirror) {
             if (in_array($mirror, $allowed_mirrors_forked_repository)) {
                 $repository_mirrors_ids[] = $mirror->id;
@@ -478,7 +478,7 @@ class GitRepositoryManager
      */
     public function getRepositoriesForRestoreByProjectId($project_id)
     {
-        $archived_repositories = array();
+        $archived_repositories = [];
         $retention_period      = ForgeConfig::getInt('sys_file_deletion_delay');
         $deleted_repositories  = $this->repository_factory->getDeletedRepositoriesByProjectId($project_id, $retention_period);
         foreach ($deleted_repositories as $repository) {

@@ -80,10 +80,10 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', $changeset, '*', '*', '*');
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
-        $this->values = array(
+        $this->values = [
             $this->int_changeset_value,
             $this->float_changeset_value
-        );
+        ];
 
         $this->artifact  = \Mockery::spy(\Tracker_Artifact::class);
         $this->changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -154,7 +154,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
     {
         $this->user_xml_exporter->shouldReceive('exportUserByMail')->once();
 
-        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns(array())->getMock();
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns([])->getMock();
         $changeset->shouldReceive('getSubmittedBy')->andReturns(null);
         $changeset->shouldReceive('getEmail')->andReturns('veloc@dino.com');
         $changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
@@ -165,12 +165,12 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
     {
         $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
 
-        $this->values_exporter->shouldReceive('exportChangedFields')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), array(101 => $value))->once();
+        $this->values_exporter->shouldReceive('exportChangedFields')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), [101 => $value])->once();
 
-        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns(array(
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns([
             101 => $value,
             102 => null
-        ))->getMock();
+        ])->getMock();
 
         $changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
 

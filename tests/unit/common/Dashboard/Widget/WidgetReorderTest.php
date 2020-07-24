@@ -68,15 +68,15 @@ class WidgetReorderTest extends TestCase
         $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
         $this->widget_five  = new DashboardWidget(5, 'image', 14, 3, 0, 0);
 
-        $this->line_one_column_one_widgets   = array($this->widget_one, $this->widget_three);
-        $this->line_one_column_two_widgets   = array($this->widget_two, $this->widget_three);
-        $this->line_one_column_three_widgets = array($this->widget_five);
+        $this->line_one_column_one_widgets   = [$this->widget_one, $this->widget_three];
+        $this->line_one_column_two_widgets   = [$this->widget_two, $this->widget_three];
+        $this->line_one_column_three_widgets = [$this->widget_five];
 
-        $this->line_one_columns = array(
+        $this->line_one_columns = [
             new DashboardWidgetColumn(1, 0, $this->line_one_column_one_widgets),
             new DashboardWidgetColumn(2, 1, $this->line_one_column_two_widgets),
             new DashboardWidgetColumn(3, 2, $this->line_one_column_three_widgets)
-        );
+        ];
     }
 
     public function testItReordersWidgetsInSameColumn()
@@ -98,18 +98,18 @@ class WidgetReorderTest extends TestCase
         $remover          = new DashboardWidgetRemoverInList();
         $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
 
-        $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::arrayToDar([
             'id'         => 3,
             'colum_id'   => 1,
             'rank'       => 0,
             'name'       => 'image',
             'content_id' => 12
-        )));
-        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::arrayToDar(array(
+        ]));
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'line_id' => 1,
             'rank'    => 0
-        )));
+        ]));
 
         $dao->shouldReceive('updateColumnIdByWidgetId')->once();
         $dao->shouldReceive('updateWidgetRankByWidgetId')->atLeast()->once();

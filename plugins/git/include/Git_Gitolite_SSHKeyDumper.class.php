@@ -173,7 +173,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
 
     private function getKeyNumber($userbase, $file)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('%^' . $this->getKeyDirPath() . '/' . $userbase . '([0-9]+).pub$%', $file, $matches)) {
             return intval($matches[1]);
         }

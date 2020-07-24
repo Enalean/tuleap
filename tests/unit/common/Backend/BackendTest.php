@@ -144,7 +144,7 @@ final class BackendTest extends TestCase
             'getBackend',
             false
         );
-        $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
+        $b = Backend::instance(Backend::SVN, null, [1, 2, 3]);
         $this->assertEquals($b->a_variable_for_tests, 9);
     }
 
@@ -211,7 +211,7 @@ final class BackendTest extends TestCase
         );
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('does not have setUp');
-        Backend::instance(Backend::SVN, null, array(1, 2, 3));
+        Backend::instance(Backend::SVN, null, [1, 2, 3]);
     }
 
     public function testRecurseDeleteInDir(): void

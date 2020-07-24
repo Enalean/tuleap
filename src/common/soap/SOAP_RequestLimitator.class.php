@@ -50,7 +50,7 @@ class SOAP_RequestLimitator
         $this->timeframe = $timeframe;
         $this->dao       = $dao;
 
-        $this->nbCallToMethod    = array();
+        $this->nbCallToMethod    = [];
     }
 
     /**

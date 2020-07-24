@@ -45,14 +45,14 @@ class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends \PHPUnit\F
         $semantic    = null;
         $type        = AgileDashBoard_Semantic_InitialEffort::NAME;
 
-        $this->parameters = array(
+        $this->parameters = [
             'xml'               => $xml,
             'full_semantic_xml' => $xml,
             'xml_mapping'       => $xml_mapping,
             'tracker'           => $tracker,
             'semantic'          => &$semantic,
             'type'              => $type,
-        );
+        ];
     }
 
     /**

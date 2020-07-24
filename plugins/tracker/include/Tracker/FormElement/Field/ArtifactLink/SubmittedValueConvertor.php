@@ -105,7 +105,7 @@ class SubmittedValueConvertor
         array $submitted_value,
         ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
-        $list_of_artifactlinkinfo = array();
+        $list_of_artifactlinkinfo = [];
         if ($previous_changesetvalue != null) {
             $list_of_artifactlinkinfo = $previous_changesetvalue->getValue();
             $this->removeLinksFromSubmittedValue($list_of_artifactlinkinfo, $submitted_value);
@@ -229,12 +229,12 @@ class SubmittedValueConvertor
     private function extractArrayFromSubmittedValue(array $submitted_value, $key)
     {
         if (! isset($submitted_value[$key])) {
-            return array();
+            return [];
         }
 
         $values = $submitted_value[$key];
         if (! is_array($values)) {
-            return array();
+            return [];
         }
 
         return $values;

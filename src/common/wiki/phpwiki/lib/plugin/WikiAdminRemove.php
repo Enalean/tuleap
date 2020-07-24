@@ -59,7 +59,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    's'     => false,
                      /*
                       * Show only pages which have been 'deleted' this
@@ -79,7 +79,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
                      'max_age' => 31,
                      /* Columns to include in listing */
                      'info'     => 'most',
-            )
+            ]
         );
     }
 
@@ -121,7 +121,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $dbi = $request->getDbh();
         $count = 0;
         foreach ($pages as $name) {
-            $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
+            $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
             if (mayAccessPage('remove', $name)) {
                 $dbi->deletePage($name);
                 $ul->pushContent(HTML::li(fmt("Removed page '%s' successfully.", $name)));
@@ -165,7 +165,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $post_args = $request->getArg('admin_remove');
 
         $next_action = 'select';
-        $pages = array();
+        $pages = [];
         if (
             $p && $request->isPost() &&
             ! empty($post_args['remove']) && empty($post_args['cancel'])
@@ -183,14 +183,14 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
             if ($post_args['action'] == 'select') {
                 $next_action = 'verify';
                 foreach ($p as $name => $c) {
-                    $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
+                    $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
                     $pages[$name] = $c;
                 }
             }
         } elseif ($p && is_array($p) && ! $request->isPost()) { // from WikiAdminSelect
             $next_action = 'verify';
             foreach ($p as $name => $c) {
-                $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
+                $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
                 $pages[$name] = $c;
             }
             $request->setArg('p', false);
@@ -202,9 +202,9 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $pagelist = new PageList_Selectable(
             $args['info'],
             $args['exclude'],
-            array('types' =>
-                                                  array('remove'
-            => new _PageList_Column_remove('remove', _("Remove"))))
+            ['types' =>
+                                                  ['remove'
+            => new _PageList_Column_remove('remove', _("Remove"))]]
         );
         $pagelist->addPageList($pages);
 
@@ -246,17 +246,17 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
         // TODO: quick select by regex javascript?
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('admin_remove')
+                ['admin_remove']
             ),
-            HiddenInputs(array('admin_remove[action]' => $next_action,
-                                             'require_authority_for_post' => WIKIAUTH_ADMIN)),
+            HiddenInputs(['admin_remove[action]' => $next_action,
+                                             'require_authority_for_post' => WIKIAUTH_ADMIN]),
             $buttons
         );
     }
@@ -267,7 +267,7 @@ class _PageList_Column_remove extends _PageList_Column
     public function _getValue($page_handle, &$revision_handle)
     {
         return Button(
-            array('action' => 'remove'),
+            ['action' => 'remove'],
             _("Remove"),
             $page_handle->getName()
         );

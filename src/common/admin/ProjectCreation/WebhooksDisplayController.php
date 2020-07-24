@@ -62,7 +62,7 @@ class WebhooksDisplayController implements DispatchableWithRequest
         $webhook_retriever        = new Retriever($webhook_dao);
         $webhooks                 = $webhook_retriever->getWebhooks();
         $webhook_status_retriever = new StatusRetriever(new WebhookLoggerDao());
-        $webhooks_presenter       = array();
+        $webhooks_presenter       = [];
 
         foreach ($webhooks as $webhook) {
             $webhooks_presenter[] = new WebhookPresenter(

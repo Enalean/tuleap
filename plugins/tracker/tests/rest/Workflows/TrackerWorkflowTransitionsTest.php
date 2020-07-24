@@ -78,11 +78,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode(
-            array(
+            [
                 "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
                 "from_id"    => $available_transition['from_id'] ?: 0,
                 "to_id"      => $available_transition['to_id']
-            )
+            ]
         );
 
         $response = $this->getResponseByName(
@@ -102,11 +102,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $available_transition = $transition_combinations["missing_transitions"][0];
 
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ?: 0,
             "to_id" => $available_transition['to_id']
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -131,11 +131,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $available_transition = $transition_combinations["missing_transitions"][0];
 
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ? $available_transition['from_id'] : 0,
             "to_id" => $available_transition['to_id']
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -151,11 +151,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
     public function testPOSTTrackerWorkflowTransitionsWhenTrackerDoesNotExistReturnsError()
     {
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => 0,
             "from_id" => 0,
             "to_id" => 0
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -171,11 +171,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
     public function testPOSTTrackerWorkflowTransitionsWhenTrackerHasNoWorkflowReturnsError()
     {
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflows_tracker_id,
             "from_id" => 0,
             "to_id" => 0
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -195,11 +195,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $used_transition = $transition_combinations["transitions"][0];
 
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $used_transition['from_id'] ? $used_transition['from_id'] : 0,
             "to_id" => $used_transition['to_id']
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -219,11 +219,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $available_transition = $transition_combinations["missing_transitions"][0];
 
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['from_id'] ? $available_transition['from_id'] : 0,
             "to_id" => 1
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -243,11 +243,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $available_transition = $transition_combinations["missing_transitions"][0];
 
-        $params = json_encode(array(
+        $params = json_encode([
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
             "from_id" => $available_transition['to_id'],
             "to_id" => $available_transition['to_id']
-        ));
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,

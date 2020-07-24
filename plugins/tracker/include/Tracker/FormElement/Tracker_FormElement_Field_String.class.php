@@ -23,23 +23,23 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 {
-    public $default_properties = array(
-        'maxchars'      => array(
+    public $default_properties = [
+        'maxchars'      => [
             'value' => 0,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'size'          => array(
+        ],
+        'size'          => [
             'value' => 30,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'default_value' => array(
+        ],
+        'default_value' => [
             'value' => '',
             'type'  => 'string',
             'size'  => 40,
-        ),
-    );
+        ],
+    ];
 
     protected function getDao(): Tracker_FormElement_Field_StringDao
     {

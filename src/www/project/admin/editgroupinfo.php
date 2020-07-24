@@ -40,7 +40,7 @@ use Tuleap\TroveCat\TroveCatLinkDao;
 
 $group_id = $request->get('group_id');
 
-session_require(array('group' => $group_id,'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 $currentproject                    = new Project($group_id);
 $fields_factory                    = new DescriptionFieldsFactory(new DescriptionFieldsDao());
@@ -89,4 +89,4 @@ $project_details_router = new ProjectDetailsRouter(
 
 $project_details_router->route($request);
 
-project_admin_footer(array());
+project_admin_footer([]);

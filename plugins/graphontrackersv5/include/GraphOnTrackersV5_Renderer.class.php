@@ -95,9 +95,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         if (! $readonly && $this->chart_to_edit) {
             $html .= $this->getAssets()->getHTMLSnippet('dependencies.js');
 
-            $url = '?' . http_build_query(array(
+            $url = '?' . http_build_query([
                                                'report'   => $this->report->id,
-                                               'renderer' => $this->id));
+                                               'renderer' => $this->id]);
             $html .= '<p><a href="' . $url . '">&laquo; ' . $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'return_renderer') . '</a></p>';
             $html .= '<form action="' . $url . '" name="edit_chart_form" method="post">';
             $html .= '<input type="hidden" name="func" VALUE="renderer" />';
@@ -160,11 +160,11 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html .= ' <span class="caret"></span>';
             $html .= '</a>';
             $html .= '<ul class="dropdown-menu pull-right"> ';
-            $url = '?' . http_build_query(array(
+            $url = '?' . http_build_query([
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id,
                                                'func'     => 'renderer',
-                                              ));
+                                              ]);
             $url_add = $url . '&amp;renderer_plugin_graphontrackersv5[add_chart]=';
             foreach ($this->getChartFactory()->getChartFactories() as $factory) {
                 $html .= '<li>';
@@ -230,12 +230,12 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             if (isset($renderer_parameters['add_chart'])) {
                 $this->chart_to_edit = $this->getChartFactory()
                                             ->createChart($this, $renderer_parameters['add_chart']);
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
                     'report' => $this->report->id,
                     'renderer' => $this->id,
                     'func' => 'renderer',
                     'renderer_plugin_graphontrackersv5[edit_chart]' => $this->chart_to_edit->id,
-                )));
+                ]));
             }
 
             if (isset($renderer_parameters['edit_chart']) && ! $current_user->isAnonymous()) {

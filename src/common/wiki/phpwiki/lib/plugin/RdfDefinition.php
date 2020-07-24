@@ -56,9 +56,9 @@ class WikiPlugin_RdfDefinition extends WikiPlugin
     }
     public function getDefaultArguments()
     {
-        return array(
+        return [
                      'pages' => false,        // define affected pageset here?
-                     );
+                     ];
     }
     public function handle_plugin_args_cruft(&$argstr, &$args)
     {

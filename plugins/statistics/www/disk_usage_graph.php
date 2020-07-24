@@ -44,7 +44,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $error = false;
-$feedback = array();
+$feedback = [];
 
 $disk_usage_dao  = new Statistics_DiskUsageDao();
 $svn_log_dao     = new SVN_LogDao();
@@ -69,7 +69,7 @@ switch ($graphType) {
         if ($request->validArray($vServices)) {
             $services = $request->get('services');
         } else {
-            $services = array();
+            $services = [];
         }
         break;
 
@@ -93,7 +93,7 @@ switch ($graphType) {
         if ($request->validArray($vServices)) {
             $services = $request->get('services');
         } else {
-            $services = array();
+            $services = [];
         }
         break;
 
@@ -101,7 +101,7 @@ switch ($graphType) {
 }
 
 
-$groupByDate = array('day', 'week', 'month', 'year');
+$groupByDate = ['day', 'week', 'month', 'year'];
 $vGroupBy = new Valid_WhiteList('group_by', $groupByDate);
 $vGroupBy->required();
 if ($request->valid($vGroupBy)) {
@@ -129,7 +129,7 @@ if ($request->valid($vStartDate)) {
     $endDate = date('Y-m-d');
 }
 
-$vRelative = new Valid_WhiteList('relative', array('true'));
+$vRelative = new Valid_WhiteList('relative', ['true']);
 $vRelative->required();
 if ($request->valid($vRelative)) {
     $relative = true;

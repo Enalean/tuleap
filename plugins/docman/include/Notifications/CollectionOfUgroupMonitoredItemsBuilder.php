@@ -43,16 +43,16 @@ class CollectionOfUgroupMonitoredItemsBuilder
     {
         $ugroup_manager = new UGroupManager(new UGroupDao(), EventManager::instance());
 
-        $monitored_items = array();
+        $monitored_items = [];
         foreach ($this->notifications_manager->getListeningUGroups($item) as $ugroup_id => $docman_item) {
             $ugroup = $ugroup_manager->getById($ugroup_id);
 
-            $ugroup = array(
+            $ugroup = [
                 'ugroup_id'   => $ugroup->getId(),
                 'name'        => $ugroup->getName(),
                 'description' => $ugroup->getDescription(),
                 'group_id'    => $docman_item->getGroupId()
-            );
+            ];
 
             $monitored_items[] = new UgroupMonitoredItem(
                 new UgroupToBeNotifiedPresenter(new ProjectUGroup($ugroup)),

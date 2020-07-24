@@ -28,12 +28,12 @@ class NodeRepresentation extends NodeReferenceRepresentation
     /**
      * @var array
      */
-    public $links = array();
+    public $links = [];
 
     /**
      * @var array
      */
-    public $reverse_links = array();
+    public $reverse_links = [];
 
     public function __construct(array $links, array $reverse_links)
     {

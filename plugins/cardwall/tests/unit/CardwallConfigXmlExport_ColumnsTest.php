@@ -80,8 +80,8 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
 
     public function testItDumpsNoColumnsWhenNoColumnsDefined(): void
     {
-        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array()));
-        $this->cardwall_config->shouldReceive('getMappings')->andReturns(array());
+        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection([]));
+        $this->cardwall_config->shouldReceive('getMappings')->andReturns([]);
 
         $this->xml_exporter->export($this->root);
         $this->assertCount(0, $this->root->cardwall->trackers->tracker->children());
@@ -89,13 +89,13 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
 
     public function testItDumpsColumnsAsDefined(): void
     {
-        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array(
+        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection([
             new Cardwall_Column(112, "Todo", "red"),
             new Cardwall_Column(113, "On going", "fiesta-red"),
             new Cardwall_Column(113, "On going", "rgb(255,255,255)")
-        )));
+        ]));
 
-        $this->cardwall_config->shouldReceive('getMappings')->andReturns(array());
+        $this->cardwall_config->shouldReceive('getMappings')->andReturns([]);
 
         $this->xml_exporter->export($this->root);
         $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
@@ -105,11 +105,11 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
 
     public function testItDumpsColumnsAsDefinedWithMappings(): void
     {
-        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array(
+        $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection([
             new Cardwall_Column(112, "Todo", "red"),
             new Cardwall_Column(113, "On going", "fiesta-red"),
             new Cardwall_Column(113, "On going", "rgb(255,255,255)")
-        )));
+        ]));
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getXMLId')->andReturn('T200');
@@ -123,10 +123,10 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
         $mapping = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMappingFreestyle::class);
         $mapping->shouldReceive('getTracker')->andReturns($tracker);
         $mapping->shouldReceive('getField')->andReturns($field);
-        $mapping->shouldReceive('getValueMappings')->andReturns(array($value_mapping));
+        $mapping->shouldReceive('getValueMappings')->andReturns([$value_mapping]);
         $mapping->shouldReceive('isCustom')->andReturns(true);
 
-        $this->cardwall_config->shouldReceive('getMappings')->andReturns(array($mapping));
+        $this->cardwall_config->shouldReceive('getMappings')->andReturns([$mapping]);
 
         $this->xml_exporter->export($this->root);
 

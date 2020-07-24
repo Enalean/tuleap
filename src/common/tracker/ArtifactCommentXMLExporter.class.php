@@ -26,7 +26,7 @@ class ArtifactCommentXMLExporter
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 
-    private $all_comments = array();
+    private $all_comments = [];
 
     public function __construct(ArtifactXMLNodeHelper $node_helper)
     {
@@ -62,7 +62,7 @@ class ArtifactCommentXMLExporter
 
     public function updateComment(array $row)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^lbl_(?P<history_id>\d+)_comment$/', $row['field_name'], $matches)) {
             $this->updateCommentNode($matches['history_id'], $row);
             return true;

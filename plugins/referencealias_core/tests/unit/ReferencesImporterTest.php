@@ -48,7 +48,7 @@ class ReferencesImporterTest extends TestCase
             </references>
 XML;
         $xml = new \SimpleXMLElement($xml);
-        $created_references = array('package' => array('1' => '1337', '2' => '42'));
+        $created_references = ['package' => ['1' => '1337', '2' => '42']];
 
         $dar = \Mockery::spy(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturns([]);
@@ -67,7 +67,7 @@ XML;
             </references>
 XML;
         $xml = new \SimpleXMLElement($xml);
-        $created_references = array('release' => array('3' => '6778', '4' => '6779'));
+        $created_references = ['release' => ['3' => '6778', '4' => '6779']];
 
         $dar = \Mockery::spy(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturns([]);
@@ -85,7 +85,7 @@ XML;
             </references>
 XML;
         $xml = new \SimpleXMLElement($xml);
-        $created_references = array('package' => array());
+        $created_references = ['package' => []];
 
         $dar = \Mockery::spy(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturns([]);
@@ -103,7 +103,7 @@ XML;
             </references>
 XML;
         $xml = new \SimpleXMLElement($xml);
-        $created_references = array('package' => array('1' => '1337'));
+        $created_references = ['package' => ['1' => '1337']];
 
         $dar = \Mockery::spy(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturns([]);

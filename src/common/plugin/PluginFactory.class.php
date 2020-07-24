@@ -44,7 +44,7 @@ class PluginFactory // phpcs:ignore
     private $plugin_restrictor;
 
     /** @var array */
-    private $plugin_class_path = array();
+    private $plugin_class_path = [];
 
     private static $instance;
 
@@ -55,14 +55,14 @@ class PluginFactory // phpcs:ignore
         $this->plugin_dao        = $plugin_dao;
         $this->plugin_restrictor = $plugin_restrictor;
 
-        $this->retrieved_plugins = array(
-            'by_name'     => array(),
-            'by_id'       => array(),
-            'available'   => array(),
-            'unavailable' => array(),
-        );
-        $this->name_by_id     = array();
-        $this->custom_plugins = array();
+        $this->retrieved_plugins = [
+            'by_name'     => [],
+            'by_id'       => [],
+            'available'   => [],
+            'unavailable' => [],
+        ];
+        $this->name_by_id     = [];
+        $this->custom_plugins = [];
     }
 
     /**
@@ -122,7 +122,7 @@ class PluginFactory // phpcs:ignore
         if (! $dar->getRow()) {
             $id = $this->plugin_dao->create($name, 0);
             if (is_int($id)) {
-                $p  = $this->_getInstancePlugin($id, array('name' => $name, 'available' => 0));
+                $p  = $this->_getInstancePlugin($id, ['name' => $name, 'available' => 0]);
                 if ($p && $p->getScope() === Plugin::SCOPE_PROJECT && $p->isRestrictedByDefault) {
                     $this->plugin_dao->restrictProjectPluginUse($id, true);
                 }
@@ -182,13 +182,13 @@ class PluginFactory // phpcs:ignore
             $class_name = false;
         } else {
             if ($class_path) {
-                $this->plugin_class_path[$name] = array(
+                $this->plugin_class_path[$name] = [
                     'class' => $class_name,
                     'path'  => $class_path,
-                );
+                ];
             }
         }
-        return array('class' => $class_name, 'custom' => $custom);
+        return ['class' => $class_name, 'custom' => $custom];
     }
 
     private function getPluginClassPath($file_name)
@@ -209,13 +209,13 @@ class PluginFactory // phpcs:ignore
     {
         return array_merge(
             array_filter(array_map('trim', explode(',', ForgeConfig::get('sys_extra_plugin_path')))),
-            array($this->_getOfficialPluginsRoot())
+            [$this->_getOfficialPluginsRoot()]
         );
     }
 
     public function getAllPossiblePluginsDir()
     {
-        return array_merge($this->getOfficialPluginPaths(), array(ForgeConfig::get('sys_custompluginsroot')));
+        return array_merge($this->getOfficialPluginPaths(), [ForgeConfig::get('sys_custompluginsroot')]);
     }
 
     private function tryPluginPaths(array $potential_paths, $file_name)
@@ -294,7 +294,7 @@ class PluginFactory // phpcs:ignore
      */
     public function getAllPlugins()
     {
-        $all_plugins = array();
+        $all_plugins = [];
         $dar = $this->plugin_dao->searchAll();
         while ($row = $dar->getRow()) {
             if ($p = $this->_getInstancePlugin($row['id'], $row)) {
@@ -336,9 +336,9 @@ class PluginFactory // phpcs:ignore
 
     public function getNotYetInstalledPlugins()
     {
-        $col     = array();
+        $col     = [];
         $paths   = $this->getOfficialPluginPaths();
-        $exclude = array('.', '..', 'CVS', '.svn');
+        $exclude = ['.', '..', 'CVS', '.svn'];
         foreach ($paths as $path) {
             $dir = openDir($path);
             while ($file = readDir($dir)) {
@@ -347,12 +347,12 @@ class PluginFactory // phpcs:ignore
                         $plugin     = $this->instantiatePlugin(null, $file);
                         if ($plugin) {
                             $descriptor = $plugin->getPluginInfo()->getPluginDescriptor();
-                            $col[] = array(
+                            $col[] = [
                                 'name'        => $file,
                                 'full_name'   => $descriptor->getFullName(),
                                 'description' => $descriptor->getDescription(),
                                 'version'     => $descriptor->getVersion()
-                            );
+                            ];
                         }
                     }
                 }
@@ -402,7 +402,7 @@ class PluginFactory // phpcs:ignore
 
     public function getProjectsByPluginId($plugin)
     {
-        $project_ids = array();
+        $project_ids = [];
         $dar         = $this->plugin_restrictor->searchAllowedProjectsOnPlugin($plugin);
 
         if ($dar && ! $dar->isError()) {

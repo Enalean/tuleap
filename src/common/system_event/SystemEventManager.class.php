@@ -51,7 +51,7 @@ class SystemEventManager
         $this->_getDao();
 
         $event_manager = $this->_getEventManager();
-        $events_to_listen = array(
+        $events_to_listen = [
             Event::SYSTEM_CHECK,
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
@@ -83,7 +83,7 @@ class SystemEventManager
             'mail_list_delete',
             Event::SERVICE_IS_USED,
             'codendi_daily_start'
-        );
+        ];
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $events_to_listen[] = Event::EDIT_SSH_KEYS;
         }
@@ -178,14 +178,14 @@ class SystemEventManager
             case Event::EDIT_SSH_KEYS:
                 $this->createEvent(
                     SystemEvent::TYPE_EDIT_SSH_KEYS,
-                    $this->concatParameters($params, array('user_id', 'original_keys')),
+                    $this->concatParameters($params, ['user_id', 'original_keys']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
             case SystemEvent::TYPE_MOVE_FRS_FILE:
                 $this->createEvent(
                     SystemEvent::TYPE_MOVE_FRS_FILE,
-                    $this->concatParameters($params, array('project_path', 'file_id', 'old_path' )),
+                    $this->concatParameters($params, ['project_path', 'file_id', 'old_path']),
                     SystemEvent::PRIORITY_HIGH
                 );
                 break;
@@ -220,21 +220,21 @@ class SystemEventManager
             case Event::PROJECT_RENAME:
                 $this->createEvent(
                     SystemEvent::TYPE_PROJECT_RENAME,
-                    $this->concatParameters($params, array('group_id', 'new_name')),
+                    $this->concatParameters($params, ['group_id', 'new_name']),
                     SystemEvent::PRIORITY_HIGH
                 );
                 break;
             case 'project_admin_add_user':
                 $this->createEvent(
                     SystemEvent::TYPE_MEMBERSHIP_CREATE,
-                    $this->concatParameters($params, array('group_id', 'user_id')),
+                    $this->concatParameters($params, ['group_id', 'user_id']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
             case 'project_admin_remove_user':
                 $this->createEvent(
                     SystemEvent::TYPE_MEMBERSHIP_DELETE,
-                    $this->concatParameters($params, array('group_id', 'user_id')),
+                    $this->concatParameters($params, ['group_id', 'user_id']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
@@ -255,7 +255,7 @@ class SystemEventManager
             case Event::USER_RENAME:
                 $this->createEvent(
                     SystemEvent::TYPE_USER_RENAME,
-                    $this->concatParameters($params, array('user_id', 'new_name', 'old_user')),
+                    $this->concatParameters($params, ['user_id', 'new_name', 'old_user']),
                     SystemEvent::PRIORITY_HIGH
                 );
                 break;
@@ -263,7 +263,7 @@ class SystemEventManager
                 $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
                 $this->createEvent(
                     SystemEvent::TYPE_CVS_IS_PRIVATE,
-                    $this->concatParameters($params, array('group_id', 'cvs_is_private')),
+                    $this->concatParameters($params, ['group_id', 'cvs_is_private']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
@@ -271,12 +271,12 @@ class SystemEventManager
                 $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
                 $this->createEvent(
                     SystemEvent::TYPE_PROJECT_IS_PRIVATE,
-                    $this->concatParameters($params, array('group_id', 'project_is_private')),
+                    $this->concatParameters($params, ['group_id', 'project_is_private']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
             case 'project_admin_ugroup_edition':
-                $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name'));
+                $parameters = $this->concatParameters($params, ['group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name']);
                 if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
@@ -290,7 +290,7 @@ class SystemEventManager
             case 'project_admin_ugroup_add_user':
             case 'project_admin_ugroup_deletion':
             case 'project_admin_ugroup_bind_modified':
-                $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id'));
+                $parameters = $this->concatParameters($params, ['group_id', 'ugroup_id']);
                 if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
@@ -306,7 +306,7 @@ class SystemEventManager
                 //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
                 foreach ($params['ugroups'] as $ugroup_id) {
                     $params['ugroup_id'] = $ugroup_id;
-                    $parameters          = $this->concatParameters($params, array('group_id', 'ugroup_id'));
+                    $parameters          = $this->concatParameters($params, ['group_id', 'ugroup_id']);
                     if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                         $this->createEvent(
                             SystemEvent::TYPE_UGROUP_MODIFY,
@@ -333,7 +333,7 @@ class SystemEventManager
             case Event::SERVICE_IS_USED:
                 $this->createEvent(
                     SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
-                    $this->concatParameters($params, array('group_id', 'shortname', 'is_used')),
+                    $this->concatParameters($params, ['group_id', 'shortname', 'is_used']),
                     SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
@@ -484,7 +484,7 @@ class SystemEventManager
      */
     public function concatParameters($params, $keys)
     {
-        $concat = array();
+        $concat = [];
         foreach ($keys as $key) {
             $concat[] = $params[$key];
         }
@@ -548,7 +548,7 @@ class SystemEventManager
             case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
             case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
                 $klass = $this->getClassForType($row['type']);
-                $klass_params = array(Backend::instance(Backend::SVN));
+                $klass_params = [Backend::instance(Backend::SVN)];
                 break;
             case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:
                 $klass = $this->getClassForType($row['type']);
@@ -578,7 +578,7 @@ class SystemEventManager
                 break;
 
             default:
-                $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
+                $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, ['type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params]);
                 break;
         }
         $sysevent = $this->instanciateSystemEventByType(
@@ -594,7 +594,7 @@ class SystemEventManager
             $row['log']
         );
         if ($sysevent && ! empty($klass_params)) {
-            call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
+            call_user_func_array([$sysevent, 'injectDependencies'], $klass_params);
         }
         return $sysevent;
     }
@@ -619,9 +619,9 @@ class SystemEventManager
     {
         $reflect = new ReflectionClass(SystemEvent::class);
         $consts  = $reflect->getConstants();
-        array_walk($consts, array($this, 'filterConstants'));
+        array_walk($consts, [$this, 'filterConstants']);
         $types = array_filter($consts);
-        EventManager::instance()->processEvent(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE, array('types' => &$types));
+        EventManager::instance()->processEvent(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE, ['types' => &$types]);
 
         return $types;
     }
@@ -633,13 +633,13 @@ class SystemEventManager
             case SystemEvent::APP_OWNER_QUEUE:
                 return $this->getTypes();
             default:
-                $types = array();
+                $types = [];
                 EventManager::instance()->processEvent(
                     Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE,
-                    array(
+                    [
                         'queue' => $queue,
                         'types' => &$types
-                    )
+                    ]
                 );
 
                 return $types;
@@ -667,13 +667,13 @@ class SystemEventManager
         $html .= '<table class="table tlp-table">';
         $html .= '<tbody>';
 
-        $filter_status = array(
+        $filter_status = [
             SystemEvent::STATUS_NEW,
             SystemEvent::STATUS_RUNNING,
             SystemEvent::STATUS_DONE,
             SystemEvent::STATUS_WARNING,
             SystemEvent::STATUS_ERROR,
-        );
+        ];
 
         $filter_type = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
 
@@ -730,8 +730,8 @@ class SystemEventManager
         $dar = $this->_getDao()->searchWithParam(
             'head',
             $parameter,
-            array($event_type),
-            array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+            [$event_type],
+            [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]
         );
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
@@ -744,8 +744,8 @@ class SystemEventManager
         $dar = $this->_getDao()->searchWithParam(
             'all',
             $parameter,
-            array($event_type),
-            array(SystemEvent::STATUS_NEW)
+            [$event_type],
+            [SystemEvent::STATUS_NEW]
         );
 
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
@@ -766,8 +766,8 @@ class SystemEventManager
         $dar = $this->_getDao()->searchWithParam(
             null,
             $parameter,
-            array($event_type),
-            array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+            [$event_type],
+            [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]
         );
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
@@ -781,8 +781,8 @@ class SystemEventManager
     public function isThereAnEventAlreadyOnGoing($event_type)
     {
         $dar = $this->_getDao()->searchWithTypeAndStatus(
-            array($event_type),
-            array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+            [$event_type],
+            [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]
         );
 
         return $dar && ! $dar->isError() && $dar->rowCount() > 0;
@@ -818,7 +818,7 @@ class SystemEventManager
      */
     public function isUserNameAvailable($newName)
     {
-        $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        $dar = $this->_getDao()->searchWithParam('tail', $newName, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 0) {
             return true;
         }
@@ -833,7 +833,7 @@ class SystemEventManager
      */
     public function isProjectNameAvailable($newName)
     {
-        $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        $dar = $this->_getDao()->searchWithParam('tail', $newName, [SystemEvent::TYPE_PROJECT_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 0) {
             return true;
         }

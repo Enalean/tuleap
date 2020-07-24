@@ -25,7 +25,7 @@
  */
 
 
-$output    = array();
+$output    = [];
 $exit_code = null;
 exec('tar -xzpf ' . escapeshellarg($argv[1]) . ' -C ' . escapeshellarg($argv[2]), $output, $exit_code);
 

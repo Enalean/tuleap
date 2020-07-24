@@ -253,7 +253,7 @@ class ArtifactFieldSet
      */
     public function getAllUsedFields()
     {
-        $result_fields = array();
+        $result_fields = [];
         foreach ($this->ArtifactFields as $key => $field) {
             if ($field->IsUsed()) {
                 $result_fields[$key] = $field;
@@ -269,7 +269,7 @@ class ArtifactFieldSet
      */
     public function getAllUnusedFields()
     {
-        $result_fields = array();
+        $result_fields = [];
         foreach ($this->ArtifactFields as $key => $field) {
             if (! $field->IsUsed()) {
                 $result_fields[$key] = $field;

@@ -131,7 +131,7 @@ class ViewVCProxy
         $location_found = false;
 
         while ($location_line && ! $location_found && strlen($location_line) > 1) {
-            $matches = array();
+            $matches = [];
 
             if (preg_match('/^Location:(.*)$/', $location_line, $matches)) {
                 return $matches[1];
@@ -221,16 +221,16 @@ class ViewVCProxy
 
     private function display(Project $project, $path, $body)
     {
-        svn_header($project, array(
+        svn_header($project, [
             'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
             'path' => urlencode($path),
-            'body_class' => array('viewvc-epel')
-        ));
+            'body_class' => ['viewvc-epel']
+        ]);
         echo util_make_reference_links(
             $body,
             $project->getID()
         );
-        site_footer(array());
+        site_footer([]);
     }
 
     private function getPermissionDeniedError(Project $project)

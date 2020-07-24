@@ -59,7 +59,7 @@ class Cardwall_PaneBoardBuilder
      */
     private function getSwimlines(PFUser $user, Tracker_Artifact $milestone_artifact, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $swimlines = array();
+        $swimlines = [];
         foreach ($this->dao->getBacklogArtifacts($milestone_artifact->getId()) as $row) {
             $swimline_artifact = $this->artifact_factory->getInstanceFromRow($row);
             if ($swimline_artifact->userCanView($user)) {
@@ -84,7 +84,7 @@ class Cardwall_PaneBoardBuilder
 
     private function buildSwimlineSolo(Tracker_Artifact $artifact, Cardwall_CardInCellPresenter $artifact_presenter, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $cells = $this->swimline_factory->getCells($columns, array($artifact_presenter));
+        $cells = $this->swimline_factory->getCells($columns, [$artifact_presenter]);
 
         if ($this->areSwimlineCellsEmpty($cells)) {
             return $this->buildSwimlineSoloNoMatchingColumns($artifact_presenter, $artifact, $cells);

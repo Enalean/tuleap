@@ -57,7 +57,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     public function getContent($params = [])
     {
         $html = '';
-        $params = array('form_name' => $this->formName);
+        $params = ['form_name' => $this->formName];
         $html  .= '<form name="' . $params['form_name'] . '" action="' . $this->url . '" method="post" class="docman_form">';
         if (! $this->updateConfirmed && $this->_subItemsAreWritable()) {
             $html .= '<div class="docman_confirm_delete">';

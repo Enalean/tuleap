@@ -43,13 +43,13 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
     {
         $this->updater->update(
             $this->field_change_xml,
-            array(
+            [
                 'use_artifact_permissions' => 1,
-                'u_groups' => array(
+                'u_groups' => [
                     '1001',
                     '1002'
-                )
-            )
+                ]
+            ]
         );
 
         $this->assertEquals(1001, (int) $this->field_change_xml->ugroup[0]['ugroup_id']);
@@ -60,10 +60,10 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
     {
         $this->updater->update(
             $this->field_change_xml,
-            array(
+            [
                 'use_artifact_permissions' => 0,
-                'u_groups' => array()
-            )
+                'u_groups' => []
+            ]
         );
 
         $this->assertEquals(0, (int) $this->field_change_xml['use_perm']);
@@ -74,9 +74,9 @@ final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLU
     {
         $this->updater->update(
             $this->field_change_xml,
-            array(
+            [
                 'use_artifact_permissions' => 0
-            )
+            ]
         );
 
         $this->assertEquals(0, (int) $this->field_change_xml['use_perm']);

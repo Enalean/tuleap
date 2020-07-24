@@ -75,7 +75,7 @@ class RecipientsManager
     public function getRecipients(Tracker_Artifact_Changeset $changeset, $is_update)
     {
         // 1 Get from the fields
-        $recipients = array();
+        $recipients = [];
         $changeset->forceFetchAllValues();
         foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
             if ($field = $this->form_element_factory->getFieldById($field_id)) {
@@ -89,7 +89,7 @@ class RecipientsManager
         $recipients = array_values(array_unique($recipients));
 
         //now force check perms for all this people
-        $tablo = array();
+        $tablo = [];
         foreach ($recipients as $r) {
             $tablo[$r] = true;
         }
@@ -180,10 +180,10 @@ class RecipientsManager
                 // we don't want to override previous emails
                 // So create new anonymous instance by hand
                 $user = $this->user_manager->getUserInstanceFromRow(
-                    array(
+                    [
                         'user_id' => 0,
                         'email'   => $recipient_name,
-                    )
+                    ]
                 );
             }
         } else {

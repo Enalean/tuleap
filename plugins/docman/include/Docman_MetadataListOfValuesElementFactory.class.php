@@ -173,7 +173,7 @@ class Docman_MetadataListOfValuesElementFactory
      */
     public function getByName($name, $mdLabel)
     {
-        $ea = array();
+        $ea = [];
         $ei = null;
         switch ($mdLabel) {
             case 'status':
@@ -216,7 +216,7 @@ class Docman_MetadataListOfValuesElementFactory
      */
     public function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd)
     {
-        $valuesMapping = array();
+        $valuesMapping = [];
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
         $loveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
         foreach ($loveArray as $love) {
@@ -314,7 +314,7 @@ class Docman_MetadataListOfValuesElementFactory
      */
     public function getStatusList($status = null)
     {
-        $ea = array();
+        $ea = [];
 
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
@@ -358,7 +358,7 @@ class Docman_MetadataListOfValuesElementFactory
 
     private function _returnLoveIteratorFromDar($dar)
     {
-        $ea = array();
+        $ea = [];
         if ($dar && ! $dar->isError()) {
             $dar->rewind();
             while ($dar->valid()) {

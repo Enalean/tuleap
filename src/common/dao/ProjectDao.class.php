@@ -299,7 +299,7 @@ class ProjectDao extends DataAccessObject
      */
     public function returnAllProjects($offset, $limit, $status = false, $groupName = false)
     {
-        $cond = array();
+        $cond = [];
         $project_limit = "";
         if ($limit != 0) {
             $project_limit .= ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
@@ -330,7 +330,7 @@ class ProjectDao extends DataAccessObject
                 ORDER BY group_name
                 ASC ' . $project_limit;
 
-        return array('projects' => $this->retrieve($sql), 'numrows' => $this->foundRows());
+        return ['projects' => $this->retrieve($sql), 'numrows' => $this->foundRows()];
     }
 
     public function searchProjectsWithNumberOfMembers(
@@ -339,7 +339,7 @@ class ProjectDao extends DataAccessObject
         $status = false,
         $project_name = false
     ) {
-        $conditions = array();
+        $conditions = [];
         $offset     = $this->da->escapeInt($offset);
         $limit      = $this->da->escapeInt($limit);
 

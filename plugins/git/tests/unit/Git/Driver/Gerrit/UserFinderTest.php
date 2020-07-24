@@ -60,29 +60,29 @@ class UserFinderTest extends TestCase
 
     public function testItReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns(array(
-            array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
-            array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN),
-        ));
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+            ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS],
+            ['ugroup_id' => ProjectUGroup::PROJECT_ADMIN],
+        ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertFalse($allowed);
     }
 
     public function testItReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns(array(
-            array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
-            array('ugroup_id' => ProjectUGroup::REGISTERED),
-        ));
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+            ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS],
+            ['ugroup_id' => ProjectUGroup::REGISTERED],
+        ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertTrue($allowed);
     }
 
     public function testItReturnsTrueIfAllUsersAreContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns(array(
-            array('ugroup_id' => ProjectUGroup::ANONYMOUS),
-        ));
+        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+            ['ugroup_id' => ProjectUGroup::ANONYMOUS],
+        ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertTrue($allowed);
     }

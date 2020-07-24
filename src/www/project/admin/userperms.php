@@ -41,7 +41,7 @@ if (! $group || ! is_object($group) || $group->isError()) {
 // Get the artfact type list
 $at_arr = $atf->getArtifactTypes();
 
-session_require(array('group' => $group_id,'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 $project = $pm->getProject($group_id);
 if ($project->isError()) {
@@ -92,10 +92,10 @@ if ($request->exist('submit')) {
 
             // Raise an event
             $em = EventManager::instance();
-            $em->processEvent('project_admin_change_user_permissions', array(
+            $em->processEvent('project_admin_change_user_permissions', [
                 'group_id' => $group_id,
                 'user_id' => $row_dev['user_id'],
-            ));
+            ]);
         }
     }
 
@@ -118,7 +118,7 @@ if (! $offset) {
 }
 $number_per_page = 25;
 
-$sql = array();
+$sql = [];
 $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
@@ -163,11 +163,11 @@ $row = db_fetch_array($res);
 $num_total_rows = $row['nb'];
 
 project_admin_header(
-    array(
+    [
         'title' => $Language->getText('project_admin_utils', 'user_perms'),
         'group' => $group_id,
         'help' => 'project-admin.html#user-permissions'
-    ),
+    ],
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
@@ -299,4 +299,4 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     echo '</FORM>';
 }
 
-project_admin_footer(array());
+project_admin_footer([]);

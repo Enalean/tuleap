@@ -50,8 +50,8 @@ class GitRepositoryGetAccessUrlTest extends TestCase
 
     public function testItReturnsTheBackendContent(): void
     {
-        $access_url = array('ssh' => 'plop');
-        $this->backend->shouldReceive('getAccessURL')->andReturns(array('ssh' => 'plop'));
+        $access_url = ['ssh' => 'plop'];
+        $this->backend->shouldReceive('getAccessURL')->andReturns(['ssh' => 'plop']);
         $this->assertEquals($access_url, $this->repository->getAccessURL());
     }
 }

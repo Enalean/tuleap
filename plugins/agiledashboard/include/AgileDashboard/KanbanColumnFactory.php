@@ -46,7 +46,7 @@ class AgileDashboard_KanbanColumnFactory
      */
     public function getAllKanbanColumnsForAKanban(AgileDashboard_Kanban $kanban, PFUser $user)
     {
-        $columns  = array();
+        $columns  = [];
         $semantic = $this->getSemanticStatus($kanban);
         if (! $semantic) {
             return $columns;

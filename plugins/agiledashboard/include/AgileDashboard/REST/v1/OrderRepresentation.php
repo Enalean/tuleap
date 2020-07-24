@@ -49,7 +49,7 @@ class OrderRepresentation
      */
     public function checkFormat()
     {
-        if (! in_array($this->direction, array(self::BEFORE, self::AFTER))) {
+        if (! in_array($this->direction, [self::BEFORE, self::AFTER])) {
             throw new RestException(400, "invalid value specified for `direction`. Expected: before | after");
         }
 

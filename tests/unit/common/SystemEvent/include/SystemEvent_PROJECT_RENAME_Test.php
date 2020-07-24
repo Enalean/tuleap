@@ -103,7 +103,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
         $evt->shouldReceive('addProjectHistory')->with('rename_done', 'TestProj :: FooBar', $project->getId())->once();
         // Expect everything went OK
@@ -146,7 +146,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
         $backendSVN->shouldReceive('repositoryExists')->andReturns(true);
         $backendSVN->shouldReceive('isNameAvailable')->andReturns(true);
         $backendSVN->shouldReceive('renameSVNRepository')->with($project, 'FooBar')->once();
-        $backendSVN->shouldReceive('renameSVNRepository')->with(false)->andReturns(array($project, 'FooBar'));
+        $backendSVN->shouldReceive('renameSVNRepository')->with(false)->andReturns([$project, 'FooBar']);
         $backendSVN->shouldReceive('setSVNApacheConfNeedUpdate')->never();
         $evt->shouldReceive('getBackend')->with('SVN')->andReturns($backendSVN);
 
@@ -169,7 +169,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -235,7 +235,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -300,7 +300,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -369,7 +369,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -436,7 +436,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -504,7 +504,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();
@@ -572,7 +572,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Event
         $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', ['project' => $project, 'new_name' => 'FooBar']);
         $evt->shouldReceive('getEventManager')->andReturns($em);
 
         $evt->shouldReceive('addProjectHistory')->with('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId())->once();

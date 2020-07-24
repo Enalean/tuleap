@@ -220,7 +220,7 @@ class BackendSystem extends Backend
      */
     private function setUserHomeOwnership(PFUser $user)
     {
-        $no_filter_file_extension = array();
+        $no_filter_file_extension = [];
         $this->recurseChownChgrp(
             $user->getUnixHomeDir(),
             $user->getUserName(),
@@ -280,7 +280,7 @@ class BackendSystem extends Backend
             $stat = stat("$projdir");
             if ($stat && $stat['gid'] != $project->getUnixGID()) {
                 $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
-                $no_filter_file_extension = array();
+                $no_filter_file_extension = [];
                 $this->recurseChgrp($projdir, $unix_group_name, $no_filter_file_extension);
             }
         }
@@ -534,7 +534,7 @@ class BackendSystem extends Backend
         }
 
         $em = EventManager::instance();
-        $em->processEvent('backend_system_purge_files', array('time' => $time));
+        $em->processEvent('backend_system_purge_files', ['time' => $time]);
 
         return $status;
     }
@@ -553,7 +553,7 @@ class BackendSystem extends Backend
                 $sshkey_dumper->writeSSHKeys($user);
             }
         }
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array());
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, []);
         return true;
     }
 

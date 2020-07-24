@@ -125,7 +125,7 @@ class FRSReleaseController
 
     private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $release_id = null)
     {
-        $options         = array();
+        $options         = [];
         foreach ($project_ugroups as $project_ugroup) {
             if ($this->isUgroupHidden($project_ugroup)) {
                 continue;
@@ -133,11 +133,11 @@ class FRSReleaseController
 
             $release_ugroups = $this->getAllUserGroups($permission_type, $release_id);
 
-            $options[] = array(
+            $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
                 'selected' => $this->isUgroupSelected($project_ugroup, $release_ugroups)
-            );
+            ];
         }
 
         return $options;
@@ -150,7 +150,7 @@ class FRSReleaseController
 
     private function getAllUserGroups($permission_type, $release_id)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         $release_ugroups = permission_db_authorized_ugroups($permission_type, $release_id);
         while ($ugroup = db_fetch_array($release_ugroups)) {

@@ -17,7 +17,7 @@ class XmlContent
 {
     public function __construct(/* ... */)
     {
-        $this->_content = array();
+        $this->_content = [];
         $this->_pushContent_array(func_get_args());
     }
 
@@ -95,7 +95,7 @@ class XmlContent
 
     public function setContent($arg /* , ... */)
     {
-        $this->_content = array();
+        $this->_content = [];
         $this->_pushContent_array(func_get_args());
     }
 
@@ -214,7 +214,7 @@ class XmlElement extends XmlContent
         if ($args && is_array($args[0])) {
             $this->_attr = array_shift($args);
         } else {
-            $this->_attr = array();
+            $this->_attr = [];
             if ($args && $args[0] === false) {
                 array_shift($args);
             }
@@ -299,7 +299,7 @@ class XmlElement extends XmlContent
     public function _getClasses()
     {
         if (! isset($this->_classes)) {
-            $this->_classes = array();
+            $this->_classes = [];
             if (isset($this->_attr['class'])) {
                 $classes = explode(' ', (string) $this->_attr['class']);
                 foreach ($classes as $class) {
@@ -498,7 +498,7 @@ class FormattedText
 
         // PHP's sprintf doesn't support variable width specifiers,
         // like sprintf("%*s", 10, "x"); --- so we won't either.
-        $m = array();
+        $m = [];
         if (! preg_match_all('/(?<!%)%(\d+)\$/x', $this->_fs, $m)) {
             $this->_args  = $args;
         } else {
@@ -516,7 +516,7 @@ class FormattedText
 
             $this->_fs = preg_replace('/(?<!%)%\d+\$/x', '%', $this->_fs);
 
-            $this->_args = array();
+            $this->_args = [];
             foreach ($m[1] as $argnum) {
                 if ($argnum < 1 || $argnum > count($args)) {
                     trigger_error(sprintf(

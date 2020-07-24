@@ -53,7 +53,7 @@ class NatureIsChildLinkRetriever
     public function getParentsHierarchy(Tracker_Artifact $artifact)
     {
         $collection = new ParentOfArtifactCollection();
-        $this->addParentsOfArtifactToCollection($artifact, $collection, array());
+        $this->addParentsOfArtifactToCollection($artifact, $collection, []);
 
         return $collection;
     }
@@ -91,7 +91,7 @@ class NatureIsChildLinkRetriever
      */
     public function getDirectParents(Tracker_Artifact $artifact)
     {
-        $parents = array();
+        $parents = [];
         foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {
             $parents[] = $this->factory->getArtifactById($row['artifact_id']);
         }

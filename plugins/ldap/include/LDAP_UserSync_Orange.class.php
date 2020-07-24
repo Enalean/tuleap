@@ -31,7 +31,7 @@ class LDAP_UserSync_Orange extends LDAP_UserSync
     public function getSyncAttributes($ldap)
     {
         //Define the default sync attributes
-        $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'), $ldap->getLDAPParam('uid'));
+        $this->attributes = [$ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'), $ldap->getLDAPParam('uid')];
         return $this->attributes;
     }
 

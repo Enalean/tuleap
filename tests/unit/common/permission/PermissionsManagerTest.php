@@ -30,9 +30,9 @@ class PermissionsManagerTest extends TestCase
     {
         $source           = 123;
         $target           = 234;
-        $permission_types = array('STUFF_READ');
-        $ugroup_mapping   = array(110 => 210,
-                                  120 => 220);
+        $permission_types = ['STUFF_READ'];
+        $ugroup_mapping   = [110 => 210,
+                                  120 => 220];
         $duplicate_type  = PermissionsDao::DUPLICATE_SAME_PROJECT;
 
         $dao = Mockery::mock(PermissionsDao::class);
@@ -47,7 +47,7 @@ class PermissionsManagerTest extends TestCase
     {
         $source           = 123;
         $target           = 234;
-        $permission_types = array('STUFF_READ');
+        $permission_types = ['STUFF_READ'];
 
         $dao = Mockery::mock(PermissionsDao::class);
         $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false)->once();
@@ -61,9 +61,9 @@ class PermissionsManagerTest extends TestCase
     {
         $source           = 123;
         $target           = 234;
-        $permission_types = array('STUFF_READ');
-        $ugroup_mapping   = array(110 => 210,
-                                  120 => 220);
+        $permission_types = ['STUFF_READ'];
+        $ugroup_mapping   = [110 => 210,
+                                  120 => 220];
 
         $dao = Mockery::mock(PermissionsDao::class);
         $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping)->once();
@@ -77,7 +77,7 @@ class PermissionsManagerTest extends TestCase
     {
         $source           = 123;
         $target           = 234;
-        $permission_types = array('STUFF_READ');
+        $permission_types = ['STUFF_READ'];
 
         $dao = Mockery::mock(PermissionsDao::class);
         $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false)->once();

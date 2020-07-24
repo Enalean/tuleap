@@ -46,8 +46,8 @@ class UserHelper
     public function __construct()
     {
         $this->_username_display         = $this->_getCurrentUserUsernameDisplayPreference();
-        $this->_cache_by_id              = array();
-        $this->_cache_by_username        = array();
+        $this->_cache_by_id              = [];
+        $this->_cache_by_username        = [];
         $this->_userdao                  = $this->_getuserDao();
         $this->instance_base_url_builder = new \Tuleap\InstanceBaseURLBuilder();
     }

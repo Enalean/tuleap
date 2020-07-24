@@ -53,7 +53,7 @@ class HierarchyOfFolderBuilder
 
     public function getHierarchyOfFolderForArtifact(Tracker_Artifact $artifact)
     {
-        $hierarchy = array();
+        $hierarchy = [];
         $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
         if ($row) {
             $folder    = $this->artifact_factory->getInstanceFromRow($row);
@@ -65,7 +65,7 @@ class HierarchyOfFolderBuilder
 
     public function getHierarchyOfFolder(Tracker_Artifact $folder)
     {
-        $hierarchy = array();
+        $hierarchy = [];
         foreach ($this->retriever->getParentsHierarchy($folder)->getArtifacts() as $ancestors) {
             $parent_folder = $this->getFirstParentThatIsAFolder($ancestors);
             if (! $parent_folder) {

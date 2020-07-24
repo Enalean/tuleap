@@ -154,12 +154,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
                 "modified"    => $this->current_time
-            ),
+            ],
             $content["/linux/kernel.git"]
         );
     }
@@ -179,12 +179,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "",
                 "reference"   => null,
                 "modified"    => $this->current_time
-            ),
+            ],
             $content["/gitolite-admin.git"],
         );
     }
@@ -198,12 +198,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
                 "modified"    => 1414684049
-            ),
+            ],
             $content["/linux/kernel.git"]
         );
     }
@@ -217,12 +217,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "free and open-source web browser",
                 "reference"   => null,
                 "modified"    => $this->current_time
-            ),
+            ],
             $content["/mozilla/firefox.git"]
         );
     }
@@ -236,12 +236,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "Linux4ever",
                 "reference"   => null,
                 "modified"    => $this->current_time
-            ),
+            ],
             $content["/linux/kernel.git"]
         );
     }
@@ -286,18 +286,18 @@ class ManifestFileGeneratorTest extends TestCase
 
         $this->generator->ensureManifestContainsLatestInfoOfRepositories(
             $this->singapour_mirror,
-            array($this->firefox_repository)
+            [$this->firefox_repository]
         );
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "free and open-source web browser",
                 "reference"   => null,
                 "modified"    => $this->current_time
-            ),
+            ],
             $content["/mozilla/firefox.git"],
         );
     }
@@ -312,7 +312,7 @@ class ManifestFileGeneratorTest extends TestCase
 
         $this->generator->ensureManifestContainsLatestInfoOfRepositories(
             $this->singapour_mirror,
-            array()
+            []
         );
 
         $content_after = $this->getManifestContent($this->manifest_file_for_singapour);
@@ -328,12 +328,12 @@ class ManifestFileGeneratorTest extends TestCase
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
         $this->assertEquals(
-            array(
+            [
                 "owner"       => null,
                 "description" => "",
                 "reference"   => null,
                 "modified"    => $this->time_in_the_past
-            ),
+            ],
             $content["/gitolite-admin.git"]
         );
     }

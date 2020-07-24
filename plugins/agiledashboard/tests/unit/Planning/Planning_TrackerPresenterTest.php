@@ -111,7 +111,7 @@ final class Planning_TrackerPresenterTest extends \PHPUnit\Framework\TestCase //
 
     public function testItIsNotSelectedAsAPlanningOrBacklogTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns(array($this->other_tracker_id));
+        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->other_tracker_id]);
         $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->other_tracker_id);
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }

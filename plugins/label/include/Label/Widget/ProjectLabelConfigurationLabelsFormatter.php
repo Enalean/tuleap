@@ -29,7 +29,7 @@ class ProjectLabelConfigurationLabelsFormatter
      */
     public function getLabelsIds(array $config_labels)
     {
-        $label_ids = array();
+        $label_ids = [];
 
         foreach ($config_labels as $label) {
             $label_ids[] = (int) $label['id'];

@@ -143,7 +143,7 @@ class ReleaseResource extends AuthenticatedResource
         $this->checkUserCanReadRelease($release, $user);
 
         $files_in_release = $release->getFiles();
-        $representations  = array();
+        $representations  = [];
         foreach (array_slice($files_in_release, $offset, $limit) as $file) {
             $file_representation = new FileRepresentation();
             $file_representation->build($file);
@@ -217,13 +217,13 @@ class ReleaseResource extends AuthenticatedResource
             throw new RestException(409, "Release name '{$body->name}' already exists in this package");
         }
 
-        $release_array = array(
+        $release_array = [
             'package_id' => $body->package_id,
             'name'       => $body->name,
             'notes'      => $body->release_note,
             'changes'    => $body->changelog,
             'status_id'  => $this->getStatusIdFromLiteralStatus($body->status)
-        );
+        ];
 
         $id = $this->release_factory->create($release_array);
         if (! $id) {
@@ -356,9 +356,9 @@ class ReleaseResource extends AuthenticatedResource
         $release_id = (int) $release->getReleaseID();
         $package_id = (int) $release->getPackageID();
 
-        $release_array = array(
+        $release_array = [
             'release_id' => $release_id
-        );
+        ];
 
         if ($body->name) {
             $with_same_name_release_id = (int) $this->release_factory->getReleaseIdByName($body->name, $package_id);

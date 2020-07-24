@@ -517,9 +517,9 @@ class PlotMark
 class ImgData
 {
     protected $name = '';  // Each subclass gives a name
-    protected $an = array();  // Data array names
-    protected $colors = array(); // Available colors
-    protected $index  = array(); // Index for colors
+    protected $an = [];  // Data array names
+    protected $colors = []; // Available colors
+    protected $index  = []; // Index for colors
     protected $maxidx = 0;  // Max color index
     protected $anchor_x = 0.5;
     private $anchor_y = 0.5;    // Where is the center of the image
@@ -551,18 +551,18 @@ class ImgData
 
     public function GetAnchor()
     {
-        return array($this->anchor_x,$this->anchor_y);
+        return [$this->anchor_x, $this->anchor_y];
     }
 }
 
 
 // Keep a global flag cache to reduce memory usage
-$_gFlagCache = array(
+$_gFlagCache = [
 1 => null,
 2 => null,
 3 => null,
 4 => null,
-);
+];
 // Only supposed to b called as statics
 class FlagCache
 {

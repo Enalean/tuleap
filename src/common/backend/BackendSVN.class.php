@@ -145,9 +145,9 @@ class BackendSVN extends Backend
             $exception = $layout_initialization_exception;
         }
 
-        $params = array(
+        $params = [
             'project_id' => $project_id
-        );
+        ];
 
         EventManager::instance()->processEvent(
             Event::SVN_REPOSITORY_CREATED,
@@ -236,7 +236,7 @@ class BackendSVN extends Backend
             return;
         }
 
-        $filtered_layout = array();
+        $filtered_layout = [];
         foreach ($initial_layout as $requested_path) {
             $path_to_create = URIModifier::removeDotSegments(
                 URIModifier::removeEmptySegments($system_path . DIRECTORY_SEPARATOR . $requested_path)
@@ -271,12 +271,12 @@ class BackendSVN extends Backend
     private function getUsernameUsableInSVN($project_id, PFUser $user)
     {
         $intro_information = false;
-        EventManager::instance()->processEvent(Event::SVN_INTRO, array(
+        EventManager::instance()->processEvent(Event::SVN_INTRO, [
             'svn_intro_in_plugin' => false,
             'svn_intro_info'      => &$intro_information,
             'group_id'            => $project_id,
             'user_id'             => $user->getId()
-        ));
+        ]);
         $user_name = $user->getUserName();
         if ($intro_information !== false) {
             $user_name = $intro_information->getLogin();
@@ -622,7 +622,7 @@ class BackendSVN extends Backend
         foreach ($dar as $row) {
             $ugroup          = $this->getUGroupFromRow($row);
             $ugroup_members  = $ugroup->getMembers();
-            $valid_members   = array();
+            $valid_members   = [];
             foreach ($ugroup_members as $ugroup_member) {
                 try {
                     $this->getProjectAccessChecker()->checkUserCanAccessProject($ugroup_member, $project);
@@ -842,7 +842,7 @@ class BackendSVN extends Backend
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check = array('db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db');
+        $files_to_check = ['db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db'];
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             // Get file stat
@@ -868,7 +868,7 @@ class BackendSVN extends Backend
     public function setUserAndGroup(Project $project, $svnroot)
     {
         $group = $this->getSvnFilesUnixGroupName($project);
-        $no_filter_file_extension = array();
+        $no_filter_file_extension = [];
         $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $group, $no_filter_file_extension);
         $this->chown($svnroot, $this->getHTTPUser());
         $this->chgrp($svnroot, $group);
@@ -914,8 +914,8 @@ class BackendSVN extends Backend
 
     private function enableCommitMessageUpdate($project_svnroot, $hooks_path)
     {
-        $hook_names = array('pre-revprop-change', 'post-revprop-change');
-        $hook_error = array();
+        $hook_names = ['pre-revprop-change', 'post-revprop-change'];
+        $hook_error = [];
 
         foreach ($hook_names as $hook_name) {
             if (! $this->enableHook($project_svnroot, $hook_name, "$hooks_path/$hook_name.php")) {

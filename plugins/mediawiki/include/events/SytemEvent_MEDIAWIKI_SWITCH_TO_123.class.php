@@ -90,14 +90,14 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
     private function getProjectsFromParameters()
     {
         if ($this->areAllProjectsMigrated()) {
-            $projects = array();
+            $projects = [];
             foreach ($this->version_manager->getAllProjectsToMigrateTo123() as $project_id) {
                 $projects[] = $this->project_manager->getProject($project_id);
             }
             return $projects;
         }
         $project_id = $this->getProjectIdFromParameters();
-        return array($this->project_manager->getProject($project_id));
+        return [$this->project_manager->getProject($project_id)];
     }
 
     private function areAllProjectsMigrated()

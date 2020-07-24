@@ -31,7 +31,7 @@ class AgileDashboard_MilestonesCardwallRepresentation
     public function build(Cardwall_Board $board, $planning_id, PFUser $user)
     {
         $this->columns = $board->getColumns()->getRestValue();
-        $this->swimlanes = array();
+        $this->swimlanes = [];
         foreach ($board->getSwimlines() as $swimline) {
             $swimline_representation = new AgileDashboard_SwimlineRepresentation();
             $swimline_representation->build($swimline, $planning_id, $user);

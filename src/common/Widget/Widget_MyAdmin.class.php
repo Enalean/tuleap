@@ -103,7 +103,7 @@ class Widget_MyAdmin extends Widget
         $i = 0;
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            $GLOBALS['Language']->getText('admin_main', 'pending_user', array("/admin/approve_pending_users.php?page=pending")),
+            $GLOBALS['Language']->getText('admin_main', 'pending_user', ["/admin/approve_pending_users.php?page=pending"]),
             $pending_users,
             $this->_get_color($pending_users)
         );
@@ -111,7 +111,7 @@ class Widget_MyAdmin extends Widget
         if (ForgeConfig::get('sys_user_approval') == 1) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++,
-                $GLOBALS['Language']->getText('admin_main', 'validated_user', array("/admin/approve_pending_users.php?page=validated")),
+                $GLOBALS['Language']->getText('admin_main', 'validated_user', ["/admin/approve_pending_users.php?page=validated"]),
                 $validated_users,
                 $this->_get_color($validated_users)
             );
@@ -126,9 +126,9 @@ class Widget_MyAdmin extends Widget
             $this->_get_color($pending_news)
         );
 
-        $pendings = array();
+        $pendings = [];
         $em = EventManager::instance();
-        $em->processEvent('widget_myadmin', array('result' => &$pendings));
+        $em->processEvent('widget_myadmin', ['result' => &$pendings]);
         foreach ($pendings as $entry) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++,
@@ -150,7 +150,7 @@ class Widget_MyAdmin extends Widget
 
         return $this->_get_admin_row(
             $i++,
-            $GLOBALS['Language']->getText('admin_main', 'pending_group', array("/admin/approve-pending.php")),
+            $GLOBALS['Language']->getText('admin_main', 'pending_group', ["/admin/approve-pending.php"]),
             $pending_projects,
             $this->_get_color($pending_projects)
         );

@@ -44,7 +44,7 @@ class WikiPlugin_RichTable extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
 
     public function getVersion()
@@ -71,10 +71,10 @@ class WikiPlugin_RichTable extends WikiPlugin
             $attrs = $this->_parse_attr($line);
             foreach ($attrs as $key => $value) {
                 if (
-                    in_array($key, array("id", "class", "title", "style",
+                    in_array($key, ["id", "class", "title", "style",
                                           "bgcolor", "frame", "rules", "border",
                                           "cellspacing", "cellpadding",
-                                          "summary", "align", "width"))
+                                          "summary", "align", "width"])
                 ) {
                     $table->setAttr($key, $value);
                 }
@@ -98,8 +98,8 @@ class WikiPlugin_RichTable extends WikiPlugin
                 $attrs = $this->_parse_attr(substr($line, 1));
                 foreach ($attrs as $key => $value) {
                     if (
-                        in_array($key, array("id", "class", "title", "style",
-                                              "bgcolor", "align", "valign"))
+                        in_array($key, ["id", "class", "title", "style",
+                                              "bgcolor", "align", "valign"])
                     ) {
                         $row->setAttr($key, $value);
                     }
@@ -120,9 +120,9 @@ class WikiPlugin_RichTable extends WikiPlugin
                     $attrs = $this->_parse_attr(substr($line, 1));
                     foreach ($attrs as $key => $value) {
                         if (
-                            in_array($key, array("id", "class", "title", "style",
+                            in_array($key, ["id", "class", "title", "style",
                                                   "colspan", "rowspan", "width", "height",
-                                                  "bgcolor", "align", "valign"))
+                                                  "bgcolor", "align", "valign"])
                         ) {
                             $cell->setAttr($key, $value);
                         }
@@ -154,7 +154,7 @@ class WikiPlugin_RichTable extends WikiPlugin
     public function _parse_attr($line)
     {
         $attr_chunks = preg_split("/\s*,\s*/", strtolower($line));
-        $options = array();
+        $options = [];
         foreach ($attr_chunks as $attr_pair) {
             if (empty($attr_pair)) {
                 continue;

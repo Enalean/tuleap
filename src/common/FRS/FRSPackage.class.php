@@ -182,7 +182,7 @@ class FRSPackage
 
     public function toArray(): array
     {
-        $array = array();
+        $array = [];
         $array['package_id']      = $this->getPackageID();
         $array['group_id']        = $this->getGroupID();
         $array['name']            = $this->getName();
@@ -209,7 +209,7 @@ class FRSPackage
     public function &getReleases()
     {
         if (! is_array($this->package_releases) || count($this->package_releases) < 1) {
-            $this->package_releases = array();
+            $this->package_releases = [];
             $frsrf = new FRSReleaseFactory();
             $this->package_releases = $frsrf->getFRSReleasesFromDb($this->getPackageID());
         }

@@ -131,8 +131,8 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->mirror_data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $this->mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array());
-        $this->mirror_data_mapper->shouldReceive('fetchAll')->andReturns(array());
+        $this->mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([]);
+        $this->mirror_data_mapper->shouldReceive('fetchAll')->andReturns([]);
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_data_mapper,

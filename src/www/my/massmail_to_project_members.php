@@ -49,9 +49,9 @@ $project_name   = $project->getPublicName();
 $massmail_sender = new MassmailSender();
 $is_sent = $massmail_sender->sendMassmail($project, $user, $subject, $body, $members);
 if ($is_sent) {
-    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('my_index', 'mail_sent', array($project_name)));
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('my_index', 'mail_sent', [$project_name]));
 } else {
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index', 'mail_not_sent', array($project_name)));
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index', 'mail_not_sent', [$project_name]));
 }
 
 $GLOBALS['Response']->redirect("/my");

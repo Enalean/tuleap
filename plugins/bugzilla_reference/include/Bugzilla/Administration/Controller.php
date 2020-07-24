@@ -85,7 +85,7 @@ class Controller
 
     private function getPresenters(array $references)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($references as $reference) {
             $presenters[] = new ReferencePresenter(

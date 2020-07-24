@@ -79,7 +79,7 @@ class Mirroring extends Pane
 
     private function getMirrorPresenters()
     {
-        $mirror_presenters = array();
+        $mirror_presenters = [];
 
         foreach ($this->mirrors as $mirror) {
             $is_used = false;

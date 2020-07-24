@@ -265,10 +265,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function getWorkflowByTrackerId(int $tracker_id)
     {
         if (! isset($this->cache_workflowfield[$tracker_id])) {
-            $this->cache_workflowfield[$tracker_id] = array(null);
+            $this->cache_workflowfield[$tracker_id] = [null];
             // only one field per workflow
             if ($row = $this->getDao()->searchByTrackerId($tracker_id)->getRow()) {
-                $this->cache_workflowfield[$tracker_id] = array($this->getInstanceFromRow($row));
+                $this->cache_workflowfield[$tracker_id] = [$this->getInstanceFromRow($row)];
             }
         }
         return $this->cache_workflowfield[$tracker_id][0];
@@ -351,7 +351,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         $workflow_field = $this->getWorkflowField($xml, $xml_mapping);
 
-        $transitions = array();
+        $transitions = [];
         foreach ($xml->transitions->transition as $t) {
             $tf = $this->transition_factory;
             $transitions[] = $tf->getInstanceFromXML($t, $xml_mapping, $project);

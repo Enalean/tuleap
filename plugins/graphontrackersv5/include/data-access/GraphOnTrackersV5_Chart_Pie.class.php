@@ -86,14 +86,14 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     {
         return array_merge(
             parent::getProperties(),
-            array(
+            [
                 'field_base' => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
                     $this->getTracker(),
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_pie_property', 'pie_field_base'),
                     'chart[field_base]',
                     $this->getField_base()
                 ),
-            )
+            ]
         );
     }
 
@@ -142,9 +142,9 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 
     public function getSpecificRow()
     {
-        return array(
+        return [
             'field_base'  => $this->getField_base(),
-        );
+        ];
     }
 
     public function getGraphicReport()
@@ -159,9 +159,9 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      */
     public function arrayOfSpecificProperties()
     {
-        return array(
+        return [
             'field_base'  => $this->getField_base(),
-        );
+        ];
     }
 
     /**

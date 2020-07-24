@@ -55,17 +55,17 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 }
 
 // Display the form
-svn_header_admin(array ('title' => $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl'),
-                        'help' => 'svn.html#subversion-access-control'));
+svn_header_admin(['title' => $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl'),
+                        'help' => 'svn.html#subversion-access-control']);
 
 if (svn_utils_svn_repo_exists($project_svnroot)) {
-    $select_options = array();
+    $select_options = [];
     foreach ($dao->getAllVersions($group_id) as $row) {
-        $select_options[] = array(
+        $select_options[] = [
             'id'      => $row['id'],
             'version' => $row['version_number'],
             'date'    => format_date("Y-m-d", (float) $row['version_date'], '')
-        );
+        ];
     }
 
     $version_number = $dao->getCurrentVersionNumber($group_id);
@@ -76,13 +76,13 @@ if (svn_utils_svn_repo_exists($project_svnroot)) {
         $current_version_title = $GLOBALS['Language']->getText(
             'svn_admin_access_control',
             'previous_version',
-            array($version_number)
+            [$version_number]
         );
     } else {
         $current_version_title = $GLOBALS['Language']->getText(
             'svn_admin_access_control',
             'last_version',
-            array($version_number)
+            [$version_number]
         );
     }
 
@@ -104,4 +104,4 @@ if (svn_utils_svn_repo_exists($project_svnroot)) {
     );
 }
 
-svn_footer(array());
+svn_footer([]);

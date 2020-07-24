@@ -98,7 +98,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\UserPreferencesDao::class);
 
         $empty_dar = TestHelper::emptyDar();
-        $dar = TestHelper::arrayToDar(array('preference_value' => '123'));
+        $dar = TestHelper::arrayToDar(['preference_value' => '123']);
 
         $dao->shouldReceive('search')->with(666, 'unexisting_preference')->andReturns($empty_dar);
         $dao->shouldReceive('search')->with(666, 'existing_preference')->andReturns($dar);
@@ -132,8 +132,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testIsMemberSiteAdmin(): void
     {
         $siteadmin = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ug_siteadmin = array(
-            '1' => array(
+        $ug_siteadmin = [
+            '1' => [
                     'user_group_id' => '1',
                     'user_id' => '101',
                     'group_id' => '1',
@@ -147,7 +147,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
                     'wiki_flags' => '2',
                     'svn_flags' => '2',
                     'news_flags' => '2'
-                  ));
+                  ]];
         $siteadmin->shouldReceive('getUserGroupData')->andReturns($ug_siteadmin);
 
         $this->assertTrue($siteadmin->isMember(1));
@@ -160,8 +160,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testIsMemberProjectAdmin(): void
     {
         $projectadmin     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ug_project_admin = array(
-            '123' => array(
+        $ug_project_admin = [
+            '123' => [
                 'user_group_id' => '1',
                 'user_id'       => '101',
                 'group_id'      => '123',
@@ -175,8 +175,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
                 'news_flags'    => '2'
-            )
-        );
+            ]
+        ];
         $projectadmin->shouldReceive('getUserGroupData')->andReturns($ug_project_admin);
         $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
         $projectadmin->shouldReceive('getPermissionManager')->andReturns($permission_manager);
@@ -196,8 +196,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testIsMemberProjectMember(): void
     {
         $projectmember     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ug_project_member = array(
-            '789' => array(
+        $ug_project_member = [
+            '789' => [
                 'user_group_id' => '1',
                 'user_id'       => '101',
                 'group_id'      => '789',
@@ -211,8 +211,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
                 'news_flags'    => '2'
-            )
-        );
+            ]
+        ];
         $projectmember->shouldReceive('getUserGroupData')->andReturns($ug_project_member);
         $permission_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
         $projectmember->shouldReceive('getPermissionManager')->andReturns($permission_manager);
@@ -234,8 +234,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
             . 'yT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHn'
             . 'QQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YL'
             . 'Rp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
-        $user = new PFUser(array('language_id'     => 'en_US',
-                               'authorized_keys' => $k1));
+        $user = new PFUser(['language_id'     => 'en_US',
+                               'authorized_keys' => $k1]);
         $this->assertEquals($user->getAuthorizedKeysRaw(), $k1);
         $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($res[0], $k1);
@@ -256,8 +256,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
             . 'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             . 'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $ssh = $k1 . PFUser::SSH_KEY_SEPARATOR . $k2;
-        $user = new PFUser(array('language_id'     => 'en_US',
-                               'authorized_keys' => $ssh));
+        $user = new PFUser(['language_id'     => 'en_US',
+                               'authorized_keys' => $ssh]);
         $this->assertEquals($user->getAuthorizedKeysRaw(), $ssh);
         $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
@@ -278,8 +278,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
             . 'mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBX'
             . 'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             . 'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
-        $user = new PFUser(array('language_id'     => 'en_US',
-                               'authorized_keys' => $k1 . PFUser::SSH_KEY_SEPARATOR . PFUser::SSH_KEY_SEPARATOR . $k2));
+        $user = new PFUser(['language_id'     => 'en_US',
+                               'authorized_keys' => $k1 . PFUser::SSH_KEY_SEPARATOR . PFUser::SSH_KEY_SEPARATOR . $k2]);
         $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
         $this->assertFalse(isset($res[1]));
@@ -290,12 +290,12 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $activeUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $activeUser->setId(123);
-        $activeUser->shouldReceive('getUserGroupData')->andReturns(array(101 => array(),
-                                                              102 => array()));
+        $activeUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
+                                                              102 => []]);
         $activeUser->setStatus(PFUser::STATUS_ACTIVE);
 
         $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $notProjectMember->shouldReceive('getUserGroupData')->andReturns(array(103 => array()));
+        $notProjectMember->shouldReceive('getUserGroupData')->andReturns([103 => []]);
 
         $this->assertTrue($activeUser->canSee($notProjectMember));
     }
@@ -304,12 +304,12 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
-        $restrictedUser->shouldReceive('getUserGroupData')->andReturns(array(101 => array(),
-                                                                  102 => array()));
+        $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
+                                                                  102 => []]);
         $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $otherProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $otherProjectMember->shouldReceive('getUserGroupData')->andReturns(array(102 => array()));
+        $otherProjectMember->shouldReceive('getUserGroupData')->andReturns([102 => []]);
 
         $this->assertTrue($restrictedUser->canSee($otherProjectMember));
     }
@@ -318,20 +318,20 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
-        $restrictedUser->shouldReceive('getUserGroupData')->andReturns(array(101 => array(),
-                                                                  102 => array()));
+        $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
+                                                                  102 => []]);
         $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $notProjectMember->shouldReceive('getUserGroupData')->andReturns(array(103 => array()));
+        $notProjectMember->shouldReceive('getUserGroupData')->andReturns([103 => []]);
 
         $this->assertFalse($restrictedUser->canSee($notProjectMember));
     }
 
     public function testGetAuthorizedKeysSplitedWithoutKey(): void
     {
-        $user = new PFUser(array('language_id'     => 'en_US',
-                               'authorized_keys' => ''));
+        $user = new PFUser(['language_id'     => 'en_US',
+                               'authorized_keys' => '']);
         $res = $user->getAuthorizedKeysArray();
         $this->assertCount(0, $res);
     }
@@ -340,14 +340,14 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $user->shouldReceive('getProjects')->andReturns(array(101, 103));
+        $user->shouldReceive('getProjects')->andReturns([101, 103]);
 
-        $dar = TestHelper::arrayToDar(array('group_id' => 102), array('group_id' => 103), array('group_id' => 104));
+        $dar = TestHelper::arrayToDar(['group_id' => 102], ['group_id' => 103], ['group_id' => 104]);
         $dao = \Mockery::spy(\UGroupDao::class);
         $dao->shouldReceive('searchGroupByUserId')->andReturns($dar);
         $user->shouldReceive('getUGroupDao')->andReturns($dao);
 
-        $this->assertEquals(array(102, 103, 104, 101), $user->getAllProjects());
+        $this->assertEquals([102, 103, 104, 101], $user->getAllProjects());
     }
 
     public function testGetLanguageShouldUserLanguageFactoryIfNotDefined(): void
@@ -355,7 +355,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $langFactory = \Mockery::spy(\BaseLanguageFactory::class);
         $langFactory->shouldReceive('getBaseLanguage')->with('fr_BE')->once();
 
-        $user = new PFUser(array('language_id' => 'fr_BE'));
+        $user = new PFUser(['language_id' => 'fr_BE']);
         $user->setLanguageFactory($langFactory);
         $user->getLanguage();
     }
@@ -369,7 +369,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsTrueWhenUserIsAdminOfProjectAdministration(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns(array(1 => array('admin_flags' => 'A')));
+        $user->shouldReceive('getUserGroupData')->andReturns([1 => ['admin_flags' => 'A']]);
         $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(false);
 
         $this->assertTrue($user->isSuperUser());
@@ -378,7 +378,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns(array());
+        $user->shouldReceive('getUserGroupData')->andReturns([]);
         $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(true);
 
         $this->assertTrue($user->isSuperUser());
@@ -387,7 +387,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsFalseWhenUserIsNotSiteAdministrator(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getUserGroupData')->andReturns(array());
+        $user->shouldReceive('getUserGroupData')->andReturns([]);
         $user->shouldReceive('doesUserHaveSuperUserPermissionDelegation')->andReturns(false);
 
         $this->assertFalse($user->isSuperUser());
@@ -400,11 +400,11 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $dao     = \Mockery::mock(\UserPreferencesDao::class);
         $user->shouldReceive('getPreferencesDao')->andReturns($dao);
 
-        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
             'preference_value' => 'default_value'
-        )));
+        ]));
 
         $user->togglePreference('pref_name', 'default_value', 'alternate_value');
     }
@@ -416,11 +416,11 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $dao     = \Mockery::mock(\UserPreferencesDao::class);
         $user->shouldReceive('getPreferencesDao')->andReturns($dao);
 
-        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
             'preference_value' => 'alt_value'
-        )));
+        ]));
 
         $user->togglePreference('pref_name', 'default_value', 'alt_value');
     }

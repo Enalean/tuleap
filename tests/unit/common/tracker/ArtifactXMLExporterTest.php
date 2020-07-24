@@ -150,13 +150,13 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
 
         if (isset($json['user']) && $json['user'] !== null) {
-            $all_users = array();
+            $all_users = [];
             foreach ($json['user'] as $user_id => $user_rows) {
                 $this->dao->shouldReceive('searchUser')->with("$user_id")->andReturns(\TestHelper::argListToDar($user_rows));
-                $all_users[] = array (
+                $all_users[] =  [
                     'user_id'   => $user_id,
                     'user_name' => $user_rows[0]['user_name']
-                );
+                ];
             }
             $this->dao->shouldReceive('getAllUsers')->andReturns(\TestHelper::argListToDar($all_users));
         } else {

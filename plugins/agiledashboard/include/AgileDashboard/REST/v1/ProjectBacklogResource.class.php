@@ -293,7 +293,7 @@ class ProjectBacklogResource
         if ($order) {
             $order->checkFormat();
 
-            $all_ids = array_merge(array($order->compared_to), $order->ids);
+            $all_ids = array_merge([$order->compared_to], $order->ids);
             $this->validateArtifactIdsAreInUnassignedTopBacklog($all_ids, $user, $project);
 
             $orderer = ArtifactsRankOrderer::build();

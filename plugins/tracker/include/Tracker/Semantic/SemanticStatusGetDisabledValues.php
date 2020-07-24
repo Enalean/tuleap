@@ -39,7 +39,7 @@ class SemanticStatusGetDisabledValues implements Dispatchable
     /**
      * @var array
      */
-    private $disabled_values = array();
+    private $disabled_values = [];
 
     public function __construct(Tracker_FormElement_Field_List $field)
     {

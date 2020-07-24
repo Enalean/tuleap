@@ -33,7 +33,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         array $submitted_values,
         array $additional_classes
     ) {
-        return $this->fetchWithColumnGroup('fetchArtifact', array($artifact, $submitted_values));
+        return $this->fetchWithColumnGroup('fetchArtifact', [$artifact, $submitted_values]);
     }
 
     public function fetchArtifactInGroup(Tracker_Artifact $artifact, array $submitted_values)
@@ -60,12 +60,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
-        return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchWithColumnGroup('fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
 
     public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
-        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
 
     /**
@@ -118,7 +118,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      */
     public function fetchAdmin($tracker)
     {
-        return $this->fetchWithColumnGroup('fetchAdmin', array($tracker));
+        return $this->fetchWithColumnGroup('fetchAdmin', [$tracker]);
     }
     public function fetchAdminInGroup($tracker)
     {
@@ -128,24 +128,24 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html .= '<div><label title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
 
         if ($this->canBeRemovedFromUsage()) {
-            $html .= '<a href="?' . http_build_query(array(
+            $html .= '<a href="?' . http_build_query([
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
-            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
+            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
             $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
+            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
             $html .= '</span>';
         }
 
         $html .= '</span></label>';
         $html .= '</div>';
-        $content = array();
+        $content = [];
         foreach ($this->getFormElements() as $formElement) {
             $content[] = $formElement->fetchAdmin($tracker);
         }
@@ -155,13 +155,13 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $html;
     }
 
-    protected function fetchWithColumnGroup($method, $params = array())
+    protected function fetchWithColumnGroup($method, $params = [])
     {
         $html = '';
         //Fetch only if it has not been already done
         if (! $this->hasBeenDisplayed()) {
             //search for next siblings
-            $next = array();
+            $next = [];
             $tf   = Tracker_FormElementFactory::instance();
             $cur = $this;
             while ($cur instanceof \Tracker_FormElement_Container_Column) {
@@ -170,7 +170,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             }
             //delegates the fetch to the group of next sibblings
             $group = new Tracker_FormElement_Container_Column_Group();
-            $html .= call_user_func_array(array($group, $method), array_merge(array($next), $params));
+            $html .= call_user_func_array([$group, $method], array_merge([$next], $params));
         }
         return $html;
     }

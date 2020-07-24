@@ -73,7 +73,7 @@ class ChartMessageFetcher
         assert($tracker instanceof Tracker);
         $user    = $this->user_manager->getCurrentUser();
 
-        $warnings = array();
+        $warnings = [];
         if ($usage->getUseStartDate()) {
             try {
                 $this->configuration_field_retriever->getStartDateField($tracker, $user);
@@ -99,7 +99,7 @@ class ChartMessageFetcher
             $warning_message = $this->fetchMissingCapacityFieldWarning(
                 $tracker,
                 ChartConfigurationFieldRetriever::CAPACITY_FIELD_NAME,
-                array('int', 'computed')
+                ['int', 'computed']
             );
             if ($warning_message !== null) {
                 $warnings[] = $warning_message;
@@ -171,7 +171,7 @@ class ChartMessageFetcher
     {
         return array_filter(
             $this->getChildTrackers($tracker),
-            array($this->configuration_field_retriever, 'doesRemainingEffortFieldExists')
+            [$this->configuration_field_retriever, 'doesRemainingEffortFieldExists']
         );
     }
 

@@ -42,7 +42,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-generate-pie-charts.js')
 );
 
-$abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
+$abc_array = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 $em = EventManager::instance();
 
@@ -96,26 +96,26 @@ $row = db_fetch_array();
 $validated_users = $row['count'];
 
 $purifier = Codendi_HTMLPurifier::instance();
-$statistics_users_graph = array();
+$statistics_users_graph = [];
 
 if ($actif_users > 0) {
-    $statistics_users_graph[] = array( 'key' => 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'count' => $actif_users);
+    $statistics_users_graph[] = ['key' => 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'count' => $actif_users];
 }
 
 if ($hold_users > 0) {
-    $statistics_users_graph[] = array( 'key' => 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'count' => $hold_users);
+    $statistics_users_graph[] = ['key' => 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'count' => $hold_users];
 }
 
 if ($deleted_users > 0) {
-    $statistics_users_graph[] = array( 'key' => 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'count' => $deleted_users);
+    $statistics_users_graph[] = ['key' => 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'count' => $deleted_users];
 }
 
 if ($validated_users + $realpending_users > 0) {
-    $statistics_users_graph[] = array( 'key' => 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'count' => $validated_users + $realpending_users);
+    $statistics_users_graph[] = ['key' => 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'count' => $validated_users + $realpending_users];
 }
 
 if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
-    $statistics_users_graph[] = array( 'key' => 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users);
+    $statistics_users_graph[] = ['key' => 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users];
 }
 
 function stats_getactiveusers($since)
@@ -132,23 +132,23 @@ function stats_getactiveusers($since)
     }
 }
 
-$additional_statistics = array(
+$additional_statistics = [
     new StatisticsPresenter(
         $GLOBALS['Language']->getText('admin_main', 'mode_lab_users'),
-        array(
+        [
             new StatisticsBadgePresenter(
                 "$mode_lab " . $GLOBALS['Language']->getText('admin_main', 'mode_lab_users_nb_users'),
                 StatisticsBadgePresenter::LEVEL_SECONDARY
             )
-        )
+        ]
     )
-);
+];
 EventManager::instance()->processEvent(
     Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS,
-    array(
+    [
         'nb_users_by_status'    => $nb_users_by_status,
         'additional_statistics' => &$additional_statistics
-    )
+    ]
 );
 
 $nb_seconds_in_a_day        = 84600;
@@ -319,4 +319,4 @@ $system_events_pane_renderer->renderToPage(
 
 echo '</div>';
 
-$GLOBALS['HTML']->footer(array());
+$GLOBALS['HTML']->footer([]);

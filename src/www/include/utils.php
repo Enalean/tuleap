@@ -88,23 +88,23 @@ function util_importdatefmt_to_unixtime($date)
 {
     $time = 0;
     if (! $date || $date == "") {
-        return array($time,false);
+        return [$time, false];
     }
 
     if (strstr($date, "/") !== false) {
         [$year, $month, $day, $hour, $minute] = util_xlsdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
 
-        return array($time,true);
+        return [$time, true];
     }
 
     if (strstr($date, "-") !== false) {
         [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
-        return array($time,true);
+        return [$time, true];
     }
 
-    return array($time,false);
+    return [$time, false];
 }
 
 // Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
@@ -146,7 +146,7 @@ function util_xlsdatefmt_explode($date)
         }
     }
 
-    return array($year,$month,$day,$hour,$minute);
+    return [$year, $month, $day, $hour, $minute];
 }
 
 
@@ -158,12 +158,12 @@ function util_date_to_unixtime($date)
 {
     $time = 0;
     if (! $date || $date == "") {
-        return array($time,false);
+        return [$time, false];
     }
 
     [$year, $month, $day] = util_date_explode($date);
     $time = mktime(0, 0, 0, $month, $day, $year);
-    return array($time,true);
+    return [$time, true];
 }
 
 // Explode a date in the form of (YYYY-MM-DD) into its a list of 3 parts (YYYY,MM,DD)
@@ -177,7 +177,7 @@ function util_date_explode($date)
         if ($res == 0) {
             // if it doesn't work try YYYY only
             $res = preg_match("/\s*(\d+)/", $date, $match);
-            return array('1970','1','1');
+            return ['1970', '1', '1'];
             if ($res == 0) {
          // nothing is valid return Epoch time
                 $year = '1970';
@@ -195,7 +195,7 @@ function util_date_explode($date)
     } else {
         [, $year, $month, $day] = $match;
     }
-    return array($year,$month,$day);
+    return [$year, $month, $day];
 }
 
 // Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
@@ -206,19 +206,19 @@ function util_sysdatefmt_to_unixtime($date)
 {
     $time = 0;
     if (! $date || $date == "") {
-        return array($time,false);
+        return [$time, false];
     }
 
     [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
     $time = mktime($hour, $minute, 0, $month, $day, $year);
-    return array($time,true);
+    return [$time, true];
 }
 
 // Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
 function util_sysdatefmt_explode($date)
 {
-    $months = array("Jan" => 1, "Feb" => 2, "Mar" => 3, "Apr" => 4, "May" => 5, "Jun" => 6, "Jul" => 7, "Aug" => 8, "Sep" => 9, "Oct" => 10, "Nov" => 11, "Dec" => 12);
+    $months = ["Jan" => 1, "Feb" => 2, "Mar" => 3, "Apr" => 4, "May" => 5, "Jun" => 6, "Jul" => 7, "Aug" => 8, "Sep" => 9, "Oct" => 10, "Nov" => 11, "Dec" => 12];
 
     $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/", $date, $match);
     if ($res == 0) {
@@ -259,13 +259,13 @@ function util_sysdatefmt_explode($date)
         [, $year, $month, $day, $hour, $minute] = $match;
     }
 
-    return array($year,getMonth($month, $ok),$day,$hour,$minute);
+    return [$year, getMonth($month, $ok), $day, $hour, $minute];
 }
 
 //accept now month either in format Jan-Dec or 1-12
 function getMonth($month, &$ok)
 {
-    $months = array("Jan" => 1, "Feb" => 2, "Mar" => 3, "Apr" => 4, "May" => 5, "Jun" => 6, "Jul" => 7, "Aug" => 8, "Sep" => 9, "Oct" => 10, "Nov" => 11, "Dec" => 12);
+    $months = ["Jan" => 1, "Feb" => 2, "Mar" => 3, "Apr" => 4, "May" => 5, "Jun" => 6, "Jul" => 7, "Aug" => 8, "Sep" => 9, "Oct" => 10, "Nov" => 11, "Dec" => 12];
     if (array_key_exists($month, $months)) {
         $ok = true;
         return $months[$month];
@@ -323,12 +323,12 @@ function util_result_column_to_array($result, $col = 0)
     $rows = db_numrows($result);
 
     if ($rows > 0) {
-        $arr = array();
+        $arr = [];
         for ($i = 0; $i < $rows; $i++) {
             $arr[$i] = db_result($result, $i, $col);
         }
     } else {
-        $arr = array();
+        $arr = [];
     }
     return $arr;
 }
@@ -373,7 +373,7 @@ function util_line_wrap($text, $wrap = 80, $break = "\n")
 {
     $paras = explode("\n", $text);
 
-    $result = array();
+    $result = [];
     $i = 0;
     while ($i < count($paras)) {
         if (strlen($paras[$i]) <= $wrap) {
@@ -477,7 +477,7 @@ function util_double_diff_array($arr1, $arr2)
         $h2[$v] = $v;
     }
 
-    $deleted = array();
+    $deleted = [];
     foreach ($h1 as $k => $v) {
         if (! isset($h2[$k])) {
             $deleted[] = $k;
@@ -490,7 +490,7 @@ function util_double_diff_array($arr1, $arr2)
         }
     }
 
-    return array($deleted, $added);
+    return [$deleted, $added];
 }
 
 // Deprecated
@@ -598,8 +598,8 @@ function util_split_emails($addresses)
 function util_cleanup_email_list($addresses)
 {
     $list             = util_split_emails($addresses);
-    $cleanedAddresses = array();
-    $badAddresses     = array();
+    $cleanedAddresses = [];
+    $badAddresses     = [];
     foreach ($list as $address) {
         if (validate_email($address)) {
             $cleanedAddresses[] = $address;
@@ -607,7 +607,7 @@ function util_cleanup_email_list($addresses)
             $badAddresses[] = $address;
         }
     }
-    return array('clean' => $cleanedAddresses, 'bad' => $badAddresses);
+    return ['clean' => $cleanedAddresses, 'bad' => $badAddresses];
 }
 
 // One Email Verification
@@ -756,9 +756,9 @@ function formatByteToMb($size_byte)
 function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
 {
     // Pick units
-    $systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
+    $systems['si']['prefix'] = ['B', 'K', 'MB', 'GB', 'TB', 'PB'];
     $systems['si']['size']   = 1000;
-    $systems['bi']['prefix'] = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+    $systems['bi']['prefix'] = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
     $systems['bi']['size']   = 1024;
     $sys = isset($systems[$system]) ? $systems[$system] : $systems['si'];
 
@@ -964,5 +964,5 @@ function http_split_header_body($content)
     $beginning_of_body     = $end_of_headers + strlen($body_header_separator);
     $headers               = substr($content, 0, $end_of_headers);
     $body                  = substr($content, $beginning_of_body);
-    return array($headers, $body);
+    return [$headers, $body];
 }

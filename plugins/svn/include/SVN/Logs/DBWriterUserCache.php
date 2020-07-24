@@ -29,7 +29,7 @@ class DBWriterUserCache
      * @var UserManager
      */
     private $user_manager;
-    private $users_cache = array();
+    private $users_cache = [];
 
     public function __construct(UserManager $user_manager)
     {

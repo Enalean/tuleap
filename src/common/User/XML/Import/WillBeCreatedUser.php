@@ -28,11 +28,11 @@ use RandomNumberGenerator;
 class WillBeCreatedUser implements ReadyToBeImportedUser
 {
 
-    public static $ALLOWED_STATUSES = array(
+    public static $ALLOWED_STATUSES = [
         PFUser::STATUS_ACTIVE,
         PFUser::STATUS_RESTRICTED,
         PFUser::STATUS_SUSPENDED,
-    );
+    ];
 
     /** @var string */
     private $username;

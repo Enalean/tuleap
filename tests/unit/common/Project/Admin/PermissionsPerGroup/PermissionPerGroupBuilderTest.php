@@ -60,7 +60,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns(array());
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
@@ -74,7 +74,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns(array());
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
 
         $ugroups = $this->builder->buildUGroup($project, $request);
 
@@ -86,7 +86,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
         $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $request = \Mockery::spy(\HTTPRequest::class);
 
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns(array());
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturns([]);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $ugroups = $this->builder->buildUGroup($project, $request);

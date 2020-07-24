@@ -222,7 +222,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array(
+        $this->removeOrphanWidgets([
             'plugin_hudson_my_jobs',
             'plugin_hudson_my_joblastbuilds',
             'plugin_hudson_my_jobtestresults',
@@ -235,14 +235,14 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             'plugin_hudson_project_jobtesttrend',
             'plugin_hudson_project_jobbuildhistory',
             'plugin_hudson_project_joblastartifacts'
-        ));
+        ]);
     }
 
     public function getAvailableReferenceNatures($params)
     {
-        $hudson_plugin_reference_natures = array(
-            'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
-            'hudson_job' => array('keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')));
+        $hudson_plugin_reference_natures = [
+            'hudson_build'  => ['keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')],
+            'hudson_job' => ['keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')]];
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }
 
@@ -418,8 +418,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             }
             $formatter->clearContent();
             $formatter->addEmptyLine();
-            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
-            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
+            $formatter->addLine([$GLOBALS['Language']->getText('plugin_hudson', 'title')]);
+            $formatter->addLine([$GLOBALS['Language']->getText('plugin_hudson', 'job_count', [date('Y-m-d')]), $count]);
             echo $formatter->getCsvContent();
             $formatter->clearContent();
         }

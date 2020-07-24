@@ -104,18 +104,18 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         $tracker2->shouldReceive('getGroupId')->andReturns($group_id);
         $tracker2->shouldReceive('getId')->andReturns(112);
 
-        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
-            1 => array('PERM_1'),
-            3 => array('PERM_2'),
-            5 => array('PERM_3'),
-            115 => array('PERM_3'),
-        ));
-        $tracker1->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
-            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
-        ));
-        $tracker2->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
-            1002 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
-        ));
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns([
+            1 => ['PERM_1'],
+            3 => ['PERM_2'],
+            5 => ['PERM_3'],
+            115 => ['PERM_3'],
+        ]);
+        $tracker1->shouldReceive('getPermissionsByUgroupId')->andReturns([
+            1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
+        ]);
+        $tracker2->shouldReceive('getPermissionsByUgroupId')->andReturns([
+            1002 => [ 102 => 'PLUGIN_TRACKER_ADMIN'],
+        ]);
 
         $site_admin_user = \Mockery::spy(\PFUser::class);
         $site_admin_user->shouldReceive('getId')->andReturns(1);
@@ -216,13 +216,13 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         UserManager::setInstance($user_manager);
 
         $this->initial_global_ugroups = $GLOBALS['UGROUPS'];
-        $GLOBALS['UGROUPS'] = array(
+        $GLOBALS['UGROUPS'] = [
             'UGROUP_1' => 1,
             'UGROUP_2' => 2,
             'UGROUP_3' => 3,
             'UGROUP_4' => 4,
             'UGROUP_5' => 5,
-        );
+        ];
     }
 
     protected function tearDown(): void
@@ -234,26 +234,26 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testHasUnknownAidCreateMode(): void
     {
-        $header = array('summary', 'details');
-        $lines = array(
-                    array('summary 1', 'details 1'),
-                    array('summary 2', 'details 2'),
-                    array('summary 3', 'details 3'),
-                    array('summary 4', 'details 4'),
-                 );
+        $header = ['summary', 'details'];
+        $lines = [
+                    ['summary 1', 'details 1'],
+                    ['summary 2', 'details 2'],
+                    ['summary 3', 'details 3'],
+                    ['summary 4', 'details 4'],
+                 ];
 
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));
     }
 
     public function testHasUnknownAidUpdateModeNoError(): void
     {
-        $header = array('aid','summary', 'details');
-        $lines = array(
-                    array('1','summary 1', 'details 1'),
-                    array('2','summary 2', 'details 2'),
-                    array('3','summary 3', 'details 3'),
-                    array('4','summary 4', 'details 4'),
-                 );
+        $header = ['aid', 'summary', 'details'];
+        $lines = [
+                    ['1','summary 1', 'details 1'],
+                    ['2','summary 2', 'details 2'],
+                    ['3','summary 3', 'details 3'],
+                    ['4','summary 4', 'details 4'],
+                 ];
 
         $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
@@ -277,13 +277,13 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testHasUnknownAidUpdateModeError(): void
     {
-        $header = array('aid','summary', 'details');
-        $lines = array(
-                    array('1','summary 1', 'details 1'),
-                    array('2','summary 2', 'details 2'),
-                    array('3','summary 3', 'details 3'),
-                    array('4','summary 4', 'details 4'),
-                 );
+        $header = ['aid', 'summary', 'details'];
+        $lines = [
+                    ['1','summary 1', 'details 1'],
+                    ['2','summary 2', 'details 2'],
+                    ['3','summary 3', 'details 3'],
+                    ['4','summary 4', 'details 4'],
+                 ];
 
         $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
@@ -309,13 +309,13 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidCSVWrongSeparator(): void
     {
-        $lines = array(
-                    array('aid;summary;details'),
-                    array('1;summary 1;details 1'),
-                    array('2;summary 2;details 2'),
-                    array('3;summary 3;details 3'),
-                    array('4;summary 4;details 4'),
-                 );
+        $lines = [
+                    ['aid;summary;details'],
+                    ['1;summary 1;details 1'],
+                    ['2;summary 2;details 2'],
+                    ['3;summary 3;details 3'],
+                    ['4;summary 4;details 4'],
+                 ];
         $separator = ',';
 
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -327,13 +327,13 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidCSVGoodSeparator(): void
     {
-        $lines = array(
-                    array('aid', 'summary', 'details'),
-                    array('1', 'summary 1', 'details 1'),
-                    array('2', 'summary 2', 'details 2'),
-                    array('3', 'summary 3', 'details 3'),
-                    array('4', 'summary 4', 'details 4'),
-                 );
+        $lines = [
+                    ['aid', 'summary', 'details'],
+                    ['1', 'summary 1', 'details 1'],
+                    ['2', 'summary 2', 'details 2'],
+                    ['3', 'summary 3', 'details 3'],
+                    ['4', 'summary 4', 'details 4'],
+                 ];
         $separator = ',';
 
         $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns(\Mockery::spy(\Tracker_RulesManager::class));
@@ -346,7 +346,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFormElementDispatchesToOrdinaryFieldCreation(): void
     {
-        $data = array('type' => 'string');
+        $data = ['type' => 'string'];
 
         [$tracker, $factory, $sharedFactory, $user] = $this->givenATrackerAndItsFactories();
         $factory->shouldReceive('createFormElement')->with($tracker, $data['type'], $data, false, false)->once();
@@ -357,7 +357,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFormElementDispatchesToSharedField(): void
     {
-        $data = array('type' => 'shared');
+        $data = ['type' => 'shared'];
 
         [$tracker, $factory, $sharedFactory, $user] = $this->givenATrackerAndItsFactories();
         $factory->shouldReceive('createFormElement')->never();
@@ -374,7 +374,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         $sharedFactory = \Mockery::spy(\Tracker_SharedFormElementFactory::class);
         $tracker->setSharedFormElementFactory($sharedFactory);
         $user = \Mockery::spy(\PFUser::class);
-        return array($tracker, $factory, $sharedFactory, $user);
+        return [$tracker, $factory, $sharedFactory, $user];
     }
 
     private function setUpTrackerWorkflowTest(): void

@@ -87,7 +87,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
             "tracker_admin_field_" . $this->field->getId(),
             'artifact[' . $this->field->getId() . ']',
             $value,
-            array(),
+            [],
             $errors,
             true
         );

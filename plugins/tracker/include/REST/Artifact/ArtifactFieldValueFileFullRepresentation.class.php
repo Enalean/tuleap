@@ -42,7 +42,7 @@ class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueReprese
     /**
      * @var Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]
      */
-    public $file_descriptions = array();
+    public $file_descriptions = [];
 
     public function build($id, $type, $label, array $values)
     {

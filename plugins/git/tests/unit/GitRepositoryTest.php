@@ -121,7 +121,7 @@ class GitRepositoryTest extends TestCase
 
     public function testProjectRepositoryDosNotBelongToUser(): void
     {
-        $user = new PFUser(array('language_id' => 1));
+        $user = new PFUser(['language_id' => 1]);
         $user->setUserName('sandra');
 
         $repo = new GitRepository();
@@ -133,7 +133,7 @@ class GitRepositoryTest extends TestCase
 
     public function testUserRepositoryBelongsToUser(): void
     {
-        $user = new PFUser(array('language_id' => 1));
+        $user = new PFUser(['language_id' => 1]);
         $user->setUserName('sandra');
 
         $repo = new GitRepository();
@@ -144,10 +144,10 @@ class GitRepositoryTest extends TestCase
     }
     public function testUserRepositoryDoesNotBelongToAnotherUser(): void
     {
-        $creator = new PFUser(array('language_id' => 1));
+        $creator = new PFUser(['language_id' => 1]);
         $creator->setId(123);
 
-        $user = new PFUser(array('language_id' => 1));
+        $user = new PFUser(['language_id' => 1]);
         $user->setId(456);
 
         $repo = new GitRepository();

@@ -32,11 +32,11 @@ require_once __DIR__ . '/../include/pre.php';
 
 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
     $GLOBALS['Response']->send400JSONErrors(
-        array(
+        [
             'error' => _(
                 "You don't have permissions to see user groups."
             )
-        )
+        ]
     );
 }
 

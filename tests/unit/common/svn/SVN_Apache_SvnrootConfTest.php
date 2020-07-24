@@ -41,24 +41,24 @@ class SVN_Apache_SvnrootConfTest extends TestCase
 
     private function givenSvnrootForTwoGroups(): SVN_Apache_SvnrootConf
     {
-        $projects = array(
-            array(
+        $projects = [
+            [
                 'repository_name' => 'gpig',
                 'public_path'     => '/svnroot/gpig',
                 'system_path'     => '/svnroot/gpig',
                 'group_name'      => 'Guinea Pig',
                 'group_id'        => 101
-            ),
-            array(
+            ],
+            [
                 'repository_name' => 'garden',
                 'public_path'     => '/svnroot/garden',
                 'system_path'     => '/svnroot/garden',
                 'group_name'      => 'The Garden Project',
                 'group_id'        => 102
-            )
-        );
+            ]
+        ];
 
-        $repositories = array();
+        $repositories = [];
 
         $event_manager = new class extends EventManager
         {
@@ -92,7 +92,7 @@ class SVN_Apache_SvnrootConfTest extends TestCase
 
     private function thenThereAreTwoLocationDefinedGpigAndGarden($conf)
     {
-        $matches = array();
+        $matches = [];
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
         $this->assertEquals('gpig', $matches[1][0]);
         $this->assertEquals('garden', $matches[1][1]);

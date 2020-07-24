@@ -24,7 +24,7 @@ class Docman_Path
     public $path;
     public function __construct()
     {
-        $this->path = array();
+        $this->path = [];
     }
     public function get(&$item)
     {
@@ -32,7 +32,7 @@ class Docman_Path
             $this->path[$item->getId()] = '';
             if ($item->getParentId()) {
                 $if = $this->_getItemFactory();
-                $parent = $if->getItemFromDb($item->getParentId(), array('ignore_deleted' => true));
+                $parent = $if->getItemFromDb($item->getParentId(), ['ignore_deleted' => true]);
                 if ($parent) {
                     $this->path[$item->getId()] = $this->get($parent) . '/';
                 }

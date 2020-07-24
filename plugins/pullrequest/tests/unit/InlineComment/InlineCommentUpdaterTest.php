@@ -45,7 +45,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeObsoleteIfLineWasAddedAndLineIsDeleted(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -70,7 +70,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeObsoleteIfLineWasKeptAndLineIsDeleted(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
@@ -95,7 +95,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeObsoleteIfLineWasAddedAndLineContentHasChanged(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -123,7 +123,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeMovedIfLineWasAddedAndLineIsMoved(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
@@ -155,7 +155,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeMovedIfLineWasKeptAndLineIsMoved(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
@@ -187,7 +187,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeObsoleteIfLineWasDeletedAndLineIsNoMoreDeleted(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
@@ -214,7 +214,7 @@ class WhenSourceChangesTest extends TestCase
 
     public function testItShouldBeKeptIfLineWasDeletedAndLineIsMoved(): void
     {
-        $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
+        $comments = [new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false)];
 
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');

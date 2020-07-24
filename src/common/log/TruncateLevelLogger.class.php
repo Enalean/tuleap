@@ -26,12 +26,12 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
      */
     private $logger;
 
-    private $level_weight = array(
+    private $level_weight = [
         \Psr\Log\LogLevel::DEBUG => 0,
         \Psr\Log\LogLevel::INFO  => 10,
         \Psr\Log\LogLevel::WARNING  => 20,
         \Psr\Log\LogLevel::ERROR => 30,
-    );
+    ];
 
     private $should_log;
 
@@ -105,22 +105,22 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         $this->logger->emergency($message, $context);
     }
 
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         $this->logger->alert($message, $context);
     }
 
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         $this->logger->critical($message, $context);
     }
 
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         if ($this->should_log[\Psr\Log\LogLevel::DEBUG]) {
             $this->logger->notice($message, $context);

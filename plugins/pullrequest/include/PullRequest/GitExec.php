@@ -31,7 +31,7 @@ class GitExec extends Git_Exec
 
     public function getBranchSha1($branch_name)
     {
-        $output = array();
+        $output = [];
 
         try {
             $this->gitCmdWithOutput('show-ref --hash ' . escapeshellarg($branch_name), $output);
@@ -48,7 +48,7 @@ class GitExec extends Git_Exec
 
     public function getModifiedFilesNameStatus($src_reference, $dest_reference)
     {
-        $output = array();
+        $output = [];
 
         try {
             $this->gitCmdWithOutput(
@@ -79,7 +79,7 @@ class GitExec extends Git_Exec
 
     public function sharedCloneAndCheckout($remote, $branch_name)
     {
-        $output = array();
+        $output = [];
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg($branch_name);
         $cmd    = "clone --shared -b $branch $remote " . $this->getPath();
@@ -99,7 +99,7 @@ class GitExec extends Git_Exec
 
     public function merge($reference, $user)
     {
-        $output    = array();
+        $output    = [];
         $reference = escapeshellarg($reference);
 
         $this->setLocalCommiter($user->getRealName(), $user->getEmail());
@@ -147,7 +147,7 @@ class GitExec extends Git_Exec
     {
         $ref    = escapeshellarg($ref);
         $cmd    = "log -1 $ref --pretty=%B";
-        $output = array();
+        $output = [];
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output;
@@ -165,7 +165,7 @@ class GitExec extends Git_Exec
         $ref1   = escapeshellarg($ref1);
         $ref2   = escapeshellarg($ref2);
         $cmd    = "merge-base $ref1 $ref2";
-        $output = array();
+        $output = [];
 
         $this->gitCmdWithOutput($cmd, $output);
         return $output[0];

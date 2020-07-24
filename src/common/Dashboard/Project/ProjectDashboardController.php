@@ -161,7 +161,7 @@ class ProjectDashboardController
             $dashboard_id,
             $project_dashboards
         );
-        $trove_cats                   = array();
+        $trove_cats                   = [];
         if (ForgeConfig::get('sys_use_trove')) {
             $trove_dao = new TroveCatLinkDao();
             foreach ($trove_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
@@ -187,11 +187,11 @@ class ProjectDashboardController
         $purifier = Codendi_HTMLPurifier::instance();
         $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
         site_project_header(
-            array(
+            [
                 'title'  => $title,
                 'group'  => $project->getID(),
                 'toptab' => 'summary'
-            )
+            ]
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
@@ -216,7 +216,7 @@ class ProjectDashboardController
                 $should_display_project_created_modal
             )
         );
-        $GLOBALS['Response']->footer(array());
+        $GLOBALS['Response']->footer([]);
     }
 
     public function createDashboard(HTTPRequest $request)
@@ -376,7 +376,7 @@ class ProjectDashboardController
      */
     private function getProjectDashboardsPresenter(PFUser $user, Project $project, $dashboard_id, array $project_dashboards)
     {
-        $project_dashboards_presenter = array();
+        $project_dashboards_presenter = [];
 
         foreach ($project_dashboards as $index => $dashboard) {
             if (! $dashboard_id && $index === 0) {
@@ -385,7 +385,7 @@ class ProjectDashboardController
                 $is_active = $dashboard->getId() === $dashboard_id;
             }
 
-            $widgets_presenter = array();
+            $widgets_presenter = [];
             if ($is_active) {
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {

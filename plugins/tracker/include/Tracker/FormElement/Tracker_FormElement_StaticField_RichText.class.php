@@ -23,12 +23,12 @@
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField
 {
 
-    public $default_properties = array(
-        'static_value' => array(
+    public $default_properties = [
+        'static_value' => [
             'value' => '',
             'type'  => 'rich_text',
-        ),
-    );
+        ],
+    ];
 
     /**
      * The static text
@@ -66,12 +66,12 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         $html = '';
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<div class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
-        $html .= '<a href="?' . http_build_query(array(
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $html .= '<a href="?' . http_build_query([
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
-            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
+            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         $html .= '</div>';
         $html .= '<br />';
         $html .= $this->fetchAdminFormElement();

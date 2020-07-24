@@ -87,11 +87,11 @@ abstract class InjectSpanPadding extends TestCase
         if (is_array($artifactLinks)) {
             $artifactLinks = implode(', ', $artifactLinks);
         }
-        $nodeData = array(
+        $nodeData = [
             'id'            => $id,
             'title'         => $title,
             'artifactlinks' => $artifactLinks,
-        );
+        ];
 
         $node = new TreeNode($nodeData);
         $node->setId($id);

@@ -57,7 +57,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $task_tracker   = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn(101)->getMock();
         $bug_tracker    = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn(102)->getMock();
         $dayoff_tracker = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn(103)->getMock();
-        $story_tracker->shouldReceive('getChildren')->andReturn(array($task_tracker, $bug_tracker));
+        $story_tracker->shouldReceive('getChildren')->andReturn([$task_tracker, $bug_tracker]);
 
         $tracker_factory->shouldReceive('getTrackerById')->with(100)->andReturns($story_tracker);
         $tracker_factory->shouldReceive('getTrackerById')->with(101)->andReturns($task_tracker);
@@ -86,10 +86,10 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItExportsChildren(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, null),
             $this->anArtifactLinkInfoUserCanView(222, 102, null),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -114,10 +114,10 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItExportsChildrenNatureMode(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
             $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -143,9 +143,9 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItDoesNotExportArtifactsThatAreNotChildren(): void
     {
-        $this->changeset_value->shouldReceive('getArtifactIds')->andReturns(array(
+        $this->changeset_value->shouldReceive('getArtifactIds')->andReturns([
             $this->anArtifactLinkInfoUserCanView(333, 103, null),
-        ));
+        ]);
 
         $this->exporter->export(
             $this->artifact_xml,
@@ -160,9 +160,9 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItDoesNotExportChildrenUserCannotSee(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCannotView(111, 101, null),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -183,9 +183,9 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItDoesNotExportChildrenUserCannotSeeNatureMode(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -221,10 +221,10 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
 
     public function testItCollectsChildren(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, null),
             $this->anArtifactLinkInfoUserCanView(222, 102, null),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -238,15 +238,15 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->changeset_value
         );
 
-        $this->assertEquals(array(111, 222), $this->collector->getAllChildrenIds());
+        $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());
     }
 
     public function testItCollectsChildrenNatureMode(): void
     {
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
             $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
-        ));
+        ]);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
@@ -260,7 +260,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->changeset_value
         );
 
-        $this->assertEquals(array(111, 222), $this->collector->getAllChildrenIds());
+        $this->assertEquals([111, 222], $this->collector->getAllChildrenIds());
     }
 
     private function anArtifactLinkInfoUserCanView($artifact_id, $tracker_id, $nature)

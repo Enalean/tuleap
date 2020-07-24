@@ -21,12 +21,12 @@
 class Encoding_SupportedXmlCharEncoding
 {
 
-    private static $php_supported_encoding_types = array(
+    private static $php_supported_encoding_types = [
         'UTF-8',
         'ISO-8859-1',
         'ISO-8859-5',
         'ISO-8859-15',
-    );
+    ];
 
    /**
     * @see http://www.w3.org/TR/REC-xml/#charsets

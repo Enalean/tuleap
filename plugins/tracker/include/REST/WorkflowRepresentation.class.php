@@ -57,7 +57,7 @@ class WorkflowRepresentation
     /**
      * @var \Tuleap\Tracker\REST\WorkflowTransitionRepresentation[]
      */
-    public $transitions = array();
+    public $transitions = [];
 
     public function __construct(Workflow $workflow, WorkflowRulesRepresentation $rules, array $transitions)
     {

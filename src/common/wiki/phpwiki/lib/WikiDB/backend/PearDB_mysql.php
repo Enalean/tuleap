@@ -77,7 +77,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom'))) {
+        if ($orderby = $this->sortby($sortby, 'db', ['pagename', 'wantedfrom'])) {
             $orderby = 'ORDER BY ' . $orderby;
         }
 

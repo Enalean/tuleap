@@ -27,7 +27,7 @@ class CollectionOfLabelableDao implements Dispatchable
     public const NAME = 'collectionOfLabelableDao';
 
     /** @var LabelableDao[] */
-    private $daos = array();
+    private $daos = [];
 
     public function add(LabelableDao $dao)
     {

@@ -35,14 +35,14 @@ class Tracker_Rule_Date extends Tracker_Rule
     public const COMPARATOR_GREATER_THAN           = '>';
     public const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
-    public static $allowed_comparators = array(
+    public static $allowed_comparators = [
         self::COMPARATOR_LESS_THAN,
         self::COMPARATOR_LESS_THAN_OR_EQUALS,
         self::COMPARATOR_EQUALS,
         self::COMPARATOR_GREATER_THAN_OR_EQUALS,
         self::COMPARATOR_GREATER_THAN,
         self::COMPARATOR_NOT_EQUALS,
-    );
+    ];
 
     /**
      *

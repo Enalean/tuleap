@@ -106,7 +106,7 @@ class ViewVCProxy
         $location_found = false;
 
         while ($location_line && ! $location_found && strlen($location_line) > 1) {
-            $matches = array();
+            $matches = [];
 
             if (preg_match('/^Location:(.*)$/', $location_line, $matches)) {
                 return $matches[1];
@@ -184,17 +184,17 @@ class ViewVCProxy
     private function display(Project $project, $body)
     {
         commits_header(
-            array(
+            [
                 'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
                 'group' => $project->getID(),
-                'body_class' => array('viewvc-epel')
-            )
+                'body_class' => ['viewvc-epel']
+            ]
         );
         echo util_make_reference_links(
             $body,
             $project->getID()
         );
-        site_footer(array());
+        site_footer([]);
     }
 
     private function getPermissionDeniedError(Project $project)

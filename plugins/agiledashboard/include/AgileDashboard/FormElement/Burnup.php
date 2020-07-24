@@ -127,7 +127,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     public function fetchArtifactValue(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        $submitted_values = []
     ) {
     }
 

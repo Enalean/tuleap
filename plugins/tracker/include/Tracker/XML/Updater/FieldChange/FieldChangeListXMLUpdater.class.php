@@ -29,12 +29,12 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
         $this->removeExistingValuesNodes($field_change_xml);
 
         if (! is_array($submitted_value)) {
-            $submitted_value = array($submitted_value);
+            $submitted_value = [$submitted_value];
         }
 
         array_walk(
             $submitted_value,
-            array($this, 'appendValuesToFieldChangeNode'),
+            [$this, 'appendValuesToFieldChangeNode'],
             $field_change_xml
         );
     }

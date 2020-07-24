@@ -35,23 +35,23 @@ class AdminPageRenderer
         $body_class = [];
 
         $GLOBALS['HTML']->header(
-            array(
+            [
                 'in_siteadmin' => true,
                 'title'        => $title,
                 'body_class'   => $body_class,
-                'main_classes' => $is_framed ? array('tlp-framed') : array(),
+                'main_classes' => $is_framed ? ['tlp-framed'] : [],
                 'sidebar'      => new SidebarPresenter(
                     'siteadmin-sidebar',
                     $this->renderSideBar(),
                     VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())
                 )
-            )
+            ]
         );
     }
 
     public function footer()
     {
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
     }
 
     public function renderAPresenter($title, $template_path, $template_name, $presenter)

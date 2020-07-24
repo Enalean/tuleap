@@ -78,11 +78,11 @@ class CrossTrackerArtifactReportRepresentation
         $this->id               = JsonCast::toInt($artifact->getId());
         $this->title            = $artifact->getTitle() ?? '';
         $this->badge            =
-            array(
+            [
                 "uri"       => $artifact->getUri(),
                 "color"     => $artifact->getTracker()->getColor()->getName(),
                 "cross_ref" => $artifact->getXRef()
-            );
+            ];
         $this->status           = $artifact->getStatus();
         $this->last_update_date = JsonCast::toDate($artifact->getLastUpdateDate());
 

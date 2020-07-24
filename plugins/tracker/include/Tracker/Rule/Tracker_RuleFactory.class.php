@@ -64,7 +64,7 @@ class Tracker_RuleFactory
     public function __construct(Tracker_RuleDao $rules_dao)
     {
         $this->rules_dao = $rules_dao;
-        $this->rules = array();
+        $this->rules = [];
     }
 
     /**
@@ -86,7 +86,7 @@ class Tracker_RuleFactory
     public function getAllListRulesByTrackerWithOrder($tracker_id)
     {
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
-        $rules = array();
+        $rules = [];
         while ($rule_row = $dar->getRow()) {
             if (! isset($this->rules[$rule_row['id']])) {
                 $rule_row['tracker_id'] = $tracker_id;
@@ -183,7 +183,7 @@ class Tracker_RuleFactory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker)
     {
-        $rules = array();
+        $rules = [];
         //test this better
         if (property_exists($xml, 'list_rules')) {
             $list_rules = $xml->list_rules;
@@ -209,7 +209,7 @@ class Tracker_RuleFactory
      */
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
-        $dependencies = array();
+        $dependencies = [];
         foreach ($this->rules_dao->searchBySourceTarget($tracker_id, $field_source_id, $field_target_id) as $row) {
             $dependencies[$row['id']] = $this->getInstanceFromRow($row);
         }
@@ -339,7 +339,7 @@ class Tracker_RuleFactory
      */
     private function generateDateRulesArrayFromXml($date_rules, &$xmlMapping, $tracker)
     {
-        $rules = array();
+        $rules = [];
 
         foreach ($date_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
@@ -372,7 +372,7 @@ class Tracker_RuleFactory
      */
     private function generateListRulesArrayFromXml($list_rules, &$xmlMapping, $tracker)
     {
-        $rules = array();
+        $rules = [];
 
         foreach ($list_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();

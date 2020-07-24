@@ -53,14 +53,14 @@ function StartLoadDump(&$request, $title, $html = '')
     if ($html) {
         $html->pushContent('%BODY%');
     }
-    $tmpl = Template('html', array('TITLE' => $title,
+    $tmpl = Template('html', ['TITLE' => $title,
                                    'HEADER' => $title,
-                                   'CONTENT' => $html ? $html : '%BODY%'));
+                                   'CONTENT' => $html ? $html : '%BODY%']);
     echo preg_replace('/%BODY%.*/D', '', $tmpl->getExpansion($html));
     $request->chunkOutput();
 
     // set marker for sendPageChangeNotification()
-    $request->_deferredPageChangeNotification = array();
+    $request->_deferredPageChangeNotification = [];
 }
 
 function EndLoadDump(&$request)
@@ -98,7 +98,7 @@ function EndLoadDump(&$request)
 
     // do deferred sendPageChangeNotification()
     if (! empty($request->_deferredPageChangeNotification)) {
-        $pages = $all_emails = $all_users = array();
+        $pages = $all_emails = $all_users = [];
         foreach ($request->_deferredPageChangeNotification as $p) {
             list($pagename, $emails, $userids) = $p;
             $pages[] = $pagename;
@@ -184,7 +184,7 @@ function MailifyPage($page, $nversions = 1)
     //$head .= "X-Rcs-Id: \$Id\$\r\n";
 
     $iter = $page->getAllRevisions();
-    $parts = array();
+    $parts = [];
     while ($revision = $iter->next()) {
         $parts[] = MimeifyPageRevision($page, $revision);
         if ($nversions > 0 && count($parts) >= $nversions) {
@@ -245,7 +245,7 @@ function MakeWikiZip(&$request)
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
         $excludeList = explodePageList($exclude);
     } else {
-        $excludeList = array();
+        $excludeList = [];
     }
     if ($pages = $request->getArg('pages')) {  // which pagenames
         if ($pages == '[]') { // current page
@@ -276,8 +276,8 @@ function MakeWikiZip(&$request)
             continue;
         }
 
-        $attrib = array('mtime'    => $current->get('mtime'),
-                        'is_ascii' => 1);
+        $attrib = ['mtime'    => $current->get('mtime'),
+                        'is_ascii' => 1];
         if ($page->get('locked')) {
             $attrib['write_protected'] = 1;
         }
@@ -324,7 +324,7 @@ function _copyMsg($page, $smallmsg)
  */
 function MakeWikiZipHtml(&$request)
 {
-    $request->_TemplatesProcessed = array();
+    $request->_TemplatesProcessed = [];
     $zipname = "wikihtml.zip";
     $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $zipname);
     $dbi = $request->_dbi;
@@ -332,7 +332,7 @@ function MakeWikiZipHtml(&$request)
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
         $excludeList = explodePageList($exclude);
     } else {
-        $excludeList = array();
+        $excludeList = [];
     }
     if ($pages = $request->getArg('pages')) {  // which pagenames
         if ($pages == '[]') { // current page
@@ -371,8 +371,8 @@ function MakeWikiZipHtml(&$request)
             continue;
         }
 
-        $attrib = array('mtime'    => $current->get('mtime'),
-                        'is_ascii' => 1);
+        $attrib = ['mtime'    => $current->get('mtime'),
+                        'is_ascii' => 1];
         if ($page->get('locked')) {
             $attrib['write_protected'] = 1;
         }
@@ -386,8 +386,8 @@ function MakeWikiZipHtml(&$request)
         $template = new Template(
             'browse',
             $request,
-            array('revision' => $revision,
-            'CONTENT' => $transformedContent)
+            ['revision' => $revision,
+            'CONTENT' => $transformedContent]
         );
 
         $data = GeneratePageasXML($template, $pagename);
@@ -594,17 +594,17 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
         if (@stat($f)) {
             global $WikiTheme;
             $meb = Button(
-                array('action' => 'loadfile',
+                ['action' => 'loadfile',
                                 'merge' => true,
-                                'source' => $f),
+                                'source' => $f],
                 _("Merge Edit"),
                 _("PhpWikiAdministration"),
                 'wikiadmin'
             );
             $owb = Button(
-                array('action' => 'loadfile',
+                ['action' => 'loadfile',
                                 'overwrite' => true,
-                                'source' => $f),
+                                'source' => $f],
                 _("Restore Anyway"),
                 _("PhpWikiAdministration"),
                 'wikiunsafe'
@@ -619,7 +619,7 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
                     _("PhpWikiAdministration"),
                     'wikiunsafe'
                 );
-                $mesg->pushContent(HTML::div(array('class' => 'hint'), $owb));
+                $mesg->pushContent(HTML::div(['class' => 'hint'], $owb));
                 $overwite_all = true;
             }
         } else {
@@ -737,8 +737,8 @@ function ParseSerializedPage($text, $default_pagename, $user)
     if (! defined('FLAG_PAGE_LOCKED')) {
         define('FLAG_PAGE_LOCKED', 1);
     }
-    $pageinfo = array('pagedata'    => array(),
-                      'versiondata' => array());
+    $pageinfo = ['pagedata'    => [],
+                      'versiondata' => []];
 
     $pagedata = &$pageinfo['pagedata'];
     $versiondata = &$pageinfo['versiondata'];
@@ -851,16 +851,16 @@ function LoadFile(&$request, $filename, $text = false, $mtime = false)
         $user = $request->getUser();
 
         // Assume plain text file.
-        $pageinfo = array('pagename' => $default_pagename,
-                          'pagedata' => array(),
+        $pageinfo = ['pagename' => $default_pagename,
+                          'pagedata' => [],
                           'versiondata'
-                          => array('author' => $user->getId()),
+                          => ['author' => $user->getId()],
                           'content'  => preg_replace(
                               '/[ \t\r]*\n/',
                               "\n",
                               chop($text)
                           )
-                          );
+                          ];
         SavePage(
             $request,
             $pageinfo,
@@ -887,7 +887,7 @@ function LoadDir(&$request, $dirname, $files = false, $exclude = false)
     // the pages can still be loaded again.
     $files = $fileset->getFiles();
     if (in_array(HOME_PAGE, $files)) {
-        $files = array_diff($files, array(HOME_PAGE));
+        $files = array_diff($files, [HOME_PAGE]);
         $files[] = HOME_PAGE;
     }
     $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
@@ -929,7 +929,7 @@ class LimitedFileSet extends fileSet
     {
         $this->_includefiles = $_include;
         $this->_exclude = $exclude;
-        $this->_skiplist = array();
+        $this->_skiplist = [];
         parent::__construct($dirname);
     }
 
@@ -1099,7 +1099,7 @@ function SetupWiki(&$request)
         array_merge(
             explode(':', 'OldTextFormattingRules:TextFormattingRules:PhpWikiAdministration'),
             $GLOBALS['AllActionPages'],
-            array(constant('HOME_PAGE'))
+            [constant('HOME_PAGE')]
         ) as $f
     ) {
         $page = gettext($f);
@@ -1122,9 +1122,9 @@ function SetupWiki(&$request)
         }
 
        //WARNING  CODENDI CODE : give permissions to the administration pages of the wiki
-        $pages = array("AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer",
+        $pages = ["AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer",
            "AdministrationDePhpWiki/Renommer", "PhpWikiAdministration", "PhpWikiAdministration/Replace",
-           "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename");
+           "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename"];
 
         if (in_array($page, $pages)) {
             $group_id = $request->getArg('group_id');
@@ -1158,7 +1158,7 @@ function LoadPostFile(&$request)
 
     $fd = $upload->open();
     if (IsZipFile($fd)) {
-        LoadZip($request, $fd, false, array(_("RecentChanges")));
+        LoadZip($request, $fd, false, [_("RecentChanges")]);
     }
 
     echo "</dl>\n";

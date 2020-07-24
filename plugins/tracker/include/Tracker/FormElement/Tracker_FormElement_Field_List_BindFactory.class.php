@@ -60,12 +60,12 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function getBind($field, $type)
     {
-        $default_value = array();
+        $default_value = [];
         $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $default_value[$row['value_id']] = true;
         }
-        $decorators = array();
+        $decorators = [];
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $decorators[$row['value_id']] = new Tracker_FormElement_Field_List_BindDecorator(
@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_List_BindFactory
             case self::STATIK:
                 $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
                 if ($row = $dao->searchByFieldId($field->id)->getRow()) {
-                    $values = array();
+                    $values = [];
                     $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
                     foreach ($dao->searchByFieldId($field->id, $row['is_rank_alpha']) as $row_value) {
                         $values[$row_value['id']] = $this->getStaticValueInstance(
@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 }
                 break;
             case self::UGROUPS:
-                $values = array();
+                $values = [];
                 foreach ($this->getUgroupsValueDao()->searchByFieldId($field->id) as $row_value) {
                     $values[$row_value['id']] = $this->getUgroupsValueInstance(
                         $row_value['id'],
@@ -154,7 +154,7 @@ class Tracker_FormElement_Field_List_BindFactory
         $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
         $dao->duplicate($from_field_id, $to_field_id);
 
-        $value_mapping = array();
+        $value_mapping = [];
         //duplicate Static value, if any
         $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
         foreach ($dao->searchByFieldId($from_field_id, 0) as $row) {
@@ -232,12 +232,12 @@ class Tracker_FormElement_Field_List_BindFactory
         array &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
-        $row = array('type' => (string) $xml['type'],
+        $row = ['type' => (string) $xml['type'],
                      'field' => $field,
                      'default_values' => null,
-                     'decorators' => null);
+                     'decorators' => null];
         if (isset($xml->decorators)) {
-            $row['decorators'] = array();
+            $row['decorators'] = [];
             foreach ($xml->decorators->decorator as $deco) {
                 if (isset($deco['REF'])) {
                     $ID = (string) $deco['REF'];
@@ -258,7 +258,7 @@ class Tracker_FormElement_Field_List_BindFactory
         switch ($type) {
             case self::STATIK:
                 $row['is_rank_alpha'] = (int) $xml['is_rank_alpha'];
-                $values = array();
+                $values = [];
                 if ($xml->items->item) {
                     $i = 0;
                     foreach ($xml->items->item as $item) {
@@ -277,7 +277,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 break;
 
             case self::USERS:
-                $values = array();
+                $values = [];
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
                         $values[] = (string) $item['label'];
@@ -287,7 +287,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 break;
 
             case self::UGROUPS:
-                $values = array();
+                $values = [];
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
                         $ugroup = $this->getUgroupManager()->getUGroupByName($field->getTracker()->getProject(), (string) $item['label']);
@@ -306,7 +306,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 break;
         }
         if (isset($xml->default_values)) {
-            $row['default_values'] = array();
+            $row['default_values'] = [];
             foreach ($xml->default_values->value as $default_value) {
                 if (isset($default_value['REF'])) {
                     $ID = (string) $default_value['REF'];
@@ -426,19 +426,19 @@ class Tracker_FormElement_Field_List_BindFactory
             case self::STATIK:
                 $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
                 if ($dao->save($field->getId(), 0)) {
-                    $bind = new Tracker_FormElement_Field_List_Bind_Static($field, 0, array(), array(), array());
+                    $bind = new Tracker_FormElement_Field_List_Bind_Static($field, 0, [], [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
             case self::USERS:
                 $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
-                if ($dao->save($field->getId(), array())) {
-                    $bind = new Tracker_FormElement_Field_List_Bind_Users($field, '', array(), array());
+                if ($dao->save($field->getId(), [])) {
+                    $bind = new Tracker_FormElement_Field_List_Bind_Users($field, '', [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
             case self::UGROUPS:
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array(), array(), array(), $this->ugroup_manager, $this->getUgroupsValueDao());
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, [], [], [], $this->ugroup_manager, $this->getUgroupsValueDao());
                 $bind->process($bind_data, 'no redirect');
                 break;
             default:

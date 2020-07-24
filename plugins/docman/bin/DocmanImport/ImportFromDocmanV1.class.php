@@ -74,25 +74,25 @@ class Docman_ImportFromDocmanV1
             'Documents imported from legacy documentation system on ' . date('c', $_SERVER['REQUEST_TIME']),
             'begin',
             'none',
-            array(
-                array(
+            [
+                [
                     'type'      => DocmanV1_XMLExportData::V2_SOAP_PERM_NONE,
                     'ugroup_id' => ProjectUGroup::ANONYMOUS,
-                ),
-                array(
+                ],
+                [
                     'type'      => DocmanV1_XMLExportData::V2_SOAP_PERM_NONE,
                     'ugroup_id' => ProjectUGroup::REGISTERED,
-                ),
-                array(
+                ],
+                [
                     'type'      => DocmanV1_XMLExportData::V2_SOAP_PERM_NONE,
                     'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-                ),
-                array(
+                ],
+                [
                     'type'      => DocmanV1_XMLExportData::V2_SOAP_PERM_MANAGE,
                     'ugroup_id' => ProjectUGroup::PROJECT_ADMIN,
-                ),
-            ),
-            array(),
+                ],
+            ],
+            [],
             'admin',
             $_SERVER['REQUEST_TIME'],
             $_SERVER['REQUEST_TIME']

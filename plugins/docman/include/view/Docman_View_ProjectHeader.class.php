@@ -27,12 +27,12 @@
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
         $di = $this->_getDocmanIcons($params);
         echo json_encode(array_merge(
-            array(
+            [
                 'folderSpinner' => $di->getFolderSpinner(),
                 'spinner'       => $di->getSpinner(),
                 'pluginPath'    => $this->_controller->pluginPath,
                 'themePath'     => $this->_controller->themePath,
-                'language'      => array(
+                'language'      => [
                     'btn_close'                => $GLOBALS['Language']->getText('global', 'btn_close'),
                     'new_in'                   => dgettext('tuleap-docman', 'In:&nbsp;'),
                     'new_other_folders'        => dgettext('tuleap-docman', 'other folders:'),
@@ -66,8 +66,8 @@
                     'feedback_copy'            => dgettext('tuleap-docman', 'copied. you can now paste it wherever you want (even across projects) with \'Paste\' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.'),
                     'new_approvaltable'        => dgettext('tuleap-docman', 'Please choose option for creating approval table'),
                     'event_lock_add'           => dgettext('tuleap-docman', 'Locked document')
-                )
-            ),
+                ]
+            ],
             $this->_getJSDocmanParameters($params)
         ));
         echo '); </script>';
@@ -75,14 +75,14 @@
 
     /* protected */ public function _getAdditionalHtmlParams($params)
     {
-        return array(
+        return [
             'group'  => $params['group_id'],
-            'toptab' => 'docman');
+            'toptab' => 'docman'];
     }
 
 
     /* protected */ public function _getJSDocmanParameters($params)
     {
-        return array();
+        return [];
     }
 }

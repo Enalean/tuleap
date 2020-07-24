@@ -47,13 +47,13 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         Docman_LinkVersionFactory $link_version_factory
     ) {
         $this->dstGroupId           = $dstGroupId;
-        $this->_cacheMetadataUsage  = array();
-        $this->itemMapping          = array();
+        $this->_cacheMetadataUsage  = [];
+        $this->itemMapping          = [];
         $this->project_manager      = $project_manager;
         $this->link_version_factory = $link_version_factory;
     }
 
-    public function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = [])
     {
         // Clone folder
         $newItemId = $this->_cloneItem($item, $params);
@@ -77,17 +77,17 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    public function visitDocument(&$item, $params = array())
+    public function visitDocument(&$item, $params = [])
     {
         die('never happen');
     }
 
-    public function visitWiki(Docman_Wiki $item, $params = array())
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         $this->_cloneItem($item, $params);
     }
 
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         $copied_item_id = $this->_cloneItem($item, $params);
 
@@ -103,17 +103,17 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         $this->_cloneFile($item, $params);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         $this->_cloneFile($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         $this->_cloneItem($item, $params);
     }
@@ -144,7 +144,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             $versionFactory = $this->_getVersionFactory();
             $user = $params['user'];
 
-            $newVersionArray = array('item_id'   => $newItemId,
+            $newVersionArray = ['item_id'   => $newItemId,
                                      'number'    => 0,
                                      'user_id'   => $user->getId(),
                                      'label'     => dgettext('tuleap-docman', 'Copy from template'),
@@ -152,7 +152,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                                      'filename'  => $srcVersion->getFilename(),
                                      'filesize'  => $srcVersion->getFilesize(),
                                      'filetype'  => $srcVersion->getFiletype(),
-                                     'path'      => $dstPath);
+                                     'path'      => $dstPath];
 
             $versionId = $versionFactory->create($newVersionArray);
         }
@@ -264,7 +264,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                     $newMdv->setItemId($newItemId);
                     $newMdv->setFieldId($metadataMapping['md'][$oldMd->getId()]);
                     if ($oldMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                        $ea = array();
+                        $ea = [];
                         $oldValue->rewind();
                         while ($oldValue->valid()) {
                             $e = $oldValue->current();

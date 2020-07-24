@@ -180,7 +180,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         }
 
         $this->big_object_authorization_manager->authorizeProject($project);
-        $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
+        $this->system_event_manager->queueProjectsConfigurationUpdate([$project->getID()]);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,

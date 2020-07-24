@@ -84,7 +84,7 @@ class MembershipManagerCreateGroupTest extends TestCase
         $this->admin_ugroup->shouldReceive('getNormalizedName')->andReturns('project_admins');
         $this->admin_ugroup->shouldReceive('getProject')->andReturns($this->project);
         $this->admin_ugroup->shouldReceive('getProjectId')->andReturns($project_id);
-        $this->admin_ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->admin_ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->ugroup_manager->shouldReceive('getUGroup')->andReturns($this->admin_ugroup);
 
@@ -110,23 +110,23 @@ class MembershipManagerCreateGroupTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
         $this->membership_manager->shouldReceive('doesGroupExistOnServer')->andReturns(true);
     }
 
     public function testItCreateGroupOnAllGerritServersTheProjectUses()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $this->remote_server_factory->shouldReceive('getServersForProject')
             ->with($this->project)
             ->once()
-            ->andReturns(array($this->remote_server));
+            ->andReturns([$this->remote_server]);
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
 
     public function testItCreatesGerritGroupFromUGroup()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $this->driver->shouldReceive('createGroup')
             ->with($this->remote_server, 'w3c/coders', 'w3c/project_admins')
             ->once()
@@ -149,7 +149,7 @@ class MembershipManagerCreateGroupTest extends TestCase
             'language_id' => 'en',
             'user_id' => 25
         ]);
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array($mary, $bob));
+        $this->ugroup->shouldReceive('getMembers')->andReturns([$mary, $bob]);
 
         $this->membership_manager->shouldReceive('addUserToGroupWithoutFlush')->times(2);
         $this->membership_manager->shouldReceive('addUserToGroupWithoutFlush')->with($mary, $this->ugroup)->ordered();
@@ -160,7 +160,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItStoresTheGroupInTheDb()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $this->remote_server->shouldReceive('getId')->andReturns(666);
 
         $this->dao->shouldReceive('addReference')->with(1236, 25698, 666)->once();
@@ -170,7 +170,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItDoesntCreateAGroupThatAlreadyExist()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $this->driver->shouldReceive('doesTheGroupExist')
             ->with($this->remote_server, 'w3c/coders')
             ->once()
@@ -184,7 +184,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItAddsMembersToAGroupThatAlreadyExists()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array($this->user1, $this->user2));
+        $this->ugroup->shouldReceive('getMembers')->andReturns([$this->user1, $this->user2]);
         $this->ugroup->shouldReceive('getId')->andReturns(123);
 
         $this->driver->shouldReceive('doesTheGroupExist')->andReturns(true);
@@ -199,10 +199,10 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItCreatesGerritGroupOnEachServer()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($remote_server1, $remote_server2));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$remote_server1, $remote_server2]);
 
         $this->driver->shouldReceive('createGroup')->times(2);
         $this->driver->shouldReceive('createGroup')->with($remote_server1, 'w3c/coders', 'w3c/project_admins')->ordered();
@@ -213,10 +213,10 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItStoresTheGroupInTheDbForEachServer()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($remote_server1, $remote_server2));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$remote_server1, $remote_server2]);
 
         $remote_server1->shouldReceive('getId')->andReturns(666);
         $remote_server2->shouldReceive('getId')->andReturns(667);
@@ -229,7 +229,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItLogsRemoteSSHErrors()
     {
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($this->remote_server));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$this->remote_server]);
 
         $this->driver->shouldReceive('createGroup')->andThrows(new Git_Driver_Gerrit_Exception('whatever'));
 
@@ -240,7 +240,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItLogsGerritExceptions()
     {
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($this->remote_server));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$this->remote_server]);
 
         $this->driver->shouldReceive('createGroup')->andThrows(new Git_Driver_Gerrit_Exception('whatever'));
 
@@ -251,7 +251,7 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItLogsAllOtherExceptions()
     {
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($this->remote_server));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$this->remote_server]);
 
         $this->driver->shouldReceive('createGroup')->andThrows(new Exception('whatever'));
 
@@ -262,11 +262,11 @@ class MembershipManagerCreateGroupTest extends TestCase
 
     public function testItContinuesToCreateGroupsEvenIfOneFails()
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
         $remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $remote_server2->shouldReceive('getId')->andReturns(667);
-        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(array($remote_server1, $remote_server2));
+        $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns([$remote_server1, $remote_server2]);
 
         $this->driver->shouldReceive('createGroup')->times(2);
         $this->driver->shouldReceive('createGroup')->andThrow(new Exception('whatever'))->ordered();
@@ -280,7 +280,7 @@ class MembershipManagerCreateGroupTest extends TestCase
     {
         $this->driver->shouldReceive('createGroup')->never();
 
-        $ugroup            = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::NONE));
+        $ugroup            = new ProjectUGroup(['ugroup_id' => ProjectUGroup::NONE]);
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
         $this->assertEquals('', $gerrit_group_name);
     }
@@ -289,7 +289,7 @@ class MembershipManagerCreateGroupTest extends TestCase
     {
         $this->driver->shouldReceive('createGroup')->never();
 
-        $ugroup            = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::WIKI_ADMIN));
+        $ugroup            = new ProjectUGroup(['ugroup_id' => ProjectUGroup::WIKI_ADMIN]);
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
         $this->assertEquals('', $gerrit_group_name);
     }
@@ -303,7 +303,7 @@ class MembershipManagerCreateGroupTest extends TestCase
         $ugroup->shouldReceive('getNormalizedName')->andReturns('project_members');
         $ugroup->shouldReceive('getProject')->andReturns($this->project);
         $ugroup->shouldReceive('getProjectId')->andReturns(999);
-        $ugroup->shouldReceive('getMembers')->andReturns(array());
+        $ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
     }
@@ -317,7 +317,7 @@ class MembershipManagerCreateGroupTest extends TestCase
         $ugroup->shouldReceive('getNormalizedName')->andReturns('project_admin');
         $ugroup->shouldReceive('getProject')->andReturns($this->project);
         $ugroup->shouldReceive('getProjectId')->andReturns(999);
-        $ugroup->shouldReceive('getMembers')->andReturns(array());
+        $ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
     }

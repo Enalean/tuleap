@@ -53,7 +53,7 @@ final class ReleaseTest extends RestBase
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('frs_release'));
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin(): void
@@ -69,7 +69,7 @@ final class ReleaseTest extends RestBase
     public function testOPTIONSRelease()
     {
         $response = $this->getResponse($this->client->options('frs_release/1'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSReleaseWithUserRESTReadOnlyAdmin(): void
@@ -78,7 +78,7 @@ final class ReleaseTest extends RestBase
             $this->client->options('frs_release/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETRelease(): void
@@ -145,13 +145,13 @@ final class ReleaseTest extends RestBase
 
     private function getPostResource(): string
     {
-        return json_encode(array(
+        return json_encode([
             'package_id'   => 1,
             'name'         => 'Paleo Pumpkin Bread',
             'release_note' => 'Philophobia',
             'changelog'    => 'Food & Dining',
             'status'       => 'hidden'
-        ));
+        ]);
     }
 
     public function testPATCHRelease(): void
@@ -180,8 +180,8 @@ final class ReleaseTest extends RestBase
 
     private function getPatchResource(): string
     {
-        return json_encode(array(
+        return json_encode([
             'name' => 'Release 1.1',
-        ));
+        ]);
     }
 }

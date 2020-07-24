@@ -52,7 +52,7 @@ class CrossTrackerReportFactory
         }
         $expert_query = $report_row['expert_query'];
 
-        $report_trackers = array();
+        $report_trackers = [];
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
         foreach ($tracker_rows as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);

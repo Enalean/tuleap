@@ -23,7 +23,7 @@ namespace Tuleap\Trove;
 
 class TroveCatCollectionPresenter
 {
-    public $categories           = array();
+    public $categories           = [];
     public $has_categories       = false;
 
     public function __construct(array $categories)

@@ -209,12 +209,12 @@ final class SiteDeployFPM
     {
         $this->logger->info("Deploy $this->tuleap_php_configuration_folder/$reference_file into $this->php_configuration_folder/php-fpm.d/$configuration_name");
 
-        $variables = array(
+        $variables = [
             '%application_user%',
-        );
-        $replacement = array(
+        ];
+        $replacement = [
             $this->application_user,
-        );
+        ];
 
         TemplateHelper::replacePlaceHolderInto(
             "$this->tuleap_php_configuration_folder/$reference_file",

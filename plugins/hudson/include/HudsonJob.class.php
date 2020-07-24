@@ -194,7 +194,7 @@ class HudsonJob
         if (! isset($this->xml_content->healthReport)) {
             return [];
         }
-        $scores = array();
+        $scores = [];
         foreach ($this->xml_content->healthReport as $health_report) {
             if (isset($health_report->score)) {
                 $scores[] = (int) $health_report->score;

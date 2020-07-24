@@ -120,7 +120,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
 
-        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --config='{$this->config_file}' 'check-update'")->once()->andReturns(array());
+        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --config='{$this->config_file}' 'check-update'")->once()->andReturns([]);
 
         $this->forgeupgrade_config->isSystemUpToDate();
     }
@@ -131,10 +131,10 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
 
-        $this->command->shouldReceive('exec')->andReturns(array(
+        $this->command->shouldReceive('exec')->andReturns([
             '[32mINFO - System up-to-date',
             '[0m',
-        ));
+        ]);
 
         $this->assertTrue($this->forgeupgrade_config->isSystemUpToDate());
     }
@@ -145,11 +145,11 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
 
-        $this->command->shouldReceive('exec')->andReturns(array(
+        $this->command->shouldReceive('exec')->andReturns([
             '/usr/share/tuleap/plugins/tracker/db/mysql/updates/2015/201510131648_add_emailgateway_column_to_tracker.php',
             'Add enable_emailgateway column to tracker table',
             '1 migrations pending',
-        ));
+        ]);
 
         $this->assertFalse($this->forgeupgrade_config->isSystemUpToDate());
     }

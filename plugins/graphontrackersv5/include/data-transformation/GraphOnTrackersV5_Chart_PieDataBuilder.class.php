@@ -32,9 +32,9 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
     public function buildProperties($engine)
     {
         parent::buildProperties($engine);
-        $engine->data   = array();
+        $engine->data   = [];
         $engine->legend = null;
-        $result = array();
+        $result = [];
         $ff = Tracker_FormElementFactory::instance();
         $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         \assert($af instanceof Tracker_FormElement_Field_List);

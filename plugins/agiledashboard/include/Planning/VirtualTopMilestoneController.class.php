@@ -74,7 +74,7 @@ class Planning_VirtualTopMilestoneController extends BaseController
         try {
             $this->generateVirtualTopMilestone();
         } catch (Planning_NoPlanningsException $e) {
-            $query_parts = array('group_id' => $this->request->get('group_id'));
+            $query_parts = ['group_id' => $this->request->get('group_id')];
             $this->redirect($query_parts);
         }
 
@@ -106,13 +106,13 @@ class Planning_VirtualTopMilestoneController extends BaseController
             $this->generateVirtualTopMilestone();
             $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
-            return array(
+            return [
                 Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
                     $this->getActivePaneIdentifier()
                 )
-            );
+            ];
         } catch (Planning_NoPlanningsException $e) {
-            return array();
+            return [];
         }
     }
 

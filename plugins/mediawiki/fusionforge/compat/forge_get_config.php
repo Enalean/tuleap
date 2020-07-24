@@ -20,7 +20,7 @@
 
 function forge_get_config($key, $scope = 'core')
 {
-    $conf_variables_mapping = array(
+    $conf_variables_mapping = [
         'web_host'          => 'sys_default_domain',
         'forge_name'        => 'sys_name',
         //'lists_host'        => 'sys_lists_host',
@@ -29,7 +29,7 @@ function forge_get_config($key, $scope = 'core')
         'database_user'     => 'sys_dbuser',
         'database_name'     => 'sys_dbname',
         'database_password' => 'sys_dbpasswd',
-    );
+    ];
     if (isset($conf_variables_mapping[$key])) {
         $key = $conf_variables_mapping[$key];
     } elseif ($scope !== 'core') {

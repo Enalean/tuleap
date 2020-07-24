@@ -51,10 +51,10 @@ class Docman_View_ItemRanking
         $itemFactory = Docman_ItemFactory::instance($parentItem->getGroupId());
         $brotherIter = $itemFactory->getChildrenFromParent($parentItem);
 
-        $vals = array('beginning', 'end', '--');
-        $texts = array(dgettext('tuleap-docman', 'At the beginning'),
+        $vals = ['beginning', 'end', '--'];
+        $texts = [dgettext('tuleap-docman', 'At the beginning'),
                        dgettext('tuleap-docman', 'At the end'),
-                       '----');
+                       '----'];
         $i = 3;
 
         $pm = Docman_PermissionsManager::instance($parentItem->getGroupId());

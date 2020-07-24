@@ -38,7 +38,7 @@ class TrackerFieldsTest extends TrackerBase
         $field_id = $this->getStaticSelectboxFieldId();
 
         $response = $this->getResponse($this->client->options("tracker_fields/$field_id"));
-        $this->assertEquals(array('OPTIONS', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testPATCHAddsNewValuesInSelectboxBindToStaticValues()

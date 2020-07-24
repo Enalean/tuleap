@@ -25,11 +25,11 @@ $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../temp
 $explorer_endpoint_event = new \Tuleap\REST\ExplorerEndpointAvailableEvent();
 EventManager::instance()->dispatch($explorer_endpoint_event);
 
-$presenter = array(
+$presenter = [
     'should_display_documentation_about_deprecated_soap_api' => ForgeConfig::get('should_display_documentation_about_deprecated_soap_api'),
     'explorer_url' => $explorer_endpoint_event->getEndpointURL(),
-    'end_points'         => array(
-        array(
+    'end_points'         => [
+        [
             'title'       => 'Core',
             'wsdl'        => '/soap/?wsdl',
             'wsdl_viewer' => '/soap/wsdl.php',
@@ -44,26 +44,26 @@ Historically the sole end point, therefore it groups multiple different function
     <li>Documentation: get/updateDocman, ...</li>
 </ul>
 EOT
-        ),
-        array(
+        ],
+        [
             'title'       => 'Subversion',
             'wsdl'        => '/soap/svn/?wsdl',
             'wsdl_viewer' => '/soap/svn/wsdl-viewer.php',
             'changelog'   => '/soap/svn/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__) . '/../soap/svn/VERSION'),
             'description' => 'Get informations about Subversion usage in project.',
-        ),
-        array(
+        ],
+        [
             'title'       => 'Project',
             'wsdl'        => '/soap/project/?wsdl',
             'wsdl_viewer' => '/soap/project/wsdl-viewer.php',
             'changelog'   => '/soap/project/ChangeLog',
             'version'     => file_get_contents(dirname(__FILE__) . '/../soap/project/VERSION'),
             'description' => 'Create and administrate projects.',
-        ),
-    )
-);
+        ],
+    ]
+];
 
-$GLOBALS['HTML']->header(array('title' => 'API', 'main_classes' => array('tlp-framed')));
+$GLOBALS['HTML']->header(['title' => 'API', 'main_classes' => ['tlp-framed']]);
 $renderer->renderToPage('api', $presenter);
-$GLOBALS['HTML']->footer(array());
+$GLOBALS['HTML']->footer([]);

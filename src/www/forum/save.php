@@ -62,7 +62,7 @@ if (user_isloggedin()) {
         $forum_name = db_result($result, 0, 'forum_name');
 
 
-        forum_header(array('title' => $Language->getText('forum_save', 'save_place')));
+        forum_header(['title' => $Language->getText('forum_save', 'save_place')]);
 
         echo '
 			<H2>' . $Language->getText('forum_save', 'save_your_place') . '</H2>';
@@ -101,12 +101,12 @@ if (user_isloggedin()) {
                 echo "<P>" . $Language->getText('forum_save', 'msg_highlighted');
             }
         }
-        forum_footer(array());
+        forum_footer([]);
     } else {
-        forum_header(array('title' => $Language->getText('forum_monitor', 'choose_forum_first')));
+        forum_header(['title' => $Language->getText('forum_monitor', 'choose_forum_first')]);
         echo '
 			<H1>' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
-        forum_footer(array());
+        forum_footer([]);
     }
 } else {
     exit_not_logged_in();

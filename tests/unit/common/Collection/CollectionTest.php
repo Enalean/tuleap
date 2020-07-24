@@ -227,7 +227,7 @@ class CollectionTest extends TestCase
         $a->toto = 1;
         $b = new stdClass();
         $b->toto = 2;
-        $arr = array();
+        $arr = [];
         $arr[] = $a;
         $arr[] = $b;
         $col = new Collection($arr);

@@ -264,7 +264,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             $this->throwGerritException('Gerrit REST driver: an error occurred while fetching all groups', $response);
         }
 
-        $groups = array();
+        $groups = [];
         foreach ($this->decodeGerritResponse($response->getBody()->getContents()) as $name => $group) {
             $groups[$name] = $group['id'];
         }
@@ -623,7 +623,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
     private function getUserSSHKeyId(array $ssh_keys, $expected_ssh_key)
     {
-        $matching_keys = array();
+        $matching_keys = [];
 
         foreach ($ssh_keys as $ssh_key_info) {
             if ($ssh_key_info['encoded_key'] === $this->getKeyPartFromSSHKey($expected_ssh_key)) {

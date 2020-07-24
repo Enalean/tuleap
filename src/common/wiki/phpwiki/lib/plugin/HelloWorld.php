@@ -65,8 +65,8 @@ class WikiPlugin_HelloWorld extends WikiPlugin
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return array('salutation' => "Hello,",
-                     'name'       => "World");
+        return ['salutation' => "Hello,",
+                     'name'       => "World"];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

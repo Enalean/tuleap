@@ -44,7 +44,7 @@ class LauncherTest extends TestCase
         $this->project     = \Mockery::spy(\Project::class);
         $this->repository  = new Repository(1, "repository_name", '', '', $this->project);
         $this->commit_info = new CommitInfo();
-        $this->commit_info->setChangedDirectories(array("/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"));
+        $this->commit_info->setChangedDirectories(["/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"]);
 
         $this->project->shouldReceive('getID')->andReturn(101);
         $this->project->shouldReceive('usesService')->with('hudson')->andReturn(true);
@@ -74,43 +74,43 @@ class LauncherTest extends TestCase
 
     public function testItTestJenkinsJobAreTriggeredOnCommit()
     {
-        $jobs = array(new Job('1', '1', '/', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('1', '1', '/', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('2', '1', '/a', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('2', '1', '/a', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('3', '1', '/a/trunk', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('3', '1', '/a/trunk', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('4', '1', '/*/trunk', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('4', '1', '/*/trunk', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('5', '1', '/*/*', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('5', '1', '/*/*', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('6', '1', '/a/*', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('6', '1', '/a/*', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('7', '1', '/a/*/b', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('7', '1', '/a/*/b', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('8', '1', '/a/*/c', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('8', '1', '/a/*/c', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
 
-        $jobs = array(new Job('9', '1', '/b', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('9', '1', '/b', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 0);
 
-        $jobs = array(new Job('10', '1', '/a/trunked*', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('10', '1', '/a/trunked*', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 0);
 
-        $jobs = array(new Job('10', '1', '/a/root/c', 'https://ci.exemple.com/job/Job_Example/', ''));
+        $jobs = [new Job('10', '1', '/a/root/c', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 0);
     }
 
     public function testItTestJenkinsJobAreNotLaunchedTwiceOnSameCommit()
     {
-        $jobs = array(
+        $jobs = [
             new Job('1', '1', '/', 'https://ci.exemple.com/job/Job_Example/', ''),
             new Job('2', '1', '/a/', 'https://ci.exemple.com/job/Job_Example/', ''),
             new Job('3', '1', '/a/*', 'https://ci.exemple.com/job/Job_Example/', ''),
@@ -120,7 +120,7 @@ class LauncherTest extends TestCase
             new Job('7', '1', '/a/*', 'https://ci.exemple.com/job/New_Job_Example/', ''),
             new Job('8', '1', '/a/trunk', 'https://ci.exemple.com/job/New_Job_Example/', ''),
             new Job('9', '1', '/', 'https://ci.exemple.com/job/Another_Job_Example/', '')
-        );
+        ];
 
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 3);
     }

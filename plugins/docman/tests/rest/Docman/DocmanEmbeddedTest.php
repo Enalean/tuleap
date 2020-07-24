@@ -742,7 +742,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

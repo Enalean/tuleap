@@ -145,10 +145,10 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user)
     {
         if (! $request->isAjax()) {
-            $params = array(
+            $params = [
                 'report'   => $this->report->id,
                 'renderer' => $this->id
-            );
+            ];
             if ($request->existAndNonEmpty('pv')) {
                 $params['pv'] = (int) $request->get('pv');
             }
@@ -165,15 +165,15 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function getOptionsMenuItems()
     {
-        $items = array(
+        $items = [
             'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="' . TRACKER_BASE_URL . '/?' . http_build_query(
-                array(
+                [
                     'report'   => $this->report->id,
                     'renderer' => $this->id,
                     'pv'       => 1,
-                )
+                ]
             ) . '"><i class="fa fa-print"></i> ' . $GLOBALS['Language']->getText('global', 'printer_version') . '</a></div>'
-        );
+        ];
         $this->addDashboardButtons($items);
 
         return $items;
@@ -206,7 +206,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
             $presenter_builder->build($user, $project, $this)
         );
 
-        $items = array('add_to_dashboard' => $html) + $items;
+        $items = ['add_to_dashboard' => $html] + $items;
     }
 
     private function getTemplateRenderer()
@@ -258,7 +258,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     {
         $html = '';
         $html .= '<div class="tracker-form-element-artifactlink-gototracker">';
-        $html .=  $this->fetchLinkGoTo(dgettext('tuleap-tracker', 'Go see this tracker'), array('target' => '_blank', 'rel' => 'noreferrer'));
+        $html .=  $this->fetchLinkGoTo(dgettext('tuleap-tracker', 'Go see this tracker'), ['target' => '_blank', 'rel' => 'noreferrer']);
         $html .= '</div>';
         return $html;
     }
@@ -270,14 +270,14 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return string html
      */
-    protected function fetchLinkGoTo($msg, $params = array())
+    protected function fetchLinkGoTo($msg, $params = [])
     {
         $html = '';
         $html .= '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'report'   => $this->report->id,
                 'renderer' => $this->id
-            )
+            ]
         );
         $html .= '"';
         foreach ($params as $key => $value) {

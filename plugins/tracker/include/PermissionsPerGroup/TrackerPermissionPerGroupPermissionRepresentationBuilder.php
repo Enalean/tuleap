@@ -51,7 +51,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
 
     public function build(Project $project, array $ugroups_permissions, $selected_ugroup_id = null)
     {
-        $indexed_permissions = array();
+        $indexed_permissions = [];
 
         foreach ($ugroups_permissions as $ugroup_permission) {
             $permissions = $ugroup_permission['permissions'];
@@ -65,7 +65,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
             $permission_name = array_keys($permissions)[0];
 
             if (! array_key_exists($permission_name, $indexed_permissions)) {
-                $indexed_permissions[$permission_name] = array();
+                $indexed_permissions[$permission_name] = [];
             }
 
             array_push(
@@ -88,7 +88,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
 
     private function getCollectionOfPermissionsRepresentations(array $indexed_permissions)
     {
-        $permissions_collection = array();
+        $permissions_collection = [];
 
         foreach ($indexed_permissions as $permission_name => $granted_groups) {
             $permissions_collection[] = new TrackerPermissionPerGroupPermissionRepresentation(

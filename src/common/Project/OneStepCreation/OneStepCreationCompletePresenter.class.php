@@ -33,6 +33,6 @@ class Project_OneStepCreation_OneStepCreationCompletePresenter
 
     public function thanks()
     {
-        return $GLOBALS['Language']->getText('register_project_one_step', 'complete_thanks', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('register_project_one_step', 'complete_thanks', [ForgeConfig::get('sys_name')]);
     }
 }

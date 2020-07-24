@@ -31,13 +31,13 @@ use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var array<int, array<PaneInfo>> */
-    private $list_of_pane_info = array();
+    private $list_of_pane_info = [];
 
     /** @var PaneInfo[] */
-    private $list_of_default_pane_info = array();
+    private $list_of_default_pane_info = [];
 
     /** @var array<AgileDashboard_Pane|null> */
-    private $active_pane = array();
+    private $active_pane = [];
 
     /** @var Codendi_Request */
     private $request;

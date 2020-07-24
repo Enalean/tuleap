@@ -33,23 +33,23 @@ class Search_SearchController
      */
     private $renderer;
 
-    private $search_types = array();
+    private $search_types = [];
 
     public function __construct(EventManager $event_manager)
     {
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
-            array(
+            [
                  ForgeConfig::get('codendi_dir') . '/src/templates/search',
-            )
+            ]
         );
-        $this->search_types = array(
+        $this->search_types = [
             Search_SearchTrackerV3::NAME => new Search_SearchTrackerV3(new ArtifactDao()),
             Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
             Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
             Search_SearchForum::NAME     => new Search_SearchForum(new ForumDao()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
-        );
+        ];
     }
 
     public function index(Codendi_Request $request)
@@ -65,9 +65,9 @@ class Search_SearchController
     {
         $empty_result = new Search_SearchResults();
 
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
+        $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $empty_result->getResultsHtml()));
-        $GLOBALS['HTML']->footer(array('without_content' => true));
+        $GLOBALS['HTML']->footer(['without_content' => true]);
     }
 
     public function ajaxResults(Codendi_Request $request)
@@ -80,14 +80,14 @@ class Search_SearchController
         }
 
         $results = $this->doSearch($query);
-        $output  = array(
+        $output  = [
             'has_more'      => $results->hasMore(),
             'html'          => '',
             'results_count' => $results->getCountResults(),
-        );
+        ];
 
         if ($results->getResultsHtml() !== '') {
-            $output['html'] = $this->renderer->renderToString('results', array('search_result' => $results->getResultsHtml()));
+            $output['html'] = $this->renderer->renderToString('results', ['search_result' => $results->getResultsHtml()]);
         }
 
         echo json_encode($output);
@@ -112,26 +112,26 @@ class Search_SearchController
 
     private function renderResults(Search_SearchQuery $query, $results)
     {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
+        $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
-        $GLOBALS['HTML']->footer(array('without_content' => true));
+        $GLOBALS['HTML']->footer(['without_content' => true]);
     }
 
     private function getSearchPresenter(Search_SearchQuery $query, $results)
     {
-        $project_search_types   = array();
-        $site_search_types      = array();
+        $project_search_types   = [];
+        $site_search_types      = [];
         $redirect_to_services   = true;
 
         $this->event_manager->processEvent(
             Event::SEARCH_TYPES_PRESENTERS,
-            array(
+            [
                 'project'              => $query->getProject(),
                 'words'                => $query->getWords(),
                 'project_presenters'   => &$project_search_types,
                 'site_presenters'      => &$site_search_types,
                 'redirect_to_services' => &$redirect_to_services
-            )
+            ]
         );
 
         $additional_project_search_types = $this->getAdditionnalProjectWidePresentersIfNeeded(
@@ -141,7 +141,7 @@ class Search_SearchController
         );
         $project_search_types = array_merge($additional_project_search_types, $project_search_types);
 
-        $search_panes = array();
+        $search_panes = [];
         if (! $query->getProject()->isError()) {
             $project_name = $query->getProject()->getPublicName();
             $search_panes[] = new Search_SearchPanePresenter(
@@ -163,7 +163,7 @@ class Search_SearchController
 
     private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words, $redirect_to_services)
     {
-        $additionnal_presenters = array();
+        $additionnal_presenters = [];
 
         if ($project->usesService('wiki')) {
             $search_wiki              = new Search_SearchWiki(new WikiDao());
@@ -178,9 +178,9 @@ class Search_SearchController
         return $additionnal_presenters;
     }
 
-    private function getSiteWidePane($site_search_types = array())
+    private function getSiteWidePane($site_search_types = [])
     {
-        $search_types = array(
+        $search_types = [
             new Search_SearchTypePresenter(
                 Search_SearchProject::NAME,
                 $GLOBALS['Language']->getText('search_index', 'soft')
@@ -189,7 +189,7 @@ class Search_SearchController
                 Search_SearchPeople::NAME,
                 $GLOBALS['Language']->getText('search_index', 'people')
             ),
-        );
+        ];
 
         return new Search_SearchPanePresenter(
             $GLOBALS['Language']->getText('search_index', 'site_wide_search'),

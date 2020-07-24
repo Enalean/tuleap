@@ -468,13 +468,13 @@ final class GerritRESTTest extends TestCase
         $this->driver->createProjectWithPermissionsOnly($this->gerrit_server, $project, 'firefox/project_admins');
 
         $expected_json_data = json_encode(
-            array(
+            [
                 'description'      => "Migration of $project_name from Tuleap",
                 'permissions_only' => true,
-                'owners'           => array(
+                'owners'           => [
                     'firefox/project_admins'
-                )
-            )
+                ]
+            ]
         );
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
@@ -512,9 +512,9 @@ final class GerritRESTTest extends TestCase
         $this->driver->makeGerritProjectReadOnly($this->gerrit_server, $project_name);
 
         $expected_json_data = json_encode(
-            array(
+            [
                 'state' => 'READ_ONLY'
-            )
+            ]
         );
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
@@ -535,9 +535,9 @@ final class GerritRESTTest extends TestCase
         $this->driver->setProjectInheritance($this->gerrit_server, $project_name, 'prj');
 
         $expected_json_data = json_encode(
-            array(
+            [
                 'parent' => 'prj'
-            )
+            ]
         );
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
@@ -558,9 +558,9 @@ final class GerritRESTTest extends TestCase
         $this->driver->resetProjectInheritance($this->gerrit_server, $project_name);
 
         $expected_json_data = json_encode(
-            array(
+            [
                 'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
-            )
+            ]
         );
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
@@ -706,9 +706,9 @@ final class GerritRESTTest extends TestCase
         $this->driver->removeAllGroupMembers($this->gerrit_server, $group_name);
 
         $expected_json_data = json_encode(
-            array(
-                'members' => array('gerrit-adm', 'testUser')
-            )
+            [
+                'members' => ['gerrit-adm', 'testUser']
+            ]
         );
         $this->assertCount(2, $this->http_client->getRequests());
         $request = $this->http_client->getLastRequest();

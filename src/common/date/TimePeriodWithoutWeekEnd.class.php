@@ -125,7 +125,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
      */
     public function getHumanReadableDates(): array
     {
-        $dates = array();
+        $dates = [];
 
         foreach ($this->getDayOffsets() as $day_offset) {
             $day     = strtotime("+$day_offset days", (int) $this->getStartDate());
@@ -209,7 +209,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
      */
     private static function getDayOffsetsWithConsistentDuration(int $start_date, int $duration): array
     {
-        $day_offsets_excluding_we = array();
+        $day_offsets_excluding_we = [];
         $day_offset = 0;
         while (count($day_offsets_excluding_we) - 1 !== $duration) {
             $day = self::getNextDay($day_offset, $start_date);
@@ -235,7 +235,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
             $day = self::getNextDay($day_offset, $start_date);
         }
 
-        return array($day_offset);
+        return [$day_offset];
     }
 
     /**

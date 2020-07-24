@@ -53,14 +53,14 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TestCase
 
     public function testItLoadsAllCommandsInTheRightOrder(): void
     {
-        $expected_commands = array(
+        $expected_commands = [
             'Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing'
-        );
+        ];
 
         $chain = $this->runner->getChain();
 

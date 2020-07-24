@@ -64,7 +64,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('prefix'       => '[pagename]',
+        return ['prefix'       => '[pagename]',
                      'date_format'  => '%Y-%m-%d',
                      'order'         => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
                      'year'         => '',
@@ -79,7 +79,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
 
                      'month_format' => '%B, %Y',
                      'wday_format'  => '%a',
-                     'start_wday'   => '0');
+                     'start_wday'   => '0'];
     }
 
     /**
@@ -133,7 +133,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
         $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
         $t = localtime($time, 1);
 
-        $td = HTML::td(array('align' => 'center'));
+        $td = HTML::td(['align' => 'center']);
 
         if ($dbi->isWikiPage($page_for_date)) {
             // Extract the page contents for this date
@@ -143,17 +143,17 @@ class WikiPlugin_CalendarList extends WikiPlugin
             include_once('lib/BlockParser.php');
             $content = TransformText(implode("\n", $c), $r->get('markup'));
             $link = HTML::a(
-                array(
+                [
                     'class' => 'cal-hide',
-                    'href' => WikiURL($page_for_date, array('action' => 'edit')),
+                    'href' => WikiURL($page_for_date, ['action' => 'edit']),
                     'title' => sprintf(_("Edit %s"), $page_for_date)
-                ),
+                ],
                 $date_string
             );
             $this->_links[] = $page_for_date;
-            $a = array(HTML::dt($link), HTML::dd($content));
+            $a = [HTML::dt($link), HTML::dd($content)];
         } else {
-            $a = array();
+            $a = [];
         }
         return $a;
     }
@@ -162,11 +162,11 @@ class WikiPlugin_CalendarList extends WikiPlugin
     {
         $this->args = $this->getArgs($argstr, $request);
         $args       = &$this->args;
-        $this->_links = array();
+        $this->_links = [];
 
         // default to this month
         $now = localtime(time() + 3600 * $request->getPref('timeOffset'), 1);
-        foreach (array('month' => $now['tm_mon'] + 1, 'year'  => $now['tm_year'] + 1900) as $param => $dflt) {
+        foreach (['month' => $now['tm_mon'] + 1, 'year'  => $now['tm_year'] + 1900] as $param => $dflt) {
             if (! ($args[$param] = intval($args[$param]))) {
                 $args[$param] = $dflt;
             }

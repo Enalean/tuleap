@@ -74,7 +74,7 @@ class Tracker_XML_Updater_TemporaryFileCreator
             RecursiveIteratorIterator::CHILD_FIRST
         );
         foreach ($recursive_iterator as $path) {
-            if (in_array($path->getFilename(), array('.', '..'))) {
+            if (in_array($path->getFilename(), ['.', '..'])) {
                 continue;
             }
 

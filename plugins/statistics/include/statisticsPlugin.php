@@ -86,12 +86,12 @@ class StatisticsPlugin extends Plugin
             case SystemEvent_STATISTICS_DAILY::NAME:
                 $queue = new SystemEventQueueStatistics();
                 $params['class'] = 'SystemEvent_STATISTICS_DAILY';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $queue->getLogger(),
                     $this->getConfigurationManager(),
                     $this->getDiskUsagePurger($queue->getLogger()),
                     $this->getDiskUsageManager()
-                );
+                ];
                 break;
             default:
                 break;
@@ -132,10 +132,10 @@ class StatisticsPlugin extends Plugin
 
     public function site_admin_option_hook($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => 'Statistics',
             'href'  => $this->getPluginPath() . '/'
-        );
+        ];
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
@@ -180,7 +180,7 @@ class StatisticsPlugin extends Plugin
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-statistics', 'Disk usage'),
                 $this->getPluginPath() . '/project_stat.php?' . http_build_query(
-                    array('group_id' => $presenter->getProjectId())
+                    ['group_id' => $presenter->getProjectId()]
                 )
             )
         );
@@ -195,15 +195,15 @@ class StatisticsPlugin extends Plugin
      */
     public function usergroup_data($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $user_url_params = array(
+        $user_url_params = [
             'menu' => 'one_user_details',
             'user' => $params['user']->getRealName() . ' (' . $params['user']->getUserName() . ')'
-        );
+        ];
 
-        $params['links'][] = array(
+        $params['links'][] = [
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($user_url_params),
             'label' => dgettext('tuleap-statistics', 'Disk usage')
-        );
+        ];
     }
 
     /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */
@@ -213,14 +213,14 @@ class StatisticsPlugin extends Plugin
             return;
         }
 
-        $project_url_params = array(
+        $project_url_params = [
             'menu'           => 'services',
             'project_filter' => $params['project']->getPublicName() . ' (' . $params['project']->getUnixName() . ')'
-        );
-        $params['links'][] = array(
+        ];
+        $params['links'][] = [
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($project_url_params),
             'label' => dgettext('tuleap-statistics', 'Disk usage')
-        );
+        ];
     }
 
     /**
@@ -244,7 +244,7 @@ class StatisticsPlugin extends Plugin
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array('plugin_statistics_projectstatistics'));
+        $this->removeOrphanWidgets(['plugin_statistics_projectstatistics']);
     }
 
     public function cssFile($params)
@@ -294,7 +294,7 @@ class StatisticsPlugin extends Plugin
         $disk_usage_manager     = $this->getDiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
 
-        $server = new TuleapSOAPServer($uri . '/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
+        $server = new TuleapSOAPServer($uri . '/?wsdl', ['cache_wsdl' => WSDL_CACHE_NONE]);
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
@@ -337,9 +337,9 @@ class StatisticsPlugin extends Plugin
 
     public function wsdl_doc2soap_types($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
+        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], [
             'arrayofstatistics' => 'tns:ArrayOfStatistics',
-        ));
+        ]);
     }
 
     public function aggregate_statistics($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

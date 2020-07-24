@@ -627,7 +627,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testRestoreDeletedFiles()
     {
-        $refFile = new FRSFile(array('file_id' => 12));
+        $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToRestore')->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
@@ -663,7 +663,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testRestoreDeletedFilesDBError()
     {
-        $refFile = new FRSFile(array('file_id' => 12));
+        $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToRestore')->once()->andReturns(Mockery::mock(DataAccessResult::class, ['isError' => true]));
@@ -679,7 +679,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testRestoreDeletedFilesNoFiles()
     {
-        $refFile = new FRSFile(array('file_id' => 12));
+        $refFile = new FRSFile(['file_id' => 12]);
 
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToRestore')->once()->andReturn(TestHelper::emptyDar());

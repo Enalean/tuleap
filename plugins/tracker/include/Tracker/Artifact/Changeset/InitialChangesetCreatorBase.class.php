@@ -197,6 +197,6 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
     private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Tracker_Artifact $artifact): void
     {
-        $artifact->setChangesets(array(new Tracker_Artifact_Changeset_Null()));
+        $artifact->setChangesets([new Tracker_Artifact_Changeset_Null()]);
     }
 }

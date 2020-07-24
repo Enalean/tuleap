@@ -103,7 +103,7 @@ class ProjectLabeledItems extends Widget
         return Codendi_HTMLPurifier::instance()->purify(
             $this->renderer->renderToString(
                 'project-labeled-items-config',
-                array('labels' => $config_labels)
+                ['labels' => $config_labels]
             ),
             CODENDI_PURIFIER_FULL
         );
@@ -148,7 +148,7 @@ class ProjectLabeledItems extends Widget
 
     public function getInstallPreferences()
     {
-        $selected_labels = array();
+        $selected_labels = [];
         $project_id      = $this->getProject()->getID();
 
         return $this->renderer->renderToString(

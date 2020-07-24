@@ -31,7 +31,7 @@ class Wrapper extends AbstractLogger
      */
     private $logger;
 
-    private $prefix = array();
+    private $prefix = [];
 
     public function __construct(LoggerInterface $logger, $prefix)
     {
@@ -39,7 +39,7 @@ class Wrapper extends AbstractLogger
         $this->prefix[] = $prefix;
     }
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $this->logger->log($level, $this->formatMessage($message), $context);
     }

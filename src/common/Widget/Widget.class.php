@@ -103,13 +103,13 @@ use Tuleap\Layout\CssAssetCollection;
     {
         if ($this->hasRss()) {
             return '/widgets/?' . http_build_query(
-                array(
+                [
                     'owner'  => $owner_type . $owner_id,
                     'action' => 'rss',
-                    'name'   => array(
+                    'name'   => [
                         $this->id => $this->getInstanceId()
-                    )
-                )
+                    ]
+                ]
             );
         } else {
             return false;
@@ -190,20 +190,20 @@ use Tuleap\Layout\CssAssetCollection;
     {
         $request = HTTPRequest::instance();
 
-        $additional_parameters = array();
+        $additional_parameters = [];
         if ($owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $additional_parameters = array('group_id' => $owner_id);
+            $additional_parameters = ['group_id' => $owner_id];
         }
 
         return $request->getServerUrl() . '/widgets/?' . http_build_query(
             array_merge(
-                array(
+                [
                     'dashboard_id' => $dashboard_id,
                     'action'       => 'ajax',
-                    'name'         => array(
+                    'name'         => [
                         $this->id => $this->getInstanceId()
-                    )
-                ),
+                    ]
+                ],
                 $additional_parameters
             )
         );
@@ -246,7 +246,7 @@ use Tuleap\Layout\CssAssetCollection;
     /** @return array */
     public function getJavascriptDependencies()
     {
-        return array();
+        return [];
     }
 
     /**

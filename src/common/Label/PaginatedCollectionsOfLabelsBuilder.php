@@ -26,7 +26,7 @@ class PaginatedCollectionsOfLabelsBuilder
 {
     public function build(LegacyDataAccessResultInterface $result, $total_size)
     {
-        $labels = array();
+        $labels = [];
         foreach ($result as $row) {
             $labels[] = new Label($row['id'], $row['name'], $row['is_outline'], $row['color']);
         }

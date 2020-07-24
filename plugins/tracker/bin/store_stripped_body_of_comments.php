@@ -33,7 +33,7 @@ $sql = "SELECT id, body, body_format
 $results = $dao->retrieve($sql);
 $nb      = count($results);
 $logger->info("Found $nb comments to store");
-$values  = array();
+$values  = [];
 $i = 1;
 foreach ($dao->retrieve($sql) as $row) {
     if ($row['body_format'] === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {

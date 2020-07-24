@@ -65,10 +65,10 @@ class HookConfigCheckerTest extends TestCase
             )
         );
 
-        $hook_config = array(
+        $hook_config = [
             HookConfig::MANDATORY_REFERENCE       => false,
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
-        );
+        ];
 
         $this->assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }
@@ -85,10 +85,10 @@ class HookConfigCheckerTest extends TestCase
             )
         );
 
-        $hook_config = array(
+        $hook_config = [
             HookConfig::MANDATORY_REFERENCE       => false,
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
-        );
+        ];
 
         $this->assertTrue($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }
@@ -105,10 +105,10 @@ class HookConfigCheckerTest extends TestCase
             )
         );
 
-        $hook_config = array(
+        $hook_config = [
             HookConfig::MANDATORY_REFERENCE       => false,
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
-        );
+        ];
 
         $this->assertFalse($this->config_hook_checker->hasConfigurationChanged($this->repository, $hook_config));
     }

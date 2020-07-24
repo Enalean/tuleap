@@ -29,7 +29,7 @@ class PiePlot
     public $theme = "earth";
     protected $use_plot_theme_colors = false;
     protected $radius = 0.3;
-    protected $explode_radius = array();
+    protected $explode_radius = [];
     protected $explode_all = false;
     protected $explode_r = 20;
     protected $labels = null;
@@ -45,12 +45,12 @@ class PiePlot
     protected $color = "black";
     protected $legend_margin = 6;
     protected $show_labels = true;
-    protected $themearr = array(
-    "earth"  => array(136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430),
-    "pastel" => array(27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38),
-    "water"  => array(8,370,24,40,335,56,213,237,268,14,326,387,10,388),
-    "sand"   => array(27,168,34,170,19,50,65,72,131,209,46,393));
-    protected $setslicecolors = array();
+    protected $themearr = [
+    "earth"  => [136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430],
+    "pastel" => [27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38],
+    "water"  => [8,370,24,40,335,56,213,237,268,14,326,387,10,388],
+    "sand"   => [27,168,34,170,19,50,65,72,131,209,46,393]];
+    protected $setslicecolors = [];
     protected $labeltype = 0; // Default to percentage
     protected $pie_border = true;
     protected $pie_interior_border = true;
@@ -58,17 +58,17 @@ class PiePlot
     protected $ishadowcolor = '';
     protected $ishadowdrop = 4;
     protected $ilabelposadj = 1;
-    protected $legendcsimtargets = array();
-    protected $legendcsimwintargets = array();
-    protected $legendcsimalts = array();
-    protected $adjusted_data = array();
+    protected $legendcsimtargets = [];
+    protected $legendcsimwintargets = [];
+    protected $legendcsimalts = [];
+    protected $adjusted_data = [];
     public $guideline = null;
     protected $guidelinemargin = 10;
     protected $iShowGuideLineForSingle = false;
     protected $iGuideLineCurve = false;
     protected $iGuideVFactor = 1.4;
     protected $iGuideLineRFactor = 0.8;
-    protected $la = array(); // Holds the exact angle for each label
+    protected $la = []; // Holds the exact angle for each label
 
     //---------------
     // CONSTRUCTOR
@@ -396,8 +396,8 @@ class PiePlot
             }
         }
 
-        $tmp = array();
-        $result = array();
+        $tmp = [];
+        $result = [];
         $quote_sum = 0;
         $n = count($aData);
         for ($i = 0, $sum = 0; $i < $n; ++$i) {
@@ -743,7 +743,7 @@ class PiePlot
         //-----------------------------------------------------------------------
         $tresh_hold = 25 * M_PI / 180; // 25 degrees difference to be in a cluster
         $incluster = false; // flag if we are currently in a cluster or not
-        $clusters = array(); // array of clusters
+        $clusters = []; // array of clusters
         $cidx = -1;  // running cluster index
 
         // Go through all the labels and construct a number of clusters
@@ -1344,14 +1344,14 @@ class PiePlotC extends PiePlot
 //===================================================
 class PieGraph extends Graph
 {
-    public $plots = array();
+    public $plots = [];
     public $pieaa = false;
     //---------------
     // CONSTRUCTOR
     public function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)
     {
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
-        $this->SetColor(array(255,255,255));
+        $this->SetColor([255, 255, 255]);
 
         if ($this->graph_theme) {
             $this->graph_theme->ApplyGraph($this);

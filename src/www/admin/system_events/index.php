@@ -34,12 +34,12 @@ $request_queue = $request->get('queue');
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$available_queues = array(
+$available_queues = [
     SystemEventQueue::NAME => new SystemEventQueue()
-);
+];
 EventManager::instance()->processEvent(
     Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-    array('queues' => &$available_queues)
+    ['queues' => &$available_queues]
 );
 
 $selected_queue_name = SystemEventQueue::NAME;
@@ -51,32 +51,32 @@ $offset          = $request->get('offset') && ! $request->exist('filter') ? (int
 $limit           = 25;
 $full            = true;
 $selected_status = $request->get('filter_status');
-$all_status      = array(
+$all_status      = [
     SystemEvent::STATUS_NEW,
     SystemEvent::STATUS_RUNNING,
     SystemEvent::STATUS_DONE,
     SystemEvent::STATUS_WARNING,
     SystemEvent::STATUS_ERROR,
-);
+];
 $filter_status = $all_status;
 if (is_array($selected_status)) {
     if (in_array("0", $selected_status) || $selected_status === $all_status) {
-        $selected_status = array();
+        $selected_status = [];
     } else {
         $filter_status = array_intersect($selected_status, $filter_status);
     }
 } else {
-    $selected_status = array();
+    $selected_status = [];
 }
 
 $filter_type     = $request->get('filter_type');
 $filter_type_any = '0';
 
 if (! $filter_type || (count($filter_type) === 1 && $filter_type[0] === $filter_type_any)) {
-    $filter_type = array();
+    $filter_type = [];
 }
 
-$all_types_by_queue = array();
+$all_types_by_queue = [];
 foreach ($available_queues as $name => $queue) {
     $types = $se->getTypesForQueue($name);
     uksort($types, 'strnatcasecmp');
@@ -93,19 +93,19 @@ if (! $filter_type) {
 }
 
 $matching_events = $dao->searchLastEvents($offset, $limit, $filter_status, $filter_type)
-    ->instanciateWith(array($se, 'getInstanceFromRow'));
+    ->instanciateWith([$se, 'getInstanceFromRow']);
 $num_total_rows = $dao->foundRows();
 
-$events = array();
+$events = [];
 foreach ($matching_events as $event) {
     $events[] = new Tuleap\SystemEvent\SystemEventPresenter($event);
 }
 
-$default_params = array(
+$default_params = [
     'filter_status' => $filter_status,
     'filter_type'   => $filter_type,
     'queue'         => $selected_queue_name
-);
+];
 $pagination = new Tuleap\Layout\PaginationPresenter(
     $limit,
     $offset,
@@ -127,7 +127,7 @@ $id_to_replay = $request->get('replay');
 if ($id_to_replay) {
     $token->check();
     $se->replay($id_to_replay);
-    $GLOBALS['Response']->redirect('/admin/system_events/?' . http_build_query(array('offset' => $offset) + $default_params));
+    $GLOBALS['Response']->redirect('/admin/system_events/?' . http_build_query(['offset' => $offset] + $default_params));
 }
 
 $title = $Language->getText('admin_system_events', 'title');

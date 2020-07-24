@@ -72,7 +72,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      *
      * @var array of Planning_Milestone
      */
-    private $parent_milestones = array();
+    private $parent_milestones = [];
 
     /**
      * @var TimePeriodWithoutWeekEnd|null

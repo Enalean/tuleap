@@ -42,7 +42,7 @@ class ConfigNotificationEmailCustomSender
     {
         $rows = $this->dao->searchCustomSender($tracker->getId());
         if (count($rows) <= 0) {
-            return array('format' => '', 'enabled' => 0);
+            return ['format' => '', 'enabled' => 0];
         } else {
             return $rows[0]; // Only one answer is expected for any one tracker_id
         }

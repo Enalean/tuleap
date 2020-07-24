@@ -55,7 +55,7 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
             }
         }
 
-        array_splice($this->semantics, $position, 0, array($semantic));
+        array_splice($this->semantics, $position, 0, [$semantic]);
         $this->semantics_by_name[$semantic->getShortName()] = $semantic;
     }
 

@@ -45,20 +45,20 @@ class GerritServerTest extends \PHPUnit\Framework\TestCase
         );
 
         $gerrit_server_access_result = [
-            array(
+            [
                 'id'      => 1,
                 'ssh_key' => $server1_key->getKey()
-            ),
-            array(
+            ],
+            [
                 'id'      => 3,
                 'ssh_key' => $server3_key->getKey()
-            )
+            ]
         ];
         $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
         $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andReturns($gerrit_server_access_result);
 
         $gerrit_server_provider = new GerritServer($gerrit_server_dao);
-        $expected_result        = array($server1_key, $server3_key);
+        $expected_result        = [$server1_key, $server3_key];
 
         $this->assertEquals($expected_result, array_values(iterator_to_array($gerrit_server_provider)));
     }

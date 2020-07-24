@@ -46,7 +46,7 @@ if ($request->exist('export')) {
         $group_name_search = $request->get('group_name_search');
     }
     //Get status values
-    $status_values = array();
+    $status_values = [];
     if ($request->exist('status')) {
         $status_values = $request->get('status');
         if (! is_array($status_values)) {
@@ -54,7 +54,7 @@ if ($request->exist('export')) {
         }
     }
     if (in_array('ANY', $status_values)) {
-        $status_values = array();
+        $status_values = [];
     }
     //export user list in csv format
     $project_list_exporter = new Admin_ProjectListExporter();
@@ -81,19 +81,19 @@ if ($request->valid($vGroupNameSearch)) {
     }
 }
 
-$status_values = array();
+$status_values = [];
 if ($request->exist('status')) {
     $status_values = $request->get('status');
     if (! is_array($status_values)) {
         $status_values = explode(',', $status_values);
     }
 } else {
-    $status_values = array('ANY');
+    $status_values = ['ANY'];
 }
 
 $dao_status_values = $status_values;
 if (in_array('ANY', $status_values)) {
-    $dao_status_values = array();
+    $dao_status_values = [];
 }
 
 //return projects matching given parameters

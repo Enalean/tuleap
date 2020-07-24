@@ -107,7 +107,7 @@ class MailGatewayTokenTest extends TestCase
         $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
         $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->with(array(), $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
+        $this->artifact->shouldReceive('createNewChangeset')->with([], $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
 
         $this->mailgateway->process($this->incoming_mail);
     }
@@ -120,7 +120,7 @@ class MailGatewayTokenTest extends TestCase
         $this->incoming_message->shouldReceive('isAFollowUp')->andReturns(true);
         $this->artifact->shouldReceive('userCanUpdate')->with($this->user)->andReturns(true);
 
-        $this->artifact->shouldReceive('createNewChangeset')->with(array(), $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
+        $this->artifact->shouldReceive('createNewChangeset')->with([], $this->stripped_body, $this->user, \Mockery::any(), \Mockery::any())->once();
 
         $this->mailgateway->process($this->incoming_mail);
     }

@@ -31,15 +31,15 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTRepositoryWithMissingKey()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_05",
-                "settings"   => array(
-                    "commit_rules" => array(
+                "settings"   => [
+                    "commit_rules" => [
                         "is_reference_mandatory" => true,
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -49,22 +49,22 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithEmailNotificationWithMissingPathKey()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_06",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
-                            'emails'      => array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -74,19 +74,19 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithEmailNotificationWithMissingEmailsKey()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'users'       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            'users'       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -96,19 +96,19 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithEmailNotificationWithMissingUserGroupsKey()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'   => "/tags",
-                            'users'  => array(),
-                            "emails" => array()
-                        )
-                    )
-                )
-            )
+                            'users'  => [],
+                            "emails" => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -118,22 +118,22 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithEmailNotificationWithMissingUsersKey()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_08",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
-                            'emails'      => array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
+                            ],
                             'path'        => "/tags",
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -143,20 +143,20 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithEmailNotificationWithEmptyNotification()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_08",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
-                            'users'       => array(),
-                            'emails'      => array(),
+                "settings"   => [
+                    "email_notifications" => [
+                        [
+                            'users'       => [],
+                            'emails'      => [],
                             'path'        => "/tags",
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -166,31 +166,31 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithDuplicatePath()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array()
-                        ),
-                        array(
+                            ],
+                            'users'       => [],
+                            'user_groups' => []
+                        ],
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "test@list.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -200,23 +200,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithNonExistingGroupId()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array("1000")
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => ["1000"]
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -226,23 +226,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithUGroupIdFromAnOtherProject()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array("110_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => ["110_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS]
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -252,23 +252,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithUnsupportedDynamicUGroupId()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array($this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS)
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS]
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -278,23 +278,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPOSTWithSupportedDynamicUGroupId()
     {
         $params = json_encode(
-            array(
+            [
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
-                "settings"   => array(
-                    "email_notifications" => array(
-                        array(
+                "settings"   => [
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            'users'       => array(),
-                            'user_groups' => array($this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'       => [],
+                            'user_groups' => [$this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS]
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -304,30 +304,30 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithEmptyAccessFile()
     {
         $data = json_encode(
-            array(
-                'settings' => array(
-                    'commit_rules'        => array(
+            [
+                'settings' => [
+                    'commit_rules'        => [
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
-                    ),
+                    ],
                     "access_file"         => "",
-                    "immutable_tags"      => array(
-                        "paths"     => array(),
-                        "whitelist" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths"     => [],
+                        "whitelist" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->put('svn/1', null, $data));
@@ -338,17 +338,17 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($repository['name'], 'repo01');
         $this->assertEquals(
             $repository['settings']['commit_rules'],
-            array(
+            [
                 "is_reference_mandatory"           => true,
                 "is_commit_message_change_allowed" => false
-            )
+            ]
         );
         $this->assertEquals(
             $repository['settings']['immutable_tags'],
-            array(
-                "paths"     => array(),
-                "whitelist" => array(),
-            )
+            [
+                "paths"     => [],
+                "whitelist" => [],
+            ]
         );
         $this->assertEquals(
             $repository['settings']['access_file'],
@@ -359,25 +359,25 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingCommitRulesKey()
     {
         $params = json_encode(
-            array(
-                'settings' => array(
+            [
+                'settings' => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags"      => array(
-                        "paths"     => array(),
-                        "whitelist" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths"     => [],
+                        "whitelist" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -387,25 +387,25 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingImmutableTagKey()
     {
         $params = json_encode(
-            array(
-                'settings' => array(
-                    'commit_rules'        => array(
+            [
+                'settings' => [
+                    'commit_rules'        => [
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
-                    ),
+                    ],
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "email_notifications" => array(
-                        array(
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -415,28 +415,28 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingAccessFileKey()
     {
         $params = json_encode(
-            array(
-                'settings' => array(
-                    'commit_rules'        => array(
+            [
+                'settings' => [
+                    'commit_rules'        => [
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
-                    ),
-                    "immutable_tags"      => array(
-                        "paths"     => array(),
-                        "whitelist" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    ],
+                    "immutable_tags"      => [
+                        "paths"     => [],
+                        "whitelist" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -446,19 +446,19 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingEmailNotificationsKey()
     {
         $params = json_encode(
-            array(
-                'settings' => array(
-                    'commit_rules'   => array(
+            [
+                'settings' => [
+                    'commit_rules'   => [
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
-                    ),
-                    "immutable_tags" => array(
-                        "paths"     => array(),
-                        "whitelist" => array()
-                    ),
+                    ],
+                    "immutable_tags" => [
+                        "paths"     => [],
+                        "whitelist" => []
+                    ],
                     "access_file"    => "[/]\r\n* = rw\r\n@members = rw"
-                )
-            )
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -468,28 +468,28 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingCommitRulesCommitChangedKey()
     {
         $params = json_encode(
-            array(
-                "settings" => array(
-                    "commit_rules"        => array(
+            [
+                "settings" => [
+                    "commit_rules"        => [
                         "is_reference_mandatory" => true,
-                    ),
+                    ],
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags"      => array(
-                        "paths"     => array(),
-                        "whitelist" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths"     => [],
+                        "whitelist" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -499,24 +499,24 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingImmutableTagsWhiteListKey()
     {
         $params = json_encode(
-            array(
-                "settings" => array(
+            [
+                "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags"      => array(
-                        "paths" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            "users"       => array(),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            "users"       => [],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -526,23 +526,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingUsersKey()
     {
         $params = json_encode(
-            array(
-                "settings" => array(
+            [
+                "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags"      => array(
-                        "paths" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'        => "/tags",
-                            'emails'      => array(
+                            'emails'      => [
                                 "project-announce@list.example.com"
-                            ),
-                            'user_groups' => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            'user_groups' => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
@@ -552,23 +552,23 @@ class RepositoryTestNonRegressionTest extends TestBase
     public function testPUTRepositoryWithMissingUserGroupsKey()
     {
         $params = json_encode(
-            array(
-                "settings" => array(
+            [
+                "settings" => [
                     "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags"      => array(
-                        "paths" => array()
-                    ),
-                    "email_notifications" => array(
-                        array(
+                    "immutable_tags"      => [
+                        "paths" => []
+                    ],
+                    "email_notifications" => [
+                        [
                             'path'   => "/tags",
-                            'emails' => array(
+                            'emails' => [
                                 "project-announce@list.example.com"
-                            ),
-                            'users'  => array()
-                        )
-                    )
-                )
-            )
+                            ],
+                            'users'  => []
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));

@@ -100,7 +100,7 @@ class AdminNewsBuilder
 
     public function buildNewsList($result, $current_tab)
     {
-        $news_list = array();
+        $news_list = [];
 
         foreach ($result as $row) {
             $news_list[] = $this->getNewsDetailsPresenter($row, $current_tab);

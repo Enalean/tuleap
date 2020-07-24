@@ -76,12 +76,12 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
         array $changeset_values,
         $export_mode
     ) {
-        $params = array(
+        $params = [
             self::ARTIFACT_KEY      => $artifact,
             self::ARTIFACT_XML_KEY  => $artifact_xml,
             self::CHANGESET_XML_KEY => $changeset_xml,
             self::EXPORT_MODE_KEY   => $export_mode
-        );
+        ];
 
         foreach ($changeset_values as $changeset_value) {
             if ($changeset_value === null) {

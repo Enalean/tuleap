@@ -24,7 +24,7 @@ class AllowedColorsCollection
 {
 
     /** @var string[] */
-    private $colors = array(
+    private $colors = [
         'inca-silver',
         'chrome-silver',
         'firemist-silver',
@@ -49,7 +49,7 @@ class AllowedColorsCollection
         'panther-pink',
         'peggy-pink',
         'flamingo-pink'
-    );
+    ];
 
     public const DEFAULT_COLOR = 'chrome-silver';
 

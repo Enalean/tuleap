@@ -92,11 +92,11 @@ class HookConfigUpdatorTest extends TestCase
         $this->hook_dao->shouldReceive('updateHookConfig')->once();
         $this->project_history_dao->shouldReceive('groupAddHistory')->once();
 
-        $hook_config = array(
+        $hook_config = [
             'mandatory_reference'       => true,
             'commit_message_can_change' => false
 
-        );
+        ];
 
         $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 
@@ -110,11 +110,11 @@ class HookConfigUpdatorTest extends TestCase
         $this->hook_dao->shouldReceive('updateHookConfig')->never();
         $this->project_history_dao->shouldReceive('groupAddHistory')->never();
 
-        $hook_config = array(
+        $hook_config = [
             'mandatory_reference'       => true,
             'commit_message_can_change' => false
 
-        );
+        ];
 
         $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 
@@ -128,11 +128,11 @@ class HookConfigUpdatorTest extends TestCase
         $this->hook_dao->shouldReceive('updateHookConfig')->once();
         $this->project_history_dao->shouldReceive('groupAddHistory')->never();
 
-        $hook_config = array(
+        $hook_config = [
             'mandatory_reference'       => true,
             'commit_message_can_change' => false
 
-        );
+        ];
 
         $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 
@@ -146,11 +146,11 @@ class HookConfigUpdatorTest extends TestCase
         $this->hook_dao->shouldReceive('updateHookConfig')->once();
         $this->project_history_dao->shouldReceive('groupAddHistory')->never();
 
-        $hook_config = array(
+        $hook_config = [
             'mandatory_reference'       => true,
             'commit_message_can_change' => false
 
-        );
+        ];
 
         $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 

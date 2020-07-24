@@ -44,14 +44,14 @@ class ParameterRetrieverTest extends TestCase
     public function testItUsesDatabaseInformationsToCreateParameters(): void
     {
         $parameters_data = TestHelper::arrayToDar(
-            array(
+            [
                 'name'  => ParameterRetriever::MAXIMUM_CREDENTIALS,
                 'value' => 877
-            ),
-            array(
+            ],
+            [
                 'name' => ParameterRetriever::LIFETIME,
                 'value' => 947
-            )
+            ]
         );
         $dao             = \Mockery::spy(\Tuleap\SvnCore\Cache\ParameterDao::class);
         $dao->shouldReceive('search')->andReturns($parameters_data);

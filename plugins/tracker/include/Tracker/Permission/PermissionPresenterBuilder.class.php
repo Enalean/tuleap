@@ -28,7 +28,7 @@ class Tracker_Permission_PermissionPresenterBuilder
 
     private function getUGroupList(Tracker $tracker)
     {
-        $ugroup_list = array();
+        $ugroup_list = [];
 
         $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($tracker->getGroupId(), $tracker->getId());
         ksort($ugroups_permissions);
@@ -52,7 +52,7 @@ class Tracker_Permission_PermissionPresenterBuilder
 
     private function getPermissionTypeList($ugroup_id, $permissions)
     {
-        $permission_type_list = array();
+        $permission_type_list = [];
 
         $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
             Tracker_Permission_Command::PERMISSION_NONE,

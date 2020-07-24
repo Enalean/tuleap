@@ -62,7 +62,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     /**
      * @var array List of allowed projects
      */
-    protected $allowedForProject = array();
+    protected $allowedForProject = [];
 
     /**
      * @param int|null $id
@@ -155,7 +155,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check ' . $hook);
         }
-        $value = array();
+        $value = [];
         $value['hook']       = $hook;
         $value['callback']   = $callback ?: $this->deduceCallbackFromHook($hook);
         $value['recallHook'] = $recallHook;
@@ -256,12 +256,12 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $pluginName = $this->getName();
 
-        $paths  = array(ForgeConfig::get('sys_custompluginspath'), ForgeConfig::get('sys_pluginspath'));
-        $roots  = array(ForgeConfig::get('sys_custompluginsroot'), ForgeConfig::get('sys_pluginsroot'));
+        $paths  = [ForgeConfig::get('sys_custompluginspath'), ForgeConfig::get('sys_pluginspath')];
+        $roots  = [ForgeConfig::get('sys_custompluginsroot'), ForgeConfig::get('sys_pluginsroot')];
         $dir    = '/' . $pluginName . '/www/themes/';
-        $dirs   = array($dir . ForgeConfig::get('sys_user_theme'), $dir . 'default');
+        $dirs   = [$dir . ForgeConfig::get('sys_user_theme'), $dir . 'default'];
         $dir    = '/' . $pluginName . '/themes/';
-        $themes = array($dir . ForgeConfig::get('sys_user_theme'), $dir . 'default');
+        $themes = [$dir . ForgeConfig::get('sys_user_theme'), $dir . 'default'];
         foreach ($dirs as $kd => $dir) {
             foreach ($roots as $kr => $root) {
                 if (is_dir($root . $dir) && $paths[$kr] . $themes[$kd]) {
@@ -371,7 +371,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function getDependencies()
     {
-        return array();
+        return [];
     }
 
     public function setIsCustom($is_custom)

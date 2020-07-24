@@ -47,12 +47,12 @@ class SystemEventProcessor_Factory
     {
         $owner         = SystemEvent::OWNER_APP;
         /** @var SystemEventQueue[] $custom_queues */
-        $custom_queues = array();
+        $custom_queues = [];
         $this->event_manager->processEvent(
             Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-            array(
+            [
                 'queues' => &$custom_queues,
-            )
+            ]
         );
         if (isset($custom_queues[$request_queue])) {
             $this->logger = $custom_queues[$request_queue]->getLogger();

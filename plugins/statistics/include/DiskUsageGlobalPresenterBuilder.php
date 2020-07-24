@@ -63,49 +63,49 @@ class DiskUsageGlobalPresenterBuilder
 
     private function buildDataGlobal()
     {
-        $data_global = array();
+        $data_global = [];
         $result        = $this->usage_manager->getLatestData();
 
         if (isset($result['service'][Statistics_DiskUsageManager::USR_HOME])) {
-            $data_global[] = array(
+            $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Users'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::USR_HOME])
-            );
+            ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::MYSQL])) {
-            $data_global[] = array(
+            $data_global[] = [
                 'title' => 'MySQL',
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::MYSQL])
-            );
+            ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])) {
-            $data_global[] = array(
+            $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Codendi Logs'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])
-            );
+            ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP])) {
-            $data_global[] = array(
+            $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Backup'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP])
-            );
+            ];
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])) {
-            $data_global[] = array(
+            $data_global[] = [
                 'title' => dgettext('tuleap-statistics', 'Backup old'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])
-            );
+            ];
         }
 
         if (isset($result['path'])) {
             foreach ($result['path'] as $path => $size) {
-                $data_global[] = array(
+                $data_global[] = [
                     'title' => $path,
                     'size'  => $this->usage_output->sizeReadable($size)
-                );
+                ];
             }
         }
 
-        return array($data_global, $result['date']);
+        return [$data_global, $result['date']];
     }
 }

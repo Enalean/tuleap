@@ -321,7 +321,7 @@ class PluginManager
     public function getNameForPlugin($plugin)
     {
         if (! $this->plugins_name) {
-            $this->plugins_name = array();
+            $this->plugins_name = [];
         }
         if (! isset($this->plugins_name[$plugin->getId()])) {
             $this->plugins_name[$plugin->getId()] = $this->plugin_factory->getNameForPlugin($plugin);

@@ -55,7 +55,7 @@ class LogFactory
 
     public function getJobByRepository(GitRepository $repository)
     {
-        $jobs = array();
+        $jobs = [];
         foreach ($this->job_dao->searchJobsByRepositoryId($repository->getId()) as $row) {
             $jobs[] = $this->instantiateFromRow($row, $repository);
         }

@@ -74,7 +74,7 @@ class DetailsPresenter
 
     private function getTrackerNames($trackers)
     {
-        $tracker_names = array();
+        $tracker_names = [];
 
         foreach ($trackers as $tracker) {
             $tracker_names[] = $tracker->getName();

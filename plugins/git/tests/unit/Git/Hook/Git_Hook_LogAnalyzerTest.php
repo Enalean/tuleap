@@ -50,21 +50,21 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItUpdatesBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->with('d8f1e57', '469eaa9')->once()->andReturns(array('469eaa9'));
+        $this->git_exec->shouldReceive('revList')->with('d8f1e57', '469eaa9')->once()->andReturns(['469eaa9']);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master');
         $this->assertEquals(Git_Hook_PushDetails::ACTION_UPDATE, $push_details->getType());
-        $this->assertEquals(array('469eaa9'), $push_details->getRevisionList());
+        $this->assertEquals(['469eaa9'], $push_details->getRevisionList());
         $this->assertEquals('refs/heads/master', $push_details->getRefname());
     }
 
     public function testItCreatesBranch(): void
     {
-        $this->git_exec->shouldReceive('revListSinceStart')->with('refs/heads/master', '469eaa9')->once()->andReturns(array('469eaa9'));
+        $this->git_exec->shouldReceive('revListSinceStart')->with('refs/heads/master', '469eaa9')->once()->andReturns(['469eaa9']);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, Git_Hook_LogAnalyzer::FAKE_EMPTY_COMMIT, '469eaa9', 'refs/heads/master');
         $this->assertEquals(Git_Hook_PushDetails::ACTION_CREATE, $push_details->getType());
-        $this->assertEquals(array('469eaa9'), $push_details->getRevisionList());
+        $this->assertEquals(['469eaa9'], $push_details->getRevisionList());
         $this->assertEquals('refs/heads/master', $push_details->getRefname());
     }
 
@@ -72,13 +72,13 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
     {
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, '469eaa9', Git_Hook_LogAnalyzer::FAKE_EMPTY_COMMIT, 'refs/heads/master');
         $this->assertEquals(Git_Hook_PushDetails::ACTION_DELETE, $push_details->getType());
-        $this->assertEquals(array(), $push_details->getRevisionList());
+        $this->assertEquals([], $push_details->getRevisionList());
         $this->assertEquals('refs/heads/master', $push_details->getRefname());
     }
 
     public function testItTakesNewRevHashToIdentifyRevTypeOnUpdate(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(array('469eaa9'));
+        $this->git_exec->shouldReceive('revList')->andReturns(['469eaa9']);
         $this->git_exec->shouldReceive('getObjectType')->with('469eaa9')->once()->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master');
@@ -87,7 +87,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItTakesNewRevHashToIdentifyRevTypeOnCreate(): void
     {
-        $this->git_exec->shouldReceive('revListSinceStart')->andReturns(array('469eaa9'));
+        $this->git_exec->shouldReceive('revListSinceStart')->andReturns(['469eaa9']);
         $this->git_exec->shouldReceive('getObjectType')->with('469eaa9')->once()->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, Git_Hook_LogAnalyzer::FAKE_EMPTY_COMMIT, '469eaa9', 'refs/heads/master');
@@ -104,7 +104,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItCommitsOnWorkingBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(array());
+        $this->git_exec->shouldReceive('revList')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master');
@@ -113,7 +113,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItCommitsAnUnannotedTag(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(array());
+        $this->git_exec->shouldReceive('revList')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/tags/v1.0');
@@ -122,7 +122,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItCommitsAnAnnotedTag(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(array());
+        $this->git_exec->shouldReceive('revList')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_TAG);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/tags/v1.0');
@@ -131,7 +131,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItCommitsOnRemoteTrackingBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(array());
+        $this->git_exec->shouldReceive('revList')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/remotes/bla');
@@ -140,7 +140,7 @@ class Git_Hook_LogAnalyzerTest extends \PHPUnit\Framework\TestCase
 
     public function testItGeneratesAnEmptyPushDetailWhenCannotExtactRevList(): void
     {
-        $this->git_exec->shouldReceive('revList')->andThrows(new Git_Command_Exception('cmd', array('stuff'), '233'));
+        $this->git_exec->shouldReceive('revList')->andThrows(new Git_Command_Exception('cmd', ['stuff'], '233'));
 
         $this->logger->shouldReceive('error')->once();
 

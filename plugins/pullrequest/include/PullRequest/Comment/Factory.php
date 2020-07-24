@@ -76,7 +76,7 @@ class Factory
 
     public function getPaginatedCommentsByPullRequestId($pull_request_id, $limit, $offset, $order)
     {
-        $comments = array();
+        $comments = [];
 
         foreach ($this->dao->searchByPullRequestId($pull_request_id, $limit, $offset, $order) as $row) {
             $comments[] = $this->instantiateFromRow($row);

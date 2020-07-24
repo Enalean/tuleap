@@ -31,10 +31,10 @@ class Tracker_Report_Session extends Codendi_Session
         $this->report_id         = $report_id;
         $this->report_namespace  = $report_id;
         if (! isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed'])) {
-            $this->session['trackers']['reports'][$this->report_namespace] = array(
+            $this->session['trackers']['reports'][$this->report_namespace] = [
                 'has_changed'   => false,
                 'checkout_date' => $_SERVER['REQUEST_TIME'],
-            );
+            ];
         }
         $this->session_namespace = &$this->session['trackers']['reports'][$this->report_namespace];
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
@@ -67,7 +67,7 @@ class Tracker_Report_Session extends Codendi_Session
         $report_copy = $report;
         //now we need to reindex renderers
         $i = 0;
-        $report_copy['renderers'] = ($report_copy['renderers']) ? $report_copy['renderers'] : array();
+        $report_copy['renderers'] = ($report_copy['renderers']) ? $report_copy['renderers'] : [];
         foreach ($report_copy['renderers'] as $renderer_id => $renderer) {
             $i = $i - 1;
             //set new id for previously existing renderers (before adding new renderers in session)
@@ -117,7 +117,7 @@ class Tracker_Report_Session extends Codendi_Session
      * @param array $opts
      * @todo empty value may allow to set options only?
      */
-    public function storeCriterion($field_id, $value, $opts = array())
+    public function storeCriterion($field_id, $value, $opts = [])
     {
         $this->set("criteria.{$field_id}.value", $value);
         if (isset($opts['is_advanced'])) {
@@ -139,7 +139,7 @@ class Tracker_Report_Session extends Codendi_Session
      * NOTICE: Do not set value if empty
      *
      */
-    public function updateCriterion($field_id, $value, $opts = array())
+    public function updateCriterion($field_id, $value, $opts = [])
     {
         if (! empty($value) || is_array($value)) {
             $this->set("criteria.{$field_id}.value", $value);
@@ -210,7 +210,7 @@ class Tracker_Report_Session extends Codendi_Session
         }
     }
 
-    public function storeRenderer($renderer_id, $data, $opts = array())
+    public function storeRenderer($renderer_id, $data, $opts = [])
     {
         $this->set("renderers.{$renderer_id}", $data);
     }

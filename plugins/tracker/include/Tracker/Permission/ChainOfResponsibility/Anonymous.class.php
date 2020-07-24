@@ -53,10 +53,10 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tr
             $GLOBALS['Language']->getText(
                 'tracker_admin_permissions',
                 'tracker_ignore_g_anon_full',
-                array(
+                [
                     $permission_setter->getUGroupName($ugroup_id),
                     $permission_setter->getUGroupName(ProjectUGroup::ANONYMOUS),
-                )
+                ]
             )
         );
     }

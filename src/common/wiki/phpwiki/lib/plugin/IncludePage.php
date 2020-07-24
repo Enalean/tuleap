@@ -51,14 +51,14 @@ class WikiPlugin_IncludePage extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'page'    => false, // the page to include
+        return [ 'page'    => false, // the page to include
                       'rev'     => false, // the revision (defaults to most recent)
                       'quiet'   => false, // if set, inclusion appears as normal content
                       'words'   => false, // maximum number of words to include
                       'lines'   => false, // maximum number of lines to include
                       'section' => false, // include a named section
                       'sectionhead' => false // when including a named section show the heading
-                      );
+                      ];
     }
 
     public function getWikiPageLinks($argstr, $basepage)
@@ -72,7 +72,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         if (! isset($page) or ! $page or ! $page->name) {
             return false;
         }
-        return array($page->name);
+        return [$page->name];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -89,7 +89,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
 
         // A page can include itself once (this is needed, e.g.,  when editing
         // TextFormattingRules).
-        static $included_pages = array();
+        static $included_pages = [];
         if (in_array($page, $included_pages)) {
             return $this->error(sprintf(
                 _("recursive inclusion of page %s"),
@@ -135,11 +135,11 @@ class WikiPlugin_IncludePage extends WikiPlugin
 
         return HTML(
             HTML::p(
-                array('class' => 'transclusion-title'),
+                ['class' => 'transclusion-title'],
                 fmt("Included from %s", WikiLink($page))
             ),
             HTML::div(
-                array('class' => 'transclusion'),
+                ['class' => 'transclusion'],
                 false,
                 $content
             )
@@ -174,7 +174,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $ct = implode("\n", $c); // one string
             if (strlen($ct) > $bytes) {
                 $ct = substr($c, 0, $bytes);
-                $c = array($ct, sprintf(_(" ... first %d bytes"), $bytes));
+                $c = [$ct, sprintf(_(" ... first %d bytes"), $bytes)];
             }
         }
         $ct = implode("\n", $c); // one string

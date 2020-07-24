@@ -62,7 +62,7 @@ class GettextHelper
 
         $translated_text = ngettext($msgid1, $msgid2, $n);
 
-        return $this->getFormattedText($translated_text, $parts, array($n));
+        return $this->getFormattedText($translated_text, $parts, [$n]);
     }
 
     public function dgettext($text)
@@ -91,7 +91,7 @@ class GettextHelper
 
         $translated_text = dngettext($domain, $msgid1, $msgid2, $n);
 
-        return $this->getFormattedText($translated_text, $parts, array($n));
+        return $this->getFormattedText($translated_text, $parts, [$n]);
     }
 
     private function splitTextInParts($text)
@@ -114,7 +114,7 @@ class GettextHelper
         );
     }
 
-    private function getFormattedText($translated_text, $parts, $default_vsprintf_args = array())
+    private function getFormattedText($translated_text, $parts, $default_vsprintf_args = [])
     {
         $args = $default_vsprintf_args;
         if ($parts) {

@@ -114,7 +114,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      */
     public function getArtifactLinkInfoDiff(Tracker $tracker, ?Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null)
     {
-        $previous = array();
+        $previous = [];
         if ($old_changeset_value !== null) {
             $previous = $old_changeset_value->getValue();
         }
@@ -148,7 +148,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         $next = $this->getValue();
         if (! empty($next)) {
             $result = '';
-            $added_arr = array();
+            $added_arr = [];
             foreach ($next as $art_id => $added_element) {
                 $added_arr[] = $added_element->getLink();
             }
@@ -182,7 +182,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     private function getAllOutgoingArtifactIdsUserCanSee(PFUser $user)
     {
-        $values = array();
+        $values = [];
 
         foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
             $values[] = $this->buildArtifactReference($id);
@@ -193,7 +193,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     private function getAllIncomingArtifactIdsUserCanSee(PFUser $user)
     {
-        $values = array();
+        $values = [];
 
         foreach ($this->getIncomingArtifactIdsUserCanSee($user) as $id) {
             $values[] = $this->buildArtifactReference($id);
@@ -232,7 +232,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      */
     public function getArtifactIdsUserCanSee(PFUser $user)
     {
-        $artifact_links_user_can_see = array();
+        $artifact_links_user_can_see = [];
 
         foreach ($this->artifact_links as $artifact_id => $link) {
             if ($link->userCanView($user)) {
@@ -245,7 +245,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     private function getIncomingArtifactIdsUserCanSee(PFUser $user)
     {
-        $reverse_artifact_links_user_can_see = array();
+        $reverse_artifact_links_user_can_see = [];
 
         foreach ($this->reverse_artifact_links as $artifact_id => $link) {
             if ($link->userCanView($user)) {

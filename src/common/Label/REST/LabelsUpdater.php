@@ -56,7 +56,7 @@ class LabelsUpdater
 
     public function update($project_id, Labelable $item, LabelsPATCHRepresentation $body)
     {
-        $this->new_labels = array();
+        $this->new_labels = [];
         $this->project_label_dao->startTransaction();
 
         try {
@@ -94,7 +94,7 @@ class LabelsUpdater
 
     private function getLabelIdsToRemove(LabelsPATCHRepresentation $body)
     {
-        $labels_to_remove             = $body->remove ?: array();
+        $labels_to_remove             = $body->remove ?: [];
         $array_of_label_ids_to_remove = array_map(
             static function (LabelRepresentation $label_representation) {
                 return $label_representation->id;
@@ -107,8 +107,8 @@ class LabelsUpdater
 
     private function getLabelIdsToAdd($project_id, LabelsPATCHRepresentation $body)
     {
-        $labels_to_add = $body->add ?: array();
-        $project_ids   = $labels_to_add ? array_fill(0, count($labels_to_add), $project_id) : array();
+        $labels_to_add = $body->add ?: [];
+        $project_ids   = $labels_to_add ? array_fill(0, count($labels_to_add), $project_id) : [];
 
         $this->checkThatUserDoesNotTryToAddEmptyLabels($labels_to_add);
 

@@ -38,7 +38,7 @@ class InlineCommentUpdater
      */
     public function updateWhenSourceChanges(array $comments, FileUniDiff $original_diff, FileUniDiff $changes_diff, FileUniDiff $dest_changes_diff, FileUniDiff $target_diff)
     {
-        $comments_to_update = array();
+        $comments_to_update = [];
 
         foreach ($comments as $comment) {
             $original_line = $original_diff->getLine($comment->getUniDiffOffset());

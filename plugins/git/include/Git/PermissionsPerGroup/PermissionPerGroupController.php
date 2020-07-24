@@ -51,12 +51,12 @@ class PermissionPerGroupController extends RouterLink
     {
         if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => dgettext(
                         'tuleap-git',
                         "You don't have permissions to see user groups."
                     )
-                )
+                ]
             );
         }
 

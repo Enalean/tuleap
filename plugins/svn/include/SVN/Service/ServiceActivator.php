@@ -87,13 +87,13 @@ class ServiceActivator
             return $this->service_creator->createService(
                 ServiceSvn::getDefaultServiceData($project->getID()),
                 $project->getID(),
-                array(
+                [
                     'system' => $template->isSystem(),
                     'name'   => $template->isSystem() ? '' : $template->getUnixName(),
                     'id'     => $template->getID(),
                     'is_used'   => (int) $this->mustServiceBeUsed($svn_core_service, $svn_plugin_service),
                     'is_active' => (int) $this->mustServiceBeActive($svn_core_service, $svn_plugin_service),
-                )
+                ]
             );
         }
     }

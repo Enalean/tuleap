@@ -76,6 +76,6 @@ class IndexController
 
     private function displayFooter()
     {
-        project_admin_footer(array());
+        project_admin_footer([]);
     }
 }

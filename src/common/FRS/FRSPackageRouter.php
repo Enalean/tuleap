@@ -119,14 +119,14 @@ class FRSPackageRouter
 
     private function getExistingPackagesForProject(Project $project)
     {
-        $existing_packages = array();
+        $existing_packages = [];
         $packages = $this->package_factory->getFRSPackagesFromDb($project->getGroupId());
         foreach ($packages as $p => $nop) {
-            $existing_packages[] = array(
+            $existing_packages[] = [
                 'id'   => $packages[$p]->getPackageId(),
                 'name' => $packages[$p]->getName(),
                 'rank' => $packages[$p]->getRank(),
-            );
+            ];
         }
 
         return $existing_packages;

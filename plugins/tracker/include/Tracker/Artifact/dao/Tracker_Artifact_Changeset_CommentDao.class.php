@@ -47,7 +47,7 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
                 WHERE changeset.artifact_id = $artifact_id
                 AND comment_v2.id IS NULL
                 AND comment_v1.id IS NOT NULL";
-        $result = array();
+        $result = [];
         foreach ($this->retrieve($sql) as $row) {
             $result[$row['changeset_id']] = $row;
         }

@@ -115,7 +115,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     /**
@@ -149,7 +149,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array(ProjectCrossTrackerSearch::NAME));
+        $this->removeOrphanWidgets([ProjectCrossTrackerSearch::NAME]);
     }
 
     /** @see Event::REST_RESOURCES */

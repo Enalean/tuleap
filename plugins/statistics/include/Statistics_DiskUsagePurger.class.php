@@ -38,11 +38,11 @@ class Statistics_DiskUsagePurger
     /**
      * @var array
      */
-    public static $STATISTIC_TABLES = array(
+    public static $STATISTIC_TABLES = [
         'plugin_statistics_diskusage_group',
         'plugin_statistics_diskusage_site',
         'plugin_statistics_diskusage_user',
-    );
+    ];
 
     public function __construct(Statistics_DiskUsageDao $disk_usage_dao, \Psr\Log\LoggerInterface $logger)
     {
@@ -92,7 +92,7 @@ class Statistics_DiskUsagePurger
             return false;
         }
 
-        $first_day_with_data_of_each_months = array();
+        $first_day_with_data_of_each_months = [];
         foreach ($first_day_of_each_months as $day) {
             $first_day_with_data = $this->disk_usage_dao->findFirstDateGreaterEqualThan($day, $table);
 
@@ -131,7 +131,7 @@ class Statistics_DiskUsagePurger
             return false;
         }
 
-        $first_day_with_data_of_each_weeks = array();
+        $first_day_with_data_of_each_weeks = [];
         foreach ($first_day_of_each_weeks as $day) {
             $first_day_with_data = $this->disk_usage_dao->findFirstDateGreaterEqualThan($day, $table);
 
@@ -154,7 +154,7 @@ class Statistics_DiskUsagePurger
             return false;
         }
 
-        $first_day_of_each_months  = array();
+        $first_day_of_each_months  = [];
         $first_day_of_month        = date('Y-m-01 00:00:00', strtotime($date_min));
 
         do {
@@ -171,7 +171,7 @@ class Statistics_DiskUsagePurger
             return false;
         }
 
-        $first_day_of_each_weeks = array();
+        $first_day_of_each_weeks = [];
         $first_day_of_week       = date('Y-m-d 00:00:00', strtotime('monday this week', strtotime($date_min)));
 
         do {

@@ -48,7 +48,7 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -64,7 +64,7 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
         return new TransformedText(
             $page,
             _('InterWikiMap'),
-            array('markup' => 2),
+            ['markup' => 2],
             'searchableInterWikiMap'
         );
         /*
@@ -90,7 +90,7 @@ if (defined('DEBUG') && DEBUG) {
         public function format($text)
         {
             return HTML::div(
-                array('class' => 'wikitext'),
+                ['class' => 'wikitext'],
                 $this->_transform($this->_getHeader($text)),
                 $this->_formatMap(),
                 $this->_transform($this->_getFooter($text))
@@ -117,7 +117,7 @@ if (defined('DEBUG') && DEBUG) {
             if ($array) {
                 foreach ($array as $moniker => $interurl) {
                     $monikertd = HTML::td(
-                        array('class' => 'interwiki-moniker'),
+                        ['class' => 'interwiki-moniker'],
                         $dbi->isWikiPage($moniker)
                                       ? WikiLink($moniker)
                         : $moniker

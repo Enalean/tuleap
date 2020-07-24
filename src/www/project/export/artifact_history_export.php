@@ -78,8 +78,8 @@ function extract_history($atid)
     return db_query($sql);
 }
 
-$col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type','label');
-$lbl_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
+$col_list = ['artifact_id', 'field_name', 'old_value', 'new_value', 'mod_by', 'email', 'date', 'type', 'label'];
+$lbl_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
           'field_name' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'field_name'),
           'old_value' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'old_val'),
           'new_value' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'new_val'),
@@ -88,16 +88,16 @@ $lbl_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export
           'date' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'mod_on'),
           'type' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'comment_type'),
           'label' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'label')
-                  );
+                  ];
 
-$dsc_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
+$dsc_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
           'field_name' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'field_name_desc'),
           'old_value' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'old_val_desc'),
           'new_value' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'new_val_desc'),
           'mod_by' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'mod_by_desc'),
           'date' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'mod_on_desc'),
           'type' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'comment_type_desc'),
-          'label' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'label_desc'));
+          'label' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'label_desc')];
 
 $eol = "\n";
 
@@ -120,7 +120,7 @@ if ($export == 'artifact_history') {
         }
     } else {
         assert(isset($pg_title));
-        project_admin_header(array('title' => $pg_title), 'data');
+        project_admin_header(['title' => $pg_title], 'data');
 
         echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_hist_export') . '</h3>';
         if ($result) {
@@ -129,7 +129,7 @@ if ($export == 'artifact_history') {
             echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_history_export', 'db_access_err', ForgeConfig::get('sys_name'));
             echo '<br>' . db_error();
         }
-        site_project_footer(array());
+        site_project_footer([]);
     }
 } elseif ($export == "artifact_history_format") {
     assert(isset($at, $art_field_fact));

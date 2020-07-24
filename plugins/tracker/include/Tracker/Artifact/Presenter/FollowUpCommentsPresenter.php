@@ -45,16 +45,16 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
      */
     private function buildFollowUpsPresenters(array $followups, PFUser $current_user)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($followups as $followup) {
             $diff_to_previous = $followup->diffToPrevious();
-            $presenters[] = array(
+            $presenters[] = [
                 'getId'              => $followup->getId(),
                 'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),
                 'getTimeAgo'         => $followup->getTimeAgo($current_user),
                 'getFollowupContent' => $followup->getFollowupContent($diff_to_previous, $current_user)
-            );
+            ];
         }
 
         return $presenters;

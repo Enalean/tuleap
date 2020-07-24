@@ -21,11 +21,11 @@ class RssWriter2 extends RssWriter
     {
         $this->XmlElement(
             'rss',
-            array('version' => "2.0")
+            ['version' => "2.0"]
         );
 
         // not used. no namespaces should be used.
-        $this->_modules = array(
+        $this->_modules = [
             //Standards
         'content'    => "http://purl.org/rss/1.0/modules/content/",
         'dc'    => "http://purl.org/dc/elements/1.1/",
@@ -40,9 +40,9 @@ class RssWriter2 extends RssWriter
         'slash'    => "http://purl.org/rss/1.0/modules/slash/",
         'taxo'    => "http://purl.org/rss/1.0/modules/taxonomy/",
         'thr'    => "http://purl.org/rss/1.0/modules/threading/"
-        );
-        $this->_uris_seen = array();
-        $this->_items = array();
+        ];
+        $this->_uris_seen = [];
+        $this->_items = [];
     }
 
     // Required args: (applying defaults)

@@ -83,8 +83,8 @@ class UserRemoverTest extends TestCase
         $this->tracker_v3->shouldReceive('deleteUser')->once()->with(102)->andReturns(true);
         $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($this->project);
         $this->user_manager->shouldReceive('getUserById')->with(102)->andReturns($this->user);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($this->project)->andReturns(array());
-        $this->tv3_tracker_factory->shouldReceive('getArtifactTypesFromId')->with(101)->andReturns(array($this->tracker_v3));
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($this->project)->andReturns([]);
+        $this->tv3_tracker_factory->shouldReceive('getArtifactTypesFromId')->with(101)->andReturns([$this->tracker_v3]);
 
         $this->project_history_dao->shouldReceive('groupAddHistory')->once();
         $this->event_manager->shouldReceive('processEvent')->twice();

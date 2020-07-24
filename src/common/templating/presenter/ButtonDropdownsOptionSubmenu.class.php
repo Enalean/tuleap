@@ -22,7 +22,7 @@
 class Templating_Presenter_ButtonDropdownsOptionSubmenu extends Templating_Presenter_ButtonDropdownsOption
 {
 
-    public $sub_options = array();
+    public $sub_options = [];
 
     public function __construct($id, $label, array $sub_options)
     {

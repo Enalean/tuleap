@@ -76,7 +76,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
      */
     public function getAllUnusedForgePermissionsForForgeUserGroup(UserForgeUGroupPresenter $user_group)
     {
-        $unused_permissions    = array();
+        $unused_permissions    = [];
         $group_permissions_ids = $this->extractPermissionIds($this->permissions_dao->getPermissionsForForgeUGroup($user_group->id));
         $all_permissions_ids   = $this->getAllAvailableForgePermissionIds();
 
@@ -91,7 +91,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
 
     private function extractPermissionIds($permissions)
     {
-        $permission_ids = array();
+        $permission_ids = [];
 
         if ($permissions) {
             foreach ($permissions as $permission) {
@@ -109,11 +109,11 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
 
     public function getAllAvailableForgePermissions()
     {
-        $plugins_permission = array();
+        $plugins_permission = [];
 
-        $params = array(
+        $params = [
             'plugins_permission' => &$plugins_permission
-        );
+        ];
 
         $this->event_manager->processEvent(
             self::GET_PERMISSION_DELEGATION,
@@ -138,7 +138,7 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
      */
     public function getPermissionsForForgeUserGroup(User_ForgeUGroup $user_group)
     {
-        $permissions   = array();
+        $permissions   = [];
         $user_group_id = $user_group->getId();
 
         $rows = $this->permissions_dao->getPermissionsForForgeUGroup($user_group_id);

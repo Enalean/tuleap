@@ -61,7 +61,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r7 = new ArtifactRuleValue(7, 1, 'F3', 'C2', 'F2', 'B2');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array(&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([&$r1, &$r2, &$r3, &$r4, &$r5, &$r6, &$r7]);
 
         $f1 = \Mockery::spy(\ArtifactField::class);
         $f1->shouldReceive('getID')->andReturns('F1');
@@ -91,35 +91,35 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A1')->andReturns(array('a_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A2')->andReturns(array('a_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B1')->andReturns(array('b_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B2')->andReturns(array('b_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B3')->andReturns(array('b_3'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C1')->andReturns(array('c_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C2')->andReturns(array('c_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', array('A1'))->andReturns(array('a_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', array('A2'))->andReturns(array('a_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B1'))->andReturns(array('b_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B2'))->andReturns(array('b_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', array('B3'))->andReturns(array('b_3'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('C1'))->andReturns(array('c_1'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('C2'))->andReturns(array('c_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('A1', 'A2'))->andReturns(array('a_1', 'a_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B1', 'B3'))->andReturns(array('b_1', 'b_3'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B1', 'B2'))->andReturns(array('b_1', 'b_2'));
-        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', array('B2', 'B3'))->andReturns(array('b_2', 'b_3'));
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A1')->andReturns(['a_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', 'A2')->andReturns(['a_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B1')->andReturns(['b_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B2')->andReturns(['b_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', 'B3')->andReturns(['b_3']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C1')->andReturns(['c_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', 'C2')->andReturns(['c_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', ['A1'])->andReturns(['a_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F1', ['A2'])->andReturns(['a_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B1'])->andReturns(['b_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B2'])->andReturns(['b_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F2', ['B3'])->andReturns(['b_3']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['C1'])->andReturns(['c_1']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['C2'])->andReturns(['c_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['A1', 'A2'])->andReturns(['a_1', 'a_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B1', 'B3'])->andReturns(['b_1', 'b_3']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B1', 'B2'])->andReturns(['b_1', 'b_2']);
+        $arm->shouldReceive('_getSelectedValuesForField')->with(null, 'F3', ['B2', 'B3'])->andReturns(['b_2', 'b_3']);
 
         //S1
         $this->assertTrue(
             $arm->validate(
                 1,
-                array(
+                [
                     'f_1' => 'A2',
                     'f_2' => 'B3',
                     'f_3' => 'C1',
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -128,12 +128,12 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(
             $arm->validate(
                 1,
-                array(
+                [
                     'f_1' => 'A2',
                     'f_2' => 'B3',
                     'f_3' => 'C2', //C2 cannot access to B3 !
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -142,12 +142,12 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(
             $arm->validate(
                 1,
-                array(
-                    'f_1' => array('A1', 'A2'),
+                [
+                    'f_1' => ['A1', 'A2'],
                     'f_2' => 'B3',
                     'f_3' => 'C1',
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -157,12 +157,12 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(
             $arm->validate(
                 1,
-                array(
-                    'f_1' => array('A1', 'A2'),
+                [
+                    'f_1' => ['A1', 'A2'],
                     'f_2' => 'B2',
                     'f_3' => 'C2',
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -173,12 +173,12 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(
             $arm->validate(
                 1,
-                array(
+                [
                     'f_1' => 'A1',
-                    'f_2' => array('B1', 'B3'),
+                    'f_2' => ['B1', 'B3'],
                     'f_3' => 'C1',
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -189,12 +189,12 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(
             $arm->validate(
                 1,
-                array(
+                [
                     'f_1' => 'A1',
-                    'f_2' => array('B1', 'B2'), //A1 cannot access to B2 !
+                    'f_2' => ['B1', 'B2'], //A1 cannot access to B2 !
                     'f_3' => 'C1',
                     'f_4' => 'D1'
-                ),
+                ],
                 $aff
             )
         );
@@ -208,7 +208,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
@@ -263,7 +263,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
@@ -290,7 +290,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
@@ -333,7 +333,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);
@@ -377,7 +377,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
 
         $arf = \Mockery::spy(\ArtifactRuleFactory::class);
-        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns(array($r1, $r2, $r3));
+        $arf->shouldReceive('getAllRulesByArtifactTypeWithOrder')->andReturns([$r1, $r2, $r3]);
 
         $arm = \Mockery::mock(\ArtifactRulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $arm->shouldReceive('_getArtifactRuleFactory')->andReturns($arf);

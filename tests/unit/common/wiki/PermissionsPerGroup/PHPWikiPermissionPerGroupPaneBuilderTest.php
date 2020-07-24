@@ -71,12 +71,12 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends TestCase
     public function testItExportsServicePermissions(): void
     {
         $this->project->shouldReceive('usesWiki')->andReturns(true);
-        $this->wiki_permissions_manager->shouldReceive('getWikiServicePermissions')->once()->with($this->project)->andReturns(array(ProjectUGroup::REGISTERED));
+        $this->wiki_permissions_manager->shouldReceive('getWikiServicePermissions')->once()->with($this->project)->andReturns([ProjectUGroup::REGISTERED]);
 
         $selected_ugroup_id = null;
 
         $this->ugroup_manager->shouldReceive('getUGroup')->times(3);
-        $this->wiki_permissions_manager->shouldReceive('getWikiAdminsGroups')->once()->andReturns(array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN));
+        $this->wiki_permissions_manager->shouldReceive('getWikiAdminsGroups')->once()->andReturns([ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN]);
 
         $this->builder->getPaneContent($this->project, $selected_ugroup_id);
     }

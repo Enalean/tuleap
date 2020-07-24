@@ -38,7 +38,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
      */
     public function moveArtifactAfter($artifact_id, $predecessor_id)
     {
-        return $this->moveListOfArtifactsAfter(array($artifact_id), $predecessor_id);
+        return $this->moveListOfArtifactsAfter([$artifact_id], $predecessor_id);
     }
 
     /**
@@ -185,7 +185,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                     throw new RuntimeException('Cannot update rank');
                 }
 
-                $new_ranks = array();
+                $new_ranks = [];
                 foreach (array_values($list_of_artifact_ids) as $position => $id) {
                     $id       = $this->da->escapeInt($id);
                     $new_rank = $this->da->escapeInt($rank + $position);

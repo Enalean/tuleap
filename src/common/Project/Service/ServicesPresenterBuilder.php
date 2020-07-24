@@ -48,7 +48,7 @@ class ServicesPresenterBuilder
 
     public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user): ServicesPresenter
     {
-        $service_presenters = array();
+        $service_presenters = [];
         $allowed_services = $this->service_manager->getListOfAllowedServicesForProject($project);
         foreach ($allowed_services as $service) {
             if (! $this->isServiceReadable($service, $user)) {

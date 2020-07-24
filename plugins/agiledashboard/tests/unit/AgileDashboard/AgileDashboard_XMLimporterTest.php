@@ -72,11 +72,11 @@ final class AgileDashboard_XMLimporterTest extends \PHPUnit\Framework\TestCase
                  </agiledashboard>';
         $this->xml_object = new SimpleXMLElement($default_xml);
 
-        $this->tracker_mappings = array(
+        $this->tracker_mappings = [
             'T11' => 154,
             'T14' => 8,
             'T15' => 96,
-        );
+        ];
     }
 
     public function testItReturnsAnEmptyArrayIfNoPlanningsExist(): void

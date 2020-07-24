@@ -483,14 +483,14 @@ class Graph
 {
     public $cache = null;   // Cache object (singleton)
     public $img = null;   // Img object (singleton)
-    public $plots = array();  // Array of all plot object in the graph (for Y 1 axis)
-    public $y2plots = array();  // Array of all plot object in the graph (for Y 2 axis)
-    public $ynplots = array();
+    public $plots = [];  // Array of all plot object in the graph (for Y 1 axis)
+    public $y2plots = [];  // Array of all plot object in the graph (for Y 2 axis)
+    public $ynplots = [];
     public $xscale = null;  // X Scale object (could be instance of LinearScale or LogScale
     public $yscale = null;
     public $y2scale = null;
-    public $ynscale = array();
-    public $iIcons = array();  // Array of Icons to add to
+    public $ynscale = [];
+    public $iIcons = [];  // Array of Icons to add to
     public $cache_name;   // File name to be used for the current graph in the cache directory
     public $xgrid = null;   // X Grid object (linear or logarithmic)
     public $ygrid = null; //dito for Y
@@ -507,9 +507,9 @@ class Graph
     public $xaxis = null;   // X-axis (instane of Axis class)
     public $yaxis = null;
     public $y2axis = null;
-    public $ynaxis = array(); // Y axis (instance of Axis class)
+    public $ynaxis = []; // Y axis (instance of Axis class)
     public $margin_color; // Margin color of graph
-    public $plotarea_color = array(255,255,255); // Plot area color
+    public $plotarea_color = [255, 255, 255]; // Plot area color
     public $title; // Title and subtitle(s) text object
     public $subtitle;
     public $subsubtitle;
@@ -665,7 +665,7 @@ class Graph
         $this->tabtitle = new GraphTabTitle();
 
         if (! $this->isRunningClear) {
-            $this->inputValues = array();
+            $this->inputValues = [];
             $this->inputValues['aWidth'] = $aWidth;
             $this->inputValues['aHeight'] = $aHeight;
             $this->inputValues['aCachedName'] = $aCachedName;
@@ -699,7 +699,7 @@ class Graph
         $this->framebevelcolor1 = 'white@0.4';
         $this->framebevelcolor2 = 'black@0.4';
 
-        $this->margin_color = array(250,250,250);
+        $this->margin_color = [250, 250, 250];
     }
 
     public function SetupCache($aFilename, $aTimeout = 60)
@@ -1037,7 +1037,7 @@ class Graph
                 JpGraphError::RaiseL(25018, $aFileName);//('Incorrect file name for Graph::SetBackgroundImage() : '.$aFileName.' Must have a valid image extension (jpg,gif,png) when using autodetection of image type');
             }
 
-            $valid_formats = array('png', 'jpg', 'gif');
+            $valid_formats = ['png', 'jpg', 'gif'];
             $aImgFormat = strtolower($e[count($e) - 1]);
             if ($aImgFormat == 'jpeg') {
                 $aImgFormat = 'jpg';
@@ -1070,7 +1070,7 @@ class Graph
     }
 
     // Set a frame around the plot area
-    public function SetBox($aDrawPlotFrame = true, $aPlotFrameColor = array(0,0,0), $aPlotFrameWeight = 1)
+    public function SetBox($aDrawPlotFrame = true, $aPlotFrameColor = [0, 0, 0], $aPlotFrameWeight = 1)
     {
         $this->boxed = $aDrawPlotFrame;
         $this->box_weight = $aPlotFrameWeight;
@@ -1090,7 +1090,7 @@ class Graph
     }
 
     // Set a frame around the entire image
-    public function SetFrame($aDrawImgFrame = true, $aImgFrameColor = array(0,0,0), $aImgFrameWeight = 1)
+    public function SetFrame($aDrawImgFrame = true, $aImgFrameColor = [0, 0, 0], $aImgFrameWeight = 1)
     {
         $this->doframe = $aDrawImgFrame;
         $this->frame_color = $aImgFrameColor;
@@ -1544,7 +1544,7 @@ class Graph
             }
         }
         if ($min !== null) {
-            return array($min,$max);
+            return [$min, $max];
         } else {
             return null;
         }
@@ -1571,7 +1571,7 @@ class Graph
             }
         }
         if ($min !== null) {
-            return array($min,$max);
+            return [$min, $max];
         } else {
             return null;
         }
@@ -1622,7 +1622,7 @@ class Graph
                 }
             }
         }
-        return array($min,$max);
+        return [$min, $max];
     }
 
     public function AdjustMarginsForTitles()
@@ -3194,7 +3194,7 @@ class Graph
                 }
             }
         }
-        return $flg ? array($min,$max) : false;
+        return $flg ? [$min, $max] : false;
     }
 
     // Get X min and max values for added lines
@@ -3219,7 +3219,7 @@ class Graph
                 }
             }
         }
-        return $flg ? array($min,$max) : false;
+        return $flg ? [$min, $max] : false;
     }
 
     // Get min and max values for all included plots
@@ -3261,7 +3261,7 @@ class Graph
             $min = 0;
             $max = 1;
         }
-        return array($min,$max);
+        return [$min, $max];
     }
 
     public function hasLinePlotAndBarPlot()
@@ -3463,28 +3463,28 @@ class GraphTabTitle extends Text
 
         if ($this->width === TABTITLE_WIDTHFIT) {
             if ($this->align == 'left') {
-                $p = array($x,                $y,
+                $p = [$x,                $y,
                 $x,                $y - $h + $this->corner,
                 $x + $this->corner,$y - $h,
                 $x + $w - $this->corner, $y - $h,
                 $x + $w, $y - $h + $this->corner,
-                $x + $w, $y);
+                $x + $w, $y];
             } elseif ($this->align == 'center') {
                 $x += round($aImg->plotwidth / 2) - round($w / 2);
-                $p = array($x, $y,
+                $p = [$x, $y,
                 $x, $y - $h + $this->corner,
                 $x + $this->corner, $y - $h,
                 $x + $w - $this->corner, $y - $h,
                 $x + $w, $y - $h + $this->corner,
-                $x + $w, $y);
+                $x + $w, $y];
             } else {
                 $x += $aImg->plotwidth - $w;
-                $p = array($x, $y,
+                $p = [$x, $y,
                 $x, $y - $h + $this->corner,
                 $x + $this->corner,$y - $h,
                 $x + $w - $this->corner, $y - $h,
                 $x + $w, $y - $h + $this->corner,
-                $x + $w, $y);
+                $x + $w, $y];
             }
         } else {
             if ($this->width === TABTITLE_WIDTHFULL) {
@@ -3494,12 +3494,12 @@ class GraphTabTitle extends Text
             }
 
             // Make the tab fit the width of the plot area
-            $p = array($x, $y,
+            $p = [$x, $y,
             $x, $y - $h + $this->corner,
             $x + $this->corner,$y - $h,
             $x + $w - $this->corner, $y - $h,
             $x + $w, $y - $h + $this->corner,
-            $x + $w, $y);
+            $x + $w, $y];
         }
         if ($this->halign == 'left') {
             $aImg->SetTextAlign('left', 'bottom');
@@ -3733,7 +3733,7 @@ class Grid
     protected $majorweight = 1;
     protected $minorweight = 1;
     protected $fill = false;
-    protected $fillcolor = array('#EFEFEF','#BBCCFF');
+    protected $fillcolor = ['#EFEFEF', '#BBCCFF'];
 
     public function __construct($aAxis)
     {
@@ -3778,7 +3778,7 @@ class Grid
     public function SetFill($aFlg = true, $aColor1 = 'lightgray', $aColor2 = 'lightblue')
     {
         $this->fill = $aFlg;
-        $this->fillcolor = array( $aColor1, $aColor2 );
+        $this->fillcolor = [$aColor1, $aColor2];
     }
 
     // Display the grid
@@ -3910,11 +3910,11 @@ class AxisPrototype
     public $label_angle = 0;
     public $tick_step = 1;
     public $pos = false;
-    public $ticks_label = array();
+    public $ticks_label = [];
 
     protected $weight = 1;
-    protected $color = array(0,0,0);
-    protected $label_color = array(0,0,0);
+    protected $color = [0, 0, 0];
+    protected $label_color = [0, 0, 0];
     protected $ticks_label_colors = null;
     protected $show_first_label = true;
     protected $show_last_label = true;
@@ -3931,7 +3931,7 @@ class AxisPrototype
     protected $hide_line = false;
     protected $iDeltaAbsPos = 0;
 
-    public function __construct($img, $aScale, $color = array(0,0,0))
+    public function __construct($img, $aScale, $color = [0, 0, 0])
     {
         $this->img = $img;
         $this->scale = $aScale;
@@ -4428,10 +4428,10 @@ class Ticks
     public $supress_last = false;
     public $supress_tickmarks = false;
     public $supress_minor_tickmarks = false;
-    public $maj_ticks_pos = array();
-    public $maj_ticklabels_pos = array();
-    public $ticks_pos = array();
-    public $maj_ticks_label = array();
+    public $maj_ticks_pos = [];
+    public $maj_ticklabels_pos = [];
+    public $ticks_pos = [];
+    public $maj_ticks_label = [];
     public $precision;
 
     protected $minor_abs_size = 3;
@@ -4641,9 +4641,9 @@ class LinearTicks extends Ticks
         $m = is_array($this->iManualMinTickPos) ? count($this->iManualMinTickPos) : 0;
         $doLbl = is_array($this->iManualTickLabels) ? count($this->iManualTickLabels) > 0 : false;
 
-        $this->maj_ticks_pos = array();
-        $this->maj_ticklabels_pos = array();
-        $this->ticks_pos = array();
+        $this->maj_ticks_pos = [];
+        $this->maj_ticklabels_pos = [];
+        $this->ticks_pos = [];
 
         // Now loop through the supplied positions and translate them to screen coordinates
         // and store them in the maj_label_positions
@@ -4954,10 +4954,10 @@ class LinearScale
     public $type; // is this x or y scale ?
     public $ticks = null; // Store ticks
     public $text_scale_off = 0;
-    public $scale_abs = array(0,0);
+    public $scale_abs = [0, 0];
     public $scale_factor; // Scale factor between world and screen
     public $off; // Offset between image edge and plot area
-    public $scale = array(0,0);
+    public $scale = [0, 0];
     public $name = 'lin';
     public $auto_ticks = false; // When using manual scale should the ticks be automatically set?
     public $world_abs_size; // Plot area size in pixels (Needed public in jpgraph_radar.php)
@@ -4976,7 +4976,7 @@ class LinearScale
         assert($aMin <= $aMax);
 
         $this->type = $aType;
-        $this->scale = array($aMin,$aMax);
+        $this->scale = [$aMin, $aMax];
         $this->world_size = $aMax - $aMin;
         $this->ticks = new LinearTicks();
     }
@@ -5039,7 +5039,7 @@ class LinearScale
     // Specify a new min/max value for sclae
     public function Update($aImg, $aMin, $aMax)
     {
-        $this->scale = array($aMin,$aMax);
+        $this->scale = [$aMin, $aMax];
         $this->world_size = $aMax - $aMin;
         $this->InitConstants($aImg);
     }
@@ -5320,7 +5320,7 @@ class LinearScale
             }
         }
         $size = $this->world_size * $this->scale_factor;
-        $this->scale_abs = array($this->off,$this->off + $size);
+        $this->scale_abs = [$this->off, $this->off + $size];
     }
 
     // Initialize the conversion constants for this scale
@@ -5344,7 +5344,7 @@ class LinearScale
         $this->scale_factor = $this->world_abs_size / ($this->world_size * 1.0);
 
         // scale_abs = start and end points of scale in absolute pixels
-        $this->scale_abs = array($this->off,$this->off + $this->world_size * $this->scale_factor);
+        $this->scale_abs = [$this->off, $this->off + $this->world_size * $this->scale_factor];
     }
 
 
@@ -5397,7 +5397,7 @@ class LinearScale
             $adjmax = ceil($max / $minstep) * $minstep;
         }
 
-        return array($numsteps,$adjmin,$adjmax,$minstep,$majstep);
+        return [$numsteps, $adjmin, $adjmax, $minstep, $majstep];
     }
 
     public function CalcTicksFreeze($maxsteps, $min, $max, $a, $b)
@@ -5421,7 +5421,7 @@ class LinearScale
             ++$ld;
         }
         $minstep = $majstep / $b;
-        return array($numsteps,$minstep,$majstep);
+        return [$numsteps, $minstep, $majstep];
     }
 
 
@@ -5467,7 +5467,7 @@ class LinearScale
             $adjmax = ceil($max / $majstep) * $majstep;
         }
 
-        return array($numsteps,$adjmin,$adjmax,$majstep);
+        return [$numsteps, $adjmin, $adjmax, $majstep];
     }
 
 
@@ -5496,7 +5496,7 @@ class LinearScale
             ++$ld;
         }
 
-        return array($numsteps,$majstep);
+        return [$numsteps, $majstep];
     }
 
     // Determine the minimum of three values witha  weight for last value
@@ -5685,12 +5685,12 @@ class Plot
     public $numpoints = 0;
     public $value;
     public $legend = '';
-    public $coords = array();
+    public $coords = [];
     public $color = 'black';
     public $hidelegend = false;
     public $line_weight = 1;
-    public $csimtargets = array();
-    public $csimwintargets = array(); // Array of targets for CSIM
+    public $csimtargets = [];
+    public $csimwintargets = []; // Array of targets for CSIM
     public $csimareas = '';   // Resultant CSIM area tags
     public $csimalts = null;   // ALT:s for corresponding target
     public $legendcsimtarget = '';
@@ -5710,7 +5710,7 @@ class Plot
         }
 
         if (! $this->isRunningClear) {
-            $this->inputValues = array();
+            $this->inputValues = [];
             $this->inputValues['aDatay'] = $aDatay;
             $this->inputValues['aDatax'] = $aDatax;
         }
@@ -5813,7 +5813,7 @@ class Plot
         } else {
             $ym = '';
         }
-        return array($xm,$ym);
+        return [$xm, $ym];
     }
 
     // Get maximum value in plot
@@ -5846,7 +5846,7 @@ class Plot
         } else {
             $ym = '';
         }
-        return array($xm,$ym);
+        return [$xm, $ym];
     }
 
     public function SetColor($aColor)
@@ -5907,7 +5907,7 @@ class ColorFactory
 {
 
     private static $iIdx = 0;
-    private static $iColorList = array(
+    private static $iColorList = [
         'black',
         'blue',
         'orange',
@@ -5940,7 +5940,7 @@ class ColorFactory
         'peru',
         'slategray',
         'yellow4',
-        'springgreen2');
+        'springgreen2'];
     private static $iNum = 33;
 
     public static function getColor()

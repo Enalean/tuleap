@@ -42,7 +42,7 @@ class TimetrackingUgroupRetriever
     {
         $ugroup_rows = $this->dao->getWriters($tracker->getId());
 
-        $ugroup_ids = array();
+        $ugroup_ids = [];
         foreach ($ugroup_rows as $ugroup_row) {
             $ugroup_ids[] = $ugroup_row['ugroup_id'];
         }
@@ -57,7 +57,7 @@ class TimetrackingUgroupRetriever
     {
         $ugroup_rows = $this->dao->getReaders($tracker->getId());
 
-        $ugroup_ids = array();
+        $ugroup_ids = [];
         foreach ($ugroup_rows as $ugroup_row) {
             $ugroup_ids[] = $ugroup_row['ugroup_id'];
         }

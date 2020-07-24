@@ -42,22 +42,22 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * @var Array of Transition_PostAction
      */
-    protected $post_actions = array();
+    protected $post_actions = [];
 
     /**
      * @var Array of Transition_PostAction run after fields validation
      */
-    protected $post_actions_after = array();
+    protected $post_actions_after = [];
 
     /**
      * @var Array of Workflow_Transition_Condition
      */
-    private $conditions = array();
+    private $conditions = [];
 
     /**
      * @var Array of permissions
      */
-    protected $cache_permissions = array();
+    protected $cache_permissions = [];
 
     /**
      * @var Workflow

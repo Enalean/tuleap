@@ -51,7 +51,7 @@ class ProjectContacts extends \Widget
         $token     = new \CSRFSynchronizerToken('');
         $presenter = new \MassmailFormPresenter(
             $token,
-            $GLOBALS['Language']->getText('contact_admins', 'title', array($project->getPublicName())),
+            $GLOBALS['Language']->getText('contact_admins', 'title', [$project->getPublicName()]),
             '/include/massmail_to_project_admins.php'
         );
         $template_factory = \TemplateRendererFactory::build();

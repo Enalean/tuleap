@@ -56,7 +56,7 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildrenNoFiles(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFRSRelease->shouldReceive('getFileList')->andReturns(array());
+        $webDAVFRSRelease->shouldReceive('getFileList')->andReturns([]);
 
         $this->assertEquals([], $webDAVFRSRelease->getChildren());
     }
@@ -72,7 +72,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getChild')->andReturns($file);
 
         $FRSFile = \Mockery::spy(\FRSFile::class);
-        $webDAVFRSRelease->shouldReceive('getFileList')->andReturns(array($FRSFile));
+        $webDAVFRSRelease->shouldReceive('getFileList')->andReturns([$FRSFile]);
         $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($file);
 
         $this->assertEquals([$file], $webDAVFRSRelease->getChildren());

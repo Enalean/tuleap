@@ -77,8 +77,8 @@ class ProjectSerializerTest extends TestCase
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new InstanceBaseURLBuilder());
 
         $mirror_data_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn(array());
-        $mirror_data_mapper->shouldReceive('fetchAll')->andReturn(array());
+        $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn([]);
+        $mirror_data_mapper->shouldReceive('fetchAll')->andReturn([]);
 
         $this->gerrit_project_status = Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
@@ -184,16 +184,16 @@ class ProjectSerializerTest extends TestCase
             ->andReturn([$repo, $repo2]);
 
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(array('2'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(array('3'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(['2']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
         // Repo 5 (test_pimped): R = project_members | W = project_admin | W+ = user groups 101
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(array('3'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(array('4'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(array('125'));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(['3']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(['4']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
 
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn(array());
+        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
@@ -228,17 +228,17 @@ class ProjectSerializerTest extends TestCase
             ->once()
             ->andReturn([$repo, $repo2]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(array('2'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(array('3'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(array('125'));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(['2']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(array('2'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(array('3'));
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(array('125'));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(['2']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(['3']);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
 
         $this->gerrit_project_status->shouldReceive('getStatus')->andReturn(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn(array());
+        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
@@ -337,15 +337,15 @@ EOS;
             ->once()
             ->andReturn([$repo, $repo2]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn(array($prj));
+        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([$prj]);
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
@@ -381,15 +381,15 @@ EOS;
             ->once()
             ->andReturn([$repo, $repo2]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns(array());
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns([]);
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn(array());
+        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
         $this->version_detector->shouldReceive('isGitolite3')->andReturnFalse();
 
         // Ensure file is correct

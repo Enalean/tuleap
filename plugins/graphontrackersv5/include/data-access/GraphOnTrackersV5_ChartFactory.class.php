@@ -29,9 +29,9 @@ class GraphOnTrackersV5_ChartFactory
     protected function __construct()
     {
         $this->charts        = null;
-        $this->chart_factories = array();
+        $this->chart_factories = [];
         $em = EventManager::instance();
-        $em->processEvent('graphontrackersv5_load_chart_factories', array('factories' => &$this->chart_factories));
+        $em->processEvent('graphontrackersv5_load_chart_factories', ['factories' => &$this->chart_factories]);
     }
 
     /**
@@ -53,8 +53,8 @@ class GraphOnTrackersV5_ChartFactory
     public function getCharts($renderer, $store_in_session = true)
     {
         if (! isset($this->charts[$renderer->id])) {
-            $charts_data = array();
-            $this->charts[$renderer->id] = array();
+            $charts_data = [];
+            $this->charts[$renderer->id] = [];
             if ($store_in_session) {
                 $this->report_session = new Tracker_Report_Session($renderer->report->id);
                 $this->report_session->changeSessionNamespace("renderers.{$renderer->id}");
@@ -115,7 +115,7 @@ class GraphOnTrackersV5_ChartFactory
 
     public function getChartsFromDb($renderer)
     {
-        $charts = array();
+        $charts = [];
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
         $charts = $dao->searchByReportId($renderer->id);
         return $charts;
@@ -124,7 +124,7 @@ class GraphOnTrackersV5_ChartFactory
 
     public function getReportRenderersByReportFromDb($report)
     {
-        $renderers = array();
+        $renderers = [];
         foreach ($this->getDao()->searchByReportId($report->id) as $row) {
             if ($r = $this->getInstanceFromRow($row, $report)) {
                 $renderers[$row['id']] = $r;
@@ -146,8 +146,8 @@ class GraphOnTrackersV5_ChartFactory
             $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
             $default_title       = 'Untitled ' . $chart_type;
             $default_description = '';
-            $default_width       = call_user_func(array($chart_classname, 'getDefaultWidth'));
-            $default_height      = call_user_func(array($chart_classname, 'getDefaultHeight'));
+            $default_width       = call_user_func([$chart_classname, 'getDefaultWidth']);
+            $default_height      = call_user_func([$chart_classname, 'getDefaultHeight']);
 
             $session = new Tracker_Report_Session($renderer->report->id);
             $session->changeSessionNamespace("renderers.{$renderer->id}");
@@ -157,7 +157,7 @@ class GraphOnTrackersV5_ChartFactory
             //Add new chart in session
             $session->set("charts.$id.chart_type", $chart_type);
             $session->setHasChanged();
-            $chart = call_user_func(array($chart_classname, 'create'), $renderer, $id, $rank, $default_title, $default_description, $default_width, $default_height);
+            $chart = call_user_func([$chart_classname, 'create'], $renderer, $id, $rank, $default_title, $default_description, $default_width, $default_height);
         }
         return $chart;
     }
@@ -323,7 +323,7 @@ class GraphOnTrackersV5_ChartFactory
     public function getInstanceFromXML($xml, $renderer, $formsMapping, $store_in_session = true)
     {
         $att = $xml->attributes();
-        $row = array(
+        $row = [
             'id'          => 0,
             'chart_type'  => (string) $att->type,
             'height'      => (int) $att->height,
@@ -331,7 +331,7 @@ class GraphOnTrackersV5_ChartFactory
             'rank'        => 'end',
             'title'       => (string) $xml->title,
             'description' => (string) $xml->description,
-        );
+        ];
 
         $chart = $this->instanciateChart($row, $renderer, $store_in_session);
         $chart->setSpecificPropertiesFromXML($xml, $formsMapping);

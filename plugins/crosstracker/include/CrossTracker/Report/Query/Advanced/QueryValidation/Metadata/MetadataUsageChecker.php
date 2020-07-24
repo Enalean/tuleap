@@ -71,7 +71,7 @@ class MetadataUsageChecker
         $this->status_dao           = $status_dao;
         $this->assigned_to_dao      = $assigned_to_dao;
 
-        $this->cache_already_checked = array();
+        $this->cache_already_checked = [];
     }
 
     /**

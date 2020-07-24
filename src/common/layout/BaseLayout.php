@@ -58,7 +58,7 @@ abstract class BaseLayout extends Response
     public $imgroot;
 
     /** @var array */
-    protected $javascript_in_footer = array();
+    protected $javascript_in_footer = [];
 
     /** @var IncludeAssets */
     protected $include_asset;
@@ -105,7 +105,7 @@ abstract class BaseLayout extends Response
         $this->imgroot = $root . '/images/';
 
         $this->breadcrumbs = new BreadCrumbCollection();
-        $this->toolbar     = array();
+        $this->toolbar     = [];
 
         $this->include_asset  = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         $this->uri_sanitizer  = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
@@ -136,7 +136,7 @@ abstract class BaseLayout extends Response
      * @param array $args The optionnal arguments for the tag ['alt' => 'Beautiful image']
      * @return string <img src="/themes/Tuleap/images/trash.png" alt="Beautiful image" />
      */
-    public function getImage($src, $args = array())
+    public function getImage($src, $args = [])
     {
         $src = $this->getImagePath($src);
 
@@ -199,7 +199,7 @@ abstract class BaseLayout extends Response
      */
     public function includeFooterJavascriptFile($file)
     {
-        $this->javascript_in_footer[] = array('file' => $file);
+        $this->javascript_in_footer[] = ['file' => $file];
     }
 
     public function addJavascriptAsset(JavascriptAsset $asset): void
@@ -216,7 +216,7 @@ abstract class BaseLayout extends Response
      */
     public function includeFooterJavascriptSnippet($snippet)
     {
-        $this->javascript_in_footer[] = array('snippet' => $snippet);
+        $this->javascript_in_footer[] = ['snippet' => $snippet];
     }
 
     /** @deprecated */
@@ -238,8 +238,8 @@ abstract class BaseLayout extends Response
         $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (! $is_anon && headers_sent())) {
-            $this->header(array('title' => 'Redirection'));
-            echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', array($url)) . '</p>';
+            $this->header(['title' => 'Redirection']);
+            echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', [$url]) . '</p>';
             echo '<script type="text/javascript">';
             if ($has_feedback) {
                 echo 'setTimeout(function() {';
@@ -249,7 +249,7 @@ abstract class BaseLayout extends Response
                 echo '}, 5000);';
             }
             echo '</script>';
-            $this->footer(array());
+            $this->footer([]);
         } else {
             if (! $is_anon && ! headers_sent() && $has_feedback) {
                 $this->_serializeFeedback();

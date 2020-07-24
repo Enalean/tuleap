@@ -78,9 +78,9 @@ function replaceReferencesByActualFiles($archive_path, TuleapArchiveContent $con
 
 class TuleapArchiveContent
 {
-    private $reference_files = array();
+    private $reference_files = [];
 
-    private $content_files   = array();
+    private $content_files   = [];
 
     public function addFileReference($reference, $target_file_path)
     {

@@ -84,13 +84,13 @@ class User_LoginManager
 
         $this->event_manager->processEvent(
             Event::SESSION_BEFORE_LOGIN,
-            array(
+            [
                 'loginname'        => $name,
                 'passwd'           => $password,
                 'auth_success'     => &$auth_success,
                 'auth_user_id'     => &$auth_user_id,
                 'auth_user_status' => &$auth_user_status,
-            )
+            ]
         );
 
         if ($auth_success) {
@@ -124,10 +124,10 @@ class User_LoginManager
             $is_auth_valid = true;
             $this->event_manager->processEvent(
                 Event::SESSION_AFTER_LOGIN,
-                array(
+                [
                     'user'                => $user,
                     'allow_codendi_login' => &$is_auth_valid
-                )
+                ]
             );
         }
 

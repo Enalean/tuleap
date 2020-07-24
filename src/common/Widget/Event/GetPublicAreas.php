@@ -40,7 +40,7 @@ class GetPublicAreas implements Dispatchable
     public function __construct(Project $project)
     {
         $this->project = $project;
-        $this->areas   = array();
+        $this->areas   = [];
     }
 
     /**

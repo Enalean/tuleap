@@ -31,26 +31,26 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '42' => array(
+            [
+                '42' => [
                     'field' => '123',
-                ),
-                '69' => array(
+                ],
+                '69' => [
                     'field' => '321',
-                ),
-            )
+                ],
+            ]
         );
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
                 'field_id'            => 100
-            ),
-            array(
+            ],
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => null
-            )
+            ]
         ));
         $this->dao->shouldReceive('save')->with($this->tracker_id, 42, 123)->once()->andReturns(true);
         $this->dao->shouldReceive('save')->with($this->tracker_id, 69, 321)->once()->andReturns(true);
@@ -62,26 +62,26 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '42' => array(
+            [
+                '42' => [
                     'field' => '123',
-                ),
-                '69' => array(
+                ],
+                '69' => [
                     'field' => '322',
-                ),
-            )
+                ],
+            ]
         );
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
                 'field_id'            => 123
-            ),
-            array(
+            ],
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => 321
-            )
+            ]
         ));
         $this->dao->shouldReceive('save')->with($this->tracker_id, 69, 322)->once();
         $this->command->execute($request);

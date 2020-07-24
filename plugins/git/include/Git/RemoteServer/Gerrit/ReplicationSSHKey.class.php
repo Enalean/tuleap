@@ -72,9 +72,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
     public function getAuthorizedKeysArray()
     {
         if ($this->value) {
-            return array($this->value);
+            return [$this->value];
         }
-        return array();
+        return [];
     }
 
     /**

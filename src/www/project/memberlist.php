@@ -36,7 +36,7 @@ if ($request->valid($vGroupId)) {
     }
 }
 
-site_project_header(array('title' => $Language->getText('project_memberlist', 'proj_member_list'),'group' => $group_id,'toptab' => 'memberlist'));
+site_project_header(['title' => $Language->getText('project_memberlist', 'proj_member_list'), 'group' => $group_id, 'toptab' => 'memberlist']);
 
 print $Language->getText('project_memberlist', 'contact_to_become_member');
 
@@ -51,7 +51,7 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
     . "ORDER BY user.user_name";
 
 
-$title_arr = array();
+$title_arr = [];
 $title_arr[] = $Language->getText('project_memberlist', 'developer');
 $title_arr[] = $Language->getText('project_export_artifact_history_export', 'email');
 
@@ -77,4 +77,4 @@ while ($row_memb = db_fetch_array($res_memb)) {
 }
 print "\t</table>";
 
-site_project_footer(array());
+site_project_footer([]);

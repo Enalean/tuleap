@@ -62,7 +62,7 @@ class Docman_VersionFactoryTest extends TestCase
         $dao = \Mockery::spy(\Docman_VersionDao::class);
         $dao->shouldReceive('listVersionsToPurge')->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'id'        => null,
                     'user_id'   => null,
                     'item_id'   => null,
@@ -74,7 +74,7 @@ class Docman_VersionFactoryTest extends TestCase
                     'filesize'  => null,
                     'filetype'  => null,
                     'path'      => null
-                )
+                ]
             )
         );
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
@@ -89,7 +89,7 @@ class Docman_VersionFactoryTest extends TestCase
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class)->makePartial();
 
         $version = new Docman_Version(
-            array(
+            [
                 'id'        => null,
                 'user_id'   => null,
                 'item_id'   => null,
@@ -101,7 +101,7 @@ class Docman_VersionFactoryTest extends TestCase
                 'filesize'  => null,
                 'filetype'  => null,
                 'path'      => $this->tmp_tuleap_dir . '/noFile'
-            )
+            ]
         );
 
         $versionFactory->shouldReceive('archiveBeforePurge')->with($version)->once();
@@ -115,7 +115,7 @@ class Docman_VersionFactoryTest extends TestCase
 
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
         $version        = new Docman_Version(
-            array(
+            [
                 'id'        => null,
                 'user_id'   => null,
                 'item_id'   => null,
@@ -127,7 +127,7 @@ class Docman_VersionFactoryTest extends TestCase
                 'filesize'  => null,
                 'filetype'  => null,
                 'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt'
-            )
+            ]
         );
 
         $fp = fopen($version->getPath(), 'w');
@@ -145,7 +145,7 @@ class Docman_VersionFactoryTest extends TestCase
 
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
         $version        = new Docman_Version(
-            array(
+            [
                 'id'        => null,
                 'user_id'   => null,
                 'item_id'   => null,
@@ -157,7 +157,7 @@ class Docman_VersionFactoryTest extends TestCase
                 'filesize'  => null,
                 'filetype'  => null,
                 'path'      => $this->tmp_tuleap_dir . '/fileToPurge_txt'
-            )
+            ]
         );
         fopen($version->getPath(), 'w');
 
@@ -176,13 +176,13 @@ class Docman_VersionFactoryTest extends TestCase
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         $dao->shouldReceive('searchDeletedVersion')->with(1664, 2)->andReturns(
-            \TestHelper::arrayToDar(array('purge_date' => null, 'label' => 'Ho hisse la saucisse', 'path' => $filePath))
+            \TestHelper::arrayToDar(['purge_date' => null, 'label' => 'Ho hisse la saucisse', 'path' => $filePath])
         );
 
         $file = \Mockery::spy(\Docman_File::class);
         $file->shouldReceive('getGroupId')->andReturns(114);
         $if = \Mockery::spy(\Docman_ItemFactory::class);
-        $if->shouldReceive('getItemFromDb')->with(1664, array('ignore_deleted' => true))->once()->andReturns($file);
+        $if->shouldReceive('getItemFromDb')->with(1664, ['ignore_deleted' => true])->once()->andReturns($file);
         $versionFactory->shouldReceive('_getItemFactory')->andReturn($if);
 
         $user = \Mockery::spy(\PFUser::class);
@@ -193,12 +193,12 @@ class Docman_VersionFactoryTest extends TestCase
         $em = \Mockery::mock(EventManager::class);
         $em->shouldReceive('processEvent')->with(
             'plugin_docman_event_restore_version',
-            array(
+            [
                 'group_id'  => 114,
                 'item'      => $file,
                 'old_value' => '2 (Ho hisse la saucisse)',
                 'user'      => $user
-            )
+            ]
         );
         $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
         $dao->shouldReceive('restore')->with(1664, 2)->once()->andReturns(true);
@@ -218,7 +218,7 @@ class Docman_VersionFactoryTest extends TestCase
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         $dao->shouldReceive('searchDeletedVersion')->with(1664, 2)->andReturns(
-            \TestHelper::arrayToDar(array('purge_date' => null, 'path' => $filePath))
+            \TestHelper::arrayToDar(['purge_date' => null, 'path' => $filePath])
         );
 
         $em = \Mockery::mock(EventManager::class);
@@ -242,7 +242,7 @@ class Docman_VersionFactoryTest extends TestCase
         $versionFactory = \Mockery::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         $dao->shouldReceive('searchDeletedVersion')->with(1664, 2)->andReturns(
-            \TestHelper::arrayToDar(array('purge_date' => 1234567890, 'path' => $filePath))
+            \TestHelper::arrayToDar(['purge_date' => 1234567890, 'path' => $filePath])
         );
 
         $em = \Mockery::mock(EventManager::class);

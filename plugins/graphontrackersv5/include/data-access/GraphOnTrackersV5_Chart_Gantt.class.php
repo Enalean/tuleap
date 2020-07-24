@@ -197,7 +197,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         unset($parent_properties['dimensions']);
         return array_merge(
             $parent_properties,
-            array(
+            [
                 new HTML_Element_Columns(
                     new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_start'), 'chart[field_start]', $this->getField_start()),
                     new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_due'), 'chart[field_due]', $this->getField_due(), true),
@@ -213,7 +213,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
                     new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
                 ),
-            )
+            ]
         );
     }
 
@@ -332,7 +332,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function getSpecificRow()
     {
-        return array(
+        return [
             'field_start'      => $this->getField_start(),
             'field_due'        => $this->getField_due(),
             'field_finish'     => $this->getField_finish(),
@@ -341,7 +341,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             'scale'            => $this->getScale(),
             'as_of_date'       => $this->getAs_of_date(),
             'summary'          => $this->getSummary(),
-        );
+        ];
     }
 
     /**
@@ -385,7 +385,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
      */
     public function arrayOfSpecificProperties()
     {
-        return array(
+        return [
             'field_start'      => $this->getField_start(),
             'field_due'        => $this->getField_due(),
             'field_finish'     => $this->getField_finish(),
@@ -394,7 +394,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             'scale'            => $this->getScale(),
             'as_of_date'       => $this->getAs_of_date(),
             'summary'          => $this->getSummary(),
-        );
+        ];
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

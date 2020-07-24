@@ -25,20 +25,20 @@ class Tracker_Artifact_MailGateway_CitationStripper
     public const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
     public const DEFAULT_REPLACEMENT   = "\n[citation removed]";
 
-    private $outlook_header = array(
-        'en' => array(
+    private $outlook_header = [
+        'en' => [
             'from'    => 'From:',
             'sent'    => 'Sent:',
             'to'      => 'To:',
             'subject' => 'Subject:',
-        ),
-        'fr' => array(
+        ],
+        'fr' => [
             'from'    => 'De :',
             'sent'    => 'Envoyé :',
             'to'      => 'À :',
             'subject' => 'Objet :',
-        ),
-    );
+        ],
+    ];
 
     public function stripText($mail_content)
     {

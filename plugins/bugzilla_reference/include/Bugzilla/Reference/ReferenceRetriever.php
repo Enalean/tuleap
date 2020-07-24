@@ -46,7 +46,7 @@ class ReferenceRetriever
      */
     public function getAllReferences()
     {
-        $references = array();
+        $references = [];
 
         foreach ($this->dao->searchAllReferences() as $row) {
             $references[] = $this->instantiateFromRow($row);

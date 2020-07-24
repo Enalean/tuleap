@@ -151,45 +151,45 @@ final class BackendSVNTest extends TestCase
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
-        $proj_members = array("0" =>
-                              array (
+        $proj_members = ["0" =>
+                               [
                                      "user_name" => "user1",
-                                     "user_id"  => "1"),
+                                     "user_id"  => "1"],
                               "1" =>
-                              array (
+                               [
                                      "user_name" => "user2",
-                                     "user_id"  => "2"),
+                                     "user_id"  => "2"],
                               "2" =>
-                              array (
+                               [
                                      "user_name" => "user3",
-                                     "user_id"  => "3"));
+                                     "user_id"  => "3"]];
         $project->shouldReceive('getMembersUserNames')->andReturns($proj_members);
-        $project->shouldReceive('getMembers')->andReturns(array($user1, $user2, $user3));
+        $project->shouldReceive('getMembers')->andReturns([$user1, $user2, $user3]);
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
 
-        $ugroups = array("0" =>
-                         array (
+        $ugroups = ["0" =>
+                          [
                                 "name" => "QA",
-                                "ugroup_id"  => "104"),
+                                "ugroup_id"  => "104"],
                          "1" =>
-                         array (
+                          [
                                 "name" => "Customers",
-                                "ugroup_id"  => "102"));
+                                "ugroup_id"  => "102"]];
         $ugdao = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 
         $ugroup = \Mockery::spy(\ProjectUGroup::class);
         $ugroup->shouldReceive('getMembersUserName')->andReturn(
-            array('user1', 'user2', 'user3'),
-            array('user1', 'user4')
+            ['user1', 'user2', 'user3'],
+            ['user1', 'user4']
         );
         $ugroup->shouldReceive('getMembers')->andReturn(
-            array($user1, $user2, $user3),
-            array($user1, $user4),
-            array($user1, $user4),
-            array($user1, $user4),
+            [$user1, $user2, $user3],
+            [$user1, $user4],
+            [$user1, $user4],
+            [$user1, $user4],
         );
         $ugroup->shouldReceive('getName')->andReturn('QA', 'QA', 'customers', 'customers');
 
@@ -222,51 +222,51 @@ final class BackendSVNTest extends TestCase
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
-        $proj_members = array("0" =>
-                              array (
+        $proj_members = ["0" =>
+                               [
                                      "user_name" => "user1",
-                                     "user_id"  => "1"),
+                                     "user_id"  => "1"],
                               "1" =>
-                              array (
+                               [
                                      "user_name" => "user2",
-                                     "user_id"  => "2"),
+                                     "user_id"  => "2"],
                               "2" =>
-                              array (
+                               [
                                      "user_name" => "user3",
-                                     "user_id"  => "3"));
+                                     "user_id"  => "3"]];
         $project->shouldReceive('getMembersUserNames')->andReturns($proj_members);
-        $project->shouldReceive('getMembers')->andReturns(array($user1, $user2, $user3));
+        $project->shouldReceive('getMembers')->andReturns([$user1, $user2, $user3]);
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
 
-        $ugroups = array("0" =>
-                         array (
+        $ugroups = ["0" =>
+                          [
                                 "name" => "QA",
-                                "ugroup_id"  => "104"),
+                                "ugroup_id"  => "104"],
                          "1" =>
-                         array (
+                          [
                                 "name" => "Customers",
-                                "ugroup_id"  => "102"));
+                                "ugroup_id"  => "102"]];
         $ugdao = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 
         $ugroup = \Mockery::spy(\ProjectUGroup::class);
         $ugroup->shouldReceive('getMembersUserName')->andReturn(
-            array('user1', 'user2', 'user3'),
-            array('user1', 'user4'),
-            array('user1', 'user2', 'user3'),
-            array('user1', 'user4'),
-            array('user1', 'user2', 'user3'),
-            array('user1', 'user4', 'user5'),
+            ['user1', 'user2', 'user3'],
+            ['user1', 'user4'],
+            ['user1', 'user2', 'user3'],
+            ['user1', 'user4'],
+            ['user1', 'user2', 'user3'],
+            ['user1', 'user4', 'user5'],
         );
         $ugroup->shouldReceive('getMembers')->andReturn(
-            array($user1, $user2, $user3),
-            array($user1, $user4),
-            array($user1, $user2, $user3),
-            array($user1, $user4),
-            array($user1, $user2, $user3),
-            array($user1, $user4, $user5),
+            [$user1, $user2, $user3],
+            [$user1, $user4],
+            [$user1, $user2, $user3],
+            [$user1, $user4],
+            [$user1, $user2, $user3],
+            [$user1, $user4, $user5],
         );
         $ugroup->shouldReceive('getName')->andReturn(
             'QA',
@@ -305,25 +305,25 @@ final class BackendSVNTest extends TestCase
 
     public function testGenerateSVNApacheConf(): void
     {
-        $svn_dao = \Mockery::spy(\SVN_DAO::class)->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar(array (
+        $svn_dao = \Mockery::spy(\SVN_DAO::class)->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar([
             "group_id"        => "101",
             "group_name"      => "Guinea Pig",
             "repository_name" => "gpig",
             "public_path"     => "/svnroot/gpig",
             "system_path"     => "/svnroot/gpig"
-        ), array (
+        ], [
             "group_id"        => "102",
             "group_name"      => "Guinea Pig is \"back\"",
             "repository_name" => "gpig2",
             "public_path"     => "/svnroot/gpig2",
             "system_path"     => "/svnroot/gpig2"
-        ), array (
+        ], [
             "group_id"        => "103",
             "group_name"      => "Guinea Pig is 'angry'",
             "repository_name" => "gpig3",
             "public_path"     => "/svnroot/gpig3",
             "system_path"     => "/svnroot/gpig3"
-        )))->getMock();
+        ]))->getMock();
         $this->backend->shouldReceive('getSvnDao')->andReturns($svn_dao);
         $this->backend->shouldReceive('getProjectManager')->andReturns($this->project_manager);
         $this->backend->shouldReceive('getSVNCacheParameters')->andReturns($this->cache_parameters);
@@ -376,13 +376,13 @@ final class BackendSVNTest extends TestCase
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(false);
 
-        $project->shouldReceive('getMembersUserNames')->andReturns(array());
+        $project->shouldReceive('getMembersUserNames')->andReturns([]);
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
 
         $ugdao = \Mockery::spy(\UGroupDao::class);
-        $ugdao->shouldReceive('searchByGroupId')->andReturns(array());
+        $ugdao->shouldReceive('searchByGroupId')->andReturns([]);
 
         $access_file = new SVNAccessFile();
         $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
@@ -402,7 +402,7 @@ final class BackendSVNTest extends TestCase
 
         // The user
         $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(array(142));
+        $user->shouldReceive('getId')->andReturns([142]);
 
         $project1 = \Mockery::spy(\Project::class);
         $project1->shouldReceive('getId')->andReturns(102);
@@ -410,7 +410,7 @@ final class BackendSVNTest extends TestCase
         $project2 = \Mockery::spy(\Project::class);
         $project2->shouldReceive('getId')->andReturns(101);
 
-        $projects =  array(102, 101);
+        $projects =  [102, 101];
         $user->shouldReceive('getAllProjects')->andReturns($projects);
 
         $pm = \Mockery::spy(\ProjectManager::class);

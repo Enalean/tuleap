@@ -45,7 +45,7 @@ class UgroupLabelConverter
         $this->bind_value_normalizer = $bind_value_normalizer;
         $this->base_language_factory = $base_language_factory;
 
-        $this->index = array();
+        $this->index = [];
         foreach ($this->getAvailableLanguages() as $language) {
             $base_language = $this->base_language_factory->getBaseLanguage($language);
 

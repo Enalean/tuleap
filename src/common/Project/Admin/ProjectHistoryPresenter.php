@@ -83,9 +83,9 @@ class ProjectHistoryPresenter
         $offset
     ) {
         $base_url       = '/admin/projecthistory.php';
-        $default_params = array(
+        $default_params = [
             'group_id' => $project->getId()
-        );
+        ];
 
         if ($search->selected_event) {
             $default_params['events_box'] = $search->selected_event;

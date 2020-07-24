@@ -459,35 +459,35 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             );
             $representations = $this->representation_factory->buildRepresentationsForReport($artifacts, $current_user);
         } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, null, array('i18n_error_message' => "Report not found"));
+            throw new RestException(404, null, ['i18n_error_message' => "Report not found"]);
         } catch (TrackerNotFoundException $exception) {
-            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
+            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         } catch (TrackerDuplicateException $exception) {
-            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
+            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         } catch (SyntaxError $exception) {
             throw new RestException(
                 400,
                 null,
-                array('i18n_error_message' => dgettext("tuleap-crosstracker", "Error while parsing the query"))
+                ['i18n_error_message' => dgettext("tuleap-crosstracker", "Error while parsing the query")]
             );
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(
                 400,
                 null,
-                array('i18n_error_message' => dgettext(
+                ['i18n_error_message' => dgettext(
                     "tuleap-tracker",
                     "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
-                ))
+                )]
             );
         } catch (SearchablesDoNotExistException $exception) {
-            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
+            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         } catch (SearchablesAreInvalidException $exception) {
-            throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
+            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         }
 
         $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
 
-        return array("artifacts" => $representations->getArtifacts());
+        return ["artifacts" => $representations->getArtifacts()];
     }
 
     /**
@@ -650,7 +650,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $ex) {
-            throw new RestException(403, null, array('i18n_error_message' => $ex->getMessage()));
+            throw new RestException(403, null, ['i18n_error_message' => $ex->getMessage()]);
         }
     }
 

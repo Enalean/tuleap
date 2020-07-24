@@ -124,14 +124,14 @@ function forum_header($params)
                 $msg = $Language->getText('forum_forum_utils', 'monitor');
             }
             echo '<A HREF="/forum/monitor.php?forum_id=' . $forum_id . '">';
-            echo html_image("ic/monitor_forum.png", array()) . ' ' . $msg . '</A> | ';
+            echo html_image("ic/monitor_forum.png", []) . ' ' . $msg . '</A> | ';
 
-            echo '<A HREF="/forum/monitor_thread.php?forum_id=' . $forum_id . '"> ' . html_image("ic/monitor_thread.png", array()) . $Language->getText('forum_forum_utils', 'monitor_thread') . '</A> | ';
+            echo '<A HREF="/forum/monitor_thread.php?forum_id=' . $forum_id . '"> ' . html_image("ic/monitor_thread.png", []) . $Language->getText('forum_forum_utils', 'monitor_thread') . '</A> | ';
 
             echo '<A HREF="/forum/save.php?forum_id=' . $forum_id . '">';
-            echo html_image("ic/save.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'save_place') . '</A> | ';
+            echo html_image("ic/save.png", []) . ' ' . $Language->getText('forum_forum_utils', 'save_place') . '</A> | ';
             print ' <a href="forum.php?forum_id=' . $forum_id . '#start_new_thread">';
-            echo html_image("ic/thread.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
+            echo html_image("ic/thread.png", []) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
             if (isset($msg_id) && $msg_id) {
                 echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> | ";
             } else {
@@ -239,12 +239,12 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
     $result = db_query($sql);
     if (! $result) {
         if ($need_feedback) {
-            $feedback .= ' ' . $GLOBALS['Language']->getText('forum_forum_utils', 'add_err', array($forum_name)) . ' ';
+            $feedback .= ' ' . $GLOBALS['Language']->getText('forum_forum_utils', 'add_err', [$forum_name]) . ' ';
         }
         return -1;
     } else {
         if ($need_feedback) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('forum_forum_utils', 'forum_added', array($forum_name)));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('forum_forum_utils', 'forum_added', [$forum_name]));
         }
 
         $forum_id = db_insertid($result);
@@ -262,8 +262,8 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
          //set up a cheap default message
             $result2 = db_query("INSERT INTO forum " .
              "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) " .
-             "VALUES (" . db_ei($forum_id) . ",100,'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', array($hp->purify($group_name))) . " " . htmlspecialchars($forum_name)) . "'," .
-             "'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', array($group_name)) . " " . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
+             "VALUES (" . db_ei($forum_id) . ",100,'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', [$hp->purify($group_name)]) . " " . htmlspecialchars($forum_name)) . "'," .
+             "'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', [$group_name]) . " " . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
         }
         return $forum_id;
     }
@@ -320,7 +320,7 @@ function show_thread($thread_id, $et = 0)
     if (! $result || db_numrows($result) < 1) {
         return $Language->getText('forum_forum_utils', 'broken_thread');
     } else {
-        $title_arr = array();
+        $title_arr = [];
         $title_arr[] = $Language->getText('forum_forum', 'thread');
         $title_arr[] = $Language->getText('forum_forum', 'author');
         $title_arr[] = $Language->getText('forum_forum', 'date');
@@ -707,13 +707,13 @@ function handle_monitoring($forum_id, $thread_id, $msg_id)
              "\n" . $Language->getText('global', 'by') . ' ' . db_result($result, 0, 'user_name') . ' (' . db_result($result, 0, 'realname') . ')' .
              "\n\n" . util_unconvert_htmlspecialchars(db_result($result, 0, 'body')) .
              "\n\n______________________________________________________________________" .
-             "\n" . $Language->getText('forum_forum_utils', 'stop_monitor_explain', array($url1,$url2));
+             "\n" . $Language->getText('forum_forum_utils', 'stop_monitor_explain', [$url1, $url2]);
                 $mail->setBodyText($body);
 
             if ($mail->send()) {
                 $feedback .= ' - ' . $Language->getText('forum_forum_utils', 'mail_sent');
             } else {//ERROR
-                $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')));
+                $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]);
             }
 
             if (forum_is_monitored($forum_id) || forum_thread_is_monitored($thread_id)) {
@@ -788,7 +788,7 @@ function forum_utils_news_access($forum_id)
 
 function forum_utils_get_styles()
 {
-    return array('nested','flat','threaded','nocomments');
+    return ['nested', 'flat', 'threaded', 'nocomments'];
 }
 
 function forum_thread_monitor($mthread, $user_id, $forum_id)

@@ -30,7 +30,7 @@ class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_
     public function create($changeset_value_id, $value_ids)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        $values = array();
+        $values = [];
         foreach ($value_ids as $v) {
             $v = $this->da->escapeInt($v);
             $values[] = "($changeset_value_id, $v)";

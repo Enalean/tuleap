@@ -40,7 +40,7 @@ class Docman_LinkVersionFactory
      */
     public function getAllVersionForItem(Docman_Link $item)
     {
-        $versions = array();
+        $versions = [];
         $rows     = $this->dao->searchByItemId($item->getId());
 
         foreach ($rows as $row) {

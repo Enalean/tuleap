@@ -36,7 +36,7 @@ final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends
 
     public function testItReplacesOtherBadCharacters(): void
     {
-        $bad_chars =  array(
+        $bad_chars =  [
            "\x01" => ' ',
            "\x02" => ' ',
            "\x03" => ' ',
@@ -51,7 +51,7 @@ final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends
            "\x0f" => ' ',
            "\x11" => ' ',
            "’"    => '?',
-        );
+        ];
 
         foreach ($bad_chars as $bad_char => $replace) {
             //changing the encoding to ISO-8859-1 via mb_convert_encoding. This will result in unorthodox chars
@@ -78,7 +78,7 @@ final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends
 
     public function testItReplacesBadCharacters()
     {
-        $bad_chars =  array(
+        $bad_chars =  [
             "\x01" => ' ',
             "\x02" => ' ',
             "\x03" => ' ',
@@ -93,7 +93,7 @@ final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends
             "\x0f" => ' ',
             "\x11" => ' ',
             "’"    => '&rsquo;',
-        );
+        ];
 
         foreach ($bad_chars as $bad_char => $replace) {
             $string   = htmlentities($bad_char, ENT_IGNORE, 'UTF-8');

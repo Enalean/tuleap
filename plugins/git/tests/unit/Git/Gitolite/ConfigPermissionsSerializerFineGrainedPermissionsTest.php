@@ -151,24 +151,24 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
             1,
             1,
             'refs/heads/master',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->permission_02 = new FineGrainedPermission(
             2,
             1,
             'refs/tags/v1',
-            array(),
-            array()
+            [],
+            []
         );
 
         $this->permission_03 = new FineGrainedPermission(
             3,
             1,
             'refs/heads/dev/*',
-            array(),
-            array()
+            [],
+            []
         );
 
         PermissionsManager::setInstance($this->permissions_manager);
@@ -182,11 +182,11 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
 
     public function testItMustFollowTheExpectedOrderForPermission()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array());
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([]);
 
-        $writers   = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders = array($this->ugroup_03);
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -208,11 +208,11 @@ EOS;
 
     public function testItFetchesFineGrainedPermissions()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers   = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders = array($this->ugroup_03);
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -240,12 +240,12 @@ EOS;
 
     public function testItDealsWithNobody()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders        = array($this->ugroup_03);
-        $rewinders_nobody = array($this->ugroup_nobody);
+        $writers          = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders        = [$this->ugroup_03];
+        $rewinders_nobody = [$this->ugroup_nobody];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -272,11 +272,11 @@ EOS;
 
     public function testItDealsWithStarPath()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_03));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_03]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders        = array($this->ugroup_03);
+        $writers          = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders        = [$this->ugroup_03];
 
         $this->permission_03->setWriters($writers);
         $this->permission_03->setRewinders($rewinders);
@@ -304,11 +304,11 @@ EOS;
 
     public function testItDealsWithNoUgroupSelected()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders        = array();
+        $writers          = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders        = [];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -334,11 +334,11 @@ EOS;
 
     public function testItDeniesPatternIfNobodyCanWriteAndRewind()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_nobody);
-        $rewinders        = array();
+        $writers          = [$this->ugroup_nobody];
+        $rewinders        = [];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -362,11 +362,11 @@ EOS;
 
     public function testItAddEndCharacterAtPatternEndWhenRegexpAreDisabled()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders        = array($this->ugroup_03);
+        $writers          = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders        = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -395,11 +395,11 @@ EOS;
 
     public function testItDoesntUpdatePatternWhenRegexpAreEnabled()
     {
-        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_01));
-        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = array($this->ugroup_01, $this->ugroup_02);
-        $rewinders        = array($this->ugroup_03);
+        $writers          = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders        = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);

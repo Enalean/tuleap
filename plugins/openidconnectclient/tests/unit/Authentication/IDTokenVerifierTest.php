@@ -219,12 +219,12 @@ class IDTokenVerifierTest extends TestCase
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
         $nonce    = 'random_string';
 
-        $expected_id_token_content  = array(
+        $expected_id_token_content  = [
             'nonce' => $nonce,
             'iss'   => 'example.com',
             'aud'   => $audience,
             'sub'   => '123'
-        );
+        ];
         $id_token = $this->buildIDToken($expected_id_token_content);
         if ($with_jwks_key) {
             $key_details = openssl_pkey_get_details(self::$rsa_key);

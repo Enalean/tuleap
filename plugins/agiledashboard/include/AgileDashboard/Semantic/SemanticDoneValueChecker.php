@@ -59,7 +59,7 @@ class SemanticDoneValueChecker
      */
     private function getOpenValuesFromXMLSemanticStatus(SimpleXMLElement $xml_semantic_status)
     {
-        $open_values_from_xml = array();
+        $open_values_from_xml = [];
 
         foreach ($xml_semantic_status->open_values->open_value as $xml_open_value) {
             $open_values_from_xml[] = (string) $xml_open_value['REF'];

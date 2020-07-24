@@ -40,10 +40,10 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         parent::__construct($artifact->getTracker(), $event_manager);
         $this->artifact = $artifact;
 
-        $this->redirect->query_parameters = array(
+        $this->redirect->query_parameters = [
             'aid'       => (string) $this->artifact->getId(),
             'func'      => 'artifact-update',
-        );
+        ];
         $this->visit_recorder = $visit_recorder;
     }
 

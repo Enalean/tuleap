@@ -35,13 +35,13 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_USERNAMES
         );
 
-        $this->redirect(array(
+        $this->redirect([
             'group_id'    => $this->request->getValidated('group_id', 'int'),
             'planning_id' => $this->request->get('planning_id'),
             'action'      => 'show',
             'aid'         => $this->request->get('aid'),
             'pane'        => 'cardwall'
-        ));
+        ]);
     }
 
     public function toggleAutostack()

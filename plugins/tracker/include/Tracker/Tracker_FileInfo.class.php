@@ -34,7 +34,7 @@ class Tracker_FileInfo
     protected $filesize;
     protected $filetype;
 
-    protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
+    protected $supported_image_types = ['gif', 'png', 'jpeg', 'jpg'];
 
     /**
      * @param int $id
@@ -147,7 +147,7 @@ class Tracker_FileInfo
      */
     public function getHumanReadableFilesize()
     {
-        $s = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+        $s = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
         $e = 0;
         if ($this->getFilesize()) {
             $e = (int) floor(log($this->getFilesize()) / log(1024));

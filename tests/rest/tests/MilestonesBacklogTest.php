@@ -29,7 +29,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testOPTIONSBacklog(): void
     {
         $response = $this->getResponse($this->client->options('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSBacklogWithRESTReadOnlyUser(): void
@@ -205,7 +205,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPOSTBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $post = [
-            'artifact' => array('id' => $this->story_artifact_ids[6])
+            'artifact' => ['id' => $this->story_artifact_ids[6]]
         ];
 
         $response_post = $this->getResponse(
@@ -222,9 +222,9 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
     public function testPOSTBacklogAppendsId(): void
     {
-        $post          = array(
-            'artifact' => array('id' => $this->story_artifact_ids[6])
-        );
+        $post          = [
+            'artifact' => ['id' => $this->story_artifact_ids[6]]
+        ];
         $response_post = $this->getResponse(
             $this->client->post(
                 'milestones/' . $this->release_artifact_ids[1] . '/backlog',
@@ -245,9 +245,9 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
     public function testPOSTBacklogWithoutPermissions(): void
     {
-        $post = array(
-            'artifact' => array('id' => $this->story_artifact_ids[6])
-        );
+        $post = [
+            'artifact' => ['id' => $this->story_artifact_ids[6]]
+        ];
         $response_post = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
             $this->client->post(

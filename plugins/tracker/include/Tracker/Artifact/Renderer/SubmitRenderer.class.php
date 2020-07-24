@@ -45,19 +45,19 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
     protected function displayHeader()
     {
-        $breadcrumbs = array(
-            array(
+        $breadcrumbs = [
+            [
                 'title' => 'New artifact',
                 'url'   => $this->tracker->getSubmitUrl(),
-            ),
-        );
+            ],
+        ];
 
         $this->tracker->displayHeader(
             $this->layout,
             $this->tracker->name,
             $breadcrumbs,
             $this->tracker->getDefaultToolbar(),
-            array('body_class' => array('widgetable'))
+            ['body_class' => ['widgetable']]
         );
 
         echo $this->fetchSubmitInstructions();

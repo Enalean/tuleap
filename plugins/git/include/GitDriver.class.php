@@ -24,7 +24,7 @@ class GitDriver
 
     protected function execGitAction($cmd, $action_name)
     {
-        $out = array();
+        $out = [];
         $ret = -1;
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
@@ -132,7 +132,7 @@ class GitDriver
     {
         if ($bare === false) {
             $cmd = 'git init';
-            $out = array();
+            $out = [];
             $ret = -1;
             exec($cmd, $out, $ret);
             if ($ret !== 0) {
@@ -142,7 +142,7 @@ class GitDriver
         }
 
         $cmd = 'git --bare init --shared=group 2>&1';
-        $out = array();
+        $out = [];
         $ret = -1;
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
@@ -165,7 +165,7 @@ class GitDriver
         chdir($path);
 
         $cmd = 'git update-server-info';
-        $out = array();
+        $out = [];
         $ret = -1;
         exec($cmd, $out, $ret);
         chdir($cwd);
@@ -268,7 +268,7 @@ class GitDriver
         $configFile = $repoPath . '/config';
         $cmd = 'git config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
         $ret = -1;
-        $out = array();
+        $out = [];
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
             throw new GitDriverErrorException('Unable to set config for repository ' . $repoPath . ':' . PHP_EOL . implode(PHP_EOL, $out));

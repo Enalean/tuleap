@@ -46,11 +46,11 @@ foreach ($argv as $project) {
     $schema = "plugin_mediawiki_$project";
     strtr($schema, "-", "_");
     echo "  Dropping database schema $schema.\n";
-    $res = db_query_params("DROP SCHEMA $schema CASCADE", array());
+    $res = db_query_params("DROP SCHEMA $schema CASCADE", []);
     if (! $res) {
         echo db_error();
     }
-    $res = db_query_params('DELETE FROM plugin_mediawiki_interwiki WHERE iw_prefix=$1', array($project));
+    $res = db_query_params('DELETE FROM plugin_mediawiki_interwiki WHERE iw_prefix=$1', [$project]);
     if (! $res) {
         echo db_error();
     }

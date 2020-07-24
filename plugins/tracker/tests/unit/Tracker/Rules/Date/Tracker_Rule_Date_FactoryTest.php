@@ -102,13 +102,13 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao(): void
     {
-        $data = array(
+        $data = [
             'id'                => 20,
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
             'target_field_id'   => $this->target_field_id,
             'tracker_id'        => $this->tracker_id,
-        );
+        ];
 
         $this->date_rule_dao->shouldReceive('searchById')->with($this->tracker_id, 20)->andReturns(\TestHelper::arrayToDar($data));
         $this->date_rule_dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
@@ -131,13 +131,13 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao(): void
     {
-        $data = array(
+        $data = [
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
             'target_field_id'   => $this->target_field_id,
             'tracker_id'        => $this->tracker_id,
             'id'                => 20
-        );
+        ];
 
         $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($data));
         $date_rules = $this->date_rule_factory
@@ -167,16 +167,16 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
-        $field_mapping   = array(
-            array(
+        $field_mapping   = [
+            [
                 'from'  => 123,
                 'to'    => 888
-            ),
-            array(
+            ],
+            [
                 'from'  => 456,
                 'to'    => 999
-            ),
-        );
+            ],
+        ];
 
         $db_data = false;
 
@@ -194,22 +194,22 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = array(
-            array(
+        $field_mapping   = [
+            [
                 'from'  => 123,
                 'to'    => 888
-            ),
-            array(
+            ],
+            [
                 'from'  => 456,
                 'to'    => 999
-            ),
-        );
+            ],
+        ];
 
-        $db_data = array(
+        $db_data = [
             'source_field_id' => 123,
             'target_field_id' => 456,
             'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
-        );
+        ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
         $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data));
@@ -225,35 +225,35 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = array(
-            array(
+        $field_mapping   = [
+            [
                 'from'  => 111,
                 'to'    => 555
-            ),
-            array(
+            ],
+            [
                 'from'  => 222,
                 'to'    => 666
-            ),
-            array(
+            ],
+            [
                 'from'  => 333,
                 'to'    => 777
-            ),
-            array(
+            ],
+            [
                 'from'  => 444,
                 'to'    => 888
-            ),
-        );
+            ],
+        ];
 
-        $db_data1 = array(
+        $db_data1 = [
             'source_field_id' => 111,
             'target_field_id' => 222,
             'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
-        );
-        $db_data2 = array(
+        ];
+        $db_data2 = [
             'source_field_id' => 333,
             'target_field_id' => 444,
             'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
-        );
+        ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
         $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data1, $db_data2));
@@ -268,7 +268,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
     public function testItDelegatesUsedDateFieldsRetrievalToElementFactory(): void
     {
         $tracker          = \Mockery::spy(\Tracker::class);
-        $used_date_fields = array('of', 'fields');
+        $used_date_fields = ['of', 'fields'];
         $this->element_factory->shouldReceive('getUsedDateFields')->with($tracker)->once()->andReturns($used_date_fields);
         $this->assertEquals($used_date_fields, $this->date_rule_factory->getUsedDateFields($tracker));
     }
@@ -283,11 +283,11 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
     public function testExport(): void
     {
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_xml_mapping = array('F25' => 102,
+        $array_xml_mapping = ['F25' => 102,
                                    'F28' => 103,
                                    'F29' => 801,
                                    'F22' => 806,
-                                   );
+                                   ];
 
         $r1 = new Tracker_Rule_Date();
         $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
@@ -300,7 +300,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
                 ->setTargetFieldId(806);
 
         $trm = \Mockery::mock(\Tracker_Rule_Date_Factory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $trm->shouldReceive('searchByTrackerId')->andReturns(array($r1, $r2));
+        $trm->shouldReceive('searchByTrackerId')->andReturns([$r1, $r2]);
 
         $trm->exportToXML($root, $array_xml_mapping, 666);
         $this->assertNull($root->dependencies->rule);

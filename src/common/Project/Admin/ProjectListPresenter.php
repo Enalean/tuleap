@@ -53,10 +53,10 @@ class ProjectListPresenter
             $GLOBALS['Language']->getText(
                 'admin_projectlist',
                 'pending_projects_text',
-                array(
+                [
                     '/admin/approve-pending.php',
                     $pending_projects_count
-                )
+                ]
             ),
             CODENDI_PURIFIER_LIGHT
         );

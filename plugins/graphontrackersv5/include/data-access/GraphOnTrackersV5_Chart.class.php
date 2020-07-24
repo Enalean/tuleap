@@ -187,13 +187,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     public function getStrokeUrl($store_in_session = true)
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query(array(
+        return TRACKER_BASE_URL . '/?' . http_build_query([
                      '_jpg_csimd' => '1',
                      'report'     => $this->renderer->report->id,
                      'renderer'   => $this->renderer->id,
                      'func'       => 'renderer',
                      'store_in_session' => $store_in_session,
-                     'renderer_plugin_graphontrackersv5[stroke]' => $this->getId()));
+                     'renderer_plugin_graphontrackersv5[stroke]' => $this->getId()]);
     }
 
     /**
@@ -293,30 +293,30 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly)
     {
-        $add_to_dashboard_params      = array(
+        $add_to_dashboard_params      = [
             'action' => 'add-widget',
-            'chart'  => array(
+            'chart'  => [
                 'title'    => $this->getTitle(),
                 'chart_id' => $this->getId(),
-            )
+            ]
 
-        );
+        ];
 
-        $url = '?' . http_build_query(array(
+        $url = '?' . http_build_query([
             'report'   => $renderer->report->id,
             'renderer' => $renderer->id,
             'func'     => 'renderer',
-        ));
+        ]);
 
         $csrf             = new CSRFSynchronizerToken('/my/');
         $my_dashboard_url = '/widgets/?' .
             http_build_query(
                 array_merge(
-                    array(
+                    [
                         'dashboard-type'      => UserDashboardController::DASHBOARD_TYPE,
                         'widget-name'         => 'my_plugin_graphontrackersv5_chart',
                         $csrf->getTokenName() => $csrf->getToken()
-                    ),
+                    ],
                     $add_to_dashboard_params
                 )
             );
@@ -328,13 +328,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             $project_dashboard_url = '/widgets/?' .
                 http_build_query(
                     array_merge(
-                        array(
+                        [
                             'widget-name'         => 'project_plugin_graphontrackersv5_chart',
                             'dashboard-type'      => ProjectDashboardController::DASHBOARD_TYPE,
                             $csrf->getTokenName() => $csrf->getToken(),
                             'group_id'            => $project->getID()
 
-                        ),
+                        ],
                         $add_to_dashboard_params
                     )
                 );
@@ -373,7 +373,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     {
         $engine = $this->getEngineWithData();
         if (! $this->userCanVisualize() || ! $engine) {
-            return array();
+            return [];
         }
 
         return $engine->toArray();
@@ -381,14 +381,14 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     public function getRow()
     {
-        return array_merge(array(
+        return array_merge([
             'id'          => $this->getId(),
             'rank'        => $this->getRank(),
             'title'       => $this->getTitle(),
             'description' => $this->getDescription(),
             'width'       => $this->getWidth(),
             'height'      => $this->getHeight(),
-        ), $this->getSpecificRow());
+        ], $this->getSpecificRow());
     }
 
     /**
@@ -463,7 +463,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     {
         $siblings = $this->getSiblingsForRankSelectbox();
 
-        return array(
+        return [
             'id'          => new HTML_Element_Input_Hidden($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'id'), 'chart[id]', $this->getId()),
             'title'       => new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'title'), 'chart[title]', $this->getTitle()),
             'description' => new HTML_Element_Textarea($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'description'), 'chart[description]', $this->getDescription()),
@@ -472,26 +472,26 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                 new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'width'), 'chart[width]', $this->getWidth(), 4),
                 new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'height'), 'chart[height]', $this->getHeight(), 4)
             ),
-        );
+        ];
     }
 
     private function getSiblingsForRankSelectbox(): array
     {
-        $siblings = array();
+        $siblings = [];
         $session  = new Tracker_Report_Session($this->renderer->report->id);
         $session->changeSessionNamespace("renderers.{$this->renderer->id}");
 
         $charts = $session->get('charts');
-        uasort($charts, array(GraphOnTrackersV5_ChartFactory::instance(), 'sortArrayByRank'));
+        uasort($charts, [GraphOnTrackersV5_ChartFactory::instance(), 'sortArrayByRank']);
         foreach ($charts as $sibling) {
             if ($sibling === GraphOnTrackersV5_ChartFactory::CHART_REMOVED) {
                 continue;
             }
-            $siblings[] = array(
+            $siblings[] = [
                 'id'   => $sibling['id'],
                 'name' => $sibling['title'],
                 'rank' => $sibling['rank']
-            );
+            ];
         }
 
         return $siblings;

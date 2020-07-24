@@ -37,7 +37,7 @@ class ArtifactFieldValueFileRepresentation
     /**
      * @var Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]
      */
-    public $file_descriptions = array();
+    public $file_descriptions = [];
 
     public function build($id, $label, array $values)
     {

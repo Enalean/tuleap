@@ -205,7 +205,7 @@ class GitViews_RepoManagement
 
         $collection->add(new Pane\Delete($repository, $this->request));
 
-        $indexed_panes = array();
+        $indexed_panes = [];
         foreach ($collection->getPanes() as $pane) {
             if ($pane->canBeDisplayed()) {
                 $indexed_panes[$pane->getIdentifier()] = $pane;
@@ -236,12 +236,12 @@ class GitViews_RepoManagement
     {
         echo '<li class="' . ($this->current_pane == $pane->getIdentifier() ? 'active' : '') . '">';
         $url = GIT_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'action' => 'repo_management',
                 'group_id' => $this->repository->getProjectId(),
                 'repo_id'  => $this->repository->getId(),
                 'pane'     => $pane->getIdentifier(),
-            )
+            ]
         );
         $purifier = Codendi_HTMLPurifier::instance();
 

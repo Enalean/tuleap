@@ -55,7 +55,7 @@ class ReportArtifactFactoryTest extends TestCase
             0
         );
 
-        $this->assertEquals(array(), $collection->getArtifacts());
+        $this->assertEquals([], $collection->getArtifacts());
         $this->assertEquals(0, $collection->getTotalSize());
     }
 
@@ -64,12 +64,12 @@ class ReportArtifactFactoryTest extends TestCase
         $report     = \Mockery::spy(\Tracker_Report::class);
         $from_where = new FromWhere('', '');
 
-        $report->shouldReceive('getMatchingIdsWithAdditionalFromWhere')->andReturns(array('id' => '12,85,217,98'));
+        $report->shouldReceive('getMatchingIdsWithAdditionalFromWhere')->andReturns(['id' => '12,85,217,98']);
         $artifact_one = Mockery::spy(\Tracker_Artifact::class);
         $artifact_one->shouldReceive('getId')->andReturn(85);
         $artifact_two = Mockery::spy(\Tracker_Artifact::class);
         $artifact_two->shouldReceive('getId')->andReturn(217);
-        $this->tracker_artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->andReturns(array($artifact_one, $artifact_two));
+        $this->tracker_artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->andReturns([$artifact_one, $artifact_two]);
 
         $collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
             $report,
@@ -78,7 +78,7 @@ class ReportArtifactFactoryTest extends TestCase
             1
         );
 
-        $this->assertEquals(array($artifact_one, $artifact_two), $collection->getArtifacts());
+        $this->assertEquals([$artifact_one, $artifact_two], $collection->getArtifacts());
         $this->assertEquals(4, $collection->getTotalSize());
     }
 }

@@ -64,70 +64,70 @@ class ProjectTest extends ProjectBase
 
         $this->assertTrue(
             $this->valuesArePresent(
-                array(
+                [
                     $this->project_private_member_id,
                     $this->project_public_id,
                     $this->project_public_member_id,
                     $this->project_pbi_id
-                ),
+                ],
                 $this->getIds($json_projects)
             )
         );
 
         $this->assertArrayHasKey('resources', $json_projects[0]);
         $this->assertContains(
-            array(
+            [
                 'type' => 'trackers',
                 'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'backlog',
                 'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'milestones',
                 'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'plannings',
                 'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'user_groups',
                 'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'labels',
                 'uri' => 'projects/' . $this->project_private_member_id . '/labels',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
         $this->assertContains(
-            array(
+            [
                 'type' => 'project_services',
                 'uri' => 'projects/' . $this->project_private_member_id . '/project_services',
-            ),
+            ],
             $json_projects[0]['resources']
         );
 
@@ -260,7 +260,7 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(array('labels' => array()), $response->json());
+        $this->assertEquals(['labels' => []], $response->json());
     }
 
     public function testGETUserGroups(): void
@@ -276,20 +276,20 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki'));
 
-        $expected_result = array(
-            'pages' => array(
-                0 => array(
+        $expected_result = [
+            'pages' => [
+                0 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
                     'name' => 'WithContent'
-                ),
-                1 => array(
+                ],
+                1 => [
                     'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
                     'name' => 'With Space'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $this->assertEquals($expected_result, $response->json());
     }

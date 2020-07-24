@@ -67,10 +67,10 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
         $user_group  = new User_ForgeUGroup(101, '', '');
         $expected_id = User_ForgeUserGroupPermission_ProjectApproval::ID;
 
-        $permission_ids = array (
-            array('permission_id' => $expected_id),
-            array('permission_id' => $expected_id)
-        );
+        $permission_ids =  [
+            ['permission_id' => $expected_id],
+            ['permission_id' => $expected_id]
+        ];
 
         $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns($permission_ids);
         $all = $this->factory->getPermissionsForForgeUserGroup($user_group);

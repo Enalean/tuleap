@@ -88,7 +88,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
                 VALUES ($tv5_id, $field_id, $ugroups,  $notification_type, $distance, $status)";
         $reminderId = $this->updateAndGetLastId($sql);
         if ($reminderId && ! empty($roles)) {
-            $values = array();
+            $values = [];
             foreach ($roles as $role) {
                 $role = (int) $this->da->escapeInt($role);
                 $values[] = " (
@@ -116,7 +116,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
      */
     private function extractUgroups($notified_people)
     {
-        $ugroups = array();
+        $ugroups = [];
         foreach (explode(',', $notified_people) as $id) {
             $id = trim($id);
             if ($id[0] == 'g') {
@@ -137,10 +137,10 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
      */
     private function extractTrackerRoles($notified_people)
     {
-        $roles = array();
+        $roles = [];
         foreach (explode(',', $notified_people) as $id) {
             $id = trim($id);
-            $role = array("1", "2", "4");
+            $role = ["1", "2", "4"];
             if (in_array($id, $role)) {
                 $roles[] = ($id == "4") ? "3" : $id;
             }

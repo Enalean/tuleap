@@ -131,7 +131,7 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
     public function testItShouldImportOnePackageWithDefaultValues()
     {
         $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
         $xml = <<<XML
         <project>
             <frs>
@@ -145,17 +145,17 @@ XML;
         $expected_package_array = $this->getDefaultPackage('empty_package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once();
 
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function testItShouldImportPermissions()
     {
         $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
 
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, array(2), FRSPermission::FRS_READER)->ordered();
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, array(3), FRSPermission::FRS_ADMIN)->ordered();
+        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [2], FRSPermission::FRS_READER)->ordered();
+        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [3], FRSPermission::FRS_ADMIN)->ordered();
 
         $xml = <<<XML
         <project>
@@ -171,14 +171,14 @@ XML;
 XML;
 
         $xml_element = new SimpleXMLElement($xml);
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function testItShouldImportOnePackageWithOneRelease()
     {
         $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
         $xml = <<<XML
         <project>
             <frs>
@@ -197,13 +197,13 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id = 1337;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->andReturns($package_id);
 
-        $expected_release_array = array(
+        $expected_release_array = [
             'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
@@ -212,17 +212,17 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id);
+            'released_by' => $user_id];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once();
 
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
     public function testItShouldImportOnePackageWithOneReleaseLinkedToAnArtifact()
     {
         $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
         $xml = <<<XML
         <project>
             <frs>
@@ -246,12 +246,12 @@ XML;
         $release    = \Mockery::spy(FRSRelease::class);
 
         $release->shouldReceive('getGroupId')->andReturn(123);
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
         $this->package_dao->shouldReceive('createFromArray')->andReturns($package_id);
         $this->release_dao->shouldReceive('createFromArray')->andReturns(47);
         $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
 
         $this->assertSame($frs_mapping[47], 'A101');
@@ -265,7 +265,7 @@ XML;
         $file_name = basename($temp_file);
 
         $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
         $xml = <<<XML
         <project>
             <frs>
@@ -288,24 +288,24 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
         $package_id = 1337;
-        $package_array_with_id = array(
+        $package_array_with_id = [
             'package_id' => $package_id,
             'group_id'   => 123,
             'name'       => "package",
             'status_id'  => FRSPackage::STATUS_ACTIVE,
             'rank'       => 0,
             'approve_license' => true
-        );
+        ];
 
         $expected_package_array = $this->getDefaultPackage('package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
         $release_id = 8665;
-        $expected_release_array = array(
+        $expected_release_array = [
             'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
@@ -314,7 +314,7 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id);
+            'released_by' => $user_id];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
         $release_array_with_group = $expected_release_array;
@@ -326,7 +326,7 @@ XML;
         $this->file_dao->shouldReceive('searchFileByName')->andReturns(\TestHelper::emptyDar());
 
         $file_id = 12569;
-        $expected_file_array = array(
+        $expected_file_array = [
             'file_id'       => null,
             'filename'      => "p1337_r8665/lefichier",
             'filepath'      => "p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
@@ -341,7 +341,7 @@ XML;
             'computed_md5'  => "c58ef9ab0b1fc7f6f90ffb607dee0073",
             'reference_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
             'user_id'       => $user_id,
-            'comment'       => "one file to rule them all");
+            'comment'       => "one file to rule them all"];
 
         $this->file_dao->shouldReceive('createFromArray')->with($expected_file_array)->once()->andReturns($file_id);
 
@@ -353,7 +353,7 @@ XML;
         $release->shouldReceive('getGroupId')->andReturn(123);
         $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
@@ -361,7 +361,7 @@ XML;
     {
         $extraction_path = $this->getTmpDir();
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $project = $project_manager->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
         $xml = <<<XML
         <project>
             <frs>
@@ -386,24 +386,24 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id' => $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
         $package_id = 1337;
-        $package_array_with_id = array(
+        $package_array_with_id = [
             'package_id' => $package_id,
             'group_id'   => 123,
             'name'       => "package",
             'status_id'  => FRSPackage::STATUS_ACTIVE,
             'rank'       => 0,
             'approve_license' => true
-        );
+        ];
 
         $expected_package_array = $this->getDefaultPackage('package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
         $release_id = 8665;
-        $expected_release_array = array(
+        $expected_release_array = [
             'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
@@ -412,7 +412,7 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id);
+            'released_by' => $user_id];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
         $release_array_with_group = $expected_release_array;
@@ -424,18 +424,18 @@ XML;
         $release->shouldReceive('getGroupId')->andReturn(123);
         $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
-        $frs_mapping = array();
+        $frs_mapping = [];
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
     private function getDefaultPackage($name)
     {
-        return array(
+        return [
             'package_id' => null,
             'group_id' => 123,
             'name' => $name,
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 'end',
-            'approve_license' => '1');
+            'approve_license' => '1'];
     }
 }

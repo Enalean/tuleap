@@ -40,11 +40,11 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
         $this->user     = \Mockery::spy(\PFUser::class);
         $this->project  = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('gpig')->getMock();
 
-        $content = array(
+        $content = [
             "/my/Project/tags",
             "/my/Project/tags/1.0/",
             "/my/Project/tags/2.0/"
-        );
+        ];
 
         $this->svnlook->shouldReceive('getDirectoryListing')->with($this->project, '/my/Project/tags')->andReturns($content);
     }
@@ -68,28 +68,28 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_1)->andReturns($author_1_user);
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_2)->andReturns($author_2_user);
 
-        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/1.0')->andReturns(array(
+        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/1.0')->andReturns([
             'REVISION   PATH',
             '--------   ----',
             '       8  /my/Project/tags/1.0/',
-        ));
-        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/2.0')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/2.0')->andReturns([
             'REVISION   PATH',
             '--------   ----',
             '       19   /my/Project/tags/2.0/',
-        ));
-        $this->svnlook->shouldReceive('getInfo')->with($this->project, '8')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getInfo')->with($this->project, '8')->andReturns([
             $author_1,
             $datestamp_1,
             16,
             $log_message_1,
-        ));
-        $this->svnlook->shouldReceive('getInfo')->with($this->project, '19')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getInfo')->with($this->project, '19')->andReturns([
             $author_2,
             $datestamp_2,
             16,
             $log_message_2,
-        ));
+        ]);
 
         $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
@@ -129,28 +129,28 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_1)->andReturns($author_1_user);
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_2)->andReturns($author_2_user);
 
-        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/1.0')->andReturns(array(
+        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/1.0')->andReturns([
             'REVISION   PATH',
             '--------   ----',
             '       8  /my/Project/tags/1.0/',
-        ));
-        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/2.0')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getPathLastHistory')->with($this->project, '/my/Project/tags/2.0')->andReturns([
             'REVISION   PATH',
             '--------   ----',
             '       19   /my/Project/tags/2.0/',
-        ));
-        $this->svnlook->shouldReceive('getInfo')->with($this->project, '8')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getInfo')->with($this->project, '8')->andReturns([
             $author_1,
             $datestamp_1,
             16,
             $log_message_1,
-        ));
-        $this->svnlook->shouldReceive('getInfo')->with($this->project, '19')->andReturns(array(
+        ]);
+        $this->svnlook->shouldReceive('getInfo')->with($this->project, '19')->andReturns([
             $author_2,
             $datestamp_2,
             16,
             $log_message_2,
-        ));
+        ]);
 
         $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
@@ -176,7 +176,7 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
         $svnlook = \Mockery::spy(\SVN_Svnlook::class);
         $svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $svnlook, $this->user_manager);
 
-        $content = array('/');
+        $content = ['/'];
         $svnlook->shouldReceive('getDirectoryListing')->with($this->project, '/')->andReturns($content);
 
         $last_revision = $svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, '/', $this->order);

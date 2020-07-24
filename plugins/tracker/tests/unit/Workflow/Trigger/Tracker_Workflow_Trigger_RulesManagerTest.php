@@ -139,7 +139,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                 $this->buildStaticValue($this->target_value_id)
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-            array(
+            [
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->buildSelectBoxField(23),
                     $this->buildStaticValue($this->trigger_value_id_1)
@@ -148,7 +148,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                     $this->buildSelectBoxField(25),
                     $this->buildStaticValue($this->trigger_value_id_2)
                 ),
-            )
+            ]
         );
     }
 
@@ -158,14 +158,14 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
 
         $this->manager = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
-            array(
+            [
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
                 $workflow_logger,
                 \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
                 new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -178,22 +178,22 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $new_field_03      = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(501)->getMock();
         $new_field_03->shouldReceive('getTracker')->andReturn($template_tracker);
 
-        $new_field_01->shouldReceive('getAllValues')->andReturn(array(
+        $new_field_01->shouldReceive('getAllValues')->andReturn([
                                                                     $this->buildStaticValue(601),
                                                                     $this->buildStaticValue(602)
-                                                                ));
+                                                                ]);
 
-        $new_field_02->shouldReceive('getAllValues')->andReturn(array(
+        $new_field_02->shouldReceive('getAllValues')->andReturn([
                                                                     $this->buildStaticValue(701),
                                                                     $this->buildStaticValue(702),
                                                                     $this->buildStaticValue(703),
                                                                     $this->buildStaticValue(704)
-                                                                ));
+                                                                ]);
 
-        $new_field_03->shouldReceive('getAllValues')->andReturn(array(
+        $new_field_03->shouldReceive('getAllValues')->andReturn([
                                                                     $this->buildStaticValue(801),
                                                                     $this->buildStaticValue(802),
-                                                                ));
+                                                                ]);
 
         $this->formelement_factory->shouldReceive('getFieldById')->with(502)->andReturns($new_field_01);
         $this->formelement_factory->shouldReceive('getFieldById')->with(503)->andReturns($new_field_02);
@@ -216,9 +216,9 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                 $this->buildStaticValue(101)
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-            array(
+            [
                 $trigger_01
-            )
+            ]
         );
 
         $rule_02 = new Tracker_Workflow_Trigger_TriggerRule(
@@ -228,45 +228,45 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                 $this->buildStaticValue(102)
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
-            array(
+            [
                 $trigger_02
-            )
+            ]
         );
 
-        $this->manager->shouldReceive('getForTargetTracker')->andReturns(array($rule_01, $rule_02));
+        $this->manager->shouldReceive('getForTargetTracker')->andReturns([$rule_01, $rule_02]);
 
-        $template_trackers = array(
+        $template_trackers = [
             $template_tracker,
-        );
+        ];
 
-        $field_mapping = array(
-            0 => array(
+        $field_mapping = [
+            0 => [
                 'from'   => 102,
                 'to'     => 502,
-                'values' => array(
+                'values' => [
                     101 => 601,
                     102 => 602
-                )
-            ),
-            1 => array(
+                ]
+            ],
+            1 => [
                 'from'   => 103,
                 'to'     => 503,
-                'values' => array(
+                'values' => [
                     101 => 701,
                     102 => 702,
                     103 => 703,
                     104 => 704,
-                )
-            ),
-            2 => array(
+                ]
+            ],
+            2 => [
                 'from'   => 101,
                 'to'     => 501,
-                'values' => array(
+                'values' => [
                     101 => 801,
                     102 => 802,
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $this->manager->shouldReceive('add')->times(2);
 
@@ -332,11 +332,11 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $this->target_field_value = $this->buildStaticValue($this->target_value_id);
         $this->target_field = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->target_field->shouldReceive('getAllValues')->andReturns(array(
+        $this->target_field->shouldReceive('getAllValues')->andReturns([
                                                                            $this->buildStaticValue(9998),
                                                                            $this->target_field_value,
                                                                            $this->buildStaticValue(9999),
-                                                                       ));
+                                                                       ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with($this->target_field_id)->andReturns($this->target_field);
 
         $this->trigger_field_id_1 = 369;
@@ -344,9 +344,9 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $this->trigger_field_value_1 = $this->buildStaticValue($this->trigger_value_id_1);
         $this->trigger_field_1 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
-        $this->trigger_field_1->shouldReceive('getAllValues')->andReturns(array(
+        $this->trigger_field_1->shouldReceive('getAllValues')->andReturns([
                                                                               $this->trigger_field_value_1,
-                                                                          ));
+                                                                          ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with($this->trigger_field_id_1)->andReturns($this->trigger_field_1);
     }
 
@@ -375,12 +375,12 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
     {
         $this->dao->shouldReceive('searchForTargetTracker')->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'id' => $this->rule_id,
                     'field_id' => $this->target_field_id,
                     'value_id' => $this->target_value_id,
                     'rule_condition' => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE
-                )
+                ]
             )
         );
     }
@@ -433,10 +433,10 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
 
         $this->dao->shouldReceive('searchForTriggeringFieldByRuleId')->with($this->rule_id)->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'field_id' => $this->trigger_field_id_1,
                     'value_id' => $this->trigger_value_id_1,
-                )
+                ]
             )
         );
 
@@ -451,10 +451,10 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
 
         $this->dao->shouldReceive('searchForTriggeringFieldByRuleId')->with($this->rule_id)->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'field_id' => $this->trigger_field_id_1,
                     'value_id' => $this->trigger_value_id_1,
-                )
+                ]
             )
         );
 
@@ -515,14 +515,14 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $workflow_logger = new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG);
         $manager         = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
-            array(
+            [
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
                 $workflow_logger,
                 \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
                 new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -547,7 +547,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $changeset->shouldReceive('getId')->andReturn(3);
         $changeset->shouldReceive('getArtifact')->andReturns($artifact);
 
-        $this->dao->shouldReceive('searchForInvolvedRulesIdsByChangesetId')->with(3)->andReturns(\TestHelper::arrayToDar(array('rule_id' => 1), array('rule_id' => 2)));
+        $this->dao->shouldReceive('searchForInvolvedRulesIdsByChangesetId')->with(3)->andReturns(\TestHelper::arrayToDar(['rule_id' => 1], ['rule_id' => 2]));
         $manager->shouldReceive('getRuleById')->with(1)->andReturns($trigger_1);
         $manager->shouldReceive('getRuleById')->with(2)->andReturns($trigger_2);
 
@@ -595,14 +595,14 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $this->value_2117 = $this->buildStaticValue(2117);
         $this->value_2118 = $this->buildStaticValue(2118);
 
-        $this->xmlFieldMapping = array(
+        $this->xmlFieldMapping = [
             'F1685' => $this->field_1685,
             'F1741' => $this->field_1741,
             'V2060' => $this->value_2060,
             'V2061' => $this->value_2061,
             'V2117' => $this->value_2117,
             'V2118' => $this->value_2118,
-        );
+        ];
 
         $this->manager = \Mockery::mock(\Tracker_Workflow_Trigger_RulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
@@ -617,12 +617,12 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                 $this->value_2117
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-            array(
+            [
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->field_1685,
                     $this->value_2060
                 )
-            )
+            ]
         );
 
         $trigger_rule_2 = new Tracker_Workflow_Trigger_TriggerRule(
@@ -632,12 +632,12 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                 $this->value_2118
             ),
             Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
-            array(
+            [
                 new Tracker_Workflow_Trigger_FieldValue(
                     $this->field_1685,
                     $this->value_2061
                 )
-            )
+            ]
         );
 
         $this->manager->shouldReceive('add')->with(Mockery::on($this->getMatcherTriggerRule($trigger_rule_1)))->once();

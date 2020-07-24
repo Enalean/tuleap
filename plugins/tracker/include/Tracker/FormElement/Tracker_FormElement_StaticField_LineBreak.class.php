@@ -39,12 +39,12 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</span>';
         $html .= '<div class="tracker-admin-field-controls">';
-        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
-        $html .= '<a href="?' . http_build_query(array(
+        $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $html .= '<a href="?' . http_build_query([
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-delete',
                 'formElement' => $this->id,
-            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
+            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         $html .= '</div>';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';

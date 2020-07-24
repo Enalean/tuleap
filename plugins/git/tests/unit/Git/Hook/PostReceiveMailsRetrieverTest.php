@@ -47,16 +47,16 @@ class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
         $this->repository = Mockery::mock(GitRepository::class);
         $this->repository->shouldReceive('getId')->andReturn(101);
         $this->repository->shouldReceive('getProject')->andReturn($project);
-        $this->repository->shouldReceive('getNotifiedMails')->andReturn(array('jdoe@example.com', 'smith@example.com'));
+        $this->repository->shouldReceive('getNotifiedMails')->andReturn(['jdoe@example.com', 'smith@example.com']);
 
         $notified_users_dao = Mockery::mock(UsersToNotifyDao::class);
-        $notified_users_dao->shouldReceive('searchUsersByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('email' => 'andrew@example.com'), array('email' => 'smith@example.com')));
+        $notified_users_dao->shouldReceive('searchUsersByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(['email' => 'andrew@example.com'], ['email' => 'smith@example.com']));
 
         $notified_ugroup_dao = Mockery::mock(UgroupsToNotifyDao::class);
-        $notified_ugroup_dao->shouldReceive('searchUgroupsByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 104, 'name' => 'Developers')));
+        $notified_ugroup_dao->shouldReceive('searchUgroupsByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 104, 'name' => 'Developers']));
 
         $developers = Mockery::mock(\ProjectUGroup::class);
-        $developers->shouldReceive('getMembers')->andReturn(array(
+        $developers->shouldReceive('getMembers')->andReturn([
             new PFUser([
                 'language_id' => 'en',
                 'user_id' => 201,
@@ -75,7 +75,7 @@ class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
                 'status' => PFUser::STATUS_SUSPENDED,
                 'email' => 'suspended@example.com'
             ])
-        ));
+        ]);
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
         $ugroup_manager->shouldReceive('getUGroup')->with($project, 104)->andReturns($developers);

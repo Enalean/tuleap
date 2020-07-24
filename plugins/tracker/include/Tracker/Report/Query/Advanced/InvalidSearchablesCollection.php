@@ -29,8 +29,8 @@ class InvalidSearchablesCollection
 
     public function __construct()
     {
-        $this->searchables_not_exist     = array();
-        $this->invalid_searchable_errors = array();
+        $this->searchables_not_exist     = [];
+        $this->invalid_searchable_errors = [];
     }
 
     public function addNonexistentSearchable($searchable_name)

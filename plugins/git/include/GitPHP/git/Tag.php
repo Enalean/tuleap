@@ -98,7 +98,7 @@ class Tag extends Ref
      *
      * @access protected
      */
-    protected $comment = array();
+    protected $comment = [];
 
     /**
      * objectReferenced

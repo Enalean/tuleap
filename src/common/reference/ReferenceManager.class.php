@@ -35,14 +35,14 @@ class ReferenceManager
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
-    public $activeReferencesByProject = array();
+    public $activeReferencesByProject = [];
 
     /**
      * array of Reference objects arrays indexed by group_id
      * Example: $activeReferencesByProject[101][1] return the first reference object for project 101
      * @var array
      */
-    public $referencesByProject = array();
+    public $referencesByProject = [];
 
     public $referenceDao;
 
@@ -51,7 +51,7 @@ class ReferenceManager
      */
     public $cross_reference_dao;
 
-    private $groupIdByName = array();
+    private $groupIdByName = [];
 
     /**
      * @var array containing additional regexp to match more reference formats.
@@ -65,14 +65,14 @@ class ReferenceManager
      *   ...
      * )
      */
-    private $additional_references = array();
+    private $additional_references = [];
 
-    private $php_supported_encoding_types = array(
+    private $php_supported_encoding_types = [
         'UTF-8',
         'ISO-8859-15',
         'ISO-8859-5',
         'ISO-8859-1',
-    );
+    ];
     /**
      * @var EventManager
      */
@@ -113,11 +113,11 @@ class ReferenceManager
 
     protected function loadExtraFormats()
     {
-        $this->additional_references = array();
-        $this->eventManager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, array(
+        $this->additional_references = [];
+        $this->eventManager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, [
             'reference_manager' => $this,
             'refs'              => &$this->additional_references
-        ));
+        ]);
     }
 
     /**
@@ -139,24 +139,24 @@ class ReferenceManager
      */
     public function getAvailableNatures()
     {
-        $core_natures = array(
-            self::REFERENCE_NATURE_ARTIFACT => array('keyword' => 'art', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key')),
-            self::REFERENCE_NATURE_DOCUMENT => array('keyword' => 'doc', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key')),
-            self::REFERENCE_NATURE_CVSCOMMIT => array('keyword' => 'cvs', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key')),
-            self::REFERENCE_NATURE_SVNREVISION => array('keyword' => 'svn', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key')),
-            self::REFERENCE_NATURE_FILE => array('keyword' => 'file', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key')),
-            self::REFERENCE_NATURE_RELEASE => array('keyword' => 'release', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key')),
-            self::REFERENCE_NATURE_FORUM => array('keyword' => 'forum', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key')),
-            self::REFERENCE_NATURE_FORUMMESSAGE => array('keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key')),
-            self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key')),
-            self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key')),
-        );
+        $core_natures = [
+            self::REFERENCE_NATURE_ARTIFACT => ['keyword' => 'art', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key')],
+            self::REFERENCE_NATURE_DOCUMENT => ['keyword' => 'doc', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key')],
+            self::REFERENCE_NATURE_CVSCOMMIT => ['keyword' => 'cvs', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key')],
+            self::REFERENCE_NATURE_SVNREVISION => ['keyword' => 'svn', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key')],
+            self::REFERENCE_NATURE_FILE => ['keyword' => 'file', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key')],
+            self::REFERENCE_NATURE_RELEASE => ['keyword' => 'release', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key')],
+            self::REFERENCE_NATURE_FORUM => ['keyword' => 'forum', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key')],
+            self::REFERENCE_NATURE_FORUMMESSAGE => ['keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key')],
+            self::REFERENCE_NATURE_NEWS => ['keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key')],
+            self::REFERENCE_NATURE_WIKIPAGE => ['keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key')],
+        ];
 
-        $plugins_natures = array();
-        $this->eventManager->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
+        $plugins_natures = [];
+        $this->eventManager->processEvent('get_available_reference_natures', ['natures' => &$plugins_natures]);
 
         $natures = array_merge($core_natures, $plugins_natures);
-        $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'));
+        $natures[self::REFERENCE_NATURE_OTHER] = ['keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key')];
         return $natures;
     }
 
@@ -166,7 +166,7 @@ class ReferenceManager
         if (isset($this->referencesByProject[$group_id])) {
             $p = $this->referencesByProject[$group_id];
         } else {
-            $p = array();
+            $p = [];
             $reference_dao = $this->_getReferenceDao();
             $dar = $reference_dao->searchByGroupID($group_id);
             while ($row = $dar->getRow()) {
@@ -542,7 +542,7 @@ class ReferenceManager
             if (! $this->getGroupIdFromArtifactId($val)) {
                 $this->eventManager->processEvent(
                     Event::BUILD_REFERENCE,
-                    array('row' => $row, 'ref_id' => $refid, 'ref' => &$reference)
+                    ['row' => $row, 'ref_id' => $refid, 'ref' => &$reference]
                 );
             } else {
                 $this->ensureArtifactDataIsCorrect($reference, $val);
@@ -735,7 +735,7 @@ class ReferenceManager
     public function extractReferences($html, $group_id)
     {
         $this->tmpGroupIdForCallbackFunction = $group_id;
-        $referencesInstances                 = array();
+        $referencesInstances                 = [];
         $matches                             = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
             $ref_instance = $this->_getReferenceInstanceFromMatch($match);
@@ -861,9 +861,9 @@ class ReferenceManager
 
             EventManager::instance()->processEvent(
                 Event::POST_REFERENCE_EXTRACTED,
-                array(
+                [
                     'cross_reference' => $cross_reference
-                )
+                ]
             );
 
             $res = $dao->searchByKeywordAndGroupId($target_key, $source_gid);
@@ -890,10 +890,10 @@ class ReferenceManager
         $is_reference_removed = false;
         EventManager::instance()->processEvent(
             Event::REMOVE_CROSS_REFERENCE,
-            array(
+            [
                 'cross_reference'      => $cross_reference,
                 'is_reference_removed' => &$is_reference_removed
-            )
+            ]
         );
 
         if ($is_reference_removed) {
@@ -912,7 +912,7 @@ class ReferenceManager
     public function extractReferencesGrouped($html, $group_id)
     {
         $referencesInstances = $this->extractReferences($html, $group_id);
-        $groupedReferencesInstances = array();
+        $groupedReferencesInstances = [];
         foreach ($referencesInstances as $idx => $referenceInstance) {
             $reference = $referenceInstance->getReference();
             // description to group the references
@@ -954,7 +954,7 @@ class ReferenceManager
     {
         $group_id = $this->getGroupIdFromArtifactId($artifact_id);
         if ($group_id === false) {
-            $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
+            $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, ['artifact_id' => $artifact_id, 'group_id' => &$group_id]);
         }
         return $group_id;
     }
@@ -1122,14 +1122,14 @@ class ReferenceManager
 
         $this->eventManager->processEvent(
             Event::GET_REFERENCE,
-            array(
+            [
                 'reference_manager' => $this,
                 'project'           => $project,
                 'keyword'           => $key,
                 'value'             => $value,
                 'group_id'          => $ref_gid,
                 'reference'         => &$reference,
-            )
+            ]
         );
 
         if (! $reference) {
@@ -1163,14 +1163,14 @@ class ReferenceManager
     public function _initProjectReferences($group_id)
     {
         if (! isset($this->activeReferencesByProject[$group_id])) {
-            $p = array();
+            $p = [];
             $reference_dao = $this->_getReferenceDao();
             $dar = $reference_dao->searchActiveByGroupID($group_id);
             while ($row = $dar->getRow()) {
                 $ref = $this->_buildReference($row);
                 $num_args = $ref->getNumParam();
                 if (! isset($p[$ref->getKeyword()])) {
-                    $p[$ref->getKeyword()] = array();
+                    $p[$ref->getKeyword()] = [];
                 }
                 if (isset($p[$ref->getKeyword()][$num_args])) {
                     // Project reference overload system reference
@@ -1238,7 +1238,7 @@ class ReferenceManager
     {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupId($keyword, $group_id);
-        $existing_refs = array();
+        $existing_refs = [];
         while ($row = $dar->getRow()) {
             if (Reference::computeNumParam($row['link']) == $num_args) {
                 return $row['reference_id'];

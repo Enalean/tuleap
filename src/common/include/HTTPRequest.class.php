@@ -30,7 +30,7 @@ class HTTPRequest extends Codendi_Request
     /**
      * @var array
      */
-    private $trusted_proxied = array();
+    private $trusted_proxied = [];
 
     /**
      * Constructor

@@ -28,7 +28,7 @@ class Admin_PermissionDelegationIndexPresenter
     /**
      * @var Admin_PermissionDelegationGroupPresenter[]
      */
-    private $groups = array();
+    private $groups = [];
 
     /**
      * @var Admin_PermissionDelegationGroupPresenter

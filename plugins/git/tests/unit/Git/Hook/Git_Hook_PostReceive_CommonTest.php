@@ -69,12 +69,12 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
             \Mockery::spy(\Tuleap\Git\Hook\PostReceiveMailSender::class)
         );
 
-        $this->repository->shouldReceive('getNotifiedMails')->andReturns(array());
+        $this->repository->shouldReceive('getNotifiedMails')->andReturns([]);
     }
 
     public function testItGetRepositoryFromFactory(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
@@ -84,7 +84,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 
     public function testItGetUserFromManager(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
@@ -95,7 +95,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 
     public function testItSkipsIfRepositoryIsNotKnown(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
@@ -108,7 +108,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 
     public function testItFallsBackOnAnonymousIfUserIsNotKnows(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
 
@@ -124,7 +124,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 
     public function testItGetsPushDetailsFromLogAnalyzer(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns([])->getMock();
 
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -142,7 +142,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
         $this->parse_log->shouldReceive('execute')->with($this->push_details)->once();
@@ -152,7 +152,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 
     public function testItTriggersACiBuild(): void
     {
-        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(\Mockery::spy(\PFUser::class));

@@ -108,7 +108,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItRedirectsToTheTrackerHomePageByDefault(): void
     {
-        $request_data = array();
+        $request_data = [];
         $tracker_id   = 20;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
         $this->assertEquals(TRACKER_BASE_URL . "/?tracker=$tracker_id", $redirect_uri->toUrl());
@@ -116,7 +116,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItStaysOnTheCurrentArtifactWhenSubmitAndStayIsSpecified(): void
     {
-        $request_data = array('submit_and_stay' => true);
+        $request_data = ['submit_and_stay' => true];
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
         $this->assertEquals(TRACKER_BASE_URL . "/?aid=$artifact_id", $redirect_uri->toUrl());
@@ -132,7 +132,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItRedirectsToNewArtifactCreationWhenSubmitAndContinueIsSpecified(): void
     {
-        $request_data = array('submit_and_continue' => true);
+        $request_data = ['submit_and_continue' => true];
         $tracker_id  = 73;
         $artifact_id = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
@@ -143,7 +143,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testSubmitAndContinue(): void
     {
-        $request_data = array('submit_and_continue' => true);
+        $request_data = ['submit_and_continue' => true];
         $tracker_id   = 73;
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
@@ -162,7 +162,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->parent_tracker)->andReturns($this->parent_art_link_field);
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->tracker)->andReturns($this->art_link_field);
         $this->art_link_field->shouldReceive('getId')->andReturns(333);
-        $this->request->shouldReceive('get')->with('artifact')->andReturns(array(333 => array('parent' => Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE)));
+        $this->request->shouldReceive('get')->with('artifact')->andReturns([333 => ['parent' => Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE]]);
         $this->new_artifact->shouldReceive('getAllAncestors')->with($this->current_user)->andReturns([]);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
@@ -171,7 +171,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItDoesntRedirectWhenNewArtifactAlreadyHasAParent(): void
     {
-        $this->new_artifact->shouldReceive('getAllAncestors')->andReturns(array(Mockery::spy(Tracker_Artifact::class)));
+        $this->new_artifact->shouldReceive('getAllAncestors')->andReturns([Mockery::spy(Tracker_Artifact::class)]);
 
         $this->tracker->shouldReceive('getParent')->andReturns($this->parent_tracker);
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->andReturns($this->parent_art_link_field);

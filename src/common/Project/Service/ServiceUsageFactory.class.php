@@ -41,7 +41,7 @@ class Project_Service_ServiceUsageFactory
      */
     public function getAllServicesUsage(Project $project)
     {
-        $services_usages = array();
+        $services_usages = [];
         $res = $this->dao->getAllServicesUsage($project->getID());
         while ($row = $res->getRow()) {
             $services_usages[] = $this->getInstanceFromRow($row);

@@ -16,11 +16,11 @@ function display_remove_button($pagename)
     $em = EventManager::instance();
     $em->processEvent(
         Event::WIKI_DISPLAY_REMOVE_BUTTON,
-        array(
+        [
             'display_remove_button' => &$display_remove_button,
             'group_id'              => GROUP_ID,
             'wiki_page'             => $pagename,
-        )
+        ]
     );
     return $display_remove_button;
 }
@@ -72,14 +72,14 @@ function codendi_main()
     // http://www.procata.com/blog/archives/2004/05/27/rephlux-and-php-memory-usage/
     // kill the global PEAR _PEAR_destructor_object_list
     if (! empty($_PEAR_destructor_object_list)) {
-        $_PEAR_destructor_object_list = array();
+        $_PEAR_destructor_object_list = [];
     }
     require_once __DIR__ . '/lib/prepend.php';
     $request->possiblyDeflowerVirginWiki();
 
-    $validators = array('wikiname' => WIKI_NAME,
+    $validators = ['wikiname' => WIKI_NAME,
                         'args'     => wikihash($request->getArgs()),
-                        'prefs'    => wikihash($request->getPrefs()));
+                        'prefs'    => wikihash($request->getPrefs())];
     if (CACHE_CONTROL == 'STRICT') {
         $dbi = $request->getDbh();
         $timestamp = $dbi->getTimestamp();

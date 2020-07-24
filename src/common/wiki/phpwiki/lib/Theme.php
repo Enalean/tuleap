@@ -226,7 +226,7 @@ class Theme
         if (ENABLE_LIVESEARCH) { // by bitflux.ch
             $this->initLiveSearch();
         }
-        $this->_css = array();
+        $this->_css = [];
     }
 
     public function file($file)
@@ -591,7 +591,7 @@ class Theme
         global $request;
 
         if ($version !== false and ! $this->HTML_DUMP_SUFFIX) {
-            $url = WikiURL($wikiword, array('version' => $version));
+            $url = WikiURL($wikiword, ['version' => $version]);
         } else {
             $url = WikiURL($wikiword);
         }
@@ -601,7 +601,7 @@ class Theme
             $url = preg_replace('/^\./', '%2e', $url); // dot pages
         }
 
-        $link = HTML::a(array('href' => $url));
+        $link = HTML::a(['href' => $url]);
 
         if (isa($wikiword, 'WikiPageName')) {
              $default_text = $wikiword->shortName;
@@ -651,7 +651,7 @@ class Theme
                 $text->setAttr('class', empty($linktext) ? 'wikiunknown' : 'named-wikiunknown');
                 return $text;
             } else {
-                $url = WikiURL($wikiword, array('action' => 'create'));
+                $url = WikiURL($wikiword, ['action' => 'create']);
                 $button = $this->makeButton('?', $url);
                 $button->addTooltip(sprintf(_("Create: %s"), $wikiword));
             }
@@ -701,7 +701,7 @@ class Theme
         }
         $ErrorManager->warning($message);
 
-        return HTML::span(array('class' => 'badwikiword'), $text);
+        return HTML::span(['class' => 'badwikiword'], $text);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -709,8 +709,8 @@ class Theme
     // Images and Icons
     //
     ////////////////////////////////////////////////////////////////
-    public $_imageAliases = array();
-    public $_imageAlt = array();
+    public $_imageAliases = [];
+    public $_imageAlt = [];
 
     /**
      *
@@ -760,7 +760,7 @@ class Theme
 
         if ($this->DUMP_MODE) {
             if (empty($this->dumped_images)) {
-                $this->dumped_images = array();
+                $this->dumped_images = [];
             }
             $path = "images/" . basename($path);
             if (! in_array($path, $this->dumped_images)) {
@@ -849,7 +849,7 @@ class Theme
         }
         if ($url and $this->DUMP_MODE) {
             if (empty($this->dumped_buttons)) {
-                $this->dumped_buttons = array();
+                $this->dumped_buttons = [];
             }
             $file = $url;
             if (defined('DATA_PATH')) {
@@ -882,9 +882,9 @@ class Theme
         $button_dir = $this->_findFile("buttons");
         $path_dir = $this->_path . $button_dir;
         if (! file_exists($path_dir) || ! is_dir($path_dir)) {
-            return array();
+            return [];
         }
-        $path = array($button_dir);
+        $path = [$button_dir];
 
         $dir = dir($path_dir);
         while (($subdir = $dir->read()) !== false) {
@@ -1029,7 +1029,7 @@ class Theme
     {
         extract($this->_get_name_and_rev($page_or_rev));
 
-        $args = $version ? array('version' => $version) : false;
+        $args = $version ? ['version' => $version] : false;
         if ($action) {
             $args['action'] = $action;
         }
@@ -1156,10 +1156,10 @@ class Theme
         if ($is_alt and isBrowserKonqueror()) {
             return HTML();
         }
-        $link = HTML::link(array('rel'     => $is_alt ? 'alternate stylesheet' : 'stylesheet',
+        $link = HTML::link(['rel'     => $is_alt ? 'alternate stylesheet' : 'stylesheet',
                                  'type'    => 'text/css',
                                  'charset' => $GLOBALS['charset'],
-                                 'href'    => $this->_findData($css_file)));
+                                 'href'    => $this->_findData($css_file)]);
         if ($is_alt) {
             $link->setAttr('title', $title);
         }
@@ -1169,7 +1169,7 @@ class Theme
         }
         if ($this->DUMP_MODE) {
             if (empty($this->dumped_css)) {
-                $this->dumped_css = array();
+                $this->dumped_css = [];
             }
             if (! in_array($css_file, $this->dumped_css)) {
                 $this->dumped_css[] = $css_file;
@@ -1203,11 +1203,11 @@ class Theme
     public function setDefaultCSS($title, $css_files)
     {
         if (! is_array($css_files)) {
-            $css_files = array('' => $css_files);
+            $css_files = ['' => $css_files];
         }
         // Add to the front of $this->_css
         unset($this->_css[$title]);
-        $this->_css = array_merge(array($title => $css_files), $this->_css);
+        $this->_css = array_merge([$title => $css_files], $this->_css);
     }
 
     /** Set alternate CSS source for this theme.
@@ -1218,7 +1218,7 @@ class Theme
     public function addAlternateCSS($title, $css_files)
     {
         if (! is_array($css_files)) {
-            $css_files = array('' => $css_files);
+            $css_files = ['' => $css_files];
         }
         $this->_css[$title] = $css_files;
     }
@@ -1228,7 +1228,7 @@ class Theme
      */
     public function getCSS()
     {
-        $css = array();
+        $css = [];
         $is_alt = false;
         foreach ($this->_css as $title => $css_files) {
             ksort($css_files); // move $css_files[''] to front.
@@ -1260,7 +1260,7 @@ class Theme
         }
     }
 
-    public $_MoreHeaders = array();
+    public $_MoreHeaders = [];
     public function addMoreHeaders($element)
     {
         array_push($this->_MoreHeaders, $element);
@@ -1282,12 +1282,12 @@ class Theme
         return $out;
     }
 
-    public $_MoreAttr = array();
+    public $_MoreAttr = [];
     // new arg: named elements to be able to remove them. such as DoubleClickEdit for htmldumps
     public function addMoreAttr($tag, $name, $element)
     {
         // protect from duplicate attr (body jscript: themes, prefs, ...)
-        static $_attr_cache = array();
+        static $_attr_cache = [];
         $hash = md5($tag . "/" . $element);
         if (! empty($_attr_cache[$hash])) {
             return;
@@ -1295,7 +1295,7 @@ class Theme
         $_attr_cache[$hash] = 1;
 
         if (empty($this->_MoreAttr) or ! is_array($this->_MoreAttr[$tag])) {
-            $this->_MoreAttr[$tag] = array($name => $element);
+            $this->_MoreAttr[$tag] = [$name => $element];
         } else {
             $this->_MoreAttr[$tag][$name] = $element;
         }
@@ -1329,7 +1329,7 @@ class Theme
     {
         global $customUserPreferenceColumns; // FIXME: really a global?
         if (empty($customUserPreferenceColumns)) {
-            $customUserPreferenceColumns = array();
+            $customUserPreferenceColumns = [];
         }
         //array('wikilens' => new _UserPreference_wikilens());
         foreach ($array as $field => $prefobj) {
@@ -1345,7 +1345,7 @@ class Theme
     {
         global $customPageListColumns;
         if (empty($customPageListColumns)) {
-            $customPageListColumns = array();
+            $customPageListColumns = [];
         }
         foreach ($array as $column => $obj) {
             $customPageListColumns[$column] = $obj;
@@ -1375,8 +1375,10 @@ class Theme
             );
             $this->addMoreHeaders(JavaScript('var liveSearchURI="'
                                              . WikiURL(_("TitleSearch"), false, true) . '";'));
-            $this->addMoreHeaders(JavaScript('', array
-                                             ('src' => $this->_findData('livesearch.js'))));
+            $this->addMoreHeaders(JavaScript(
+                '',
+                ['src' => $this->_findData('livesearch.js')]
+            ));
         }
     }
 }
@@ -1400,7 +1402,7 @@ class Button extends HtmlElement
     {
         global $request;
         //php5 workaround
-        $this->_init('a', array('href' => $url));
+        $this->_init('a', ['href' => $url]);
         if ($class) {
             $this->setAttr('class', $class);
         }
@@ -1409,7 +1411,7 @@ class Button extends HtmlElement
         }
         // Google honors this
         if (
-            in_array(strtolower($text), array('edit','create','diff'))
+            in_array(strtolower($text), ['edit', 'create', 'diff'])
             and ! $request->_user->isAuthenticated()
         ) {
             $this->setAttr('rel', 'nofollow');
@@ -1434,20 +1436,20 @@ class ImageButton extends Button
      */
     public function __construct($text, $url, $class, $img_url, $img_attr = false)
     {
-        parent::__construct('a', array('href' => $url));
+        parent::__construct('a', ['href' => $url]);
         if ($class) {
             $this->setAttr('class', $class);
         }
         // Google honors this
         if (
-            in_array(strtolower($text), array('edit','create','diff'))
+            in_array(strtolower($text), ['edit', 'create', 'diff'])
             and ! $GLOBALS['request']->_user->isAuthenticated()
         ) {
             $this->setAttr('rel', 'nofollow');
         }
 
         if (! is_array($img_attr)) {
-            $img_attr = array();
+            $img_attr = [];
         }
         $img_attr['src'] = $img_url;
         $img_attr['alt'] = $text;
@@ -1470,8 +1472,8 @@ class SubmitButton extends HtmlElement
      */
     public function __construct($text, $name = false, $class = false)
     {
-        parent::__construct('input', array('type' => 'submit',
-                                          'value' => $text));
+        parent::__construct('input', ['type' => 'submit',
+                                          'value' => $text]);
         if ($name) {
             $this->setAttr('name', $name);
         }
@@ -1497,10 +1499,10 @@ class SubmitImageButton extends SubmitButton
      */
     public function __construct($text, $name, $class, $img_url)
     {
-        parent::__construct('input', array('type'  => 'image',
+        parent::__construct('input', ['type'  => 'image',
                                           'src'   => $img_url,
                                           'value' => $text,
-                                          'alt'   => $text));
+                                          'alt'   => $text]);
         if ($name) {
             $this->setAttr('name', $name);
         }
@@ -1565,7 +1567,7 @@ class PluginSidebarBox extends SidebarBox
                                            get_class($plugin)));
         }*/
         $this->_plugin   = $plugin;
-        $this->_args     = $args ? $args : array();
+        $this->_args     = $args ? $args : [];
         $this->_basepage = $basepage;
     }
 
@@ -1631,7 +1633,7 @@ class RelatedExternalLinksBox extends SidebarBox
 
 function listAvailableThemes()
 {
-    $available_themes = array();
+    $available_themes = [];
     $dir_root = 'themes';
     if (defined('PHPWIKI_DIR')) {
         $dir_root = PHPWIKI_DIR . "/$dir_root";
@@ -1654,7 +1656,7 @@ function listAvailableThemes()
 
 function listAvailableLanguages()
 {
-    $available_languages = array('en');
+    $available_languages = ['en'];
     $dir_root = 'locale';
     if (defined('PHPWIKI_DIR')) {
         $dir_root = PHPWIKI_DIR . "/$dir_root";
