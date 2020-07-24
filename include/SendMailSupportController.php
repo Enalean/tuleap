@@ -65,7 +65,7 @@ class SendMailSupportController implements DispatchableWithRequest
 
         $this->sendEmailToMyTuleapSupport($sys_https_host, $current_user, $message_title, $message_content);
 
-        if (!$current_user->isAnonymous()) {
+        if (! $current_user->isAnonymous()) {
             $this->sendConfirmationEmailToUser($sys_https_host, $current_user, $message_title, $message_content);
         }
     }
@@ -81,7 +81,7 @@ class SendMailSupportController implements DispatchableWithRequest
     ): void {
         $current_user_name = 'Anonymous';
 
-        if (!$current_user->isAnonymous()) {
+        if (! $current_user->isAnonymous()) {
             $current_user_name = $current_user->getRealName();
         }
 
@@ -98,7 +98,7 @@ class SendMailSupportController implements DispatchableWithRequest
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($this->contact_support_email);
 
-        if (!$current_user->isAnonymous()) {
+        if (! $current_user->isAnonymous()) {
             $mail->addAdditionalHeader('Reply-To', $current_user_name . ' <' . $current_user->getEmail() . '>');
         }
 

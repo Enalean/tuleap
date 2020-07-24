@@ -52,7 +52,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
 
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Info($this);
         }
 
