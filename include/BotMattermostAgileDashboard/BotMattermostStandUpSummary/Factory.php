@@ -73,7 +73,7 @@ class Factory
         if ($dar === false) {
             throw new ChannelsNotFoundException();
         }
-        $channels = array();
+        $channels = [];
         foreach ($dar as $row) {
             $channels[] = $row['channel_name'];
         }
@@ -111,13 +111,13 @@ class Factory
 
     public function getAgileDashboardBotsForSummary()
     {
-        $bots_mattermost_stand_up_summary = array();
+        $bots_mattermost_stand_up_summary = [];
 
         if ($dar  = $this->dao->searchAgileDashboardBotsForSummary()) {
             foreach ($dar as $row) {
                 $project_id = $row['project_id'];
 
-                $channels = array();
+                $channels = [];
                 try {
                     $channels = $this->getChannels($project_id);
                 } catch (ChannelsNotFoundException $exception) {

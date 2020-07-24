@@ -175,7 +175,7 @@ class Dao extends DataAccessObject
 
     private function createChannels(array $channels, $notification_id)
     {
-        $channels_value_sql = array();
+        $channels_value_sql = [];
         foreach ($channels as $channel_name) {
             $channels_value_sql[] = $this->getChannelValueSqlForInsert($notification_id, $channel_name);
         }

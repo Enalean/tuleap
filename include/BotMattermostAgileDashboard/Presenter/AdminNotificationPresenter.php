@@ -110,7 +110,7 @@ class AdminNotificationPresenter
         $this->alert_time_warning             = $GLOBALS['Language']->getText(
             'plugin_botmattermost_agiledashboard',
             'admin_notification_time_warning',
-            array(date_default_timezone_get())
+            [date_default_timezone_get()]
         );
 
         $this->bot_list_is_empty = count($this->bots) === 0;

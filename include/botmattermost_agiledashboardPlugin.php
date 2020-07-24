@@ -68,7 +68,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
 
     public function getDependencies()
     {
-        return array('agiledashboard', 'botmattermost');
+        return ['agiledashboard', 'botmattermost'];
     }
 
     /**

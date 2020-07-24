@@ -151,11 +151,11 @@ class Controller
     {
         $GLOBALS['Response']->redirect(
             AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
-                array(
+                [
                     'group_id' => $this->request->getProject()->getID(),
                     'action'   => 'admin',
                     'pane'     => 'scrum'
-                )
+                ]
             )
         );
     }

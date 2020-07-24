@@ -83,7 +83,7 @@ class StandUpNotificationSender
 
     private function getProjectsIdsFromAgileDashboardBots(array $bots)
     {
-        $projects_ids = array();
+        $projects_ids = [];
         foreach ($bots as $bot) {
             $project_id = $bot->getProjectId();
             if (! in_array($project_id, $projects_ids)) {

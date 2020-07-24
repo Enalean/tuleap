@@ -53,7 +53,7 @@ class BotMattermostStandUpSummary
 
     public function toArray()
     {
-        return array(
+        return [
             'id'             => $this->bot->getId(),
             'name'           => $this->bot->getName(),
             'webhook_url'    => $this->bot->getWebhookUrl(),
@@ -63,7 +63,7 @@ class BotMattermostStandUpSummary
             'project_id'     => $this->project_id,
             'send_time'      => date("H:i", strtotime($this->send_time)),
             'is_assigned'    => $this->isAssigned()
-        );
+        ];
     }
 
     /**
