@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CookieManager;
 use Tuleap\Event\Events\HitEvent;
@@ -209,7 +210,9 @@ if (! IS_SCRIPT) {
         $urlVerif = $urlVerifFactory->getURLVerification($global_server);
         $urlVerif->assertValidUrl($global_server, $request);
 
-        (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy();
+        (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy(
+            DetectedBrowser::detectFromTuleapHTTPRequest($request)
+        );
     }
 
     if (! $current_user->isAnonymous()) {

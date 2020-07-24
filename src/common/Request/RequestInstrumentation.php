@@ -21,6 +21,7 @@
 
 namespace Tuleap\Request;
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
 class RequestInstrumentation
@@ -42,23 +43,23 @@ class RequestInstrumentation
         $this->prometheus = $prometheus;
     }
 
-    public function increment(int $code): void
+    public function increment(int $code, DetectedBrowser $detected_browser): void
     {
-        $this->incrementCodeRouter((string) $code, 'fastroute');
+        $this->incrementCodeRouter((string) $code, 'fastroute', $detected_browser);
         $this->updateRequestDurationHistogram('fastroute');
     }
 
-    public function incrementLegacy(): void
+    public function incrementLegacy(DetectedBrowser $detected_browser): void
     {
-        $this->incrementCodeRouter('200', 'legacy');
+        $this->incrementCodeRouter('200', 'legacy', $detected_browser);
     }
 
-    public function incrementRest(?int $code): void
+    public function incrementRest(?int $code, DetectedBrowser $detected_browser): void
     {
         if ($code === null) {
             $code = -1;
         }
-        $this->incrementCodeRouter((string) $code, 'rest');
+        $this->incrementCodeRouter((string) $code, 'rest', $detected_browser);
         $this->updateRequestDurationHistogram('rest');
     }
 
@@ -66,14 +67,18 @@ class RequestInstrumentation
      * Soap will also increment legacy router due to pre.php
      * It's not worth fixing it.
      */
-    public function incrementSoap(): void
+    public function incrementSoap(DetectedBrowser $detected_browser): void
     {
-        $this->incrementCodeRouter('200', 'soap');
+        $this->incrementCodeRouter('200', 'soap', $detected_browser);
     }
 
-    private function incrementCodeRouter(string $code, string $router): void
+    private function incrementCodeRouter(string $code, string $router, DetectedBrowser $detected_browser): void
     {
-        $this->prometheus->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
+        $this->prometheus->increment(
+            self::COUNT_NAME,
+            self::COUNT_HELP,
+            ['code' => $code, 'router' => $router, 'browser' => $detected_browser->getName() ?? 'Not identified']
+        );
     }
 
     private function updateRequestDurationHistogram(string $router): void

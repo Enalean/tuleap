@@ -21,6 +21,7 @@ define('IS_SCRIPT', true);
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../project/admin/permissions.php';
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\REST\BasicAuthentication;
@@ -43,7 +44,10 @@ try {
     $gate_keeper = new GateKeeper();
     $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), $http_request);
 } catch (Exception $exception) {
-    $request_instrumentation->incrementRest(403);
+    $request_instrumentation->incrementRest(
+        403,
+        DetectedBrowser::detectFromTuleapHTTPRequest($http_request)
+    );
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON([
         'error' => $exception->getMessage()
@@ -59,8 +63,11 @@ if ($matches && isset($matches[1]) && $matches[1] == 2) {
 
 $restler = (new RestlerFactory(new RestlerCache(), new Tuleap\REST\ResourcesInjector(), EventManager::instance()))->buildRestler($version);
 
-$restler->onComplete(static function () use ($restler, $request_instrumentation) {
-    $request_instrumentation->incrementRest($restler->responseCode);
+$restler->onComplete(static function () use ($restler, $request_instrumentation, $http_request) {
+    $request_instrumentation->incrementRest(
+        $restler->responseCode,
+        DetectedBrowser::detectFromTuleapHTTPRequest($http_request)
+    );
 
     if ($restler->exception === null || $restler->responseCode !== 500) {
         return;

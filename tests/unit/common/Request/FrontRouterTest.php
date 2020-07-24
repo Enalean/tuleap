@@ -26,6 +26,7 @@ use Mockery;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use PluginManager;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
@@ -49,7 +50,6 @@ class FrontRouterTest extends TestCase
     private $layout;
     private $logger;
     private $error_rendering;
-    private $theme_manager;
     private $burning_parrot;
     private $plugin_manager;
     /**
@@ -64,18 +64,19 @@ class FrontRouterTest extends TestCase
         $this->route_collector = Mockery::mock(RouteCollector::class);
         $this->url_verification_factory = Mockery::mock(\URLVerificationFactory::class);
         $this->request = Mockery::mock(\HTTPRequest::class);
+        $this->request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->layout = Mockery::mock(BaseLayout::class);
         $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->error_rendering = Mockery::mock(ErrorRendering::class);
-        $this->theme_manager = Mockery::mock(\ThemeManager::class);
+        $theme_manager = Mockery::mock(\ThemeManager::class);
         $this->burning_parrot = Mockery::mock(BurningParrotTheme::class);
         $this->plugin_manager = Mockery::mock(PluginManager::class);
         $this->request_instrumentation = Mockery::mock(RequestInstrumentation::class);
 
         $this->user = Mockery::mock(\PFUser::class);
         $this->request->shouldReceive('getCurrentUser')->andReturn($this->user);
-        $this->theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
-        $this->theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
+        $theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
+        $theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
 
         \ForgeConfig::store();
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
@@ -85,7 +86,7 @@ class FrontRouterTest extends TestCase
             $this->url_verification_factory,
             $this->logger,
             $this->error_rendering,
-            $this->theme_manager,
+            $theme_manager,
             $this->plugin_manager,
             $this->request_instrumentation
         );
@@ -109,7 +110,7 @@ class FrontRouterTest extends TestCase
 
         $this->route_collector->shouldReceive('collect');
         $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 404, Mockery::any(), Mockery::any());
-        $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
+        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
 
         $this->user->shouldReceive('isAnonymous')->andReturnFalse();
         $this->request->shouldReceive('isAjax')->andReturnFalse();
@@ -133,7 +134,7 @@ class FrontRouterTest extends TestCase
             Mockery::any(),
             Mockery::any()
         );
-        $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
+        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
 
         $this->user->shouldReceive('isAnonymous')->andReturnTrue();
 
@@ -155,7 +156,7 @@ class FrontRouterTest extends TestCase
             Mockery::any(),
             Mockery::any()
         );
-        $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
+        $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
 
         $this->router->route($this->request);
     }
@@ -379,7 +380,7 @@ class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->request_instrumentation->shouldReceive('increment')->with($status_code)->once();
+        $this->request_instrumentation->shouldReceive('increment')->with($status_code, Mockery::type(DetectedBrowser::class))->once();
 
         $this->router->route($this->request);
     }

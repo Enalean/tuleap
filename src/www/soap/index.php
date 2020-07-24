@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\Templating\TemplateCache;
 
 require_once __DIR__ . '/../include/pre.php';
 
-(new RequestInstrumentation(Prometheus::instance()))->incrementSoap();
+(new RequestInstrumentation(Prometheus::instance()))->incrementSoap(
+    DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
+);
 
 define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__) . '/VERSION'));
 

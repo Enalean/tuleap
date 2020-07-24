@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Error\ErrorDependenciesInjector;
 use Tuleap\Error\PermissionDeniedPrivateProjectController;
@@ -423,7 +424,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 if ($layout === null) {
                     throw new \Exception("Could not load BurningParrot theme");
                 }
-                (new RequestInstrumentation(Prometheus::instance()))->increment(404);
+                (new RequestInstrumentation(Prometheus::instance()))->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
                 (new ErrorRendering())->rendersError(
                     $layout,
                     $request,

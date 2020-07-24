@@ -27,6 +27,7 @@ use HTTPRequest;
 use PluginManager;
 use Psr\Log\LoggerInterface;
 use ThemeManager;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\ErrorRendering;
 use URLVerificationFactory;
 
@@ -117,13 +118,13 @@ class FrontRouter
             }
             $http_response_code = http_response_code();
             assert(is_int($http_response_code));
-            $this->request_instrumentation->increment($http_response_code);
+            $this->request_instrumentation->increment($http_response_code, DetectedBrowser::detectFromTuleapHTTPRequest($request));
         } catch (NotFoundException $exception) {
             if ($this->shouldRedirectAnonymousUser($request)) {
                 header('Location: /account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
                 exit;
             } else {
-                $this->request_instrumentation->increment(404);
+                $this->request_instrumentation->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
                 $this->error_rendering->rendersError(
                     $this->getBurningParrotTheme($request),
                     $request,
@@ -133,7 +134,7 @@ class FrontRouter
                 );
             }
         } catch (ForbiddenException $exception) {
-            $this->request_instrumentation->increment(403);
+            $this->request_instrumentation->increment(403, DetectedBrowser::detectFromTuleapHTTPRequest($request));
             $this->error_rendering->rendersError(
                 $this->getBurningParrotTheme($request),
                 $request,
@@ -147,7 +148,7 @@ class FrontRouter
             if ($exception_code !== 0) {
                 $code = $exception_code;
             }
-            $this->request_instrumentation->increment($code);
+            $this->request_instrumentation->increment($code, DetectedBrowser::detectFromTuleapHTTPRequest($request));
             $this->logger->error('Caught exception', ['exception' => $exception]);
             $this->error_rendering->rendersErrorWithException(
                 $this->getBurningParrotTheme($request),
