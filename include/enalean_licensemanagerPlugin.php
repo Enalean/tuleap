@@ -149,12 +149,12 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $params['additional_statistics'][] = new StatisticsPresenter(
             dgettext('tuleap-enalean_licensemanager', 'Allowed users quota'),
-            array(
+            [
                 new StatisticsBadgePresenter(
                     "$nb_alive_users_label / $max_allowed_users_label",
                     $level
                 )
-            )
+            ]
         );
     }
 

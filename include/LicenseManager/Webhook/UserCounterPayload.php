@@ -30,13 +30,13 @@ class UserCounterPayload implements Payload
 
     public function __construct(HTTPRequest $request, UserCounterDao $dao, $max_users, $event, $user_id)
     {
-        $this->payload = array(
+        $this->payload = [
             'event'     => $event,
             'url'       => $request->getServerUrl(),
-            'users'     => array(),
+            'users'     => [],
             'max_users' => $max_users,
             'user_id'   => $user_id
-        );
+        ];
 
         foreach ($dao->getNbOfUsersByStatus() as $row) {
             $this->payload['users'][$row['status']] = $row['nb'];
