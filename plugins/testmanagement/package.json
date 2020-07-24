@@ -38,7 +38,7 @@
     "vue": "^2.6.11",
     "vue-dompurify-html": "^2.2.1",
     "vue-gettext": "^2.1.8",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.8.0",
