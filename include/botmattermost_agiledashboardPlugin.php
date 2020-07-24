@@ -76,7 +76,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;

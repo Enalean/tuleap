@@ -77,7 +77,7 @@ class AdminNotificationPresenter
         $this->bots         = $bots;
         $this->project_id   = $project_id;
         $this->bot_assigned = $bot_assigned;
-        $this->has_bots     = !empty($bots);
+        $this->has_bots     = ! empty($bots);
         $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
         $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
         $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description_create_bot');
