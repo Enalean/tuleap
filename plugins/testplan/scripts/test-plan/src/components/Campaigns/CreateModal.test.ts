@@ -31,7 +31,7 @@ import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-repor
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn(),
+        createModal: jest.fn(),
     };
 });
 
@@ -44,7 +44,7 @@ describe("CreateModal", () => {
 
     it("Display the modal when mounted", async () => {
         const modal_show = jest.fn();
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
                 show: modal_show,
             } as unknown) as Modal;
@@ -70,7 +70,7 @@ describe("CreateModal", () => {
 
     it("creates the campaign and hides the modal", async () => {
         const modal_hide = jest.fn();
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
                 show: jest.fn(),
                 hide: modal_hide,
@@ -108,7 +108,7 @@ describe("CreateModal", () => {
 
     it("sets an error message when the reports of the test definition tracker cannot be retrieved", async () => {
         const modal_hide = jest.fn();
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
                 show: jest.fn(),
                 hide: modal_hide,

@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { createModal } from "tlp";
 
 export function initAddModal() {
     const modal_gerrit_add_server = document.getElementById("modal-add-gerrit-server");
-    const modal_gerrit_add_server_content = tlp.modal(modal_gerrit_add_server, {});
+    const modal_gerrit_add_server_content = createModal(modal_gerrit_add_server, {});
 
     document
         .getElementById("button-modal-add-gerrit-server")

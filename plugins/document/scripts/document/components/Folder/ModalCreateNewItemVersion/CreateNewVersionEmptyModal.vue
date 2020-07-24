@@ -58,7 +58,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import { TYPE_FILE } from "../../../constants.js";
 import { redirectToUrl } from "../../../helpers/location-helper.js";

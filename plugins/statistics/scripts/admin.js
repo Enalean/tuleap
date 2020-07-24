@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker, modal as createModal } from "tlp";
+import { datePicker, createModal } from "tlp";
 import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
 import CKEDITOR from "ckeditor";
 import tuleap from "tuleap";

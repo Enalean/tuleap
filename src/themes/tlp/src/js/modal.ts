@@ -40,7 +40,7 @@ interface EventListener {
     eventHandler: ModalEventListener;
 }
 
-export const modal = (doc: Document, element: Element, options?: ModalOptions): Modal =>
+export const createModal = (doc: Document, element: Element, options?: ModalOptions): Modal =>
     new Modal(doc, element, options);
 
 export class Modal {

@@ -28,7 +28,7 @@ import { Modal } from "tlp";
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn(),
+        createModal: jest.fn(),
     };
 });
 
@@ -52,14 +52,14 @@ describe("ErrorModal", () => {
 
     it("warns user that something is wrong with a button to show details", () => {
         const actual_tlp = jest.requireActual("tlp");
-        jest.spyOn(tlp, "modal").mockImplementation(actual_tlp.modal);
+        jest.spyOn(tlp, "createModal").mockImplementation(actual_tlp.createModal);
         const wrapper = createWrapper("Full error message with details");
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
                 show: modal_show,
             } as unknown) as Modal;

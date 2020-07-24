@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal } from "tlp";
+import { createModal } from "tlp";
 import Gettext from "node-gettext";
 import french_translations from "../po/fr.po";
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const join_modal = modal(modal_element);
+    const join_modal = createModal(modal_element);
 
     button.addEventListener("click", () => {
         join_modal.toggle();

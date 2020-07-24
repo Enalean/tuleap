@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { createModal } from "tlp";
 
 export function initAddModal() {
     const modal_add_mirror_element = document.getElementById("modal-add-mirror");
-    const modal_add_mirror = tlp.modal(modal_add_mirror_element, {});
+    const modal_add_mirror = createModal(modal_add_mirror_element, {});
 
     document.getElementById("button-modal-add-mirror").addEventListener("click", function () {
         modal_add_mirror.toggle();

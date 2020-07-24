@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { createModal } from "tlp";
 
 export function initDeleteModal() {
     const modal_gerrit_delete_buttons = document.querySelectorAll(".gerrit-action-delete-button");
@@ -25,7 +25,7 @@ export function initDeleteModal() {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            const modal = tlp.modal(modal_element);
+            const modal = createModal(modal_element);
 
             button.addEventListener("click", function () {
                 modal.toggle();

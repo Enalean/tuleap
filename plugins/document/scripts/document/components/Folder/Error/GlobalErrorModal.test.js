@@ -26,7 +26,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn().mockImplementation(() => ({
+        createModal: jest.fn().mockImplementation(() => ({
             show: jest.fn(),
             addEventListener: jest.fn(),
         })),
@@ -47,7 +47,7 @@ function createWrapper(error_message) {
 describe(`GlobalErrorModal`, () => {
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return {
                 show: modal_show,
                 addEventListener: jest.fn(),
@@ -75,7 +75,7 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`when I hide the modal, it resets the error`, () => {
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return {
                 show: jest.fn(),
                 addEventListener: (event_name, handler) => handler(),

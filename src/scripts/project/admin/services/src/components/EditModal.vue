@@ -63,7 +63,7 @@
     </form>
 </template>
 <script>
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 export default {
     name: "EditModal",

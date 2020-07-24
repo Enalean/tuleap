@@ -18,7 +18,7 @@
  */
 
 import jQuery from "jquery";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { filterInlineTable } from "./tables/filter-inline-table";
 import { autocomplete_projects_for_select2 } from "./autocomplete-for-select2";
 

@@ -50,7 +50,7 @@ describe(`TransitionModal`, () => {
             show: jest.fn(),
             hide: jest.fn(),
         };
-        createModal = jest.spyOn(tlp, "modal").mockReturnValue(modal);
+        createModal = jest.spyOn(tlp, "createModal").mockReturnValue(modal);
     });
 
     it(`when mounted(), it will create a TLP modal`, () => {

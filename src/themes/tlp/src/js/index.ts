@@ -21,7 +21,7 @@
 import "core-js/stable";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "regenerator-runtime/runtime";
-import { Modal, modal as createModalImplementation, ModalOptions } from "./modal";
+import { Modal, createModal as createModalImplementation, ModalOptions } from "./modal";
 import { Dropdown, dropdown as createDropdownImplementation, DropdownOptions } from "./dropdowns";
 import { createPopover as createPopoverImplementation, Popover, PopoverOptions } from "./popovers";
 
@@ -29,9 +29,9 @@ export * from "./fetch-wrapper";
 
 export { default as locale } from "./default_locale";
 
-export * from "./modal";
+export type { Modal, ModalOptions } from "./modal";
 // Apply partially the modal creation function to pass document
-export const modal = (element: Element, options?: ModalOptions): Modal =>
+export const createModal = (element: Element, options?: ModalOptions): Modal =>
     createModalImplementation(document, element, options);
 export * from "./dropdowns";
 // Apply partially the dropdowns creation function to pass document

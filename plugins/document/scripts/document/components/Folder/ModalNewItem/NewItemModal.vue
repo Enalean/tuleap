@@ -83,7 +83,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { TYPE_FILE } from "../../../constants.js";
 import DocumentGlobalMetadataForCreate from "../Metadata/DocumentMetadata/DocumentGlobalMetadataForCreate.vue";
 import LinkProperties from "../Property/LinkProperties.vue";

@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { Modal, modal as createModal } from "tlp";
+import { Modal, createModal } from "tlp";
 import EventBus from "../../../helpers/event-bus";
 import { getTermOfService } from "../../../api/rest-querier";
 

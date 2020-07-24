@@ -18,7 +18,7 @@
  *
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const congratulation_modal_content = document.getElementById("project-creation-success-modal");

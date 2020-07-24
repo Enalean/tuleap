@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import CKEDITOR from "ckeditor";
 import tuleap from "tuleap";
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Modal, modal as createModal } from "tlp";
+import { Modal, createModal } from "tlp";
 
 export function openTargetModalIdOnClick(
     doc: Document,

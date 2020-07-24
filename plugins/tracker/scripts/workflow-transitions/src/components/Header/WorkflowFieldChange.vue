@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { mapState, mapGetters } from "vuex";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 

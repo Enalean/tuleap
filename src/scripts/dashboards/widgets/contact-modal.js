@@ -19,7 +19,7 @@
 
 import CKEDITOR from "ckeditor";
 import { config as ckeditor_config } from "../../../www/scripts/tuleap/tuleap-ckeditor-toolbar";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
     var massmail_project_member_links = document.querySelectorAll(".massmail-project-member-link");

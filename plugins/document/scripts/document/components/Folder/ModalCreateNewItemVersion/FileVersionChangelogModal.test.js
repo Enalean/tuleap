@@ -42,7 +42,7 @@ describe("FileVersionChangelogModal", () => {
     beforeEach(() => {
         store = createStoreMock({}, { error: {} });
 
-        jest.spyOn(tlp, "modal").mockReturnValue({
+        jest.spyOn(tlp, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

@@ -1,4 +1,4 @@
-import { modal } from "tlp";
+import { createModal } from "tlp";
 import { forEach, isObject, isString, isUndefined, isFunction } from "angular";
 
 export default TlpModalService;
@@ -26,7 +26,7 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
         "                 Warning: modal_instance will NOT have a tlp_modal property at controller creation. It is added just after.\n" +
         "                 Code depending on modal_instance.tlp_modal must be in the controller's $onInit() function\n" +
         "    controllerAs: (string) The scope property name that will hold the controller instance,\n" +
-        "    tlpModalOptions: (optional)(object) Options object to be passed down to TLP modal(),\n" +
+        "    tlpModalOptions: (optional)(object) Options object to be passed down to TLP createModal(),\n" +
         "    resolve: (optional)(object) Each key of this object is a function that will be injected in the controller. \n" +
         "             Each of these function can return a promise that will be resolved before opening the modal.\n" +
         "}\n";
@@ -93,7 +93,7 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
         var compiled_modal = $compile(template)(scope);
         var dom_modal_element = compiled_modal[0];
         body.append(dom_modal_element);
-        modal_instance.tlp_modal = modal(dom_modal_element, tlp_modal_options);
+        modal_instance.tlp_modal = createModal(dom_modal_element, tlp_modal_options);
 
         if (isFunction(controller.$onInit)) {
             controller.$onInit();
