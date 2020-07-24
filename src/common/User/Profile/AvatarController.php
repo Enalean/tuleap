@@ -36,12 +36,17 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
     private $never_expires = false;
 
     public const ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
+    /**
+     * @var AvatarGenerator
+     */
+    private $avatar_generator;
 
-    public function __construct(array $options = [])
+    public function __construct(AvatarGenerator $avatar_generator, array $options = [])
     {
         if (isset($options['expires']) && $options['expires'] === 'never') {
             $this->never_expires = true;
         }
+        $this->avatar_generator = $avatar_generator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -51,13 +56,20 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
             throw new ForbiddenException();
         }
 
-        $user = UserManager::instance()->getUserByUserName($variables['name']);
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getUserByUserName($variables['name']);
         if ($user === null) {
             throw new NotFoundException(_("That user does not exist."));
         }
 
         if ($user->hasAvatar()) {
             $user_avatar_path = $user->getAvatarFilePath();
+            if (! is_file($user_avatar_path)) {
+                $this->avatar_generator->generate($user, $user_avatar_path);
+                $user->setHasCustomAvatar(false);
+                $user_manager->updateDb($user);
+            }
+
             if (is_file($user_avatar_path)) {
                 if (isset($variables['hash'])) {
                     $this->redirectIfStalled($layout, $user_avatar_path, $variables['hash'], $variables['name']);

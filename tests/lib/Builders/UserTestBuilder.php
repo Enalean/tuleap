@@ -30,6 +30,10 @@ class UserTestBuilder
      * @var \BaseLanguage
      */
     private $language;
+    /**
+     * @var string
+     */
+    private $avatar_url = '';
 
     public static function aUser(): self
     {
@@ -77,6 +81,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withAvatarUrl(string $avatar_url): self
+    {
+        $this->avatar_url = $avatar_url;
+        return $this;
+    }
+
     public function withAddDate(int $timestamp): self
     {
         $this->params['add_date'] = (string) $timestamp;
@@ -115,6 +125,9 @@ class UserTestBuilder
         $user = new \PFUser($this->params);
         if ($this->language) {
             $user->setLanguage($this->language);
+        }
+        if ($this->avatar_url) {
+            $user->setAvatarUrl($this->avatar_url);
         }
         return $user;
     }

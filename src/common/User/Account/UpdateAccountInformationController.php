@@ -31,6 +31,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Profile\AvatarGenerator;
 use UserManager;
 
 final class UpdateAccountInformationController implements DispatchableWithRequest, DispatchableWithBurningParrot
@@ -52,13 +53,23 @@ final class UpdateAccountInformationController implements DispatchableWithReques
      * @var EmailUpdater
      */
     private $email_updater;
+    /**
+     * @var AvatarGenerator
+     */
+    private $avatar_generator;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher, CSRFSynchronizerToken $csrf_token, UserManager $user_manager, EmailUpdater $email_updater)
-    {
+    public function __construct(
+        EventDispatcherInterface $event_dispatcher,
+        CSRFSynchronizerToken $csrf_token,
+        UserManager $user_manager,
+        EmailUpdater $email_updater,
+        AvatarGenerator $avatar_generator
+    ) {
         $this->event_dispatcher = $event_dispatcher;
         $this->csrf_token = $csrf_token;
         $this->user_manager = $user_manager;
         $this->email_updater = $email_updater;
+        $this->avatar_generator = $avatar_generator;
     }
 
     public static function buildSelf(): self
@@ -68,6 +79,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             DisplayAccountInformationController::getCSRFToken(),
             UserManager::instance(),
             new EmailUpdater(),
+            new AvatarGenerator()
         );
     }
 
@@ -119,6 +131,9 @@ final class UpdateAccountInformationController implements DispatchableWithReques
 
         $user->setRealName($wanted_realname);
         if ($this->user_manager->updateDb($user)) {
+            if (! $user->hasCustomAvatar()) {
+                $this->avatar_generator->generate($user, $user->getAvatarFilePath());
+            }
             $layout->addFeedback(\Feedback::INFO, _('Real name successfully updated'));
             return true;
         }

@@ -149,7 +149,7 @@ class UserListResultsPresenter
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
-                $row['has_avatar'],
+                $user->hasAvatar(),
                 $user->getAvatarUrl(),
                 $row['status'],
                 $nb_member_of,

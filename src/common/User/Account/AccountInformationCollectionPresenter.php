@@ -99,9 +99,19 @@ final class AccountInformationCollectionPresenter
      * @psalm-readonly
      */
     public $change_email_pending;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $default_avatar_data_url;
 
-    public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, PFUser $user, AccountInformationCollection $account_information_collection)
-    {
+    public function __construct(
+        AccountTabPresenterCollection $tabs,
+        CSRFSynchronizerToken $csrf_token,
+        PFUser $user,
+        AccountInformationCollection $account_information_collection,
+        string $default_avatar_data_url
+    ) {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
         $this->user_id = (int) $user->getId();
@@ -115,5 +125,6 @@ final class AccountInformationCollectionPresenter
         $this->extra_information = $account_information_collection->getExtraInformation();
         $this->timezone = new Account_TimezoneSelectorPresenter($user->getTimezone());
         $this->change_email_pending = $user->getConfirmHash() != '';
+        $this->default_avatar_data_url = $default_avatar_data_url;
     }
 }

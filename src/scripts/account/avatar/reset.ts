@@ -33,7 +33,12 @@ export function loadAvatarReset(): void {
         preview_container.classList.remove("account-information-avatar-modal-preview");
         const img = preview_container.querySelector("img");
         if (img) {
-            img.remove();
+            const data_url = btn.dataset.defaultAvatarDataUrl;
+            if (data_url) {
+                img.src = data_url;
+            } else {
+                img.remove();
+            }
         }
 
         const use_default_avatar = document.getElementById(

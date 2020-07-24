@@ -41,7 +41,7 @@ class UserAvatarSaverTest extends TestCase
         $avatar_file_path = $filesystem->url() . '/folder/user/avatar';
         $user->shouldReceive('getAvatarFilePath')->andReturns($avatar_file_path);
 
-        $user->shouldReceive('setHasAvatar')->once();
+        $user->shouldReceive('setHasCustomAvatar')->with(true)->once();
         $user_manager->shouldReceive('updateDb')->once();
 
         $avatar_temporary_path = $filesystem->url() . '/avatar_tmp_upload';

@@ -49,7 +49,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $json['username']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
-        $this->assertEquals('https://localhost/themes/common/images/avatar_default.png', $json['avatar_url']);
+        $this->assertEquals('https://localhost/users/rest_api_tester_1/avatar.png', $json['avatar_url']);
         $this->assertFalse(isset($json['email']));
         $this->assertFalse(isset($json['status']));
     }
@@ -93,7 +93,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $json['username']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
-        $this->assertEquals('https://localhost/themes/common/images/avatar_default.png', $json['avatar_url']);
+        $this->assertEquals('https://localhost/users/rest_api_tester_1/avatar.png', $json['avatar_url']);
     }
 
     public function testGETIdDoesNotWorkIfUserDoesNotExist()

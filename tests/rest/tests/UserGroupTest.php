@@ -164,10 +164,10 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar'   => false
+                    'has_avatar'   => true
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -232,10 +232,10 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
+                    'has_avatar'   => true
                 ]
             ]
         );
@@ -257,10 +257,10 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'display_name' => REST_TestDataBuilder::TEST_USER_1_DISPLAYNAME,
                     'username'     => REST_TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                    'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
+                    'has_avatar'   => true
                 ],
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -274,7 +274,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
+                    'has_avatar'   => false
                 ]
             ]
         );

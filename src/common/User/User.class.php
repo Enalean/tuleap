@@ -28,6 +28,7 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
  *
  * Sets up database results and preferences for a user and abstracts this info
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PFUser implements PFO_User, IHaveAnSSHKey
 {
 
@@ -149,7 +150,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $language_id;
     protected $last_pwd_update;
     protected $expiry_date;
-    protected $has_avatar;
+    /**
+     * @var 0|1
+     */
+    private $has_custom_avatar;
 
     /**
      * Keep super user info
@@ -165,17 +169,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The preferences
      */
-    public $_preferences;
+    private $preferences;
 
     /**
      * The dao used to retrieve preferences
      */
-    public $_preferencesdao;
+    public $preferencesdao;
 
     /**
      * The dao used to retrieve user-group info
      */
-    public $_usergroupdao;
+    private $usergroupdao;
 
     /**
      * @var int|false
@@ -204,6 +208,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * @var BaseLanguage
      */
     protected $language;
+    /**
+     * @var string
+     */
+    private $avatar_url = '';
 
     /**
      * Constructor
@@ -217,7 +225,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->is_super_user = null;
         $this->locale        = '';
-        $this->_preferences  = [];
+        $this->preferences  = [];
 
         $this->user_id            = isset($row['user_id'])            ? $row['user_id']            : 0;
         $this->user_name          = isset($row['user_name'])          ? $row['user_name']          : null;
@@ -244,7 +252,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
-        $this->has_avatar         = isset($row['has_avatar'])         ? $row['has_avatar']         : null;
+        $this->has_custom_avatar  = ($row['has_custom_avatar'] ?? 0) ? 1 : 0;
 
         $this->id = $this->user_id;
 
@@ -295,7 +303,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
             'expiry_date'        => $this->expiry_date,
-            'has_avatar'         => $this->has_avatar,
+            'has_custom_avatar'  => $this->has_custom_avatar,
         ];
     }
 
@@ -304,31 +312,31 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function clearGroupData()
     {
-        unset($this->_group_data);
-        $this->_group_data = null;
+        unset($this->group_data);
+        $this->group_data = null;
     }
     /**
      * clear: clear the cached tracker data
      */
     public function clearTrackerData()
     {
-        unset($this->_tracker_data);
-        $this->_tracker_data = null;
+        unset($this->tracker_data);
+        $this->tracker_data = null;
     }
 
     /**
      * group data row from db.
      * For each group_id (the user is part of) one array from the user_group table
      */
-    protected $_group_data;
+    private $group_data;
     public function getUserGroupData()
     {
-        if (! is_array($this->_group_data)) {
+        if (! is_array($this->group_data)) {
             if ($this->user_id) {
                 $this->setUserGroupData($this->getUserGroupDao()->searchByUserId($this->user_id));
             }
         }
-        return $this->_group_data;
+        return $this->group_data;
     }
 
     /**
@@ -338,9 +346,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setUserGroupData($data)
     {
-        $this->_group_data = [];
+        $this->group_data = [];
         foreach ($data as $row) {
-            $this->_group_data[$row['group_id']] = $row;
+            $this->group_data[$row['group_id']] = $row;
         }
     }
 
@@ -451,11 +459,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * tracker permission data
      * for each group_artifact_id (the user is part of) one array from the artifact-perm table
      */
-    protected $_tracker_data;
+    private $tracker_data;
     protected function getTrackerData()
     {
-        if (! $this->_tracker_data) {
-            $this->_tracker_data = [];
+        if (! $this->tracker_data) {
+            $this->tracker_data = [];
             $id = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
             $sql = "SELECT group_artifact_id, perm_level
@@ -463,11 +471,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             $db_res = db_query($sql);
             if (db_numrows($db_res) > 0) {
                 while ($row = db_fetch_array($db_res)) {
-                    $this->_tracker_data[$row['group_artifact_id']] = $row;
+                    $this->tracker_data[$row['group_artifact_id']] = $row;
                 }
             }
         }
-        return $this->_tracker_data;
+        return $this->tracker_data;
     }
 
     public function getTrackerPerm($group_artifact_id)
@@ -493,7 +501,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->getUGroupDao()->searchByUserIdTakingAccountUserProjectMembership($this->user_id);
     }
 
-    public $_ugroups;
+    /**
+     * @var array
+     */
+    private $ugroups;
 
     /**
      * @return array<int|string>
@@ -502,47 +513,54 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUgroups($group_id, $instances): array
     {
         $hash = md5(serialize($instances));
-        if (! isset($this->_ugroups)) {
-            $this->_ugroups = [];
+        if (! isset($this->ugroups)) {
+            $this->ugroups = [];
         }
-        if (! isset($this->_ugroups[$hash])) {
-            $this->_ugroups[$hash] = array_merge($this->getDynamicUgroups($group_id, $instances), $this->getStaticUgroups($group_id));
+        if (! isset($this->ugroups[$hash])) {
+            $this->ugroups[$hash] = array_merge($this->getDynamicUgroups($group_id, $instances), $this->getStaticUgroups($group_id));
         }
-        return $this->_ugroups[$hash];
+        return $this->ugroups[$hash];
     }
 
-    public $_static_ugroups;
+    /**
+     * @var array
+     */
+    private $static_ugroups;
 
     public function getStaticUgroups($group_id)
     {
-        if (! isset($this->_static_ugroups)) {
-            $this->_static_ugroups = [];
+        if (! isset($this->static_ugroups)) {
+            $this->static_ugroups = [];
         }
 
-        if (! isset($this->_static_ugroups[$group_id])) {
-            $this->_static_ugroups[$group_id] = [];
+        if (! isset($this->static_ugroups[$group_id])) {
+            $this->static_ugroups[$group_id] = [];
             if (! $this->isSuperUser()) {
                 $res = ugroup_db_list_all_ugroups_for_user($group_id, $this->id);
                 while ($row = db_fetch_array($res)) {
-                    $this->_static_ugroups[$group_id][] = $row['ugroup_id'];
+                    $this->static_ugroups[$group_id][] = $row['ugroup_id'];
                 }
             }
         }
 
-        return $this->_static_ugroups[$group_id];
+        return $this->static_ugroups[$group_id];
     }
 
-    public $_dynamics_ugroups;
+    /**
+     * @var array
+     */
+    private $dynamics_ugroups;
+
     public function getDynamicUgroups($group_id, $instances)
     {
         $hash = md5(serialize($instances));
-        if (! isset($this->_dynamics_ugroups)) {
-            $this->_dynamics_ugroups = [];
+        if (! isset($this->dynamics_ugroups)) {
+            $this->dynamics_ugroups = [];
         }
-        if (! isset($this->_dynamics_ugroups[$hash])) {
-            $this->_dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $this->id);
+        if (! isset($this->dynamics_ugroups[$hash])) {
+            $this->dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $this->id);
         }
-        return $this->_dynamics_ugroups[$hash];
+        return $this->dynamics_ugroups[$hash];
     }
 
     /**
@@ -1255,18 +1273,18 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     // Preferences
     protected function getPreferencesDao()
     {
-        if (! $this->_preferencesdao) {
-            $this->_preferencesdao = new UserPreferencesDao();
+        if (! $this->preferencesdao) {
+            $this->preferencesdao = new UserPreferencesDao();
         }
-        return $this->_preferencesdao;
+        return $this->preferencesdao;
     }
 
     protected function getUserGroupDao()
     {
-        if (! $this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao();
+        if (! $this->usergroupdao) {
+            $this->usergroupdao = new UserGroupDao();
         }
-        return $this->_usergroupdao;
+        return $this->usergroupdao;
     }
 
     /**
@@ -1277,17 +1295,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getPreference($preference_name)
     {
-        if (! isset($this->_preferences[$preference_name])) {
-            $this->_preferences[$preference_name] = false;
+        if (! isset($this->preferences[$preference_name])) {
+            $this->preferences[$preference_name] = false;
             if (! $this->isAnonymous()) {
                 $dao = $this->getPreferencesDao();
                 $dar = $dao->search($this->getId(), $preference_name);
                 if ($row = $dar->getRow()) {
-                    $this->_preferences[$preference_name] = $row['preference_value'];
+                    $this->preferences[$preference_name] = $row['preference_value'];
                 }
             }
         }
-        return $this->_preferences[$preference_name];
+        return $this->preferences[$preference_name];
     }
 
     /**
@@ -1299,11 +1317,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setPreference($preference_name, $preference_value)
     {
-        $this->_preferences[$preference_name] = false;
+        $this->preferences[$preference_name] = false;
         if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
             if ($dao->set($this->getId(), $preference_name, $preference_value)) {
-                $this->_preferences[$preference_name] = $preference_value;
+                $this->preferences[$preference_name] = $preference_value;
                 return true;
             }
         }
@@ -1357,7 +1375,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function delPreference($preference_name)
     {
-        $this->_preferences[$preference_name] = false;
+        $this->preferences[$preference_name] = false;
         if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
             if (! $dao->delete($this->getId(), $preference_name)) {
@@ -1435,20 +1453,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       */
     public function hasAvatar()
     {
-        return $this->has_avatar;
+        return ! empty($this->getRealName());
     }
 
-     /**
-      * Set if the user has avatar
-      *
-      * @param bool $has_avatar true if the user has an avatar
-      *
-      * @return PFUser for chaining methods
-      */
-    public function setHasAvatar($has_avatar = 1)
+    public function hasCustomAvatar(): bool
     {
-        $this->has_avatar = ($has_avatar ? 1 : 0);
-        return $this;
+        return (bool) $this->has_custom_avatar;
+    }
+
+    public function setHasCustomAvatar(bool $has_custom_avatar): void
+    {
+        $this->has_custom_avatar = ($has_custom_avatar ? 1 : 0);
     }
 
      /**
@@ -1486,14 +1501,30 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       */
     public function getAvatarUrl()
     {
+        if ($this->avatar_url) {
+            return $this->avatar_url;
+        }
+
         $request    = HTTPRequest::instance();
         $avatar_url = self::DEFAULT_AVATAR_URL;
 
         if (! $this->isAnonymous() && $this->hasAvatar()) {
-            $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar-' . hash_file('sha256', $this->getAvatarFilePath()) . '.png';
+            $avatar_file_path = $this->getAvatarFilePath();
+            if (is_file($avatar_file_path)) {
+                $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar-' . hash_file('sha256', $avatar_file_path) . '.png';
+            } else {
+                $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar.png';
+            }
         }
 
-        return $request->getServerUrl() . $avatar_url;
+        $this->avatar_url = $request->getServerUrl() . $avatar_url;
+
+        return $this->avatar_url;
+    }
+
+    public function setAvatarUrl(string $url): void
+    {
+        $this->avatar_url = $url;
     }
 
     /**

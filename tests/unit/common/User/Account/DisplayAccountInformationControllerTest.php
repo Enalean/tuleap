@@ -87,6 +87,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
             ->withEmail('alice@example.com')
             ->withAddDate((new \DateTimeImmutable())->getTimestamp())
             ->withLanguage(M::spy(\BaseLanguage::class))
+            ->withAvatarUrl("/path/to/avatar.png")
             ->build();
     }
 

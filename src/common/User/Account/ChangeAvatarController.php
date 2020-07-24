@@ -31,10 +31,6 @@ use Tuleap\Request\DispatchableWithRequest;
 class ChangeAvatarController implements DispatchableWithRequest
 {
     /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
      * @var UserAvatarSaver
      */
     private $user_avatar_saver;
@@ -42,15 +38,19 @@ class ChangeAvatarController implements DispatchableWithRequest
      * @var CSRFSynchronizerToken
      */
     private $csrf;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
-        \UserManager $user_manager,
-        UserAvatarSaver $user_avatar_saver
+        UserAvatarSaver $user_avatar_saver,
+        \UserManager $user_manager
     ) {
         $this->csrf              = $csrf;
-        $this->user_manager      = $user_manager;
         $this->user_avatar_saver = $user_avatar_saver;
+        $this->user_manager = $user_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -63,12 +63,13 @@ class ChangeAvatarController implements DispatchableWithRequest
         $this->csrf->check();
 
         if ($request->get('use-default-avatar')) {
-            $user->setHasAvatar(false);
-            if ($this->user_manager->updateDb($user)) {
-                $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('account_change_avatar', 'success'));
-            } else {
-                $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('account_change_avatar', 'error'));
+            $avatar_path = $user->getAvatarFilePath();
+            if (is_file($avatar_path)) {
+                unlink($avatar_path);
             }
+            $user->setHasCustomAvatar(false);
+            $this->user_manager->updateDb($user);
+            $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('account_change_avatar', 'success'));
         } elseif (isset($_FILES['avatar'])) {
             if ($_FILES['avatar']['error']) {
                 $GLOBALS['Response']->addFeedback(

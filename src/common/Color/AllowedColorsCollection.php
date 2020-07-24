@@ -22,33 +22,31 @@ namespace Tuleap\Color;
 
 class AllowedColorsCollection
 {
-
-    /** @var string[] */
+    /** @var array<array{secondary: string, text: string}> */
     private $colors = [
-        'inca-silver',
-        'chrome-silver',
-        'firemist-silver',
-        'red-wine',
-        'fiesta-red',
-        'coral-pink',
-        'teddy-brown',
-        'clockwork-orange',
-        'graffiti-yellow',
-        'army-green',
-        'neon-green',
-        'acid-green',
-        'sherwood-green',
-        'ocean-turquoise',
-        'surf-green',
-        'deep-blue',
-        'lake-placid-blue',
-        'daphne-blue',
-        'plum-crazy',
-        'ultra-violet',
-        'lilac-purple',
-        'panther-pink',
-        'peggy-pink',
-        'flamingo-pink'
+        'inca-silver'      => ['secondary' => '#cacaca', 'text' => '#525252'],
+        'chrome-silver'    => ['secondary' => '#dcdcdc', 'text' => '#5f5f5f'],
+        'firemist-silver'  => ['secondary' => '#f3f3f3', 'text' => '#6f6f6f'],
+        'red-wine'         => ['secondary' => '#f7a9a9', 'text' => '#842f2f'],
+        'fiesta-red'       => ['secondary' => '#f9d1d1', 'text' => '#b70d0d'],
+        'coral-pink'       => ['secondary' => '#fff2f2', 'text' => '#bf4747'],
+        'teddy-brown'      => ['secondary' => '#e2c59b', 'text' => '#774a0a'],
+        'clockwork-orange' => ['secondary' => '#ffddae', 'text' => '#945600'],
+        'graffiti-yellow'  => ['secondary' => '#fff7d0', 'text' => '#8a6c00'],
+        'army-green'       => ['secondary' => '#b4d49f', 'text' => '#385f1e'],
+        'neon-green'       => ['secondary' => '#d8efc4', 'text' => '#137900'],
+        'acid-green'       => ['secondary' => '#f3fdde', 'text' => '#567d00'],
+        'sherwood-green'   => ['secondary' => '#a1dcc9', 'text' => '#006545'],
+        'ocean-turquoise'  => ['secondary' => '#cbf5ea', 'text' => '#00775c'],
+        'surf-green'       => ['secondary' => '#eefdf8', 'text' => '#1b805e'],
+        'deep-blue'        => ['secondary' => '#acd8ef', 'text' => '#005f90'],
+        'lake-placid-blue' => ['secondary' => '#d4f7ff', 'text' => '#007792'],
+        'daphne-blue'      => ['secondary' => '#eaf9fd', 'text' => '#007a96'],
+        'plum-crazy'       => ['secondary' => '#d2abec', 'text' => '#6a14a7'],
+        'ultra-violet'     => ['secondary' => '#edd4ff', 'text' => '#8b21d6'],
+        'lilac-purple'     => ['secondary' => '#f6eaff', 'text' => '#8e4cbd'],
+        'panther-pink'     => ['secondary' => '#f9b8e0', 'text' => '#9a1d69'],
+        'peggy-pink'       => ['secondary' => '#ffdcf2', 'text' => '#c5007a'],
     ];
 
     public const DEFAULT_COLOR = 'chrome-silver';
@@ -56,13 +54,18 @@ class AllowedColorsCollection
     /**
      * @return string[]
      */
-    public function getColors()
+    public function getColorNames()
+    {
+        return array_keys($this->colors);
+    }
+
+    public function getColors(): array
     {
         return $this->colors;
     }
 
     public function isColorAllowed($color)
     {
-        return in_array($color, $this->colors);
+        return isset($this->colors[$color]);
     }
 }

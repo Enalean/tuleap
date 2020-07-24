@@ -34,6 +34,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Profile\AvatarGenerator;
 
 final class DisplayAccountInformationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -100,6 +101,7 @@ final class DisplayAccountInformationController implements DispatchableWithReque
                 $this->csrf_token,
                 $user,
                 $account_information_collection,
+                (new AvatarGenerator())->generateAsDataUrl($user),
             )
         );
         $layout->footer([]);

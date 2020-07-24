@@ -50,6 +50,7 @@ final class UserInfoResponseRepresentationTest extends TestCase
             ->withRealName('Test USER')
             ->withTimezone('America/Montreal')
             ->withLocale('en_US')
+            ->withAvatarUrl('/path/to/avatar.png')
             ->build();
         $representation = UserInfoResponseRepresentation::fromUserWithSubject($user);
         if ($with_email === true) {
@@ -80,12 +81,12 @@ final class UserInfoResponseRepresentationTest extends TestCase
             'With profile'            => [
                 false,
                 true,
-                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ],
             'With all claims'         => [
                 true,
                 true,
-                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ]
         ];
     }

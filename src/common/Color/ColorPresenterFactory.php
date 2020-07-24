@@ -37,7 +37,7 @@ class ColorPresenterFactory
     {
         $colors_presenters = [];
 
-        foreach ($this->allowed_colors->getColors() as $color) {
+        foreach ($this->allowed_colors->getColorNames() as $color) {
             $is_color_selected = false;
 
             if ($current_color === $color) {
