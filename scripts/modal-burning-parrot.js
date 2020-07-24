@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import jQuery from "jquery";
 import { contactSupportModalShown } from "./modal.js";
 import { sanitize } from "dompurify";
