@@ -101,6 +101,16 @@ pipeline {
                         }
                     }
                 }
+                stage('SCSS coding standards') {
+                    agent {
+                        docker {
+                            image 'node:13.10-alpine'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps { script { actions.runStylelint() } }
+                }
                 stage('Build RPM') {
                     steps {
                         script {
