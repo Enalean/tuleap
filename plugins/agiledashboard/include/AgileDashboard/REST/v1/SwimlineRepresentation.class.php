@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @psalm-immutable
+ */
 class AgileDashboard_SwimlineRepresentation
 {
 
     /** @var AgileDashboard_CardRepresentation[]*/
     public $cards;
 
-    public function build(Cardwall_Swimline $swimline, $planning_id, PFUser $user)
+    public function __construct(Cardwall_Swimline $swimline, $planning_id, PFUser $user)
     {
-        $this->cards = [];
+        $cards = [];
         $swimline_card_in_cell_presenter = $swimline->getCardInCellPresenter();
         if ($swimline_card_in_cell_presenter) {
-            $card_representation = new AgileDashboard_CardRepresentation();
-            $card_representation->build($swimline_card_in_cell_presenter, null, $planning_id, $user);
-            $this->cards[] = $card_representation;
+            $card_representation = AgileDashboard_CardRepresentation::build($swimline_card_in_cell_presenter, null, $planning_id, $user);
+            $cards[] = $card_representation;
         }
         foreach ($swimline->getCells() as $cell) {
             $column_id = $cell['column_id'];
             foreach ($cell['cardincell_presenters'] as $card) {
-                $card_representation = new AgileDashboard_CardRepresentation();
-                $card_representation->build($card, $column_id, $planning_id, $user);
-                $this->cards[] = $card_representation;
+                $card_representation = AgileDashboard_CardRepresentation::build($card, $column_id, $planning_id, $user);
+                $cards[] = $card_representation;
             }
         }
+        $this->cards = $cards;
     }
 }

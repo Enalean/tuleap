@@ -50,11 +50,6 @@ class MilestonesCardwallResource
      * Get milestone
      *
      * Get the definition of a given the milestone
-     *
-     * @url GET {id}/cardwall
-     *
-     * @param int $id Id of the milestone
-     *
      * @return \AgileDashboard_MilestonesCardwallRepresentation
      *
      * @throws RestException 403
@@ -66,10 +61,7 @@ class MilestonesCardwallResource
 
         $this->sendAllowHeaderForCardwall();
         $board = $this->getBoard($milestone);
-        $board_representation = new \AgileDashboard_MilestonesCardwallRepresentation();
-        $board_representation->build($board, $milestone->getPlanningId(), $this->getCurrentUser());
-
-        return $board_representation;
+        return new \AgileDashboard_MilestonesCardwallRepresentation($board, $milestone->getPlanningId(), $this->getCurrentUser());
     }
 
     private function getBoard(Planning_Milestone $milestone)
