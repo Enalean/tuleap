@@ -295,6 +295,9 @@ function ExecutionDetailCtrl(
         $scope.execution = ExecutionService.executions[execution_id];
         $scope.execution.results = "";
         $scope.execution.saving = false;
+        $scope.execution.is_automated =
+            Boolean($scope.execution.definition.automated_tests) &&
+            $scope.execution.definition.automated_tests !== "";
     }
 
     function isCurrentExecutionLoaded() {

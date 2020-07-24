@@ -154,6 +154,15 @@ msgstr "Id"
 msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
 
+msgid "Its status is blocked."
+msgstr "Son statut est bloqué."
+
+msgid "Its status is failed."
+msgstr "Son statut est échoué."
+
+msgid "Its status is passed."
+msgstr "Son statut est passé."
+
 msgid "Jenkins authentication token"
 msgstr "Jeton d'authentification Jenkins"
 
@@ -198,6 +207,9 @@ msgstr "Non exécuté"
 
 msgid "Passed"
 msgstr "Succès"
+
+msgid "Please come back later to see the result."
+msgstr "Revenez plus tard pour voir le résultat."
 
 msgid "Please select a test"
 msgstr "Merci de sélectionner un test"
@@ -259,6 +271,9 @@ msgstr "Cet artéfact est déjà lié à ce test."
 
 msgid "This is an automated test"
 msgstr "Ceci est un test automatisé"
+
+msgid "This is an automated test."
+msgstr "Ceci est un test automatisé."
 
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."

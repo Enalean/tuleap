@@ -19,6 +19,12 @@
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
             <h1 class="current-test-header-title" data-test="current-test-header-title">
+                <i ng-if="execution.is_automated" class="fa current-test-title-icon-auto" ng-class="{
+                    'fa-tlp-robot notrun': execution.status === 'notrun',
+                    'fa-tlp-robot blocked': execution.status === 'blocked',
+                    'fa-tlp-robot-happy passed': execution.status ===  'passed',
+                    'fa-tlp-robot-unhappy failed': execution.status ===  'failed'
+                }"></i>
                 {{ execution.definition.summary }}
             </h1>
 
@@ -103,7 +109,7 @@
             </div>
         </section>
 
-        <section ng-if="execution.definition.requirement" class="tlp-pane-section current-test-requirement">
+        <section ng-if="execution.definition.requirement && execution.is_automated === false" class="tlp-pane-section current-test-requirement">
             <div>
                 <i class="fa fa-long-arrow-right current-test-requirement-arrow"></i>
                 <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
@@ -114,7 +120,7 @@
             </div>
         </section>
 
-        <section class="tlp-pane-section current-test-content" ng-if="! execution.definition.steps.length">
+        <section class="tlp-pane-section current-test-content" ng-if="! execution.definition.steps.length && execution.is_automated === false">
             <execution-detail-just-updated></execution-detail-just-updated>
             <h2>Steps</h2>
             <p class="current-test-description-empty-state"
@@ -125,11 +131,11 @@
         </section>
 
         <execution-with-steps class="current-test-content"
-                              ng-if="execution.definition.steps.length"
+                              ng-if="execution.definition.steps.length && execution.is_automated === false"
                               execution="execution"
         ></execution-with-steps>
 
-        <section class="tlp-pane-section current-test-footer-section">
+        <section ng-if="execution.is_automated === false" class="tlp-pane-section current-test-footer-section">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                 <div class="current-test-results-container">
@@ -179,5 +185,23 @@
                 </button>
             </div>
         </section>
+        <div ng-if="execution.is_automated === true" class="current-test-automated-message">
+            <robot-svg-displayer test-status="execution.status"></robot-svg-displayer>
+
+            <span>{{ "This is an automated test." | translate }}</span>
+
+            <span ng-if="execution.status === 'notrun'">
+                {{ "Please come back later to see the result." | translate }}
+            </span>
+            <span ng-if="execution.status === 'passed'">
+                {{ "Its status is passed." | translate }}
+            </span>
+            <span ng-if="execution.status === 'failed'">
+                {{ "Its status is failed." | translate }}
+            </span>
+            <span ng-if="execution.status === 'blocked'">
+                {{ "Its status is blocked." | translate }}
+            </span>
+        </div>
     </div>
 </section>

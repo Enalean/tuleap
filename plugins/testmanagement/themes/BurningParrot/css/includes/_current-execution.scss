@@ -19,6 +19,10 @@
         > .current-test-latest-result {
             background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-success;
         }
+
+        > .current-test-automated-message {
+            color: $tlp-ui-success;
+        }
     }
 
     &.failed > .tlp-pane-container {
@@ -28,6 +32,10 @@
 
         > .current-test-latest-result {
             background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-danger;
+        }
+
+        > .current-test-automated-message {
+            color: $tlp-ui-danger;
         }
     }
 
@@ -39,6 +47,10 @@
         > .current-test-latest-result {
             background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-info;
         }
+
+        > .current-test-automated-message {
+            color: $tlp-ui-info;
+        }
     }
 
     &.notrun > .tlp-pane-container {
@@ -48,6 +60,10 @@
 
         > .current-test-latest-result {
             background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-dimmed;
+        }
+
+        > .current-test-automated-message {
+            color: $tlp-ui-dimmed;
         }
     }
 }
@@ -82,6 +98,12 @@
     margin: 0;
     color: $tlp-ui-white;
     font-size: 24px;
+}
+
+.current-test-title-icon-auto {
+    position: relative;
+    top: 1px;
+    margin: 0 $tlp-small-spacing 0;
 }
 
 .current-test-requirement {
@@ -270,4 +292,19 @@ execution-with-steps.current-test-content {
 .current-test-description-empty-state {
     color: $tlp-ui-dimmed;
     font-style: italic;
+}
+
+.current-test-automated-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    margin: 75px 0 0;
+    opacity: .7;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.svg-robot {
+    margin: 0 0 $tlp-medium-spacing;
 }
