@@ -95,6 +95,15 @@
                             </div>
                         </div>
                     </div>
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-button-small tlp-button-outline scroll-to-current-test-button"
+                        ng-click="scrollToCurrentTest()"
+                        ng-disabled="isScrollToTestButtonDisabled()"
+                        title="{{ 'Auto scroll to current test' | translate }}"
+                    >
+                        <i class="fa fa-tlp-go-to-user scroll-to-current-test-button-icon" aria-hidden="true"></i>
+                    </button>
                 </section>
 
                 <section class="empty-pane empty-execution-list" ng-if="shouldShowEmptyState()">
@@ -119,7 +128,9 @@
                                 track by execution.definition.id"
                             ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
                             ng-click="viewTestExecution(execution)"
-                            ng-class="{active: checkActiveClassOnExecution(execution)}">
+                            ng-class="{active: checkActiveClassOnExecution(execution)}"
+                            data-exec-id="{{ execution.id }}"
+                        >
                             <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
                                  data-tlp-tooltip="{{ presence.real_name }}"
                                  ng-if="execution.viewed_by"

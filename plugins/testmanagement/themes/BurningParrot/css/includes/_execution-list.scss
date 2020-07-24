@@ -168,6 +168,20 @@ $toolbar-height: 46px;
     font-size: 14px;
 }
 
+.tests-list-filters {
+    display: flex;
+}
+
+.scroll-to-current-test-button {
+    margin: 0 0 0 $tlp-medium-spacing;
+
+    > .scroll-to-current-test-button-icon {
+        // icon is not symmetric, so we need to shift the icon a bit to the left
+        position: relative;
+        right: 1px;
+    }
+}
+
 .tests-list-filters > .tests-filter-bar {
     display: flex;
     align-items: center;
@@ -311,6 +325,10 @@ $toolbar-height: 46px;
         align-self: center;
         margin: 0 5px 0 0;
     }
+
+    &.current-test-highlight {
+        animation: 1s ease-in-out test-is-back-in-viewport;
+    }
 }
 
 .tests-list-test-id {
@@ -342,4 +360,18 @@ $toolbar-height: 46px;
 
 .empty-execution-list {
     margin: $tlp-medium-spacing 0 0;
+}
+
+@keyframes test-is-back-in-viewport {
+    0% {
+        background: transparentize($tlp-theme-color, .9);
+    }
+
+    80% {
+        background: transparentize($tlp-theme-color, .9);
+    }
+
+    100% {
+        background: #ffffff;
+    }
 }
