@@ -1027,9 +1027,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * @return string
+     * @psalm-mutation-free
      */
-    public function getUri()
+    public function getUri(): string
     {
         return TRACKER_BASE_URL . '/?aid=' . $this->getId();
     }

@@ -25,6 +25,9 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\REST\I18NRestException;
 
+/**
+ * @psalm-immutable
+ */
 final class CellPatchRepresentation
 {
     /**

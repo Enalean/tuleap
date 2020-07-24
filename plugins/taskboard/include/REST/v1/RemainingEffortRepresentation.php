@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class RemainingEffortRepresentation
 {
     /**
@@ -34,7 +37,7 @@ class RemainingEffortRepresentation
      */
     public $can_update;
 
-    public function build(?float $value, bool $can_update): void
+    public function __construct(?float $value, bool $can_update)
     {
         $this->value      = $value;
         $this->can_update = $can_update;
