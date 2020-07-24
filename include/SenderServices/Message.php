@@ -26,7 +26,7 @@ class Message
 {
 
     private $text = '';
-    private $attachments = array();
+    private $attachments = [];
 
     public function getText()
     {

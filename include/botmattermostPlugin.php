@@ -56,10 +56,10 @@ class BotMattermostPlugin extends Plugin
 
     public function site_admin_option_hook(array $params)
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name'),
             'href'  => $this->getPluginPath() . '/admin/'
-        );
+        ];
     }
 
     public function burning_parrot_get_javascript_files($params)

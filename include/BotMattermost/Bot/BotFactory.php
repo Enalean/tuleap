@@ -97,7 +97,7 @@ class BotFactory
         if ($dar === false) {
             throw new BotNotFoundException();
         }
-        $bots = array();
+        $bots = [];
         foreach ($dar as $row) {
             $bots[] = new Bot(
                 $row['id'],

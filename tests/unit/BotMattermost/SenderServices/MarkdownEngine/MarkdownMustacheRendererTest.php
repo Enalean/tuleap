@@ -39,7 +39,7 @@ class MarkdownMustacheRendererTest extends TestCase
         $text   = '![my](text)|{~}\*+-._$>`';
         $result = $renderer->renderToString(
             'simple-text',
-            array('text' => $text)
+            ['text' => $text]
         );
 
         $this->assertEquals(

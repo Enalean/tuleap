@@ -35,11 +35,11 @@ class EncoderMessage
         if (! $message->hasContent()) {
             throw new HasNoMessageContentException();
         }
-        $tab = array(
+        $tab = [
             "username" => $bot->getName(),
             "channel"  => strtolower($channel),
             "icon_url" => $bot->getAvatarUrl(),
-        );
+        ];
         if ($message->hasText()) {
             $tab["text"] = $message->getText();
         }
@@ -52,16 +52,16 @@ class EncoderMessage
 
     private function generateArrayAttachments(array $attachments)
     {
-        $array_attachments = array();
+        $array_attachments = [];
 
         foreach ($attachments as $attachment) {
-            $array_attachments[] =  array(
+            $array_attachments[] =  [
                 'color'      => $attachment->getColor(),
                 'pretext'    => $attachment->getPreText(),
                 'title'      => $attachment->getTitle(),
                 'title_link' => $attachment->getTitleLink(),
                 'text'       => $attachment->getText()
-            );
+            ];
         }
 
         return $array_attachments;

@@ -26,7 +26,7 @@ use Tuleap\Templating\TemplateCacheInterface;
 
 class MarkdownMustacheRenderer extends MustacheRenderer
 {
-    private static $markdown_special_characters = array(
+    private static $markdown_special_characters = [
         '|'  => '&#124;',
         '\\' => '&#92;',
         '*'  => '&#42;',
@@ -45,7 +45,7 @@ class MarkdownMustacheRenderer extends MustacheRenderer
         '('  => '&#40;',
         ')'  => '&#41;',
         '!'  => '&#33;'
-    );
+    ];
 
 
     protected function getEngine(\Mustache_Loader $loader, TemplateCacheInterface $template_cache): MustacheEngine

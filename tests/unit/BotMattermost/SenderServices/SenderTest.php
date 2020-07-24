@@ -55,7 +55,7 @@ class SenderTest extends TestCase
     public function testItVerifiedThatPushNotificationForEachChannels()
     {
         $message  = new Message();
-        $channels = array('channel1', 'channel2');
+        $channels = ['channel1', 'channel2'];
         $message->setText('{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}');
 
         $bot = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);
