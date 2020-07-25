@@ -276,10 +276,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      */
     private function getReportRepresentation(TimetrackingReport $report)
     {
-        $representation = new TimetrackingReportRepresentation();
-        $representation->build($report);
-
-        return $representation;
+        return TimetrackingReportRepresentation::fromReport($report);
     }
 
     /**

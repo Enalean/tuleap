@@ -30,6 +30,9 @@ use Tracker;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class TimetrackingTrackerReportRepresentation
 {
     /**
@@ -57,15 +60,21 @@ class TimetrackingTrackerReportRepresentation
      */
     public $time_per_user;
 
-    public function build(Tracker $tracker, array $time_per_user): void
+    private function __construct(Tracker $tracker, MinimalProjectRepresentation $project, array $time_per_user)
     {
-        $this->id    = JsonCast::toInt($tracker->getId());
-        $this->uri   = $tracker->getUri();
-        $this->label = $tracker->getName();
-
-        $project_reference = new MinimalProjectRepresentation($tracker->getProject());
-        $this->project = $project_reference;
-
+        $this->id            = JsonCast::toInt($tracker->getId());
+        $this->uri           = $tracker->getUri();
+        $this->label         = $tracker->getName();
+        $this->project       = $project;
         $this->time_per_user = $time_per_user;
+    }
+
+    public static function build(Tracker $tracker, array $time_per_user): self
+    {
+        return new self(
+            $tracker,
+            new MinimalProjectRepresentation($tracker->getProject()),
+            $time_per_user,
+        );
     }
 }

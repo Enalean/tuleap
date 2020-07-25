@@ -81,8 +81,7 @@ class TrackerRepresentationFactory
         );
 
         foreach ($authorized_trackers_ids as $tracker_id) {
-            $tracker_representation = new TimetrackingTrackerReportRepresentation();
-            $tracker_representation->build($trackers[$tracker_id], $this->getTrackersRow($tracker_id, $trackers_rows));
+            $tracker_representation = TimetrackingTrackerReportRepresentation::build($trackers[$tracker_id], $this->getTrackersRow($tracker_id, $trackers_rows));
             $tracker_representations[] = $tracker_representation;
         }
 

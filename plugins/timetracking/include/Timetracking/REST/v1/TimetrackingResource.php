@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -166,10 +166,8 @@ class TimetrackingResource extends AuthenticatedResource
         );
 
         try {
-            $time_representation = new TimetrackingRepresentation();
             $this->time_updater->addTimeForUserInArtifact($current_user, $artifact, $item->date_time, $item->time_value, $item->step);
-            $time_representation->build($this->time_retriever->getLastTime($current_user, $artifact));
-            return $time_representation;
+            return TimetrackingRepresentation::fromTime($this->time_retriever->getLastTime($current_user, $artifact));
         } catch (TimeTrackingBadTimeFormatException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (TimeTrackingMissingTimeException $e) {
@@ -226,10 +224,8 @@ class TimetrackingResource extends AuthenticatedResource
         );
 
         try {
-            $time_representation = new TimetrackingRepresentation();
             $this->time_updater->updateTime($current_user, $artifact, $time, $item->date_time, $item->time_value, $item->step);
-            $time_representation->build($this->time_retriever->getTimeByIdForUser($current_user, $id));
-            return $time_representation;
+            return TimetrackingRepresentation::fromTime($this->time_retriever->getTimeByIdForUser($current_user, $id));
         } catch (TimeTrackingBadTimeFormatException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (TimeTrackingMissingTimeException $e) {
