@@ -411,11 +411,7 @@ class LdapPlugin extends Plugin
             $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if ($lr) {
                 $params['allow_codendi_login'] = false;
-                $GLOBALS['feedback'] .= ' ' . $GLOBALS['Language']->getText(
-                    'plugin_ldap',
-                    'login_pls_use_ldap',
-                    [ForgeConfig::get('sys_name')]
-                );
+                $GLOBALS['feedback'] .= ' ' . sprintf(dgettext('tuleap-ldap', 'Please use your Enterprise Directory login (not the %1$s one).'), ForgeConfig::get('sys_name'));
             } else {
                 $params['allow_codendi_login'] = true;
             }
@@ -501,11 +497,11 @@ class LdapPlugin extends Plugin
     public function personalInformationEntry($params)
     {
         if ($this->isLdapAuthType()) {
-            $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+            $params['entry_label'][$this->getId()] = dgettext('tuleap-ldap', 'Enterprise Directory Login');
 
             $login_info = $this->getLdapLoginInfo($params['user_id']);
             if (! $login_info) {
-                $login_info = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+                $login_info = dgettext('tuleap-ldap', 'No Enterprise Directory login found');
             }
             $params['entry_value'][$this->getId()] = $login_info;
         }
@@ -520,12 +516,12 @@ class LdapPlugin extends Plugin
             $ldap_id_label = $GLOBALS['Language']->getText('admin_usergroup', 'ldap_id');
             $ldap_id       = $user->getLdapId();
 
-            $login_label    = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+            $login_label    = dgettext('tuleap-ldap', 'Enterprise Directory Login');
             $login_info     = $this->getLdapLoginInfo($user->getId());
             $has_login_info = true;
             if (! $login_info) {
                 $has_login_info = false;
-                $login_info     = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+                $login_info     = dgettext('tuleap-ldap', 'No Enterprise Directory login found');
             }
 
             $params['additional_details'][] = [
@@ -681,15 +677,15 @@ class LdapPlugin extends Plugin
             if ($ldap_result) {
                 $account_information->addInformation(
                     new AccountInformationPresenter(
-                        $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
+                        dgettext('tuleap-ldap', 'Enterprise Directory Login'),
                         $ldap_result->getLogin(),
                     )
                 );
             } else {
                 $account_information->addInformation(
                     new AccountInformationPresenter(
-                        $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login'),
-                        $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found'),
+                        dgettext('tuleap-ldap', 'Enterprise Directory Login'),
+                        dgettext('tuleap-ldap', 'No Enterprise Directory login found'),
                     )
                 );
             }
@@ -1312,7 +1308,7 @@ class LdapPlugin extends Plugin
                 if ($ldapUserGroupManager->unbindFromBindLdap()) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
-                        $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink')
+                        dgettext('tuleap-ldap', 'User group no longer linked with the directory')
                     );
                     $event->getEditEventLauncher()->launch($ugroup);
                 }

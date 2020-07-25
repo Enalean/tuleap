@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#, php-format
+msgid "%1$s internal login:"
+msgstr "Login interne %1$s&nbsp;:"
+
+msgid "<em>Required for CVS, FTP and Subversion accesses</em>."
+msgstr "<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>."
+
 msgid ""
 "<strong>%s</strong> is already linked with directory group <strong>%s</"
 "strong>."
@@ -20,9 +27,19 @@ msgstr ""
 "<strong>%s</strong> est déjà lié avec le groupe <strong>%s</strong> de "
 "l'annuaire."
 
+msgid "Account details"
+msgstr "Détails du compte"
+
+msgid "Account preferences"
+msgstr "Préférences du compte"
+
 msgid "Add those who are not already member of this %s group."
 msgstr ""
 "Les utilisateurs de l'annuaire non membres de ce groupe y sont ajoutés."
+
+#, php-format
+msgid "An error occured during account update: %1$s."
+msgstr "Une erreur s'est produite pendant la mise à jour du compte: %1$s."
 
 msgid "Bind with group from directory"
 msgstr "Lier avec un groupe de l'annuaire"
@@ -30,14 +47,40 @@ msgstr "Lier avec un groupe de l'annuaire"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Email Address:"
+msgstr "Adresse email&nbsp;:"
+
+msgid "Enterprise Directory"
+msgstr "Annuaire d'entreprise"
+
+msgid "Enterprise Directory Login"
+msgstr "Identifiant sur l'annuaire d'entreprise"
+
 msgid "Enterprise directory group name"
 msgstr "Nom du groupe"
 
 msgid "Every night the group will be synchronized with the directory one."
 msgstr "Chaque nuit, le groupe sera synchronisé avec le groupe de l'annuaire."
 
+#, php-format
+msgid "Fields marked with %1$s are mandatory."
+msgstr "Les champs marqués %1$s sont obligatoires."
+
+#, php-format
+msgid "First login to %1$s"
+msgstr "Premier login sur %1$s"
+
+#, php-format
+msgid "Group %1$s not found in directory"
+msgstr "Le groupe %1$s n'existe pas dans l'annuaire"
+
 msgid "If you choose to synchronize with a group from the directory, it will:"
 msgstr "Lors de la synchronisation avec l'annuaire :"
+
+msgid "LDAP Plugin. Provides LDAP information as well as LDAP authentication."
+msgstr ""
+"Plugin LDAP. Permet l'affichage des information LDAP des utilisateurs, ainsi "
+"que l'authentification LDAP."
 
 msgid "LDAP Sync Results"
 msgstr "Résultats LDAP Sync"
@@ -48,6 +91,9 @@ msgstr "Résultats de synchronisation LDAP pour %projectName%"
 msgid "Link with Enterprise Directory Group"
 msgstr "Lier avec un groupe de l'annuaire"
 
+msgid "No Enterprise Directory login found"
+msgstr "Identifiant sur l'annuaire d'entreprise introuvable"
+
 msgid "No users were added"
 msgstr "Aucun utilisateur n'a été ajouté"
 
@@ -57,6 +103,11 @@ msgstr "Aucun utilisateur n'a été supprimé"
 msgid "Please select a LDAP group."
 msgstr "Veuillez sélectionner un groupe LDAP."
 
+#, php-format
+msgid "Please use your Enterprise Directory login (not the %1$s one)."
+msgstr ""
+"Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de %1$s)."
+
 msgid "Preserve members"
 msgstr "Préserver les membres"
 
@@ -64,6 +115,19 @@ msgid "Preserve users that are not part of the directory group."
 msgstr ""
 "Les membres de ce groupe qui n'appartiennent pas au groupe de l'annuaire ne "
 "seront pas supprimés."
+
+msgid ""
+"Receive Email about Site Updates <em>(Very low traffic and includes security "
+"notices. Highly Recommended.)</em>"
+msgstr ""
+"Recevoir du courrier électronique à propos des mises à jour du site "
+"<i>(Faible trafic et informations relatives à la sécurité. Fortement "
+"recommandé.)</I>"
+
+msgid "Receive additional community mailings. <em>(Low traffic.)</em>"
+msgstr ""
+"Recevoir du courrier électronique supplémentaire au sujet de la communauté. "
+"<I>(Faible trafic)</I>"
 
 msgid ""
 "Remove all users who belong to this %s group but not to the directory group "
@@ -82,6 +146,12 @@ msgstr "Synchroniser"
 msgid "Synchronize daily"
 msgstr "Synchroniser journalièrement"
 
+msgid "Thank you to fill the following before accessing your data:"
+msgstr "Merci de remplir les champs suivants avant d'accéder à la suite&nbsp;:"
+
+msgid "Timezone"
+msgstr "Fuseau Horaire"
+
 msgid ""
 "Unable to retrieve LDAP info for your user account, skipping Welcome page"
 msgstr ""
@@ -95,8 +165,46 @@ msgstr "Supprimer le lien avec l'annuaire"
 msgid "Update directory group binding (%s)"
 msgstr "Mettre à jour le lien avec l'annuaire (%s)"
 
+msgid "Update my account"
+msgstr "Mettre à jour mon compte"
+
+msgid "User group no longer linked with the directory"
+msgstr "Ce groupe n'est plus lié avec l'annuaire"
+
+msgid "User name:"
+msgstr "Nom de l'utilisateur&nbsp;:"
+
+#, php-format
+msgid "User not found: %1$s"
+msgstr "Pas d'utilisateur trouvé: %1$s"
+
+msgid "User settings update error"
+msgstr "Erreur lors de la mise à jour des paramètres de l'utilisateur"
+
 msgid "Users added"
 msgstr "Utilisateurs ajoutés"
 
 msgid "Users removed"
 msgstr "Utilisateurs supprimés"
+
+#, php-format
+msgid "Welcome %1$s"
+msgstr "Bienvenue %1$s"
+
+msgid ""
+"You must supply a timezone.<br /><br />Click on 'Back' to return to the "
+"previous screen and select a timezone."
+msgstr ""
+"Prière de choisir un autre fuseau horaire que 'Aucun'. <br /><br />Cliquez "
+"sur 'Retour' et choisissez un fuseau horaire."
+
+#, php-format
+msgid ""
+"[LDAP Daily Synchronization] %1$s is suspended, please clean up %2$s project."
+msgstr ""
+"[Synchronisation LDAP quotidienne] %1$s est suspendu, veuillez nettoyer le "
+"projet %2$s."
+
+#, php-format
+msgid "[Reminder][LDAP Synch] The user %1$s will be deleted tomorrow"
+msgstr "[Rappel][Synchronisation LDAP] L'utilisateur %1$s sera détruit demain"

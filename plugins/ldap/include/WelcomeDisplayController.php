@@ -89,23 +89,27 @@ class WelcomeDisplayController implements DispatchableWithRequest
         if ($pv === 2) {
             $layout->pv_header([]);
         } else {
-            $layout->header(['title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', [$this->html_purifier->purify($lr->getCommonName())]),
-                                'registeration_process' => true]);
+            $layout->header(
+                [
+                    'title' => sprintf(dgettext('tuleap-ldap', 'Welcome %1$s'), $this->html_purifier->purify($lr->getCommonName())),
+                    'registeration_process' => true
+                ]
+            );
         }
 
         print '<h2>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', [$this->html_purifier->purify($lr->getCommonName())]);
+        print sprintf(dgettext('tuleap-ldap', 'Welcome %1$s'), $this->html_purifier->purify($lr->getCommonName()));
         print '</h2>';
 
         print '<h3>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', [\ForgeConfig::get('sys_name')]);
+        print sprintf(dgettext('tuleap-ldap', 'First login to %1$s'), \ForgeConfig::get('sys_name'));
         print '</h3>';
 
-        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', [\ForgeConfig::get('sys_name')]) . '</p>';
+        print '<p>' . dgettext('tuleap-ldap', 'Thank you to fill the following before accessing your data:') . '</p>';
 
         print '<fieldset>';
 
-        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_preferences') . '</legend>';
+        print '<legend>' . dgettext('tuleap-ldap', 'Account preferences') . '</legend>';
 
         $return_to = '';
         $vReturnTo = new Valid_String('return_to');
@@ -120,37 +124,37 @@ class WelcomeDisplayController implements DispatchableWithRequest
 <input type="hidden" name="action" value="update_reg">
 <input type="hidden" name="pv" value="' . $this->html_purifier->purify($pv) . '">
 
-<p>' . $star . ' ' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_tz') . ':';
+<p>' . $star . ' ' . dgettext('tuleap-ldap', 'Timezone') . ':';
 
         echo html_get_timezone_popup($timezone);
 
         print '</p>
-<p><input type="checkbox" name="form_mail_site" value="1" checked />' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_siteupdate');
+<p><input type="checkbox" name="form_mail_site" value="1" checked />' . dgettext('tuleap-ldap', 'Receive Email about Site Updates <em>(Very low traffic and includes security notices. Highly Recommended.)</em>');
 
         print '</p>
-<p><input type="checkbox" name="form_mail_va" value="1" />' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_communitymail') . '</p>';
+<p><input type="checkbox" name="form_mail_va" value="1" />' . dgettext('tuleap-ldap', 'Receive additional community mailings. <em>(Low traffic.)</em>') . '</p>';
 
-        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_mandatory', [$star]) . '</p>';
+        print '<p>' . sprintf(dgettext('tuleap-ldap', 'Fields marked with %1$s are mandatory.'), $star) . '</p>';
 
-        print '<p><input type="submit" name="update_reg" value="' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_btn_update') . '"></p>';
+        print '<p><input type="submit" name="update_reg" value="' . dgettext('tuleap-ldap', 'Update my account') . '"></p>';
         print '</fieldset>';
 
         print '<fieldset>';
-        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', [\ForgeConfig::get('sys_org_name')]) . '</legend>';
+        print '<legend>' . dgettext('tuleap-ldap', 'Account details') . '</legend>';
 
         print '<table>
 <tr>
-<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_ldap_login') . '</td>
+<td>' . dgettext('tuleap-ldap', 'User name:') . '</td>
 <td><strong>' . $this->html_purifier->purify($ldap_name) . '</strong></td>
 </tr>
 <tr>
-<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_email') . '</td>
+<td>' . dgettext('tuleap-ldap', 'Email Address:') . '</td>
 <td><strong>' . $this->html_purifier->purify($currentUser->getEmail()) . '</strong></td>
 </tr>
 <tr>
-<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', [\ForgeConfig::get('sys_name')]) . '</td>
+<td>' . sprintf(dgettext('tuleap-ldap', '%1$s internal login:'), \ForgeConfig::get('sys_name')) . '</td>
 <td>' . $this->html_purifier->purify($currentUser->getUserName()) . '<br>
-' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', [\ForgeConfig::get('sys_name')]) . '
+' . dgettext('tuleap-ldap', '<em>Required for CVS, FTP and Subversion accesses</em>.') . '
 </td>
 </tr>
 </table>';

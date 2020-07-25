@@ -193,7 +193,6 @@ class LDAP
             if ($binddn && (! $bindpw)) {
                 // Prevent successful binding if a username is given and the server
                 // accepts anonymous connections
-                //$this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
                 $this->logger->error('Cannot connect to LDAP server: ' . $this->ldapParams['server'] .
                     ' ***ERROR: will not bind if a username is given and the server accepts anonymous connections');
                 $this->bound = false;
@@ -235,11 +234,9 @@ class LDAP
     public function _connectAndBind()
     {
         if (! $this->connect()) {
-            //$this->setError($Language->getText('ldap_class','err_cant_connect'));
             return false;
         }
         if (! $this->bind()) {
-            //$this->setError($Language->getText('ldap_class','err_cant_bind'));
             return false;
         }
         return true;
@@ -269,7 +266,6 @@ class LDAP
     {
         if ($passwd->isIdenticalTo(new ConcealedString(''))) {
             // avoid a successful bind on LDAP servers accepting anonymous connections
-            //$this->setError($Language->getText('ldap_class','err_nopasswd'));
             return false;
         }
 

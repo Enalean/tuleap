@@ -71,7 +71,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         $timezone     = $request->get('timezone');
 
         if (! $this->timezones_collection->isValidTimezone($timezone)) {
-            $this->welcomeExitError($request, $layout, $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up'), $GLOBALS['Language']->getText('plugin_ldap', 'welcome_err_notz'));
+            $this->welcomeExitError($request, $layout, dgettext('tuleap-ldap', 'User settings update error'), dgettext('tuleap-ldap', 'You must supply a timezone.<br /><br />Click on \'Back\' to return to the previous screen and select a timezone.'));
             return;
         }
 
@@ -97,7 +97,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
             if ($this->userValuesHaveNotBeenModified($current_user, $timezone, $mailVa, $mailSite) || $this->user_manager->updateDb($current_user)) {
                 $this->ldap_user_dao->setLoginDate($current_user->getId(), $_SERVER['REQUEST_TIME']);
             } else {
-                $this->welcomeExitError($request, $layout, $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up'), $GLOBALS['Language']->getText('plugin_ldap', 'welcome_error_up_expl', ['']));
+                $this->welcomeExitError($request, $layout, dgettext('tuleap-ldap', 'User settings update error'), sprintf(dgettext('tuleap-ldap', 'An error occured during account update: %1$s.'), ''));
                 return;
             }
         }
@@ -107,7 +107,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
 
     private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text): void
     {
-        assert($layout instanceof \FlamingParrot_Theme);
+        assert($layout instanceof \Layout);
 
         $layout->addFeedback(\Feedback::ERROR, $title);
 
