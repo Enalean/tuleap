@@ -205,7 +205,7 @@ function ExecutionListCtrl(
 
                 ExecutionService.removeAllViewTestExecution();
                 if ($scope.execution_id) {
-                    updateViewTestExecution($scope.execution_id, "");
+                    updateViewTestExecution($scope.execution_id, "").then(scrollToCurrentTest);
                 }
 
                 ExecutionService.executions_loaded = true;
@@ -224,7 +224,7 @@ function ExecutionListCtrl(
     function updateViewTestExecution(current_execution_id, old_execution_id) {
         ExecutionService.addPresenceCampaign(SharedPropertiesService.getCurrentUser());
 
-        ExecutionRestService.changePresenceOnTestExecution(
+        return ExecutionRestService.changePresenceOnTestExecution(
             current_execution_id,
             old_execution_id
         ).then(function () {
@@ -237,7 +237,6 @@ function ExecutionListCtrl(
                 SharedPropertiesService.getCurrentUser()
             );
             $scope.execution_id = current_execution_id;
-            scrollToCurrentTest();
         });
     }
 
