@@ -30,7 +30,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
-	cd /build/src && npm install && \
+	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
     cd /build/src/plugins/botmattermost && npm install && npm run build
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
