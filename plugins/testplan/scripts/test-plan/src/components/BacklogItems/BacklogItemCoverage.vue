@@ -52,7 +52,6 @@ interface TestStats {
     failed: number;
     blocked: number;
     notrun: number;
-    blank: number;
 }
 
 @Component
@@ -61,12 +60,14 @@ export default class BacklogItemCoverage extends Vue {
     readonly backlog_item!: BacklogItem;
 
     get nb_tests(): number {
-        return this.backlog_item.test_definitions.length;
+        return Object.values(this.stats).reduce((a: number, b: number): number => {
+            return a + b;
+        });
     }
 
     get nb_tests_title(): string {
         return this.$gettextInterpolate(
-            this.$ngettext("%{ nb } test", "%{ nb } tests", this.nb_tests),
+            this.$ngettext("%{ nb } planned test", "%{ nb } planned tests", this.nb_tests),
             { nb: this.nb_tests }
         );
     }
@@ -77,12 +78,13 @@ export default class BacklogItemCoverage extends Vue {
             failed: 0,
             blocked: 0,
             notrun: 0,
-            blank: 0,
         };
 
         for (const test_definition of this.backlog_item.test_definitions) {
-            const status = test_definition.test_status || "blank";
-            stats[status]++;
+            const status = test_definition.test_status;
+            if (status !== null) {
+                stats[status]++;
+            }
         }
 
         return stats;
@@ -98,7 +100,7 @@ export default class BacklogItemCoverage extends Vue {
             return "fa-exclamation-circle";
         }
 
-        if (stats.notrun > 0 || stats.blank > 0) {
+        if (stats.notrun > 0) {
             return "fa-question-circle";
         }
 
@@ -115,7 +117,7 @@ export default class BacklogItemCoverage extends Vue {
             return "test-plan-backlog-item-coverage-icon-blocked";
         }
 
-        if (stats.notrun > 0 || stats.blank > 0) {
+        if (stats.notrun > 0) {
             return "test-plan-backlog-item-coverage-icon-notrun";
         }
 

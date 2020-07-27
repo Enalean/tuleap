@@ -47,16 +47,30 @@ describe("BacklogItemCoverage", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
+    it("Does not display anything if there is only tests not planned in any campaigns", async () => {
+        const wrapper = await createWrapper({
+            is_loading_test_definitions: false,
+            test_definitions: [
+                { test_status: null },
+                { test_status: null },
+                { test_status: null },
+            ] as TestDefinition[],
+        } as BacklogItem);
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
     it("Displays the number of tests", async () => {
         const wrapper = await createWrapper({
             is_loading_test_definitions: false,
             test_definitions: [
                 { test_status: "passed" },
+                { test_status: "notrun" },
                 { test_status: null },
             ] as TestDefinition[],
         } as BacklogItem);
 
-        expect(wrapper.find("[data-test=nb-tests]").text()).toBe("2 tests");
+        expect(wrapper.find("[data-test=nb-tests]").text()).toBe("2 planned tests");
     });
 
     it("Marks the backlog item as failed if there is at least one failed", async () => {
@@ -117,7 +131,7 @@ describe("BacklogItemCoverage", () => {
     });
 
     it(`Marks the backlog item as notrun if there is no failed, no blocked, no notrun
-        and at least one not planned in any campaign`, async () => {
+        and one test not planned in any campaign`, async () => {
         const wrapper = await createWrapper({
             is_loading_test_definitions: false,
             test_definitions: [
@@ -132,7 +146,7 @@ describe("BacklogItemCoverage", () => {
         expect(
             wrapper
                 .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-notrun")
+                .classes("test-plan-backlog-item-coverage-icon-passed")
         ).toBe(true);
     });
 

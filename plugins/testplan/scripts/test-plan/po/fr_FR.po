@@ -32,6 +32,11 @@ msgid_plural "%{ nb } passed"
 msgstr[0] "%{ nb } passé"
 msgstr[1] "%{ nb } passés"
 
+msgid "%{ nb } planned test"
+msgid_plural "%{ nb } planned tests"
+msgstr[0] "%{ nb } test planifié"
+msgstr[1] "%{ nb } tests planifiés"
+
 msgid "%{ nb } test"
 msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"
