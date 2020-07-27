@@ -108,7 +108,7 @@ class AdminScrumPresenter
             $this->planning_hierarchy[] = $tracker->getName();
         }
 
-        $this->explicit_top_backlog_enabled              = $explicit_top_backlog_enabled;
+        $this->explicit_top_backlog_enabled                   = $explicit_top_backlog_enabled;
         $this->has_workflow_action_add_to_top_backlog_defined = $has_workflow_action_add_to_top_backlog_defined;
         $this->additional_scrum_sections_controllers          = $additional_scrum_sections_controllers;
     }

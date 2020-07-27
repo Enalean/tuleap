@@ -2712,6 +2712,11 @@
         </trackers>
     </cardwall>
     <agiledashboard>
+        <admin>
+          <scrum>
+            <explicit_backlog is_used="0"/>
+          </scrum>
+        </admin>
         <plannings>
             <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T216" backlog_title="Product Backlog">
                 <backlogs>
