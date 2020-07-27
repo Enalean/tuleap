@@ -43,7 +43,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 # This is crappy but it avoids the duplication of the files that need to be built
 .PHONY: build
 build:
-	cd /build/src && npm install && \
+	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
 	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build && \
 	cd /build/src/plugins/mytuleap_contact_support && scl enable php73 'composer install --classmap-authoritative --no-dev --no-interaction --no-scripts'
 
