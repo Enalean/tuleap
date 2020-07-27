@@ -27,6 +27,7 @@ use Codendi_Request;
 use MilestoneReportCriterionDao;
 use PFUser;
 use Planning_MilestoneFactory;
+use Planning_NoPlanningsException;
 use Project;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBTransactionExecutor;
@@ -110,13 +111,18 @@ class ConfigurationUpdater
         }
     }
 
-    private function activateExplicitBacklogManagement(Project $project, PFUser $user): void
+    public function activateExplicitBacklogManagement(Project $project, PFUser $user): void
     {
         $this->db_transaction_executor->execute(function () use ($project, $user) {
             $project_id = (int) $project->getID();
             $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog($project_id);
             //duplicate data
-            $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
+            try {
+                $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
+            } catch (Planning_NoPlanningsException $exception) {
+                return;
+            }
+
             $backlog_items_rows = $this->backlog_item_dao->getOpenUnplannedTopBacklogArtifacts(
                 $top_milestone->getPlanning()->getBacklogTrackersIds(),
                 []

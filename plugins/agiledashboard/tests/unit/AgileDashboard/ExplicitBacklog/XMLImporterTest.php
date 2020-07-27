@@ -93,11 +93,13 @@ final class XMLImporterTest extends TestCase
         $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
-    public function testItDoesNothingIfAdminNodeIsNotInXML(): void
+    public function testItSetsExplicitBacklogInXMLImportIfAdminNodeIsNotInXML(): void
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><agiledashboard><plannings/></agiledashboard>');
 
         $this->explicit_backlog_dao->shouldNotReceive('setProjectIsUsingExplicitBacklog');
+
+        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->with(101)->once();
 
         $this->importer->importConfiguration($xml, $this->project);
     }

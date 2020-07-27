@@ -62,11 +62,10 @@ class XMLImporter
 
     public function importConfiguration(SimpleXMLElement $xml, Project $project): void
     {
-        if (! isset($xml->admin)) {
-            return;
-        }
-
-        if (PHPCast::toBoolean($xml->admin->scrum->explicit_backlog['is_used']) === true) {
+        if (
+            ! isset($xml->admin) ||
+            PHPCast::toBoolean($xml->admin->scrum->explicit_backlog['is_used']) === true
+        ) {
             $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog((int) $project->getID());
         }
     }

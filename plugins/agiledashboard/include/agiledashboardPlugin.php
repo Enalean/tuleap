@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\DirectArtifactLinkCleaner;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -89,6 +90,8 @@ use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -157,7 +160,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 {
     public const PLUGIN_NAME = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
-    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
@@ -200,6 +202,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TRACKER_USAGE);
             $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+            $this->addHook(Event::SERVICE_IS_USED);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
@@ -327,6 +330,16 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getConfigurationManager()->duplicate(
                 $params['group_id'],
                 $params['template_id']
+            );
+
+            $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
+
+            $project = ProjectManager::instance()->getProject((int) $params['group_id']);
+            $user    = UserManager::instance()->getCurrentUser();
+
+            $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
+                $project,
+                $user
             );
 
             (new ProjectsCountModeDao())->inheritBurnupCountMode(
@@ -2134,5 +2147,41 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
         $collection->add(__DIR__ . '/../resources/templates/Tracker_activity.xml');
+    }
+
+    //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function service_is_used(array $params): void
+    {
+        if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
+            if (isset($params['is_used']) && $params['is_used']) {
+                $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
+
+                $project = ProjectManager::instance()->getProject((int) $params['group_id']);
+                $user    = UserManager::instance()->getCurrentUser();
+
+                $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
+                    $project,
+                    $user
+                );
+            }
+        }
+    }
+
+    private function getExplicitBacklogConfigurationUpdater(): ConfigurationUpdater
+    {
+        return new ConfigurationUpdater(
+            new ExplicitBacklogDao(),
+            new MilestoneReportCriterionDao(),
+            new AgileDashboard_BacklogItemDao(),
+            Planning_MilestoneFactory::build(),
+            new ArtifactsInExplicitBacklogDao(),
+            new UnplannedArtifactsAdder(
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao(),
+                new PlannedArtifactDao()
+            ),
+            new AddToTopBacklogPostActionDao(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
     }
 }

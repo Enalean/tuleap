@@ -246,8 +246,9 @@ class Planning_MilestoneFactory
     /**
      * Build a fake milestone that catch all submilestones of root planning
      *
-     *
      * @return Planning_VirtualTopMilestone
+     *
+     * @throws Planning_NoPlanningsException
      */
     public function getVirtualTopMilestone(PFUser $user, Project $project)
     {
