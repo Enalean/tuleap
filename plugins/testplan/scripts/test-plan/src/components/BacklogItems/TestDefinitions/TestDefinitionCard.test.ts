@@ -126,7 +126,7 @@ describe("TestDefinitionCard", () => {
         );
     });
 
-    it("Does not display a status icon for a test that has not been planned in a campaign yet", () => {
+    it("Displays an icon for a not planned test", () => {
         const wrapper = shallowMount(TestDefinitionCard, {
             propsData: {
                 test_definition: {
@@ -139,7 +139,7 @@ describe("TestDefinitionCard", () => {
             },
         });
 
-        expect(wrapper.find("[data-test=test-status-icon]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=test-status-icon]").classes("fa-circle-thin")).toBe(true);
     });
 
     it("Marks the test as just refreshed", () => {

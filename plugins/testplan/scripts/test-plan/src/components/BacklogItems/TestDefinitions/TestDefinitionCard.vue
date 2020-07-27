@@ -42,7 +42,6 @@
                 class="fa fa-fw"
                 v-bind:class="icon_status"
                 aria-hidden="true"
-                v-if="test_definition.test_status"
                 data-test="test-status-icon"
             ></i>
         </div>
@@ -101,7 +100,7 @@ export default class TestDefinitionCard extends Vue {
             case "notrun":
                 return "fa-question-circle test-plan-test-definition-icon-status-notrun";
             default:
-                return "";
+                return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
         }
     }
 
