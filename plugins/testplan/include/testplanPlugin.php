@@ -148,7 +148,7 @@ final class testplanPlugin extends Plugin
         $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
 
         return new TestPlanController(
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
+            $this->buildTemplateRenderer(),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
@@ -200,6 +200,7 @@ final class testplanPlugin extends Plugin
         $redirect_parameter_injector = new RedirectParameterInjector(
             Tracker_ArtifactFactory::instance(),
             $GLOBALS['Response'],
+            $this->buildTemplateRenderer(),
         );
         $redirect_parameter_injector->injectAndInformUserAboutBacklogItemBeingCovered($event->getRequest(), $event->getRedirect());
     }
@@ -225,8 +226,14 @@ final class testplanPlugin extends Plugin
             new RedirectParameterInjector(
                 Tracker_ArtifactFactory::instance(),
                 $GLOBALS['Response'],
+                $this->buildTemplateRenderer(),
             )
         );
         $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
+    }
+
+    private function buildTemplateRenderer(): TemplateRenderer
+    {
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 }
