@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use Codendi_Request;
 use Response;
+use TemplateRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 
@@ -40,11 +41,19 @@ class RedirectParameterInjector
      * @var Response
      */
     private $response;
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Response $response)
-    {
-        $this->artifact_factory = $artifact_factory;
-        $this->response         = $response;
+    public function __construct(
+        Tracker_ArtifactFactory $artifact_factory,
+        Response $response,
+        TemplateRenderer $template_renderer
+    ) {
+        $this->artifact_factory  = $artifact_factory;
+        $this->response          = $response;
+        $this->template_renderer = $template_renderer;
     }
 
     public function injectAndInformUserAboutBacklogItemBeingCovered(
@@ -69,7 +78,10 @@ class RedirectParameterInjector
             \Feedback::INFO,
             sprintf(
                 dgettext('tuleap-testplan', 'You are creating a new test that will cover: %s'),
-                $backlog_item->getXRefAndTitle()
+                $this->template_renderer->renderToString(
+                    'backlog-item-test-creation-information-link',
+                    BacklogItemTestCreationInformationLinkPresenter::fromBacklogItem($backlog_item)
+                )
             ),
             CODENDI_PURIFIER_FULL
         );

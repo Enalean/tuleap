@@ -25,8 +25,12 @@ namespace Tuleap\TestPlan\TestDefinition;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TemplateRendererFactory;
+use Tracker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Templating\TemplateCache;
+use Tuleap\Tracker\TrackerColor;
 
 class RedirectParameterInjectorTest extends TestCase
 {
@@ -60,9 +64,14 @@ class RedirectParameterInjectorTest extends TestCase
         $this->backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->user         = Mockery::mock(\PFUser::class);
 
+        $template_cache            = \Mockery::mock(TemplateCache::class);
+        $template_cache->shouldReceive('getPath')->andReturnNull();
+        $template_renderer_factory = new TemplateRendererFactory($template_cache);
+
         $this->injector = new RedirectParameterInjector(
             $this->artifact_factory,
             $this->response,
+            $template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/'),
         );
     }
 
@@ -133,11 +142,27 @@ class RedirectParameterInjectorTest extends TestCase
             ->with($this->user, "123")
             ->once()
             ->andReturn($this->backlog_item);
-        $this->backlog_item->shouldReceive('getXRefAndTitle')->andReturn('story #123 - My story');
+        //$this->backlog_item->shouldReceive('getXRefAndTitle')->andReturn('story #123 - My story');
+        $this->backlog_item->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=123');
+        $this->backlog_item->shouldReceive('getTitle')->andReturn('My story');
+        $this->backlog_item->shouldReceive('getXref')->andReturn('story #123');
+        $backlog_item_tracker = Mockery::mock(Tracker::class);
+        $backlog_item_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
+        $this->backlog_item->shouldReceive('getTracker')->andReturn($backlog_item_tracker);
+
 
         $this->response
             ->shouldReceive('addFeedback')
-            ->with('info', 'You are creating a new test that will cover: story #123 - My story', CODENDI_PURIFIER_FULL)
+            ->with(
+                \Feedback::INFO,
+                Mockery::on(
+                    static function (string $content_to_display): bool {
+                        return strpos($content_to_display, 'My story') !== false &&
+                               strpos($content_to_display, 'story #123') !== false;
+                    }
+                ),
+                CODENDI_PURIFIER_FULL
+            )
             ->once();
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
