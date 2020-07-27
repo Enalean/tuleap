@@ -67,7 +67,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
-	cd /build/src && npm install && \
+	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
 	cd /build/src/plugins/baseline/ && npm install && npm run build && \
 	cd /build/src/plugins/baseline/ && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
