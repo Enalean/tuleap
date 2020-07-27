@@ -2152,19 +2152,26 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function service_is_used(array $params): void
     {
-        if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
-            if (isset($params['is_used']) && $params['is_used']) {
-                $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
-
-                $project = ProjectManager::instance()->getProject((int) $params['group_id']);
-                $user    = UserManager::instance()->getCurrentUser();
-
-                $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
-                    $project,
-                    $user
-                );
-            }
+        if (! isset($params['shortname']) || ! isset($params['is_used'])) {
+            return;
         }
+
+        $service_short_name = (string) $params['shortname'];
+        $service_is_used    = (bool) $params['is_used'];
+
+        if ($service_short_name !== $this->getServiceShortname() || ! $service_is_used) {
+            return;
+        }
+
+        $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
+
+        $project = ProjectManager::instance()->getProject((int) $params['group_id']);
+        $user    = UserManager::instance()->getCurrentUser();
+
+        $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
+            $project,
+            $user
+        );
     }
 
     private function getExplicitBacklogConfigurationUpdater(): ConfigurationUpdater
