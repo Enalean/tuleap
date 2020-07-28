@@ -67,7 +67,8 @@ class TestPlanTestDefinitionWithTestStatusRetriever
 
         $rows = $this->dao->searchTestStatusPerTestDefinitionInAMilestone($information);
 
-        $test_definitions_with_test_status = [];
+        $test_definitions_with_test_status         = [];
+        $test_definitions_with_unknown_test_status = [];
         foreach ($test_definitions as $test_definition) {
             $test_definition_id = (int) $test_definition->getId();
             if (isset($rows[$test_definition_id])) {
@@ -76,11 +77,11 @@ class TestPlanTestDefinitionWithTestStatusRetriever
                     $rows[$test_definition_id],
                 );
             } else {
-                $test_definitions_with_test_status[] = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(
+                $test_definitions_with_unknown_test_status[] = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(
                     $test_definition,
                 );
             }
         }
-        return $test_definitions_with_test_status;
+        return array_merge($test_definitions_with_test_status, $test_definitions_with_unknown_test_status);
     }
 }

@@ -276,6 +276,35 @@ describe("BacklogItem state mutations", () => {
             expect(state.backlog_items[0].test_definitions.length).toBe(2);
         });
 
+        it("Moves not planned test definitions to the end of the definitions of a backlog item", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    {
+                        id: 123,
+                        test_definitions: [
+                            { id: 677, test_status: null } as TestDefinition,
+                            { id: 679, test_status: "passed" } as TestDefinition,
+                            { id: 678, test_status: null } as TestDefinition,
+                        ],
+                    } as BacklogItem,
+                ],
+            };
+
+            addTestDefinitions(state, {
+                backlog_item: { id: 123 } as BacklogItem,
+                test_definitions: [{ id: 680, test_status: "blocked" } as TestDefinition],
+            });
+
+            expect(state.backlog_items[0].test_definitions).toStrictEqual([
+                { id: 679, test_status: "passed" },
+                { id: 680, test_status: "blocked" },
+                { id: 677, test_status: null },
+                { id: 678, test_status: null },
+            ]);
+        });
+
         it("Does not wipe new test definitions if we call another mutation", () => {
             const state: BacklogItemState = {
                 is_loading: true,
