@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2013 - present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -148,6 +148,12 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         }
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date.js'));
 
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);

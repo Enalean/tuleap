@@ -194,10 +194,6 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
     }
 
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-    }
-
     public function fetchMailArtifactValue(
         Tracker_Artifact $artifact,
         PFUser $user,

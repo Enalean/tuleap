@@ -311,38 +311,6 @@ document.observe("dom:loaded", function () {
         }
     });
 
-    $$(".tracker_artifact_showdiff").each(function (link) {
-        if (link.next()) {
-            link.next().hide();
-            link.observe("click", function (evt) {
-                link.next().toggle();
-                Event.stop(evt);
-            });
-        }
-    });
-
-    $$(".toggle-diff").each(function (toggle_button) {
-        toggle_button.observe("click", function (event) {
-            Event.stop(event);
-            toggle_button.next().toggle();
-        });
-    });
-
-    (function showDiffDirectlyIfInUrl() {
-        var url = document.location.toString(),
-            reg_ex = /#followup_(\d+)/,
-            matches = url.match(reg_ex);
-
-        if (!matches) {
-            return;
-        }
-
-        var followup_id = matches[1];
-        $("followup_" + followup_id)
-            .down("div.diff")
-            .toggle();
-    })();
-
     $$(".tracker_artifact_add_attachment").each(function (attachment) {
         var add = new Element("a", {
             href: "#add-another-file",

@@ -1118,40 +1118,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        $html = '';
-        $values = [];
-        $from_value = false;
-        if ($from && isset($from['changeset_id'])) {
-            foreach ($this->getBind()->getChangesetValues($from['changeset_id']) as $v) {
-                if ($v['id'] != Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
-                    $values[] = $this->getBind()->formatChangesetValue($v);
-                }
-            }
-            $from_value = implode(', ', $values);
-        }
-
-        if (! $from_value) {
-            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
-        } else {
-            $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
-        }
-
-        $values = [];
-        foreach ($this->getBind()->getChangesetValues($to['changeset_id']) as $v) {
-            $values[] = $this->getBind()->formatChangesetValue($v);
-        }
-        $html .= implode(', ', $values);
-        return $html;
-    }
-
-    /**
      * Display the html field in the admin ui
      * @return string html
      */

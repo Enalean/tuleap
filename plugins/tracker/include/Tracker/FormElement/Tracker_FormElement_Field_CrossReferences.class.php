@@ -235,21 +235,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     }
 
     /**
-     * Fetch the value to display changes in followups
-     *
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     *
-     * @return string
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        //don't display anything in follow-up
-        return '';
-    }
-
-    /**
      * Fetch the value in a specific changeset
      *
      * @param Tracker_Artifact_Changeset $changeset

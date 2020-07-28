@@ -383,48 +383,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     }
 
     /**
-     * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        $html = '';
-        $html .= 'changed <a href="#show-diff" class="tracker_artifact_showdiff">[diff]</a>';
-        $html .= $this->fetchHistory($artifact, $from, $to);
-        return $html;
-    }
-
-    /**
-     * Fetch the value to display changes in artifact history
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     * @return string
-     */
-    public function fetchHistory($artifact, $from, $to)
-    {
-        $from_value = $this->getValue($from['value_id']);
-        $from_value = isset($from_value['value']) ? $from_value['value'] : '';
-        $to_value = $this->getValue($to['value_id']);
-        $to_value = isset($to_value['value']) ? $to_value['value'] : '';
-
-        $callback = [$this, '_filter_html_callback'];
-        $d = new Codendi_Diff(
-            array_map($callback, explode("\n", $from_value)),
-            array_map($callback, explode("\n", $to_value))
-        );
-        $f = new Codendi_HtmlUnifiedDiffFormatter();
-        $diff = $f->format($d);
-        return $diff ? $diff : '<em>No changes</em>';
-    }
-    protected function _filter_html_callback($s)
-    {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($s, CODENDI_PURIFIER_CONVERT_HTML);
-    }
-
-    /**
      * Display the html field in the admin ui
      * @return string html
      */

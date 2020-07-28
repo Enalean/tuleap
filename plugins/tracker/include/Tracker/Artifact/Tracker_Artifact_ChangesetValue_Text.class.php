@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 
 /**
@@ -246,16 +247,18 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $string;
     }
 
-    /**
-     * @return string text to be displayed in web ui when the text has been changed
-     */
-    protected function fetchDiffInFollowUp($formated_diff)
+    protected function fetchDiffInFollowUp(string $formated_diff): string
     {
-        $html  = '';
-        $html .= '<button class="btn btn-mini toggle-diff">' . dgettext('tuleap-tracker', 'Show diff') . '</button>';
-        $html .= '<div class="diff" style="display: none">' . $formated_diff . '</div>';
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $presenter = new FollowUpPresenter(
+            $this->getId(),
+            $formated_diff
+        );
 
-        return $html;
+        return $renderer->renderToString(
+            'form-element/text/follow-up-content',
+            $presenter
+        );
     }
 
     private function getFormatedDiff($previous, $next)

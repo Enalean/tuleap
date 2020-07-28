@@ -290,32 +290,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return '';  // deactivate mass change for file fields (see issue described in rev #15855)
     }
 
-    /**
-     * Fetch the changes that has been made to this field in a followup
-     *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param array            $from     the value(s) *before*
-     * @param array            $to       the value(s) *after*
-     *
-     * @return string html
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        $html = '';
-        //Retrieve all the values for the changeset
-        $to_values = $this->getChangesetValues($to['changeset_id']);
-        foreach ($to_values as $key => $v) {
-            if (! $v['has_changed']) {
-                unset($to_values[$key]);
-            }
-        }
-        if (count($to_values)) {
-            $submitter_needed = false;
-            $html .= 'Added: ' . $this->fetchAllAttachment($artifact->id, $to_values, $submitter_needed, []);
-        }
-        return $html;
-    }
-
     public function fetchAllAttachment(
         $artifact_id,
         $values,

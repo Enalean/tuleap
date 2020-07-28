@@ -64,6 +64,7 @@ const webpack_config_for_vue = {
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
+        "text-follow-up": "./scripts/artifact/text-follow-up.ts",
     },
     context,
     output,

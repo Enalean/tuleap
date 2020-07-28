@@ -240,11 +240,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return new StepDefinitionChangesetValueDao();
     }
 
-    public function fetchFollowUp($artifact, $from, $to): string
-    {
-        return '';
-    }
-
     public function fetchRawValueFromChangeset($changeset): string
     {
         return '';
