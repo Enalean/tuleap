@@ -70,7 +70,7 @@ pipeline {
                 stage ('Jest') {
                     agent {
                         docker {
-                            image 'node:13.10-alpine'
+                            image 'node:14.5-alpine'
                             reuseNode true
                             args '--network none'
                         }
@@ -104,7 +104,7 @@ pipeline {
                 stage('SCSS coding standards') {
                     agent {
                         docker {
-                            image 'node:13.10-alpine'
+                            image 'node:14.5-alpine'
                             reuseNode true
                             args '--network none'
                         }
