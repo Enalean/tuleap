@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'media-query-definitions' as media-query;
+@use '../../../../src/themes/tlp/src/scss/components/tooltips-mixins' as tooltip with (
+    $tlp-tooltip-background: $tlp-theme-sidebar-background-color
+);
+
 .test-plan-list-of-test-definitions {
     display: flex;
     flex-direction: column;
@@ -125,6 +130,14 @@
 
 .test-plan-test-definition-icon-status-notplanned {
     color: $tlp-ui-dimmed;
+}
+
+.test-plan-test-definition-test-status-tooltip-position {
+    @include tooltip.tlp-tooltip-right();
+
+    @include media-query.not-large-screen() {
+        @include tooltip.tlp-tooltip-left();
+    }
 }
 
 .test-plan-add-test-button {

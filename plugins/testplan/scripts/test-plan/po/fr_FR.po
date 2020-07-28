@@ -65,6 +65,9 @@ msgstr ""
 "Une erreur est survenue lors de la récupération des informations de la "
 "nouvelle campagne."
 
+msgid "Blocked"
+msgstr "Bloqué"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -80,6 +83,9 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
+msgid "Failed"
+msgstr "Échoué"
+
 msgid "From %{ tracker_name } tracker report"
 msgid_plural "From %{ tracker_name } tracker reports"
 msgstr[0] "Rapport de l’outil de suivi %{ tracker_name }"
@@ -93,6 +99,15 @@ msgstr "Nouvelle campagne"
 
 msgid "No tests"
 msgstr "Aucun test"
+
+msgid "Not planned in release %{ release_name }"
+msgstr "Non planifié dans la release %{ release_name }"
+
+msgid "Not run"
+msgstr "Non executé"
+
+msgid "Passed"
+msgstr "Passé"
 
 msgid "Test campaigns"
 msgstr "Campagnes de test"
