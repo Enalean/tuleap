@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 class AgileDashboard_BacklogItemDao extends DataAccessObject
 {
     public const STATUS_OPEN   = 1;
@@ -218,6 +220,37 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                         INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                         INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
+                    ) ON (art_1.id = child_art.id )
+                WHERE art_1.tracker_id IN ($backlog_tracker_ids)
+                    AND child_art.id IS NULL
+                ORDER BY tracker_artifact_priority_rank.rank ASC
+                LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    public function getOpenClosedUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, ?int $limit, ?int $offset)
+    {
+        $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
+        $limit               = $this->da->escapeInt($limit);
+        $offset              = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
+                FROM tracker_artifact AS art_1
+                    INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = art_1.id)
+                    INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
+                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
+                    -- ensure that the artifact is not planned in a milestone by joins
+                    LEFT JOIN ( tracker_artifact parent_art
+                        INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                        INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
+                        INNER JOIN tracker_artifact                     AS child_art  ON (child_art.id = artlink.artifact_id)
+                        INNER JOIN plugin_agiledashboard_planning       AS planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     AND child_art.id IS NULL

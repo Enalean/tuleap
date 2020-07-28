@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class Tracker_ArtifactDao extends DataAccessObject
 {
@@ -1122,6 +1123,57 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit,
         $offset
     ) {
+        $filter = 'AND (
+                        SS.field_id IS NULL
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )';
+
+        return $this->getLinkedArtifactsToTrackerWithWhereConditionAndLimitAndOffset(
+            $artifact_id,
+            $tracker_ids,
+            $excluded_linked_ids,
+            $additional_artifacts,
+            $limit,
+            $offset,
+            $filter
+        );
+    }
+
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    public function getLinkedOpenClosedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
+        int $artifact_id,
+        array $tracker_ids,
+        array $excluded_linked_ids,
+        array $additional_artifacts,
+        ?int $limit,
+        ?int $offset
+    ) {
+        return $this->getLinkedArtifactsToTrackerWithWhereConditionAndLimitAndOffset(
+            $artifact_id,
+            $tracker_ids,
+            $excluded_linked_ids,
+            $additional_artifacts,
+            $limit,
+            $offset,
+            ''
+        );
+    }
+
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    private function getLinkedArtifactsToTrackerWithWhereConditionAndLimitAndOffset(
+        int $artifact_id,
+        array $tracker_ids,
+        array $excluded_linked_ids,
+        array $additional_artifacts,
+        ?int $limit,
+        ?int $offset,
+        string $filter
+    ) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
         $limit        = $this->da->escapeInt($limit);
@@ -1168,11 +1220,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
                     ) ON (C.id = CV2.changeset_id)
                 WHERE parent_art.id = $artifact_id
-                    AND (
-                        SS.field_id IS NULL
-                        OR
-                        CVL2.bindvalue_id = SS.open_value_id
-                     )
+                    $filter
                     $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
@@ -1299,7 +1347,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $this->update($sql);
     }
 
-    public function deleteUnsubscribeNotificationForArtifact($artifact_id)
+    public function deleteUnsubscribeNotificationForArtifact(int $artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 

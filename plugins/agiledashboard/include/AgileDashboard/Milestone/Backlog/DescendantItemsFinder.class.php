@@ -138,6 +138,20 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         return $this->getItemsForUser($user, $result, $this->item_dao->foundRows());
     }
 
+    public function getTopMilestoneOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
+        PFUser $user,
+        ?int $limit,
+        ?int $offset
+    ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
+        $result = $this->item_dao->getOpenClosedUnplannedTopBacklogArtifactsWithLimitAndOffset(
+            $this->descendant_tracker_ids,
+            $limit,
+            $offset
+        );
+
+        return $this->getItemsForUser($user, $result, $this->item_dao->foundRows());
+    }
+
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getTopMilestoneUnplannedBacklogItemsWithLimitAndOffset(PFUser $user, $limit, $offset)
     {
@@ -203,9 +217,12 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
     }
 
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getMilestoneUnplannedBacklogItemsWithLimitAndOffset(PFUser $user, $sub_milestone_ids, $limit, $offset)
-    {
+    public function getMilestoneUnplannedBacklogItemsWithLimitAndOffset(
+        PFUser $user,
+        array $sub_milestone_ids,
+        ?int $limit,
+        ?int $offset
+    ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->artifact_dao->getLinkedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
             $this->milestone_id,
             $this->descendant_tracker_ids,
@@ -218,12 +235,35 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
     }
 
+    public function getMilestoneOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
+        PFUser $user,
+        array $sub_milestone_ids,
+        ?int $limit,
+        ?int $offset
+    ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
+        $result = $this->artifact_dao->getLinkedOpenClosedArtifactsOfTrackersNotLinkedToOthersWithLimitAndOffset(
+            $this->milestone_id,
+            $this->descendant_tracker_ids,
+            $sub_milestone_ids,
+            $this->getDescendantPlannifiableItems(),
+            $limit,
+            $offset
+        );
+
+        return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
+    }
+
     /**
+     * @param LegacyDataAccessResultInterface|false $result
      * @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection
      */
-    private function getItemsForUser(PFUser $user, LegacyDataAccessResultInterface $result, $found_rows)
+    private function getItemsForUser(PFUser $user, $result, $found_rows)
     {
         $items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        if ($result === false) {
+            return $items;
+        }
+
         foreach ($result as $row) {
             $item = $this->artifact_factory->getInstanceFromRow($row);
             if ($item->userCanView($user)) {

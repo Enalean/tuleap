@@ -501,7 +501,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $explicit_backlog_collection = $this->collection_factory->getExplicitTopBacklogItems(
             $user,
             $milestone,
-            false,
+            null,
             50,
             0
         );

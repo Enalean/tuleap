@@ -44,13 +44,12 @@ class MonoMilestoneItemsFinder
         $this->artifact_factory = $artifact_factory;
     }
 
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
         PFUser $user,
         array $backlog_tracker_ids,
-        $limit,
-        $offset
-    ) {
+        ?int $limit,
+        ?int $offset
+    ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
         $result = $this->backlog_item_dao->getTopBacklogArtifactsWithLimitAndOffset(
             $backlog_tracker_ids,
             $limit,
@@ -60,12 +59,33 @@ class MonoMilestoneItemsFinder
         return $this->getItemsForUser($user, $result, $this->backlog_item_dao->foundRows());
     }
 
+    public function getTopMilestonesOpenClosedUnplannedBacklogItemsWithLimitAndOffset(
+        PFUser $user,
+        array $backlog_tracker_ids,
+        ?int $limit,
+        ?int $offset
+    ): AgileDashboard_Milestone_Backlog_DescendantItemsCollection {
+        $result = $this->backlog_item_dao->getTopBacklogOpenClosedArtifactsWithLimitAndOffset(
+            $backlog_tracker_ids,
+            $limit,
+            $offset
+        );
+
+        return $this->getItemsForUser($user, $result, $this->backlog_item_dao->foundRows());
+    }
+
     /**
+     * @param false|LegacyDataAccessResultInterface $result
      * @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection
      */
-    private function getItemsForUser(PFUser $user, LegacyDataAccessResultInterface $result, $found_rows)
+    private function getItemsForUser(PFUser $user, $result, $found_rows)
     {
         $items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+
+        if ($result === false) {
+            return $items;
+        }
+
         foreach ($result as $row) {
             $item = $this->artifact_factory->getInstanceFromRow($row);
             if ($item->userCanView($user)) {
