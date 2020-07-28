@@ -83,7 +83,7 @@ function getTypescriptCheckerPlugin(use_vue) {
 }
 
 function getCopyPlugin(patterns = [], options = {}) {
-    return new CopyWebpackPlugin(patterns, options);
+    return new CopyWebpackPlugin({ patterns, options });
 }
 
 function getCSSExtractionPlugins() {
