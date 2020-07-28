@@ -1,0 +1,96 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-tooltip-background: $tlp-theme-sidebar-background-color !default;
+$tlp-tooltip-arrow-size: 5px;
+$tlp-tooltip-border-radius: 4px;
+$tlp-tooltip-margin: 5px;
+
+@mixin tlp-tooltip-top() {
+    &::before {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-arrow-size) translateY(-$tlp-tooltip-margin);
+    }
+
+    &::after {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-margin);
+        border-top: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
+        border-right: $tlp-tooltip-arrow-size solid transparent;
+        border-left: $tlp-tooltip-arrow-size solid transparent;
+    }
+}
+
+@mixin tlp-tooltip-right() {
+    &::before {
+        top: 50%;
+        right: 0;
+        left: initial;
+        transform: translateX(100%) translateX($tlp-tooltip-arrow-size) translateX($tlp-tooltip-margin) translateY(-50%);
+    }
+
+    &::after {
+        top: 50%;
+        right: 0;
+        transform: translateX(100%) translateX($tlp-tooltip-margin) translateY(-50%);
+        border-top: $tlp-tooltip-arrow-size solid transparent;
+        border-right: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
+        border-bottom: $tlp-tooltip-arrow-size solid transparent;
+        border-left: initial;
+    }
+}
+
+@mixin tlp-tooltip-bottom() {
+    &::before {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-arrow-size) translateY($tlp-tooltip-margin);
+    }
+
+    &::after {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-margin);
+        border-right: $tlp-tooltip-arrow-size solid transparent;
+        border-bottom: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
+        border-left: $tlp-tooltip-arrow-size solid transparent;
+    }
+}
+
+@mixin tlp-tooltip-left() {
+    &::before {
+        top: 50%;
+        right: initial;
+        left: 0;
+        transform: translateX(-100%) translateX(-$tlp-tooltip-arrow-size) translateX(-$tlp-tooltip-margin) translateY(-50%);
+    }
+
+    &::after {
+        top: 50%;
+        right: initial;
+        left: 0;
+        transform: translateX(-100%) translateX(-$tlp-tooltip-margin) translateY(-50%);
+        border-top: $tlp-tooltip-arrow-size solid transparent;
+        border-right: initial;
+        border-bottom: $tlp-tooltip-arrow-size solid transparent;
+        border-left: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
+    }
+}

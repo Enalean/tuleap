@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,29 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'media-query-definitions' as media-query;
-@import '../../../agiledashboard/themes/BurningParrot/css/header';
-
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
-
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
-
-.test-plan-app {
-    display: grid;
-    grid-template-areas: 'backlog-items campaigns';
-    grid-template-columns: 60% auto;
-    column-gap: $tlp-large-spacing;
-
-    @include media-query.not-large-screen() {
-        row-gap: $tlp-jumbo-spacing;
-        grid-template-areas:
-            'backlog-items'
-            'campaigns';
-        grid-template-columns: none;
+@mixin not-large-screen() {
+    @media only screen and (max-width: 1100px) {
+        @content;
     }
 }

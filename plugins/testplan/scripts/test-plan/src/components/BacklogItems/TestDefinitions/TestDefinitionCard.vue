@@ -38,12 +38,7 @@
                 v-if="test_definition.automated_tests"
                 data-test="automated-test-icon"
             ></i>
-            <i
-                class="fa fa-fw"
-                v-bind:class="icon_status"
-                aria-hidden="true"
-                data-test="test-status-icon"
-            ></i>
+            <test-definition-card-status v-bind:test_definition="test_definition" />
         </div>
     </a>
 </template>
@@ -54,10 +49,12 @@ import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem, TestDefinition } from "../../../type";
 import { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
 import { namespace } from "vuex-class";
+import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 
 const backlog_item_store = namespace("backlog_item");
-
-@Component
+@Component({
+    components: { TestDefinitionCardStatus },
+})
 export default class TestDefinitionCard extends Vue {
     @Prop({ required: true })
     readonly test_definition!: TestDefinition;
@@ -87,21 +84,6 @@ export default class TestDefinitionCard extends Vue {
         }
 
         return "";
-    }
-
-    get icon_status(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return "fa-check-circle test-plan-test-definition-icon-status-passed";
-            case "failed":
-                return "fa-times-circle test-plan-test-definition-icon-status-failed";
-            case "blocked":
-                return "fa-exclamation-circle test-plan-test-definition-icon-status-blocked";
-            case "notrun":
-                return "fa-question-circle test-plan-test-definition-icon-status-notrun";
-            default:
-                return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
-        }
     }
 
     get automated_icon_status(): string {

@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-tooltip-background: $tlp-theme-sidebar-background-color;
-$tlp-tooltip-arrow-size: 5px;
-$tlp-tooltip-border-radius: 4px;
-$tlp-tooltip-margin: 5px;
+@import 'tooltips-mixins';
 
 .tlp-tooltip {
     position: relative;
@@ -65,69 +62,17 @@ $tlp-tooltip-margin: 5px;
 }
 
 .tlp-tooltip-top {
-    &::before {
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-arrow-size) translateY(-$tlp-tooltip-margin);
-    }
-
-    &::after {
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100%) translateY(-$tlp-tooltip-margin);
-        border-top: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
-        border-right: $tlp-tooltip-arrow-size solid transparent;
-        border-left: $tlp-tooltip-arrow-size solid transparent;
-    }
+    @include tlp-tooltip-top();
 }
 
 .tlp-tooltip-right {
-    &::before {
-        top: 50%;
-        right: 0;
-        transform: translateX(100%) translateX($tlp-tooltip-arrow-size) translateX($tlp-tooltip-margin) translateY(-50%);
-    }
-
-    &::after {
-        top: 50%;
-        right: 0;
-        transform: translateX(100%) translateX($tlp-tooltip-margin) translateY(-50%);
-        border-top: $tlp-tooltip-arrow-size solid transparent;
-        border-right: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
-        border-bottom: $tlp-tooltip-arrow-size solid transparent;
-    }
+    @include tlp-tooltip-right();
 }
 
 .tlp-tooltip-bottom {
-    &::before {
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-arrow-size) translateY($tlp-tooltip-margin);
-    }
-
-    &::after {
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%) translateY(100%) translateY($tlp-tooltip-margin);
-        border-right: $tlp-tooltip-arrow-size solid transparent;
-        border-bottom: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
-        border-left: $tlp-tooltip-arrow-size solid transparent;
-    }
+    @include tlp-tooltip-bottom();
 }
 
 .tlp-tooltip-left {
-    &::before {
-        top: 50%;
-        left: 0;
-        transform: translateX(-100%) translateX(-$tlp-tooltip-arrow-size) translateX(-$tlp-tooltip-margin) translateY(-50%);
-    }
-
-    &::after {
-        top: 50%;
-        left: 0;
-        transform: translateX(-100%) translateX(-$tlp-tooltip-margin) translateY(-50%);
-        border-top: $tlp-tooltip-arrow-size solid transparent;
-        border-bottom: $tlp-tooltip-arrow-size solid transparent;
-        border-left: $tlp-tooltip-arrow-size solid $tlp-tooltip-background;
-    }
+    @include tlp-tooltip-left();
 }
