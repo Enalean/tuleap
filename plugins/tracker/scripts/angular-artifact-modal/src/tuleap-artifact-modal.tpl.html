@@ -435,14 +435,26 @@
                             <div class="tuleap-artifact-modal-followups-comment-header-author">
                                 <a ng-if="comment.email" href="mailto:{{comment.email}}">{{ comment.email }}</a>
                                 <a ng-if="! comment.email" href="{{ comment.submitted_by_details.user_url }}">{{ comment.submitted_by_details.display_name }}</a>
-                                <span class="tuleap-artifact-modal-followups-comment-header-time" am-time-ago="comment.submitted_on"></span>
+                                <tlp-relative-date
+                                    class="tuleap-artifact-modal-followups-comment-header-time"
+                                    date="{{ comment.submitted_on }}"
+                                    absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.submitted_on) }}"
+                                    preference="{{ modal.relativeDatePreference() }}"
+                                    locale="{{ modal.user_locale }}"
+                                    placement="{{ modal.relativeDatePlacement() }}"></tlp-relative-date>
                             </div>
 
                             <div ng-if="comment.submitted_on !== comment.last_modified_date"
                                 class="tuleap-artifact-modal-followups-comment-header-author"
                             >
                                 <span><span translate>Edited by</span> {{ comment.last_modified_by.display_name }}</span>
-                                <span class="tuleap-artifact-modal-followups-comment-header-time" am-time-ago="comment.last_modified_date"></span>
+                                <tlp-relative-date
+                                    class="tuleap-artifact-modal-followups-comment-header-time"
+                                    date="{{ comment.last_modified_date }}"
+                                    absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.last_modified_date) }}"
+                                    preference="{{ modal.relativeDatePreference() }}"
+                                    locale="{{ modal.user_locale }}"
+                                    placement="{{ modal.relativeDatePlacement() }}"></tlp-relative-date>
                             </div>
                         </div>
                     </div>

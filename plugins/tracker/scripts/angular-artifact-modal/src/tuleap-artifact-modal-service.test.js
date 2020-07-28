@@ -298,6 +298,11 @@ describe("NewTuleapArtifactModalService", () => {
                     return $q.when(comment_order_preference);
                 } else if (preference_key === "user_edition_default_format") {
                     return $q.when(text_format_preference);
+                } else if (preference_key === "relative_dates_display") {
+                    return $q.when({
+                        key: "relative_dates_display",
+                        value: false,
+                    });
                 }
             });
             updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -325,8 +330,12 @@ describe("NewTuleapArtifactModalService", () => {
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
             });
 
-            it("Given a user id, tracker id and an artifact id, when I create the modal's edition model, then the artifact's field values will be retrieved, the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", async () => {
-                var promise = NewTuleapArtifactModalService.initEditionModalModel(
+            it(`Given a user id, tracker id and an artifact id,
+                When I create the modal's edition model,
+                Then the artifact's field values will be retrieved,
+                    the tracker's structure will be retrieved
+                    and a promise will be resolved with the modal's model object`, async () => {
+                const promise = NewTuleapArtifactModalService.initEditionModalModel(
                     user_id,
                     tracker_id,
                     artifact_id
@@ -338,6 +347,12 @@ describe("NewTuleapArtifactModalService", () => {
                     user_id,
                     "tracker_comment_invertorder_93"
                 );
+                expect(getUserPreference).toHaveBeenCalledWith(user_id, "relative_dates_display");
+                expect(getUserPreference).toHaveBeenCalledWith(
+                    user_id,
+                    "user_edition_default_format"
+                );
+
                 expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                 expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(
                     expect.any(Object),
@@ -364,8 +379,10 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(model.title).toEqual("onomatomania");
             });
 
-            it("Given that the user didn't have a preference set for text fields format, when I create the modal's edition model, then the default text_field format will be 'text' by default", async () => {
-                var comment_order_preference = {
+            it(`Given that the user didn't have a preference set for text fields format,
+                when I create the modal's edition model,
+                then the default text_field format will be 'text' by default`, async () => {
+                const comment_order_preference = {
                     key: "tracker_comment_invertorder_93",
                     value: "1",
                 };
@@ -378,17 +395,22 @@ describe("NewTuleapArtifactModalService", () => {
                             key: "user_edition_default_format",
                             value: false,
                         });
+                    } else if (preference_key === "relative_dates_display") {
+                        return $q.when({
+                            key: "relative_dates_display",
+                            value: false,
+                        });
                     }
                 });
 
-                var promise = NewTuleapArtifactModalService.initEditionModalModel(
+                const promise = NewTuleapArtifactModalService.initEditionModalModel(
                     user_id,
                     tracker_id,
                     artifact_id
                 );
 
                 expect(await wrapPromise(promise)).toBeDefined();
-                var model = promise.$$state.value;
+                const model = promise.$$state.value;
 
                 expect(model.text_fields_format).toEqual("text");
             });

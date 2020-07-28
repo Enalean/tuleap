@@ -46,6 +46,7 @@ const webpack_config_for_angular = {
                 angular$: path.resolve(__dirname, "node_modules/angular"),
             }
         ),
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [

@@ -31,6 +31,12 @@ import {
     setIsNotUploadingInCKEditor,
 } from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
+import {
+    relativeDatePlacement,
+    relativeDatePreference,
+} from "../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
+import moment from "moment";
+import phptomoment from "phptomoment";
 
 export default ArtifactModalController;
 
@@ -100,6 +106,12 @@ function ArtifactModalController(
         toggleFieldset,
         hasHiddenFieldsets,
         showHiddenFieldsets,
+        relativeDatePreference: () => relativeDatePreference(modal_model.relative_dates_display),
+        relativeDatePlacement: () =>
+            relativeDatePlacement(modal_model.relative_dates_display, "right"),
+        formatDateUsingPreferredUserFormat: (date) =>
+            moment(date).format(phptomoment(document.body.dataset.dateTimeFormat)),
+        user_locale: document.body.dataset.userLocale,
     });
 
     function init() {

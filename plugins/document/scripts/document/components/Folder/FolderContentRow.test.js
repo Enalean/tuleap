@@ -22,13 +22,15 @@ import localVue from "../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants.js";
-import "../../../../../../src/themes/tlp/src/js/custom-elements/relative-date";
 
 function getFolderContentRowInstance(store, props) {
     return shallowMount(FolderContentRow, {
         localVue,
         propsData: props,
         mocks: { $store: store },
+        stubs: {
+            "tlp-relative-date": true,
+        },
     });
 }
 
