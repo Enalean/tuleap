@@ -20,7 +20,16 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
+use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
+use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminURLBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
+use Tuleap\Request\CollectRoutesEvent;
+
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class multi_project_backlogPlugin extends Plugin
@@ -30,6 +39,14 @@ final class multi_project_backlogPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-multi_project_backlog', __DIR__ . '/../site-content');
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(PlanningEditURLEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getDependencies(): array
@@ -51,5 +68,49 @@ final class multi_project_backlogPlugin extends Plugin
             $this->pluginInfo = $pluginInfo;
         }
         return $this->pluginInfo;
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addRoute(
+            ['GET'],
+            '/project/{project_name:[A-z0-9-]+}/backlog/admin/{id:\d+}',
+            $this->getRouteHandler('routeGETAggregatorReadOnlyAdminTopPlanning')
+        );
+    }
+
+    public function routeGETAggregatorReadOnlyAdminTopPlanning(): ReadOnlyAggregatorAdminViewController
+    {
+        $agiledashboard_plugin = PluginManager::instance()->getPluginByName(AgileDashboardPlugin::PLUGIN_NAME);
+        assert($agiledashboard_plugin instanceof AgileDashboardPlugin);
+
+        return new ReadOnlyAggregatorAdminViewController(
+            ProjectManager::instance(),
+            PlanningFactory::build(),
+            new AgileDashboardCrumbBuilder(
+                $agiledashboard_plugin->getPluginPath()
+            ),
+            new AdministrationCrumbBuilder()
+        );
+    }
+
+    public function planningEditURLEvent(PlanningEditURLEvent $event): void
+    {
+        $planning      = $event->getPlanning();
+        $root_planning = $event->getRootPlanning();
+
+        $url_builder = new ReadOnlyAggregatorAdminURLBuilder(
+            new AggregatorDao(),
+            ProjectManager::instance()
+        );
+
+        $url = $url_builder->buildURL(
+            $planning,
+            $root_planning
+        );
+
+        if ($url !== null) {
+            $event->setEditUrl($url);
+        }
     }
 }
