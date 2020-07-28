@@ -34,7 +34,7 @@ pipeline {
         stage ('Unit tests JS/TS with coverage') {
             agent {
                 docker {
-                    image 'node:13.3-alpine'
+                    image 'node:14.5-alpine'
                     reuseNode true
                     args '--network none'
                 }
