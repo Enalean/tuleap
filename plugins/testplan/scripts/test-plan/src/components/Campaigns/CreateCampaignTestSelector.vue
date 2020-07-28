@@ -56,7 +56,6 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { sprintf } from "sprintf-js";
 import { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
 
 function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitialTests): string {
@@ -83,13 +82,13 @@ export default class CreateCampaignTestSelector extends Vue {
     private selected_value = transformCampaignInitialTestToStringValue(this.value);
 
     get test_definitions_tracker_reports_group_label(): string {
-        return sprintf(
+        return this.$gettextInterpolate(
             this.$ngettext(
-                "From %s tracker report",
-                "From %s tracker reports",
+                "From %{ tracker_name } tracker report",
+                "From %{ tracker_name } tracker reports",
                 this.getNbTrackerReports()
             ),
-            this.testdefinition_tracker_name
+            { tracker_name: this.testdefinition_tracker_name }
         );
     }
 
