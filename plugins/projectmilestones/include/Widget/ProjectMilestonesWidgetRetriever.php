@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProjectMilestones\Widget;
 
 use Tuleap\Project\ProjectAccessChecker;
@@ -36,6 +38,9 @@ use PFUser;
 
 class ProjectMilestonesWidgetRetriever
 {
+    public const PARAM_SELECTED_PROJECT = 'select-project-milestones-widget';
+    public const VALUE_SELECTED_PROJECT_SELF = 'self';
+
     /**
      * @var ProjectAccessChecker
      */
@@ -146,7 +151,7 @@ class ProjectMilestonesWidgetRetriever
     {
         $widget_id = (int) $request->getValidated('content_id', 'uint', 0);
 
-        $project_id = $request->getValidated("select-project-milestones-widget", 'string');
+        $project_id = $request->getValidated(self::PARAM_SELECTED_PROJECT, 'string');
 
         $project = $this->project_manager->getProjectFromAutocompleter($project_id);
         if ($project === false) {
@@ -166,8 +171,12 @@ class ProjectMilestonesWidgetRetriever
 
     public function create(Codendi_Request $request): ?int
     {
-        $project_id = $request->getValidated("select-project-milestones-widget", 'string');
-        $project    = $this->project_manager->getProjectFromAutocompleter($project_id);
+        $project_name = $request->getValidated(self::PARAM_SELECTED_PROJECT, 'string');
+        if ($project_name === self::VALUE_SELECTED_PROJECT_SELF) {
+            $project = $request->get('project');
+        } else {
+            $project = $this->project_manager->getProjectFromAutocompleter($project_name);
+        }
 
         if ($project === false) {
             return null;

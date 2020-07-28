@@ -206,7 +206,7 @@ class ProjectDashboardXMLImporter
             $this->logger->warning("Impossible to instantiate twice widget named '" . $widget_name . "'.  Widget skipped");
             return [null, null];
         }
-        $event = new ConfigureAtXMLImport($widget, $widget_xml, $mapping_registry);
+        $event = new ConfigureAtXMLImport($widget, $widget_xml, $mapping_registry, $project);
         $this->event_manager->processEvent($event);
         if ($event->isWidgetConfigured()) {
             return [$widget, $event->getContentId()];

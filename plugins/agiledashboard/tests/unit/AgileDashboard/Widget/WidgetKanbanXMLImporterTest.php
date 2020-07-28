@@ -85,11 +85,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
             return false;
         }))->once()->andReturn(30003);
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $xml,
-            $this->registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, \Project::buildForTest());
 
         $importer = new WidgetKanbanXMLImporter();
         $importer->configureWidget($event);
@@ -111,11 +107,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
 
         $this->widget->shouldNotReceive('create');
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $xml,
-            $this->registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, \Project::buildForTest());
 
         $importer = new WidgetKanbanXMLImporter();
 
@@ -136,11 +128,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
 
         $this->widget->shouldNotReceive('create');
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $xml,
-            $this->registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $xml, $this->registry, \Project::buildForTest());
 
         $importer = new WidgetKanbanXMLImporter();
 

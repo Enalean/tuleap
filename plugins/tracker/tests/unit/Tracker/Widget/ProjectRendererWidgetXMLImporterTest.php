@@ -85,11 +85,7 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
 
         $this->assertWidgetCreateWithParams(456, 'Imported');
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $widget_xml,
-            $this->mapping_registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
 
         $this->importer->import($event);
     }
@@ -109,11 +105,7 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $widget_xml,
-            $this->mapping_registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
 
         $this->importer->import($event);
     }
@@ -127,11 +119,7 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
 
         $this->assertWidgetCreateWithDefault();
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $widget_xml,
-            $this->mapping_registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
 
         $this->importer->import($event);
     }
@@ -149,11 +137,7 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
 
         $this->assertWidgetCreateWithDefault();
 
-        $event = new ConfigureAtXMLImport(
-            $this->widget,
-            $widget_xml,
-            $this->mapping_registry
-        );
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
 
         $this->importer->import($event);
     }

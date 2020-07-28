@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
 use Tuleap\Layout\IncludeAssets;
@@ -52,6 +53,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetUserWidgetList::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook('project_is_deleted');
+        $this->addHook(ConfigureAtXMLImport::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -138,6 +140,11 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
                 new CSRFSynchronizerToken('/my/')
             ));
         }
+    }
+
+    public function configureAtXMLImport(ConfigureAtXMLImport $event): void
+    {
+        (new Tuleap\ProjectMilestones\Widget\ConfigureAtXMLImport())($event);
     }
 
     public function getDependencies()
