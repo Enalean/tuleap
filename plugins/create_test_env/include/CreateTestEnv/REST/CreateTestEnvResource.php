@@ -99,6 +99,7 @@ class CreateTestEnvResource
             $this->notifier->notify('Server error at environment creation: ' . $exception->getMessage());
             throw new RestException(500, $exception->getMessage(), ['exception' => get_class($exception)]);
         } finally {
+            $this->cleanUpTempDir($tmp_name . '/data');
             $this->cleanUpTempDir($tmp_name);
         }
     }
