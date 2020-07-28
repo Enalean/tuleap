@@ -70,8 +70,7 @@ class CardRepresentationBuilder
         $initial_effort       = $this->getInitialEffort($artifact, $user);
         $remaining_effort     = $this->remaining_effort_representation_builder->getRemainingEffort($user, $artifact);
 
-        $representation = new CardRepresentation();
-        $representation->build(
+        return CardRepresentation::build(
             $artifact,
             $background_color,
             $rank,
@@ -81,8 +80,6 @@ class CardRepresentationBuilder
             $remaining_effort,
             $this->isCollapsed($user, $artifact, $milestone)
         );
-
-        return $representation;
     }
 
     private function getMappedListValue(
@@ -95,10 +92,7 @@ class CardRepresentationBuilder
             return null;
         }
 
-        $representation = new MappedListValueRepresentation();
-        $representation->build($mapped_list_value);
-
-        return $representation;
+        return MappedListValueRepresentation::build($mapped_list_value);
     }
 
     /**

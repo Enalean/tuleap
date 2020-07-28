@@ -57,13 +57,10 @@ class RemainingEffortRepresentationBuilder
             return null;
         }
 
-        $representation = new RemainingEffortRepresentation();
-        $representation->build(
+        return new RemainingEffortRepresentation(
             $this->getValue($current_user, $artifact),
             $remaining_effort_field->userCanUpdate($current_user)
         );
-
-        return $representation;
     }
 
     private function getValue(PFUser $current_user, Tracker_Artifact $artifact): ?float

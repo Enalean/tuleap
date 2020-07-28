@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1\Card;
 
+/**
+ * @psalm-immutable
+ */
 class CardPatchRepresentation
 {
     /**

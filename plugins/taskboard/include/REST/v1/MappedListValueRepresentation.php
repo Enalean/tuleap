@@ -25,6 +25,9 @@ namespace Tuleap\Taskboard\REST\v1;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MappedListValueRepresentation
 {
     /**
@@ -36,9 +39,17 @@ class MappedListValueRepresentation
      */
     public $label;
 
-    public function build(Tracker_FormElement_Field_List_BindValue $bind_value): void
+    private function __construct(int $id, string $label)
     {
-        $this->id    = JsonCast::toInt($bind_value->getId());
-        $this->label = $bind_value->getLabel();
+        $this->id    = $id;
+        $this->label = $label;
+    }
+
+    public static function build(Tracker_FormElement_Field_List_BindValue $bind_value): self
+    {
+        return new self(
+            JsonCast::toInt($bind_value->getId()),
+            $bind_value->getLabel()
+        );
     }
 }
