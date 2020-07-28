@@ -64,7 +64,20 @@ export function addTestDefinitions(
 ): void {
     updateBacklogItem(state, payload.backlog_item, (item) => ({
         ...item,
-        test_definitions: item.test_definitions.concat(payload.test_definitions),
+        test_definitions: item.test_definitions
+            .concat(payload.test_definitions)
+            .sort((a: TestDefinition, b: TestDefinition): number => {
+                if (a.test_status === b.test_status) {
+                    return 0;
+                }
+                if (a.test_status === null) {
+                    return 1;
+                }
+                if (b.test_status === null) {
+                    return -1;
+                }
+                return 0;
+            }),
     }));
 }
 

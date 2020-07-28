@@ -55,7 +55,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
         );
     }
 
-    public function testRetrieveTestDefinitionWithTestStatus(): void
+    public function testRetrieveTestDefinitionWithTestStatusAndAllTestsWithUnknownStatusAtTheEnd(): void
     {
         $milestone         = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('132')->getMock();
         $test_definition_1 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
@@ -74,7 +74,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
             ->andReturn($information);
 
         $this->dao->shouldReceive('searchTestStatusPerTestDefinitionInAMilestone')
-            ->andReturn([456 => 'passed']);
+            ->andReturn([457 => 'passed']);
 
         $milestone = \Mockery::mock(\Tracker_Artifact::class);
         $user      = UserTestBuilder::aUser()->build();
@@ -87,8 +87,8 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
 
         $this->assertEquals(
             [
-                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_1, 'passed'),
-                TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_2),
+                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed'),
+                TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_1),
             ],
             $test_definitions_with_test_status
         );
