@@ -26,6 +26,9 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MinimalDefinitionRepresentation
 {
     public const ROUTE = 'testmanagement_definitions';
@@ -79,7 +82,7 @@ class MinimalDefinitionRepresentation
         $this->id   = JsonCast::toInt($artifact->getId());
         $this->uri  = self::ROUTE . '/' . $this->id;
 
-        $changeset = $changeset ?: $artifact->getLastChangeset();
+        $changeset = $changeset ?: self::getArtifactLastChangeset($artifact);
 
         $this->summary         = self::getTextFieldValue(
             $form_element_factory,
@@ -98,6 +101,11 @@ class MinimalDefinitionRepresentation
             $changeset,
             self::FIELD_AUTOMATED_TESTS
         );
+    }
+
+    private static function getArtifactLastChangeset(Tracker_Artifact $artifact): ?Tracker_Artifact_Changeset
+    {
+        return $artifact->getLastChangeset();
     }
 
     /**

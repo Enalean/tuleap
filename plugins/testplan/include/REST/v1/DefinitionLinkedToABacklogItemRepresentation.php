@@ -27,33 +27,53 @@ use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
 
+/**
+ * @psalm-immutable
+ *
+ * @psalm-type TestStatus = null|"notrun"|"passed"|"failed"|"blocked"
+ */
 final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefinitionRepresentation
 {
     /**
      * @var string
-     *
-     * @psalm-readonly
      */
     public $short_type = '';
     /**
      * @var string | null {@choice notrun,passed,failed,blocked}
-     * @psalm-var null|"notrun"|"passed"|"failed"|"blocked"
-     *
-     * @psalm-readonly
+     * @psalm-var TestStatus
      */
     public $test_status;
 
     /**
-     * @psalm-param null|"notrun"|"passed"|"failed"|"blocked" $test_status
+     * @psalm-param TestStatus $test_status
      */
-    public function __construct(
+    private function __construct(
         Tracker_Artifact $artifact,
+        string $short_type,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?string $test_status
     ) {
         parent::__construct($artifact, $form_element_factory, $user, null);
-        $this->short_type  = $artifact->getTracker()->getItemName();
+        $this->short_type  = $short_type;
         $this->test_status = $test_status;
+    }
+
+    /**
+     * @psalm-param TestStatus $test_status
+     */
+    public static function build(
+        Tracker_Artifact $artifact,
+        Tracker_FormElementFactory $form_element_factory,
+        PFUser $user,
+        ?string $test_status
+    ): self {
+        return new self(
+            $artifact,
+            $artifact->getTracker()->getItemName(),
+            $form_element_factory,
+            $user,
+            $test_status,
+        );
     }
 }
