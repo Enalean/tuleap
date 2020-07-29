@@ -4659,36 +4659,37 @@
         },
         {
             "name": "tuleap/prometheus-client",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/php-prometheus-client.git",
-                "reference": "bcaae4b34b5f37e216e7a79978deef0fdd49b7dc"
+                "reference": "ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/php-prometheus-client/zipball/bcaae4b34b5f37e216e7a79978deef0fdd49b7dc",
-                "reference": "bcaae4b34b5f37e216e7a79978deef0fdd49b7dc",
+                "url": "https://api.github.com/repos/Enalean/php-prometheus-client/zipball/ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3",
+                "reference": "ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.3",
+                "php": "^7.3|^7.4|^8.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^7.0",
+                "doctrine/coding-standard": "^8.0",
                 "guzzlehttp/psr7": "^1.6",
                 "http-interop/http-factory-guzzle": "^1.0",
-                "infection/infection": "^0.15.0",
+                "infection/infection": "^0.16.1",
                 "php-http/curl-client": "^2.0",
                 "php-http/mock-client": "^1.3",
-                "phpstan/phpstan": "^0.12.8",
+                "phpstan/phpstan": "^0.12.23",
                 "phpstan/phpstan-phpunit": "^0.12.6",
-                "phpunit/phpunit": "^8.2",
-                "psalm/plugin-phpunit": "^0.8.0",
+                "phpstan/phpstan-strict-rules": "^0.12.2",
+                "phpunit/phpunit": "^9.0",
+                "psalm/plugin-phpunit": "^0.10.0",
                 "vimeo/psalm": "^3.3"
             },
             "suggest": {
@@ -4706,7 +4707,7 @@
                 "Apache-2.0"
             ],
             "description": "Prometheus instrumentation library",
-            "time": "2020-02-07T10:11:44+00:00"
+            "time": "2020-07-27T16:15:36+00:00"
         },
         {
             "name": "webimpress/safe-writer",

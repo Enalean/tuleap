@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
+use Enalean\Prometheus\Renderer\IncoherentMetricLabelNamesAndValues;
 use Enalean\Prometheus\Renderer\RenderTextFormat;
 use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
@@ -118,9 +119,10 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
 
         try {
             return $instance->renderText();
-        } catch (\TypeError $error) {
+        } catch (IncoherentMetricLabelNamesAndValues | \TypeError $error) {
             // Try to cleanup the persistent datastore, the inconsistency might comes
-            // from an upgrade of the Prometheus library
+            // from an upgrade of the Prometheus library or a change in the structure
+            // of one of the metrics
             $this->flushable_storage->flush();
             return $instance->renderText();
         }
