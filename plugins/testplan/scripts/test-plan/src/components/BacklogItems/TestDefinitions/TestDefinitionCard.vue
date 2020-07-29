@@ -19,11 +19,7 @@
   -->
 
 <template>
-    <a
-        v-bind:href="'/plugins/tracker/?aid=' + encodeURIComponent(test_definition.id)"
-        class="tlp-card tlp-card-selectable test-plan-test-definition-card"
-        v-bind:class="classname"
-    >
+    <div class="tlp-card test-plan-test-definition-card" v-bind:class="classname">
         <div class="test-plan-test-definition-xref-title">
             <span class="test-plan-test-definition-xref">
                 {{ test_definition.short_type }} #{{ test_definition.id }}
@@ -40,7 +36,7 @@
             ></i>
             <test-definition-card-status v-bind:test_definition="test_definition" />
         </div>
-    </a>
+    </div>
 </template>
 
 <script lang="ts">
