@@ -23,6 +23,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
@@ -281,6 +282,17 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 echo $assets->getHTMLSnippet('tracker.js');
             }
             echo $this->getAssets()->getHTMLSnippet('cardwall.js');
+        }
+
+        if (HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
+            $include_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+            if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+                echo $include_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
+                return;
+            }
+
+            echo $include_assets->getHTMLSnippet('tlp-relative-date.js');
         }
     }
 

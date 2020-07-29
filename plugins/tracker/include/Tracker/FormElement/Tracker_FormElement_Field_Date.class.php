@@ -789,8 +789,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        if ($value) {
-            $html .= DateHelper::timeAgoInWords($value->getTimestamp());
+        if ($value && $value->getTimestamp()) {
+            $user = HTTPRequest::instance()->getCurrentUser();
+            $html .= DateHelper::relativeDateInlineContext($value->getTimestamp(), $user);
         }
         return $html;
     }

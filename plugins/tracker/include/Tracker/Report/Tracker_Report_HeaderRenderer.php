@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\IncludeAssets;
 
 class Tracker_Report_HeaderRenderer
@@ -69,6 +70,13 @@ class Tracker_Report_HeaderRenderer
         if ($request->get('pv')) {
             return;
         }
+
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/core', '/assets/core');
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date-polyfills.js'));
+        }
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date.js'));
 
         $reports = $this->report_factory->getReportsByTrackerId($report->tracker_id, $current_user->getId());
 
