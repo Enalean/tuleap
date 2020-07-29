@@ -65,6 +65,7 @@ module.exports = [
                     use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
                 },
                 webpack_configurator.rule_vue_loader,
+                webpack_configurator.rule_css_assets,
                 webpack_configurator.rule_scss_loader,
             ],
         },
