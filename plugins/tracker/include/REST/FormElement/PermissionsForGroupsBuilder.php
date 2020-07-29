@@ -101,8 +101,7 @@ class PermissionsForGroupsBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new MinimalUserGroupRepresentation();
-            $representation->build((int) $ugroup->getProjectId(), $ugroup);
+            $representation = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
             $ugroups_collection[] = $representation;
         }
     }

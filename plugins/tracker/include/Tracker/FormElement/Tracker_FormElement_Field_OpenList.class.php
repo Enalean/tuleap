@@ -952,8 +952,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
             $values = [];
             foreach ($user_groups as $ugroup) {
-                $ugroup_representation = new MinimalUserGroupRepresentation();
-                $ugroup_representation->build($project->getID(), $ugroup);
+                $ugroup_representation = new MinimalUserGroupRepresentation($project->getID(), $ugroup);
                 $values[] = $ugroup_representation;
             }
 

@@ -712,8 +712,7 @@ class ProjectResource extends AuthenticatedResource
         $user_groups = [];
 
         foreach ($ugroups as $ugroup) {
-            $representation = new MinimalUserGroupRepresentation();
-            $representation->build((int) $project_id, $ugroup);
+            $representation = new MinimalUserGroupRepresentation((int) $project_id, $ugroup);
             $user_groups[] = $representation;
         }
 

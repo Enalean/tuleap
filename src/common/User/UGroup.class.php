@@ -19,8 +19,14 @@
  */
 interface User_UGroup
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function getName();
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId();
 
     public function getDescription();

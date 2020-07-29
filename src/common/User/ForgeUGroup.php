@@ -41,11 +41,17 @@ class User_ForgeUGroup implements User_UGroup
         return $this->description;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getName()
     {
         return $this->name;

@@ -79,8 +79,7 @@ class PermissionsRepresentationBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new MinimalUserGroupRepresentation();
-            $representation->build((int) $tracker->getProject()->getID(), $ugroup);
+            $representation = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
             $ugroup_representations[] = $representation;
         }
     }

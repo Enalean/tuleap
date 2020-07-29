@@ -93,7 +93,7 @@ class DocmanItemPermissionsForGroupsBuilder
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
             if ($ugroup !== null) {
-                $user_group_representations[] = (new MinimalUserGroupRepresentation())->build((int) $project->getID(), $ugroup);
+                $user_group_representations[] = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
             }
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -43,26 +43,41 @@ class UploadedLink
         $this->release_time = $release_time;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getOwner()
     {
         return $this->owner;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getLink()
     {
         return $this->link;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getReleaseTime()
     {
         return $this->release_time;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId()
     {
         return $this->id;

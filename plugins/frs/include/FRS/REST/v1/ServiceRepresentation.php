@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class ServiceRepresentation
 {
     public const ROUTE = 'frs_service';
@@ -33,9 +36,18 @@ class ServiceRepresentation
      */
     public $permissions_for_groups;
 
-    public function build(ServicePermissionsForGroupsRepresentation $permission_for_groups): self
+    private function __construct(?ServicePermissionsForGroupsRepresentation $permission_for_groups)
     {
         $this->permissions_for_groups = $permission_for_groups;
-        return $this;
+    }
+
+    public static function withoutPermissions(): self
+    {
+        return new self(null);
+    }
+
+    public static function withPermissions(ServicePermissionsForGroupsRepresentation $permission_for_groups): self
+    {
+        return new self($permission_for_groups);
     }
 }

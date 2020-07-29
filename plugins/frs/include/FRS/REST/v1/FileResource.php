@@ -86,10 +86,7 @@ class FileResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
         $file = $this->getFile($id, $user);
 
-        $file_representation = new FileRepresentation();
-        $file_representation->build($file);
-
-        return $file_representation;
+        return new FileRepresentation($file);
     }
 
     /**

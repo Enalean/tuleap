@@ -25,6 +25,9 @@ use Tuleap\FRS\UploadedLink;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\UserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class UploadedLinkRepresentation
 {
     /**
@@ -52,7 +55,7 @@ class UploadedLinkRepresentation
      */
     public $release_time;
 
-    public function build(UploadedLink $link)
+    public function __construct(UploadedLink $link)
     {
         $this->id             = JsonCast::toInt($link->getId());
         $this->link           = $link->getLink();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\FRS\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class CollectionOfFileRepresentation
 {
     /**
@@ -30,7 +33,7 @@ class CollectionOfFileRepresentation
     /**
      * @param FileRepresentation[] $representations
      */
-    public function build(array $representations)
+    public function __construct(array $representations)
     {
         $this->files = $representations;
     }

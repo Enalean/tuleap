@@ -177,6 +177,8 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * Get the ugroup name
      *
      * @return string
+     *
+     * @psalm-mutation-free
      */
     public function getName()
     {
@@ -209,6 +211,8 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * Get the ugroup id
      *
      * @return int
+     *
+     * @psalm-mutation-free
      */
     public function getId()
     {

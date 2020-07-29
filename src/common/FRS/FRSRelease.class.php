@@ -96,6 +96,9 @@ class FRSRelease
         }
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getReleaseID(): int
     {
         return (int) $this->release_id;
