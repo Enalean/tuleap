@@ -30,7 +30,6 @@ use Planning;
 use PlanningFactory;
 use PlanningParameters;
 use PlanningPermissionsManager;
-use TestHelper;
 use TrackerFactory;
 
 class PlanningFactoryDuplicationTest extends TestCase
@@ -96,7 +95,7 @@ class PlanningFactoryDuplicationTest extends TestCase
             $faq_tracker_id    => $faq_tracker_copy_id
         ];
 
-        $rows = TestHelper::arrayToDar(
+        $rows = [
             [
                 'id'                  => 1,
                 'name'                => 'Foo',
@@ -105,20 +104,19 @@ class PlanningFactoryDuplicationTest extends TestCase
                 'backlog_title'       => 'Release Backlog',
                 'plan_title'          => 'Sprint Plan'
             ]
-        );
+        ];
 
-        $this->planning_dao->shouldReceive('searchByPlanningTrackerIds')->with(
+        $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
             array_keys($tracker_mapping)
         )->andReturns($rows);
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersById')->with(1)->andReturns(
-            TestHelper::arrayToDar(
+        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
+            ->with(1)
+            ->andReturns(
                 [
-                    'planning_id' => 1,
-                    'tracker_id'  => $story_tracker_id
+                    ['planning_id' => 1, 'tracker_id' => $story_tracker_id]
                 ]
-            )
-        );
+            );
 
         $parameters = [
             'id'                  => 1,
@@ -130,7 +128,7 @@ class PlanningFactoryDuplicationTest extends TestCase
             'backlog_tracker_ids' => [$story_tracker_copy_id]
         ];
 
-        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns(TestHelper::arrayToDar($parameters));
+        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
         $expected_parameters = PlanningParameters::fromArray($parameters);
 
         $this->planning_dao->shouldReceive('createPlanning')
@@ -174,7 +172,7 @@ class PlanningFactoryDuplicationTest extends TestCase
             $faq_tracker_id    => $faq_tracker_copy_id
         ];
 
-        $rows = TestHelper::arrayToDar(
+        $rows = [
             [
                 'id'                  => 1,
                 'name'                => 'Foo',
@@ -183,19 +181,16 @@ class PlanningFactoryDuplicationTest extends TestCase
                 'backlog_title'       => 'Release Backlog',
                 'plan_title'          => 'Sprint Plan'
             ]
-        );
+        ];
 
-        $this->planning_dao->shouldReceive('searchByPlanningTrackerIds')->with(
+        $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
             array_keys($tracker_mapping)
         )->andReturns($rows);
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersById')->with(1)->andReturns(
-            TestHelper::arrayToDar(
-                [
-                    'planning_id' => 1,
-                    'tracker_id'  => $story_tracker_id
-                ]
-            )
+        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->with(1)->andReturns(
+            [
+                ['planning_id' => 1, 'tracker_id' => $story_tracker_id]
+            ]
         );
 
         $parameters = [
@@ -207,9 +202,7 @@ class PlanningFactoryDuplicationTest extends TestCase
             'planning_tracker_id' => $sprint_tracker_copy_id,
             'backlog_tracker_ids' => [$story_tracker_copy_id]
         ];
-        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns(
-            TestHelper::arrayToDar($parameters)
-        );
+        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
 
         $expected_ugroups = [113, 114];
         $this->planning_permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->with(

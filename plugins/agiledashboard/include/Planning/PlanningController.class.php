@@ -570,7 +570,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     public function edit()
     {
-        $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $planning_id = $this->request->get('planning_id');
+        $planning    = $this->planning_factory->getPlanning($planning_id);
+        if ($planning === null) {
+            throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
+        }
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
 
         return $this->renderToString('edit', $presenter);
@@ -654,11 +658,25 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
             $updated_planning_id = (int) $this->request->get('planning_id');
             $user                = $this->request->getCurrentUser();
+            $planning            = $this->planning_factory->getPlanning($updated_planning_id);
+            if ($planning === null) {
+                $this->addFeedback(
+                    Feedback::ERROR,
+                    sprintf(
+                        dgettext('tuleap-agiledashboard', "Could not find planning with id %s."),
+                        $updated_planning_id
+                    )
+                );
+                $this->redirect(
+                    ['group_id' => $this->group_id, 'planning_id' => $updated_planning_id, 'action' => 'edit']
+                );
+                return;
+            }
 
             try {
                 $this->planning_backlog_tracker_removal_checker->checkRemovedBacklogTrackersCanBeRemoved(
                     $user,
-                    $this->planning_factory->getPlanning($updated_planning_id),
+                    $planning,
                     $planning_parameter
                 );
 

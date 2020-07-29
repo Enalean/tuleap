@@ -30,9 +30,21 @@ class PlanningParameters
     public const BACKLOG_TRACKER_IDS = 'backlog_tracker_ids';
     public const PLANNING_TRACKER_ID = 'planning_tracker_id';
 
+    /**
+     * @var string
+     */
     public $name;
+    /**
+     * @var string
+     */
     public $backlog_title;
+    /**
+     * @var string
+     */
     public $plan_title;
+    /**
+     * @psalm-var list<int>
+     */
     public $backlog_tracker_ids = [];
     /**
      * @var string|null

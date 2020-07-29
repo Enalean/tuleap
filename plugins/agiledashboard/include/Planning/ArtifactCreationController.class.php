@@ -44,6 +44,9 @@ class Planning_ArtifactCreationController extends MVC2_PluginController
     {
         $planning_id = $this->request->get('planning_id');
         $planning    = $this->planning_factory->getPlanning($planning_id);
+        if ($planning === null) {
+            throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
+        }
         $tracker_id  = $planning->getPlanningTrackerId();
 
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . "/?tracker=$tracker_id&func=new-artifact&planning[$planning_id]=-1");

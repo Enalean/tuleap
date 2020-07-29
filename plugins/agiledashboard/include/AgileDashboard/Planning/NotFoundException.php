@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_NotFoundException extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Planning;
+
+final class NotFoundException extends \RuntimeException
 {
+    public function __construct(int $planning_id)
+    {
+        parent::__construct("Could not find planning with id $planning_id");
+    }
 }
