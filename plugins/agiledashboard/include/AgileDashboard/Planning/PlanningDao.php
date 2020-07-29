@@ -50,7 +50,7 @@ class PlanningDao extends DataAccessObject
         return $planning_id;
     }
 
-    public function createBacklogTracker($planning_id, $backlog_tracker_id)
+    private function createBacklogTracker($planning_id, $backlog_tracker_id)
     {
         $planning_id = $this->da->escapeInt($planning_id);
         $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
@@ -217,7 +217,7 @@ class PlanningDao extends DataAccessObject
         $this->deletePlanningBacklogTrackers($planning_id);
     }
 
-    public function deletePlanningBacklogTrackers($planning_id)
+    private function deletePlanningBacklogTrackers($planning_id)
     {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning_backlog_tracker
