@@ -850,11 +850,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedDao();
     }
 
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        return '';
-    }
-
     public function isArtifactValueAutocomputed(Tracker_Artifact $artifact)
     {
         if (! $artifact->getLastChangeset()->getValue($this)) {

@@ -472,10 +472,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
     }
 
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-    }
-
     public function fetchRawValueFromChangeset($changeset)
     {
     }

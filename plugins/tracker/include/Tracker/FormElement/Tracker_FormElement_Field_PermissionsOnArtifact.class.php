@@ -316,25 +316,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        $html = '';
-        if (! $from || ! ($from_value = $this->getValue($from['value_id']))) {
-            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
-        } else {
-            $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
-        }
-        $to_value = $this->getValue($to['value_id']);
-        $html .= $to_value['value'];
-        return $html;
-    }
-
-    /**
      * @return string
      */
     protected function fetchAdminFormElement()

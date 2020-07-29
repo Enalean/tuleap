@@ -145,10 +145,6 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             {
             }
 
-            public function fetchFollowUp($artifact, $from, $to)
-            {
-            }
-
             public function fetchRawValueFromChangeset($changeset)
             {
             }

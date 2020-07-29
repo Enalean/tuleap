@@ -791,27 +791,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     abstract protected function getValueDao();
 
     /**
-     * Fetch the value to display changes in followups
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     * @return string
-     */
-    abstract public function fetchFollowUp($artifact, $from, $to);
-
-    /**
-     * Fetch the value to display changes in artifact history
-     * @param Tracker_Artifact $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     * @return string
-     */
-    public function fetchHistory($artifact, $from, $to)
-    {
-        return $this->fetchFollowUp($artifact, $from, $to);
-    }
-
-    /**
      * Returns null because a Field object is not of the type FieldComposite
      *
      * @return null

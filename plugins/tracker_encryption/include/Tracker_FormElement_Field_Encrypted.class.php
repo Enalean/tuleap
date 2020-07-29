@@ -307,18 +307,6 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param array $from
-     * @param array $to
-     *
-     * @return string
-     */
-    public function fetchFollowUp($artifact, $from, $to)
-    {
-        return '';
-    }
-
-    /**
      * @param Tracker_Artifact_Changeset $changeset
      *
      * @return string
