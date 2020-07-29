@@ -1754,14 +1754,14 @@ msgstr "Date de dernière mise à jour"
 msgid "Last Updated By"
 msgstr "Dernière Modification Par"
 
-msgid "Last artifact created"
-msgstr "Dernier artifact crée"
+msgid "Last artifact created:"
+msgstr "Dernier artefact crée :"
 
 msgid "Last push"
 msgstr "Dernier push"
 
-msgid "Last update"
-msgstr "Dernière modification"
+msgid "Last update:"
+msgstr "Dernière modification :"
 
 msgid "Latest modifications"
 msgstr "Dernières modifications"
@@ -2079,7 +2079,7 @@ msgid "Notify me when artifacts are created"
 msgstr "Me notifier lors de la création d'un nouvel artéfact"
 
 msgid "Number of open artifacts:"
-msgstr "Nombre d'artifacts ouverts :"
+msgstr "Nombre d'artefacts ouverts :"
 
 msgid "OK, got it!"
 msgstr "OK, vu."
@@ -3520,7 +3520,7 @@ msgid "Tooltip"
 msgstr "Tooltip"
 
 msgid "Total number of artifacts:"
-msgstr "Nombre total d'artifacts :"
+msgstr "Nombre total d'artefacts :"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
