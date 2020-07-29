@@ -1,5 +1,14 @@
 <button class="btn btn-mini toggle-diff">
-    <i class="fa fa-caret-right" ></i> {{# dgettext }} tuleap-tracker |Show diff{{/ dgettext }}
+    <i class="fa fa-caret-right show-diff-follow-up" ></i> {{# dgettext }} tuleap-tracker |Show diff{{/ dgettext }}
 </button>
 
-<div class="diff follow-up-diff">{{{ purified_formatted_diff }}}</div>
+<div class="diff follow-up-diff"
+     data-changeset-id="{{ changeset_id }}"
+     data-artifact-id="{{ artifact_id }}"
+     data-field-id="{{ field_id }}"
+     data-format="html"
+></div>
+
+<div class="alert alert-error hide-diff-error-message" id="tracker-changeset-diff-error-{{ changeset_id }}-{{ field_id }}">
+    {{# dgettext }} tuleap-tracker | Something went wrong, the follow up content couldn't be loaded {{/ dgettext }}
+</div>

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener("DOMContentLoaded", () => {
-    showDiffDirectlyIfInUrl();
+import { get } from "../../../../src/themes/tlp/src/js/fetch-wrapper";
+import { sanitize } from "dompurify";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await showDiffDirectlyIfInUrl();
 
     const toggle_diff_buttons = document.getElementsByClassName("toggle-diff");
 
     for (const diff_button of toggle_diff_buttons) {
-        diff_button.addEventListener("click", function (event: Event) {
+        diff_button.addEventListener("click", async function (event: Event) {
             event.preventDefault();
             toggleIcon(diff_button);
-            toggleDiffContent(diff_button);
+            await toggleDiffContent(diff_button, document);
         });
     }
 });
 
-function toggleDiffContent(diff_button: Element): void {
-    const diff = diff_button.nextElementSibling;
-    if (diff) {
-        diff.classList.toggle("follow-up-diff");
+export async function toggleDiffContent(diff_button: Element, document: Document): Promise<void> {
+    const diff = await diff_button.nextElementSibling;
+    if (!diff) {
+        return;
     }
+
+    if (diff instanceof HTMLElement && diff.innerHTML === "") {
+        const spinner_icon = diff_button.getElementsByClassName("show-diff-follow-up");
+        if (spinner_icon[0]) {
+            spinner_icon[0].classList.add("fa-spin", "fa-circle-o-notch");
+        }
+
+        const changeset_id = diff.dataset.changesetId;
+
+        if (!changeset_id) {
+            throw new Error("Missing changeset id -" + changeset_id);
+        }
+
+        const artifact_id = diff.dataset.artifactId;
+        if (!artifact_id) {
+            throw new Error("Missing artifact id - " + changeset_id);
+        }
+        const field_id = diff.dataset.fieldId;
+        if (!field_id) {
+            throw new Error("Missing field id - " + changeset_id);
+        }
+        const format = diff.dataset.format;
+        if (!format) {
+            throw new Error("Missing format - " + changeset_id);
+        }
+
+        const error_message = document.getElementById(
+            `tracker-changeset-diff-error-${changeset_id}-${field_id}`
+        );
+        if (!error_message) {
+            throw new Error("Missing error message field error-" + changeset_id);
+        }
+        error_message.classList.add("hide-diff-error-message");
+
+        const url =
+            "/plugins/tracker/changeset/" +
+            encodeURI(changeset_id) +
+            "/diff/" +
+            encodeURI(format) +
+            "/" +
+            encodeURI(artifact_id) +
+            "/" +
+            encodeURI(field_id);
+
+        try {
+            const response = await get(url);
+
+            diff.innerHTML = sanitize(await response.json());
+        } catch (e) {
+            error_message.classList.remove("hide-diff-error-message");
+            throw e;
+        } finally {
+            if (spinner_icon[0]) {
+                spinner_icon[0].classList.remove("fa-spin", "fa-circle-o-notch");
+            }
+        }
+    }
+
+    diff.classList.toggle("follow-up-diff");
 }
 
 export function toggleIcon(diff_button: Element): void {
@@ -52,7 +114,7 @@ export function toggleIcon(diff_button: Element): void {
     }
 }
 
-function showDiffDirectlyIfInUrl(): void {
+async function showDiffDirectlyIfInUrl(): Promise<void> {
     const url = document.location.toString(),
         reg_ex = /#followup_(\d+)/,
         matches = url.match(reg_ex);
@@ -74,5 +136,5 @@ function showDiffDirectlyIfInUrl(): void {
         throw Error("Changeset " + followup_id + "does not have a diff button");
     }
     toggleIcon(toggle_diff_button[0]);
-    toggleDiffContent(toggle_diff_button[0]);
+    await toggleDiffContent(toggle_diff_button[0], document);
 }

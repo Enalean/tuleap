@@ -138,8 +138,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false,
-        $for_modal = false
+        $for_mail = false
     ) {
         return false;
     }

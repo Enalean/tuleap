@@ -184,7 +184,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    public function getFollowupContent($diff_to_previous, \PFUser $current_user)
+    public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string
     {
         return dgettext('tuleap-tracker', 'The priority has been') .
             ' ' . $this->getRankProgression() .
@@ -247,8 +247,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false,
-        $for_modal = false
+        $for_mail = false
     ) {
         return '';
     }

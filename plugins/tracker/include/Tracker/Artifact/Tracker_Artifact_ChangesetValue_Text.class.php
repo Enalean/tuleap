@@ -151,14 +151,6 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return false|string
      */
-    public function modalDiff($changeset_value, $format = 'modal', ?PFUser $user = null)
-    {
-        return $this->diff($changeset_value, 'modal', $user);
-    }
-
-    /**
-     * @return false|string
-     */
     public function mailDiff(
         $changeset_value,
         $artifact_id,
@@ -173,7 +165,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         switch ($format) {
             case 'html':
-                $formated_diff = $this->getFormatedDiff($previous, $next);
+                $formated_diff = $this->getFormattedDiff($previous, $next);
                 if ($formated_diff) {
                     $string = $this->fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id);
                 }
@@ -215,44 +207,24 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         }
     }
 
-    /**
-    * Display the diff in changeset
-    *
-    * @return string The text to display
-    */
-    public function fetchDiff($previous, $next, $format)
+    public function fetchDiff(array $previous, array $next, string $format): string
     {
-        $string = '';
-        switch ($format) {
-            case 'text':
-                $diff = new Codendi_Diff($previous, $next);
-                $f    = new Codendi_UnifiedDiffFormatter();
-                $string .= PHP_EOL . $f->format($diff);
-                break;
-            case 'html':
-                $formated_diff = $this->getFormatedDiff($previous, $next);
-                if ($formated_diff) {
-                    $string = $this->fetchDiffInFollowUp($formated_diff);
-                }
-                break;
-            case 'modal':
-                $formated_diff = $this->getFormatedDiff($previous, $next);
-                if ($formated_diff) {
-                    $string = '<div class="diff">' . $formated_diff . '</div>';
-                }
-                break;
-            default:
-                break;
-        }
-        return $string;
+        return $this->fetchDiffInFollowUp("");
     }
 
     protected function fetchDiffInFollowUp(string $formated_diff): string
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+
+        $field = $this->getField();
+        if (! $field instanceof Tracker_FormElement_Field_Text) {
+            throw new LogicException("Field " . $field->getId() . " is not a text field");
+        }
+
         $presenter = new FollowUpPresenter(
-            $this->getId(),
-            $formated_diff
+            $this->getChangeset()->getArtifact(),
+            $field,
+            $this
         );
 
         return $renderer->renderToString(
@@ -261,7 +233,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         );
     }
 
-    private function getFormatedDiff($previous, $next)
+    public function getFormattedDiff(array $previous, array $next): string
     {
         $callback = [Codendi_HTMLPurifier::instance(), 'purify'];
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
