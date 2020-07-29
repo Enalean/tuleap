@@ -26,6 +26,8 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
+use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
+use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;
 
 /**
  * @psalm-immutable
@@ -43,37 +45,57 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
      * @psalm-var TestStatus
      */
     public $test_status;
+    /**
+     * @var ArtifactReferenceRepresentation | null
+     */
+    public $test_execution_used_to_define_status;
+    /**
+     * @var ArtifactReferenceRepresentation | null
+     */
+    public $test_campaign_defining_status;
 
     /**
      * @psalm-param TestStatus $test_status
      */
     private function __construct(
         Tracker_Artifact $artifact,
-        string $short_type,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        ?string $test_status
+        string $short_type,
+        ?string $test_status,
+        ?ArtifactReferenceRepresentation $test_exec,
+        ?ArtifactReferenceRepresentation $test_campaign
     ) {
         parent::__construct($artifact, $form_element_factory, $user, null);
-        $this->short_type  = $short_type;
-        $this->test_status = $test_status;
+        $this->short_type                           = $short_type;
+        $this->test_status                          = $test_status;
+        $this->test_execution_used_to_define_status = $test_exec;
+        $this->test_campaign_defining_status        = $test_campaign;
     }
 
-    /**
-     * @psalm-param TestStatus $test_status
-     */
-    public static function build(
-        Tracker_Artifact $artifact,
-        Tracker_FormElementFactory $form_element_factory,
+    public static function fromTestDefinitionWithTestStatus(
+        TestPlanTestDefinitionWithTestStatus $test_definition_with_test_status,
         PFUser $user,
-        ?string $test_status
+        Tracker_FormElementFactory $form_element_factory
     ): self {
+        $test_definition = $test_definition_with_test_status->getTestDefinition();
         return new self(
-            $artifact,
-            $artifact->getTracker()->getItemName(),
+            $test_definition,
             $form_element_factory,
             $user,
-            $test_status,
+            $test_definition->getTracker()->getItemName(),
+            $test_definition_with_test_status->getStatus(),
+            self::buildArtifactReference($test_definition_with_test_status->getTestExecutionIdUsedToDefineStatus()),
+            self::buildArtifactReference($test_definition_with_test_status->getTestCampaignIdDefiningTheStatus())
         );
+    }
+
+    private static function buildArtifactReference(?int $id): ?ArtifactReferenceRepresentation
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        return new ArtifactReferenceRepresentation($id);
     }
 }

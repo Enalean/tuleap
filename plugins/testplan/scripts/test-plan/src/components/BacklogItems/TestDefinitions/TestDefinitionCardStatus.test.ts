@@ -18,46 +18,65 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { BacklogItem, TestDefinition } from "../../../type";
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../store/type";
+import { TestDefinition } from "../../../type";
 
 describe("TestDefinitionCardStatus", () => {
-    it.each([
-        ["passed", "Passed", "fa-check-circle"],
-        ["failed", "Failed", "fa-times-circle"],
-        ["blocked", "Blocked", "fa-exclamation-circle"],
-        ["notrun", "Not run", "fa-question-circle"],
-        [null, "Not planned in release MyRelease", "fa-circle-thin"],
-    ])(
-        "Displays an icon for test with %s status with the appropriate tooltip",
-        async (test_status: string | null, expected_tooltip: string, expected_icon: string) => {
-            const wrapper = shallowMount(TestDefinitionCardStatus, {
-                localVue: await createTestPlanLocalVue(),
-                propsData: {
-                    test_definition: {
+    it("has a link to go to the test exec in TTM when the test definition is planned", () => {
+        const wrapper = shallowMount(TestDefinitionCardStatus, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    test_status: "notrun",
+                    test_execution_used_to_define_status: {
                         id: 123,
-                        short_type: "test_def",
-                        summary: "Test definition summary",
-                        test_status: test_status,
-                    } as TestDefinition,
-                    backlog_item: { id: 456 } as BacklogItem,
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            milestone_title: "MyRelease",
-                        } as RootState,
-                    }),
-                },
-            });
+                    },
+                    test_campaign_defining_status: {
+                        id: 41,
+                    },
+                } as TestDefinition,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        project_id: 102,
+                        milestone_id: 11,
+                    } as RootState,
+                }),
+            },
+        });
 
-            expect(wrapper.find("[data-test=test-status]").attributes("data-tlp-tooltip")).toBe(
-                expected_tooltip
-            );
-            expect(wrapper.find("[data-test=test-status-icon]").classes(expected_icon)).toBe(true);
-        }
-    );
+        expect(wrapper).toMatchInlineSnapshot(`
+            <a href="/plugins/testmanagement/?group_id=102&amp;milestone_id=11#!/campaigns/41/123/123">
+              <test-definition-card-status-tooltip-icon-stub test_definition="[object Object]"></test-definition-card-status-tooltip-icon-stub>
+            </a>
+        `);
+    });
+
+    it("only shows the icon when the test definition is not planned", () => {
+        const wrapper = shallowMount(TestDefinitionCardStatus, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    test_status: null,
+                    test_execution_used_to_define_status: null,
+                    test_campaign_defining_status: null,
+                } as TestDefinition,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        project_id: 102,
+                        milestone_id: 11,
+                    } as RootState,
+                }),
+            },
+        });
+
+        expect(wrapper).toMatchInlineSnapshot(
+            `<test-definition-card-status-tooltip-icon-stub test_definition="[object Object]"></test-definition-card-status-tooltip-icon-stub>`
+        );
+    });
 });

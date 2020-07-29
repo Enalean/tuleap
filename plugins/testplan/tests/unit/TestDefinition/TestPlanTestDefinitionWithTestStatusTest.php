@@ -37,15 +37,19 @@ final class TestPlanTestDefinitionWithTestStatusTest extends TestCase
 
         $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
         $this->assertEquals(null, $test_def_with_status->getStatus());
+        $this->assertEquals(null, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        $this->assertEquals(null, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 
     public function testBuildWhenTestStatusIsKnown(): void
     {
         $test_def = \Mockery::mock(\Tracker_Artifact::class);
 
-        $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed');
+        $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 14);
 
         $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
         $this->assertEquals("passed", $test_def_with_status->getStatus());
+        $this->assertEquals(852, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        $this->assertEquals(14, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 }

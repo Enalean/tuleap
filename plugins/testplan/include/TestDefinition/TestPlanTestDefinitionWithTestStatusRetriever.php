@@ -74,7 +74,9 @@ class TestPlanTestDefinitionWithTestStatusRetriever
             if (isset($rows[$test_definition_id])) {
                 $test_definitions_with_test_status[] = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition(
                     $test_definition,
-                    $rows[$test_definition_id],
+                    $rows[$test_definition_id]['test_status'],
+                    $rows[$test_definition_id]['test_exec_id'],
+                    $rows[$test_definition_id]['test_campaign_id'],
                 );
             } else {
                 $test_definitions_with_unknown_test_status[] = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(

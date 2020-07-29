@@ -35,25 +35,44 @@ final class TestPlanTestDefinitionWithTestStatus
     private $status;
 
     /**
+     * @var int|null
+     */
+    private $test_execution_id_used_to_define_status;
+    /**
+     * @var int|null
+     */
+    private $test_campaign_id;
+
+    /**
      * @psalm-param null|"notrun"|"passed"|"failed"|"blocked" $status
      */
-    private function __construct(\Tracker_Artifact $test_definition, ?string $status)
-    {
-        $this->test_definition = $test_definition;
-        $this->status          = $status;
+    private function __construct(
+        \Tracker_Artifact $test_definition,
+        ?string $status,
+        ?int $test_execution_id_used_to_define_status,
+        ?int $test_campaign_id
+    ) {
+        $this->test_definition                         = $test_definition;
+        $this->status                                  = $status;
+        $this->test_execution_id_used_to_define_status = $test_execution_id_used_to_define_status;
+        $this->test_campaign_id                        = $test_campaign_id;
     }
 
     public static function unknownTestStatusForTheDefinition(\Tracker_Artifact $test_definition): self
     {
-        return new self($test_definition, null);
+        return new self($test_definition, null, null, null);
     }
 
     /**
      * @psalm-param "notrun"|"passed"|"failed"|"blocked" $status
      */
-    public static function knownTestStatusForTheDefinition(\Tracker_Artifact $test_definition, string $status): self
-    {
-        return new self($test_definition, $status);
+    public static function knownTestStatusForTheDefinition(
+        \Tracker_Artifact $test_definition,
+        string $status,
+        int $test_execution_id_used_to_define_status,
+        int $test_campaign_id
+    ): self {
+        return new self($test_definition, $status, $test_execution_id_used_to_define_status, $test_campaign_id);
     }
 
     public function getTestDefinition(): \Tracker_Artifact
@@ -67,5 +86,15 @@ final class TestPlanTestDefinitionWithTestStatus
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+
+    public function getTestExecutionIdUsedToDefineStatus(): ?int
+    {
+        return $this->test_execution_id_used_to_define_status;
+    }
+
+    public function getTestCampaignIdDefiningTheStatus(): ?int
+    {
+        return $this->test_campaign_id;
     }
 }

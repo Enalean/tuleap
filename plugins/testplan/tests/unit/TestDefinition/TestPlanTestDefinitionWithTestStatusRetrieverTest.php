@@ -74,7 +74,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
             ->andReturn($information);
 
         $this->dao->shouldReceive('searchTestStatusPerTestDefinitionInAMilestone')
-            ->andReturn([457 => 'passed']);
+            ->andReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_campaign_id' => 23]]);
 
         $milestone = \Mockery::mock(\Tracker_Artifact::class);
         $user      = UserTestBuilder::aUser()->build();
@@ -87,7 +87,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
 
         $this->assertEquals(
             [
-                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed'),
+                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed', 95147, 23),
                 TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_1),
             ],
             $test_definitions_with_test_status

@@ -28,6 +28,8 @@ final class BacklogItemTest extends \RestBase
     {
         $backlog_item_id = $this->getIDOfTheOnlyArtifactOfTheTracker('Sprints');
         $milestone_id    = $this->getIDOfTheOnlyArtifactOfTheTracker('Releases');
+        $test_exec_id    = $this->getIDOfTheOnlyArtifactOfTheTracker('Test Execution');
+        $campaign_id     = $this->getIDOfTheOnlyArtifactOfTheTracker('Validation Campaign');
 
         $response = $this->getResponse(
             $this->client->get('backlog_items/' . urlencode((string) $backlog_item_id) . '/test_definitions?milestone_id=' . urlencode((string) $milestone_id))
@@ -41,6 +43,8 @@ final class BacklogItemTest extends \RestBase
         $this->assertEquals('Expected Test Def 1', $linked_test_definition['summary']);
         $this->assertEquals('test_case', $linked_test_definition['short_type']);
         $this->assertEquals('passed', $linked_test_definition['test_status']);
+        $this->assertEquals($test_exec_id, $linked_test_definition['test_execution_used_to_define_status']['id']);
+        $this->assertEquals($campaign_id, $linked_test_definition['test_campaign_defining_status']['id']);
     }
 
     private function getIDOfTheOnlyArtifactOfTheTracker(string $tracker_label): int
