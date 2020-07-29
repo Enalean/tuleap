@@ -50,14 +50,31 @@ export interface BacklogItem extends BacklogItemFromREST {
     readonly test_definitions: TestDefinition[];
 }
 
-export interface TestDefinitionFromREST {
+interface TestDefinitionFromRESTWithNoStatusInformation {
     readonly id: number;
     readonly short_type: string;
     readonly summary: string;
     readonly automated_tests: string;
-    readonly test_status: null | "passed" | "failed" | "blocked" | "notrun";
 }
 
-export interface TestDefinition extends TestDefinitionFromREST {
+interface PlannedTestDefinitionFromREST extends TestDefinitionFromRESTWithNoStatusInformation {
+    readonly test_status: "passed" | "failed" | "blocked" | "notrun";
+    readonly test_execution_used_to_define_status: ArtifactReference;
+    readonly test_campaign_defining_status: ArtifactReference;
+}
+
+interface NotPlannedTestDefinitionFromREST extends TestDefinitionFromRESTWithNoStatusInformation {
+    readonly test_status: null;
+    readonly test_execution_used_to_define_status: null;
+    readonly test_campaign_defining_status: null;
+}
+
+export type TestDefinitionFromREST =
+    | PlannedTestDefinitionFromREST
+    | NotPlannedTestDefinitionFromREST;
+
+interface TestDefinitionRefreshInformation {
     readonly is_just_refreshed: boolean;
 }
+
+export type TestDefinition = TestDefinitionFromREST & TestDefinitionRefreshInformation;

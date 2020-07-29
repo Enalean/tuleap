@@ -19,18 +19,10 @@
   -->
 
 <template>
-    <span
-        class="tlp-tooltip test-plan-test-definition-test-status-tooltip-position"
-        v-bind:data-tlp-tooltip="tooltip_content"
-        data-test="test-status"
-    >
-        <i
-            class="fa fa-fw"
-            v-bind:class="icon_status"
-            aria-hidden="true"
-            data-test="test-status-icon"
-        ></i>
-    </span>
+    <a v-if="go_to_test_exec_link !== null" v-bind:href="go_to_test_exec_link">
+        <test-definition-card-status-tooltip-icon v-bind:test_definition="test_definition" />
+    </a>
+    <test-definition-card-status-tooltip-icon v-else v-bind:test_definition="test_definition" />
 </template>
 
 <script lang="ts">
@@ -38,46 +30,23 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { TestDefinition } from "../../../type";
 import { State } from "vuex-class";
-
-@Component
+import TestDefinitionCardStatusTooltipIcon from "./TestDefinitionCardStatusTooltipIcon.vue";
+import { buildGoToTestExecutionLink } from "../../../helpers/BacklogItems/url-builder";
+@Component({
+    components: { TestDefinitionCardStatusTooltipIcon },
+})
 export default class TestDefinitionCardStatus extends Vue {
     @State
-    readonly milestone_title!: string;
+    readonly project_id!: number;
+
+    @State
+    readonly milestone_id!: number;
 
     @Prop({ required: true })
     readonly test_definition!: TestDefinition;
 
-    get tooltip_content(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return this.$gettext("Passed");
-            case "failed":
-                return this.$gettext("Failed");
-            case "blocked":
-                return this.$gettext("Blocked");
-            case "notrun":
-                return this.$gettext("Not run");
-            default:
-                return this.$gettextInterpolate(
-                    this.$gettext("Not planned in release %{ release_name }"),
-                    { release_name: this.milestone_title }
-                );
-        }
-    }
-
-    get icon_status(): string {
-        switch (this.test_definition.test_status) {
-            case "passed":
-                return "fa-check-circle test-plan-test-definition-icon-status-passed";
-            case "failed":
-                return "fa-times-circle test-plan-test-definition-icon-status-failed";
-            case "blocked":
-                return "fa-exclamation-circle test-plan-test-definition-icon-status-blocked";
-            case "notrun":
-                return "fa-question-circle test-plan-test-definition-icon-status-notrun";
-            default:
-                return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
-        }
+    get go_to_test_exec_link(): string | null {
+        return buildGoToTestExecutionLink(this.project_id, this.milestone_id, this.test_definition);
     }
 }
 </script>
