@@ -27,7 +27,6 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Planning;
-use PlanningDao;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use TestHelper;

@@ -3549,7 +3549,7 @@
       <code>validFile</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/PlanningDao.class.php">
+  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
     <MissingParamType occurrences="17">
       <code>$group_id</code>
       <code>$planning_id</code>

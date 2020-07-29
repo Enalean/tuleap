@@ -28,7 +28,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_NoPlanningsException;
-use PlanningDao;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker;

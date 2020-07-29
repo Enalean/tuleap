@@ -26,7 +26,6 @@ namespace Tuleap\AgileDashboard\Planning;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use PlanningDao;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker_Hierarchy;

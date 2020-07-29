@@ -27,7 +27,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use PlanningDao;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use TrackerFactory;
