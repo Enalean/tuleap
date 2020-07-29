@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TestDefinition } from "../../type";
-import { buildGoToTestExecutionLink } from "./url-builder";
+import { BacklogItem, TestDefinition } from "../../type";
+import {
+    buildCreateNewTestDefinitionLink,
+    buildEditBacklogItemLink,
+    buildGoToTestExecutionLink,
+} from "./url-builder";
 
 describe("URL Builder for backlog items", () => {
     it("does not generate an URL to go to the test exec when then the test definition is not planned", () => {
@@ -50,6 +54,28 @@ describe("URL Builder for backlog items", () => {
 
         expect(url).toBe(
             "/plugins/testmanagement/?group_id=102&milestone_id=12#!/campaigns/21/741/123"
+        );
+    });
+
+    it("generates an URL to go to the edition page of a backlog item", () => {
+        const backlog_item = {
+            id: 123,
+        } as BacklogItem;
+
+        const url = buildEditBacklogItemLink(backlog_item);
+
+        expect(url).toBe("/plugins/tracker/?aid=123");
+    });
+
+    it("generates an URL to add a new test definition linked to a backlog item", () => {
+        const backlog_item = {
+            id: 123,
+        } as BacklogItem;
+
+        const url = buildCreateNewTestDefinitionLink(12, 41, backlog_item);
+
+        expect(url).toBe(
+            "/plugins/tracker/?tracker=12&func=new-artifact&ttm_backlog_item_id=123&ttm_milestone_id=41"
         );
     });
 });

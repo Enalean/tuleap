@@ -18,19 +18,19 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import AddTestButton from "./AddTestButton.vue";
-import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
-import { RootState } from "../../../store/type";
-import { BacklogItem } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { RootState } from "../../store/type";
+import { BacklogItem } from "../../type";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";
 
-describe("AddTestButton", () => {
+describe("AddTestButtonWithAdditionalActionsMenu", () => {
     async function createWrapper(
         state: RootState,
         backlog_item: BacklogItem,
         should_empty_state_be_displayed: boolean
-    ): Promise<Wrapper<AddTestButton>> {
-        return shallowMount(AddTestButton, {
+    ): Promise<Wrapper<AddTestButtonWithAdditionalActionsMenu>> {
+        return shallowMount(AddTestButtonWithAdditionalActionsMenu, {
             localVue: await createTestPlanLocalVue(),
             propsData: {
                 backlog_item,
@@ -67,7 +67,12 @@ describe("AddTestButton", () => {
     it("Does not display the button if the test definitions are still loading", async () => {
         const wrapper = await createWrapper(
             { milestone_id: 69, testdefinition_tracker_id: 42 } as RootState,
-            { id: 123, is_loading_test_definitions: true, can_add_a_test: true } as BacklogItem,
+            {
+                id: 123,
+                is_loading_test_definitions: true,
+                can_add_a_test: true,
+                is_expanded: true,
+            } as BacklogItem,
             false
         );
 
@@ -82,6 +87,7 @@ describe("AddTestButton", () => {
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: true,
                 can_add_a_test: true,
+                is_expanded: true,
             } as BacklogItem,
             false
         );
@@ -97,25 +103,11 @@ describe("AddTestButton", () => {
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: false,
                 can_add_a_test: true,
+                is_expanded: true,
             } as BacklogItem,
             false
         );
 
         expect(wrapper.element).toMatchSnapshot();
-    });
-
-    it("Adds a dedicated class when we are in empty state so that we don't have too much margin", async () => {
-        const wrapper = await createWrapper(
-            { milestone_id: 69, testdefinition_tracker_id: 42 } as RootState,
-            {
-                id: 123,
-                is_loading_test_definitions: false,
-                has_test_definitions_loading_error: false,
-                can_add_a_test: true,
-            } as BacklogItem,
-            true
-        );
-
-        expect(wrapper.classes("test-plan-add-test-button-with-empty-state")).toBe(true);
     });
 });
