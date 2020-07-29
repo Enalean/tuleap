@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,13 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace Tuleap\AgileDashboard\Planning;
+
+use DataAccessObject;
+use PlanningParameters;
+use TrackerDao;
 
 class PlanningDao extends DataAccessObject
 {
-
     private function getTrackerDao()
     {
         return new TrackerDao();
@@ -60,7 +64,7 @@ class PlanningDao extends DataAccessObject
     public function searchPlannings($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM plugin_agiledashboard_planning
                 WHERE group_id = $group_id";
 
@@ -70,7 +74,7 @@ class PlanningDao extends DataAccessObject
     public function searchById($planning_id)
     {
         $planning_id = $this->da->escapeInt($planning_id);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM plugin_agiledashboard_planning
                 WHERE id = $planning_id";
         return $this->retrieve($sql);
@@ -79,7 +83,7 @@ class PlanningDao extends DataAccessObject
     public function searchByPlanningTrackerId($planning_tracker_id)
     {
         $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM plugin_agiledashboard_planning
                 WHERE planning_tracker_id = $planning_tracker_id";
         return $this->retrieve($sql);
@@ -181,8 +185,8 @@ class PlanningDao extends DataAccessObject
 
         $sql = "UPDATE plugin_agiledashboard_planning
                 SET name                = $planning_name,
-                    planning_tracker_id = $planning_tracker_id, 
-                    backlog_title       = $backlog_title, 
+                    planning_tracker_id = $planning_tracker_id,
+                    backlog_title       = $backlog_title,
                     plan_title          = $plan_title
                 WHERE id = $planning_id";
         $this->update($sql);
