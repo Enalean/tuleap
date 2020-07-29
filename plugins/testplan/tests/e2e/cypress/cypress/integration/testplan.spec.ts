@@ -66,7 +66,7 @@ describe("Test plan", function () {
                 it("Display the backlog items", () => {
                     cy.contains("Display list of backlog items with their tests definition");
                     cy.contains("Create new campaign in new “Test” screen").within(() => {
-                        cy.get("[data-test=nb-tests]").contains("3 tests");
+                        cy.get("[data-test=nb-tests]").contains("3 planned tests");
                         cy.get("[data-test=backlog-item-icon]").should(($icon) => {
                             expect($icon).to.have.length(1);
                             expect($icon[0].className).to.match(
@@ -80,17 +80,21 @@ describe("Test plan", function () {
                     cy.contains(
                         "Display list of backlog items with their tests definition"
                     ).click();
-                    cy.contains("Update artifact").within(() => {
-                        cy.get("[data-test=test-status-icon]").should(($icon) => {
-                            expect($icon).to.have.length(1);
-                            expect($icon[0].className).to.match(
-                                /test-plan-test-definition-icon-status-/
-                            );
+                    cy.contains("Update artifact")
+                        .parent()
+                        .within(() => {
+                            cy.get("[data-test=test-status-icon]").should(($icon) => {
+                                expect($icon).to.have.length(1);
+                                expect($icon[0].className).to.match(
+                                    /test-plan-test-definition-icon-status-/
+                                );
+                            });
                         });
-                    });
-                    cy.contains("Send beeper notification").within(() => {
-                        cy.get("[data-test=automated-test-icon]");
-                    });
+                    cy.contains("Send beeper notification")
+                        .parent()
+                        .within(() => {
+                            cy.get("[data-test=automated-test-icon]");
+                        });
                 });
 
                 it("Marks a test as failed", () => {
@@ -154,10 +158,12 @@ function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string
             }
         })
         .click();
-    cy.contains("Update artifact").within(() => {
-        cy.get("[data-test=test-status-icon]").should(
-            "have.class",
-            `test-plan-test-definition-icon-status-${new_status}`
-        );
-    });
+    cy.contains("Update artifact")
+        .parent()
+        .within(() => {
+            cy.get("[data-test=test-status-icon]").should(
+                "have.class",
+                `test-plan-test-definition-icon-status-${new_status}`
+            );
+        });
 }
