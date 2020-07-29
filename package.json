@@ -21,7 +21,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
     "core-js": "^3.6.5",
-    "css-loader": "^3.6.0",
+    "css-loader": "^4.0.0",
     "cssnano": "^4.1.10",
     "cypress": "^4.11.0",
     "eslint": "^7.5.0",

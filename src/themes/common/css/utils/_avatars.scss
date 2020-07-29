@@ -2,6 +2,6 @@ div.avatar { /* stylelint-disable-line selector-no-qualifying-type */
     width: 50px;
     height: 50px;
     border: 1px solid #cccccc;
-    background: #ffffff url('/themes/common/images/avatar_default.png') 0 0 no-repeat;
+    background: #ffffff url('../../../www/themes/common/images/avatar_default.png') 0 0 no-repeat;
     background-size: cover;
 }
