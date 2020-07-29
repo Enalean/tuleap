@@ -83,6 +83,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $something_has_been_updated = $this->setNewDisplayDensity($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewAccessibilityMode($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewUsernameDisplay($request, $layout, $user) || $something_has_been_updated;
+        $something_has_been_updated = $this->setNewRelativeDatesDisplay($request, $layout, $user) || $something_has_been_updated;
 
         $needs_update_db = $this->prepareNewLanguage($request, $layout, $user);
         if (! $needs_update_db && ! $something_has_been_updated) {
@@ -142,7 +143,37 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         if (! $user->setPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS, (string) $new_username_display)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the accessibility mode.'));
+            $layout->addFeedback(Feedback::ERROR, _('Unable to change the username display.'));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function setNewRelativeDatesDisplay(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    {
+        $current_relative_dates_display = (string) $user->getPreference(\DateHelper::PREFERENCE_NAME);
+        $new_relative_dates_display     = (string) $request->get('relative-dates-display');
+
+        if ($current_relative_dates_display === $new_relative_dates_display) {
+            return false;
+        }
+
+        $allowed = [
+            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+        ];
+        if (! in_array($new_relative_dates_display, $allowed, true)) {
+            $layout->addFeedback(Feedback::ERROR, _('Submitted relative dates display is not valid.'));
+
+            return false;
+        }
+
+        if (! $user->setPreference(\DateHelper::PREFERENCE_NAME, $new_relative_dates_display)) {
+            $layout->addFeedback(Feedback::ERROR, _('Unable to change the relative dates display.'));
 
             return false;
         }

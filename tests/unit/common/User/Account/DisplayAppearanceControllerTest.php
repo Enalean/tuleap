@@ -32,7 +32,7 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
-use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
+use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 use Tuleap\User\Account\Appearance\AppearancePresenter;
 
 class DisplayAppearanceControllerTest extends TestCase
@@ -45,7 +45,7 @@ class DisplayAppearanceControllerTest extends TestCase
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppareancePresenterBuilder
+     * @var M\LegacyMockInterface|M\MockInterface|AppearancePresenterBuilder
      */
     private $appearance_builder;
     /**
@@ -62,7 +62,7 @@ class DisplayAppearanceControllerTest extends TestCase
             }
         };
 
-        $this->appearance_builder = M::mock(AppareancePresenterBuilder::class);
+        $this->appearance_builder = M::mock(AppearancePresenterBuilder::class);
         $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
 
         $this->controller = new DisplayAppearanceController(
@@ -103,7 +103,8 @@ class DisplayAppearanceControllerTest extends TestCase
                     true,
                     true,
                     true,
-                    true
+                    true,
+                    \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
                 )
             );
 

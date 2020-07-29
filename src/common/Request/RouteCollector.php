@@ -105,7 +105,7 @@ use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\AccessKeyPresenterBuilder;
-use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
+use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
 use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
@@ -323,7 +323,7 @@ class RouteCollector
             EventManager::instance(),
             TemplateRendererFactory::build(),
             DisplayAppearanceController::getCSRFToken(),
-            new AppareancePresenterBuilder(
+            new AppearancePresenterBuilder(
                 new LanguagePresenterBuilder(new \BaseLanguageFactory()),
                 new ThemeColorPresenterBuilder(new \ThemeVariant())
             )
