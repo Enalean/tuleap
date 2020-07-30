@@ -14,7 +14,7 @@
     "tus-js-client": "^1.5.2",
     "vue": "^2.6.11",
     "vue-dompurify-html": "^2.2.1",
-    "vue-gettext": "^2.1.8",
+    "vue-gettext": "^2.1.10",
     "vue-router": "^3.1.6",
     "vuex": "^3.5.1",
     "vuex-persistedstate": "^2.7.1",
