@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -104,11 +104,11 @@ class ScrumPresenterBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
-        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn(null);
+        $root_planning = null;
+        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($root_planning);
 
         $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnFalse();
         $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
-
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getId')->andReturn(42);
@@ -123,7 +123,12 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
 
         $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter($planning, false)],
+            [new Planning_PlanningAdminPresenter(
+                $this->event_manager,
+                $planning,
+                $root_planning,
+                false
+            )],
             101,
             true,
             "",
@@ -158,7 +163,6 @@ class ScrumPresenterBuilderTest extends TestCase
         $planning->shouldReceive('getId')->andReturn(42);
 
         $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getUri')->once()->andReturn('/tracker/uri');
         $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
         $planning->shouldReceive('getName')->once()->andReturn("tracker name");
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
@@ -181,7 +185,12 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
         $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter($planning, false)],
+            [new Planning_PlanningAdminPresenter(
+                $this->event_manager,
+                $planning,
+                $planning,
+                false
+            )],
             101,
             false,
             "tracker name",
@@ -216,7 +225,6 @@ class ScrumPresenterBuilderTest extends TestCase
         $planning->shouldReceive('getId')->andReturn(42);
 
         $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getUri')->once()->andReturn('/tracker/uri');
         $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
         $planning->shouldReceive('getName')->once()->andReturn("tracker name");
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
@@ -225,7 +233,6 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
-
         $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
@@ -242,7 +249,12 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
         $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter($planning, false)],
+            [new Planning_PlanningAdminPresenter(
+                $this->event_manager,
+                $planning,
+                $planning,
+                false
+            )],
             101,
             false,
             "tracker name",
@@ -277,7 +289,6 @@ class ScrumPresenterBuilderTest extends TestCase
         $planning->shouldReceive('getId')->andReturn(42);
 
         $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getUri')->once()->andReturn('/tracker/uri');
         $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
         $planning->shouldReceive('getName')->once()->andReturn("tracker name");
         $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
@@ -286,7 +297,6 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->config_manager->shouldReceive('getScrumTitle')->once()->andReturn("Scrum");
 
         $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
-
         $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
@@ -300,7 +310,12 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
         $expected_presenter = new AdminScrumPresenter(
-            [new Planning_PlanningAdminPresenter($planning, true)],
+            [new Planning_PlanningAdminPresenter(
+                $this->event_manager,
+                $planning,
+                $planning,
+                true
+            )],
             101,
             false,
             "tracker name",

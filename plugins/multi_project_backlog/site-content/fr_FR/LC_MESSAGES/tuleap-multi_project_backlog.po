@@ -12,6 +12,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3.1\n"
 
+msgid "AgileDashboard service not used in project."
+msgstr "Le service AgileDashboard n'est pas utilisé dans le projet."
+
+msgid "Edit"
+msgstr "Éditer"
+
 msgid ""
 "Extension of the Agile Dashboard plugin to allow planning of Backlog items "
 "across projects"
@@ -21,3 +27,21 @@ msgstr ""
 
 msgid "Multi-Project Backlog"
 msgstr "Backlog Multi-Projet"
+
+msgid "Project not found."
+msgstr "Le projet n'a pas été trouvé."
+
+msgid "There is no root planning in the project."
+msgstr "Il n'y a pas de planning de plus haut niveau dans le projet."
+
+msgid "This planning does not belong to the project."
+msgstr "Ce planning n'appartient pas au projet."
+
+msgid "This planning does not exist."
+msgstr "Ce planning n'existe pas."
+
+msgid "This planning is not the root planning of the project."
+msgstr "Ce planning n'est pas le planning de plus haut niveau du projet."
+
+msgid "You are not AgileDashboard admin."
+msgstr "Vous n'êtes pas administrateur du service AgileDashboard."

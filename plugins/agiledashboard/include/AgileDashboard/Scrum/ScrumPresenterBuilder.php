@@ -27,6 +27,7 @@ use AdminScrumPresenter;
 use AgileDashboard_ConfigurationManager;
 use EventManager;
 use PFUser;
+use Planning;
 use Planning_PlanningAdminPresenter;
 use Planning_PlanningOutOfHierarchyAdminPresenter;
 use PlanningFactory;
@@ -85,16 +86,14 @@ class ScrumPresenterBuilder
     {
         $group_id                    = (int) $project->getID();
         $can_create_planning         = true;
-        $tracker_uri                 = '';
         $root_planning_name          = '';
         $potential_planning_trackers = [];
-        $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
+        $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id) ?: null;
         $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($group_id);
 
         if ($root_planning) {
             $can_create_planning = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
 
-            $tracker_uri                 = $root_planning->getPlanningTracker()->getUri();
             $root_planning_name          = $root_planning->getName();
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
         }
@@ -103,7 +102,7 @@ class ScrumPresenterBuilder
             ->isAtLeastOnePostActionDefinedInProject($group_id);
 
         return new AdminScrumPresenter(
-            $this->getPlanningAdminPresenterList($user, $project, $root_planning_name),
+            $this->getPlanningAdminPresenterList($user, $project, $root_planning),
             $group_id,
             $can_create_planning,
             $root_planning_name,
@@ -152,7 +151,7 @@ class ScrumPresenterBuilder
     /**
      * @return Planning_PlanningOutOfHierarchyAdminPresenter[] | Planning_PlanningAdminPresenter[]
      */
-    private function getPlanningAdminPresenterList(PFUser $user, Project $project, string $root_planning_name): array
+    private function getPlanningAdminPresenterList(PFUser $user, Project $project, ?Planning $root_planning): array
     {
         $plannings                 = [];
         $planning_out_of_hierarchy = [];
@@ -162,19 +161,24 @@ class ScrumPresenterBuilder
         }
 
         $use_explicit_backlog = $this->doesProjectUseExplicitBacklog($project);
-        $root_planning        = $this->planning_factory->getRootPlanning($user, $project_id);
 
         foreach ($this->planning_factory->getPlannings($user, $project_id) as $planning) {
             $is_planning_removal_dangerous = $root_planning && $use_explicit_backlog && $planning->getId() === $root_planning->getId();
 
             if (isset($planning_out_of_hierarchy[$planning->getId()])) {
                 $plannings[] = new Planning_PlanningOutOfHierarchyAdminPresenter(
+                    $this->event_manager,
                     $planning,
-                    $root_planning_name,
+                    $root_planning,
                     $is_planning_removal_dangerous
                 );
             } else {
-                $plannings[] = new Planning_PlanningAdminPresenter($planning, $is_planning_removal_dangerous);
+                $plannings[] = new Planning_PlanningAdminPresenter(
+                    $this->event_manager,
+                    $planning,
+                    $root_planning,
+                    $is_planning_removal_dangerous
+                );
             }
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
+
 class Planning_PlanningAdminPresenter
 {
     private $planning;
@@ -25,19 +28,38 @@ class Planning_PlanningAdminPresenter
      */
     public $is_planning_removal_dangerous;
 
-    public function __construct(Planning $planning, bool $is_planning_removal_dangerous)
-    {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    /**
+     * @var Planning|null
+     */
+    private $root_planning;
+
+    public function __construct(
+        EventManager $event_manager,
+        Planning $planning,
+        ?Planning $root_planning,
+        bool $is_planning_removal_dangerous
+    ) {
         $this->planning                      = $planning;
         $this->is_planning_removal_dangerous = $is_planning_removal_dangerous;
+        $this->event_manager                 = $event_manager;
+        $this->root_planning                 = $root_planning;
     }
 
     public function edit_url()
     {
-        return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query([
-            'group_id' => $this->planning->getGroupId(),
-            'planning_id' => $this->planning->getId(),
-            'action' => 'edit',
-        ]);
+        $event = new PlanningEditURLEvent(
+            $this->planning,
+            $this->root_planning
+        );
+
+        $this->event_manager->processEvent($event);
+
+        return $event->getEditUrl();
     }
 
     public function delete_url()
