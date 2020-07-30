@@ -18,3 +18,4 @@
  */
 
 DROP TABLE IF EXISTS plugin_multi_project_backlog_contributor_projects;
+DROP TABLE IF EXISTS plugin_multi_project_backlog_plannable_item_trackers;

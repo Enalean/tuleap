@@ -15,6 +15,12 @@ msgstr ""
 msgid "AgileDashboard service not used in project."
 msgstr "Le service AgileDashboard n'est pas utilisé dans le projet."
 
+msgid "Contributor Project"
+msgstr "Projet Contributeur"
+
+msgid "Contributor Projects"
+msgstr "Projets Contributeurs"
+
 msgid "Edit"
 msgstr "Éditer"
 
@@ -28,8 +34,28 @@ msgstr ""
 msgid "Multi-Project Backlog"
 msgstr "Backlog Multi-Projet"
 
+msgid "Plannable Items"
+msgstr "Élements plannifiables"
+
+msgid "Planning Configuration"
+msgstr "Configuration du planning"
+
 msgid "Project not found."
 msgstr "Le projet n'a pas été trouvé."
+
+msgid ""
+"The following projects contribute to <b>%s</b> by feeding the backlog with "
+"their plannable items. You can edit these by configuring the top planning of "
+"each of the following projects."
+msgstr ""
+"Les projets suivants contribuent à <b>%s</b> en fournissant dans le backlog "
+"leurs élements planifiables. Vous pouvez les éditer en configurant leur planification "
+"de plus haut niveau dans chacun des projets suivants."
+
+msgid "There are no plannable items in any contributor projects."
+msgstr ""
+"Il n'y a pas d'éléments planifiables dans aucun des projets "
+"contributeurs."
 
 msgid "There is no root planning in the project."
 msgstr "Il n'y a pas de planning de plus haut niveau dans le projet."
