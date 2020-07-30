@@ -89,6 +89,7 @@ class CreateTestEnvironment
         $this->serializeXmlIntoFile($create_test_project->generateXML(), 'project.xml');
 
         $this->copyExtraFiles($archive_base_dir);
+        $this->copyDataDirectoryContent($archive_base_dir);
 
         $this->execImport();
 
@@ -143,6 +144,23 @@ class CreateTestEnvironment
         foreach ($iterator as $file) {
             if ($file->isFile() && ! in_array($file->getBasename(), ['project.xml', 'users.xml'])) {
                 copy($file->getPathname(), $this->output_dir . '/' . $file->getBasename());
+            }
+        }
+    }
+
+    private function copyDataDirectoryContent(string $archive_base_dir): void
+    {
+        $data_dir = $archive_base_dir . '/data';
+        if (! is_dir($data_dir)) {
+            return;
+        }
+        $output_data_dir = $this->output_dir . '/data';
+        if (! is_dir($output_data_dir) && ! mkdir($output_data_dir, 0755) && ! is_dir($output_data_dir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $output_data_dir));
+        }
+        foreach (new \DirectoryIterator($data_dir) as $file) {
+            if ($file->isFile()) {
+                copy($file->getPathname(), $output_data_dir . '/' . $file->getBasename());
             }
         }
     }
