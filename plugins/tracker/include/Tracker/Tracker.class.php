@@ -72,6 +72,8 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
+use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerIsInvalidException;
@@ -166,6 +168,11 @@ class Tracker implements Tracker_Dispatchable_Interface
      * @var TemplateRenderer
      */
     private $renderer;
+
+    /**
+     * @var TrackerStats|null
+     */
+    protected $tracker_stats;
 
     public function __construct(
         $id,
@@ -3069,56 +3076,48 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $recipients;
     }
 
-    protected $cache_stats;
-
     /**
-     * get stats for this tracker
-     *
-     * @return array
+     * Get stats for this tracker
      */
-    public function getStats()
+    public function getStats(): ?TrackerStats
     {
-        if (! isset($this->cache_stats)) {
+        if ($this->tracker_stats === null) {
             $dao = new Tracker_ArtifactDao();
-            $this->cache_stats = $dao->searchStatsForTracker($this->id)->getRow();
+            $row = $dao->searchStatsForTracker($this->id)->getRow();
+
+            if ($row) {
+                $this->tracker_stats = new TrackerStats(
+                    $row['nb_total'],
+                    $row['nb_open'],
+                    $row['last_creation'] ?? null,
+                    $row['last_update'] ?? null
+                );
+            }
         }
-        return $this->cache_stats;
+
+        return $this->tracker_stats;
     }
 
     /**
      * Fetch some statistics about this tracker to display on trackers home page
-     *
-     * @return string html
      */
-    public function fetchStats()
+    public function fetchStatsTooltip(PFUser $current_user): string
     {
-        $html = '';
-        if ($row = $this->getStats()) {
-            $html .= '<div class="tracker_statistics">';
-            $html .= '<div style="text-align:right;font-size:0.825em;">#' . $this->id . '</div>';
-            if ($row['nb_total'] && $this->hasSemanticsStatus()) {
-                $html .= dgettext('tuleap-tracker', 'Number of open artifacts:') . ' ' . $row['nb_open'] . '<br />';
-            }
-
-            $html .= dgettext('tuleap-tracker', 'Total number of artifacts:') . ' ' . $row['nb_total'] . '<br />';
-            if ($row['last_creation'] && $row['last_update']) {
-                $html .= dgettext('tuleap-tracker', 'Recent activity:');
-                $html .= '<ul>';
-                if ($row['last_update']) {
-                    $html .= '<li>' . dgettext('tuleap-tracker', 'Last update') . ' ';
-                    $html .= DateHelper::timeAgoInWords($row['last_update'], true, true);
-                    $html .= '</li>';
-                }
-                if ($row['last_creation']) {
-                    $html .= '<li>' . dgettext('tuleap-tracker', 'Last artifact created') . ' ';
-                    $html .= DateHelper::timeAgoInWords($row['last_creation'], true, true);
-                    $html .= '</li>';
-                }
-                $html .= '</ul>';
-            }
-            $html .= '</div>';
+        if ($this->getStats() === null) {
+            return '';
         }
-        return $html;
+
+        $tooltip_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/tooltip');
+
+        return $tooltip_renderer->renderToString(
+            'stats-tooltip',
+            new TooltipStatsPresenter(
+                $this->getId(),
+                $this->hasSemanticsStatus(),
+                $this->getStats(),
+                $current_user
+            )
+        );
     }
 
     /**
@@ -3377,7 +3376,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 Tracker_FormElementFactory::instance()
             ),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
-            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+            new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build()
         );
 

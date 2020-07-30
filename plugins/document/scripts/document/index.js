@@ -27,7 +27,6 @@ import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
-import "../../../../src/themes/tlp/src/js/custom-elements/relative-date";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);

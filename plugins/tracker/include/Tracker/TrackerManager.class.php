@@ -20,7 +20,9 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
@@ -541,6 +543,18 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $html .= '</a>';
         }
         $html   .= '</p>';
+
+        $core_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+
+        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+            $GLOBALS['HTML']->includeFooterJavascriptFile(
+                $core_assets->getFileURL('tlp-relative-date-polyfills.js')
+            );
+        }
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($core_assets->getFileURL('tlp-relative-date.js'));
+
         foreach ($trackers as $tracker) {
             if ($this->trackerCanBeDisplayed($tracker, $user)) {
                 $html .= '<dt>';
@@ -568,18 +582,19 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
                 $html .= '</a>';
 
-                if ($tracker->userHasFullAccess()) {
+                if ($tracker->userHasFullAccess() && $tracker->getStats()) {
                     $stats = $tracker->getStats();
+
                     $html .= ' <span style="font-size:0.75em">( <strong>';
-                    if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
-                        $html .= (int) ($stats['nb_open']) . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
+                    if ($tracker->hasSemanticsStatus() && $stats->getNbOpenArtifacts() > 0) {
+                        $html .= $stats->getNbOpenArtifacts() . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
                     }
-                    $html .= (int) ($stats['nb_total']) . ' ' . dgettext('tuleap-tracker', 'total');
+                    $html .= $stats->getNbTotalArtifacts() . ' ' . dgettext('tuleap-tracker', 'total');
                     $html .= '</strong> )</span>';
 
                     $html .= '</dt>';
                     $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= $tracker->fetchStats();
+                    $html .= $tracker->fetchStatsTooltip($user);
                     $html .= '</dd>';
                 } else {
                     $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);

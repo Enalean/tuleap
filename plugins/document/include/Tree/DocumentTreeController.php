@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -82,7 +83,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
         $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
-        $this->includeJavascriptFiles($layout);
+        $this->includeJavascriptFiles($layout, $request);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
@@ -128,11 +129,17 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         );
     }
 
-    private function includeJavascriptFiles(BaseLayout $layout): void
+    private function includeJavascriptFiles(BaseLayout $layout, HTTPRequest $request): void
     {
-        $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
-        $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
+        $core_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
+        $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('document.js'));
+
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
+        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+            $layout->includeFooterJavascriptFile($core_assets->getFileURL('tlp-relative-date-polyfills.js'));
+        }
+        $layout->includeFooterJavascriptFile($core_assets->getFileURL('tlp-relative-date.js'));
     }
 
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project)
