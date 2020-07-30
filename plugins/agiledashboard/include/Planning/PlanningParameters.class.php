@@ -50,6 +50,9 @@ class PlanningParameters
      * @var string|null
      */
     public $planning_tracker_id;
+    /**
+     * @var string[]
+     */
     public $priority_change_permission;
 
     public static function fromArray(array $array)

@@ -32,8 +32,10 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetri
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
-use Tuleap\AgileDashboard\Planning\PlanningBacklogTrackerRemovalChecker;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
+use Tuleap\AgileDashboard\Planning\RootPlanning\BacklogTrackerRemovalChecker;
+use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
@@ -81,8 +83,15 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             AgileDashboardPlugin::PLUGIN_NAME
         );
 
-        $planning_factory                                = $this->getPlanningFactory();
-        $milestone_factory                               = $this->getMilestoneFactory();
+        $tracker_dao                  = new TrackerDao();
+        $planning_dao                 = new PlanningDao($tracker_dao);
+        $planning_permissions_manager = new PlanningPermissionsManager();
+        $planning_factory             = new PlanningFactory(
+            $planning_dao,
+            TrackerFactory::instance(),
+            $planning_permissions_manager
+        );
+        $milestone_factory            = $this->getMilestoneFactory();
 
         $event_manager = EventManager::instance();
 
@@ -108,6 +117,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $ugroup_manager = new UGroupManager();
 
+        $db_connection = DBFactory::getMainTuleapDBConnection();
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,
@@ -143,7 +153,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 Tracker_FormElementFactory::instance()
             ),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),
             new ScrumPresenterBuilder(
                 $this->getConfigurationManager(),
@@ -154,14 +164,21 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new AddToTopBacklogPostActionDao()
             ),
             $event_manager,
-            new PlanningUpdater($planning_factory, new ArtifactsInExplicitBacklogDao()),
+            new PlanningUpdater(
+                $planning_factory,
+                new ArtifactsInExplicitBacklogDao(),
+                $planning_dao,
+                $planning_permissions_manager,
+                new DBTransactionExecutorWithConnection($db_connection)
+            ),
             new Planning_RequestValidator($planning_factory),
             AgileDashboard_XMLExporter::build(),
-            new PlanningBacklogTrackerRemovalChecker(
-                $this->getPlanningFactory(),
-                new AddToTopBacklogPostActionDao()
-            ),
-            TrackerFactory::instance()
+            new UpdateIsAllowedChecker(
+                $planning_factory,
+                new BacklogTrackerRemovalChecker(new AddToTopBacklogPostActionDao()),
+                TrackerFactory::instance(),
+                $event_manager
+            )
         );
     }
 

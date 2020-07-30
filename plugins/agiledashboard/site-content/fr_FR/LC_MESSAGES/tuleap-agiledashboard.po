@@ -398,6 +398,9 @@ msgstr ""
 "Les jalons terminés ont leur statut défini à 'fermé' tel que précisé dans la "
 "sémantique."
 
+msgid "Modification of this planning is not allowed."
+msgstr "La modification de cette planification n'est pas autorisée."
+
 msgid "Name"
 msgstr "Nom"
 

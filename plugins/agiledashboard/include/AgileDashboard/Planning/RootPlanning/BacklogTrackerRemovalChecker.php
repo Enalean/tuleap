@@ -18,31 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Planning;
+namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
-use PFUser;
 use Planning;
-use PlanningFactory;
 use PlanningParameters;
+use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 
-class PlanningBacklogTrackerRemovalChecker
+class BacklogTrackerRemovalChecker
 {
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
     /**
      * @var AddToTopBacklogPostActionDao
      */
     private $add_to_top_backlog_post_action_dao;
 
-    public function __construct(
-        PlanningFactory $planning_factory,
-        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao
-    ) {
-        $this->planning_factory                   = $planning_factory;
+    public function __construct(AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao)
+    {
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
@@ -50,23 +41,9 @@ class PlanningBacklogTrackerRemovalChecker
      * @throws TrackerHaveAtLeastOneAddToTopBacklogPostActionException
      */
     public function checkRemovedBacklogTrackersCanBeRemoved(
-        PFUser $user,
         Planning $planning,
         PlanningParameters $planning_parameters
     ): void {
-        $root_planning = $this->planning_factory->getRootPlanning(
-            $user,
-            (int) $planning->getGroupId()
-        );
-
-        if (! $root_planning) {
-            return;
-        }
-
-        if (! $this->isPlanningTheRootPlanning($planning, $root_planning)) {
-            return;
-        }
-
         $removed_backlog_tracker_ids = $this->getRemovedTrackerIds($planning, $planning_parameters);
 
         if (count($removed_backlog_tracker_ids) === 0) {
@@ -82,13 +59,6 @@ class PlanningBacklogTrackerRemovalChecker
                 $this->getTrackerNames($trackers_in_error)
             );
         }
-
-        return;
-    }
-
-    private function isPlanningTheRootPlanning(Planning $planning, Planning $root_planning): bool
-    {
-        return (int) $planning->getId() === (int) $root_planning->getId();
     }
 
     private function getTrackerNames(array $trackers_in_error): array
