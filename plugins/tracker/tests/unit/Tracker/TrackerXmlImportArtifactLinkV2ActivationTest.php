@@ -22,18 +22,17 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TrackerXmlImportArtifactLinkV2Activation extends TestCase
+class TrackerXmlImportArtifactLinkV2ActivationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -42,10 +41,41 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
      */
     private $external_validator;
+    /**
+     * @var MappingsRegistry
+     */
+    private $mappings_registry;
+    /**
+     * @var TrackerXmlImport
+     */
+    private $tracker_xml_importer;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HierarchyDAO
+     */
+    private $hierarchy_dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater
+     */
+    private $artifact_link_usage_updater;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\ArtifactLinksUsageDao
+     */
+    private $artifact_link_usage_dao;
+    /**
+     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $event_manager;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var PFUser
+     */
+    private $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->hierarchy_dao               = Mockery::spy(HierarchyDAO::class);
         $this->artifact_link_usage_updater = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class);
         $this->artifact_link_usage_dao     = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
@@ -85,21 +115,24 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
             \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class),
             \Mockery::spy(\Tracker_Artifact_XMLImport::class),
             \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class),
-            \Mockery::spy(\UGroupManager::class),
+            \Mockery::spy(UGroupRetrieverWithLegacy::class),
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
             \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
-            $this->external_validator
+            $this->external_validator,
+            \Mockery::spy(TrackerXmlImportFeedbackCollector::class),
+            \Mockery::spy(TrackerCreationDataChecker::class),
         );
 
         $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement');
-        $this->external_validator->shouldReceive('extractExternalFieldsFromFormElements');
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getId')->andReturn(201)->getMock();
+        $this->project = new Project(['group_id' => '201']);
 
-        $this->mapping_registery = new MappingsRegistry();
+        $this->user = new PFUser(['language_id' => 'en_US']);
+
+        $this->mappings_registry = new MappingsRegistry();
         $this->configuration     = new ImportConfig();
     }
 
@@ -112,7 +145,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->once();
         $this->artifact_link_usage_updater->shouldReceive('forceDeactivationOfArtifactLinkTypes')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldActivateIfNoAttributeAndProjectDoesNotUseNature(): void
@@ -124,7 +157,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->once();
         $this->artifact_link_usage_updater->shouldReceive('forceDeactivationOfArtifactLinkTypes')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldNotActivateIfAttributeIsFalseAndProjectDoesNotUseNature(): void
@@ -134,7 +167,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('isProjectAllowedToUseArtifactLinkTypes')->once()->andReturns(false);
         $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldActivateIfAttributeIsTrueAndProjectDoesNotUseNature(): void
@@ -144,7 +177,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('isProjectAllowedToUseArtifactLinkTypes')->once()->andReturns(false);
         $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->once();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldDoNothingIfAttributeIsTrueAndProjectUsesNature(): void
@@ -154,7 +187,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('isProjectAllowedToUseArtifactLinkTypes')->andReturns(true);
         $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldDeactivateIfAttributeIsFalseAndProjectUsesNature(): void
@@ -164,7 +197,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
         $this->artifact_link_usage_updater->shouldReceive('isProjectAllowedToUseArtifactLinkTypes')->once()->andReturns(true);
         $this->artifact_link_usage_updater->shouldReceive('forceDeactivationOfArtifactLinkTypes')->once();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldDeactivateATypeIfAttributeIsFalse(): void
@@ -180,7 +213,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
 
         $this->artifact_link_usage_dao->shouldReceive('disableTypeInProject')->with(201, 'type_name')->once();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldActivateATypeIfAttributeIsTrue(): void
@@ -196,7 +229,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
 
         $this->artifact_link_usage_dao->shouldReceive('disableTypeInProject')->with(201, 'type_name')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItShouldActivateATypeIfAttributeIsMissing(): void
@@ -212,7 +245,7 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
 
         $this->artifact_link_usage_dao->shouldReceive('disableTypeInProject')->with(201, 'type_name')->never();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
     public function testItThrowsAnEventToCheckIfTypeCanBeDisabled(): void
@@ -230,6 +263,6 @@ class TrackerXmlImportArtifactLinkV2Activation extends TestCase
 
         $this->event_manager->shouldReceive('processEvent')->with(\Mockery::type(XMLImportArtifactLinkTypeCanBeDisabled::class))->once();
 
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 }
