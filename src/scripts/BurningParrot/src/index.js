@@ -25,12 +25,14 @@ import { init as initScrollbar } from "./scrollbar.js";
 import { init as initProjectFlags } from "./project-flags.js";
 import { init as initProjectPrivacy } from "./project-privacy.js";
 import { init as initNavbarHistory } from "../../navbar-history/index-burningparrot.js";
+import { initHelpDropdown } from "./help-dropdown";
 import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown();
     initProjectNavbarDropdown();
     initSidebar();
+    initHelpDropdown();
     initMotd();
     initScrollbar();
     initNavbarHistory();

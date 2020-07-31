@@ -165,6 +165,7 @@ const webpack_config_for_flaming_parrot_code = {
                 ),
             }
         ),
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
@@ -178,7 +179,7 @@ const webpack_config_for_flaming_parrot_code = {
             },
         ],
     },
-    plugins: [manifest_plugin],
+    plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
 };
 
 const webpack_config_for_rich_text_editor = {

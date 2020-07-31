@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use Feedback;
 use PFUser;
 use ThemeVariantColor;
+use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
@@ -102,6 +103,10 @@ class HeaderPresenter
      * @var bool
      */
     public $user_has_accessibility_mode;
+    /**
+     * @var HelpDropdownPresenter
+     */
+    public $help_dropdown;
 
     public function __construct(
         PFUser $user,
@@ -118,7 +123,8 @@ class HeaderPresenter
         array $toolbar,
         array $breadcrumbs,
         $motd,
-        OpenGraphPresenter $open_graph
+        OpenGraphPresenter $open_graph,
+        HelpDropdownPresenter $help_dropdown_presenter
     ) {
         $this->date_time_format                      = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone                         = TimezoneRetriever::getUserTimezone($user);
@@ -139,6 +145,7 @@ class HeaderPresenter
         $this->has_motd                              = ! empty($motd);
         $this->breadcrumbs                           = $breadcrumbs;
         $this->open_graph                            = $open_graph;
+        $this->help_dropdown                         = $help_dropdown_presenter;
         $this->user_has_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
 
         $this->buildFeedbacks($feedback_logs);

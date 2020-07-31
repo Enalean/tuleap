@@ -1,0 +1,20 @@
+{{# help_dropdown }}
+    <div class="tlp-dropdown help-dropdown">
+        <button type="button" id="help" class="btn btn-outline-primary">
+            <i class="fa fa-question"></i>
+        </button>
+        <div class="tlp-dropdown-menu dropdown-menu-top dropdown-menu-right" role="menu">
+            {{# main_items }}
+                <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item" role="menuitem">
+                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-life-saver"></i>{{ title }}
+                </a>
+            {{/ main_items }}
+            <span class="dropdown-menu-separator" role="separator"></span>
+            <span class="dropdown-menu-item-alt text-muted">
+                {{# footer_items }}
+                    <a href="{{ link }}" role="menuitem">{{ title }}</a>
+                {{/ footer_items }}
+            </span>
+        </div>
+    </div>
+{{/ help_dropdown }}

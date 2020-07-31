@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\HelpDropdown\HelpDropdownPresenter;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_BodyPresenter
 {
     /** @var string */
@@ -28,14 +31,20 @@ class FlamingParrot_BodyPresenter
 
     /** @var string */
     public $user_locale;
+    /**
+     * @var HelpDropdownPresenter
+     */
+    public $help_dropdown;
 
     public function __construct(
         PFUser $user,
         $notifications_placeholder,
+        HelpDropdownPresenter $help_dropdown_presenter,
         $body_class
     ) {
         $this->user_locale               = $user->getLocale();
         $this->notifications_placeholder = $notifications_placeholder;
         $this->body_class                = $body_class;
+        $this->help_dropdown             = $help_dropdown_presenter;
     }
 }

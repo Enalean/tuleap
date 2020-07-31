@@ -25,6 +25,7 @@ use EventManager;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -80,6 +81,7 @@ class HeaderPresenterBuilder
         $motd,
         CssAssetCollection $css_assets,
         OpenGraphPresenter $open_graph,
+        HelpDropdownPresenter $help_dropdown_presenter,
         ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
@@ -102,7 +104,6 @@ class HeaderPresenterBuilder
             $this->navbar_presenter_builder->build(
                 $this->current_user,
                 $this->getExtraTabs(),
-                $this->getHelpMenuItems(),
                 $url_redirect,
                 $registration_user_permission_checker
             ),
@@ -116,7 +117,8 @@ class HeaderPresenterBuilder
             $toolbar,
             $breadcrumbs,
             $motd,
-            $open_graph
+            $open_graph,
+            $help_dropdown_presenter
         );
     }
 
@@ -127,26 +129,6 @@ class HeaderPresenterBuilder
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
         return $additional_tabs;
-    }
-
-    private function getHelpMenuItems()
-    {
-        $help_menu_items = [
-            [
-                'link'  => '/help/',
-                'title' => $GLOBALS['Language']->getText('include_menu', 'get_help')
-            ],
-            [
-                'link'  => '/help/api.php',
-                'title' => $GLOBALS['Language']->getText('include_menu', 'api')
-            ],
-            [
-                'link'  => '/contact.php',
-                'title' => $GLOBALS['Language']->getText('include_menu', 'contact_us')
-            ]
-        ];
-
-        return $help_menu_items;
     }
 
     private function getPageTitle()

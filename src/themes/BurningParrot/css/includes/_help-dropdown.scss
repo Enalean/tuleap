@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.help-dropdown {
+    position: fixed;
+    z-index: 1000;
+    right: $tlp-medium-spacing;
+    bottom: $tlp-medium-spacing;
+
+    #help {
+        position: relative;
+        width: 45px;
+        height: 45px;
+        overflow: visible;
+        border-radius: 50%;
+        text-align: center;
+
+        > .fa {
+            font-size: 20px;
+        }
+    }
+
+    .tlp-dropdown-menu {
+        background: $tlp-theme-sidebar-background-color;
+
+        &::after {
+            border-top-color: $tlp-theme-sidebar-background-color;
+        }
+
+        .help-dropdown-link {
+            &.tlp-dropdown-menu-item {
+                background: $tlp-theme-sidebar-background-color;
+                color: $tlp-ui-border-dark;
+
+                &:hover {
+                    background: #25383f;
+                }
+            }
+        }
+
+        .tlp-dropdown-menu-separator {
+            opacity: .2;
+            background: $tlp-ui-border-dark;
+        }
+
+        .tlp-dropdown-menu-item-alt {
+            display: flex;
+            align-items: baseline;
+            padding: 10px 20px;
+            font-size: 13px;
+
+            > a {
+                margin: 0 10px 0 0;
+                opacity: .6;
+                color: $tlp-ui-border-dark;
+            }
+        }
+    }
+}

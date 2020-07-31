@@ -27,6 +27,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
@@ -36,6 +37,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
+use UserManager;
 use Widget_Static;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -107,12 +109,15 @@ class BurningParrotTheme extends BaseLayout
         $sidebar                     = $this->getSidebarFromParams($params);
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $current_project_navbar_info);
-
+        $current_user                = UserManager::instance()->getCurrentUser();
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
+
+        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder();
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -130,6 +135,7 @@ class BurningParrotTheme extends BaseLayout
             $this->getMOTD(),
             $this->css_assets,
             $open_graph,
+            $help_dropdown_presenter,
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()
             )
