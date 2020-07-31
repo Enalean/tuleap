@@ -76,30 +76,36 @@ final class PlanningDAOTest extends TestCase
                 'name'                => 'Release Planning',
                 'backlog_title'       => 'Product Backlog',
                 'plan_title'          => 'Release Plan',
-                'backlog_tracker_ids' => ['17', '48'],
+                'backlog_tracker_ids' => [17, 48],
                 'planning_tracker_id' => '25',
             ]
         );
         $planning_id = $this->dao->createPlanning($project_id, $planning);
 
-        $planning_row = $this->dao->searchById($planning_id)->getRow();
-        $this->assertSame((string) $planning_id, $planning_row['id']);
-        $this->assertSame('Release Plan', $planning_row['plan_title']);
-        $this->assertSame('Release Planning', $planning_row['name']);
-        $this->assertSame('25', $planning_row['planning_tracker_id']);
-        $this->assertSame((string) $project_id, $planning_row['group_id']);
-        $this->assertSame('Product Backlog', $planning_row['backlog_title']);
+        $planning_row = $this->dao->searchById($planning_id);
+        $this->assertEquals(
+            [
+                'id'                  => $planning_id,
+                'name'                => 'Release Planning',
+                'group_id'            => $project_id,
+                'planning_tracker_id' => 25,
+                'backlog_title'       => 'Product Backlog',
+                'plan_title'          => 'Release Plan',
+            ],
+            $planning_row
+        );
+
         $backlog_tracker_rows = [];
-        foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
+        foreach ($this->dao->searchBacklogTrackersByPlanningId($planning_id) as $row) {
             $backlog_tracker_rows[] = $row['tracker_id'];
         }
-        $this->assertContainsEquals('17', $backlog_tracker_rows);
-        $this->assertContainsEquals('48', $backlog_tracker_rows);
+        $this->assertContains(17, $backlog_tracker_rows);
+        $this->assertContains(48, $backlog_tracker_rows);
 
         $this->dao->deletePlanning($planning_id);
 
-        $this->assertFalse($this->dao->searchById($planning_id)->getRow());
-        $this->assertFalse($this->dao->searchBacklogTrackersById($planning_id)->getRow());
+        $this->assertNull($this->dao->searchById($planning_id));
+        $this->assertEmpty($this->dao->searchBacklogTrackersByPlanningId($planning_id));
     }
 
     public function testAPlanningCanBeUpdated(): void
@@ -110,7 +116,7 @@ final class PlanningDAOTest extends TestCase
                 'name'                => 'Release Planning',
                 'backlog_title'       => 'Product Backlog',
                 'plan_title'          => 'Release Plan',
-                'backlog_tracker_ids' => ['17', '48'],
+                'backlog_tracker_ids' => [17, 48],
                 'planning_tracker_id' => '25',
             ]
         );
@@ -121,25 +127,31 @@ final class PlanningDAOTest extends TestCase
                 'name'                => 'Sprint Planning',
                 'backlog_title'       => 'Epic Backlog',
                 'plan_title'          => 'Sprint Plan',
-                'backlog_tracker_ids' => ['90', '57'],
+                'backlog_tracker_ids' => [90, 57],
                 'planning_tracker_id' => '32'
             ]
         );
         $this->dao->updatePlanning($planning_id, $updated_planning);
 
-        $planning_row = $this->dao->searchById($planning_id)->getRow();
-        $this->assertSame((string) $planning_id, $planning_row['id']);
-        $this->assertSame('Sprint Planning', $planning_row['name']);
-        $this->assertSame((string) $project_id, $planning_row['group_id']);
-        $this->assertSame('32', $planning_row['planning_tracker_id']);
-        $this->assertSame('Epic Backlog', $planning_row['backlog_title']);
-        $this->assertSame('Sprint Plan', $planning_row['plan_title']);
+        $planning_row = $this->dao->searchById($planning_id);
+        $this->assertEquals(
+            [
+                'id'                  => $planning_id,
+                'name'                => 'Sprint Planning',
+                'group_id'            => $project_id,
+                'planning_tracker_id' => 32,
+                'backlog_title'       => 'Epic Backlog',
+                'plan_title'          => 'Sprint Plan',
+            ],
+            $planning_row
+        );
+
         $backlog_tracker_rows = [];
-        foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
+        foreach ($this->dao->searchBacklogTrackersByPlanningId($planning_id) as $row) {
             $backlog_tracker_rows[] = $row['tracker_id'];
         }
-        $this->assertContainsEquals('90', $backlog_tracker_rows);
-        $this->assertContainsEquals('57', $backlog_tracker_rows);
+        $this->assertContains(90, $backlog_tracker_rows);
+        $this->assertContains(57, $backlog_tracker_rows);
 
         $this->dao->deletePlanning($planning_id);
     }
@@ -155,41 +167,47 @@ final class PlanningDAOTest extends TestCase
                 'name'                => 'Release Planning',
                 'backlog_title'       => 'Product Backlog',
                 'plan_title'          => 'Release Plan',
-                'backlog_tracker_ids' => [(string) $first_backlog_tracker_id, (string) $second_backlog_tracker_id],
+                'backlog_tracker_ids' => [$first_backlog_tracker_id, $second_backlog_tracker_id],
                 'planning_tracker_id' => (string) $milestone_tracker_id,
             ]
         );
         $planning_id               = $this->dao->createPlanning($project_id, $planning);
 
-        $planning_row_by_project = $this->dao->searchPlannings($project_id)->getRow();
-        $this->assertSame((string) $planning_id, $planning_row_by_project['id']);
+        $planning_rows_by_project = $this->dao->searchByProjectId($project_id);
+        assert(count($planning_rows_by_project) > 0);
+        $this->assertContains($planning_id, $planning_rows_by_project[0]);
 
-        $planning_row_by_planning_tracker = $this->dao->searchByPlanningTrackerId($milestone_tracker_id)->getRow();
-        $this->assertSame((string) $planning_id, $planning_row_by_planning_tracker['id']);
+        $planning_row_by_milestone_tracker = $this->dao->searchByMilestoneTrackerId($milestone_tracker_id);
+        $this->assertContains($planning_id, $planning_row_by_milestone_tracker);
 
-        $planning_row_by_multiple_planning_tracker = $this->dao->searchByPlanningTrackerIds(
+        $planning_rows_by_multiple_milestone_trackers = $this->dao->searchByMilestoneTrackerIds(
             [$milestone_tracker_id, 404]
-        )->getRow();
-        $this->assertSame((string) $planning_id, $planning_row_by_multiple_planning_tracker['id']);
+        );
+        assert(count($planning_rows_by_multiple_milestone_trackers) > 0);
+        $this->assertContains($planning_id, $planning_rows_by_multiple_milestone_trackers[0]);
 
-        $milestone_tracker_row = $this->dao->searchPlanningTrackerIdsByGroupId($project_id);
-        $this->assertContainsEquals($milestone_tracker_id, $milestone_tracker_row);
+        $milestone_tracker_row = $this->dao->searchMilestoneTrackerIdsByProjectId($project_id);
+        $this->assertContains($milestone_tracker_id, $milestone_tracker_row);
 
         $not_milestone_tracker_rows = [];
-        foreach ($this->dao->searchNonPlanningTrackersByGroupId($project_id) as $row) {
+        $non_planning_rows          = $this->dao->searchNonPlanningTrackersByGroupId($project_id);
+        assert($non_planning_rows !== false);
+        foreach ($non_planning_rows as $row) {
             $not_milestone_tracker_rows[] = $row['id'];
         }
-        $this->assertContainsEquals(self::$not_milestone_tracker_id, $not_milestone_tracker_rows);
+        $this->assertContains((string) self::$not_milestone_tracker_id, $not_milestone_tracker_rows);
 
-        $planning_row_by_backlog_tracker = $this->dao->searchByBacklogTrackerId($first_backlog_tracker_id)->getRow();
-        $this->assertSame((string) $planning_id, $planning_row_by_backlog_tracker['id']);
+        $planning_rows_by_backlog_tracker = $this->dao->searchByBacklogTrackerId($first_backlog_tracker_id);
+        assert(count($planning_rows_by_backlog_tracker) > 0);
+        $this->assertContains($planning_id, $planning_rows_by_backlog_tracker[0]);
 
-        $backlog_tracker_row = $this->dao->searchBacklogItemsByTrackerId($first_backlog_tracker_id)->getRow();
-        $this->assertSame((string) $first_backlog_tracker_id, $backlog_tracker_row['tracker_id']);
+        $backlog_tracker_rows = $this->dao->searchBacklogTrackersByTrackerId($first_backlog_tracker_id);
+        assert(count($backlog_tracker_rows) > 0);
+        $this->assertContains($first_backlog_tracker_id, $backlog_tracker_rows[0]);
 
-        $backlog_tracker_rows_by_project = $this->dao->searchBacklogTrackerIdsByGroupId($project_id);
-        $this->assertContainsEquals($first_backlog_tracker_id, $backlog_tracker_rows_by_project);
-        $this->assertContainsEquals($second_backlog_tracker_id, $backlog_tracker_rows_by_project);
+        $backlog_tracker_rows_by_project = $this->dao->searchBacklogTrackerIdsByProjectId($project_id);
+        $this->assertContains($first_backlog_tracker_id, $backlog_tracker_rows_by_project);
+        $this->assertContains($second_backlog_tracker_id, $backlog_tracker_rows_by_project);
 
         $this->dao->deletePlanning($planning_id);
     }

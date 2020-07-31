@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
+use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -138,19 +139,6 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * Return an empty milestone for given planning/project.
-     *
-     * @param int $planning_id
-     *
-     * @return Planning_NoMilestone
-     */
-    public function getNoMilestone(Project $project, $planning_id)
-    {
-        $planning = $this->planning_factory->getPlanning($planning_id);
-        return new Planning_NoMilestone($project, $planning);
-    }
-
-    /**
      * Create a milestone corresponding to an artifact
      *
      * @param int $artifact_id
@@ -232,7 +220,7 @@ class Planning_MilestoneFactory
     {
         $planning = $this->planning_factory->getPlanning($planning_id);
         if ($planning === null) {
-            throw new Planning_NotFoundException();
+            throw new NotFoundException($planning_id);
         }
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
@@ -861,6 +849,9 @@ class Planning_MilestoneFactory
     public function getLastMilestoneCreated(PFUser $user, $planning_id)
     {
         $planning  = $this->planning_factory->getPlanning($planning_id);
+        if ($planning === null) {
+            throw new NotFoundException($planning_id);
+        }
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {
             return $this->getMilestoneFromArtifact(array_shift($artifacts));

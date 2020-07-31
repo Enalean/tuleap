@@ -18,210 +18,219 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Planning;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use PlanningParameters;
 use TrackerDao;
+use Tuleap\DB\DataAccessObject;
 
 class PlanningDao extends DataAccessObject
 {
-    private function getTrackerDao()
+    /**
+     * @var TrackerDao
+     */
+    private $tracker_dao;
+
+    public function __construct(?TrackerDao $tracker_dao = null)
     {
-        return new TrackerDao();
+        parent::__construct();
+        $this->tracker_dao = $tracker_dao ?? new TrackerDao();
     }
 
-    public function createPlanning($group_id, PlanningParameters $planning_parameters)
+    public function createPlanning(int $group_id, PlanningParameters $planning_parameters): int
     {
-        $planning_name       = $this->da->quoteSmart($planning_parameters->name);
-        $backlog_title       = $this->da->quoteSmart($planning_parameters->backlog_title);
-        $plan_title          = $this->da->quoteSmart($planning_parameters->plan_title);
-        $group_id            = $this->da->escapeInt($group_id);
-        $planning_tracker_id = $this->da->escapeInt($planning_parameters->planning_tracker_id);
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($group_id, $planning_parameters): int {
+                $planning_id = (int) $db->insertReturnId(
+                    'plugin_agiledashboard_planning',
+                    [
+                        'name'                => $planning_parameters->name,
+                        'group_id'            => $group_id,
+                        'planning_tracker_id' => $planning_parameters->planning_tracker_id,
+                        'backlog_title'       => $planning_parameters->backlog_title,
+                        'plan_title'          => $planning_parameters->plan_title,
+                    ]
+                );
 
-        $sql = "INSERT INTO plugin_agiledashboard_planning
-                    (name, group_id, planning_tracker_id, backlog_title, plan_title)
-                    VALUES ($planning_name, $group_id, $planning_tracker_id, $backlog_title, $plan_title)";
-
-        $planning_id = $this->updateAndGetLastId($sql);
-
-        $this->createBacklogTrackers($planning_id, $planning_parameters);
-
-        return $planning_id;
+                $this->createBacklogTrackers($db, $planning_id, $planning_parameters);
+                return $planning_id;
+            }
+        );
     }
 
-    private function createBacklogTracker($planning_id, $backlog_tracker_id)
+    private function createBacklogTracker(EasyDB $db, int $planning_id, int $backlog_tracker_id): void
     {
-        $planning_id = $this->da->escapeInt($planning_id);
-        $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
-
-        $sql = "INSERT INTO plugin_agiledashboard_planning_backlog_tracker
-                (planning_id, tracker_id)
-                VALUES ($planning_id, $backlog_tracker_id)";
-        $this->update($sql);
+        $db->insert(
+            'plugin_agiledashboard_planning_backlog_tracker',
+            [
+                'planning_id' => $planning_id,
+                'tracker_id'  => $backlog_tracker_id
+            ]
+        );
     }
 
-    public function searchPlannings($group_id)
+    /**
+     * @psalm-return list<array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}>
+     */
+    public function searchByProjectId(int $project_id): array
     {
-        $group_id = $this->da->escapeInt($group_id);
-        $sql = "SELECT *
-                FROM plugin_agiledashboard_planning
-                WHERE group_id = $group_id";
-
-        return $this->retrieve($sql);
+        $sql = 'SELECT * FROM plugin_agiledashboard_planning WHERE group_id = ?';
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function searchById($planning_id)
+    /**
+     * @psalm-return array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}
+     */
+    public function searchById(int $planning_id): ?array
     {
-        $planning_id = $this->da->escapeInt($planning_id);
-        $sql = "SELECT *
-                FROM plugin_agiledashboard_planning
-                WHERE id = $planning_id";
-        return $this->retrieve($sql);
+        $sql = 'SELECT * FROM plugin_agiledashboard_planning WHERE id = ?';
+        return $this->getDB()->row($sql, $planning_id);
     }
 
-    public function searchByPlanningTrackerId($planning_tracker_id)
+    /**
+     * @psalm-return array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}
+     */
+    public function searchByMilestoneTrackerId(int $milestone_tracker_id): ?array
     {
-        $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
-        $sql = "SELECT *
-                FROM plugin_agiledashboard_planning
-                WHERE planning_tracker_id = $planning_tracker_id";
-        return $this->retrieve($sql);
+        $sql = 'SELECT * FROM plugin_agiledashboard_planning WHERE planning_tracker_id = ?';
+        return $this->getDB()->row($sql, $milestone_tracker_id);
     }
 
-    public function searchByPlanningTrackerIds(array $planning_tracker_ids)
+    /**
+     * @psalm-param  list<int> $milestone_tracker_ids
+     * @psalm-return list<array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}>
+     */
+    public function searchByMilestoneTrackerIds(array $milestone_tracker_ids): array
     {
-        $planning_tracker_ids = $this->da->escapeIntImplode($planning_tracker_ids);
-
-        $sql = "SELECT *
-                FROM plugin_agiledashboard_planning
-                WHERE planning_tracker_id IN ($planning_tracker_ids)";
-        return $this->retrieve($sql);
+        $in_statement = EasyStatement::open()->in('planning_tracker_id IN (?*)', $milestone_tracker_ids);
+        $sql          = "SELECT * FROM plugin_agiledashboard_planning WHERE $in_statement";
+        return $this->getDB()->safeQuery($sql, $in_statement->values());
     }
 
-    public function searchByBacklogTrackerId($backlog_tracker_id)
+    /**
+     * @psalm-return list<array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string, backlog_tracker_id:int}>
+     */
+    public function searchByBacklogTrackerId(int $backlog_tracker_id): array
     {
-        $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
-        $sql = "
-            SELECT p.*,
-                   b.tracker_id AS backlog_tracker_id
-
-            FROM      plugin_agiledashboard_planning                  AS p
-            INNER JOIN plugin_agiledashboard_planning_backlog_tracker AS b ON p.id = b.planning_id
-
-            WHERE b.tracker_id = $backlog_tracker_id
-            GROUP BY p.id;
-        ";
-        return $this->retrieve($sql);
+        $sql = 'SELECT planning.*,
+                    backlog_trackers.tracker_id AS backlog_tracker_id
+                FROM plugin_agiledashboard_planning AS planning
+                    INNER JOIN plugin_agiledashboard_planning_backlog_tracker AS backlog_trackers
+                ON planning.id = backlog_trackers.planning_id
+                WHERE backlog_trackers.tracker_id = ?
+                GROUP BY planning.id';
+        return $this->getDB()->run($sql, $backlog_tracker_id);
     }
 
-    public function searchBacklogTrackersById($planning_id)
+    /**
+     * @psalm-return list<array{planning_id:int, tracker_id:int}>
+     */
+    public function searchBacklogTrackersByPlanningId(int $planning_id): array
     {
-        $planning_id = $this->da->escapeInt($planning_id);
-        // TODO: Merge table 'plugin_agiledashboard_planning_backlog_tracker' into 'plugin_agiledashboard_planning'
-        $sql = "SELECT *
+        $sql = 'SELECT * FROM plugin_agiledashboard_planning_backlog_tracker WHERE planning_id = ?';
+        return $this->getDB()->run($sql, $planning_id);
+    }
+
+    /**
+     * @psalm-return list<array{planning_id:int, tracker_id:int}>
+     */
+    public function searchBacklogTrackersByTrackerId(int $tracker_id): array
+    {
+        $sql = 'SELECT * FROM plugin_agiledashboard_planning_backlog_tracker WHERE tracker_id = ?';
+        return $this->getDB()->run($sql, $tracker_id);
+    }
+
+    /**
+     * @psalm-return list<int>
+     */
+    public function searchBacklogTrackerIdsByProjectId(int $project_id): array
+    {
+        $sql  = 'SELECT tracker_id
                 FROM plugin_agiledashboard_planning_backlog_tracker
-                WHERE planning_id = $planning_id";
-        return $this->retrieve($sql);
-    }
-
-    public function searchBacklogItemsByTrackerId($tracker_id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-
-        $sql = "SELECT *
-                FROM plugin_agiledashboard_planning_backlog_tracker
-                WHERE tracker_id = $tracker_id";
-        return $this->retrieve($sql);
-    }
-
-    public function searchBacklogTrackerIdsByGroupId($group_id)
-    {
-        $group_id = $this->da->escapeInt($group_id);
-
-        $sql = "SELECT tracker_id AS id
-                FROM plugin_agiledashboard_planning_backlog_tracker
-                    JOIN plugin_agiledashboard_planning ON
-                        (plugin_agiledashboard_planning_backlog_tracker.planning_id = plugin_agiledashboard_planning.id)
-                WHERE plugin_agiledashboard_planning.group_id = $group_id";
-
-        return $this->retrieveIds($sql);
-    }
-
-    public function searchPlanningTrackerIdsByGroupId($group_id)
-    {
-        $group_id = $this->da->escapeInt($group_id);
-
-        $sql = "SELECT planning_tracker_id AS id
-                FROM plugin_agiledashboard_planning
-                WHERE group_id = $group_id";
-
-        /* TODO:
-         *   return $this->retrieveIds($sql);
-         *   (needs trunk merge)
-         */
-        $ids = [];
-        foreach ($this->retrieve($sql) as $row) {
-            $ids[] = $row['id'];
+                    JOIN plugin_agiledashboard_planning
+                ON (plugin_agiledashboard_planning_backlog_tracker.planning_id = plugin_agiledashboard_planning.id)
+                WHERE plugin_agiledashboard_planning.group_id = ?';
+        $rows = $this->getDB()->run($sql, $project_id);
+        $ids  = [];
+        foreach ($rows as $row) {
+            $ids[] = $row['tracker_id'];
         }
         return $ids;
     }
 
-    public function searchNonPlanningTrackersByGroupId($group_id)
+    /**
+     * @psalm-return list<int>
+     */
+    public function searchMilestoneTrackerIdsByProjectId(int $project_id): array
     {
-        $planning_tracker_ids = $this->searchPlanningTrackerIdsByGroupId($group_id);
-        $tracker_dao          = $this->getTrackerDao();
-
-        return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
+        $sql  = 'SELECT planning_tracker_id FROM plugin_agiledashboard_planning WHERE group_id = ?';
+        $rows = $this->getDB()->run($sql, $project_id);
+        $ids  = [];
+        foreach ($rows as $row) {
+            $ids[] = $row['planning_tracker_id'];
+        }
+        return $ids;
     }
 
-    public function updatePlanning($planning_id, PlanningParameters $planning_parameters)
+    /**
+     * @return \DataAccessResult|false
+     */
+    public function searchNonPlanningTrackersByGroupId(int $project_id)
     {
-        $planning_id         = $this->da->escapeInt($planning_id);
-        $planning_name       = $this->da->quoteSmart($planning_parameters->name);
-        $backlog_title       = $this->da->quoteSmart($planning_parameters->backlog_title);
-        $plan_title          = $this->da->quoteSmart($planning_parameters->plan_title);
-        $planning_tracker_id = $this->da->escapeInt($planning_parameters->planning_tracker_id);
-
-        $sql = "UPDATE plugin_agiledashboard_planning
-                SET name                = $planning_name,
-                    planning_tracker_id = $planning_tracker_id,
-                    backlog_title       = $backlog_title,
-                    plan_title          = $plan_title
-                WHERE id = $planning_id";
-        $this->update($sql);
-
-        $this->updateBacklogTrackers($planning_id, $planning_parameters);
+        $planning_tracker_ids = $this->searchMilestoneTrackerIdsByProjectId($project_id);
+        return $this->tracker_dao->searchByGroupIdWithExcludedIds($project_id, $planning_tracker_ids);
     }
 
-    private function updateBacklogTrackers($planning_id, PlanningParameters $planning_parameters)
+    public function updatePlanning(int $planning_id, PlanningParameters $planning_parameters): void
     {
-        $this->deletePlanningBacklogTrackers($planning_id);
-        $this->createBacklogTrackers($planning_id, $planning_parameters);
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($planning_id, $planning_parameters) {
+                $db->update(
+                    'plugin_agiledashboard_planning',
+                    [
+                        'name'                => $planning_parameters->name,
+                        'planning_tracker_id' => $planning_parameters->planning_tracker_id,
+                        'backlog_title'       => $planning_parameters->backlog_title,
+                        'plan_title'          => $planning_parameters->plan_title,
+                    ],
+                    ['id' => $planning_id]
+                );
+                $this->updateBacklogTrackers($db, $planning_id, $planning_parameters);
+            }
+        );
     }
 
-    private function createBacklogTrackers($planning_id, PlanningParameters $planning_parameters)
+    private function updateBacklogTrackers(EasyDB $db, int $planning_id, PlanningParameters $planning_parameters): void
+    {
+        $this->deletePlanningBacklogTrackers($db, $planning_id);
+        $this->createBacklogTrackers($db, $planning_id, $planning_parameters);
+    }
+
+    private function createBacklogTrackers(EasyDB $db, int $planning_id, PlanningParameters $planning_parameters): void
     {
         foreach ($planning_parameters->backlog_tracker_ids as $backlog_tracker_id) {
-            $this->createBacklogTracker($planning_id, $backlog_tracker_id);
+            $this->createBacklogTracker($db, $planning_id, (int) $backlog_tracker_id);
         }
     }
 
-    public function deletePlanning($planning_id)
+    public function deletePlanning(int $planning_id): void
     {
-        $planning_id = $this->da->escapeInt($planning_id);
-        $sql = "DELETE FROM plugin_agiledashboard_planning
-                WHERE id=$planning_id";
-        $this->update($sql);
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($planning_id) {
+                $sql = 'DELETE FROM plugin_agiledashboard_planning WHERE id = ?';
+                $db->run($sql, $planning_id);
 
-        $this->deletePlanningBacklogTrackers($planning_id);
+                $this->deletePlanningBacklogTrackers($db, $planning_id);
+            }
+        );
     }
 
-    private function deletePlanningBacklogTrackers($planning_id)
+    private function deletePlanningBacklogTrackers(EasyDB $db, int $planning_id): void
     {
-        $planning_id = $this->da->escapeInt($planning_id);
-        $sql = "DELETE FROM plugin_agiledashboard_planning_backlog_tracker
-                WHERE planning_id=$planning_id";
-        $this->update($sql);
+        $db->delete('plugin_agiledashboard_planning_backlog_tracker', ['planning_id' => $planning_id]);
     }
 }

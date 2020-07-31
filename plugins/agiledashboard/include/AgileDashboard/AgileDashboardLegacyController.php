@@ -79,7 +79,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
 
         try {
             $router->route($request);
-        } catch (\Planning_NotFoundException $exception) {
+        } catch (\Tuleap\AgileDashboard\Planning\NotFoundException $exception) {
             throw new NotFoundException('', $exception);
         }
     }

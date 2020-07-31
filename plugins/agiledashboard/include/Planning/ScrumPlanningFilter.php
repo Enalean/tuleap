@@ -122,7 +122,7 @@ class ScrumPlanningFilter
         $available_trackers = $this->planning_factory->getAvailableBacklogTrackers($user, $project_id);
 
         foreach ($available_trackers as $tracker) {
-            if (count($tracker->getChildren()) === 0 && count($tracker->getParent()) === 0) {
+            if (count($tracker->getChildren()) === 0 && $tracker->getParent() === null) {
                 $trackers_filtered[] = [
                     'name'     => $tracker->getName(),
                     'id'       => $tracker->getId(),

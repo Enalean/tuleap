@@ -3549,59 +3549,6 @@
       <code>validFile</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
-    <MissingParamType occurrences="17">
-      <code>$group_id</code>
-      <code>$planning_id</code>
-      <code>$backlog_tracker_id</code>
-      <code>$group_id</code>
-      <code>$planning_id</code>
-      <code>$planning_tracker_id</code>
-      <code>$backlog_tracker_id</code>
-      <code>$planning_id</code>
-      <code>$tracker_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$planning_id</code>
-      <code>$planning_id</code>
-      <code>$planning_id</code>
-      <code>$planning_id</code>
-      <code>$planning_id</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="7">
-      <code>$planning_parameters-&gt;name</code>
-      <code>$planning_parameters-&gt;backlog_title</code>
-      <code>$planning_parameters-&gt;plan_title</code>
-      <code>$planning_parameters-&gt;name</code>
-      <code>$planning_parameters-&gt;backlog_title</code>
-      <code>$planning_parameters-&gt;plan_title</code>
-      <code>$planning_parameters-&gt;backlog_tracker_ids</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="18">
-      <code>getTrackerDao</code>
-      <code>createPlanning</code>
-      <code>createBacklogTracker</code>
-      <code>searchPlannings</code>
-      <code>searchById</code>
-      <code>searchByPlanningTrackerId</code>
-      <code>searchByPlanningTrackerIds</code>
-      <code>searchByBacklogTrackerId</code>
-      <code>searchBacklogTrackersById</code>
-      <code>searchBacklogItemsByTrackerId</code>
-      <code>searchBacklogTrackerIdsByGroupId</code>
-      <code>searchPlanningTrackerIdsByGroupId</code>
-      <code>searchNonPlanningTrackersByGroupId</code>
-      <code>updatePlanning</code>
-      <code>updateBacklogTrackers</code>
-      <code>createBacklogTrackers</code>
-      <code>deletePlanning</code>
-      <code>deletePlanningBacklogTrackers</code>
-    </MissingReturnType>
-    <PossiblyFalseIterator occurrences="1">
-      <code>$this-&gt;retrieve($sql)</code>
-    </PossiblyFalseIterator>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningFactory.class.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Planning</code>

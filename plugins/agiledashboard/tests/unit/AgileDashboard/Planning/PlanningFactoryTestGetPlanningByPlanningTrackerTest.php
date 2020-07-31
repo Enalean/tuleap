@@ -29,7 +29,6 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use TestHelper;
 use Tracker;
 use TrackerFactory;
 
@@ -67,8 +66,8 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends TestCase
     public function testItReturnsNothingIfThereIsNoAssociatedPlanning(): void
     {
         $tracker = $this->mockTrackerWithId(99);
-        $this->planning_dao->shouldReceive('searchByPlanningTrackerId')
-            ->andReturns(TestHelper::arrayToDar());
+        $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')
+            ->andReturnNull();
 
         $this->assertNull($this->planning_factory->getPlanningByPlanningTracker($tracker));
     }
@@ -86,19 +85,17 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->once()->andReturn($planning_tracker);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->once()->andReturn($backlog_tracker);
 
-        $rows = TestHelper::arrayToDar(
-            [
-                'id'                  => 12,
-                'name'                => 'Foo',
-                'group_id'            => 102,
-                'planning_tracker_id' => 1,
-                'backlog_title'       => 'Release Backlog',
-                'plan_title'          => 'Sprint Plan'
-            ]
-        );
+        $rows = [
+            'id'                  => 12,
+            'name'                => 'Foo',
+            'group_id'            => 102,
+            'planning_tracker_id' => 1,
+            'backlog_title'       => 'Release Backlog',
+            'plan_title'          => 'Sprint Plan'
+        ];
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersById')->andReturn([['tracker_id' => 2]]);
-        $this->planning_dao->shouldReceive('searchByPlanningTrackerId')
+        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->andReturn([['tracker_id' => 2]]);
+        $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')
             ->andReturns($rows);
 
         $retrieved_planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
