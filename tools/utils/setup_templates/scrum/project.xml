@@ -17,27 +17,14 @@
     <dashboards>
         <dashboard name="0 - Project Dashboard">
             <line>
-                <column>
-                    <widget name="projectnote">
-                        <preference name="note">
-                            <value name="title">Note from the editor</value>
-                            <value name="content"><![CDATA[
-You've created a new project based upon a template.
-
-Feel free to change tools customization to your needs.
-
-Add user groups and set permissions.
-
-Customize workflow options.
-]]></value>
-                        </preference>
-                    </widget>
-                    <widget name="projectmembers" />
-                </column>
-                <column>
-                    <widget name="projectheartbeat" />
-                    <widget name="projectcontact" />
-                </column>
+              <column>
+                <widget name="projectdescription"/>
+                <widget name="dashboardprojectmilestone"/>
+              </column>
+              <column>
+                <widget name="projectmembers"/>
+                <widget name="projectheartbeat"/>
+              </column>
             </line>
         </dashboard>
         <dashboard name="1 - Epics (backlog)">

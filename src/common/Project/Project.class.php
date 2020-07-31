@@ -77,10 +77,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      */
     private $serviceClassnames;
 
-    /*
-        basically just call the parent to set up everything
-                and set up services arrays
-    */
     public function __construct($param)
     {
         parent::__construct($param);
@@ -88,6 +84,11 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
         $this->project_data_array = $this->data_array;
+    }
+
+    public static function buildForTest(): self
+    {
+        return new self(['group_id' => '101']);
     }
 
     private function cacheServiceClassnames()

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProjectMilestones\Widget;
 
 use PHPUnit\Framework\TestCase;
@@ -184,6 +186,18 @@ class ProjectMilestonesWidgetRetrieverTest extends TestCase
         $this->project_milestones_dao->shouldNotReceive('create');
 
         $this->assertNull($this->retriever->create($this->http));
+    }
+
+    public function testCreatingProjectMilestoneLikeXMLImportDoes(): void
+    {
+        $request = new \Codendi_Request([
+            ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT => ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF,
+            'project' => \Project::buildForTest(),
+        ]);
+
+        $this->project_milestones_dao->shouldReceive('create')->with(101)->andReturn(455);
+
+        $this->assertEquals(455, $this->retriever->create($request));
     }
 
     public function testUpdatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void

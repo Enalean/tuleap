@@ -47,12 +47,21 @@ class ConfigureAtXMLImport implements Dispatchable
      * @var null|int|false
      */
     private $content_id;
+    /**
+     * @var \Project
+     */
+    private $project;
 
-    public function __construct(\Widget $widget, \SimpleXMLElement $widget_xml, MappingsRegistry $mappings_registry)
-    {
+    public function __construct(
+        \Widget $widget,
+        \SimpleXMLElement $widget_xml,
+        MappingsRegistry $mappings_registry,
+        \Project $project
+    ) {
         $this->widget            = $widget;
         $this->widget_xml        = $widget_xml;
         $this->mappings_registry = $mappings_registry;
+        $this->project           = $project;
     }
 
     public function getWidget()
@@ -88,5 +97,10 @@ class ConfigureAtXMLImport implements Dispatchable
     public function getContentId()
     {
         return $this->content_id;
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->project;
     }
 }
