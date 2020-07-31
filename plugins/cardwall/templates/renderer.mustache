@@ -37,10 +37,6 @@
         </div>
     {{/has_columns}}
     {{#has_columns}}
-        <label id="cardwall_board-nifty">
-            <input type="checkbox" onclick="$(this).up().next('div.cardwall_board').toggleClassName('nifty'); new Ajax.Request('/toggler.php?id=cardwall_board-nifty');" {{#nifty}}checked{{/nifty}}>
-            free-hand drawing view
-        </label>
         {{> board}}
     {{/has_columns}}
 {{/field}}

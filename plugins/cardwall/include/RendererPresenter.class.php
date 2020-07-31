@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,7 +67,6 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter
     ) {
         parent::__construct($board, $redirect_parameter);
         $hp                        = Codendi_HTMLPurifier::instance();
-        $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
         $this->has_swimline_header = false;
         $this->field               = $field ? $field : false;

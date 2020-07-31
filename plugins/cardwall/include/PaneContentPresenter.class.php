@@ -73,7 +73,6 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         Cardwall_EffortProgressPresenter $progress_presenter
     ) {
         parent::__construct($board, $redirect_parameter);
-        $this->nifty                        = '';
         $this->swimline_title               = dgettext('tuleap-cardwall', 'Backlog items');
         $this->has_swimline_header          = true;
         $this->switch_display_username_url  = $switch_display_username_url;
