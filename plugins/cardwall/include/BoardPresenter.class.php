@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,11 +45,6 @@ abstract class Cardwall_BoardPresenter
      * @var bool
      */
     public $has_swimline_header = true;
-
-    /**
-     * @var string
-     */
-    public $nifty = '';
 
     /**
      * @param Cardwall_Board $board The board

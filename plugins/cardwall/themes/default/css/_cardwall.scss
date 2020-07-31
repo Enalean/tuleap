@@ -51,11 +51,6 @@ $cardwall-font-basepath: '../fonts/' !default;
     margin-bottom: 7px;
 }
 
-#cardwall_board-nifty {
-    float: right;
-    color: #999999;
-}
-
 .cardwall_board p {
     margin: 0;
     font-size: 100%;
@@ -69,10 +64,6 @@ $cardwall-font-basepath: '../fonts/' !default;
 
 .cardwall_board ul {
     padding: 0;
-}
-
-.cardwall_board.nifty ul {
-    padding: 3em;
 }
 
 .cardwall_board .toggle-collapse {
@@ -111,30 +102,12 @@ $cardwall-font-basepath: '../fonts/' !default;
     cursor: auto;
 }
 
-.cardwall_board.nifty ul li .card {
-    height: 8em;
-    font-size: 1.5em;
-}
-
 /* stylelint-disable property-no-vendor-prefix */
-.cardwall_board.nifty ul li {
-    -webkit-transform: rotate(-6deg);
-    -o-transform: rotate(-6deg);
-    -moz-transform: rotate(-6deg);
-    -moz-transition: -moz-transform .15s linear;
-    -o-transition: -o-transform .15s linear;
-    -webkit-transition: -webkit-transform .15s linear;
-    -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
-    -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
-    box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
-}
-
 .cardwall_board ul li.error { /* stylelint-disable-line selector-no-qualifying-type */
     -moz-box-shadow: 5px 5px 12px rgba(254, 0, 0, 1);
     -webkit-box-shadow: 5px 5px 12px rgba(254, 0, 0, .7);
     box-shadow: 5px 5px 12px rgba(254, 0, 0, .7);
 }
-/* stylelint-enable property-no-vendor-prefix */
 
 .cardwall_board ul li p.cardwall_board_title { /* stylelint-disable-line selector-no-qualifying-type */
     padding-bottom: 10px;
@@ -142,64 +115,7 @@ $cardwall-font-basepath: '../fonts/' !default;
     font-weight: bold;
 }
 
-.cardwall_board.nifty ul li div.cardwall_board_content { /* stylelint-disable-line selector-no-qualifying-type */
-    height: 83%;
-    overflow: hidden;
-    font-family: 'Reenie Beanie', arial, sans-serif;
-    font-size: 180%;
-}
-
-/* stylelint-disable property-no-vendor-prefix */
-.cardwall_board.nifty ul li:nth-child(even) {
-    position: relative;
-    top: 5px;
-    -o-transform: rotate(4deg);
-    -webkit-transform: rotate(4deg);
-    -moz-transform: rotate(4deg);
-    /*  background:#cfc; */
-}
-
-.cardwall_board.nifty ul li:nth-child(3n) {
-    position: relative;
-    top: -5px;
-    -o-transform: rotate(-3deg);
-    -webkit-transform: rotate(-3deg);
-    -moz-transform: rotate(-3deg);
-    /*  background:#ccf; */
-}
-
-.cardwall_board.nifty ul li:nth-child(5n) {
-    position: relative;
-    top: -10px;
-    -o-transform: rotate(5deg);
-    -webkit-transform: rotate(5deg);
-    -moz-transform: rotate(5deg);
-}
-
-.cardwall_board.nifty ul.nodrag li { /* stylelint-disable-line selector-no-qualifying-type */
-    -o-transform: none;
-    -webkit-transform: none;
-    -moz-transform: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-
-/* magnifying-glass effect. Maybe too disturbing?
-.cardwall_board.nifty ul li:hover, ul li:focus{
-  box-shadow:10px 10px 7px rgba(0,0,0,.7);
-  -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
-  -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
-  -webkit-transform: scale(1.25);
-  -moz-transform: scale(1.25);
-  -o-transform: scale(1.25);
-  position:relative;
-  z-index:5;
-}
-*/
-
 .cardwall_board_column_hover {
-    /*background: #fcfcfc;*/
     -moz-box-shadow: 0 0 20px 0 rgba(0, 0, 0, .1) inset;
     -webkit-box-shadow: 0 0 20px 0 rgba(0, 0, 0, .1) inset;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, .1) inset;
@@ -402,11 +318,6 @@ input[type='text'].search-in-cardwall { /* stylelint-disable-line selector-no-qu
 .dashboard-widget {
     .cardwall_board {
         font-size: 14px;
-    }
-
-    #cardwall_board-nifty,
-    .dropdown-menu {
-        display: none;
     }
 }
 
