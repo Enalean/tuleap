@@ -140,14 +140,6 @@
     }
 }
 
-.test-plan-add-test-button {
-    margin: $tlp-medium-spacing - $tlp-small-spacing;
-
-    &.test-plan-add-test-button-with-empty-state {
-        margin: 0 0 $tlp-large-spacing - $tlp-small-spacing;
-    }
-}
-
 @keyframes pulse-test-definition {
     0% {
         transform: scale(1);

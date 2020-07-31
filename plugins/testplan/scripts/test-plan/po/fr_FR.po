@@ -83,6 +83,9 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
+msgid "Edit %{ item_type } #%{ item_id }"
+msgstr "Éditer %{ item_type } #%{ item_id }"
+
 msgid "Failed"
 msgstr "Échoué"
 

@@ -37,6 +37,7 @@
             <span class="test-plan-backlog-item-title">
                 {{ backlog_item.label }}
             </span>
+            <add-test-button v-bind:backlog_item="backlog_item" />
         </div>
         <backlog-item-coverage v-bind:backlog_item="backlog_item" />
     </a>
@@ -48,10 +49,11 @@ import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
 import { namespace } from "vuex-class";
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
+import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";
 
 const backlog_item_store = namespace("backlog_item");
 @Component({
-    components: { BacklogItemCoverage },
+    components: { AddTestButton: AddTestButtonWithAdditionalActionsMenu, BacklogItemCoverage },
 })
 export default class BacklogItemCard extends Vue {
     @Prop({ required: true })

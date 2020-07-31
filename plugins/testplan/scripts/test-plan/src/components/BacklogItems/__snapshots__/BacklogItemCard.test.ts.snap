@@ -26,6 +26,10 @@ exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
             A backlog item
         
     </span>
+     
+    <add-test-button-stub
+      backlog_item="[object Object]"
+    />
   </div>
    
   <backlog-item-coverage-stub

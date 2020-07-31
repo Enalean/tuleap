@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddTestButtonWithAdditionalActionsMenu Displays the button if conditions are ok 1`] = `
+<div
+  class="tlp-dropdown"
+>
+  <div
+    class="tlp-dropdown-split-button test-plan-add-test-dropdown"
+  >
+    <a
+      class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+      data-current-language="en_US"
+      data-msgid="
+            Create a new test
+        "
+      data-test="add-test-button"
+      href="/plugins/tracker/?tracker=42&func=new-artifact&ttm_backlog_item_id=123&ttm_milestone_id=69"
+    >
+      
+            Create a new test
+        
+    </a>
+     
+    <button
+      class="tlp-button-primary tlp-button-outline tlp-append tlp-dropdown-split-button-caret tlp-button-small"
+    >
+      <i
+        class="fa fa-caret-down"
+      />
+    </button>
+  </div>
+   
+  <div
+    class="tlp-dropdown-menu tlp-dropdown-menu-left"
+    role="menu"
+  >
+    <a
+      class="tlp-dropdown-menu-item"
+      href="/plugins/tracker/?aid=123"
+      role="menuitem"
+    >
+      <i
+        class="fa fa-fw fa-pencil"
+      />
+       
+      <translate-stub
+        tag="span"
+        translateparams="[object Object]"
+      >
+        
+                Edit %{ item_type } #%{ item_id }
+            
+      </translate-stub>
+    </a>
+  </div>
+</div>
+`;

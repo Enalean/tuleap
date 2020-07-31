@@ -17,7 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TestDefinition } from "../../type";
+import { BacklogItem, TestDefinition } from "../../type";
+
+export function buildCreateNewTestDefinitionLink(
+    testdefinition_tracker_id: number,
+    milestone_id: number,
+    backlog_item: BacklogItem
+): string {
+    const url_params = new URLSearchParams({
+        tracker: String(testdefinition_tracker_id),
+        func: "new-artifact",
+        ttm_backlog_item_id: String(backlog_item.id),
+        ttm_milestone_id: String(milestone_id),
+    });
+
+    return `/plugins/tracker/?${url_params.toString()}`;
+}
+
+export function buildEditBacklogItemLink(backlog_item: BacklogItem): string {
+    return `/plugins/tracker/?aid=${encodeURIComponent(backlog_item.id)}`;
+}
 
 export function buildGoToTestExecutionLink(
     project_id: number,

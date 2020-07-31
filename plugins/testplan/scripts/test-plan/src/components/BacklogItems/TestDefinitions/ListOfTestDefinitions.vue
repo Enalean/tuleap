@@ -29,10 +29,6 @@
         <test-definition-skeleton v-if="backlog_item.is_loading_test_definitions" />
         <test-definition-empty-state v-if="should_empty_state_be_displayed" />
         <test-definition-error-state v-if="should_error_state_be_displayed" />
-        <add-test-button
-            v-bind:backlog_item="backlog_item"
-            v-bind:should_empty_state_be_displayed="should_empty_state_be_displayed"
-        />
     </div>
 </template>
 
@@ -44,11 +40,9 @@ import { BacklogItem } from "../../../type";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
-import AddTestButton from "./AddTestButton.vue";
 
 @Component({
     components: {
-        AddTestButton,
         TestDefinitionErrorState,
         TestDefinitionEmptyState,
         TestDefinitionCard,
