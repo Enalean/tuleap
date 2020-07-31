@@ -44,6 +44,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-captcha \
     tuleap-plugin-cardwall \
     tuleap-plugin-crosstracker \
+    tuleap-plugin-create-test-env \
     tuleap-plugin-docman \
     tuleap-plugin-document \
     tuleap-plugin-dynamic-credentials \
