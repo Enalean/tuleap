@@ -13,7 +13,7 @@
     "codemirror": "^5.40.0",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.11",
-    "vue-gettext": "^2.1.8",
+    "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

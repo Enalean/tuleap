@@ -37,7 +37,7 @@
     "uuid": "^3.2.1",
     "vue": "^2.6.11",
     "vue-dompurify-html": "^2.2.1",
-    "vue-gettext": "^2.1.8",
+    "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
