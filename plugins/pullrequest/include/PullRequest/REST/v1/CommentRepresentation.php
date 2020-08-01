@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,18 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class CommentRepresentation
 {
 
     /** @var int */
     public $id;
 
-    /** @var Tuleap\User\REST\MinimalUserRepresentation */
+    /** @var MinimalUserRepresentation */
     public $user;
 
     /**
@@ -44,13 +48,18 @@ class CommentRepresentation
     public $type;
 
 
-    public function build($id, $project_id, $user_representation, $post_date, $content)
+    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content)
     {
         $this->id        = $id;
         $this->user      = $user_representation;
         $this->post_date = JsonCast::toDate($post_date);
-        $purifier        = Codendi_HTMLPurifier::instance();
-        $this->content   = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        $this->content   = self::getPurifiedContent($project_id, $content);
         $this->type      = 'comment';
+    }
+
+    private static function getPurifiedContent(int $project_id, string $content): string
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
     }
 }

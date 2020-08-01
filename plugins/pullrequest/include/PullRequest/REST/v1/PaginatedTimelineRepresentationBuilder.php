@@ -66,18 +66,15 @@ class PaginatedTimelineRepresentationBuilder
     {
         switch (get_class($event)) {
             case Comment::class:
-                $event_representation = new CommentRepresentation();
-                $event_representation->build(
+                return new CommentRepresentation(
                     $event->getId(),
                     $project_id,
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getContent()
                 );
-                return $event_representation;
             case InlineComment::class:
-                $event_representation = new TimelineInlineCommentRepresentation();
-                $event_representation->build(
+                return new TimelineInlineCommentRepresentation(
                     $event->getFilePath(),
                     $event->getUnidiffOffset(),
                     $this->buildMinimalUserRepresentation($event->getUserId()),
@@ -86,14 +83,12 @@ class PaginatedTimelineRepresentationBuilder
                     $event->isOutdated(),
                     $project_id
                 );
-                return $event_representation;
             case TimelineGlobalEvent::class:
-                $event_representation = new TimelineEventRepresentation(
+                return new TimelineEventRepresentation(
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getType()
                 );
-                return $event_representation;
             case ReviewerChange::class:
                 return ReviewerChangeTimelineEventRepresentation::fromReviewerChange($event);
         }

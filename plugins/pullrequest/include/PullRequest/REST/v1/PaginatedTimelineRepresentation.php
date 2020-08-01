@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class PaginatedTimelineRepresentation
 {
 
@@ -30,7 +33,7 @@ class PaginatedTimelineRepresentation
     public $total_size;
 
 
-    public function __construct(array $timeline_representation, $total_size)
+    public function __construct(array $timeline_representation, int $total_size)
     {
         $this->collection = $timeline_representation;
         $this->total_size = $total_size;

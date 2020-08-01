@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,15 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class PullRequestReference
 {
 
     /**
-     * @var id
+     * @var int id
      */
     public $id;
 
@@ -36,9 +38,14 @@ class PullRequestReference
      */
     public $uri;
 
-    public function build(PullRequest $pull_request)
+    private function __construct(int $id)
     {
-        $this->id = JsonCast::toInt($pull_request->getId());
+        $this->id  = $id;
         $this->uri = PullRequestRepresentation::ROUTE . '/' . $this->id;
+    }
+
+    public static function fromPullRequest(PullRequest $pull_request): self
+    {
+        return new self($pull_request->getId());
     }
 }

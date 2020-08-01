@@ -32,9 +32,9 @@ class RepositoryPullRequestRepresentation
     /** @var int */
     public $total_size;
 
-    public function __construct(array $collection, $total_size)
+    public function __construct(array $collection, int $total_size)
     {
-        $this->total_size = (int) $total_size;
+        $this->total_size = $total_size;
         $this->collection = $collection;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,9 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\ShortStat;
 
+/**
+ * @psalm-immutable
+ */
 class PullRequestShortStatRepresentation
 {
 
@@ -33,7 +36,7 @@ class PullRequestShortStatRepresentation
     /** @var int */
     public $lines_removed;
 
-    public function build(ShortStat $short_stat)
+    public function __construct(ShortStat $short_stat)
     {
         $this->files_changed = $short_stat->getFilesChangedNumber();
         $this->lines_added   = $short_stat->getLinesAddedNumber();
