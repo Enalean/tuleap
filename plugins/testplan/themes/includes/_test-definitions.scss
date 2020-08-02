@@ -87,6 +87,11 @@
     margin: 0 4px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
+
+    &:hover {
+        opacity: .7;
+        text-decoration: none;
+    }
 }
 
 .test-plan-test-definition-icons {

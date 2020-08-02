@@ -4,20 +4,9 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
 <div
   class="tlp-card test-plan-test-definition-card"
 >
-  <div
-    class="test-plan-test-definition-xref-title"
-  >
-    <span
-      class="test-plan-test-definition-xref"
-    >
-      
-            test_def #123
-        
-    </span>
-    
-        Test definition summary
-    
-  </div>
+  <test-definition-card-xref-title-stub
+    test_definition="[object Object]"
+  />
    
   <div
     class="test-plan-test-definition-icons"

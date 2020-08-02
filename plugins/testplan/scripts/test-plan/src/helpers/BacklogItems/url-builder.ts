@@ -35,7 +35,15 @@ export function buildCreateNewTestDefinitionLink(
 }
 
 export function buildEditBacklogItemLink(backlog_item: BacklogItem): string {
-    return `/plugins/tracker/?aid=${encodeURIComponent(backlog_item.id)}`;
+    return buildEditArtifactLink(backlog_item.id);
+}
+
+export function buildEditTestDefinitionItemLink(test_definition: TestDefinition): string {
+    return buildEditArtifactLink(test_definition.id);
+}
+
+function buildEditArtifactLink(id: number): string {
+    return `/plugins/tracker/?aid=${encodeURIComponent(id)}`;
 }
 
 export function buildGoToTestExecutionLink(

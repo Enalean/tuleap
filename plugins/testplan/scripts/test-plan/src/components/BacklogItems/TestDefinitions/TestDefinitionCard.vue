@@ -20,12 +20,7 @@
 
 <template>
     <div class="tlp-card test-plan-test-definition-card" v-bind:class="classname">
-        <div class="test-plan-test-definition-xref-title">
-            <span class="test-plan-test-definition-xref">
-                {{ test_definition.short_type }} #{{ test_definition.id }}
-            </span>
-            {{ test_definition.summary }}
-        </div>
+        <test-definition-card-xref-title v-bind:test_definition="test_definition" />
         <div class="test-plan-test-definition-icons">
             <i
                 class="fa test-plan-test-definition-icon-automated-tests"
@@ -46,10 +41,11 @@ import { BacklogItem, TestDefinition } from "../../../type";
 import { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
 import { namespace } from "vuex-class";
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
+import TestDefinitionCardXrefTitle from "./TestDefinitionCardXrefTitle.vue";
 
 const backlog_item_store = namespace("backlog_item");
 @Component({
-    components: { TestDefinitionCardStatus },
+    components: { TestDefinitionCardXrefTitle, TestDefinitionCardStatus },
 })
 export default class TestDefinitionCard extends Vue {
     @Prop({ required: true })

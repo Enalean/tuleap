@@ -21,6 +21,7 @@ import { BacklogItem, TestDefinition } from "../../type";
 import {
     buildCreateNewTestDefinitionLink,
     buildEditBacklogItemLink,
+    buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,
 } from "./url-builder";
 
@@ -65,6 +66,16 @@ describe("URL Builder for backlog items", () => {
         const url = buildEditBacklogItemLink(backlog_item);
 
         expect(url).toBe("/plugins/tracker/?aid=123");
+    });
+
+    it("generates an URL to go to the edition page of a test definition", () => {
+        const test_def = {
+            id: 321,
+        } as TestDefinition;
+
+        const url = buildEditTestDefinitionItemLink(test_def);
+
+        expect(url).toBe("/plugins/tracker/?aid=321");
     });
 
     it("generates an URL to add a new test definition linked to a backlog item", () => {
