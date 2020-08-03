@@ -32,13 +32,21 @@ class FollowUpPresenter
      */
     public $changeset_id;
     /**
-     * @var string
+     * @var int
      */
-    public $purified_formatted_diff;
+    public $field_id;
+    /**
+     * @var int
+     */
+    public $artifact_id;
 
-    public function __construct(int $changeset_id, string $purified_formatted_diff)
-    {
-        $this->changeset_id            = $changeset_id;
-        $this->purified_formatted_diff = $purified_formatted_diff;
+    public function __construct(
+        \Tracker_Artifact $artifact,
+        \Tracker_FormElement_Field_Text $field,
+        \Tracker_Artifact_ChangesetValue_Text $changeset_value
+    ) {
+        $this->changeset_id = $changeset_value->getChangeset()->getId();
+        $this->artifact_id  = $artifact->getId();
+        $this->field_id     = $field->getId();
     }
 }

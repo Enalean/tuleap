@@ -63,4 +63,25 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
 
         return $artifact_field_value_full_representation;
     }
+
+    public function fetchDiff(array $previous, array $next, string $format): string
+    {
+        $string = '';
+        switch ($format) {
+            case 'text':
+                    $diff = new Codendi_Diff($previous, $next);
+                    $f    = new Codendi_UnifiedDiffFormatter();
+                    $string .= PHP_EOL . $f->format($diff);
+                break;
+            case 'html':
+                    $formated_diff = $this->getFormattedDiff($previous, $next);
+                if ($formated_diff) {
+                    $string = $this->fetchDiffInFollowUp($formated_diff);
+                }
+                break;
+            default:
+                break;
+        }
+        return $string;
+    }
 }

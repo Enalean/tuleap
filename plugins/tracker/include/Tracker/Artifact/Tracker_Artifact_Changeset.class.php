@@ -209,7 +209,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->submitted_on;
     }
 
-    public function getFollowupContent($diff_to_previous, \PFUser $current_user)
+    public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string
     {
         $html = '';
 
@@ -630,16 +630,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     }
 
     /**
-     * Return modal format diff between this changeset and previous one (HTML code)
-     *
-     * @return string The field difference between the previous changeset. or false if no changes
-     */
-    public function modalDiffToPrevious($format = 'html', $user = null, $ignore_perms = false)
-    {
-        return $this->diffToPrevious($format, $user, $ignore_perms, false, true);
-    }
-
-    /**
      * Return diff between this followup and previous one (HTML code)
      *
      * @return string html
@@ -648,8 +638,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false,
-        $for_modal = false
+        $for_mail = false
     ) {
         $result             = '';
         $factory            = $this->getFormElementFactory();
@@ -690,8 +679,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                     $format,
                     $user
                 );
-            } elseif ($for_modal) {
-                $diff = $current_changeset_value->modalDiff($previous_changeset_value, $format, $user);
             } else {
                 $diff = $current_changeset_value->diff($previous_changeset_value, $format, $user);
             }

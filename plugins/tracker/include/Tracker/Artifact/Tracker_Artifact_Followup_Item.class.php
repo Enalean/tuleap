@@ -31,7 +31,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getSubmitterUrl();
 
-    abstract public function getFollowupContent($diff_to_previous, \PFUser $current_user);
+    abstract public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string;
 
     /**
      * Return diff between this followup and previous one (HTML code)
@@ -42,8 +42,7 @@ abstract class Tracker_Artifact_Followup_Item
         $format = 'html',
         $user = null,
         $ignore_perms = false,
-        $for_mail = false,
-        $for_modal = false
+        $for_mail = false
     );
 
     public function diffToPreviousArtifactView(PFUser $user, Tracker_Artifact_Followup_Item $previous_item)

@@ -85,7 +85,7 @@ class Tracker_URL extends URL
      *
      * @param Array $requestUri $SERVER['REQUEST_URI']
      *
-     * @return int
+     * @return ?int
      */
     public function getGroupIdFromUrl($requestUri)
     {
@@ -107,8 +107,7 @@ class Tracker_URL extends URL
             // Do nothing
         }
 
-        // If no valid group id found force return of a fake group id
-        return -1;
+        return null;
     }
 
     /**

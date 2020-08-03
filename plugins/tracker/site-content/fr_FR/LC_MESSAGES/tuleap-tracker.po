@@ -624,6 +624,10 @@ msgstr "Titre de l'artefact"
 msgid "Artifact id(s)"
 msgstr "Artefact id(s)"
 
+msgid "Artifact is not found or not accessible by user."
+msgstr ""
+"L'artéfact n'a pas été trouvé ou n'est pas disponible pour l'utilisateur."
+
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
 
@@ -908,6 +912,9 @@ msgstr "Changement de nature de %s à %s : %s"
 
 msgid "Changes are displayed"
 msgstr "Les changements sont affichés"
+
+msgid "Changeset is not found."
+msgstr "Changement non trouvé."
 
 #, php-format
 msgid "Changing %1$s artifact(s):"
@@ -2113,6 +2120,9 @@ msgstr ""
 "Seuls les lettres et le tiret bas sont autorisés pour le nom court (il doit "
 "cependant commencer par une lettre)."
 
+msgid "Only text fields are supported for diff."
+msgstr "Seuls les changements de type texte sont supportés pour les diff."
+
 msgid ""
 "Oops. Something weird occured. Unable to create the tracker. Please try "
 "again."
@@ -2530,6 +2540,9 @@ msgid ""
 msgstr ""
 "Certaines valeurs selectionnées n'ont pu être enregistrées car elle sont "
 "utilisées par une autre sémantique."
+
+msgid "Something went wrong, the follow up content couldn't be loaded"
+msgstr "Quelque chose s'est mal passé, l'historique n'a pas pu être chargé"
 
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."

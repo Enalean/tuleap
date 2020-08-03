@@ -28,15 +28,8 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
      */
     private $changeset;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $field;
-
     protected function setUp(): void
     {
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_Text::class)->shouldReceive('getName')->andReturns('field_text')->getMock();
-
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
     }
 
@@ -47,48 +40,6 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
         $text  = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
         $this->assertEquals('Problems during installation', $text->getText());
         $this->assertEquals('Problems during installation', $text->getValue());
-    }
-
-    public function testNoDiff(): void
-    {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
-        $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
-
-        $this->assertEquals('', $text_1->diff($text_2));
-        $this->assertEquals('', $text_2->diff($text_1));
-    }
-
-    public function testDiff(): void
-    {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(
-            111,
-            $this->changeset,
-            $this->field,
-            false,
-            'Problems during <ins> installation',
-            'text'
-        );
-
-        $previous = ['Problems during <ins> installation'];
-        $next     = ['FullTextSearch does not work on Wiki pages'];
-
-        $this->assertStringContainsString(
-            '- FullTextSearch does not work on Wiki pages',
-            $text_1->fetchDiff($next, $previous, 'text')
-        );
-        $this->assertStringContainsString(
-            '+ Problems during <ins> installation',
-            $text_1->fetchDiff($next, $previous, 'text')
-        );
-
-        $this->assertStringContainsString(
-            '+ FullTextSearch does not work on Wiki pages',
-            $text_1->fetchDiff($previous, $next, 'text')
-        );
-        $this->assertStringContainsString(
-            '- Problems during <ins> installation',
-            $text_1->fetchDiff($previous, $next, 'text')
-        );
     }
 
     public function testItReturnsTheValueWhenFormatIsText(): void
