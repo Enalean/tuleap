@@ -31,6 +31,7 @@ import {
     loadingErrorHasBeenCatched,
     loadingErrorHasBeenCatchedForTestDefinition,
     markTestDefinitionsAsBeingLoaded,
+    removeIsJustRefreshedFlagOnBacklogItem,
     removeIsJustRefreshedFlagOnTestDefinition,
 } from "./backlog-item-mutations";
 
@@ -214,6 +215,32 @@ describe("BacklogItem state mutations", () => {
             loadingErrorHasBeenCatchedForTestDefinition(state, { id: 123 } as BacklogItem);
 
             expect(state.backlog_items[0].has_test_definitions_loading_error).toBe(true);
+        });
+    });
+
+    describe("removeIsJustRefreshedFlagOnBacklogItem", () => {
+        it("removes juste refreshed flag on backlog item", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, is_just_refreshed: true } as BacklogItem],
+            };
+
+            removeIsJustRefreshedFlagOnBacklogItem(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items[0].is_just_refreshed).toBe(false);
+        });
+
+        it("throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: false,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                removeIsJustRefreshedFlagOnBacklogItem(state, { id: 123 } as BacklogItem);
+            }).toThrow();
         });
     });
 

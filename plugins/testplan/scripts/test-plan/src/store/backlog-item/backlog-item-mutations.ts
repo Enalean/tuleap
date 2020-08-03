@@ -32,6 +32,16 @@ export function endLoadingTestDefinition(state: BacklogItemState, item: BacklogI
     updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: false }));
 }
 
+export function removeIsJustRefreshedFlagOnBacklogItem(
+    state: BacklogItemState,
+    item: BacklogItem
+): void {
+    updateBacklogItem(state, item, (item) => ({
+        ...item,
+        is_just_refreshed: false,
+    }));
+}
+
 export function removeIsJustRefreshedFlagOnTestDefinition(
     state: BacklogItemState,
     payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload

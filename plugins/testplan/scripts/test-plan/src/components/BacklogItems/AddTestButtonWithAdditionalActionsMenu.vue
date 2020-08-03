@@ -92,7 +92,7 @@ export default class AddTestButtonWithAdditionalActionsMenu extends Vue {
     }
 
     get edit_backlog_item_href(): string {
-        return buildEditBacklogItemLink(this.backlog_item);
+        return buildEditBacklogItemLink(this.milestone_id, this.backlog_item);
     }
 
     get can_add_button_be_displayed(): boolean {

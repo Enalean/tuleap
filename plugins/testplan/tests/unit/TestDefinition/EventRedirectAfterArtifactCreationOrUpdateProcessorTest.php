@@ -30,7 +30,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
-class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
+final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
@@ -137,6 +137,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $artifact->shouldReceive(['getId' => 1001]);
 
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with("123")
@@ -174,6 +175,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $artifact->shouldReceive(['getId' => 1001]);
 
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with("123")
@@ -223,6 +225,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         ]);
 
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with("123")
@@ -242,6 +245,47 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $this->processor->process($request, $redirect, $artifact);
 
         $this->assertEquals('/testplan/my-project/42/backlog_item/123/test/1001', $redirect->base_url);
+        $this->assertEquals([], $redirect->query_parameters);
+    }
+
+    public function testItRedirectsToTestPlanOfTheMilestoneWhenABacklogItemIsEdited(): void
+    {
+        $request  = $this->aRequest(
+            [
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
+            ]
+        );
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
+        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact->shouldReceive(
+            [
+                'getId'      => 123,
+                'getTracker' => Mockery::mock(\Tracker::class)
+                    ->shouldReceive(
+                        [
+                            'getProject' => Mockery::mock(\Project::class)
+                                ->shouldReceive(['getUnixNameMixedCase' => 'my-project'])
+                                ->getMock()
+                        ]
+                    )->getMock()
+            ]
+        );
+
+        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
+        $this->artifact_factory
+            ->shouldReceive('getArtifactById')
+            ->with("123")
+            ->once()
+            ->andReturn($backlog_item);
+
+        $this->artifact_link_updater->shouldNotReceive('updateArtifactLinks');
+
+        $this->processor->process($request, $redirect, $artifact);
+
+        $this->assertEquals('/testplan/my-project/42/backlog_item/123', $redirect->base_url);
         $this->assertEquals([], $redirect->query_parameters);
     }
 
@@ -267,6 +311,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         ]);
 
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with("123")
@@ -310,6 +355,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         ]);
 
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with("123")

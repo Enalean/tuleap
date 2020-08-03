@@ -41,14 +41,21 @@ export async function loadBacklogItems(
                 },
                 getCollectionCallback: (collection: BacklogItemFromREST[]): BacklogItem[] => {
                     const backlog_items: BacklogItem[] = collection.map(
-                        (item: BacklogItemFromREST): BacklogItem => ({
-                            ...item,
-                            is_expanded: item.id === context.rootState.expand_backlog_item_id,
-                            is_loading_test_definitions: false,
-                            are_test_definitions_loaded: false,
-                            has_test_definitions_loading_error: false,
-                            test_definitions: [],
-                        })
+                        (item: BacklogItemFromREST): BacklogItem => {
+                            const is_expanded =
+                                item.id === context.rootState.expand_backlog_item_id;
+                            return {
+                                ...item,
+                                is_expanded: is_expanded,
+                                is_just_refreshed:
+                                    is_expanded &&
+                                    context.rootState.highlight_test_definition_id === null,
+                                is_loading_test_definitions: false,
+                                are_test_definitions_loaded: false,
+                                has_test_definitions_loading_error: false,
+                                test_definitions: [],
+                            };
+                        }
                     );
                     context.commit("addBacklogItems", backlog_items);
 

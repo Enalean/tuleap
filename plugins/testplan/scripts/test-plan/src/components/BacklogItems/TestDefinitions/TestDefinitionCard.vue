@@ -20,7 +20,10 @@
 
 <template>
     <div class="tlp-card test-plan-test-definition-card" v-bind:class="classname">
-        <test-definition-card-xref-title v-bind:test_definition="test_definition" />
+        <test-definition-card-xref-title
+            v-bind:test_definition="test_definition"
+            v-bind:backlog_item="backlog_item"
+        />
         <div class="test-plan-test-definition-card-category-status">
             <div
                 class="test-plan-test-definition-category"

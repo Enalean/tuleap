@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { TestDefinition } from "../../../type";
+import { BacklogItem, TestDefinition } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../store/type";
 import TestDefinitionCardXrefTitle from "./TestDefinitionCardXrefTitle.vue";
@@ -41,6 +41,9 @@ describe("TestDefinitionCardXrefTitle", () => {
                         id: 41,
                     },
                 } as TestDefinition,
+                backlog_item: {
+                    id: 741,
+                } as BacklogItem,
             },
             mocks: {
                 $store: createStoreMock({
@@ -55,10 +58,10 @@ describe("TestDefinitionCardXrefTitle", () => {
 
         expect(wrapper).toMatchInlineSnapshot(`
             <div class="test-plan-test-definition-xref-title">
-              <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123" class="test-plan-test-definition-xref">
+              <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" class="test-plan-test-definition-xref">
                   test_def #123
                   <i class="fa fa-caret-down"></i></a>
-                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left"><a href="/plugins/tracker/?aid=123" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-fw fa-pencil"></i>
+                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-fw fa-pencil"></i>
                     <translate-stub tag="span" translateparams="[object Object]">
                       Edit %{ item_type } #%{ item_id }
                     </translate-stub>
@@ -85,6 +88,9 @@ describe("TestDefinitionCardXrefTitle", () => {
                     test_execution_used_to_define_status: null,
                     test_campaign_defining_status: null,
                 } as TestDefinition,
+                backlog_item: {
+                    id: 741,
+                } as BacklogItem,
             },
             mocks: {
                 $store: createStoreMock({

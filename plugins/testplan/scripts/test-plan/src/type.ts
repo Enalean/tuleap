@@ -44,6 +44,7 @@ export interface BacklogItemFromREST {
 
 export interface BacklogItem extends BacklogItemFromREST {
     readonly is_expanded: boolean;
+    readonly is_just_refreshed: boolean;
     readonly are_test_definitions_loaded: boolean;
     readonly is_loading_test_definitions: boolean;
     readonly has_test_definitions_loading_error: boolean;

@@ -21,8 +21,11 @@ msgstr "Le jalon n'a pas été trouvé."
 msgid "Project does not use agile dashboard."
 msgstr "Le projet n'utilise pas le dashboard agile."
 
-msgid "Test plan cannot be displayed. Maybe you don't have enough rights to view it."
-msgstr "Le plan de test ne peut pas être affiché. Peut-être que vous n'avez pas les droits suffisants pour le voir."
+msgid ""
+"Test plan cannot be displayed. Maybe you don't have enough rights to view it."
+msgstr ""
+"Le plan de test ne peut pas être affiché. Peut-être que vous n'avez pas les "
+"droits suffisants pour le voir."
 
 msgid "TestPlan"
 msgstr "TestPlan"
@@ -34,10 +37,19 @@ msgid "Unable to link the backlog item to the new artifact"
 msgstr "Impossible de lier l'élément du backlog au nouvel artéfact"
 
 msgid "We recommend the latest version of Firefox, Chrome, or Edge."
-msgstr "Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
+msgstr ""
+"Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
 
 #, php-format
 msgid "You are creating a new test that will cover: %s"
+msgstr "Vous êtes en train de créer un test qui couvrira : %s"
+
+#, php-format
+msgid "You are editing a backlog item included in the milestone: %s"
+msgstr "Vous êtes en train d'éditer un élément du backlog inclut dans le jalon : %s"
+
+#, php-format
+msgid "You are editing a test covering: %s"
 msgstr "Vous êtes en train de créer un test qui couvrira : %s"
 
 msgid "Your browser is not supported."
