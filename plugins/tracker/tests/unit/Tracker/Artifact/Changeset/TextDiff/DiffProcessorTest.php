@@ -56,7 +56,7 @@ final class DiffProcessorTest extends TestCase
 
     public function testTextDiff(): void
     {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(
+        $next = new Tracker_Artifact_ChangesetValue_Text(
             111,
             $this->changeset,
             $this->field,
@@ -65,58 +65,70 @@ final class DiffProcessorTest extends TestCase
             'text'
         );
 
-        $previous = ['Problems during <ins> installation'];
-        $next     = ['FullTextSearch does not work on Wiki pages'];
+        $previous = new Tracker_Artifact_ChangesetValue_Text(
+            112,
+            $this->changeset,
+            $this->field,
+            false,
+            'FullTextSearch does not work on Wiki pages',
+            'text'
+        );
 
         $this->assertStringContainsString(
             '- FullTextSearch does not work on Wiki pages',
-            $this->diff_processor->processDiff($text_1, $next, $previous, 'text')
+            $this->diff_processor->processDiff($next, $previous, 'text')
         );
         $this->assertStringContainsString(
             '+ Problems during <ins> installation',
-            $this->diff_processor->processDiff($text_1, $next, $previous, 'text')
+            $this->diff_processor->processDiff($next, $previous, 'text')
         );
 
         $this->assertStringContainsString(
             '+ FullTextSearch does not work on Wiki pages',
-            $this->diff_processor->processDiff($text_1, $previous, $next, 'text')
+            $this->diff_processor->processDiff($previous, $next, 'text')
         );
         $this->assertStringContainsString(
             '- Problems during <ins> installation',
-            $this->diff_processor->processDiff($text_1, $previous, $next, 'text')
+            $this->diff_processor->processDiff($previous, $next, 'text')
         );
     }
 
     public function testHTMLDiff(): void
     {
-        $text_1 = new Tracker_Artifact_ChangesetValue_Text(
+        $next = new Tracker_Artifact_ChangesetValue_Text(
             111,
             $this->changeset,
             $this->field,
             false,
             'Problems during <ins> installation',
-            'text'
+            'html'
         );
 
-        $previous = ['Problems during <ins> installation'];
-        $next     = ['FullTextSearch does not work on Wiki pages'];
+        $previous = new Tracker_Artifact_ChangesetValue_Text(
+            112,
+            $this->changeset,
+            $this->field,
+            false,
+            'FullTextSearch does not work on Wiki pages',
+            'html'
+        );
 
         $this->assertStringContainsString(
             '<tt class="prefix">-</tt><del>FullTextSearch does not work on Wiki pages</del>',
-            $this->diff_processor->processDiff($text_1, $next, $previous, 'html')
+            $this->diff_processor->processDiff($next, $previous, 'html')
         );
         $this->assertStringContainsString(
             '<tt class="prefix">+</tt><ins>Problems during &lt;ins&gt; installation',
-            $this->diff_processor->processDiff($text_1, $next, $previous, 'html')
+            $this->diff_processor->processDiff($next, $previous, 'html')
         );
 
         $this->assertStringContainsString(
             '<tt class="prefix">+</tt><ins>FullTextSearch does not work on Wiki pages',
-            $this->diff_processor->processDiff($text_1, $previous, $next, 'html')
+            $this->diff_processor->processDiff($previous, $next, 'html')
         );
         $this->assertStringContainsString(
             '<tt class="prefix">-</tt><del>Problems during &lt;ins&gt; installation',
-            $this->diff_processor->processDiff($text_1, $previous, $next, 'html')
+            $this->diff_processor->processDiff($previous, $next, 'html')
         );
     }
 }
