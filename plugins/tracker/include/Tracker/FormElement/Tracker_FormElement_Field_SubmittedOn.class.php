@@ -250,15 +250,12 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
         if (! $value) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
-        $value = $value->getTimestamp();
-        $value = $value ? DateHelper::timeAgoInWords($value) : '';
-        $html .= $value;
-        return $html;
+
+        return parent::fetchTooltipValue($artifact, $value);
     }
 
      /**

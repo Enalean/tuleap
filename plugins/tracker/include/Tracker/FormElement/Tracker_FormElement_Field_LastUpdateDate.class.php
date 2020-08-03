@@ -266,17 +266,14 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
         if (! $value) {
             // TODO use $changeset instead of $artifact->getLastChangeset()
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
         }
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
-        $value = $value->getTimestamp();
-        $value = $value ? DateHelper::timeAgoInWords($value) : '';
-        $html .= $value;
-        return $html;
+
+        return parent::fetchTooltipValue($artifact, $value);
     }
 
      /**
