@@ -116,8 +116,6 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
             return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, null);
         }
 
-        $backlog_items = $this->backlog_item_collection_factory->getOpenClosedUnplannedCollection($user, $milestone, $backlog, null);
-        $backlog_items->setTotalAvaialableSize(iterator_count($backlog_items));
-        return $backlog_items;
+        return $this->backlog_item_collection_factory->getOpenClosedUnplannedCollection($user, $milestone, $backlog, null);
     }
 }
