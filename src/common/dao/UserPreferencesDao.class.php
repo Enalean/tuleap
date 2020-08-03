@@ -71,4 +71,9 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
             ]
         );
     }
+
+    public function deletePreferenceForAllUsers(string $preference_name): void
+    {
+        $this->getDB()->delete('user_preferences', ['preference_name' => $preference_name]);
+    }
 }
