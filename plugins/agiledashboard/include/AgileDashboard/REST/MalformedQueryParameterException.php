@@ -42,6 +42,11 @@ class MalformedQueryParameterException extends Exception
         return new self('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
     }
 
+    public static function invalidQueryOnlyAllStatusParameter(): self
+    {
+        return new self('Query is malformed. Expecting {"status":"all"}.');
+    }
+
     public static function invalidQueryPeriodParameter(): self
     {
         return new self('Query is malformed. Expecting {"period":"future"} or {"period":"current"}.');

@@ -45,8 +45,8 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testGETBacklog(): void
     {
         $response = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
-
-        $this->assertBacklog($response);
+        $this->assertCount(3, $response->json());
+        $this->assertFirstThreeElementsOfBacklog($response);
     }
 
     public function testGETBacklogWithRESTReadOnlyUser(): void
@@ -55,15 +55,37 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
             $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-
-        $this->assertBacklog($response);
+        $this->assertCount(3, $response->json());
+        $this->assertFirstThreeElementsOfBacklog($response);
     }
 
-    private function assertBacklog(Response $response): void
+    public function testGETBacklogWithAllItems(): void
+    {
+        $query = json_encode(['status' => 'all']);
+        $response = $this->getResponse(
+            $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog?query=' . urlencode($query))
+        );
+
+        $backlog_items = $response->json();
+        $this->assertCount(4, $backlog_items);
+        $this->assertFirstThreeElementsOfBacklog($response);
+
+        $fourth_backlog_item = $backlog_items[3];
+        $this->assertArrayHasKey('id', $fourth_backlog_item);
+        $this->assertArrayHasKey('accept', $fourth_backlog_item);
+        $this->assertArrayHasKey('trackers', $fourth_backlog_item['accept']);
+        $this->assertEquals($fourth_backlog_item['accept']['trackers'][0]['id'], $this->tasks_tracker_id);
+        $this->assertEquals($fourth_backlog_item['accept']['trackers'][0]['uri'], 'trackers/' . $this->tasks_tracker_id);
+        $this->assertEquals($fourth_backlog_item['label'], "Closed Story");
+        $this->assertEquals($fourth_backlog_item['status'], "Closed");
+        $this->assertEquals($fourth_backlog_item['artifact']['id'], $this->story_artifact_ids[12]);
+        $this->assertEquals($fourth_backlog_item['artifact']['uri'], 'artifacts/' . $this->story_artifact_ids[12]);
+        $this->assertEquals($fourth_backlog_item['artifact']['tracker']['id'], $this->user_stories_tracker_id);
+    }
+
+    private function assertFirstThreeElementsOfBacklog(Response $response): void
     {
         $backlog_items = $response->json();
-
-        $this->assertCount(3, $backlog_items);
 
         $first_backlog_item = $backlog_items[0];
         $this->assertArrayHasKey('id', $first_backlog_item);

@@ -22,10 +22,35 @@ namespace Tuleap\AgileDashboard\MonoMilestone;
 
 use DataAccessObject;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class MonoMilestoneBacklogItemDao extends DataAccessObject
 {
-    public function getTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset)
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    public function getTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, ?int $limit, ?int $offset)
+    {
+        $filter = 'AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                    )';
+        return $this->getTopBacklogArtifactsWithWhereConditionAndLimitAndOffset($backlog_tracker_ids, $limit, $offset, $filter);
+    }
+
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    public function getTopBacklogOpenClosedArtifactsWithLimitAndOffset(array $backlog_tracker_ids, ?int $limit, ?int $offset)
+    {
+        return $this->getTopBacklogArtifactsWithWhereConditionAndLimitAndOffset($backlog_tracker_ids, $limit, $offset, '');
+    }
+
+    /**
+     * @return LegacyDataAccessResultInterface|false
+     */
+    private function getTopBacklogArtifactsWithWhereConditionAndLimitAndOffset(array $backlog_tracker_ids, ?int $limit, ?int $offset, string $filter)
     {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $limit               = $this->da->escapeInt($limit);
@@ -66,11 +91,7 @@ class MonoMilestoneBacklogItemDao extends DataAccessObject
                         INNER JOIN tracker_artifact                     child_art      ON (child_art.id = artlink_parent.artifact_id)
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
-                    AND (
-                        SS.field_id IS NULL -- Use the status semantic only if it is defined
-                        OR
-                        CVL2.bindvalue_id = SS.open_value_id
-                     )
+                    $filter
                     AND content_art.id IS NULL
                     AND child_art.id IS NULL
                 ORDER BY tracker_artifact_priority_rank.rank ASC

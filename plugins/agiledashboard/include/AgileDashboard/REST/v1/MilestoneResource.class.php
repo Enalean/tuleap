@@ -73,6 +73,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
+use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 
 /**
  * Wrapper for milestone related REST methods
@@ -121,6 +122,10 @@ class MilestoneResource extends AuthenticatedResource
      * @var ContentForMiletoneProvider
      */
     private $content_for_miletone_provider;
+    /**
+     * @var QueryToCriterionOnlyAllStatusConverter
+     */
+    private $query_to_criterion_only_all_status;
 
     public function __construct()
     {
@@ -216,6 +221,7 @@ class MilestoneResource extends AuthenticatedResource
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();
+        $this->query_to_criterion_only_all_status = new QueryToCriterionOnlyAllStatusConverter();
 
         $this->content_for_miletone_provider = ContentForMiletoneProvider::build($this->milestone_factory);
     }
@@ -806,10 +812,16 @@ class MilestoneResource extends AuthenticatedResource
      *
      * Get the backlog items of a given milestone that can be planned in a sub-milestone
      *
+     * <p>
+     * $query parameter is optional, by default we return only open milestones. If
+     * <code>query={"status":"all"}</code> then open and closed milestones are returned.
+     * </p>
+     *
      * @url GET {id}/backlog
      * @access hybrid
      *
      * @param int $id     Id of the milestone
+     * @param string $query  JSON object of search criteria properties {@from path}
      * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
@@ -818,7 +830,7 @@ class MilestoneResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getBacklog($id, $limit = 10, $offset = 0)
+    public function getBacklog(int $id, string $query = '', int $limit = 10, int $offset = 0)
     {
         $this->checkAccess();
 
@@ -830,6 +842,12 @@ class MilestoneResource extends AuthenticatedResource
             $milestone->getProject()
         );
 
+        try {
+            $criterion = $this->query_to_criterion_only_all_status->convert($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
         $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $this->getBacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
@@ -837,7 +855,7 @@ class MilestoneResource extends AuthenticatedResource
             new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
 
-        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $limit, $offset);
+        $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $criterion, $limit, $offset);
 
         $this->sendAllowHeaderForBacklog();
         $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
