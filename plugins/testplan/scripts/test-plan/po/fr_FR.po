@@ -94,6 +94,9 @@ msgid_plural "From %{ tracker_name } tracker reports"
 msgstr[0] "Rapport de l’outil de suivi %{ tracker_name }"
 msgstr[1] "Rapports de l’outil de suivi %{ tracker_name }"
 
+msgid "Go to the last execution in release %{ release_name }"
+msgstr "Se rendre à la dernière exécution dans la release %{ release_name }"
+
 msgid "Name"
 msgstr "Nom"
 
