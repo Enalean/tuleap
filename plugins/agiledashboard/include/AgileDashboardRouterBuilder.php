@@ -117,7 +117,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $ugroup_manager = new UGroupManager();
 
-        $db_connection = DBFactory::getMainTuleapDBConnection();
+        $db_connection         = DBFactory::getMainTuleapDBConnection();
+        $scrum_planning_filter = new ScrumPlanningFilter($mono_milestone_checker, $planning_factory);
+        $form_element_factory  = Tracker_FormElementFactory::instance();
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,
@@ -133,7 +135,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getKanbanFactory(),
             new PlanningPermissionsManager(),
             $mono_milestone_checker,
-            new ScrumPlanningFilter($mono_milestone_checker, $planning_factory),
+            $scrum_planning_filter,
             new AgileDashboardJSONPermissionsRetriever(
                 new AgileDashboardPermissionsRepresentationBuilder(
                     $ugroup_manager,
@@ -149,9 +151,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $service_crumb_builder,
             $admin_crumb_builder,
-            new TimeframeChecker(
-                Tracker_FormElementFactory::instance()
-            ),
+            new TimeframeChecker($form_element_factory),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),
@@ -178,6 +178,13 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new BacklogTrackerRemovalChecker(new AddToTopBacklogPostActionDao()),
                 TrackerFactory::instance(),
                 $event_manager
+            ),
+            new \Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder(
+                $planning_factory,
+                $event_manager,
+                $scrum_planning_filter,
+                $planning_permissions_manager,
+                $form_element_factory
             )
         );
     }

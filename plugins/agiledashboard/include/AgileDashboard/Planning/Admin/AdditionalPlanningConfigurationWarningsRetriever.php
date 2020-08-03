@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Planning;
+namespace Tuleap\AgileDashboard\Planning\Admin;
 
 use Tracker;
 use Tuleap\Event\Dispatchable;
 
-class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
+final class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
 {
     public const NAME = 'additionalPlanningConfigurationWarningsRetriever';
 
     /**
-     * @var string[]
+     * @var PlanningWarningPossibleMisconfigurationPresenter[]
      */
     private $warnings = [];
 
     /**
      * @var Tracker
+     * @psalm-readonly
      */
     private $tracker;
 
@@ -43,22 +44,23 @@ class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
     }
 
     /**
-     * @return Tracker
+     * @psalm-mutation-free
      */
-    public function getTracker()
+    public function getTracker(): Tracker
     {
         return $this->tracker;
     }
 
-    public function addWarnings($warning)
+    public function addWarning(PlanningWarningPossibleMisconfigurationPresenter $warning): void
     {
         $this->warnings[] = $warning;
     }
 
     /**
-     * @return string[]
+     * @return PlanningWarningPossibleMisconfigurationPresenter[]
+     * @psalm-mutation-free
      */
-    public function getAllWarnings()
+    public function getAllWarnings(): array
     {
         return $this->warnings;
     }

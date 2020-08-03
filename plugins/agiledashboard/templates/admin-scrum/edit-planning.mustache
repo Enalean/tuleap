@@ -1,0 +1,65 @@
+<h2>{{# dgettext }}tuleap-agiledashboard | Agile Dashboard Administration{{/ dgettext }}</h2>
+<div class="agiledashboard">
+    <h3>{{# dgettext }}tuleap-agiledashboard | Edit planning: %s | {{ planning_name }}{{/ dgettext }}</h3>
+    <form method="post" action="/plugins/agiledashboard/?group_id={{ project_id }}&planning_id={{ planning_id }}&action=update">
+        <p>
+            <label for="planning_name">{{# dgettext }}tuleap-agiledashboard | Name{{/ dgettext }}</label>
+            <input type="text" name="planning[name]" id="planning_name" value="{{ planning_name }}" />
+        </p>
+        <p>
+            <label for="planning_backlog_title">{{# dgettext }}tuleap-agiledashboard | Backlog title{{/ dgettext }}</label>
+            <input type="text" name="planning[backlog_title]" id="planning_backlog_title" value="{{ planning_backlog_title }}" />
+        </p>
+        <p>
+            <label for="planning_plan_title">{{# dgettext }}tuleap-agiledashboard | Plan title{{/ dgettext }}</label>
+            <input type="text" name="planning[plan_title]" id="planning_plan_title" value="{{ planning_plan_title }}" />
+        </p>
+        <p>
+            <label for="">{{# dgettext }}tuleap-agiledashboard | Who can prioritize items?{{/ dgettext }}</label>
+            {{{ priority_change_permission }}}
+        </p>
+
+        {{# has_warning }}
+            <ul class="feedback_warning">
+                <li>
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Update of planning assignment may lead to errors in:
+                    {{/ dgettext }}
+                    <ul>
+                    {{# warning_list }}
+                        <li><a href="{{ url }}">{{ name }}</a></li>
+                    {{/ warning_list }}
+                    </ul>
+                </li>
+                <li>
+                    {{# dgettext }}
+                        tuleap-agiledashboard |
+                        Make sure to check their configuration.
+                    {{/ dgettext }}
+                </li>
+            </ul>
+        {{/ has_warning }}
+
+        <p>
+            {{# dgettext }} tuleap-agiledashboard | This planning allows assignment of{{/ dgettext}}
+            <select name="planning[backlog_tracker_ids][]" style="vertical-align: top;" multiple="multiple">
+                {{# available_backlog_trackers }}
+                    <option value="{{ id }}" {{# selected }} selected {{/ selected }}>{{ name }}</option>
+                {{/ available_backlog_trackers }}
+            </select>
+            {{# dgettext }} tuleap-agiledashboard | to{{/ dgettext}}
+            <select name="planning[planning_tracker_id]">
+                {{# available_planning_trackers }}
+                    <option value="{{ id }}" {{# selected }} selected {{/ selected }}>{{ name }}</option>
+                {{/ available_planning_trackers }}
+            </select>
+        </p>
+
+        {{{ cardwall_admin }}}
+
+        <p>
+            <input class="btn btn-primary" type="submit" value="{{# dgettext }}tuleap-agiledashboard | Submit{{/ dgettext }}"/>
+        </p>
+    </form>
+</div>

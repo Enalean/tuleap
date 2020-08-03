@@ -46,6 +46,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
@@ -142,7 +143,8 @@ final class PlanningControllerTest extends TestCase
             $this->planning_updater,
             $this->event_manager,
             $this->planning_request_validator,
-            $this->root_planning_update_checker
+            $this->root_planning_update_checker,
+            Mockery::mock(PlanningEditionPresenterBuilder::class)
         );
     }
 
