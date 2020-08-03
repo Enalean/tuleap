@@ -539,7 +539,7 @@ class PlanningFactory
     public function isTrackerUsedInBacklog(int $tracker_id): bool
     {
         $backlog = $this->dao->searchBacklogTrackersByTrackerId($tracker_id);
-        return ($backlog !== null);
+        return (! empty($backlog));
     }
 
     /**
