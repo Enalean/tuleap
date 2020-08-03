@@ -55,6 +55,7 @@ interface TestDefinitionFromRESTWithNoStatusInformation {
     readonly short_type: string;
     readonly summary: string;
     readonly automated_tests: string;
+    readonly category: string | null;
 }
 
 interface PlannedTestDefinitionFromREST extends TestDefinitionFromRESTWithNoStatusInformation {
