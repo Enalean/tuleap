@@ -93,10 +93,14 @@ function getMilestonesBacklog(
     id_release: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
+    const query = JSON.stringify({
+        status: "all",
+    });
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/backlog`, {
         params: {
             limit,
             offset,
+            query,
         },
     });
 }

@@ -151,12 +151,17 @@ describe("getProject() -", () => {
             offset,
         });
 
+        const query = JSON.stringify({
+            status: "all",
+        });
+
         expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/milestones/" + milestone_id + "/backlog",
             {
                 params: {
                     limit,
                     offset,
+                    query,
                 },
             }
         );
