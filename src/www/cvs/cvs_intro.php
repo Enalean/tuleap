@@ -30,7 +30,7 @@ $row_grp = db_fetch_array($res_grp);
 
 // Show CVS access information
 if ($row_grp['cvs_preamble'] != '') {
-    echo util_unconvert_htmlspecialchars($row_grp['cvs_preamble']);
+    echo Codendi_HTMLPurifier::instance()->purify(util_unconvert_htmlspecialchars($row_grp['cvs_preamble']));
 } else {
     include($GLOBALS['Language']->getContent('cvs/intro'));
 }

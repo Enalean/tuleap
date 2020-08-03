@@ -135,7 +135,7 @@ $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if ($permission_manager->isAdmin($project, $user)) {
-        echo '<p><a href="admin/package.php?func=add&amp;group_id=' . $group_id . '" data-test="create-new-package">[' . $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') . ']</a></p>';
+        echo '<p><a href="admin/package.php?func=add&amp;group_id=' . $hp->purify(urlencode($group_id)) . '" data-test="create-new-package">[' . $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') . ']</a></p>';
     }
     file_utils_footer($params);
     exit;
@@ -149,7 +149,7 @@ if ($pv) {
     $html .= "<TABLE width='100%'><TR><TD>";
     $html .= '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('documents-and-files/frs.html#delivery-manager-jargon') . '</h3>';
     $html .= "</TD>";
-    $html .= "<TD align='left'> ( <A HREF='showfiles.php?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
+    $html .= "<TD align='left'> ( <A HREF='showfiles.php?group_id=" . $hp->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     $html .= "</TR></TABLE>";
 
     $html .= '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';

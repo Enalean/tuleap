@@ -46,10 +46,12 @@ $project = ProjectManager::instance()->getProject($group_id);
 $checked  = $project->isPublic() && ! $cvs_is_private ? '' : 'checked="true"';
 $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 echo "<h2>" . $GLOBALS['Language']->getText('cvs_admin_commit', 'title') . "</h2>";
 
 echo '<FORM ACTION="?" METHOD="GET">
-	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
 	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_hdr') . '</h3>
     <p>
@@ -81,7 +83,7 @@ if (! $project->isPublic()) {
         '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'subject') . ': <br>' .
         '<INPUT TYPE="TEXT" SIZE="30" NAME="custom_mailing_header" VALUE="' . $custom_mailing_header .
         '"></p> <h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_hdr') .
-'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', ["/cvs/?func=info&group_id=" . $group_id, ForgeConfig::get('sys_name')]) .
+'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', ["/cvs/?func=info&group_id=" . $purifier->purify(urlencode($group_id)), ForgeConfig::get('sys_name')]) .
         '<p><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">' . $cvs_preamble . '</TEXTAREA>';
 echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '"></p></FORM>';
 

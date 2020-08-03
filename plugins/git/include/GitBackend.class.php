@@ -250,14 +250,14 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         chdir($this->getGitRootPath());
         $path = $repository->getPath();
         $archiveName = $repository->getBackupPath() . '.tar.gz';
-        $cmd    = ' tar czf ' . $archiveName . ' ' . $path . ' 2>&1';
+        $cmd    = ' tar czf ' . escapeshellarg($archiveName) . ' ' . escapeshellarg($path) . ' 2>&1';
         $rcode  = 0;
         $output = $this->system($cmd, $rcode);
         if ($rcode != 0) {
             throw new GitBackendException($cmd . ' -> ' . $output);
         }
         if (! empty($this->gitBackupDir) && is_dir($this->gitBackupDir)) {
-            $this->system('mv ' . $this->getGitRootPath() . '/' . $archiveName . ' ' . $this->gitBackupDir . '/' . $archiveName);
+            $this->system('mv ' . escapeshellarg($this->getGitRootPath() . '/' . $archiveName) . ' ' . escapeshellarg($this->gitBackupDir . '/' . $archiveName));
         }
         return true;
     }

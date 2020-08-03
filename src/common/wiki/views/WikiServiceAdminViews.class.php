@@ -413,8 +413,9 @@ class WikiServiceAdminViews extends WikiViews
    */
     public function wikiPerms()
     {
-        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', [$this->wikiname, $this->wikiname]);
-        $postUrl = '/wiki/admin/index.php?group_id=' . $this->gid . '&action=setWikiPerms';
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', [$purifier->purify($this->wikiname), $purifier->purify($this->wikiname)]);
+        $postUrl = '/wiki/admin/index.php?group_id=' . $purifier->purify(urlencode($this->gid)) . '&action=setWikiPerms';
         permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
 
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
@@ -425,14 +426,14 @@ class WikiServiceAdminViews extends WikiViews
      */
     public function wikiAttachments()
     {
-        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_title', [$this->wikiname]);
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_title', [$purifier->purify($this->wikiname)]);
         print '<form method="post" action="' . $this->wikiAdminLink . '&view=wikiAttachments&action=deleteAttachments">';
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . " ?"]);
 
-        $purifier = Codendi_HTMLPurifier::instance();
         $wai      = WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
         while ($wai->valid()) {
@@ -477,9 +478,11 @@ class WikiServiceAdminViews extends WikiViews
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($attachmentId);
 
-        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'perm_attachment_title', [$this->wikiname]);
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wiki_attachment_perm', [$wa->getFilename()]);
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'perm_attachment_title', [$purifier->purify($this->wikiname)]);
+
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wiki_attachment_perm', [$purifier->purify($wa->getFilename())]);
 
         $postUrl = $this->wikiAdminLink . '&view=wikiAttachments&action=setWikiAttachmentPerms';
         permission_display_selection_form("WIKIATTACHMENT_READ", $wa->getId(), $this->gid, $postUrl);
@@ -497,7 +500,9 @@ class WikiServiceAdminViews extends WikiViews
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($attachmentId);
 
-        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browse_attachment_title', [$this->wikiname, $wa->getFilename()]);
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browse_attachment_title', [$purifier->purify($this->wikiname), $purifier->purify($wa->getFilename())]);
 
         // if($wari->exist()) {
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revision'),
@@ -511,10 +516,10 @@ class WikiServiceAdminViews extends WikiViews
 
             print '
              <tr>
-	       <td><a href="/wiki/uploads/' . $this->gid . '/' . $wa->getFilename() . '/' . ($war->getRevision() + 1) . '">' . ($war->getRevision() + 1) . '</a></td>
-	       <td>' . strftime("%e %b %Y %H:%M", $war->getDate()) . '</td>
-               <td><a href="/users/' . user_getname($war->getOwnerId()) . '/">' . user_getname($war->getOwnerId()) . '</td>
-	       <td>' . $war->getSize() . '</td>
+	       <td><a href="/wiki/uploads/' . $purifier->purify(urlencode($this->gid)) . '/' . $purifier->purify(urlencode($wa->getFilename())) . '/' . $purifier->purify(urlencode($war->getRevision() + 1)) . '">' . $purifier->purify(urlencode($war->getRevision() + 1)) . '</a></td>
+	       <td>' . $purifier->purify(strftime("%e %b %Y %H:%M", $war->getDate())) . '</td>
+               <td><a href="/users/' . $purifier->purify(urlencode(user_getname($war->getOwnerId()))) . '/">' . $purifier->purify(user_getname($war->getOwnerId())) . '</td>
+	       <td>' . $purifier->purify($war->getSize()) . '</td>
 	     </tr>';
 
             $wari->next();

@@ -155,8 +155,9 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
             $return .= '<b>' . $Language->getText('news_utils', 'no_news_item_found') . '</b>';
         }
     }
+    $purifier = Codendi_HTMLPurifier::instance();
     if ($group_id != $sys_news_group) {
-        $archive_url = '/news/?group_id=' . $group_id;
+        $archive_url = '/news/?group_id=' . $purifier->purify(urlencode($group_id));
     } else {
         $archive_url = '/news/';
     }
@@ -172,7 +173,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
         //you can only submit news from a project now
         //you used to be able to submit general news
         $return .= '<div align="center">
-            <A HREF="/news/submit.php?group_id=' . $group_id . '">
+            <A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">
                 <FONT SIZE="-1">[' . $Language->getText('news_utils', 'submit_news') . ']</FONT>
             </A>
         </div>';

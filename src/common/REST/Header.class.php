@@ -209,12 +209,25 @@ class Header
         self::sendHeader(self::CORS_ALLOW_METHODS, $methods);
     }
 
-    public static function sendPaginationHeaders($limit, $offset, $size, $max_limit)
+    public static function sendPaginationHeaders(int $limit, int $offset, int $size, int $max_limit): void
     {
-        self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
-        self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
-        self::sendHeader(self::X_PAGINATION_SIZE, $size);
-        self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
+        self::sendHeader(self::X_PAGINATION_LIMIT, self::getValidValueForPaginationHeader($limit));
+        self::sendHeader(self::X_PAGINATION_OFFSET, self::getValidValueForPaginationHeader($offset));
+        self::sendHeader(self::X_PAGINATION_SIZE, self::getValidValueForPaginationHeader($size));
+        self::sendHeader(self::X_PAGINATION_LIMIT_MAX, self::getValidValueForPaginationHeader($max_limit));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @psalm-taint-escape text
+     */
+    private static function getValidValueForPaginationHeader(int $value): int
+    {
+        if ($value < 0) {
+            return 0;
+        }
+        return $value;
     }
 
     public static function sendOptionsPaginationHeaders($limit, $offset, $max_limit)

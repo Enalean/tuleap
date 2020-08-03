@@ -964,9 +964,10 @@ class GitRepository
      */
     public function getHTMLLink(Git_GitRepositoryUrlManager $url_manager)
     {
-        $href  = $url_manager->getRepositoryBaseUrl($this);
-        $label = $this->getName();
-        return '<a href="' . $href . '">' . $label . '</a>';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $href     = $url_manager->getRepositoryBaseUrl($this);
+        $label    = $this->getName();
+        return '<a href="' . $purifier->purify($href) . '">' . $purifier->purify($label) . '</a>';
     }
 
     public function setIsMirrored($is_mirrored)

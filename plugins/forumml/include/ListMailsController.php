@@ -138,7 +138,7 @@ class ListMailsController implements DispatchableWithRequest
         $list_name = mail_get_listname_from_list_id($list_id);
         if (! mail_is_list_public($list_id)) {
             $members = [];
-            exec(\ForgeConfig::get('mailman_bin_dir') . "/list_members " . $list_name, $members);
+            exec(\ForgeConfig::get('mailman_bin_dir') . "/list_members " . escapeshellarg($list_name), $members);
             if (! in_array($user->getEmail(), $members)) {
                 exit_permission_denied();
             }
@@ -165,9 +165,11 @@ class ListMailsController implements DispatchableWithRequest
             );
         }
 
-        $params['title'] = util_get_group_name_from_id($group_id) . ' - ForumML - ' . $list_name;
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $params['title'] = $hp->purify(util_get_group_name_from_id($group_id) . ' - ForumML - ' . $list_name);
         if ($topicSubject) {
-            $params['title'] .= ' - ' . $topicSubject;
+            $params['title'] .= $hp->purify(' - ' . $topicSubject);
         }
         $params['group']  = $group_id;
         $params['toptab'] = 'mail';
@@ -180,11 +182,13 @@ class ListMailsController implements DispatchableWithRequest
         if ($request->exist('send_reply') && $request->valid($vTopic)) {
             if (isset($ret) && $ret) {
                 // wait few seconds before redirecting to archives page
-                echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=" . $group_id . "&list=" . $list_id . "&topic=" . $topic . "\"',3000) </script>";
+                echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=" .
+                     $hp->purify(urlencode($group_id), CODENDI_PURIFIER_JS_DQUOTE) . "&list=" . $hp->purify(urlencode($list_id), CODENDI_PURIFIER_JS_DQUOTE) . "&topic=" .
+                     $hp->purify(urlencode((string) $topic), CODENDI_PURIFIER_JS_DQUOTE) . "\"',3000) </script>";
             }
         }
 
-        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">' . $list_name . '</a>';
+        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $hp->purify(urlencode((string) $group_id)) . '&list=' . $hp->purify(urlencode((string) $list_id)) . '">' . $hp->purify($list_name) . '</a>';
         $title     = sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\''), $list_link);
         if ($topic) {
             $fmlMessageMgr = new ForumML_MessageManager();
@@ -197,7 +201,6 @@ class ListMailsController implements DispatchableWithRequest
         }
         echo '<h2>' . $title . '</h2>';
 
-        $hp              = Codendi_HTMLPurifier::instance();
         $purified_search = '';
         if ($request->exist('search')) {
             $purified_search = $hp->purify($request->get('search'));
@@ -208,9 +211,9 @@ class ListMailsController implements DispatchableWithRequest
 
             echo "<td align='left'>";
             if ($topic) {
-                echo '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . dgettext('tuleap-forumml', 'Back to the list') . ']</a>';
+                echo '<a href="/plugins/forumml/message.php?group_id=' . $hp->purify(urlencode((string) $group_id)) . '&list=' . $hp->purify(urlencode((string) $list_id)) . '">[' . dgettext('tuleap-forumml', 'Back to the list') . ']</a>';
             } else {
-                echo "		<a href='/plugins/forumml/index.php?group_id=" . $group_id . "&list=" . $list_id . "'>
+                echo "		<a href='/plugins/forumml/index.php?group_id=" . $hp->purify(urlencode((string) $group_id)) . "&list=" . $hp->purify(urlencode((string) $list_id)) . "'>
 					[" . dgettext('tuleap-forumml', 'Post a new Thread') . "]
 				</a>";
             }
@@ -218,7 +221,7 @@ class ListMailsController implements DispatchableWithRequest
 
             echo "
 			<td align='right'>
-				(<a href='/plugins/forumml/message.php?group_id=" . $group_id . "&list=" . $list_id . "&topic=" . $topic . "&offset=" . $offset . "&search=" . $purified_search . "&pv=1'>
+				(<a href='/plugins/forumml/message.php?group_id=" . $hp->purify(urlencode((string) $group_id)) . "&list=" . $hp->purify(urlencode((string) $list_id)) . "&topic=" . $hp->purify(urlencode((string) $topic)) . "&offset=" . $hp->purify(urlencode((string) $offset)) . "&search=" . $purified_search . "&pv=1'>
 					<img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $GLOBALS['Language']->getText('global', 'printer_version') . "
 				</a>)
 			</td>

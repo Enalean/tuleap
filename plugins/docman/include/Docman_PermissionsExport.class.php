@@ -113,7 +113,11 @@ class Docman_PermissionsExport
         echo dgettext('tuleap-docman', 'Path') . $sep;
         echo dgettext('tuleap-docman', 'Type') . $sep;
         foreach ($this->getUgroups() as $id => $name) {
-            echo $name . $sep;
+            /**
+             * @psalm-taint-escape html
+             */
+            $csv_line = $name . $sep;
+            echo $csv_line;
         }
         echo PHP_EOL;
         foreach ($output as $itemid => $row) {

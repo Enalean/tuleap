@@ -527,7 +527,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $hp = Codendi_HTMLPurifier::instance();
         return '<span class="' . $hp->purify($this->getTracker()->getColor()->getName()) . ' xref-in-title">' .
-                $this->getXRef() . "\n" .
+                $hp->purify($this->getXRef()) . "\n" .
                 '</span>' .
                 $hp->purify($this->getTitle());
     }
@@ -1053,7 +1053,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             'key'      => $this->getTracker()->getItemName(),
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
-        ]) . '">' . $this->getXRef() . '</a>';
+        ]) . '">' . Codendi_HTMLPurifier::instance()->purify($this->getXRef()) . '</a>';
     }
 
     /**

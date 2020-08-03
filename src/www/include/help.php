@@ -34,7 +34,7 @@ function help_button($type, $helpid = false, $prompt = '[?]')
     if ($helpid == false) {
     // $type is a static HTML page from the Codendi User Guide
         $lang = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
-        $script = '/doc/' . $lang . '/user-guide/' . $purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
+        $script = '/doc/' . $purifier->purify(urlencode($lang), CODENDI_PURIFIER_JS_QUOTE) . '/user-guide/' . $purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
     } else {
     // $type is a php script - the invoker probably wants to customize
     // the help display somehow

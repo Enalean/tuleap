@@ -300,6 +300,9 @@ function util_prep_string_for_sendmail($body)
     return $body;
 }
 
+/**
+ * @psalm-pure
+ */
 function util_unconvert_htmlspecialchars($string)
 {
     if (strlen($string) < 1) {

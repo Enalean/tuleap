@@ -63,8 +63,14 @@ class Repository
         return $this->id;
     }
 
+    /**
+     * @psalm-taint-escape shell
+     */
     public function getName()
     {
+        if (strpos($this->name, DIRECTORY_SEPARATOR) !== false) {
+            throw new \RuntimeException('$this->name is not expected to contain a directory separator, got ' . $this->name);
+        }
         return $this->name;
     }
 

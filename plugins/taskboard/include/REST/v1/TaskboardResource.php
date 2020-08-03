@@ -98,7 +98,7 @@ class TaskboardResource extends AuthenticatedResource
             $limit,
             $offset
         );
-        $total_count = $this->backlog_item_dao->foundRows();
+        $total_count = (int) $this->backlog_item_dao->foundRows();
         foreach ($backlog as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
             if (! $artifact->userCanView($user)) {

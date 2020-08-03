@@ -276,6 +276,8 @@ class Docman_Item
      * @template ItemVisitorReturnType
      * @psalm-param ItemVisitor<ItemVisitorReturnType> $visitor
      * @psalm-return ItemVisitorReturnType
+     *
+     * @psalm-taint-specialize
      */
     public function accept(ItemVisitor $visitor, array $params = [])
     {

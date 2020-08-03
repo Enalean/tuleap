@@ -215,9 +215,15 @@ if (! IS_SCRIPT) {
         );
     }
 
-    if (! $current_user->isAnonymous()) {
-        header('X-Tuleap-Username: ' . $current_user->getUserName());
-    }
+    (static function () use ($current_user) {
+        if (! $current_user->isAnonymous()) {
+            /**
+             * @psalm-taint-escape text
+             */
+            $header = 'X-Tuleap-Username: ' . $current_user->getUserName();
+            header($header);
+        }
+    })();
 }
 
 //Check post max size

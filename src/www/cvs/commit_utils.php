@@ -185,14 +185,14 @@ function show_commitslist(
         Accepts a result set from the commits table. Should include all columns from
         the table, and it should be joined to USER to get the user_name.
     */
-    $url = '?func=browse&group_id=' . $group_id . '&set=' . $set . '&msort=' . $msort;
+    $url = '?func=browse&group_id=' . urlencode($group_id) . '&set=' . urlencode($set) . '&msort=' . urlencode($msort);
 
     if ($set == 'custom') {
         $url .= $pref_stg;
     }
 
     $url_nomorder = $url;
-    $url .= "&morder=$morder";
+    $url .= "&morder=" . urlencode($morder);
 
     if ($morder != '') {
         $orderstr = ' ' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sorted_by') . ' ' . commit_criteria_list_to_text($morder, $url_nomorder);
@@ -217,13 +217,15 @@ function show_commitslist(
 
     echo '<P>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg', [$url . '&order=#results', $url_alternate_sort, $text]);
 
+    $purifier = Codendi_HTMLPurifier::instance();
+
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
         if ($offset > 0) {
             $nav_bar .=
-            '<A HREF="' . $url . '&offset=0#results"><B>&lt;&lt;  ' . $GLOBALS['Language']->getText('global', 'begin') . '</B></A>' .
+            '<A HREF="' . $purifier->purify($url) . '&offset=0#results"><B>&lt;&lt;  ' . $GLOBALS['Language']->getText('global', 'begin') . '</B></A>' .
             '&nbsp;&nbsp;&nbsp;&nbsp;' .
-            '<A HREF="' . $url . '&offset=' . ($offset - $chunksz) .
+            '<A HREF="' . $purifier->purify($url) . '&offset=' . $purifier->purify(urlencode($offset - $chunksz)) .
             '#results"><B>< ' . $GLOBALS['Language']->getText('global', 'prev') . ' ' . $chunksz . '</B></A></td>';
         } else {
             $nav_bar .=
@@ -234,8 +236,8 @@ function show_commitslist(
     $nav_bar .= '</td>';
 
     $offset_last = min($offset + $chunksz - 1, $total_rows - 1);
-    $nav_bar .= '<td width= "60% " align = "center" class="small">Items ' . ($offset + 1) . ' - ' .
-    ($offset_last + 1) . "</td>\n";
+    $nav_bar .= '<td width= "60% " align = "center" class="small">Items ' . $purifier->purify($offset + 1) . ' - ' .
+                $purifier->purify($offset_last + 1) . "</td>\n";
 
     $nav_bar .= '<td width="20%" align ="right">';
 
@@ -248,14 +250,14 @@ function show_commitslist(
             }
 
             $nav_bar .=
-            '<A HREF="' . $url . '&offset=' . ($offset + $chunksz) .
-            '#results" class="small"><B>' . $GLOBALS['Language']->getText('global', 'next') . ' ' . $chunksz . ' &gt;</B></A>' .
+            '<A HREF="' . $purifier->purify($url) . '&offset=' . $purifier->purify(urlencode($offset + $chunksz)) .
+            '#results" class="small"><B>' . $GLOBALS['Language']->getText('global', 'next') . ' ' . $purifier->purify($chunksz) . ' &gt;</B></A>' .
             '&nbsp;&nbsp;&nbsp;&nbsp;' .
             '<A HREF="' . $url . '&offset=' . ($offset_end) .
             '#results" class="small"><B>' . $GLOBALS['Language']->getText('global', 'end') . ' &gt;&gt;</B></A></td>';
         } else {
             $nav_bar .=
-            '<span class="disable">' . $GLOBALS['Language']->getText('global', 'next') . ' ' . $chunksz .
+            '<span class="disable">' . $GLOBALS['Language']->getText('global', 'next') . ' ' . $purifier->purify($chunksz) .
             ' &gt;&nbsp;&nbsp;' . $GLOBALS['Language']->getText('global', 'end') . ' &gt;&gt;</span>';
         }
     }
@@ -306,7 +308,7 @@ function show_commitslist(
 
         // if (commits.id == '0', will fetch on desc id, else on commit_id
         $id_str = db_result($result, $i, 'id');
-        $id_link = '&commit_id=' . $id_str;
+        $id_link = '&commit_id=' . urlencode($id_str);
         $id_sublink = '';
         if ($id_str == '0') {
             $id_str = ' ? ';
@@ -316,9 +318,9 @@ function show_commitslist(
 
         echo '
 			<TR class="' . util_get_alt_row_color($i) . '">' .
-        '<TD class="small"><b><A HREF="?func=detailcommit&group_id=' . $group_id . $id_link . $filter_str . '">' . $id_str .
+        '<TD class="small"><b><A HREF="?func=detailcommit&group_id=' . $purifier->purify(urlencode($group_id) . $id_link . $filter_str) . '">' . $id_str .
         '</b></A></TD>' .
-        '<TD class="small">' . Codendi_HTMLPurifier::instance()->purify(implode('<br>', preg_split("/\n/D", db_result($result, $i, 'description'))), CODENDI_PURIFIER_BASIC_NOBR, $group_id) . $id_sublink . '</TD>' .
+        '<TD class="small">' . $purifier->purify(implode('<br>', preg_split("/\n/D", db_result($result, $i, 'description'))), CODENDI_PURIFIER_BASIC_NOBR, $group_id) . $id_sublink . '</TD>' .
       // '<TD class="small">'.$commits_url.'</TD>'.
         '<TD class="small">' . uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'c_when')) . '</TD>' .
       // '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
@@ -442,12 +444,12 @@ function show_commit_details($group_id, $commit_id, $result)
     */
 
     $rows = db_numrows($result);
-    $url = "/cvs/?func=detailcommit&commit_id=$commit_id&group_id=$group_id&order=";
     $purifier = Codendi_HTMLPurifier::instance();
+    $url = "/cvs/?func=detailcommit&commit_id=" . $purifier->purify(urlencode($commit_id)) . "&group_id=" . $purifier->purify(urlencode($group_id)) . "&order=";
     $list_log = '<pre>' . $purifier->purify(util_line_wrap(db_result($result, 0, 'description')), CODENDI_PURIFIER_BASIC_NOBR, $group_id) . '</pre>';
 
     if ($commit_id) {
-        $hdr = '[' . $GLOBALS['Language']->getText('cvs_commit_utils', 'commit') . $commit_id . '] - ';
+        $hdr = '[' . $GLOBALS['Language']->getText('cvs_commit_utils', 'commit') . $purifier->purify($commit_id) . '] - ';
     } else {
         $hdr = $GLOBALS['Language']->getText('cvs_commit_utils', 'checkin') . ' ';
     }
@@ -579,14 +581,14 @@ function show_commit_details($group_id, $commit_id, $result)
     echo '
 		<TR><TD COLSPAN="2" class="small">';
     if ($offset > 0) {
-        echo '<A HREF="?func=browse&group_id=' . $group_id . '&set=' . $set . '&offset=' . ($offset - 50) . '"><B>&lt; ' . $GLOBALS['Language']->getText('global', 'prev') . '</B></A>';
+        echo '<A HREF="?func=browse&group_id=' . $purifier->purify(urlencode($group_id)) . '&set=' . $set . '&offset=' . $purifier->purify(urlencode($offset - 50)) . '"><B>&lt; ' . $GLOBALS['Language']->getText('global', 'prev') . '</B></A>';
     } else {
         echo '&nbsp;';
     }
     echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
 
     if ($rows == 50) {
-        echo '<A HREF="?func=browse&group_id=' . $group_id . '&set=' . $set . '&offset=' . ($offset + 50) . '"><B>' . $GLOBALS['Language']->getText('global', 'prev') . ' 50 &gt;</B></A>';
+        echo '<A HREF="?func=browse&group_id=' . $purifier->purify(urlencode($group_id)) . '&set=' . $set . '&offset=' . $purifier->purify(urlencode($offset + 50)) . '"><B>' . $GLOBALS['Language']->getText('global', 'prev') . ' 50 &gt;</B></A>';
     } else {
         echo '&nbsp;';
     }

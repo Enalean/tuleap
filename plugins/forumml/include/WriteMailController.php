@@ -94,9 +94,11 @@ class WriteMailController implements DispatchableWithRequest
         $params['help'] = "collaboration.html#mailing-lists";
         mail_header($params);
 
-        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">' . mail_get_listname_from_list_id($list_id) . '</a>';
+        $purifier = \Codendi_HTMLPurifier::instance();
+
+        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $purifier->purify(urlencode($group_id)) . '&list=' . $purifier->purify(urlencode($list_id)) . '">' . mail_get_listname_from_list_id($list_id) . '</a>';
         echo '<H2><b>' . sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\' - New Thread'), $list_link) . '</b></H2>
-	<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . dgettext('tuleap-forumml', 'Browse Archives') . ']</a><br><br>
+	<a href="/plugins/forumml/message.php?group_id=' . $purifier->purify(urlencode($group_id)) . '&list=' . $purifier->purify(urlencode($list_id)) . '">[' . dgettext('tuleap-forumml', 'Browse Archives') . ']</a><br><br>
 	<H3><b>' . dgettext('tuleap-forumml', 'Submit a new Thread:') . '</b></H3>';
 
         $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');
