@@ -20,7 +20,7 @@
 
 <template>
     <a
-        v-bind:href="'/plugins/tracker/?aid=' + encodeURIComponent(backlog_item.artifact.id)"
+        v-bind:href="edit_backlog_item_href"
         class="tlp-card tlp-card-selectable test-plan-backlog-item-card"
         v-bind:class="classname"
         v-on:click.prevent.stop="toggle"
@@ -47,23 +47,38 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
 import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";
+import { buildEditBacklogItemLink } from "../../helpers/BacklogItems/url-builder";
 
 const backlog_item_store = namespace("backlog_item");
 @Component({
     components: { AddTestButton: AddTestButtonWithAdditionalActionsMenu, BacklogItemCoverage },
 })
 export default class BacklogItemCard extends Vue {
+    @State
+    readonly milestone_id!: number;
+
     @Prop({ required: true })
     readonly backlog_item!: BacklogItem;
+
+    @backlog_item_store.Mutation
+    readonly removeIsJustRefreshedFlagOnBacklogItem!: (item: BacklogItem) => void;
 
     @backlog_item_store.Mutation
     readonly expandBacklogItem!: (item: BacklogItem) => void;
 
     @backlog_item_store.Mutation
     readonly collapseBacklogItem!: (item: BacklogItem) => void;
+
+    mounted(): void {
+        if (this.backlog_item.is_just_refreshed) {
+            setTimeout(() => {
+                this.removeIsJustRefreshedFlagOnBacklogItem(this.backlog_item);
+            }, 1000);
+        }
+    }
 
     toggle(): void {
         if (this.backlog_item.is_expanded) {
@@ -86,11 +101,19 @@ export default class BacklogItemCard extends Vue {
     }
 
     get classname(): string {
+        let classnames = [];
         if (this.backlog_item.is_expanded) {
-            return "test-plan-backlog-item-card-expanded";
+            classnames.push("test-plan-backlog-item-card-expanded");
+        }
+        if (this.backlog_item.is_just_refreshed) {
+            classnames.push("test-plan-backlog-item-is-just-refreshed");
         }
 
-        return "";
+        return classnames.join(" ");
+    }
+
+    get edit_backlog_item_href(): string {
+        return buildEditBacklogItemLink(this.milestone_id, this.backlog_item);
     }
 }
 </script>

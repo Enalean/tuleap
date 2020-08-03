@@ -5,6 +5,7 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
   class="tlp-card test-plan-test-definition-card"
 >
   <test-definition-card-xref-title-stub
+    backlog_item="[object Object]"
     test_definition="[object Object]"
   />
    

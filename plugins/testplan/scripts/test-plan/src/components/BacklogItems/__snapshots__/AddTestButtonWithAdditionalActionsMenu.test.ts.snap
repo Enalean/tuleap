@@ -36,7 +36,7 @@ exports[`AddTestButtonWithAdditionalActionsMenu Displays the button if condition
   >
     <a
       class="tlp-dropdown-menu-item"
-      href="/plugins/tracker/?aid=123"
+      href="/plugins/tracker/?aid=123&ttm_backlog_item_id=123&ttm_milestone_id=69"
       role="menuitem"
     >
       <i

@@ -32,12 +32,15 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Tracker\TrackerColor;
 
-class RedirectParameterInjectorTest extends TestCase
+final class RedirectParameterInjectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
+    /**
+     * @var RedirectParameterInjector
+     */
     private $injector;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
@@ -62,6 +65,7 @@ class RedirectParameterInjectorTest extends TestCase
         $this->response         = $GLOBALS['Response'];
 
         $this->backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $this->backlog_item->shouldReceive('getId')->andReturn(123);
         $this->user         = Mockery::mock(\PFUser::class);
 
         $template_cache            = \Mockery::mock(TemplateCache::class);
@@ -118,13 +122,18 @@ class RedirectParameterInjectorTest extends TestCase
             ->with($this->user, "123")
             ->once()
             ->andReturnNull();
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, '42')
+            ->once()
+            ->andReturn(Mockery::mock(\Tracker_Artifact::class));
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
 
-    public function testInjectAndInformUserAboutBacklogItemBeingCovered(): void
+    public function testItDoesNotInjectAnythingIfTheMilestoneIsNotReadableByUser(): void
     {
         $request  = new \Codendi_Request(
             [
@@ -141,26 +150,69 @@ class RedirectParameterInjectorTest extends TestCase
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, "123")
             ->once()
+            ->andReturn(Mockery::mock(\Tracker_Artifact::class));
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, '42')
+            ->once()
+            ->andReturnNull();
+
+        $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
+
+        $this->assertEquals([], $redirect->query_parameters);
+    }
+
+    /**
+     * @dataProvider dataProviderInjectAndInformUserAboutBacklogItemBeingCovered
+     * @param array<string,string> $request_parameters
+     * @psalm-param callable(string):bool $has_expected_content
+     */
+    public function testInjectAndInformUserAboutBacklogItemBeingCovered(array $request_parameters, callable $has_expected_feedback_content): void
+    {
+        $request = new \Codendi_Request(
+            array_merge(
+                [
+                    'ttm_backlog_item_id' => "123",
+                    'ttm_milestone_id' => "42",
+                ],
+                $request_parameters
+            ),
+            \Mockery::spy(\ProjectManager::class)
+        );
+        $request->setCurrentUser($this->user);
+
+        $redirect = new \Tracker_Artifact_Redirect();
+
+        $milestone = Mockery::mock(\Tracker_Artifact::class);
+
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, "123")
+            ->once()
             ->andReturn($this->backlog_item);
-        //$this->backlog_item->shouldReceive('getXRefAndTitle')->andReturn('story #123 - My story');
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, '42')
+            ->once()
+            ->andReturn($milestone);
         $this->backlog_item->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=123');
         $this->backlog_item->shouldReceive('getTitle')->andReturn('My story');
         $this->backlog_item->shouldReceive('getXref')->andReturn('story #123');
         $backlog_item_tracker = Mockery::mock(Tracker::class);
         $backlog_item_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
         $this->backlog_item->shouldReceive('getTracker')->andReturn($backlog_item_tracker);
-
+        $milestone->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=42');
+        $milestone->shouldReceive('getTitle')->andReturn('Some milestone');
+        $milestone->shouldReceive('getXref')->andReturn('rel #42');
+        $milestone_tracker = Mockery::mock(Tracker::class);
+        $milestone_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
+        $milestone->shouldReceive('getTracker')->andReturn($milestone_tracker);
 
         $this->response
             ->shouldReceive('addFeedback')
             ->with(
                 \Feedback::INFO,
-                Mockery::on(
-                    static function (string $content_to_display): bool {
-                        return strpos($content_to_display, 'My story') !== false &&
-                               strpos($content_to_display, 'story #123') !== false;
-                    }
-                ),
+                Mockery::on($has_expected_feedback_content),
                 CODENDI_PURIFIER_FULL
             )
             ->once();
@@ -174,5 +226,32 @@ class RedirectParameterInjectorTest extends TestCase
             ],
             $redirect->query_parameters
         );
+    }
+
+    public function dataProviderInjectAndInformUserAboutBacklogItemBeingCovered(): array
+    {
+        return [
+            'Add test definition' => [
+                ['func' => 'new-artifact'],
+                static function (string $content_to_display): bool {
+                    return strpos($content_to_display, 'My story') !== false &&
+                           strpos($content_to_display, 'story #123') !== false;
+                }
+            ],
+            'Edit test definition' => [
+                [],
+                static function (string $content_to_display): bool {
+                    return strpos($content_to_display, 'My story') !== false &&
+                           strpos($content_to_display, 'story #123') !== false;
+                }
+            ],
+            'Edit backlog definition' => [
+                ['aid' => '123'],
+                static function (string $content_to_display): bool {
+                    return strpos($content_to_display, 'Some milestone') !== false &&
+                           strpos($content_to_display, 'rel #42') !== false;
+                }
+            ],
+        ];
     }
 }

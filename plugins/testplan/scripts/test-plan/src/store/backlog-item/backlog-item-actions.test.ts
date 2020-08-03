@@ -61,6 +61,7 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 123,
                     is_expanded: false,
+                    is_just_refreshed: false,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,
@@ -69,6 +70,7 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 124,
                     is_expanded: false,
+                    is_just_refreshed: false,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,
@@ -98,6 +100,7 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 123,
                     is_expanded: false,
+                    is_just_refreshed: false,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,
@@ -106,6 +109,7 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 124,
                     is_expanded: false,
+                    is_just_refreshed: false,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,
@@ -114,6 +118,35 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 1000,
                     is_expanded: true,
+                    is_just_refreshed: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
+            ] as BacklogItem[]);
+        });
+
+        it("Marks an item as just refreshed if app wants to expand it and no test def needs to be highlighted", async () => {
+            tlpRecursiveGetMock.mockImplementation((route, config) => {
+                config.getCollectionCallback([{ id: 1000 }] as BacklogItem[]);
+            });
+
+            context.rootState = { ...context.rootState, highlight_test_definition_id: null };
+
+            await loadBacklogItems(context);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingBacklogItems");
+            expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/milestones/42/testplan`, {
+                params: { limit: 30 },
+                getCollectionCallback: expect.any(Function),
+            });
+            expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [
+                {
+                    id: 1000,
+                    is_expanded: true,
+                    is_just_refreshed: true,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,

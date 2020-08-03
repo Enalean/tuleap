@@ -66,23 +66,48 @@ class RedirectParameterInjector
             return;
         }
 
+        $current_user = $request->getCurrentUser();
+
         $backlog_item = $this->artifact_factory->getArtifactByIdUserCanView(
-            $request->getCurrentUser(),
+            $current_user,
             $ttm_backlog_item_id
         );
-        if (! $backlog_item) {
+        $milestone = $this->artifact_factory->getArtifactByIdUserCanView(
+            $current_user,
+            $ttm_milestone_id
+        );
+        if ($backlog_item === null || $milestone === null) {
             return;
         }
 
-        $this->response->addFeedback(
-            \Feedback::INFO,
-            sprintf(
+        if ((int) $backlog_item->getId() === (int) $request->get('aid')) {
+            $feedback_message = sprintf(
+                dgettext('tuleap-testplan', 'You are editing a backlog item included in the milestone: %s'),
+                $this->template_renderer->renderToString(
+                    'backlog-item-test-creation-update-information-link',
+                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($milestone)
+                )
+            );
+        } elseif ($request->get('func') === 'new-artifact') {
+            $feedback_message = sprintf(
                 dgettext('tuleap-testplan', 'You are creating a new test that will cover: %s'),
                 $this->template_renderer->renderToString(
-                    'backlog-item-test-creation-information-link',
-                    BacklogItemTestCreationInformationLinkPresenter::fromBacklogItem($backlog_item)
+                    'backlog-item-test-creation-update-information-link',
+                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
                 )
-            ),
+            );
+        } else {
+            $feedback_message = sprintf(
+                dgettext('tuleap-testplan', 'You are editing a test covering: %s'),
+                $this->template_renderer->renderToString(
+                    'backlog-item-test-creation-update-information-link',
+                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
+                )
+            );
+        }
+        $this->response->addFeedback(
+            \Feedback::INFO,
+            $feedback_message,
             CODENDI_PURIFIER_FULL
         );
 
@@ -91,7 +116,7 @@ class RedirectParameterInjector
 
     public function injectParameters(Tracker_Artifact_Redirect $redirect, string $ttm_backlog_item_id, string $ttm_milestone_id): void
     {
-        $redirect->query_parameters[RedirectParameterInjector::TTM_BACKLOG_ITEM_ID_KEY] = $ttm_backlog_item_id;
-        $redirect->query_parameters[RedirectParameterInjector::TTM_MILESTONE_ID_KEY]    = $ttm_milestone_id;
+        $redirect->query_parameters[self::TTM_BACKLOG_ITEM_ID_KEY] = $ttm_backlog_item_id;
+        $redirect->query_parameters[self::TTM_MILESTONE_ID_KEY]    = $ttm_milestone_id;
     }
 }

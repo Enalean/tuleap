@@ -42,6 +42,12 @@
     justify-content: space-between;
     margin: 0;
     padding: $tlp-medium-spacing ($tlp-medium-spacing - 1px) $tlp-medium-spacing $tlp-medium-spacing;
+
+    &.test-plan-backlog-item-is-just-refreshed {
+        animation: pulse-backlog-item-card 500ms ease-in-out;
+        border-color: $tlp-ui-success;
+        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+    }
 }
 
 .test-plan-backlog-item-card-expanded {
@@ -119,4 +125,18 @@
 
 .test-plan-backlog-item-coverage-icon-notrun {
     background: $tlp-ui-dimmed;
+}
+
+@keyframes pulse-backlog-item-card {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.025);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

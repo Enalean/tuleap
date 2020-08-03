@@ -63,19 +63,22 @@ describe("URL Builder for backlog items", () => {
             id: 123,
         } as BacklogItem;
 
-        const url = buildEditBacklogItemLink(backlog_item);
+        const url = buildEditBacklogItemLink(74, backlog_item);
 
-        expect(url).toBe("/plugins/tracker/?aid=123");
+        expect(url).toBe("/plugins/tracker/?aid=123&ttm_backlog_item_id=123&ttm_milestone_id=74");
     });
 
     it("generates an URL to go to the edition page of a test definition", () => {
         const test_def = {
             id: 321,
         } as TestDefinition;
+        const backlog_item = {
+            id: 741,
+        } as BacklogItem;
 
-        const url = buildEditTestDefinitionItemLink(test_def);
+        const url = buildEditTestDefinitionItemLink(74, test_def, backlog_item);
 
-        expect(url).toBe("/plugins/tracker/?aid=321");
+        expect(url).toBe("/plugins/tracker/?aid=321&ttm_backlog_item_id=741&ttm_milestone_id=74");
     });
 
     it("generates an URL to add a new test definition linked to a backlog item", () => {

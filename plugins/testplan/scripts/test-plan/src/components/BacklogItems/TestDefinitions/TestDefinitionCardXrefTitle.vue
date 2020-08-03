@@ -70,7 +70,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { dropdown } from "tlp";
-import { TestDefinition } from "../../../type";
+import { BacklogItem, TestDefinition } from "../../../type";
 import {
     buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,
@@ -88,6 +88,9 @@ export default class TestDefinitionCardXrefTitle extends Vue {
     readonly milestone_title!: string;
 
     @Prop({ required: true })
+    readonly backlog_item!: BacklogItem;
+
+    @Prop({ required: true })
     readonly test_definition!: TestDefinition;
 
     $refs!: {
@@ -100,7 +103,11 @@ export default class TestDefinitionCardXrefTitle extends Vue {
     }
 
     get go_to_test_def_link(): string {
-        return buildEditTestDefinitionItemLink(this.test_definition);
+        return buildEditTestDefinitionItemLink(
+            this.milestone_id,
+            this.test_definition,
+            this.backlog_item
+        );
     }
 
     get go_to_last_test_exec_link(): string | null {

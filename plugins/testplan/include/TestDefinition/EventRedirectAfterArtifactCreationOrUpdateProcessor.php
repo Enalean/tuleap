@@ -69,20 +69,25 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
         if (! $backlog_item) {
             return;
         }
-        try {
-            $this->artifact_link_updater->updateArtifactLinks(
-                $request->getCurrentUser(),
-                $backlog_item,
-                [$artifact->getId()],
-                [],
-                \Tuleap\TestManagement\Nature\NatureCoveredByPresenter::NATURE_COVERED_BY
-            );
-        } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
-            $GLOBALS['Response']->addFeedback(
-                \Feedback::WARN,
-                dgettext('tuleap-testplan', 'Unable to link the backlog item to the new artifact')
-            );
-            return;
+
+        $is_editing_backlog_item = $artifact->getId() === $backlog_item->getId();
+
+        if (! $is_editing_backlog_item) {
+            try {
+                $this->artifact_link_updater->updateArtifactLinks(
+                    $request->getCurrentUser(),
+                    $backlog_item,
+                    [$artifact->getId()],
+                    [],
+                    \Tuleap\TestManagement\Nature\NatureCoveredByPresenter::NATURE_COVERED_BY
+                );
+            } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback(
+                    \Feedback::WARN,
+                    dgettext('tuleap-testplan', 'Unable to link the backlog item to the new artifact')
+                );
+                return;
+            }
         }
 
         if ($redirect->mode === Tracker_Artifact_Redirect::STATE_CONTINUE) {
@@ -95,12 +100,15 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
             return;
         }
 
-        $project_unixname   = $artifact->getTracker()->getProject()->getUnixNameMixedCase();
-        $redirect->base_url = TestPlanPaneInfo::URL
+        $project_unixname  = $artifact->getTracker()->getProject()->getUnixNameMixedCase();
+        $redirect_base_url = TestPlanPaneInfo::URL
             . '/' . urlencode($project_unixname)
             . '/' . urlencode((string) $ttm_milestone_id)
-            . '/backlog_item/' . urlencode((string) $ttm_backlog_item_id)
-            . '/test/' . urlencode((string) $artifact->getId());
+            . '/backlog_item/' . urlencode((string) $ttm_backlog_item_id);
+        if (! $is_editing_backlog_item) {
+            $redirect_base_url .= '/test/' . urlencode((string) $artifact->getId());
+        }
+        $redirect->base_url = $redirect_base_url;
 
         $redirect->query_parameters = [];
     }

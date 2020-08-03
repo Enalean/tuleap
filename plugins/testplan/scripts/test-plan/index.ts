@@ -40,10 +40,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         vue_mount_point.dataset.expandBacklogItemId || "0",
         10
     );
-    const highlight_test_definition_id = Number.parseInt(
+    let highlight_test_definition_id: number | null = Number.parseInt(
         vue_mount_point.dataset.highlightTestDefinitionId || "0",
         10
     );
+    if (highlight_test_definition_id === 0) {
+        highlight_test_definition_id = null;
+    }
     const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
     let testdefinition_tracker_id: number | null = Number.parseInt(

@@ -34,16 +34,30 @@ export function buildCreateNewTestDefinitionLink(
     return `/plugins/tracker/?${url_params.toString()}`;
 }
 
-export function buildEditBacklogItemLink(backlog_item: BacklogItem): string {
-    return buildEditArtifactLink(backlog_item.id);
+export function buildEditBacklogItemLink(milestone_id: number, backlog_item: BacklogItem): string {
+    return buildEditArtifactLink(backlog_item.id, backlog_item.id, milestone_id);
 }
 
-export function buildEditTestDefinitionItemLink(test_definition: TestDefinition): string {
-    return buildEditArtifactLink(test_definition.id);
+export function buildEditTestDefinitionItemLink(
+    milestone_id: number,
+    test_definition: TestDefinition,
+    backlog_item: BacklogItem
+): string {
+    return buildEditArtifactLink(test_definition.id, backlog_item.id, milestone_id);
 }
 
-function buildEditArtifactLink(id: number): string {
-    return `/plugins/tracker/?aid=${encodeURIComponent(id)}`;
+function buildEditArtifactLink(
+    id: number,
+    ttm_backlog_item_id: number,
+    ttm_milestone_id: number
+): string {
+    const url_params = new URLSearchParams({
+        aid: String(id),
+        ttm_backlog_item_id: String(ttm_backlog_item_id),
+        ttm_milestone_id: String(ttm_milestone_id),
+    });
+
+    return `/plugins/tracker/?${url_params.toString()}`;
 }
 
 export function buildGoToTestExecutionLink(

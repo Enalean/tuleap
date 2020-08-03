@@ -25,7 +25,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 /**
  * @psalm-immutable
  */
-final class BacklogItemTestCreationInformationLinkPresenter
+final class BacklogItemTestCreationUpdateInformationLinkPresenter
 {
     /**
      * @var string
@@ -44,7 +44,7 @@ final class BacklogItemTestCreationInformationLinkPresenter
      */
     public $title;
 
-    public function __construct(string $uri, string $color_name, string $xref, string $title)
+    private function __construct(string $uri, string $color_name, string $xref, string $title)
     {
         $this->uri        = $uri;
         $this->color_name = $color_name;
@@ -52,7 +52,7 @@ final class BacklogItemTestCreationInformationLinkPresenter
         $this->title      = $title;
     }
 
-    public static function fromBacklogItem(\Tracker_Artifact $artifact): self
+    public static function fromArtifact(\Tracker_Artifact $artifact): self
     {
         return new self(
             $artifact->getUri(),

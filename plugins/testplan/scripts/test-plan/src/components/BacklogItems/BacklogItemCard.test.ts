@@ -38,6 +38,13 @@ describe("BacklogItemCard", () => {
                     },
                 } as BacklogItem,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        milestone_id: 11,
+                    } as RootState,
+                }),
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -106,6 +113,39 @@ describe("BacklogItemCard", () => {
 
         expect($store.commit).toHaveBeenCalledWith(
             "backlog_item/collapseBacklogItem",
+            backlog_item
+        );
+    });
+
+    it("Marks a backlog item as just refreshed", () => {
+        jest.useFakeTimers();
+
+        const $store = createStoreMock({
+            state: {
+                backlog_item: {},
+            } as RootState,
+        });
+
+        const backlog_item = {
+            id: 123,
+            is_just_refreshed: true,
+        } as BacklogItem;
+
+        const wrapper = shallowMount(BacklogItemCard, {
+            propsData: {
+                backlog_item,
+            },
+            mocks: {
+                $store,
+            },
+        });
+
+        expect(wrapper.classes("test-plan-backlog-item-is-just-refreshed")).toBe(true);
+
+        jest.advanceTimersByTime(1000);
+
+        expect($store.commit).toHaveBeenCalledWith(
+            "backlog_item/removeIsJustRefreshedFlagOnBacklogItem",
             backlog_item
         );
     });
