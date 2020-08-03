@@ -33,6 +33,8 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItemsPerContributorPresenterCollectionBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -76,7 +78,12 @@ final class ReadOnlyAggregatorAdminViewController implements DispatchableWithReq
     /**
      * @var PlannableItemsPerContributorPresenterCollectionBuilder
      */
-    private $per_project_presenter_collection_builder;
+    private $per_contributor_presenter_collection_builder;
+
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -85,15 +92,17 @@ final class ReadOnlyAggregatorAdminViewController implements DispatchableWithReq
         AdministrationCrumbBuilder $administration_crumb_builder,
         TemplateRenderer $template_renderer,
         PlannableItemsCollectionBuilder $plannable_items_collection_builder,
-        PlannableItemsPerContributorPresenterCollectionBuilder $plannable_items_per_project_presenter_collection_builder
+        PlannableItemsPerContributorPresenterCollectionBuilder $per_contributor_presenter_collection_builder,
+        IncludeAssets $include_assets
     ) {
-        $this->project_manager                          = $project_manager;
-        $this->planning_factory                         = $planning_factory;
-        $this->service_crumb_builder                    = $service_crumb_builder;
-        $this->administration_crumb_builder             = $administration_crumb_builder;
-        $this->template_renderer                        = $template_renderer;
-        $this->plannable_items_collection_builder       = $plannable_items_collection_builder;
-        $this->per_project_presenter_collection_builder = $plannable_items_per_project_presenter_collection_builder;
+        $this->project_manager                              = $project_manager;
+        $this->planning_factory                             = $planning_factory;
+        $this->service_crumb_builder                        = $service_crumb_builder;
+        $this->administration_crumb_builder                 = $administration_crumb_builder;
+        $this->template_renderer                            = $template_renderer;
+        $this->plannable_items_collection_builder           = $plannable_items_collection_builder;
+        $this->per_contributor_presenter_collection_builder = $per_contributor_presenter_collection_builder;
+        $this->include_assets                               = $include_assets;
     }
 
     public function getProject(array $variables): Project
@@ -144,10 +153,12 @@ final class ReadOnlyAggregatorAdminViewController implements DispatchableWithReq
             throw new NotFoundException(dgettext("tuleap-multi_project_backlog", "This planning is not the root planning of the project."));
         }
 
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'aggregator-admin-style'));
+
         $this->displayHeader($service, $user, $project);
 
         $plannable_items_collection           = $this->plannable_items_collection_builder->buildCollection($project);
-        $plannable_items_presenter_collection = $this->per_project_presenter_collection_builder
+        $plannable_items_presenter_collection = $this->per_contributor_presenter_collection_builder
             ->buildPresenterCollectionFromObjectCollection($user, $plannable_items_collection);
 
         $aggregator_admin_presenter = new AggregatorAdminPresenter(

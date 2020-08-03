@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItemsPerContributorPresenterCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItemsPerContributorPresenterCollectionBuilder;
@@ -85,19 +86,25 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannableItemsPerContributorPresenterCollectionBuilder
      */
-    private $plannable_items_per_project_presenter_collection_builder;
+    private $per_contributor_presenter_collection_builder;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     */
+    private $include_assests;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project_manager                                          = Mockery::mock(ProjectManager::class);
-        $this->planning_factory                                         = Mockery::mock(PlanningFactory::class);
-        $this->service_crumb_builder                                    = Mockery::mock(AgileDashboardCrumbBuilder::class);
-        $this->administration_crumb_builder                             = Mockery::mock(AdministrationCrumbBuilder::class);
-        $this->template_renderer                                        = Mockery::mock(TemplateRenderer::class);
-        $this->plannable_items_collection_builder                       = Mockery::mock(PlannableItemsCollectionBuilder::class);
-        $this->plannable_items_per_project_presenter_collection_builder = Mockery::mock(PlannableItemsPerContributorPresenterCollectionBuilder::class);
+        $this->project_manager                              = Mockery::mock(ProjectManager::class);
+        $this->planning_factory                             = Mockery::mock(PlanningFactory::class);
+        $this->service_crumb_builder                        = Mockery::mock(AgileDashboardCrumbBuilder::class);
+        $this->administration_crumb_builder                 = Mockery::mock(AdministrationCrumbBuilder::class);
+        $this->template_renderer                            = Mockery::mock(TemplateRenderer::class);
+        $this->plannable_items_collection_builder           = Mockery::mock(PlannableItemsCollectionBuilder::class);
+        $this->per_contributor_presenter_collection_builder = Mockery::mock(PlannableItemsPerContributorPresenterCollectionBuilder::class);
+        $this->include_assests                              = Mockery::mock(IncludeAssets::class);
 
         $this->controller = new ReadOnlyAggregatorAdminViewController(
             $this->project_manager,
@@ -106,7 +113,8 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
             $this->administration_crumb_builder,
             $this->template_renderer,
             $this->plannable_items_collection_builder,
-            $this->plannable_items_per_project_presenter_collection_builder
+            $this->per_contributor_presenter_collection_builder,
+            $this->include_assests
         );
     }
 
@@ -152,7 +160,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
         $this->plannable_items_collection_builder->shouldReceive('buildCollection')->once();
 
         $collection = Mockery::mock(PlannableItemsPerContributorPresenterCollection::class);
-        $this->plannable_items_per_project_presenter_collection_builder->shouldReceive('buildPresenterCollectionFromObjectCollection')
+        $this->per_contributor_presenter_collection_builder->shouldReceive('buildPresenterCollectionFromObjectCollection')
             ->once()
             ->andReturn($collection);
 
@@ -163,6 +171,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->once();
         $layout->shouldReceive('footer')->once();
+        $layout->shouldReceive('addCssAsset')->once();
         $this->template_renderer->shouldReceive('renderToPage')->once();
 
         $this->controller->process(
@@ -219,6 +228,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
         $project->shouldReceive('getService')->once()->with('plugin_agiledashboard')->andReturnNull();
 
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(NotFoundException::class);
@@ -258,6 +268,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(ForbiddenException::class);
@@ -299,6 +310,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(NotFoundException::class);
@@ -343,6 +355,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(NotFoundException::class);
@@ -390,6 +403,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(NotFoundException::class);
@@ -440,6 +454,7 @@ class ReadOnlyAggregatorAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
+        $layout->shouldReceive('addCssAsset')->never();
         $this->template_renderer->shouldReceive('renderToPage')->never();
 
         $this->expectException(NotFoundException::class);

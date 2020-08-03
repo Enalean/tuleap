@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningUpdateIsAllowedEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
@@ -106,6 +107,10 @@ final class multi_project_backlogPlugin extends Plugin
             ),
             new PlannableItemsPerContributorPresenterCollectionBuilder(
                 PlanningFactory::build()
+            ),
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/multi_project_backlog',
+                '/assets/multi_project_backlog'
             )
         );
     }
