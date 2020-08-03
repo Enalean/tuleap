@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -17,76 +18,57 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('include/DataAccessObject.class.php');
 
-/**
- *  Data Access Object for UserPreferences
- */
-class UserPreferencesDao extends DataAccessObject
+declare(strict_types=1);
+
+class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
 {
-
-    public function __construct($da = null)
-    {
-        parent::__construct($da);
-    }
-
     /**
      * Search user preferences by user id and preference name
-     * @param int $user_id
-     * @param string $preference_name
-     * @return DataAccessResult
      */
-    public function search($user_id, $preference_name)
+    public function search(int $user_id, string $preference_name): array
     {
-        $sql = sprintf(
-            "SELECT * FROM user_preferences WHERE user_id = %d AND preference_name = %s",
-            $this->da->escapeInt($user_id),
-            $this->da->quoteSmart($preference_name)
-        );
-        return $this->retrieve($sql);
+        $sql = 'SELECT * FROM user_preferences WHERE user_id = ? AND preference_name = ?';
+
+        $result = $this->getDB()->row($sql, $user_id, $preference_name);
+
+        return is_array($result) ? $result : [];
     }
 
-    /**
-     * Set a preference for the user
-     *
-     * @param int $user_id
-     * @param string $preference_name
-     * @param string $preference_value
-     * @return bool
-     */
-    public function set($user_id, $preference_name, $preference_value)
+    public function set(int $user_id, string $preference_name, string $preference_value): bool
     {
-        $sql = sprintf(
-            "INSERT INTO user_preferences (user_id, preference_name, preference_value) VALUES (%d, %s, %s)
-                        ON DUPLICATE KEY UPDATE preference_value = %s",
-            $this->da->escapeInt($user_id),
-            $this->da->quoteSmart($preference_name),
-            $this->da->quoteSmart($preference_value),
-            $this->da->quoteSmart($preference_value)
+        return (bool) $this->getDB()->insertOnDuplicateKeyUpdate(
+            'user_preferences',
+            [
+                'user_id'          => $user_id,
+                'preference_name'  => $preference_name,
+                'preference_value' => $preference_value
+            ],
+            [
+                'preference_value'
+            ]
         );
-        return $this->update($sql);
     }
 
-    /**
-     * Delete a preference
-     */
-    public function delete($user_id, $preference_name)
+    public function delete(int $user_id, string $preference_name): bool
     {
-        $sql = sprintf(
-            "DELETE FROM user_preferences WHERE user_id = %d AND preference_name = %s",
-            $this->da->escapeInt($user_id),
-            $this->da->quoteSmart($preference_name)
+        return (bool) $this->getDB()->delete(
+            'user_preferences',
+            [
+                'user_id'         => $user_id,
+                'preference_name' => $preference_name
+            ]
         );
-        return $this->update($sql);
     }
 
-    public function deleteByPreferenceNameAndValue($preference_name, $preference_value)
+    public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): bool
     {
-        $preference_name  = $this->da->quoteSmart($preference_name);
-        $preference_value = $this->da->quoteSmart($preference_value);
-        $sql = "DELETE FROM user_preferences
-                WHERE preference_name = $preference_name
-                  AND preference_value = $preference_value";
-        return $this->update($sql);
+        return (bool) $this->getDB()->delete(
+            'user_preferences',
+            [
+                'preference_name' => $preference_name,
+                'preference_value' => $preference_value
+            ]
+        );
     }
 }
