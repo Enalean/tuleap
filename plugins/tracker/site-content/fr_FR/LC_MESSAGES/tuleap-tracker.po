@@ -2114,6 +2114,13 @@ msgstr ""
 "être requis afin de permettre la création d'artéfacts par mail."
 
 msgid ""
+"Only formatting have been changed, you should switch to markup to see the "
+"changes"
+msgstr ""
+"Seul du formattage a été modifié, vous devriez passer en mode balise pour "
+"voir les changements"
+
+msgid ""
 "Only letters and underscore are allowed for shortname (must start with a "
 "letter though)."
 msgstr ""
@@ -2647,6 +2654,9 @@ msgstr "Somme"
 
 msgid "Summary"
 msgstr "Résumé"
+
+msgid "Switch to markup diff"
+msgstr "Basculer le diff en mode balise"
 
 msgid "Switch to new tracker creation flow"
 msgstr "Basculer sur le nouveau flux de création d'outil de suivi"
