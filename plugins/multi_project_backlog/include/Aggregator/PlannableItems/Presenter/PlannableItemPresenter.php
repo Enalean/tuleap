@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,14 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-CREATE TABLE plugin_multi_project_backlog_contributor_projects(
-    aggregator_project_id INT(11) NOT NULL,
-    contributor_project_id INT(11) NOT NULL,
-    PRIMARY KEY (aggregator_project_id, contributor_project_id)
-) ENGINE=InnoDB;
+declare(strict_types=1);
 
-CREATE TABLE plugin_multi_project_backlog_plannable_item_trackers(
-    aggregator_project_id INT(11) NOT NULL,
-    contributor_backlog_item_tracker_id INT(11) NOT NULL,
-    PRIMARY KEY (aggregator_project_id, contributor_backlog_item_tracker_id)
-) ENGINE=InnoDB;
+namespace Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter;
+
+use Tuleap\Tracker\TrackerColor;
+
+/**
+ * @psalm-immutable
+ */
+class PlannableItemPresenter
+{
+    /**
+     * @var string
+     */
+    public $tracker_name;
+
+    /**
+     * @var string
+     */
+    public $tracker_color;
+
+    public function __construct(string $tracker_name, TrackerColor $tracker_color)
+    {
+        $this->tracker_name  = $tracker_name;
+        $this->tracker_color = $tracker_color->getName();
+    }
+}

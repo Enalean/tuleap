@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,11 +50,6 @@ class AdminKanbanPresenter
         $this->kanban_title             = $kanban_title;
         $this->has_kanban               = $has_kanban;
         $this->can_burnup_be_configured = $can_burnup_be_configured;
-    }
-
-    public function config_title()
-    {
-        return dgettext('tuleap-agiledashboard', 'Agile Dashboard administration');
     }
 
     public function config_submit_label()

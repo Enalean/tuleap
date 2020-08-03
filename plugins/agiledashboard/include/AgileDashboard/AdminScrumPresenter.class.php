@@ -192,11 +192,6 @@ class AdminScrumPresenter
         return dgettext('tuleap-agiledashboard', 'Edit');
     }
 
-    public function config_title()
-    {
-        return dgettext('tuleap-agiledashboard', 'Agile Dashboard administration');
-    }
-
     public function activate_scrum_label()
     {
         return dgettext('tuleap-agiledashboard', 'Activate Scrum');

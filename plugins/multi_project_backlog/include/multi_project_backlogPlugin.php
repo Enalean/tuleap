@@ -24,6 +24,9 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
+use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
+use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItemsPerContributorPresenterCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminURLBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
 use Tuleap\Request\CollectRoutesEvent;
@@ -90,7 +93,16 @@ final class multi_project_backlogPlugin extends Plugin
             new AgileDashboardCrumbBuilder(
                 $agiledashboard_plugin->getPluginPath()
             ),
-            new AdministrationCrumbBuilder()
+            new AdministrationCrumbBuilder(),
+            $this->buildTemplateRenderer(),
+            new PlannableItemsCollectionBuilder(
+                new PlannableItemsTrackersDao(),
+                TrackerFactory::instance(),
+                ProjectManager::instance()
+            ),
+            new PlannableItemsPerContributorPresenterCollectionBuilder(
+                PlanningFactory::build()
+            )
         );
     }
 
@@ -112,5 +124,10 @@ final class multi_project_backlogPlugin extends Plugin
         if ($url !== null) {
             $event->setEditUrl($url);
         }
+    }
+
+    private function buildTemplateRenderer(): TemplateRenderer
+    {
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 }
