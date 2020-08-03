@@ -94,9 +94,26 @@
     }
 }
 
+.test-plan-test-definition-card-category-status {
+    display: flex;
+}
+
+.test-plan-test-definition-category {
+    align-self: center;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: $tlp-theme-color-hover-background;
+    color: $tlp-theme-color;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+}
+
 .test-plan-test-definition-icons {
     flex: 0 0 auto;
-    margin: 2px 0 0 $tlp-medium-spacing;
+    min-width: 43px;
+    margin: 2px 0 0 $tlp-small-spacing;
+    text-align: end;
 }
 
 .test-plan-test-definition-icon-automated-tests:last-child {

@@ -21,15 +21,24 @@
 <template>
     <div class="tlp-card test-plan-test-definition-card" v-bind:class="classname">
         <test-definition-card-xref-title v-bind:test_definition="test_definition" />
-        <div class="test-plan-test-definition-icons">
-            <i
-                class="fa test-plan-test-definition-icon-automated-tests"
-                v-bind:class="automated_icon_status"
-                aria-hidden="true"
-                v-if="test_definition.automated_tests"
-                data-test="automated-test-icon"
-            ></i>
-            <test-definition-card-status v-bind:test_definition="test_definition" />
+        <div class="test-plan-test-definition-card-category-status">
+            <div
+                class="test-plan-test-definition-category"
+                v-if="test_definition.category !== null"
+                data-test="test-category"
+            >
+                {{ test_definition.category }}
+            </div>
+            <div class="test-plan-test-definition-icons">
+                <i
+                    class="fa test-plan-test-definition-icon-automated-tests"
+                    v-bind:class="automated_icon_status"
+                    aria-hidden="true"
+                    v-if="test_definition.automated_tests"
+                    data-test="automated-test-icon"
+                ></i>
+                <test-definition-card-status v-bind:test_definition="test_definition" />
+            </div>
         </div>
     </div>
 </template>

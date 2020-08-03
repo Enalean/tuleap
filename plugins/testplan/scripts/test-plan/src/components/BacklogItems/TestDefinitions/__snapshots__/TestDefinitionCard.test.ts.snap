@@ -9,13 +9,26 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
   />
    
   <div
-    class="test-plan-test-definition-icons"
+    class="test-plan-test-definition-card-category-status"
   >
-    <!---->
+    <div
+      class="test-plan-test-definition-category"
+      data-test="test-category"
+    >
+      
+            Some category
+        
+    </div>
      
-    <test-definition-card-status-stub
-      test_definition="[object Object]"
-    />
+    <div
+      class="test-plan-test-definition-icons"
+    >
+      <!---->
+       
+      <test-definition-card-status-stub
+        test_definition="[object Object]"
+      />
+    </div>
   </div>
 </div>
 `;
