@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\Appearance;
 
 use CSRFSynchronizerToken;
+use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenter;
+use Tuleap\date\RelativeDatesDisplayPreferencesSelectboxPresenterBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AppearancePresenter
@@ -103,26 +105,12 @@ final class AppearancePresenter
      * @psalm-readonly
      */
     public $username_display_value_realname;
+
     /**
-     * @var bool
+     * @var RelativeDatesDisplayPreferencesSelectboxPresenter
      * @psalm-readonly
      */
-    public $is_relative_first_absolute_shown = false;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $is_absolute_first_relative_shown = false;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $is_relative_first_absolute_tooltip = false;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $is_absolute_first_relative_tooltip = false;
+    public $relative_dates_display_preference_sb_presenter;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -157,21 +145,8 @@ final class AppearancePresenter
         $this->username_display_value_login          = \UserHelper::PREFERENCES_LOGIN;
         $this->username_display_value_realname       = \UserHelper::PREFERENCES_REAL_NAME;
 
-        switch ($relative_dates_display) {
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
-                $this->is_relative_first_absolute_shown = true;
-                break;
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
-                $this->is_absolute_first_relative_shown = true;
-                break;
-            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
-                $this->is_absolute_first_relative_tooltip = true;
-                break;
-            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
-            default:
-                $this->is_relative_first_absolute_tooltip = true;
-                break;
-        }
+        $presenter_builder = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
+        $this->relative_dates_display_preference_sb_presenter = $presenter_builder->build($relative_dates_display);
 
         $this->current_color = '';
         foreach ($colors as $color) {

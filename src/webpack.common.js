@@ -71,6 +71,7 @@ let entry_points = {
     "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.ts"]),
     "tlp-relative-date": "./themes/tlp/src/js/custom-elements/relative-date/index.ts",
     "tlp-relative-date-polyfills": "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
+    "site-admin/dates-display": "./scripts/site-admin/dates-display.ts",
 };
 
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];

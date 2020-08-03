@@ -24,6 +24,7 @@ namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
 use DocmanPlugin;
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
 
@@ -123,6 +124,6 @@ class DocumentTreePresenter
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
         $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
-        $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: \DateHelper::PREFERENCE_DEFAULT;
+        $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
     }
 }

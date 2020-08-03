@@ -28,6 +28,8 @@ use DateHelper;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -35,6 +37,7 @@ final class DateHelperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     public function testDistanceOfTimeInWords(): void
     {
@@ -301,5 +304,35 @@ final class DateHelperTest extends TestCase
             preference="absolute"
             locale="en_US"
             placement="tooltip"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
+    }
+
+    public function testItBuildsATlpRelativeDateComponentWithDefaultDisplaySetBySiteAdmin(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'getLocale' => 'en_US',
+                'getPreference' => false
+            ])
+            ->getMock();
+
+        \ForgeConfig::set(
+            DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
+            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+        );
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="relative"
+            locale="en_US"
+            placement="right"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 }

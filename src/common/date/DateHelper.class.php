@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+
 class DateHelper
 {
     public const SECONDS_IN_A_DAY = 86400;
@@ -29,8 +31,6 @@ class DateHelper
     public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN   = "absolute_first-relative_shown";
     public const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
     public const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
-
-    public const PREFERENCE_DEFAULT = self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP;
 
     /**
      * @deprecated Use \DateHelper::relativeDate() instead
@@ -74,9 +74,13 @@ class DateHelper
                 $placement = $position;
                 break;
             case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
-            default:
                 $preference = "relative";
                 $placement = "tooltip";
+                break;
+            default:
+                $default_display = DefaultRelativeDatesDisplayPreferenceRetriever::getDefaultPlacementAndPreference($position);
+                $preference      = $default_display->getPreference();
+                $placement       = $default_display->getPlacement();
         }
 
         return '<tlp-relative-date
