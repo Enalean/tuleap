@@ -1,8 +1,13 @@
 {
   "name": "tuleap/plugin-multi-project-backlog",
   "autoload": {
-      "psr-4": {
-          "Tuleap\\MultiProjectBacklog\\": "include/"
-      }
+    "psr-4": {
+      "Tuleap\\MultiProjectBacklog\\": "include/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\MultiProjectBacklog\\": "tests/unit/"
+    }
   }
 }

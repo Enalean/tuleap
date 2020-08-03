@@ -556,18 +556,6 @@ class PlanningFactory
         }
     }
 
-    /**
-     * Update an existing planning
-     *
-     * @param int $planning_id
-     */
-    public function updatePlanning($planning_id, $group_id, PlanningParameters $planning_parameters)
-    {
-        $this->dao->updatePlanning($planning_id, $planning_parameters);
-
-        $this->planning_permissions_manager->savePlanningPermissionForUgroups($planning_id, $group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $planning_parameters->priority_change_permission);
-    }
-
     public function deletePlanning(int $planning_id): void
     {
         $this->dao->deletePlanning($planning_id);
