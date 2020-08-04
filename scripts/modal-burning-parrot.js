@@ -23,7 +23,9 @@ import { contactSupportModalShown } from "./modal.js";
 import { sanitize } from "dompurify";
 
 (function ($) {
-    var help_modal_trigger = document.querySelector('.help-dropdown-link[href="/help/"]');
+    var help_modal_trigger = document.querySelector(
+        '#nav-dropdown-content-help-dropdown > .nav-dropdown-content-items-lists > a[href="/help/"]'
+    );
     var contact_support_modal;
 
     help_modal_trigger.addEventListener("click", function (event) {
