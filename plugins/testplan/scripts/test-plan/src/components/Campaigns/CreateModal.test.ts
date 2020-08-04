@@ -27,6 +27,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 import { RootState } from "../../store/type";
 import { CampaignState } from "../../store/campaign/type";
 import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-reports-retriever";
+import { BacklogItemState } from "../../store/backlog-item/type";
 
 jest.mock("tlp", () => {
     return {
@@ -68,7 +69,7 @@ describe("CreateModal", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("creates the campaign and hides the modal", async () => {
+    it("creates the campaign, hides the modal and refresh the backlog items", async () => {
         const modal_hide = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
@@ -82,6 +83,7 @@ describe("CreateModal", () => {
                 milestone_title: "Milestone Title",
                 testdefinition_tracker_id: null,
                 campaign: {} as CampaignState,
+                backlog_item: {} as BacklogItemState,
             } as RootState,
         });
 
@@ -103,6 +105,7 @@ describe("CreateModal", () => {
                 test_selector: "milestone",
             },
         });
+        expect($store.dispatch).toHaveBeenCalledWith("backlog_item/loadBacklogItems");
         expect(modal_hide).toHaveBeenCalledTimes(1);
     });
 
