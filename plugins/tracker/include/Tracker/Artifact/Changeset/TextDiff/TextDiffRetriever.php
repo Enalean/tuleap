@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
 use HTTPRequest;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -91,13 +92,13 @@ class TextDiffRetriever implements DispatchableWithRequest
 
         $previous_changeset_value = $previous_changeset->getValue($field);
 
-        if (! $previous_changeset_value) {
+        if (! $previous_changeset_value || ! $previous_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text) {
             $layout->sendJSON("");
             return;
         }
 
-        $previous_value = explode(PHP_EOL, $previous_changeset_value->getValue());
-        $next_value     = explode(PHP_EOL, $next_changeset_value->getValue());
+        $previous_value = explode(PHP_EOL, $previous_changeset_value->getText());
+        $next_value     = explode(PHP_EOL, $next_changeset_value->getText());
 
         $layout->sendJSON(
             $this->diff_processor->processDiff($next_changeset_value, $previous_value, $next_value, $format)

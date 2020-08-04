@@ -74,7 +74,7 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
                     $string .= PHP_EOL . $f->format($diff);
                 break;
             case 'html':
-                    $formated_diff = $this->getFormattedDiff($previous, $next);
+                    $formated_diff = $this->getFormattedDiff($previous, $next, CODENDI_PURIFIER_CONVERT_HTML);
                 if ($formated_diff) {
                     $string = $this->fetchDiffInFollowUp($formated_diff);
                 }

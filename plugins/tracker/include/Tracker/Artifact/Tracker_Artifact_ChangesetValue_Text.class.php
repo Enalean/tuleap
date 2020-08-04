@@ -165,7 +165,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         switch ($format) {
             case 'html':
-                $formated_diff = $this->getFormattedDiff($previous, $next);
+                $formated_diff = $this->getFormattedDiff($previous, $next, CODENDI_PURIFIER_CONVERT_HTML);
                 if ($formated_diff) {
                     $string = $this->fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id);
                 }
@@ -236,13 +236,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         );
     }
 
-    public function getFormattedDiff(array $previous, array $next): string
+    public function getFormattedDiff(array $previous, array $next, int $purifier_level): string
     {
         $callback = [Codendi_HTMLPurifier::instance(), 'purify'];
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
-            array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
-            array_map($callback, $next, array_fill(0, count($next), CODENDI_PURIFIER_CONVERT_HTML))
+            array_map($callback, $previous, array_fill(0, count($previous), $purifier_level)),
+            array_map($callback, $next, array_fill(0, count($next), $purifier_level))
         );
 
         return $formater->format($diff);

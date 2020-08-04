@@ -48,8 +48,10 @@ class DiffProcessor
                 $diff = new Codendi_Diff($previous_value, $next_value);
 
                 return PHP_EOL . $this->diff_formatter->format($diff);
+            case 'strip-html':
+                return $next_changeset_value->getFormattedDiff($previous_value, $next_value, CODENDI_PURIFIER_STRIP_HTML);
             case 'html':
-                return $next_changeset_value->getFormattedDiff($previous_value, $next_value);
+                return $next_changeset_value->getFormattedDiff($previous_value, $next_value, CODENDI_PURIFIER_CONVERT_HTML);
             default:
                 return "";
         }
