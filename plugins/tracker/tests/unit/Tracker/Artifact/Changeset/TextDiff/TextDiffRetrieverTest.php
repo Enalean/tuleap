@@ -210,11 +210,11 @@ final class TextDiffRetrieverTest extends TestCase
 
         $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getValue')->andReturn("this is a test");
+        $next_changeset_value->shouldReceive('getText')->andReturn("this is a test");
 
         $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getValue')->andReturn("this is not a test");
+        $previous_changeset_value->shouldReceive('getText')->andReturn("this is not a test");
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
@@ -249,11 +249,11 @@ final class TextDiffRetrieverTest extends TestCase
 
         $next_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->next_changeset->shouldReceive('getValue')->andReturn($next_changeset_value);
-        $next_changeset_value->shouldReceive('getValue')->andReturn("this is a test");
+        $next_changeset_value->shouldReceive('getText')->andReturn("this is a test");
 
         $previous_changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $this->previous_changeset->shouldReceive('getValue')->andReturn($previous_changeset_value);
-        $previous_changeset_value->shouldReceive('getValue')->andReturn("this is not a test");
+        $previous_changeset_value->shouldReceive('getText')->andReturn("this is not a test");
 
         $changesets_for_diff = new ChangesetsForDiff(
             $this->next_changeset,
