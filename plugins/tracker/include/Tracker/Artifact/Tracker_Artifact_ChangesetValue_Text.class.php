@@ -209,6 +209,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     public function fetchDiff(array $previous, array $next, string $format): string
     {
+        if ($previous === $next) {
+            return "";
+        }
         return $this->fetchDiffInFollowUp("");
     }
 
