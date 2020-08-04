@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2018. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,6 @@ use UserHelper;
 
 class UserInvolvedInNotificationPresenter
 {
-    public $has_avatar;
     public $avatar_url;
     public $label;
     public $user_id;
@@ -33,12 +32,10 @@ class UserInvolvedInNotificationPresenter
         $user_id,
         $user_name,
         $real_name,
-        $has_avatar,
         $avatar_url
     ) {
         $this->user_id    = $user_id;
         $this->avatar_url = $avatar_url;
-        $this->has_avatar = $has_avatar;
         $this->label      = UserHelper::instance()->getDisplayName($user_name, $real_name);
     }
 }

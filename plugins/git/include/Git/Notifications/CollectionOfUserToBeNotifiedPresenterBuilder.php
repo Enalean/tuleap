@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2018. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,6 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
-                $row['has_avatar'],
                 $user->getAvatarUrl()
             );
         }

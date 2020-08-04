@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -44,7 +44,6 @@ class ProjectMembersDAO extends DataAccessObject
                     user_group.wiki_flags,
                     user_group.forum_flags,
                     user_group.news_flags,
-                    user.has_avatar,
                     IF(generic_user.group_id, 1, 0) AS is_generic,
                     GROUP_CONCAT(DISTINCT ugroup_user.ugroup_id) AS ugroups_ids
                 FROM user_group

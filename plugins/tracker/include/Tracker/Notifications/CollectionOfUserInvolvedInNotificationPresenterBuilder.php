@@ -81,7 +81,6 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
-                $row['has_avatar'],
                 $user->getAvatarUrl()
             );
         }

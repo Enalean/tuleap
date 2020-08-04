@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use UserManager;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -40,8 +38,8 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCas
         $users_to_notify_dao            = \Mockery::mock(UsersToNotifyDao::class);
         $unsubscribers_notification_dao = \Mockery::mock(UnsubscribersNotificationDAO::class);
         $user_rows                      = [
-            ['user_id' => 200, 'user_name' => 'username1', 'realname' => 'Realname1', 'has_avatar' => 0],
-            ['user_id' => 102, 'user_name' => 'username2', 'realname' => 'Realname2', 'has_avatar' => 0]
+            ['user_id' => 200, 'user_name' => 'username1', 'realname' => 'Realname1'],
+            ['user_id' => 102, 'user_name' => 'username2', 'realname' => 'Realname2']
         ];
         $unsubscribers_notification_dao->shouldReceive(
             'searchUsersUnsubcribedFromNotificationByTrackerID'

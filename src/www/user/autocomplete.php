@@ -104,7 +104,7 @@ if (count($userList) < $limit) {
             $userList[] = [
                 'display_name' => $row['realname'] . " (" . $row['user_name'] . ")",
                 'login'        => $row['user_name'],
-                'has_avatar'   => $row['has_avatar'],
+                'has_avatar'   => true,
                 'avatar_url'   => $user->getAvatarUrl(),
                 'user_id'      => $row['user_id'],
             ];
