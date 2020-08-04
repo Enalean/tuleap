@@ -70,7 +70,7 @@ class AgileDashboard_FirstScrumCreator
         }
 
         $config              = new ImportConfig();
-        $extra_configuration = new TrackerExtraConfiguration(['bugs']);
+        $extra_configuration = new TrackerExtraConfiguration(['bug']);
         $config->addExtraConfiguration($extra_configuration);
 
         try {
