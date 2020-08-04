@@ -60,6 +60,8 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     /**
      *
      * @return int
+     *
+     * @psalm-mutation-free
      */
     public function getId()
     {
