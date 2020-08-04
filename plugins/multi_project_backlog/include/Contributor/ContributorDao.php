@@ -31,4 +31,16 @@ class ContributorDao extends \Tuleap\DB\DataAccessObject
                 WHERE contributor_project_id = ?';
         return $this->getDB()->exists($sql, $project_id);
     }
+
+    /**
+     * @psalm-return list<array{aggregator_project_id:int}>
+     */
+    public function getAggregatorProjectsOfAGivenContributorProject(int $contributor_project_id): array
+    {
+        $sql = "SELECT aggregator_project_id
+                FROM plugin_multi_project_backlog_contributor_projects
+                WHERE contributor_project_id = ?";
+
+        return $this->getDB()->run($sql, $contributor_project_id);
+    }
 }

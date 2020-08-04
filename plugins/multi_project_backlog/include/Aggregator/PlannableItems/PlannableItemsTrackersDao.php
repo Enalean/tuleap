@@ -41,4 +41,37 @@ class PlannableItemsTrackersDao extends DataAccessObject
 
         return $this->getDB()->run($sql, $project_id);
     }
+
+    public function deletePlannableItemsTrackerIdsOfAGivenContributorProject(int $contributor_project_id): void
+    {
+        $sql = "DELETE plugin_multi_project_backlog_plannable_item_trackers.*
+                FROM plugin_multi_project_backlog_plannable_item_trackers
+                    INNER JOIN tracker ON (
+                        tracker.id = plugin_multi_project_backlog_plannable_item_trackers.contributor_backlog_item_tracker_id
+                    )
+                WHERE tracker.group_id = ?";
+
+        $this->getDB()->run($sql, $contributor_project_id);
+    }
+
+    /**
+     * @param int[] $plannable_items_tracker_ids
+     */
+    public function addPlannableItemsTrackerIds(int $aggregator_project_id, array $plannable_items_tracker_ids): void
+    {
+        $data_to_insert = [];
+        foreach ($plannable_items_tracker_ids as $plannable_items_tracker_id) {
+            $data_to_insert[] = [
+                'aggregator_project_id' => $aggregator_project_id,
+                'contributor_backlog_item_tracker_id' => $plannable_items_tracker_id
+            ];
+        }
+
+        if (! empty($data_to_insert)) {
+            $this->getDB()->insertMany(
+                'plugin_multi_project_backlog_plannable_item_trackers',
+                $data_to_insert
+            );
+        }
+    }
 }

@@ -124,7 +124,7 @@ class Planning
     }
 
     /**
-     * @return int[] The id as the tracker used as backlog
+     * @return int[] The list of ids of trackers used as backlog
      */
     public function getBacklogTrackersIds()
     {
