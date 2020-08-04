@@ -41,6 +41,9 @@
             </ul>
         {{/ has_warning }}
 
+        {{# milestone_tracker_modification_ban }}
+            <div class="feedback_warning">{{ message }}</div>
+        {{/ milestone_tracker_modification_ban }}
         <p>
             {{# dgettext }} tuleap-agiledashboard | This planning allows assignment of{{/ dgettext}}
             <select name="planning[backlog_tracker_ids][]" style="vertical-align: top;" multiple="multiple">
@@ -49,7 +52,7 @@
                 {{/ available_backlog_trackers }}
             </select>
             {{# dgettext }} tuleap-agiledashboard | to{{/ dgettext}}
-            <select name="planning[planning_tracker_id]">
+            <select name="planning[planning_tracker_id]" {{# milestone_tracker_modification_ban }}disabled{{/ milestone_tracker_modification_ban }}>
                 {{# available_planning_trackers }}
                     <option value="{{ id }}" {{# selected }} selected {{/ selected }}>{{ name }}</option>
                 {{/ available_planning_trackers }}

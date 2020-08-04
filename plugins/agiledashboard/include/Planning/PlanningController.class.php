@@ -32,7 +32,7 @@ use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
-use Tuleap\AgileDashboard\Planning\RootPlanning\PlanningUpdateIsNotAllowedException;
+use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
@@ -584,7 +584,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         if ($planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
         }
-        $presenter = $this->planning_edition_presenter_builder->build($this->request->getCurrentUser(), $planning);
+        $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project);
 
         $include_assets = new IncludeAssets(
             __DIR__ . '/../../../../src/www/assets/agiledashboard',
@@ -682,11 +682,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             );
             return;
         }
+        $event = new RootPlanningEditionEvent($this->project, $original_planning);
+        $this->event_manager->dispatch($event);
         $already_used_milestone_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($this->group_id);
         $validated_parameters = $this->update_request_validator->getValidatedPlanning(
             $original_planning,
             $this->request,
-            $already_used_milestone_tracker_ids
+            $already_used_milestone_tracker_ids,
+            $event->getMilestoneTrackerModificationBan()
         );
         if (! $validated_parameters) {
             $this->addFeedback(
@@ -696,15 +699,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         } else {
             $user = $this->request->getCurrentUser();
             try {
-                $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $this->project, $user);
-
+                $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $user);
                 $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
 
                 //refresh the planning
                 $planning = $this->planning_factory->getPlanning($updated_planning_id);
                 if ($planning !== null) {
                     $event = new PlanningUpdatedEvent($planning);
-                    $this->event_manager->processEvent($event);
+                    $this->event_manager->dispatch($event);
                 }
 
                 $this->addFeedback(
@@ -712,15 +714,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                     dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
                 );
             } catch (TrackerHaveAtLeastOneAddToTopBacklogPostActionException $exception) {
-                $this->addFeedback(
-                    Feedback::ERROR,
-                    $exception->getMessage()
-                );
-            } catch (PlanningUpdateIsNotAllowedException $exception) {
-                $this->addFeedback(
-                    Feedback::ERROR,
-                    dgettext('tuleap-agiledashboard', 'Modification of this planning is not allowed.')
-                );
+                $this->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (TrackerNotFoundException $exception) {
                 $this->addFeedback(
                     Feedback::ERROR,

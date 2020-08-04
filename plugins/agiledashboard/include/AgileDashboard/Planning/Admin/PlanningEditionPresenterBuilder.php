@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
 use Tuleap\AgileDashboard\FormElement\Burnup;
+use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 class PlanningEditionPresenterBuilder
@@ -62,7 +63,7 @@ class PlanningEditionPresenterBuilder
         $this->tracker_form_element_factory = $tracker_form_element_factory;
     }
 
-    public function build(\PFUser $user, \Planning $planning): PlanningEditionPresenter
+    public function build(\Planning $planning, \PFUser $user, \Project $project): PlanningEditionPresenter
     {
         $project_id = $planning->getGroupId();
 
@@ -85,13 +86,23 @@ class PlanningEditionPresenterBuilder
             'planning[' . \PlanningPermissionsManager::PERM_PRIORITY_CHANGE . ']'
         );
 
+        $milestone_tracker_modification_ban = null;
+        if ($this->isRootPlanning($planning, $user)) {
+            $event = new RootPlanningEditionEvent($project, $planning);
+            $this->event_manager->dispatch($event);
+            $ban = $event->getMilestoneTrackerModificationBan();
+            if ($ban) {
+                $milestone_tracker_modification_ban = new ModificationBanPresenter($ban);
+            }
+        }
         return new PlanningEditionPresenter(
             $planning,
             $planning_priority_change_permission,
             $backlog_trackers_filtered,
             $planning_trackers_filtered,
             $cardwall_admin,
-            $this->getWarnings($planning)
+            $this->getWarnings($planning),
+            $milestone_tracker_modification_ban
         );
     }
 
@@ -152,5 +163,16 @@ class PlanningEditionPresenterBuilder
         $event = new AdditionalPlanningConfigurationWarningsRetriever($planning_tracker);
         $this->event_manager->processEvent($event);
         return $event->getAllWarnings();
+    }
+
+    private function isRootPlanning(\Planning $planning, \PFUser $user): bool
+    {
+        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $planning->getGroupId());
+
+        if (! $root_planning) {
+            return false;
+        }
+
+        return (int) $planning->getId() === (int) $root_planning->getId();
     }
 }

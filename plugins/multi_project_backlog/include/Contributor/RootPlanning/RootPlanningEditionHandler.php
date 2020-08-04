@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,12 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Planning\RootPlanning;
+namespace Tuleap\MultiProjectBacklog\Contributor\RootPlanning;
 
-final class PlanningUpdateIsNotAllowedException extends \RuntimeException
+use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
+
+final class RootPlanningEditionHandler
 {
-    public function __construct(int $planning_id, ?\Throwable $previous = null)
+    /**
+     * @var ContributorDao
+     */
+    private $contributor_dao;
+
+    public function __construct(ContributorDao $contributor_dao)
     {
-        parent::__construct("Modification of planning with id $planning_id was rejected.", 0, $previous);
+        $this->contributor_dao = $contributor_dao;
+    }
+
+    public function handle(RootPlanningEditionEvent $event): void
+    {
+        if ($this->contributor_dao->isProjectAContributorProject((int) $event->getProject()->getID())) {
+            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
+        }
     }
 }

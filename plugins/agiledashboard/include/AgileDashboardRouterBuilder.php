@@ -176,8 +176,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new UpdateIsAllowedChecker(
                 $planning_factory,
                 new BacklogTrackerRemovalChecker(new AddToTopBacklogPostActionDao()),
-                TrackerFactory::instance(),
-                $event_manager
+                TrackerFactory::instance()
             ),
             new \Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder(
                 $planning_factory,
