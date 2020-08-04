@@ -23,9 +23,7 @@ import { sanitize } from "dompurify";
 
 (function ($) {
     $(function () {
-        var help_modal_trigger = document.querySelector(
-            '#dropdown-help > li:first-child > a[href="/help/"]'
-        );
+        let help_modal_trigger = document.querySelector('.help-dropdown-link[href="/help/"]');
         var contact_support_modal;
 
         help_modal_trigger.addEventListener("click", function (event) {
