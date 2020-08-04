@@ -139,13 +139,15 @@ if ($request->valid($vFrm)) {
 		       //-->
 		       </script>';
 
+            $purifier = Codendi_HTMLPurifier::instance();
+
             $ret_val .= '
 		    	    <TR class="' . util_get_alt_row_color($i) . '">' .
             '<TD align="center"><FORM NAME="thread_monitor" action="?" METHOD="POST">' .
-            '<INPUT TYPE="hidden" NAME="thread_id" VALUE="' . $thr_id . '">' .
-            '<INPUT TYPE="hidden" NAME="user_id" VALUE="' . Codendi_HTMLPurifier::instance()->purify($user_id) . '">' .
-            '<INPUT TYPE="hidden" NAME="forum_id" VALUE="' . $forum_id . '">' .
-            '<INPUT TYPE="checkbox" ' . $disabled . ' NAME="mthread[]" VALUE="' . $thr_id . '" ' . $monitored . '></TD>' .
+            '<INPUT TYPE="hidden" NAME="thread_id" VALUE="' . $purifier->purify($thr_id) . '">' .
+            '<INPUT TYPE="hidden" NAME="user_id" VALUE="' . $purifier->purify($user_id) . '">' .
+            '<INPUT TYPE="hidden" NAME="forum_id" VALUE="' . $purifier->purify($forum_id) . '">' .
+            '<INPUT TYPE="checkbox" ' . $disabled . ' NAME="mthread[]" VALUE="' . $purifier->purify($thr_id) . '" ' . $monitored . '></TD>' .
             '<TD><A HREF="/forum/message.php?msg_id=' .
             db_result($result, $i, 'msg_id') . '">' .
             '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ';

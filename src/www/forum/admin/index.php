@@ -159,6 +159,8 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         }
     }
 
+    $purifier = Codendi_HTMLPurifier::instance();
+
     if ($request->existAndNonEmpty('delete')) {
         /*
             Show page for deleting messages
@@ -173,7 +175,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 			<div class="control-group">
                 <label for="msg_id">' . $Language->getText('forum_admin_index', 'enter_msg_id') . '</label>
 			    <div class="controls">
@@ -201,7 +203,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 			<B>' . $Language->getText('forum_admin_index', 'forum_name') . ':</B><BR>
 			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
 			<B>' . $Language->getText('forum_admin_index', 'description') . ':</B><BR>
@@ -256,13 +258,13 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
             for ($i = 0; $i < $rows; $i++) {
                 echo '
-					<TR class="' . util_get_alt_row_color($i) . '"><TD>' . db_result($result, $i, 'forum_name') . '</TD>';
+					<TR class="' . util_get_alt_row_color($i) . '"><TD>' . $purifier->purify(db_result($result, $i, 'forum_name')) . '</TD>';
                 echo '
 					<FORM ACTION="?" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="change_status" VALUE="y">
-					<INPUT TYPE="HIDDEN" NAME="group_forum_id" VALUE="' . db_result($result, $i, 'group_forum_id') . '">
-					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+					<INPUT TYPE="HIDDEN" NAME="group_forum_id" VALUE="' . $purifier->purify(db_result($result, $i, 'group_forum_id')) . '">
+					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 					<TD>
 						<FONT SIZE="-1">
                                                 <B>' . $Language->getText('forum_admin_index', 'is_public') . '</B><BR>';
@@ -277,9 +279,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 					</TD></TR>
 					<TR class="' . util_get_alt_row_color($i) . '"><TD COLSPAN="4">
 						<B>' . $Language->getText('forum_admin_index', 'forum_name') . ':</B><BR>
-						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="' . db_result($result, $i, 'forum_name') . '" SIZE="30" MAXLENGTH="50"><BR>
+						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="' . $purifier->purify(html_entity_decode(db_result($result, $i, 'forum_name'))) . '" SIZE="30" MAXLENGTH="50"><BR>
 						<B>' . $Language->getText('forum_admin_index', 'description') . ':</B><BR>
-						<INPUT TYPE="TEXT" NAME="description" VALUE="' . db_result($result, $i, 'description') . '" SIZE="60" MAXLENGTH="255"><BR>
+						<INPUT TYPE="TEXT" NAME="description" VALUE="' . $purifier->purify(html_entity_decode(db_result($result, $i, 'description'))) . '" SIZE="60" MAXLENGTH="255"><BR>
 					</TD></TR></FORM>';
             }
             echo '</TABLE>';
@@ -297,9 +299,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         echo '
 			<H2>' . $Language->getText('forum_admin_index', 'forum_admin') . '</H2>
 			<P>
-			<A HREF="?group_id=' . $group_id . '&add_forum=1">' . $Language->getText('forum_admin_index', 'add_forum') . '</A><BR>
-			<A HREF="?group_id=' . $group_id . '&delete=1">' . $Language->getText('forum_admin_index', 'del_msg') . '</A><BR>
-			<A HREF="?group_id=' . $group_id . '&change_status=1">' . $Language->getText('forum_admin_index', 'update_forum_status') . '</A>';
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&add_forum=1">' . $Language->getText('forum_admin_index', 'add_forum') . '</A><BR>
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . $Language->getText('forum_admin_index', 'del_msg') . '</A><BR>
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . $Language->getText('forum_admin_index', 'update_forum_status') . '</A>';
 
         forum_footer([]);
     }

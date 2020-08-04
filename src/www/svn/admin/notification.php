@@ -1,14 +1,31 @@
 <?php
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-//
-//
-//    Originally written by Laurent Julliard 2004, Codendi Team, Xerox
+/**
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Originally written by Laurent Julliard 2004, Codendi Team, Xerox
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
 $disabled        = "";
+
+$request = HTTPRequest::instance();
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because
@@ -23,6 +40,8 @@ if ($request->exist('path') && $request->valid($vPath)) {
 } else {
     $path = '/';
 }
+
+$group_id = $request->get('group_id');
 
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $postChanges = $request->get('post_changes');
@@ -69,7 +88,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 
     // Redirect to the same page just to refresh it !
-    $GLOBALS['Response']->redirect('/svn/admin/?func=notification&group_id=' . $group_id);
+    $GLOBALS['Response']->redirect('/svn/admin/?func=notification&group_id=' . urlencode($group_id));
     exit();
 }
 
@@ -96,7 +115,7 @@ echo '
        ' . $Language->getText('svn_admin_notification', 'mail_comment') . '
        <p><i>' . $Language->getText('svn_admin_notification', 'star_operator') . '</i></p>
        <form action="" method="post">
-           <input type="hidden" name="group_id" value="' . $group_id . '">
+           <input type="hidden" name="group_id" value="' . $hp->purify($group_id) . '">
            <input type="hidden" name="post_changes" value="subject_header">
            <label>' . $Language->getText('svn_admin_notification', 'header') . '</label>
            <input type="text" name="form_mailing_header" value="' . $hp->purify($svn_mailing_header) . '" ' . $disabled . '>
@@ -109,7 +128,7 @@ $svnNotificationsDetails = $svnNotification->getSvnEventNotificationDetails($gro
 $content = '<table>';
 if ($svnNotificationsDetails) {
     $content .= '<th align="left">' . $Language->getText('svn_admin_notification', 'existent_notifications') . '</th><tbody>';
-    $content .= '<input type="hidden" name="group_id" value="' . $group_id . '">';
+    $content .= '<input type="hidden" name="group_id" value="' . $hp->purify($group_id) . '">';
     $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
     $content .= html_build_list_table_top([$GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')], false, false, false);
     $rowBgColor  = 0;
@@ -131,7 +150,7 @@ echo '
 $svnMailingList = $svnNotification->getSvnMailingList($group_id, $path);
 echo '
        <form action="" method="post">
-           <input type="hidden" name="group_id" value="' . $group_id . '">
+           <input type="hidden" name="group_id" value="' . $hp->purify($group_id) . '">
            <input type="hidden" name="post_changes" value="path_mailing_list">
 
            <label>' . $Language->getText('svn_admin_notification', 'notification_path') . '</label>

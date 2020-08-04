@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -57,7 +57,7 @@ if ($pv != 2) {
         echo "<TABLE width='100%'><TR><TD>";
         echo '<H3>' . $Language->getText('news_index', 'news') . '</H3>';
         echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
+        echo "<TD align='left'> ( <A HREF='?group_id=" . Codendi_HTMLPurifier::instance()->purify(urlencode($group_id ?? '')) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
         echo "</TR></TABLE>";
     }
 
@@ -97,13 +97,13 @@ if ($rows < 1) {
         if (news_check_permission($forum_id, $group_id)) {
             if ($group_id) {
                 echo '
-		<A HREF="/forum/forum.php?forum_id=' . db_result($result, $j, 'forum_id') .
-                '&group_id=' . $group_id .
+		<A HREF="/forum/forum.php?forum_id=' . $purifier->purify(urlencode(db_result($result, $j, 'forum_id'))) .
+                '&group_id=' . $purifier->purify(urlencode($group_id)) .
                 '"><IMG SRC="' . util_get_image_theme("ic/cfolder15.png") . '" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;' .
                 $purifier->purify(db_result($result, $j, 'summary')) . '</A> ';
             } else {
                 echo '
-		  <A HREF="/forum/forum.php?forum_id=' . db_result($result, $j, 'forum_id') .
+		  <A HREF="/forum/forum.php?forum_id=' . $purifier->purify(urlencode(db_result($result, $j, 'forum_id'))) .
                 '"><IMG SRC="' . util_get_image_theme("ic/cfolder15.png") . '" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;' .
                 $purifier->purify(db_result($result, $j, 'summary')) . '</A> ';
             }

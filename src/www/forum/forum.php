@@ -1,7 +1,24 @@
 <?php
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /*
 
     Forum written 11/99 by Tim Perdue
@@ -320,6 +337,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
          */
 
+            $purifier = Codendi_HTMLPurifier::instance();
+
         //create a pop-up select box listing the forums for this project
          //determine if this person can see private forums or not
             if (user_isloggedin() && user_ismember($group_id)) {
@@ -328,7 +347,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                 $public_flag = '1';
             }
             if ($is_a_news) {
-                $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="' . $forum_id . '">';
+                $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="' . $purifier->purify($forum_id) . '">';
             } else {
                 $res = db_query("SELECT group_forum_id,forum_name " .
                 "FROM forum_group_list " .
@@ -471,12 +490,12 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                 $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
                 if (db_numrows($result) > $i) {
                     if (isset($pv)) {
-                        $pv_param = "&pv=" . $pv;
+                        $pv_param = "&pv=" . $purifier->purify(urlencode((string) $pv));
                     } else {
                         $pv_param = "";
                     }
                      $ret_val .= '<B><span>
-                     <A HREF="/forum/forum.php?max_rows=' . $max_rows . '&style=' . $style . '&offset=' . ($offset + $i) . '&forum_id=' . $forum_id . '' . $pv_param . '">
+                     <A HREF="/forum/forum.php?max_rows=' . $purifier->purify(urlencode((string) $max_rows)) . '&style=' . $purifier->purify(urlencode($style)) . '&offset=' . $purifier->purify(urlencode($offset + $i)) . '&forum_id=' . $purifier->purify(urlencode($forum_id)) . '' . $pv_param . '">
                      <B>' . $Language->getText('forum_forum', 'next_msg') .
                      ' <IMG SRC="' . util_get_image_theme("t.png") . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
                 } else {
