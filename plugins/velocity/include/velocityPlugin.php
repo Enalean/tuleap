@@ -21,9 +21,9 @@
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
-use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
@@ -132,7 +132,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 ]
             );
             $semantic_name = dgettext('tuleap-velocity', 'Velocity semantic');
-            $event->addWarnings(
+            $event->addWarning(
                 new PlanningWarningPossibleMisconfigurationPresenter($semantic_url, $semantic_name)
             );
         }

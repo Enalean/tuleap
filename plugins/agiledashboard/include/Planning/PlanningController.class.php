@@ -24,11 +24,12 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
-use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\RootPlanning\PlanningUpdateIsNotAllowedException;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
@@ -132,6 +133,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var UpdateIsAllowedChecker
      */
     private $root_planning_update_checker;
+    /**
+     * @var PlanningEditionPresenterBuilder
+     */
+    private $planning_edition_presenter_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -155,33 +160,35 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         PlanningUpdater $planning_updater,
         EventManager $event_manager,
         Planning_RequestValidator $planning_request_validator,
-        UpdateIsAllowedChecker $root_planning_update_checker
+        UpdateIsAllowedChecker $root_planning_update_checker,
+        PlanningEditionPresenterBuilder $planning_edition_presenter_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project                           = $this->request->getProject();
-        $this->group_id                          = $this->project->getID();
-        $this->planning_factory                  = $planning_factory;
-        $this->milestone_factory                 = $milestone_factory;
-        $this->project_manager                   = $project_manager;
-        $this->xml_exporter                      = $xml_exporter;
-        $this->plugin_path                       = $plugin_path;
-        $this->kanban_manager                    = $kanban_manager;
-        $this->config_manager                    = $config_manager;
-        $this->kanban_factory                    = $kanban_factory;
-        $this->planning_permissions_manager      = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker      = $scrum_mono_milestone_checker;
-        $this->scrum_planning_filter             = $scrum_planning_filter;
-        $this->tracker_form_element_factory      = $tracker_form_element_factory;
-        $this->service_crumb_builder             = $service_crumb_builder;
-        $this->admin_crumb_builder               = $admin_crumb_builder;
-        $this->timeframe_checker                 = $timeframe_checker;
-        $this->transaction_executor              = $transaction_executor;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planning_updater                  = $planning_updater;
-        $this->event_manager                     = $event_manager;
-        $this->planning_request_validator        = $planning_request_validator;
-        $this->root_planning_update_checker      = $root_planning_update_checker;
+        $this->project                            = $this->request->getProject();
+        $this->group_id                           = $this->project->getID();
+        $this->planning_factory                   = $planning_factory;
+        $this->milestone_factory                  = $milestone_factory;
+        $this->project_manager                    = $project_manager;
+        $this->xml_exporter                       = $xml_exporter;
+        $this->plugin_path                        = $plugin_path;
+        $this->kanban_manager                     = $kanban_manager;
+        $this->config_manager                     = $config_manager;
+        $this->kanban_factory                     = $kanban_factory;
+        $this->planning_permissions_manager       = $planning_permissions_manager;
+        $this->scrum_mono_milestone_checker       = $scrum_mono_milestone_checker;
+        $this->scrum_planning_filter              = $scrum_planning_filter;
+        $this->tracker_form_element_factory       = $tracker_form_element_factory;
+        $this->service_crumb_builder              = $service_crumb_builder;
+        $this->admin_crumb_builder                = $admin_crumb_builder;
+        $this->timeframe_checker                  = $timeframe_checker;
+        $this->transaction_executor               = $transaction_executor;
+        $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
+        $this->planning_updater                   = $planning_updater;
+        $this->event_manager                      = $event_manager;
+        $this->planning_request_validator         = $planning_request_validator;
+        $this->root_planning_update_checker       = $root_planning_update_checker;
+        $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
     }
 
     public function index()
@@ -569,9 +576,16 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         if ($planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
         }
-        $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
+        $presenter = $this->planning_edition_presenter_builder->build($this->request->getCurrentUser(), $planning);
 
-        return $this->renderToString('edit', $presenter);
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/agiledashboard',
+            '/assets/agiledashboard'
+        );
+        $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
+
+        return $this->renderToString('admin-scrum/edit-planning', $presenter);
     }
 
     private function getFormPresenter(PFUser $user, Planning $planning)

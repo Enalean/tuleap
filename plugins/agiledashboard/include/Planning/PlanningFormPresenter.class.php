@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 
 class Planning_FormPresenter extends PlanningPresenter
 {
@@ -103,11 +103,6 @@ class Planning_FormPresenter extends PlanningPresenter
     public function createPlanning()
     {
         return dgettext('tuleap-agiledashboard', 'Create a new planning');
-    }
-
-    public function editPlanning()
-    {
-        return dgettext('tuleap-agiledashboard', 'Edit planning:');
     }
 
     public function planningNameFieldLabel()

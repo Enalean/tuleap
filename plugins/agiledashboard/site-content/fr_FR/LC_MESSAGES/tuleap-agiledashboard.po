@@ -272,8 +272,8 @@ msgstr "Éditer"
 msgid "Edit %1$s"
 msgstr "Éditer %1$s"
 
-msgid "Edit planning:"
-msgstr "Éditer le planning :"
+msgid "Edit planning: %s"
+msgstr "Éditer le planning : %s"
 
 msgid "Enable Scrum V2"
 msgstr "Activer Scrum V2"
