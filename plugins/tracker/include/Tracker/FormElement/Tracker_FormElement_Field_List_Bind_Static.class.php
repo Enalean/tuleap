@@ -429,12 +429,18 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
 
     private function getAdminEditRowModifiable(
-        Tracker_FormElement_Field_List_Bind_StaticValue $value,
-        ColorpickerMountPointPresenter $decorator
+        Tracker_FormElement_Field_List_Value $value,
+        ?ColorpickerMountPointPresenter $decorator,
+        bool $is_custom_value
     ): string {
         return $this->getTemplateRenderer()->renderToString(
             'admin-edit-row-modifiable',
-            $this->getFormElementListAdminViewBuilder()->buildPresenter($this->field, $value, $decorator)
+            $this->getFormElementListAdminViewBuilder()->buildPresenter(
+                $this->field,
+                $value,
+                $decorator,
+                $is_custom_value
+            )
         );
     }
 
@@ -471,10 +477,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     /**
      * Fetch the form to edit the formElement
-     *
-     * @return string html
      */
-    public function fetchAdminEditForm()
+    public function fetchAdminEditForm(): string
     {
         if ($this->field->isTargetSharedField()) {
             return $this->fetchAdminEditFormNotModifiable();
@@ -486,16 +490,23 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     private function fetchAdminEditFormModifiable(): string
     {
         $html = '';
+
+        $html .= $this->fetchAdminEditFormModifiableWithUsersValues();
+
         $html .= '<h3>' . dgettext('tuleap-tracker', 'Static values') . '</h3>';
 
-        $h = new HTML_Element_Input_Checkbox(dgettext('tuleap-tracker', 'alphabetically sort values'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
+        $h = new HTML_Element_Input_Checkbox(
+            dgettext('tuleap-tracker', 'alphabetically sort values'),
+            'bind[is_rank_alpha]',
+            $this->is_rank_alpha
+        );
         $h->setId('is_rank_alpha');
         $h->addParam('class', 'is_rank_alpha');
         $html .= '<p>' . $h->render() . '</p>';
 
         $html .= '<table><tr><td>';
         $html .= '<input type="hidden" name="bind[order]" class="bind_order_values" value="" />';
-        $html .= '<ul class="tracker-admin-bindvalue_list">';
+        $html .= '<ul class="tracker-admin-bindvalue_list tracker-admin-bindvalue_list_sortable">';
 
         $retriever = new BindValuesAdder();
         $possible_values = $retriever->addNoneValue($this->getAllValues());
@@ -510,11 +521,48 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '<p id="tracker-admin-bind-static-addnew">';
         $html .= '<strong>' . dgettext('tuleap-tracker', 'Add new values') . '</strong><br />';
         $html .= '<textarea name="bind[add]" rows="5" cols="30"></textarea><br />';
-        $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext('tuleap-tracker', 'Add one value per row') . '</span><br />';
+        $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext(
+            'tuleap-tracker',
+            'Add one value per row'
+        ) . '</span><br />';
         $html .= '</p>';
 
         //Select default values
         $html .= $this->getField()->getSelectDefaultValues($this->default_values);
+
+        return $html;
+    }
+
+    private function fetchAdminEditFormModifiableWithUsersValues(): string
+    {
+        $html            = '';
+        $user_row_values = $this->getOpenValueDao()->searchByFieldId($this->getField()->getId());
+
+        if ($user_row_values->count() === 0) {
+            return $html;
+        }
+
+        $html        .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
+        $user_values = [];
+
+        foreach ($user_row_values as $row_value) {
+            $user_values[] = new Tracker_FormElement_Field_List_OpenValue(
+                $row_value['id'],
+                $row_value['label'],
+                $row_value['is_hidden']
+            );
+        }
+
+        $html .= '<table><tr><td>';
+        $html .= '<input type="hidden" name="bind[order]" value="" />';
+        $html .= '<ul class="tracker-admin-bindvalue_list">';
+
+        foreach ($user_values as $value) {
+            $html .= $this->getAdminEditRowModifiable($value, null, true);
+        }
+
+        $html .= '</ul>';
+        $html .= '</td></tr></table>';
 
         return $html;
     }
@@ -538,7 +586,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             );
         }
 
-        return $this->getAdminEditRowModifiable($value, $decorator);
+        return $this->getAdminEditRowModifiable($value, $decorator, false);
     }
 
     private function fetchAdminEditFormNotModifiable()
@@ -654,6 +702,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                                 unset($new_label, $new_description);
                             }
                         }
+                    }
+                    break;
+                case "edit_custom":
+                    $values = $this->getOpenValueDao()->searchByFieldId($this->field->getId());
+                    foreach ($values as $row) {
+                        $new_is_hidden = ! isset($value[$row['id']]['is_hidden']);
+                        $this->getOpenValueDao()->updateOpenValue(
+                            (int) $row['id'],
+                            $new_is_hidden,
+                            $value[$row['id']]['label']
+                        );
                     }
                     break;
                 case 'add':

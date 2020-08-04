@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,9 +27,9 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
 
     protected $label;
 
-    public function __construct($id, $label)
+    public function __construct($id, $label, bool $is_hidden)
     {
-        parent::__construct($id, false);
+        parent::__construct($id, $is_hidden);
         $this->label = $label;
     }
 

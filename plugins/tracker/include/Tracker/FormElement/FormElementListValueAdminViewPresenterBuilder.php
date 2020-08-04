@@ -24,7 +24,8 @@ namespace Tuleap\Tracker\FormElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_OpenValue;
+use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 class FormElementListValueAdminViewPresenterBuilder
@@ -42,8 +43,9 @@ class FormElementListValueAdminViewPresenterBuilder
 
     public function buildPresenter(
         \Tracker_FormElement_Field $field,
-        Tracker_FormElement_Field_List_Bind_StaticValue $value,
-        ColorpickerMountPointPresenter $decorator
+        Tracker_FormElement_Field_List_Value $value,
+        ?ColorpickerMountPointPresenter $decorator,
+        bool $is_custom_value
     ): FormElementListValueAdminViewPresenter {
         $value_can_be_hidden  = $this->canValueBeHidden($value, $field);
         $value_can_be_deleted = $this->canValueBeDeleted($value, $field);
@@ -85,6 +87,7 @@ class FormElementListValueAdminViewPresenterBuilder
             $image_title,
             $image_hidden_alt,
             $image_hidden_prefix,
+            $is_custom_value
         );
     }
 
@@ -100,14 +103,22 @@ class FormElementListValueAdminViewPresenterBuilder
         return '';
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value, Tracker_FormElement_Field $field): bool
+    public function canValueBeHidden(Tracker_FormElement_Field_List_Value $value, Tracker_FormElement_Field $field): bool
     {
+        if ($value instanceof Tracker_FormElement_Field_List_OpenValue) {
+            return true;
+        }
+
         return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE
             && $this->value_dao->canValueBeHidden($field, $value->getId());
     }
 
-    public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value, Tracker_FormElement_Field $field): bool
+    public function canValueBeDeleted(Tracker_FormElement_Field_List_Value $value, Tracker_FormElement_Field $field): bool
     {
+        if ($value instanceof Tracker_FormElement_Field_List_OpenValue) {
+            return false;
+        }
+
         return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE
             && $this->value_dao->canValueBeDeleted($field, $value->getId());
     }

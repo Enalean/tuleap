@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -75,16 +76,17 @@ class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_Specific
         for ($i = 0; $i < $bindtable_select_nb; ++$i) {
             $openvalue_select .= ' null,';
         }
-        $sql = "SELECT $bindtable_join_on_id as id, $bindtable_select, null as openvalue_label, l.insertion_order
+        $sql = "SELECT $bindtable_join_on_id as id, $bindtable_select, null as openvalue_is_hidden, null as openvalue_label, l.insertion_order
                 FROM $bindtable_from 
                     INNER JOIN tracker_changeset_value_openlist AS l ON (l.bindvalue_id = $bindtable_join_on_id) 
                     INNER JOIN tracker_changeset_value AS c ON ( l.changeset_value_id = c.id AND c.changeset_id = $changeset_id AND c.field_id = $field_id ) 
                 UNION
-                SELECT ov.id AS id, $openvalue_select ov.label as openvalue_label, l.insertion_order
+                SELECT ov.id AS id, $openvalue_select ov.is_hidden as openvalue_is_hidden, ov.label as openvalue_label, l.insertion_order
                 FROM tracker_field_openlist_value AS ov
                     INNER JOIN tracker_changeset_value_openlist AS l ON (l.openvalue_id = ov.id) 
                     INNER JOIN tracker_changeset_value AS c ON ( l.changeset_value_id = c.id AND c.changeset_id = $changeset_id AND c.field_id = $field_id ) 
                 ORDER BY insertion_order";
+
         return $this->retrieve($sql);
     }
 }

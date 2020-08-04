@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -76,6 +76,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
+                  AND is_hidden != 1
                   AND label LIKE $keyword
                 LIMIT $limit";
         return $this->retrieve($sql);
@@ -90,5 +91,18 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
                 WHERE field_id = $field_id
                   AND label = $label";
         return $this->retrieve($sql);
+    }
+
+    public function updateOpenValue(int $id, bool $is_hidden, string $label): bool
+    {
+        $id        = $this->da->escapeInt($id);
+        $is_hidden = $this->da->escapeInt($is_hidden);
+        $label     = $this->da->quoteSmart($label);
+
+        $sql = "UPDATE $this->table_name
+                SET is_hidden = $is_hidden, label = $label
+                WHERE id = $id";
+
+        return $this->update($sql);
     }
 }
