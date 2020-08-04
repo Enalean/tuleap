@@ -110,6 +110,7 @@ import {
 } from "../../helpers/Campaigns/tracker-reports-retriever";
 
 const campaign = namespace("campaign");
+const backlog_item = namespace("backlog_item");
 @Component({
     components: { CreateModalErrorFeedback, CreateCampaignTestSelector },
 })
@@ -121,6 +122,9 @@ export default class CreateModal extends Vue {
 
     @campaign.Action
     readonly createCampaign!: (payload: CreateCampaignPayload) => Promise<void>;
+
+    @backlog_item.Action
+    readonly loadBacklogItems!: () => Promise<void>;
 
     private label = "";
     private initial_tests: CampaignInitialTests = { test_selector: "milestone" };
@@ -168,6 +172,7 @@ export default class CreateModal extends Vue {
         } finally {
             this.is_creating = false;
         }
+        await this.loadBacklogItems();
     }
 
     private async getErrorMessageDetailsFromError(

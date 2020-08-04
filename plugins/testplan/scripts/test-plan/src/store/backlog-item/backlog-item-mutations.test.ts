@@ -42,12 +42,13 @@ describe("BacklogItem state mutations", () => {
         const state: BacklogItemState = {
             is_loading: false,
             has_loading_error: false,
-            backlog_items: [],
+            backlog_items: [{ id: 1 } as BacklogItem],
         };
 
         beginLoadingBacklogItems(state);
 
         expect(state.is_loading).toBe(true);
+        expect(state.backlog_items).toStrictEqual([]);
     });
 
     it("endLoadingBacklogItems", () => {

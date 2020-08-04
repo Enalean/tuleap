@@ -107,6 +107,7 @@ export function markTestDefinitionsAsBeingLoaded(state: BacklogItemState, item: 
 
 export function beginLoadingBacklogItems(state: BacklogItemState): void {
     state.is_loading = true;
+    state.backlog_items = [];
 }
 
 export function endLoadingBacklogItems(state: BacklogItemState): void {
