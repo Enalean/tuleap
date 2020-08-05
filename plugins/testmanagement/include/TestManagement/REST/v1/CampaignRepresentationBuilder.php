@@ -22,15 +22,23 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
 use Tracker_FormElementFactory;
+use TrackerFactory;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
+use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
+use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Criterion\ISearchOnMilestone;
 use Tuleap\TestManagement\Criterion\ISearchOnStatus;
 use Tuleap\TestManagement\PaginatedCampaignsRepresentations;
 
 class CampaignRepresentationBuilder
 {
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
     /**
      * @var Tracker_FormElementFactory
      */
@@ -40,27 +48,43 @@ class CampaignRepresentationBuilder
      * @var ArtifactFactory
      */
     private $testmanagement_artifact_factory;
-
     /**
      * @var CampaignRetriever
      */
     private $campaign_retriever;
+    /**
+     * @var Config
+     */
+    private $test_management_config;
+    /**
+     * @var TestExecutionTestStatusDAO
+     */
+    private $test_execution_test_status_dao;
 
     public function __construct(
+        TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $tracker_form_element_factory,
         ArtifactFactory $testmanagement_artifact_factory,
-        CampaignRetriever $campaign_retriever
+        CampaignRetriever $campaign_retriever,
+        Config $test_management_config,
+        TestExecutionTestStatusDAO $test_execution_test_status_dao
     ) {
+        $this->tracker_factory                 = $tracker_factory;
         $this->tracker_form_element_factory    = $tracker_form_element_factory;
         $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
         $this->campaign_retriever              = $campaign_retriever;
+        $this->test_management_config          = $test_management_config;
+        $this->test_execution_test_status_dao  = $test_execution_test_status_dao;
     }
 
     public function getCampaignRepresentation(PFUser $user, Campaign $campaign): CampaignRepresentation
     {
         return CampaignRepresentation::build(
             $campaign,
+            $this->test_management_config,
+            $this->tracker_factory,
             $this->tracker_form_element_factory,
+            $this->test_execution_test_status_dao,
             $user
         );
     }
@@ -92,9 +116,8 @@ class CampaignRepresentationBuilder
         }
 
         foreach ($paginated_campaigns->getArtifacts() as $artifact) {
-            $campaign = $this->campaign_retriever->getByArtifact($artifact);
-            $campaign_representation    = CampaignRepresentation::build($campaign, $this->tracker_form_element_factory, $user);
-            $campaign_representations[] = $campaign_representation;
+            $campaign                   = $this->campaign_retriever->getByArtifact($artifact);
+            $campaign_representations[] = $this->getCampaignRepresentation($user, $campaign);
         }
 
         $paginated_campaigns_representations = new PaginatedCampaignsRepresentations(

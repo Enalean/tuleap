@@ -36,6 +36,7 @@ use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
+use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
@@ -86,6 +87,7 @@ class ProjectResource
             $artifact_factory,
             $artifact_dao
         );
+        $tracker_factory                       = TrackerFactory::instance();
         $tracker_form_element_factory          = Tracker_FormElementFactory::instance();
         $this->user                            = UserManager::instance()->getCurrentUser();
 
@@ -101,9 +103,12 @@ class ProjectResource
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
+            $tracker_factory,
             $tracker_form_element_factory,
             $this->testmanagement_artifact_factory,
-            $campaign_retriever
+            $campaign_retriever,
+            new Config(new Dao(), $tracker_factory),
+            new TestExecutionTestStatusDAO()
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
