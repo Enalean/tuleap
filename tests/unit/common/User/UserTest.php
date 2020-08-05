@@ -97,8 +97,8 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     {
         $dao = \Mockery::spy(\UserPreferencesDao::class);
 
-        $empty_dar = TestHelper::emptyDar();
-        $dar = TestHelper::arrayToDar(['preference_value' => '123']);
+        $empty_dar = [];
+        $dar = ['preference_value' => '123'];
 
         $dao->shouldReceive('search')->with(666, 'unexisting_preference')->andReturns($empty_dar);
         $dao->shouldReceive('search')->with(666, 'existing_preference')->andReturns($dar);

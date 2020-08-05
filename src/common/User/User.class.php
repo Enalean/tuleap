@@ -1305,9 +1305,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         if (! isset($this->preferences[$preference_name])) {
             $this->preferences[$preference_name] = false;
             if (! $this->isAnonymous()) {
-                $dao = $this->getPreferencesDao();
-                $dar = $dao->search($this->getId(), $preference_name);
-                if ($row = $dar->getRow()) {
+                $row = $this->getPreferencesDao()->search(
+                    $this->getId(),
+                    $preference_name
+                );
+
+                if (isset($row['preference_value'])) {
                     $this->preferences[$preference_name] = $row['preference_value'];
                 }
             }
