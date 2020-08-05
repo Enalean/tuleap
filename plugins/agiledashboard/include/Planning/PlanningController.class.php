@@ -26,8 +26,9 @@ use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
-use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
+use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
@@ -138,6 +139,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var PlanningEditionPresenterBuilder
      */
     private $planning_edition_presenter_builder;
+    /**
+     * @var UpdateRequestValidator
+     */
+    private $update_request_validator;
 
     public function __construct(
         Codendi_Request $request,
@@ -162,7 +167,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         EventManager $event_manager,
         Planning_RequestValidator $planning_request_validator,
         UpdateIsAllowedChecker $root_planning_update_checker,
-        PlanningEditionPresenterBuilder $planning_edition_presenter_builder
+        PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
+        UpdateRequestValidator $update_request_validator
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -190,6 +196,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->planning_request_validator         = $planning_request_validator;
         $this->root_planning_update_checker       = $root_planning_update_checker;
         $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
+        $this->update_request_validator           = $update_request_validator;
     }
 
     public function index()
@@ -660,32 +667,38 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     {
         $this->checkUserIsAdmin();
 
-        if ($this->planning_request_validator->isValid($this->request)) {
-            $planning_parameter = PlanningParameters::fromArray(
-                $this->request->get('planning')
+        $updated_planning_id = (int) $this->request->get('planning_id');
+        $original_planning   = $this->planning_factory->getPlanning($updated_planning_id);
+        if ($original_planning === null) {
+            $this->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-agiledashboard', 'Could not find planning with id %s.'),
+                    $updated_planning_id
+                )
             );
-
-            $updated_planning_id = (int) $this->request->get('planning_id');
-            $user                = $this->request->getCurrentUser();
-            $planning            = $this->planning_factory->getPlanning($updated_planning_id);
-            if ($planning === null) {
-                $this->addFeedback(
-                    Feedback::ERROR,
-                    sprintf(
-                        dgettext('tuleap-agiledashboard', "Could not find planning with id %s."),
-                        $updated_planning_id
-                    )
-                );
-                $this->redirect(
-                    ['group_id' => $this->group_id, 'planning_id' => $updated_planning_id, 'action' => 'edit']
-                );
-                return;
-            }
-
+            $this->redirect(
+                ['group_id' => $this->group_id, 'planning_id' => $updated_planning_id, 'action' => 'edit']
+            );
+            return;
+        }
+        $already_used_milestone_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($this->group_id);
+        $validated_parameters = $this->update_request_validator->getValidatedPlanning(
+            $original_planning,
+            $this->request,
+            $already_used_milestone_tracker_ids
+        );
+        if (! $validated_parameters) {
+            $this->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-agiledashboard', 'Planning name, backlog tracker and planning tracker are mandatory.')
+            );
+        } else {
+            $user = $this->request->getCurrentUser();
             try {
-                $this->root_planning_update_checker->checkUpdateIsAllowed($planning, $planning_parameter, $this->project, $user);
+                $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $this->project, $user);
 
-                $this->planning_updater->update($user, $this->project, $updated_planning_id, $planning_parameter);
+                $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
 
                 //refresh the planning
                 $planning = $this->planning_factory->getPlanning($updated_planning_id);
@@ -713,15 +726,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                     Feedback::ERROR,
                     sprintf(
                         dgettext('tuleap-agiledashboard', 'The tracker %s is not found'),
-                        (string) $planning_parameter->planning_tracker_id
+                        (string) $validated_parameters->planning_tracker_id
                     )
                 );
             }
-        } else {
-            $this->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'Planning name, backlog tracker and planning tracker are mandatory.')
-            );
         }
 
         $this->updateCardwallConfig();

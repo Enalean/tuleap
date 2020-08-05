@@ -185,7 +185,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $scrum_planning_filter,
                 $planning_permissions_manager,
                 $form_element_factory
-            )
+            ),
+            new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator()
         );
     }
 
