@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,6 @@ class ArtifactHistory
     public function findAt(DateTimeInterface $date): ?BaselineArtifact
     {
         $previous_change_set = null;
-        \assert($previous_change_set instanceof BaselineChangeSet);
         foreach ($this->change_sets as $change_set) {
             if ($change_set->isLaterThan($date)) {
                 if ($previous_change_set === null) {
