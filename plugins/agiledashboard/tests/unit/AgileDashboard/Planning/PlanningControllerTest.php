@@ -277,11 +277,11 @@ final class PlanningControllerTest extends TestCase
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanning')->times(3)->andReturn($planning);
 
         $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
         $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')->once();

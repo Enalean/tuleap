@@ -23,11 +23,15 @@ declare(strict_types=1);
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
+use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningUpdateIsAllowedEvent;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
+use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersUpdater;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItemsPerContributorPresenterCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminURLBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
@@ -53,6 +57,7 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(PlanningEditURLEvent::NAME);
         $this->addHook(RootPlanningUpdateIsAllowedEvent::NAME);
+        $this->addHook(PlanningUpdatedEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -139,6 +144,19 @@ final class multi_project_backlogPlugin extends Plugin
     {
         $handler = new RootPlanningUpdateIsAllowedHandler(new ContributorDao());
         $handler->handle($event);
+    }
+
+    public function planningUpdatedEvent(PlanningUpdatedEvent $event): void
+    {
+        (new PlannableItemsTrackersUpdater(
+            new ContributorDao(),
+            new PlannableItemsTrackersDao(),
+            new DBTransactionExecutorWithConnection(
+                DBFactory::getMainTuleapDBConnection()
+            )
+        ))->updatePlannableItemsTrackersFromPlanning(
+            $event->getPlanning()
+        );
     }
 
     private function buildTemplateRenderer(): TemplateRenderer
