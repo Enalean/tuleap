@@ -23,13 +23,10 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SiteDeploy;
 
-use ForgeConfig;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class SiteDeployCommand extends Command
@@ -50,53 +47,37 @@ final class SiteDeployCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $php_version = $input->getOption(SiteDeployFPMCommand::OPT_PHP_VERSION);
-        assert(is_string($php_version));
-        $force = $input->getOption(SiteDeployFPMCommand::OPT_FORCE) === true;
-
-        ForgeConfig::loadLocalInc();
-
-        $this->deployImages($output);
-        $this->deployFPM($output, $php_version, $force);
-        return $this->deployGitolite3Config($input, $output);
+        return $this->executeAllCommandsInNamespace($input, $output);
     }
 
-    private function deployImages(OutputInterface $output): void
-    {
-        (new SiteDeployImages())->deploy($output);
-    }
-
-    private function deployFPM(OutputInterface $output, string $php_version, bool $force): void
-    {
-        $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-
-        $deploy = SiteDeployFPM::buildForPHP73($console_logger, ForgeConfig::get('sys_http_user'), false);
-        if ($php_version === SiteDeployFPMCommand::PHP74) {
-            $deploy = SiteDeployFPM::buildForPHP74($console_logger, ForgeConfig::get('sys_http_user'), false);
-        }
-        if ($force) {
-            $deploy->forceDeploy();
-        } else {
-            $deploy->configure();
-        }
-    }
-
-    private function deployGitolite3Config(InputInterface $input, OutputInterface $output): int
+    private function executeAllCommandsInNamespace(InputInterface $input, OutputInterface $output): int
     {
         $application = $this->getApplication();
         if ($application === null) {
             return 0;
         }
-        $command = $application->find(SiteDeployGitolite3Command::NAME);
-        $command_definition = $command->getDefinition();
 
-        $subcommand_options = [];
-        foreach ($input->getOptions() as $name => $value) {
-            if ($command_definition->hasOption($name)) {
-                $subcommand_options[$name] = $value;
+        $input_options = $input->getOptions();
+
+        foreach ($application->all(self::NAME) as $command) {
+            $command_definition = $command->getDefinition();
+
+            $subcommand_input = new ArrayInput([], $command_definition);
+            $subcommand_input->setInteractive(false);
+
+            foreach ($input_options as $name => $value) {
+                if ($command_definition->hasOption($name)) {
+                    $subcommand_input->setOption($name, $value);
+                }
+            }
+
+            $status = $command->execute($subcommand_input, $output);
+
+            if ($status !== 0) {
+                return $status;
             }
         }
 
-        return $command->run(new ArrayInput($subcommand_options), $output);
+        return 0;
     }
 }
