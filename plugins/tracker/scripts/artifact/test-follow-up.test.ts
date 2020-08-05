@@ -18,16 +18,13 @@
  */
 
 import { mockFetchSuccess } from "../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
-import { toggleIcon, toggleDiffContent, shouldLoadSomeContent } from "./text-follow-up";
+import { toggleIcon, toggleDiffContent } from "./text-follow-up";
 import * as tlp_fetch from "../../../../src/themes/tlp/src/js/fetch-wrapper";
 
 jest.mock("tlp-fetch");
 
 describe("Text follow up", () => {
     let get: jest.SpyInstance<Promise<Response>>;
-    const changeset_id = "123";
-    const field_id = "1911";
-    const value = "130";
 
     beforeEach(() => {
         get = jest.spyOn(tlp_fetch, "get");
@@ -66,85 +63,9 @@ describe("Text follow up", () => {
         const diff_button_element = diff_buttons[0];
 
         mockFetchSuccess(get, { return_json: "<div>My diff </div>" });
-        await toggleDiffContent(
-            diff_button_element,
-            local_document_with_followup,
-            changeset_id,
-            "strip-html",
-            "show-diff-follow-up"
-        );
+        await toggleDiffContent(diff_button_element, local_document_with_followup);
 
-        expect(get).toHaveBeenCalledWith("/plugins/tracker/changeset/123/diff/strip-html/130/1911");
-    });
-
-    it("Displays a specific message when diff is empty", async () => {
-        const local_document_with_followup = getLocalDocumentForToggleDiff();
-
-        const diff_buttons = local_document_with_followup.getElementsByClassName("toggle-diff");
-
-        const diff_button_element = diff_buttons[0];
-
-        const only_formatted_message = local_document_with_followup.getElementById(
-            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
-        );
-        if (!only_formatted_message) {
-            throw new Error("Missing only formatted dff message" + changeset_id);
-        }
-
-        mockFetchSuccess(get, { return_json: "" });
-        await toggleDiffContent(
-            diff_button_element,
-            local_document_with_followup,
-            changeset_id,
-            "strip-html",
-            "show-diff-follow-up"
-        );
-
-        expect(get).toHaveBeenCalledWith("/plugins/tracker/changeset/123/diff/strip-html/130/1911");
-        expect(only_formatted_message.classList.contains("hide-only-formatted-diff-message")).toBe(
-            false
-        );
-    });
-
-    it("Returns true when content have never been loaded", () => {
-        const local_document = document.implementation.createHTMLDocument();
-        const diff_element = local_document.createElement("div");
-        const diff_button = local_document.createElement("button");
-
-        expect(shouldLoadSomeContent(diff_element, diff_button, "strip-html")).toBe(true);
-    });
-
-    it("Returns true when content have we switch from html to text", () => {
-        const local_document = document.implementation.createHTMLDocument();
-        const diff_element = local_document.createElement("div");
-        diff_element.setAttribute("last-load-by", "strip-html");
-        const diff_button = local_document.createElement("button");
-
-        expect(shouldLoadSomeContent(diff_element, diff_button, "html")).toBe(true);
-    });
-
-    it("Returns false when content we are displaying a text diff and when we toggle the diff button", () => {
-        const local_document = document.implementation.createHTMLDocument();
-        const diff_element = local_document.createElement("div");
-        diff_element.setAttribute("last-load-by", "html");
-        const diff_button = local_document.createElement("button");
-        const icon_element = local_document.createElement("i");
-        icon_element.classList.add("fa-caret-down");
-        diff_button.appendChild(icon_element);
-
-        expect(shouldLoadSomeContent(diff_element, diff_button, "strip-html")).toBe(false);
-    });
-
-    it("Returns true when content we are NO longer displaying a diff and when we toggle the diff button", () => {
-        const local_document = document.implementation.createHTMLDocument();
-        const diff_element = local_document.createElement("div");
-        diff_element.setAttribute("last-load-by", "html");
-        const diff_button = local_document.createElement("button");
-        const icon_element = local_document.createElement("i");
-        icon_element.classList.add("fa-caret-right");
-        diff_button.appendChild(icon_element);
-
-        expect(shouldLoadSomeContent(diff_element, diff_button, "strip-html")).toBe(true);
+        expect(get).toHaveBeenCalledWith("/plugins/tracker/changeset/123/diff/html/130/1911");
     });
 
     function getLocalDocumentWithToggleButton(): Document {
@@ -165,50 +86,18 @@ describe("Text follow up", () => {
         const local_document = document.implementation.createHTMLDocument();
         const diff_button = local_document.createElement("div");
         diff_button.classList.add("toggle-diff");
-        const icon_element = local_document.createElement("i");
-        icon_element.classList.add("fa-caret-right");
-
-        diff_button.appendChild(icon_element);
-
-        diff_button.setAttribute("data-changeset-id", changeset_id);
-
-        const markup_diff_button = local_document.createElement("div");
-        markup_diff_button.classList.add("markup-diff");
-        markup_diff_button.setAttribute("data-changeset-id", changeset_id);
-
-        markup_diff_button.setAttribute("data-field-id", field_id);
-        markup_diff_button.setAttribute(
-            "id",
-            `tracker-changeset-markup-diff-button-${changeset_id}`
-        );
 
         const diff_element = local_document.createElement("div");
         diff_element.classList.add("diff");
-        diff_element.setAttribute("id", `tracker-changeset-diff-comment-${changeset_id}`);
-
-        diff_element.setAttribute("data-artifact-id", value);
-        diff_element.setAttribute("data-field-id", field_id);
+        diff_element.setAttribute("data-changeset-id", "123");
+        diff_element.setAttribute("data-artifact-id", "130");
+        diff_element.setAttribute("data-field-id", "1911");
+        diff_element.setAttribute("data-format", "html");
 
         const error_element = local_document.createElement("div");
-        error_element.setAttribute(
-            "id",
-            `tracker-changeset-diff-error-${changeset_id}-${field_id}`
-        );
+        error_element.setAttribute("id", "tracker-changeset-diff-error-123-1911");
 
-        const only_formatting_element = local_document.createElement("div");
-        only_formatting_element.setAttribute(
-            "id",
-            `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
-        );
-        markup_diff_button.setAttribute("class", "hide-only-formatted-diff-message");
-
-        local_document.body.append(
-            diff_button,
-            markup_diff_button,
-            diff_element,
-            error_element,
-            only_formatting_element
-        );
+        local_document.body.append(diff_button, diff_element, error_element);
 
         return local_document;
     }

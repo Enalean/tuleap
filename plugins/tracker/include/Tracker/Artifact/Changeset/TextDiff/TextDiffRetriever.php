@@ -97,8 +97,11 @@ class TextDiffRetriever implements DispatchableWithRequest
             return;
         }
 
+        $previous_value = explode(PHP_EOL, $previous_changeset_value->getText());
+        $next_value     = explode(PHP_EOL, $next_changeset_value->getText());
+
         $layout->sendJSON(
-            $this->diff_processor->processDiff($next_changeset_value, $previous_changeset_value, $format)
+            $this->diff_processor->processDiff($next_changeset_value, $previous_value, $next_value, $format)
         );
     }
 }

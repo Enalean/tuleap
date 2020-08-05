@@ -23,65 +23,47 @@ import { sanitize } from "dompurify";
 document.addEventListener("DOMContentLoaded", async () => {
     await showDiffDirectlyIfInUrl();
 
-    const markup_buttons = document.getElementsByClassName("toggle-diff");
+    const toggle_diff_buttons = document.getElementsByClassName("toggle-diff");
 
-    for (const diff_button of markup_buttons) {
+    for (const diff_button of toggle_diff_buttons) {
         diff_button.addEventListener("click", async function (event: Event) {
             event.preventDefault();
-
-            let changeset_id;
-            if (diff_button instanceof HTMLElement) {
-                changeset_id = diff_button.dataset.changesetId;
-            }
-
-            if (!changeset_id) {
-                throw new Error("Missing changeset id -" + changeset_id);
-            }
-
-            await toggleDiffContent(
-                diff_button,
-                document,
-                changeset_id,
-                "strip-html",
-                "show-diff-follow-up"
-            );
-
             toggleIcon(diff_button);
-            toggleMarkupButton(diff_button, changeset_id);
+            await toggleDiffContent(diff_button, document);
         });
     }
 });
 
-export async function toggleDiffContent(
-    diff_button: Element,
-    document: Document,
-    changeset_id: string,
-    format: string,
-    spinner_to_toogle: string
-): Promise<void> {
-    const diff = await document.getElementById(`tracker-changeset-diff-comment-${changeset_id}`);
+export async function toggleDiffContent(diff_button: Element, document: Document): Promise<void> {
+    const diff = await diff_button.nextElementSibling;
     if (!diff) {
         return;
     }
 
-    if (diff instanceof HTMLElement && shouldLoadSomeContent(diff, diff_button, format)) {
-        const spinner_icon = diff_button.getElementsByClassName(spinner_to_toogle);
+    if (diff instanceof HTMLElement && diff.innerHTML === "") {
+        const spinner_icon = diff_button.getElementsByClassName("show-diff-follow-up");
         if (spinner_icon[0]) {
             spinner_icon[0].classList.add("fa-spin", "fa-circle-o-notch");
+        }
+
+        const changeset_id = diff.dataset.changesetId;
+
+        if (!changeset_id) {
+            throw new Error("Missing changeset id -" + changeset_id);
         }
 
         const artifact_id = diff.dataset.artifactId;
         if (!artifact_id) {
             throw new Error("Missing artifact id - " + changeset_id);
         }
-
         const field_id = diff.dataset.fieldId;
         if (!field_id) {
             throw new Error("Missing field id - " + changeset_id);
         }
-
-        const only_formatted_message = getFormattedDiffDiv(changeset_id, field_id, document);
-        only_formatted_message.classList.add("hide-only-formatted-diff-message");
+        const format = diff.dataset.format;
+        if (!format) {
+            throw new Error("Missing format - " + changeset_id);
+        }
 
         const error_message = document.getElementById(
             `tracker-changeset-diff-error-${changeset_id}-${field_id}`
@@ -104,18 +86,7 @@ export async function toggleDiffContent(
         try {
             const response = await get(url);
 
-            const generated_diff = await response.json();
-            diff.innerHTML = sanitize(generated_diff);
-
-            if (generated_diff === "") {
-                const only_formatted_message = getFormattedDiffDiv(
-                    changeset_id,
-                    field_id,
-                    document
-                );
-                only_formatted_message.classList.remove("hide-only-formatted-diff-message");
-            }
-            diff.setAttribute("last-load-by", format);
+            diff.innerHTML = sanitize(await response.json());
         } catch (e) {
             error_message.classList.remove("hide-diff-error-message");
             throw e;
@@ -126,9 +97,7 @@ export async function toggleDiffContent(
         }
     }
 
-    if (format === "strip-html") {
-        diff.classList.toggle("follow-up-diff");
-    }
+    diff.classList.toggle("follow-up-diff");
 }
 
 export function toggleIcon(diff_button: Element): void {
@@ -145,90 +114,6 @@ export function toggleIcon(diff_button: Element): void {
     }
 }
 
-export function shouldLoadSomeContent(
-    diff: Element,
-    diff_button: Element,
-    new_format: string
-): boolean {
-    const last_load_by = diff.getAttribute("last-load-by");
-
-    if (!last_load_by) {
-        return true;
-    }
-
-    if (last_load_by === "strip-html" && new_format !== "strip-html") {
-        return true;
-    }
-
-    const left_icon_list = diff_button.getElementsByClassName("fa-caret-down");
-    const left_icon = left_icon_list[0];
-    let is_open = false;
-    if (left_icon) {
-        is_open = left_icon.classList.length > 0;
-    }
-    return last_load_by === "html" && new_format === "strip-html" && !is_open;
-}
-
-function toggleMarkupButton(diff_button: Element, changeset_id: string): void {
-    const markup_button = document.getElementById(
-        `tracker-changeset-markup-diff-button-${changeset_id}`
-    );
-
-    if (!markup_button) {
-        return;
-    }
-
-    const left_icon_list = diff_button.getElementsByClassName("fa-caret-down");
-    const left_icon = left_icon_list[0];
-    let is_open = false;
-    if (left_icon) {
-        is_open = left_icon.classList.length > 0;
-    }
-
-    if (is_open) {
-        markup_button.classList.remove("markup-diff");
-    } else {
-        markup_button.classList.add("markup-diff");
-    }
-
-    markup_button.addEventListener("click", async function (event: Event) {
-        event.preventDefault();
-        if (markup_button instanceof HTMLElement) {
-            const changeset_id = markup_button.dataset.changesetId;
-            if (!changeset_id) {
-                throw new Error("Missing changeset id -" + changeset_id);
-            }
-
-            try {
-                await toggleDiffContent(
-                    markup_button,
-                    document,
-                    changeset_id,
-                    "html",
-                    "show-markup-diff-follow-up"
-                );
-            } finally {
-                markup_button.classList.add("markup-diff");
-            }
-        }
-    });
-}
-
-function getFormattedDiffDiv(
-    changeset_id: string,
-    field_id: string,
-    document: Document
-): HTMLElement {
-    const only_formatted_message = document.getElementById(
-        `tracker-changeset-only-formatted-diff-info-${changeset_id}-${field_id}`
-    );
-    if (!only_formatted_message) {
-        throw new Error("Missing only formatted dff message" + changeset_id);
-    }
-
-    return only_formatted_message;
-}
-
 async function showDiffDirectlyIfInUrl(): Promise<void> {
     const url = document.location.toString(),
         reg_ex = /#followup_(\d+)/,
@@ -242,7 +127,7 @@ async function showDiffDirectlyIfInUrl(): Promise<void> {
 
     const follow_up = document.getElementById("followup_" + followup_id);
     if (!follow_up) {
-        throw Error("Follow up " + followup_id + " not found in DOM");
+        throw Error("Follow up " + followup_id + " not foud in DOM");
     }
 
     const toggle_diff_button = follow_up.getElementsByClassName("toggle-diff");
@@ -251,12 +136,5 @@ async function showDiffDirectlyIfInUrl(): Promise<void> {
         throw Error("Changeset " + followup_id + "does not have a diff button");
     }
     toggleIcon(toggle_diff_button[0]);
-    await toggleDiffContent(
-        toggle_diff_button[0],
-        document,
-        followup_id,
-        "strip-html",
-        "show-diff-follow-up"
-    );
-    toggleMarkupButton(toggle_diff_button[0], followup_id);
+    await toggleDiffContent(toggle_diff_button[0], document);
 }
