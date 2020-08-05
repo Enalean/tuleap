@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
+use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
@@ -172,6 +173,10 @@ class AgileDashboardRouter
      * @var PlanningEditionPresenterBuilder
      */
     private $planning_edition_presenter_builder;
+    /**
+     * @var UpdateRequestValidator
+     */
+    private $update_request_validator;
 
     public function __construct(
         Plugin $plugin,
@@ -199,7 +204,8 @@ class AgileDashboardRouter
         Planning_RequestValidator $planning_request_validator,
         AgileDashboard_XMLExporter $agile_dashboard_exporter,
         UpdateIsAllowedChecker $root_planning_update_checker,
-        PlanningEditionPresenterBuilder $planning_edition_presenter_builder
+        PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
+        UpdateRequestValidator $update_request_validator
     ) {
         $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
@@ -227,6 +233,7 @@ class AgileDashboardRouter
         $this->agile_dashboard_exporter           = $agile_dashboard_exporter;
         $this->root_planning_update_checker       = $root_planning_update_checker;
         $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
+        $this->update_request_validator           = $update_request_validator;
     }
 
     /**
@@ -496,7 +503,8 @@ class AgileDashboardRouter
             $this->event_manager,
             $this->planning_request_validator,
             $this->root_planning_update_checker,
-            $this->planning_edition_presenter_builder
+            $this->planning_edition_presenter_builder,
+            $this->update_request_validator
         );
     }
 

@@ -47,6 +47,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
+use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
@@ -95,6 +96,10 @@ final class PlanningControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UpdateIsAllowedChecker
      */
     private $root_planning_update_checker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UpdateRequestValidator
+     */
+    private $update_request_validator;
 
     protected function setUp(): void
     {
@@ -118,9 +123,10 @@ final class PlanningControllerTest extends TestCase
         $this->event_manager                = Mockery::mock(EventManager::class);
         $this->planning_request_validator   = Mockery::mock(\Planning_RequestValidator::class);
         $this->planning_updater             = Mockery::mock(PlanningUpdater::class);
-        $this->root_planning_update_checker = Mockery::mock(UpdateIsAllowedChecker::class);
-
         $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
+        $this->root_planning_update_checker = Mockery::mock(UpdateIsAllowedChecker::class);
+        $this->update_request_validator     = Mockery::mock(UpdateRequestValidator::class);
+
         $this->planning_controller          = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -144,7 +150,8 @@ final class PlanningControllerTest extends TestCase
             $this->event_manager,
             $this->planning_request_validator,
             $this->root_planning_update_checker,
-            Mockery::mock(PlanningEditionPresenterBuilder::class)
+            Mockery::mock(PlanningEditionPresenterBuilder::class),
+            $this->update_request_validator
         );
     }
 
@@ -222,9 +229,13 @@ final class PlanningControllerTest extends TestCase
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->once()->andReturn($planning);
-
-        $this->planning_request_validator->shouldReceive('isValid')->andReturnFalse();
+        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
+            ->once()
+            ->andReturn([]);
+        $this->update_request_validator->shouldReceive('getValidatedPlanning')
+            ->once()
+            ->andReturnNull();
 
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
@@ -251,8 +262,11 @@ final class PlanningControllerTest extends TestCase
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
         $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
+            ->once()
+            ->andReturn([]);
 
-        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')
             ->once()
             ->andThrow(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
@@ -282,8 +296,11 @@ final class PlanningControllerTest extends TestCase
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
         $this->planning_factory->shouldReceive('getPlanning')->times(3)->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
+            ->once()
+            ->andReturn([]);
 
-        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')->once();
 
         $this->planning_updater->shouldReceive('update')->once();
