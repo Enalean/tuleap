@@ -25,7 +25,7 @@ interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
 
     /**
-     * @return Tracker_FormElement_Field_Selectbox | null
+     * @return Tracker_FormElement_Field_List | null
      */
     public function getField(Tracker $tracker);
 }

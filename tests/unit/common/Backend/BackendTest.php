@@ -59,8 +59,11 @@ final class BackendTest extends TestCase
 
     public function testFactoryPlugin(): void
     {
-        $fake_backend = new class
+        $fake_backend = new class extends Backend
         {
+            public function __construct()
+            {
+            }
         };
         //Plugin backends. Give the base classname to build the backend
         $this->assertInstanceOf(get_class($fake_backend), Backend::instance('plugin_fake', get_class($fake_backend))); //like plugins !

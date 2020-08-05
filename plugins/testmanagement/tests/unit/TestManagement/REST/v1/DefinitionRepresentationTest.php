@@ -25,7 +25,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact_ChangesetValue;
 
 class DefinitionRepresentationTest extends TestCase
 {
@@ -57,7 +56,7 @@ class DefinitionRepresentationTest extends TestCase
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
 
-        $value = \Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $value->shouldReceive('getText')->andReturn("description");
         $artifact->shouldReceive('getValue')->once()->withArgs([$field, null])->andReturn($value);
 

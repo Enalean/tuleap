@@ -122,10 +122,10 @@ class MinimalDefinitionRepresentation
         $field_shortname
     ) {
         $field_value = self::getFieldValue($form_element_factory, $tracker_id, $user, $artifact, $changeset, $field_shortname);
-        \assert($field_value instanceof \Tracker_Artifact_ChangesetValue_Text);
         if (! $field_value) {
             return '';
         }
+        \assert($field_value instanceof \Tracker_Artifact_ChangesetValue_Text);
 
         return $field_value->getText();
     }
@@ -167,11 +167,11 @@ class MinimalDefinitionRepresentation
             self::FIELD_CATEGORY,
             $user
         );
-        \assert($field_status instanceof \Tracker_FormElement_Field_List);
 
         if (! $field_status || ! $changeset) {
             return null;
         }
+        \assert($field_status instanceof \Tracker_FormElement_Field_List);
 
         return $field_status->getFirstValueFor($changeset);
     }
