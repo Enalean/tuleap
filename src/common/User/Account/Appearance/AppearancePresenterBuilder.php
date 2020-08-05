@@ -25,6 +25,7 @@ namespace Tuleap\User\Account\Appearance;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use UserHelper;
 
@@ -75,7 +76,7 @@ class AppearancePresenterBuilder
             $is_login_realname,
             $is_login,
             $is_realname,
-            $display_relative_dates_preference ? $display_relative_dates_preference : ""
+            $display_relative_dates_preference ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
         );
     }
 }

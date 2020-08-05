@@ -30,6 +30,7 @@ use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -54,17 +55,23 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
      * @var ThemeVariant
      */
     private $variant;
+    /**
+     * @var SelectedDateDisplayPreferenceValidator
+     */
+    private $date_display_preference_validator;
 
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         UserManager $user_manager,
         BaseLanguage $language,
-        ThemeVariant $variant
+        ThemeVariant $variant,
+        SelectedDateDisplayPreferenceValidator $date_display_preference_validator
     ) {
-        $this->csrf_token   = $csrf_token;
-        $this->user_manager = $user_manager;
-        $this->language     = $language;
-        $this->variant      = $variant;
+        $this->csrf_token                        = $csrf_token;
+        $this->user_manager                      = $user_manager;
+        $this->language                          = $language;
+        $this->variant                           = $variant;
+        $this->date_display_preference_validator = $date_display_preference_validator;
     }
 
     /**
@@ -160,13 +167,9 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        $allowed = [
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
-            \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
-            \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
-        ];
-        if (! in_array($new_relative_dates_display, $allowed, true)) {
+        $is_provided_preference_valid = $this->date_display_preference_validator->validateSelectedUserPreference($new_relative_dates_display);
+
+        if (! $is_provided_preference_valid) {
             $layout->addFeedback(Feedback::ERROR, _('Submitted relative dates display is not valid.'));
 
             return false;

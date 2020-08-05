@@ -130,7 +130,7 @@ export class RelativeDateElement extends HTMLElement {
     }
 
     set absolute_date(value: string) {
-        this.setAttribute("absolute_date", value);
+        this.setAttribute("absolute-date", value);
     }
 
     get locale(): string {
@@ -144,9 +144,7 @@ export class RelativeDateElement extends HTMLElement {
     }
 
     private setTitle(title: string): void {
-        if (!this.hasAttribute("title")) {
-            this.setAttribute("title", title);
-        }
+        this.setAttribute("title", title);
     }
 
     private setClassNameAccordingToPlacement(): void {
@@ -154,6 +152,8 @@ export class RelativeDateElement extends HTMLElement {
             this.classList.add("tlp-date-on-right");
         } else if (this.placement === "top") {
             this.classList.add("tlp-date-on-top");
+        } else {
+            this.classList.remove("tlp-date-on-right", "tlp-date-on-top");
         }
     }
 }

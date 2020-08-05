@@ -56,6 +56,9 @@ use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
+use Tuleap\date\Admin\RelativeDatesDisplayController;
+use Tuleap\date\Admin\RelativeDatesDisplaySaveController;
+use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
@@ -336,7 +339,8 @@ class RouteCollector
             DisplayAppearanceController::getCSRFToken(),
             \UserManager::instance(),
             $GLOBALS['Language'],
-            new ThemeVariant()
+            new ThemeVariant(),
+            new SelectedDateDisplayPreferenceValidator()
         );
     }
 
@@ -649,6 +653,23 @@ class RouteCollector
         return new LegacyRoutesController($path);
     }
 
+    public function getAdminDatesDisplay(): RelativeDatesDisplayController
+    {
+        return new RelativeDatesDisplayController(
+            new AdminPageRenderer(),
+            RelativeDatesDisplayController::buildCSRFToken()
+        );
+    }
+
+    public function postAdminDatesDisplay(): RelativeDatesDisplaySaveController
+    {
+        return new RelativeDatesDisplaySaveController(
+            RelativeDatesDisplayController::buildCSRFToken(),
+            new SelectedDateDisplayPreferenceValidator(),
+            new ConfigDao()
+        );
+    }
+
 
     private function getLegacyControllerHandler(string $path): array
     {
@@ -716,6 +737,9 @@ class RouteCollector
             $r->post('/project-creation/widgets/{widget-id}/disable', [self::class, 'getProjectConfigurationPOSTWidgetsDisable']);
 
             $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
+
+            $r->get('/dates-display', [self::class, 'getAdminDatesDisplay']);
+            $r->post('/dates-display', [self::class, 'postAdminDatesDisplay']);
         });
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {

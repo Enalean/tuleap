@@ -23,6 +23,7 @@ use Luracast\Restler\RestException;
 use PaginatedUserCollection;
 use PFUser;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\UGroupLiteralizer;
@@ -403,6 +404,10 @@ class UserResource extends AuthenticatedResource
         }
 
         $value = $this->getUserPreference($id, $key);
+
+        if (! $value && $key === DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY) {
+            $value = DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        }
 
         $preference_representation = new UserPreferenceRepresentation();
         $preference_representation->build($key, $value);

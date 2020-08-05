@@ -121,4 +121,48 @@ describe("relative-date element", () => {
             expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
         });
     });
+
+    describe("updates the display when", () => {
+        it("the preference changes", () => {
+            const tlp_local_time = createRelativeDateElement("tooltip", "absolute");
+
+            expect(tlp_local_time.textContent).toBe(absolute_date);
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(false);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+
+            tlp_local_time.preference = "relative";
+
+            expect(tlp_local_time.textContent).toBe("5 days ago");
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(false);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+        });
+
+        it("the placement changes", () => {
+            const tlp_local_time = createRelativeDateElement("tooltip", "absolute");
+
+            expect(tlp_local_time.textContent).toBe(absolute_date);
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(false);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+
+            tlp_local_time.placement = "right";
+
+            expect(tlp_local_time.textContent).toBe(absolute_date);
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(true);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+        });
+
+        it("the placement is 'tooltip'", () => {
+            const tlp_local_time = createRelativeDateElement("right", "absolute");
+
+            expect(tlp_local_time.textContent).toBe(absolute_date);
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(true);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+
+            tlp_local_time.placement = "tooltip";
+
+            expect(tlp_local_time.textContent).toBe(absolute_date);
+            expect(tlp_local_time.classList.contains("tlp-date-on-right")).toBe(false);
+            expect(tlp_local_time.classList.contains("tlp-date-on-top")).toBe(false);
+        });
+    });
 });

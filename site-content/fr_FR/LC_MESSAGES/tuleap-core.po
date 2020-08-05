@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 #, php-format
 msgid ""
@@ -634,6 +634,9 @@ msgstr "Cher utilisateur {{tuleap_server_name}},"
 msgid "Dear %s user,"
 msgstr "Cher utilisateur %s,"
 
+msgid "Default dates display"
+msgstr "Affichage des dates relatives par défaut"
+
 msgid "Default format for trackers text fields"
 msgstr "Format par défaut pour les champs texte des trackers"
 
@@ -642,6 +645,14 @@ msgstr "Licence par défaut"
 
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
+
+msgid "Default relative dates display"
+msgstr "Affichage des dates relatives par défaut"
+
+msgid "Default relative dates display preference saved successfully."
+msgstr ""
+"Préférence par défaut de l'affichage des dates relatives sauvegardée avec "
+"succès."
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -1382,6 +1393,9 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 
 msgid "Preferences"
 msgstr "Préférences"
+
+msgid "Preview:"
+msgstr "Aperçu :"
 
 msgid "Previous successful login"
 msgstr "Connexion précédente"
