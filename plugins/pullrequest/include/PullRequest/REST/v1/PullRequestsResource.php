@@ -863,8 +863,7 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(500);
         }
 
-        $pull_request_reference = new PullRequestReference();
-        $pull_request_reference->build($generated_pull_request);
+        $pull_request_reference = PullRequestReference::fromPullRequest($generated_pull_request);
 
         $this->sendLocationHeader($pull_request_reference->uri);
 
@@ -1168,10 +1167,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        $comment_representation = new CommentRepresentation();
-        $comment_representation->build($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
-
-        return $comment_representation;
+        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
     }
 
     /**

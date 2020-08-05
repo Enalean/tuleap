@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,9 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
 
+/**
+ * @psalm-immutable
+ */
 class TimelineInlineCommentRepresentation
 {
 
@@ -65,15 +68,20 @@ class TimelineInlineCommentRepresentation
     public $type;
 
 
-    public function build($file_path, $unidiff_offset, $user, $post_date, $content, $is_outdated, $project_id)
+    public function __construct(string $file_path, int $unidiff_offset, MinimalUserRepresentation $user, int $post_date, string $content, bool $is_outdated, int $project_id)
     {
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
         $this->post_date      = JsonCast::toDate($post_date);
-        $purifier             = Codendi_HTMLPurifier::instance();
-        $this->content        = $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        $this->content        = self::getPurifiedContent($project_id, $content);
         $this->is_outdated    = $is_outdated;
         $this->type           = self::TYPE;
+    }
+
+    private static function getPurifiedContent(int $project_id, string $content): string
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
     }
 }

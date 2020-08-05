@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,8 +83,7 @@ class PullRequestFileRepresentationFactory
                 );
             }
 
-            $file_representation = new PullRequestFileRepresentation();
-            $file_representation->build(
+            $file_representation = new PullRequestFileRepresentation(
                 $name_status['file_name'],
                 $name_status['status'],
                 $lines_stat['added_lines'],

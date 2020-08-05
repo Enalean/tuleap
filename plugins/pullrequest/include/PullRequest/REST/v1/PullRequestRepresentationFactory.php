@@ -69,8 +69,7 @@ class PullRequestRepresentationFactory
             $pull_request->getSha1Dest(),
             $pull_request->getSha1Src()
         );
-        $short_stat_repres = new PullRequestShortStatRepresentation();
-        $short_stat_repres->build($short_stat);
+        $short_stat_repres = new PullRequestShortStatRepresentation($short_stat);
 
         $user_can_merge   = $this->access_control_verifier->canWrite($user, $repository_dest, $pull_request->getBranchDest());
         $user_can_abandon = $user_can_merge ||

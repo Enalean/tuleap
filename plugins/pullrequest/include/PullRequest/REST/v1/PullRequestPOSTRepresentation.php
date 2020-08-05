@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class PullRequestPOSTRepresentation
 {
 
@@ -42,12 +45,4 @@ class PullRequestPOSTRepresentation
      * @var string {@type string}
      */
     public $branch_dest;
-
-    public function build($repository_id, $repository_dest_id, $branch_src, $branch_dest)
-    {
-        $this->repository_id      = $repository_id;
-        $this->branch_src         = $branch_src;
-        $this->branch_dest        = $branch_dest;
-        $this->repository_dest_id = $repository_dest_id;
-    }
 }

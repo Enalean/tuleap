@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class PullRequestFileRepresentation
 {
     /**
@@ -42,10 +45,10 @@ class PullRequestFileRepresentation
      */
     public $lines_removed;
 
-    public function build($path, $status, $lines_added, $lines_removed)
+    public function __construct(string $path, string $status, int $lines_added, int $lines_removed)
     {
-        $this->path         = $path;
-        $this->status       = $status;
+        $this->path          = $path;
+        $this->status        = $status;
         $this->lines_added   = $lines_added;
         $this->lines_removed = $lines_removed;
     }
