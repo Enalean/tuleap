@@ -3372,6 +3372,8 @@ td.tracker-unsubscriber-actions {
     display: none;
 }
 
-.hide-diff-error-message {
+.hide-diff-error-message,
+.markup-diff,
+.hide-only-formatted-diff-message {
     display: none;
 }
