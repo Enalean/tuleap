@@ -90,7 +90,7 @@ class FormElementListValueAdminViewPresenter
         bool $is_custom_value
     ) {
         $this->id                   = $value->getId();
-        $this->label                = $value->getLabel();
+        $this->label                = self::getListValueLabel($value);
         $this->is_hidden            = (bool) $value->isHidden();
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;
@@ -101,5 +101,10 @@ class FormElementListValueAdminViewPresenter
         $this->decorator            = $decorator;
         $this->is_none_value        = (int) $value->getId() === \Tracker_FormElement_Field_List::NONE_VALUE;
         $this->is_custom_value      = $is_custom_value;
+    }
+
+    private static function getListValueLabel(Tracker_FormElement_Field_List_Value $list_value): string
+    {
+        return $list_value->getLabel();
     }
 }
