@@ -25,6 +25,7 @@ export default function SharedPropertiesService() {
         milestone_id: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
+        create_milestone_allowed: undefined,
     };
 
     return {
@@ -40,6 +41,8 @@ export default function SharedPropertiesService() {
         setIsInExplicitTopBacklogManagement,
         setAllowedAdditionalPanesToDisplay,
         getAllowedAdditionalPanesToDisplay,
+        setCreateMilestoneAllowed,
+        getCreateMilestoneAllowed,
     };
 
     function getUserId() {
@@ -88,5 +91,13 @@ export default function SharedPropertiesService() {
 
     function getAllowedAdditionalPanesToDisplay() {
         return property.allowed_additional_panes_to_display;
+    }
+
+    function setCreateMilestoneAllowed(create_milestone_allowed) {
+        property.create_milestone_allowed = create_milestone_allowed;
+    }
+
+    function getCreateMilestoneAllowed() {
+        return property.create_milestone_allowed;
     }
 }

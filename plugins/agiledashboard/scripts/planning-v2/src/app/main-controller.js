@@ -44,6 +44,9 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
             JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay)
         );
+        SharedPropertiesService.setCreateMilestoneAllowed(
+            JSON.parse(planning_init_data.createMilestoneAllowed)
+        );
 
         const language = planning_init_data.language;
         initLocale(language);

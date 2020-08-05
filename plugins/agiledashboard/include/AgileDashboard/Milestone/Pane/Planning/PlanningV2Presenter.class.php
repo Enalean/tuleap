@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - present. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -52,6 +52,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
     public $allowed_additional_panes_to_display;
 
     /**
+     * @var string
+     */
+    public $create_milestone_allowed;
+
+    /**
      * @param string[] $allowed_additional_panes_to_display
      */
     public function __construct(
@@ -59,16 +64,18 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         Project $project,
         $milestone_id,
         bool $is_in_explicit_top_backlog,
-        array $allowed_additional_panes_to_display
+        array $allowed_additional_panes_to_display,
+        bool $create_milestone_allowed
     ) {
-        $this->user_id                                 = $current_user->getId();
-        $this->lang                                    = $this->getLanguageAbbreviation($current_user);
-        $this->project_id                              = $project->getId();
-        $this->milestone_id                            = $milestone_id;
-        $this->view_mode                               = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
-        $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
-        $this->is_in_explicit_top_backlog              = $is_in_explicit_top_backlog;
-        $this->allowed_additional_panes_to_display     = json_encode($allowed_additional_panes_to_display);
+        $this->user_id                             = $current_user->getId();
+        $this->lang                                = $this->getLanguageAbbreviation($current_user);
+        $this->project_id                          = $project->getId();
+        $this->milestone_id                        = $milestone_id;
+        $this->view_mode                           = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
+        $this->user_accessibility_mode             = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->is_in_explicit_top_backlog          = $is_in_explicit_top_backlog;
+        $this->allowed_additional_panes_to_display = json_encode($allowed_additional_panes_to_display);
+        $this->create_milestone_allowed            = json_encode($create_milestone_allowed);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user)

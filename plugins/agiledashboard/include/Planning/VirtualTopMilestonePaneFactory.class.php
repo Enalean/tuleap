@@ -114,16 +114,13 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
         $this->list_of_pane_info[$milestone_artifact_id][] = $top_planning_pane;
     }
 
-    /**
-     * @return \AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo
-     */
-    private function getTopPlanningV2PaneInfo(Planning_Milestone $milestone)
+    private function getTopPlanningV2PaneInfo(Planning_Milestone $milestone): ?TopPlanningV2PaneInfo
     {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         $milestone_tracker = $milestone->getPlanning()->getPlanningTracker();
         if (! $milestone_tracker) {
-            return;
+            return null;
         }
 
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
@@ -140,7 +137,8 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
                 $project,
                 $milestone_artifact_id,
                 $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
-                $allowed_additional_panes_to_display_collector->getIdentifiers()
+                $allowed_additional_panes_to_display_collector->getIdentifiers(),
+                true
             )
         );
 
