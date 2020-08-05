@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -251,7 +252,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(ReferencesGroupCreatorPostProjectCreation::NAME);
-        $this->addHook('show_pending_documents', 'showArchivedRepositories', false);
 
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
@@ -316,6 +316,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
+        $this->addHook(PendingDocumentsRetriever::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2112,16 +2113,13 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return UserManager::instance()->getCurrentUser();
     }
 
-    /**
-     * Hook to list archived repositories for restore in site admin page
-     *
-     * @param array $params
-     */
-    public function showArchivedRepositories($params)
+    public function pendingDocumentsRetriever(PendingDocumentsRetriever $documents_retriever): void
     {
-        $group_id              = $params['group_id'];
+        $group_id              =  $documents_retriever->getProject()->getID();
         $archived_repositories = $this->getRepositoryManager()->getRepositoriesForRestoreByProjectId($group_id);
         $tab_content           = '';
+
+        $user = $documents_retriever->getUser();
 
         $tab_content .= '<section class="tlp-pane">
         <div class="tlp-pane-container">
@@ -2143,15 +2141,17 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         if (count($archived_repositories)) {
             $html_purifier = Codendi_HTMLPurifier::instance();
             foreach ($archived_repositories as $archived_repository) {
+                $creation_date = new DateTime($archived_repository->getCreationDate());
+                $deletion_date = new DateTime($archived_repository->getDeletionDate());
                 $tab_content .= '<tr>';
                 $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getName()) . '</td>';
-                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getCreationDate()) . '</td>';
+                $tab_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $creation_date->getTimestamp(), $user) . '</td>';
                 $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getName()) . '</td>';
-                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getDeletionDate()) . '</td>';
+                $tab_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $deletion_date->getTimestamp(), $user)  . '</td>';
                 $tab_content .= '<td class="tlp-table-cell-actions">
                                     <form method="post" action="/plugins/git/"
                                     onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-git', 'Confirm restore of this Git repository'), CODENDI_PURIFIER_JS_QUOTE) . '\')">
-                                        ' . $params['csrf_token']->fetchHTMLInput() . '
+                                        ' . $documents_retriever->getToken()->fetchHTMLInput() . '
                                         <input type="hidden" name="action" value="restore">
                                         <input type="hidden" name="group_id" value="' . $html_purifier->purify($group_id) . '">
                                         <input type="hidden" name="repo_id" value="' . $html_purifier->purify($archived_repository->getId()) . '">
@@ -2174,7 +2174,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 </section>
             </div>
         </section>';
-        $params['html'][] = $tab_content;
+
+        $documents_retriever->addPurifiedHTML($tab_content);
     }
 
     public function restrictedUsersAreHandledByPluginEvent(RestrictedUsersAreHandledByPluginEvent $event)

@@ -26,6 +26,7 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
@@ -184,8 +185,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label', false);
         $this->addHook('plugin_statistics_color', 'plugin_statistics_color', false);
 
-        $this->addHook('show_pending_documents', 'show_pending_documents', false);
-
         $this->addHook('backend_system_purge_files', 'purgeFiles', false);
         $this->addHook('project_admin_remove_user', 'projectRemoveUser', false);
 
@@ -229,6 +228,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
+        $this->addHook(PendingDocumentsRetriever::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -366,8 +366,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
             if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
                 echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
+            } else {
+                echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
             }
-            echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
         }
     }
 
@@ -755,12 +756,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         }
     }
 
-    /**
-     * Hook to list pending documents and/or versions of documents in site admin page
-     *
-     * @param array $params
-     */
-    public function show_pending_documents($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function pendingDocumentsRetriever(PendingDocumentsRetriever $event): void
     {
         $request = HTTPRequest::instance();
         $limit = 25;
@@ -773,7 +769,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         require_once('Docman_VersionFactory.class.php');
         $version = new Docman_VersionFactory();
-        $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
+        $res = $version->listPendingVersions($event->getProject()->getID(), $offsetVers, $limit);
         $html = '';
         $html .= '<section class="tlp-pane">
             <div class="tlp-pane-container">
@@ -783,7 +779,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 <section class="tlp-pane-section">
                     <h2 class="tlp-pane-subtitle">' . dgettext('tuleap-docman', 'Deleted versions') . '</h2>';
         if (isset($res) && $res) {
-            $html .= $this->showPendingVersions($params['csrf_token'], $res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
+            $html .= $this->showPendingVersions($event->getToken(), $res['versions'], $event->getProject()->getID(), $res['nbVersions'], $offsetVers, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
@@ -807,7 +803,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             </table>';
         }
         $html .= '</section>';
-        $params['html'][] = $html;
+
+        $event->addPurifiedHTML($html);
 
         //return all pending items for given group id
         $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
@@ -815,13 +812,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $offsetItem = 0;
         }
         require_once('Docman_ItemFactory.class.php');
-        $item = new Docman_ItemFactory($params['group_id']);
-        $res = $item->listPendingItems($params['group_id'], $offsetItem, $limit);
+        $item = new Docman_ItemFactory($event->getProject()->getID());
+        $res = $item->listPendingItems($event->getProject()->getID(), $offsetItem, $limit);
         $html = '';
         $html .= '<section class="tlp-pane-section">
                 <h2 class="tlp-pane-subtitle">' . dgettext('tuleap-docman', 'Deleted items') . '</h2>';
         if (isset($res) && $res) {
-            $html .= $this->showPendingItems($params['csrf_token'], $res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
+            $html .= $this->showPendingItems($event->getToken(), $res['items'], $event->getProject()->getID(), $res['nbItems'], $offsetItem, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
@@ -848,7 +845,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $html .= '</section>
             </div>
         </section>';
-        $params['html'][] = $html;
+
+        $event->addPurifiedHTML($html);
     }
 
     public function showPendingVersions(CSRFSynchronizerToken $csrf_token, $versions, $groupId, $nbVersions, $offset, $limit)
@@ -870,6 +868,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             </thead>
             <tbody>';
 
+        $user_manager = UserManager::instance();
+        $user = $user_manager->getCurrentUser();
+
         if ($nbVersions > 0) {
             foreach ($versions as $row) {
                 $historyUrl = $this->getPluginPath() . '/index.php?group_id=' . $groupId . '&id=' . $row['item_id'] . '&action=details&section=history';
@@ -879,8 +880,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['label']) . '</td>' .
                 '<td class="tlp-table-cell-numeric">' . $row['number'] . '</td>' .
-                '<td>' . \DateHelper::timeAgoInWords($row['date'], false, true) . '</td>' .
-                '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>' .
+                '<td>' . DateHelper::relativeDateInlineContext((int) $row['date'], $user) . '</td>' .
+                '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user) . '</td>' .
                 '<td class="tlp-table-cell-actions">
                         <form method="post" action="/plugins/docman/restore_documents.php" onsubmit="return confirm(\'Confirm restore of this version\')">
                             ' . $csrf_token->fetchHTMLInput() . '
@@ -937,6 +938,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
+        $user_manager = UserManager::instance();
+        $user = $user_manager->getCurrentUser();
+
         $html = '';
         $html .= '<table class="tlp-table">
             <thead>
@@ -962,8 +966,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['location']) . '</td>' .
                 '<td>' . $hp->purify($uh->getDisplayNameFromUserId($row['user'])) . '</td>' .
-                '<td>' . \DateHelper::timeAgoInWords($row['date'], false, true) . '</td>' .
-                '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>' .
+                '<td>' . DateHelper::relativeDateInlineContext((int) $row['date'], $user) . '</td>' .
+                '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user) . '</td>' .
                 '<td class="tlp-table-cell-actions">
                     <form method="post" action="/plugins/docman/restore_documents.php" onsubmit="return confirm(\'Confirm restore of this item\')">
                         ' . $csrf_token->fetchHTMLInput() . '
