@@ -47,14 +47,21 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
      */
     private $config_dao;
 
+    /**
+     * @var \UserPreferencesDao
+     */
+    private $preferences_dao;
+
     public function __construct(
         \CSRFSynchronizerToken $csrf_token,
         SelectedDateDisplayPreferenceValidator $date_display_preference_validator,
-        \ConfigDao $config_dao
+        \ConfigDao $config_dao,
+        \UserPreferencesDao $preferences_dao
     ) {
         $this->csrf_token                        = $csrf_token;
         $this->date_display_preference_validator = $date_display_preference_validator;
         $this->config_dao                        = $config_dao;
+        $this->preferences_dao                   = $preferences_dao;
     }
 
     /**
@@ -68,7 +75,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $new_relative_dates_display   = (string) $request->get('relative-dates-display');
+        $new_relative_dates_display = (string) $request->get('relative-dates-display');
         $is_provided_preference_valid = $this->date_display_preference_validator->validateSelectedUserPreference(
             $new_relative_dates_display
         );
@@ -78,8 +85,21 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
             $this->redirect($layout);
         }
 
-        $this->config_dao->save(DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY, $new_relative_dates_display);
+        $this->config_dao->save(
+            DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY,
+            $new_relative_dates_display
+        );
+
         $layout->addFeedback(Feedback::INFO, _("Default relative dates display preference saved successfully."));
+
+        if ((bool) $request->get('relative-dates-force-preference') === true) {
+            $this->preferences_dao->deletePreferenceForAllUsers(\DateHelper::PREFERENCE_NAME);
+            $layout->addFeedback(
+                Feedback::INFO,
+                _('The display preference has been forced for each user successfully.')
+            );
+        }
+
         $this->redirect($layout);
     }
 

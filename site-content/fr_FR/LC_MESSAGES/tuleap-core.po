@@ -492,6 +492,13 @@ msgstr "Changer l'avatar"
 msgid "Change email address"
 msgstr "Changer l'adresse e-mail"
 
+msgid ""
+"Check this option if you want to force the usage of this preference for all "
+"users."
+msgstr ""
+"Cochez cette option si vous souhaitez forcer l'utilisation de cette "
+"préférence pour tous les utilisateurs."
+
 msgid "Child projects"
 msgstr "Projets enfants"
 
@@ -814,6 +821,9 @@ msgstr "Filtrer par nom"
 
 msgid "Forbidden"
 msgstr "Interdit"
+
+msgid "Force usage?"
+msgstr "Forcer l'utilisation ?"
 
 msgid "Forums"
 msgstr "Forums"
@@ -1899,6 +1909,10 @@ msgstr "Le tableau de bord \"%s\" n’existe pas."
 #, php-format
 msgid "The directory %s is not valid"
 msgstr "Le répertoire %s n'est valide"
+
+msgid "The display preference has been forced for each user successfully."
+msgstr ""
+"La préférence d'affichage a été forcée pour chaque utilisateur avec succès"
 
 #, php-format
 msgid "The entered value '%s' is invalid."

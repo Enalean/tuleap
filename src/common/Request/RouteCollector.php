@@ -666,7 +666,8 @@ class RouteCollector
         return new RelativeDatesDisplaySaveController(
             RelativeDatesDisplayController::buildCSRFToken(),
             new SelectedDateDisplayPreferenceValidator(),
-            new ConfigDao()
+            new ConfigDao(),
+            new \UserPreferencesDao()
         );
     }
 
