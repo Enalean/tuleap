@@ -131,16 +131,17 @@ module.exports = {
             // Disable some rules enabled by @typescript-eslint/recommended for existing JS files
             files: ["*.js"],
             rules: {
-                "@typescript-eslint/no-var-requires": "off",
                 "@typescript-eslint/explicit-function-return-type": "off",
-                "prefer-const": "off",
+                "@typescript-eslint/explicit-module-boundary-types": "off",
+                "@typescript-eslint/no-array-constructor": "off",
+                "@typescript-eslint/no-empty-function": "off",
+                "@typescript-eslint/no-this-alias": "off",
+                "@typescript-eslint/no-use-before-define": "off",
+                "@typescript-eslint/no-var-requires": "off",
                 "no-var": "off",
+                "prefer-const": "off",
                 "prefer-rest-params": "off",
                 "prefer-spread": "off",
-                "@typescript-eslint/no-array-constructor": "off",
-                "@typescript-eslint/no-use-before-define": "off",
-                "@typescript-eslint/no-this-alias": "off",
-                "@typescript-eslint/no-empty-function": "off",
             },
         },
         {
