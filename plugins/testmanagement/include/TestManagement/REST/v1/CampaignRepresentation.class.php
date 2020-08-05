@@ -24,7 +24,11 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
+use TrackerFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
+use Tuleap\TestManagement\Campaign\InformationNeededToRetrieveTestStatusOfACampaign;
+use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
+use Tuleap\TestManagement\Config;
 
 /**
  * @psalm-immutable
@@ -108,7 +112,10 @@ class CampaignRepresentation
 
     public static function build(
         Campaign $campaign,
+        Config $testmanagement_config,
+        TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $form_element_factory,
+        TestExecutionTestStatusDAO $test_execution_test_status_dao,
         PFUser $user
     ): self {
         $artifact     = $campaign->getArtifact();
@@ -117,7 +124,14 @@ class CampaignRepresentation
         $label_field  = self::getLabelField($form_element_factory, $tracker_id, $user);
         $field_value  = self::getFieldValue($artifact, $label_field);
 
-        $executions_status = self::getExecutionsStatus($artifact, $user);
+        $executions_status = self::getExecutionsStatus(
+            $artifact,
+            $user,
+            $testmanagement_config,
+            $tracker_factory,
+            $form_element_factory,
+            $test_execution_test_status_dao
+        );
 
         $user_can_update   = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
         $job_configuration = new JobConfigurationRepresentation(
@@ -154,24 +168,32 @@ class CampaignRepresentation
      *
      * @psalm-return array{notrun: int, blocked: int, passed: int, failed: int}
      */
-    private static function getExecutionsStatus(Tracker_Artifact $campaign_artifact, PFUser $user): array
-    {
-        $executions = [
-            self::STATUS_NOT_RUN => 0,
-            self::STATUS_BLOCKED => 0,
-            self::STATUS_PASSED  => 0,
-            self::STATUS_FAILED  => 0
-        ];
+    private static function getExecutionsStatus(
+        \Tracker_Artifact $campaign_artifact,
+        \PFUser $user,
+        Config $testmanagement_config,
+        TrackerFactory $tracker_factory,
+        Tracker_FormElementFactory $form_element_factory,
+        TestExecutionTestStatusDAO $test_execution_test_status_dao
+    ): array {
+        $information = InformationNeededToRetrieveTestStatusOfACampaign::fromCampaign(
+            $campaign_artifact,
+            $user,
+            $testmanagement_config,
+            $tracker_factory,
+            $form_element_factory
+        );
 
-        $linked_artifacts = $campaign_artifact->getLinkedArtifacts($user);
-
-        foreach ($linked_artifacts as $artifact) {
-            if (isset($executions[$artifact->getStatus()])) {
-                $executions[$artifact->getStatus()]++;
-            }
+        if ($information === null) {
+            return [
+                self::STATUS_NOT_RUN => 0,
+                self::STATUS_BLOCKED => 0,
+                self::STATUS_PASSED  => 0,
+                self::STATUS_FAILED  => 0
+            ];
         }
 
-        return $executions;
+        return $test_execution_test_status_dao->searchTestStatusesInACampaign($information);
     }
 
     private static function isUserAllowedToUpdateLabelField(

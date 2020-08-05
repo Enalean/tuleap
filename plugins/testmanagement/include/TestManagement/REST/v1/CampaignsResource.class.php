@@ -76,6 +76,7 @@ use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\JobConfiguration;
+use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
@@ -228,9 +229,12 @@ class CampaignsResource
         $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
+            $tracker_factory,
             $this->formelement_factory,
             $this->testmanagement_artifact_factory,
-            $this->campaign_retriever
+            $this->campaign_retriever,
+            $this->config,
+            new TestExecutionTestStatusDAO()
         );
 
         $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
