@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -322,7 +323,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     public function getJavascriptDependencies()
     {
-        return [];
+        return [
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+        ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection

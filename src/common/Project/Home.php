@@ -25,7 +25,6 @@ use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
 use ProjectManager;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
@@ -125,8 +124,7 @@ class Home implements DispatchableWithRequest
                         new AssetsIncluder(
                             $layout,
                             $core_assets,
-                            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')]),
-                            DetectedBrowser::detectFromTuleapHTTPRequest($request)
+                            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')])
                         ),
                         EventManager::instance(),
                         $layout,

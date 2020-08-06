@@ -23,7 +23,6 @@ namespace Tuleap\Dashboard;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Dashboard\Project\ProjectDashboardPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumnPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
@@ -49,11 +48,6 @@ class AssetsIncluderTest extends TestCase
     private $css_asset_collection;
 
     /**
-     * @var DetectedBrowser
-     */
-    private $detected_browser;
-
-    /**
      * @var \HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $request;
@@ -76,19 +70,17 @@ class AssetsIncluderTest extends TestCase
 
         $this->request = \Mockery::mock(\HTTPRequest::class);
         $this->request->shouldReceive('getFromServer');
-        $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($this->request);
+
         $this->includer = new AssetsIncluder(
             $this->layout,
             $include_assets,
-            $this->css_asset_collection,
-            $this->detected_browser
+            $this->css_asset_collection
         );
     }
 
     public function testItAlwaysIncludesDashboardJsAndCss(): void
     {
         $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('tlp-relative-date.js');
         $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
@@ -137,7 +129,6 @@ class AssetsIncluderTest extends TestCase
         $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
         $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_four')->ordered()->once();
 
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('tlp-relative-date.js')->ordered()->once();
         $this->layout->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$dashboard]);
@@ -146,7 +137,6 @@ class AssetsIncluderTest extends TestCase
     private function expectDependenciesScriptsWillNOTBeIncluded(): void
     {
         $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('tlp-relative-date.js');
         $this->layout->shouldNotReceive('includeFooterJavascriptSnippet');
     }
 

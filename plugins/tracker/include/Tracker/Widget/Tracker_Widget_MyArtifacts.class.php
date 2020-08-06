@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -250,5 +251,12 @@ class Tracker_Widget_MyArtifacts extends Widget
             '/assets/trackers'
         );
         return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        return [
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+        ];
     }
 }
