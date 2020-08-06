@@ -1,0 +1,156 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dropdown-menu-item {
+    padding: 8px 16px;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:focus,
+    &:hover {
+        background: #f3f3f3;
+        text-decoration: none;
+    }
+
+    > .tlp-dropdown-menu-item-icon {
+        margin: 0 5px 0 0;
+    }
+}
+
+.tlp-dropdown-menu {
+    display: flex;
+    position: absolute;
+    z-index: 1000;
+    flex-direction: column;
+    margin: 10px 0 0;
+    padding: 8px 0;
+    transform: translateY(-10px);
+    transition: opacity 75ms ease-out;
+    border: 1px solid #e3e5ed;
+    border-bottom: 0;
+    border-radius: 3px;
+    opacity: 0;
+    background: $sidebar-background;
+    pointer-events: none;
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 20px;
+        width: 0;
+        height: 0;
+        margin: 0 #{-10px};
+        border: 10px solid transparent;
+        border-top-color: $sidebar-background;
+
+    }
+
+    &.dropdown-menu-top {
+        top: 0;
+        transform: translateY(-100%);
+
+        &::after {
+            top: 100%;
+            border-top-color: $sidebar-background;
+            border-bottom-color: transparent;
+        }
+    }
+
+    &.dropdown-menu-right {
+        right: 0;
+
+        &::before,
+        &::after {
+            right: 20px;
+            left: auto;
+        }
+    }
+
+    &.tlp-dropdown-shown {
+        transform: translateY(0);
+        opacity: 1;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+        pointer-events: auto;
+
+        &.dropdown-menu-top {
+            transform: translateY(-100%) translateY(-10px) translateY(-#{10px});
+        }
+    }
+
+    .dropdown-menu-separator {
+        margin: 8px 0;
+        border-top: 1px solid #f3f3f3;
+        opacity: .2;
+        background: #d4d7e1;
+    }
+
+    .help-dropdown-link {
+        &.dropdown-menu-item {
+            background: $sidebar-background;
+            color: #d4d7e1;
+
+            &:hover {
+                background: #25383f;
+            }
+
+            > .dropdown-menu-item-icon {
+                margin: 0 5px 0 0;
+            }
+        }
+    }
+
+    .dropdown-menu-item-alt {
+        display: flex;
+        align-items: baseline;
+        padding: 10px 20px;
+        font-size: 13px;
+
+        > a {
+            margin: 0 10px 0 0;
+            opacity: .6;
+            color: $grey;
+        }
+    }
+}
+
+.help-dropdown {
+    position: fixed;
+    z-index: 1000;
+    right: 16px;
+    bottom: 16px;
+}
+
+#help {
+    width: 45px;
+    height: 45px;
+    animation: pulse 300ms ease-in-out 1s 3 both;
+    border-radius: 50%;
+    background: mix(transparentize($main-background, .7), $white);
+    color: $main;
+
+
+    > .fa {
+        font-size: 20px;
+    }
+}

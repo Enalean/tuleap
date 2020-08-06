@@ -140,6 +140,9 @@ msgstr ""
 "Un nouveau jeton sera généré lors de la soumission du formulaire. La "
 "description n'est pas requise mais peut vous aider à gérer vos jetons."
 
+msgid "API"
+msgstr "API"
+
 msgid "Absolute"
 msgstr "Absolue"
 
@@ -553,6 +556,9 @@ msgid ""
 "Congratulations, you don't have any customisations in your language files!"
 msgstr "Félicitations, vous n'avez pas personnalisé vos fichiers de langue !"
 
+msgid "Contact"
+msgstr "Contact"
+
 msgid "Contact (help menu)"
 msgstr "Contact (menu \"Aide\")"
 
@@ -716,6 +722,9 @@ msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 msgid "Do not reply to this mail."
 msgstr "Ne répondez pas à ce courriel."
 
+msgid "Documentation"
+msgstr "Documentation"
+
 msgid "Documents"
 msgstr "Documents"
 
@@ -842,6 +851,9 @@ msgstr "Générer un nouveau jeton"
 
 msgid "Generated on"
 msgstr "Générée le"
+
+msgid "Get help"
+msgstr "Rubriques d'aide"
 
 msgid "Git"
 msgstr "Git"
@@ -1885,6 +1897,9 @@ msgstr "Modèle utilisé par ce projet"
 
 msgid "Templates"
 msgstr "Modèles de projet"
+
+msgid "Terms"
+msgstr "Conditions"
 
 msgid "Text"
 msgstr "Texte"

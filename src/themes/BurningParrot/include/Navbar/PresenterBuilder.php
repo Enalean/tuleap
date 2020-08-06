@@ -38,9 +38,6 @@ class PresenterBuilder
 
     /** @var array */
     private $extra_tabs;
-
-    /** @var array */
-    private $help_menu_items;
     /**
      * @var ProjectRegistrationUserPermissionChecker
      */
@@ -49,13 +46,11 @@ class PresenterBuilder
     public function build(
         PFUser $current_user,
         array $extra_tabs,
-        array $help_menu_items,
         URLRedirect $url_redirect,
         ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->current_user    = $current_user;
         $this->extra_tabs      = $extra_tabs;
-        $this->help_menu_items = $help_menu_items;
         $this->registration_user_permission_checker = $registration_user_permission_checker;
 
         return new Presenter(
@@ -102,20 +97,6 @@ class PresenterBuilder
         }
 
         $dropdown_menu_item_content_link_presenters_builder = new LinkPresentersBuilder();
-        $dropdown_menu_item_content_help_links_presenter    = $dropdown_menu_item_content_link_presenters_builder->build(
-            $this->help_menu_items
-        );
-        if ($dropdown_menu_item_content_help_links_presenter) {
-            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'help'),
-                'fa fa-question-circle',
-                new LinksPresenter(
-                    'help-dropdown',
-                    $dropdown_menu_item_content_help_links_presenter
-                ),
-                ''
-            );
-        }
 
         $dropdown_menu_item_content_extra_links_presenter    = $dropdown_menu_item_content_link_presenters_builder->build(
             $this->extra_tabs

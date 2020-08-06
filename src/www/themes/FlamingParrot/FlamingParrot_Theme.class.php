@@ -27,6 +27,7 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
 
@@ -173,9 +174,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $has_sidebar;
         $body_class[] = $sidebar_state;
 
+        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder();
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
             $this->getNotificationPlaceholder(),
+            $help_dropdown_presenter,
             $body_class
         ));
 

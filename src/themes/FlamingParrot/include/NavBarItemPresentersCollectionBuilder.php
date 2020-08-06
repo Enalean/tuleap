@@ -20,6 +20,7 @@
 
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_NavBarItemPresentersCollectionBuilder
 {
 
@@ -66,7 +67,6 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
         $collection = new FlamingParrot_NavBarItemPresentersCollection();
 
         $this->addProjectsItem($collection);
-        $this->addHelpItem($collection);
         $this->addMoarItem($collection);
         $this->addAdminItem($collection);
 
@@ -132,48 +132,6 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
 
             $collection->addItem($item);
         }
-    }
-
-    private function addHelpItem(FlamingParrot_NavBarItemPresentersCollection $collection)
-    {
-        $item = new FlamingParrot_NavBarItemDropdownPresenter(
-            'help',
-            $this->isNavBarItemActive(['/help/', '/contact.php', '/help/api.php'], 'help'),
-            $GLOBALS['Language']->getText('include_menu', 'help')
-        );
-
-        $item->addSection(
-            new FlamingParrot_NavBarItemDropdownSectionPresenter(
-                [
-                    new FlamingParrot_NavBarItemLinkPresenter(
-                        self::$NO_ID,
-                        self::$NOT_ACTIVE,
-                        '/help/',
-                        $GLOBALS['Language']->getText('include_menu', 'get_help')
-                    ),
-                    new FlamingParrot_NavBarItemLinkPresenter(
-                        self::$NO_ID,
-                        self::$NOT_ACTIVE,
-                        '/help/api.php',
-                        $GLOBALS['Language']->getText('include_menu', 'api')
-                    ),
-                ]
-            )
-        );
-        $item->addSection(
-            new FlamingParrot_NavBarItemDropdownSectionPresenter(
-                [
-                    new FlamingParrot_NavBarItemLinkPresenter(
-                        self::$NO_ID,
-                        self::$NOT_ACTIVE,
-                        '/contact.php',
-                        $GLOBALS['Language']->getText('include_menu', 'contact_us')
-                    )
-                ]
-            )
-        );
-
-        $collection->addItem($item);
     }
 
     private function isNavBarItemActive($paths_to_detect, $toptab = null)

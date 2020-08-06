@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/**
+ * Copyright (c) 2020-present, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -10,21 +10,18 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import { dropdown } from "tlp";
 
-import "../navbar-history/index-flamingparrot.js";
-import "./navbar.js";
-import "./sidebar.js";
-import "./motd.js";
-import "./keyboard-navigation.js";
-import "./project-flags.js";
-import "./project-privacy.js";
-import "./help-dropdown.ts";
+export function initHelpDropdown(): void {
+    const help_dropdown = document.getElementById("help");
+    if (help_dropdown) {
+        dropdown(help_dropdown);
+    }
+}
