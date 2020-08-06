@@ -176,11 +176,10 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $pane_info;
     }
 
-    /**
-     * @return AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane
-     */
-    private function getPlanningV2Pane(PlanningV2PaneInfo $info, Planning_Milestone $milestone)
-    {
+    private function getPlanningV2Pane(
+        PlanningV2PaneInfo $info,
+        Planning_Milestone $milestone
+    ): AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane {
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
         $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
 
@@ -191,7 +190,8 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $this->request->getProject(),
                 $milestone->getArtifactId(),
                 false,
-                $allowed_additional_panes_to_display_collector->getIdentifiers()
+                $allowed_additional_panes_to_display_collector->getIdentifiers(),
+                true
             )
         );
     }

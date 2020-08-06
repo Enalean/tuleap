@@ -20,7 +20,7 @@
         <div class="planning-header">
             <h2 class="planning-header-title" translate>Milestones</h2>
 
-            <button ng-if="planning.backlog.submilestone_type  && planning.backlog.user_can_move_cards"
+            <button ng-if="planning.canUserCreateMilestone()"
                 type="button"
                 class="tlp-button-primary tlp-button-outline tlp-button-small planned-header-add-button"
                 ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"

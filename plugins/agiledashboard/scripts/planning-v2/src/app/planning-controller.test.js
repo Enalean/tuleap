@@ -730,4 +730,46 @@ describe("PlanningController -", () => {
             ]);
         });
     });
+
+    describe("canUserCreateMilestone() -", function () {
+        it("Given that there were no sub milestones, when I check whether the user can create milestones, then it will return false", function () {
+            PlanningController.backlog.submilestone_type = null;
+            PlanningController.backlog.user_can_move_cards = true;
+            PlanningController.user_can_create_milestone = true;
+
+            var result = PlanningController.canUserCreateMilestone();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that user cannot move cards, when I check whether the user can create milestones, then it will return false", function () {
+            PlanningController.backlog.submilestone_type = "release";
+            PlanningController.backlog.user_can_move_cards = false;
+            PlanningController.user_can_create_milestone = true;
+
+            var result = PlanningController.canUserCreateMilestone();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that user cannot create milestones, when I check whether the user can create milestones, then it will return false", function () {
+            PlanningController.backlog.submilestone_type = "release";
+            PlanningController.backlog.user_can_move_cards = true;
+            PlanningController.user_can_create_milestone = false;
+
+            var result = PlanningController.canUserCreateMilestone();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that all requirements are true, when I check whether the user can create milestones, then it will return true", function () {
+            PlanningController.backlog.submilestone_type = "release";
+            PlanningController.backlog.user_can_move_cards = true;
+            PlanningController.user_can_create_milestone = true;
+
+            var result = PlanningController.canUserCreateMilestone();
+
+            expect(result).toBeTruthy();
+        });
+    });
 });
