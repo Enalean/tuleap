@@ -22,28 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator;
 
-use Tuleap\DB\DataAccessObject;
+use Project;
 
-class AggregatorDao extends DataAccessObject
+class ContributorProjectsCollection
 {
-    public function isProjectAnAggregatorProject(int $project_id): bool
-    {
-        $sql = "SELECT COUNT(*)
-                FROM plugin_multi_project_backlog_contributor_projects
-                WHERE aggregator_project_id = ?";
+    /**
+     * @var Project[]
+     * @psalm-readonly
+     */
+    private $contributor_projects;
 
-        return $this->getDB()->exists($sql, $project_id);
+    /**
+     * @param Project[] $contributor_projects
+     */
+    public function __construct(array $contributor_projects)
+    {
+        $this->contributor_projects = $contributor_projects;
     }
 
     /**
-     * @psalm-return list<array{contributor_project_id:int}>
+     * @return Project[]
+     * @psalm-mutation-free
      */
-    public function getContributorProjectIdsForGivenAggregatorProject(int $project_id): array
+    public function getContributorProjects(): array
     {
-        $sql = "SELECT contributor_project_id
-                FROM plugin_multi_project_backlog_contributor_projects
-                WHERE aggregator_project_id = ?";
-
-        return $this->getDB()->run($sql, $project_id);
+        return $this->contributor_projects;
     }
 }

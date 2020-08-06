@@ -24,11 +24,14 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
+use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
+use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersUpdater;
@@ -58,6 +61,7 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(PlanningEditURLEvent::NAME);
         $this->addHook(RootPlanningEditionEvent::NAME);
         $this->addHook(PlanningUpdatedEvent::NAME);
+        $this->addHook(DisplayTopPlanningAppEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -162,5 +166,25 @@ final class multi_project_backlogPlugin extends Plugin
     private function buildTemplateRenderer(): TemplateRenderer
     {
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
+    }
+
+    public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
+    {
+        $milestone_creator_checker = new MilestoneCreatorChecker(
+            new ContributorProjectsCollectionBuilder(
+                new AggregatorDao(),
+                ProjectManager::instance()
+            ),
+            PlanningFactory::build()
+        );
+
+        $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(
+            $event->getTopMilestone(),
+            $event->getUser()
+        );
+
+        if (! $user_can_create_milestone) {
+            $event->setUserCannotCreateMilestone();
+        }
     }
 }
