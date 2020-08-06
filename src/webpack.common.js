@@ -67,11 +67,11 @@ const webpack_config_for_ckeditor = {
 };
 
 let entry_points = {
+    // DO NOT add new entrypoints unless it's for a new TLP locale. TLP is exported as a "library". If you add another
+    // entrypoint, all scripts that depend on TLP will try to access "select2" or "createModal" from your file
+    // (and they will fail).
     "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.ts"]),
     "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.ts"]),
-    "tlp-relative-date": "./themes/tlp/src/js/custom-elements/relative-date/index.ts",
-    "tlp-relative-date-polyfills": "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
-    "site-admin/dates-display": "./scripts/site-admin/dates-display.ts",
 };
 
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -216,17 +216,16 @@ const webpack_config_for_rich_text_editor = {
 
 const webpack_config_for_burning_parrot_code = {
     entry: {
+        "access-denied-error": "./scripts/BurningParrot/src/access-denied-error.js",
         "account/appearance": "./scripts/account/appearance.ts",
         "account/avatar": "./scripts/account/avatar.ts",
         "account/keys-tokens": "./scripts/account/keys-tokens.ts",
         "account/preferences-nav": "./scripts/account/preferences-nav.ts",
         "account/security": "./scripts/account/security.ts",
         "account/timezone": "./scripts/account/timezone.ts",
+        "burning-parrot": "./scripts/BurningParrot/src/index.js",
         "dashboards/dashboard": "./scripts/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./scripts/dashboards/widgets/contact-modal.js",
-        "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
-        "access-denied-error": "./scripts/BurningParrot/src/access-denied-error.js",
-        "burning-parrot": "./scripts/BurningParrot/src/index.js",
         "frs-admin-license-agreement": "./scripts/frs/admin/license-agreement.js",
         "manage-allowed-projects-on-resource":
             "./scripts/tuleap/manage-allowed-projects-on-resource.js",
@@ -252,9 +251,14 @@ const webpack_config_for_burning_parrot_code = {
             "./scripts/site-admin/system-events-notifications.js",
         "site-admin-trackers-pending-removal": "./scripts/site-admin/trackers-pending-removal.js",
         "site-admin-user-details": "./scripts/site-admin/userdetails.js",
+        "site-admin/dates-display": "./scripts/site-admin/dates-display.ts",
         "site-admin/description-fields": "./scripts/site-admin/description-fields.ts",
         "site-admin/password-policy": "./scripts/site-admin/password-policy.js",
+        "tlp-relative-date": "./themes/tlp/src/js/custom-elements/relative-date/index.ts",
+        "tlp-relative-date-polyfills":
+            "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
         "trovecat-admin": "./scripts/tuleap/trovecat.js",
+        "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
     },
     context,
     output,
