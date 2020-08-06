@@ -36,16 +36,16 @@ class PullRequestFileRepresentation
     public $status;
 
     /**
-     * @var int {@type int}
+     * @var string
      */
     public $lines_added;
 
     /**
-     * @var int {@type int}
+     * @var string
      */
     public $lines_removed;
 
-    public function __construct(string $path, string $status, int $lines_added, int $lines_removed)
+    public function __construct(string $path, string $status, string $lines_added, string $lines_removed)
     {
         $this->path          = $path;
         $this->status        = $status;
