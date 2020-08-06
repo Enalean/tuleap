@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
@@ -51,6 +52,17 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-user-details.js')
 );
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
+
+$detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
+if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+    $GLOBALS['HTML']->includeFooterJavascriptFile(
+        $include_assets->getFileURL('tlp-relative-date-polyfills.js')
+    );
+} else {
+    $GLOBALS['HTML']->includeFooterJavascriptFile(
+        $include_assets->getFileURL('tlp-relative-date.js')
+    );
+}
 
 $um                  = UserManager::instance();
 $em                  = EventManager::instance();
