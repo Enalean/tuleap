@@ -20,6 +20,7 @@
  */
 
 use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
@@ -2560,7 +2561,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     public function getJavascriptDependencies()
     {
-        return [];
+        return [
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+        ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection

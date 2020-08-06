@@ -19,7 +19,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
@@ -81,8 +80,7 @@ $router                     = new UserDashboardRouter(
         new AssetsIncluder(
             $GLOBALS['Response'],
             $core_assets,
-            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')]),
-            DetectedBrowser::detectFromTuleapHTTPRequest($request)
+            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')])
         )
     ),
     new WidgetDashboardController(

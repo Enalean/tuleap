@@ -23,6 +23,7 @@ namespace Tuleap\Widget;
 use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Widget;
 
@@ -72,7 +73,8 @@ class ProjectHeartbeat extends Widget
         $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
 
         return [
-            ['file' => $include_assets->getFileURL('widget-project-heartbeat.js')]
+            ['file' => $include_assets->getFileURL('widget-project-heartbeat.js')],
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
         ];
     }
 }
