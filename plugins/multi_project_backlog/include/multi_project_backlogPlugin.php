@@ -24,7 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningUpdateIsAllowedEvent;
+use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
@@ -36,7 +36,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\Presenter\PlannableItem
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminURLBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
-use Tuleap\MultiProjectBacklog\Contributor\RootPlanningUpdateIsAllowedHandler;
+use Tuleap\MultiProjectBacklog\Contributor\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -56,7 +56,7 @@ final class multi_project_backlogPlugin extends Plugin
     {
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(PlanningEditURLEvent::NAME);
-        $this->addHook(RootPlanningUpdateIsAllowedEvent::NAME);
+        $this->addHook(RootPlanningEditionEvent::NAME);
         $this->addHook(PlanningUpdatedEvent::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -140,9 +140,9 @@ final class multi_project_backlogPlugin extends Plugin
         }
     }
 
-    public function rootPlanningUpdateIsAllowed(RootPlanningUpdateIsAllowedEvent $event): void
+    public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void
     {
-        $handler = new RootPlanningUpdateIsAllowedHandler(new ContributorDao());
+        $handler = new RootPlanningEditionHandler(new ContributorDao());
         $handler->handle($event);
     }
 

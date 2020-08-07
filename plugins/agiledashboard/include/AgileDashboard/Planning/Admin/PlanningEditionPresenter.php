@@ -71,6 +71,10 @@ final class PlanningEditionPresenter
      * @var string
      */
     public $cardwall_admin;
+    /**
+     * @var ?ModificationBanPresenter
+     */
+    public $milestone_tracker_modification_ban;
 
     /**
      * @var \Planning_TrackerPresenter[]                       $available_backlog_trackers
@@ -83,20 +87,22 @@ final class PlanningEditionPresenter
         array $available_backlog_trackers,
         array $available_planning_trackers,
         string $cardwall_admin,
-        array $warning_list
+        array $warning_list,
+        ?ModificationBanPresenter $milestone_tracker_modification_ban
     ) {
-        $planning_id                       = $planning->getId();
-        $project_id                        = $planning->getGroupId();
-        $this->planning_name               = $planning->getName();
-        $this->project_id                  = $project_id;
-        $this->planning_id                 = $planning_id;
-        $this->planning_plan_title         = $planning->getPlanTitle();
-        $this->planning_backlog_title      = $planning->getBacklogTitle();
-        $this->priority_change_permission  = $priority_change_permission_html;
-        $this->available_backlog_trackers  = $available_backlog_trackers;
-        $this->available_planning_trackers = $available_planning_trackers;
-        $this->cardwall_admin              = $cardwall_admin;
-        $this->warning_list                = $warning_list;
-        $this->has_warning                 = count($warning_list) > 0;
+        $planning_id                              = $planning->getId();
+        $project_id                               = $planning->getGroupId();
+        $this->planning_name                      = $planning->getName();
+        $this->project_id                         = $project_id;
+        $this->planning_id                        = $planning_id;
+        $this->planning_plan_title                = $planning->getPlanTitle();
+        $this->planning_backlog_title             = $planning->getBacklogTitle();
+        $this->priority_change_permission         = $priority_change_permission_html;
+        $this->available_backlog_trackers         = $available_backlog_trackers;
+        $this->available_planning_trackers        = $available_planning_trackers;
+        $this->cardwall_admin                     = $cardwall_admin;
+        $this->warning_list                       = $warning_list;
+        $this->has_warning                        = count($warning_list) > 0;
+        $this->milestone_tracker_modification_ban = $milestone_tracker_modification_ban;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,16 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
+use Tuleap\AgileDashboard\Planning\Admin\ModificationBan;
 use Tuleap\Event\Dispatchable;
 
-final class RootPlanningUpdateIsAllowedEvent implements Dispatchable
+final class RootPlanningEditionEvent implements Dispatchable
 {
-    public const NAME = 'rootPlanningUpdateIsAllowed';
-
-    /**
-     * @var bool
-     */
-    private $is_allowed = true;
+    public const NAME = "rootPlanningEditionEvent";
     /**
      * @var \Project
      * @psalm-readonly
@@ -41,31 +37,16 @@ final class RootPlanningUpdateIsAllowedEvent implements Dispatchable
      * @var \Planning
      * @psalm-readonly
      */
-    private $original_planning;
+    private $planning;
     /**
-     * @var \PlanningParameters
-     * @psalm-readonly
+     * @var ModificationBan | null
      */
-    private $updated_planning;
+    private $milestone_tracker_modification_ban = null;
 
-    public function __construct(\Project $project, \Planning $original_planning, \PlanningParameters $updated_planning)
+    public function __construct(\Project $project, \Planning $planning)
     {
-        $this->project           = $project;
-        $this->original_planning = $original_planning;
-        $this->updated_planning  = $updated_planning;
-    }
-
-    public function disallowPlanningUpdate(): void
-    {
-        $this->is_allowed = false;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function isUpdateAllowed(): bool
-    {
-        return $this->is_allowed;
+        $this->project  = $project;
+        $this->planning = $planning;
     }
 
     /**
@@ -79,16 +60,21 @@ final class RootPlanningUpdateIsAllowedEvent implements Dispatchable
     /**
      * @psalm-mutation-free
      */
-    public function getOriginalPlanning(): \Planning
+    public function getPlanning(): \Planning
     {
-        return $this->original_planning;
+        return $this->planning;
+    }
+
+    public function prohibitMilestoneTrackerModification(ModificationBan $ban): void
+    {
+        $this->milestone_tracker_modification_ban = $ban;
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function getUpdatedPlanning(): \PlanningParameters
+    public function getMilestoneTrackerModificationBan(): ?ModificationBan
     {
-        return $this->updated_planning;
+        return $this->milestone_tracker_modification_ban;
     }
 }

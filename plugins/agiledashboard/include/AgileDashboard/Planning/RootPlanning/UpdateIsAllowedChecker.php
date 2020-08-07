@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 
 class UpdateIsAllowedChecker
@@ -39,32 +38,24 @@ class UpdateIsAllowedChecker
      * @var \TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
 
     public function __construct(
         \PlanningFactory $planning_factory,
         BacklogTrackerRemovalChecker $backlog_tracker_removal_checker,
-        \TrackerFactory $tracker_factory,
-        EventDispatcherInterface $event_dispatcher
+        \TrackerFactory $tracker_factory
     ) {
         $this->planning_factory                = $planning_factory;
         $this->backlog_tracker_removal_checker = $backlog_tracker_removal_checker;
         $this->tracker_factory                 = $tracker_factory;
-        $this->event_dispatcher                = $event_dispatcher;
     }
 
     /**
      * @throws \Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException
      * @throws TrackerNotFoundException
-     * @throws PlanningUpdateIsNotAllowedException
      */
     public function checkUpdateIsAllowed(
         \Planning $planning,
         \PlanningParameters $updated_planning,
-        \Project $project,
         \PFUser $user
     ): void {
         $root_planning = $this->planning_factory->getRootPlanning(
@@ -82,11 +73,6 @@ class UpdateIsAllowedChecker
 
         $this->backlog_tracker_removal_checker->checkRemovedBacklogTrackersCanBeRemoved($planning, $updated_planning);
         $this->checkMilestoneTrackerIdIsStillAValidTracker($updated_planning);
-        $event = new RootPlanningUpdateIsAllowedEvent($project, $planning, $updated_planning);
-        $this->event_dispatcher->dispatch($event);
-        if (! $event->isUpdateAllowed()) {
-            throw new PlanningUpdateIsNotAllowedException((int) $planning->getId());
-        }
     }
 
     private function isPlanningTheRootPlanning(\Planning $planning, \Planning $root_planning): bool

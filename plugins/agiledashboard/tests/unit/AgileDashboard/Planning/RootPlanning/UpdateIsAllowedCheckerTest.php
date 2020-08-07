@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 
@@ -49,53 +48,44 @@ final class UpdateIsAllowedCheckerTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|\TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
 
     protected function setUp(): void
     {
         $this->planning_factory                = M::mock(\PlanningFactory::class);
         $this->backlog_tracker_removal_checker = M::mock(BacklogTrackerRemovalChecker::class);
         $this->tracker_factory                 = M::mock(\TrackerFactory::class);
-        $this->event_dispatcher                = new \EventManager();
         $this->checker                         = new UpdateIsAllowedChecker(
             $this->planning_factory,
             $this->backlog_tracker_removal_checker,
-            $this->tracker_factory,
-            $this->event_dispatcher
+            $this->tracker_factory
         );
     }
 
     public function testItReturnsIfNoRootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '102']);
         $planning = new \Planning(15, '102', 'Not root planning', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturnFalse();
 
-        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $project, $user);
+        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $user);
     }
 
     public function testItReturnsIfNotARootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '102']);
         $planning = new \Planning(15, '102', 'Not root planning', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn(new \Planning(1, '102', 'Root planning', '', ''));
 
-        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $project, $user);
+        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $user);
     }
 
     public function testItThrowsWhenNewMilestoneTrackerIDIsNotAValidTrackerID(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '102']);
         $planning = new \Planning(15, '102', 'Not root planning', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -110,37 +100,6 @@ final class UpdateIsAllowedCheckerTest extends TestCase
         $this->checker->checkUpdateIsAllowed(
             $planning,
             \PlanningParameters::fromArray(['planning_tracker_id' => '404']),
-            $project,
-            $user
-        );
-    }
-
-    public function testItThrowsWhenAnEventDisallowsPlanningUpdate(): void
-    {
-        $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '102']);
-        $planning = new \Planning(15, '102', 'Not root planning', '', '');
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
-            ->once();
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->once()
-            ->with(86)
-            ->andReturn(M::mock(\Tracker::class));
-        $this->event_dispatcher->addClosureOnEvent(
-            RootPlanningUpdateIsAllowedEvent::NAME,
-            function (RootPlanningUpdateIsAllowedEvent $event) {
-                $event->disallowPlanningUpdate();
-            }
-        );
-
-        $this->expectException(PlanningUpdateIsNotAllowedException::class);
-        $this->checker->checkUpdateIsAllowed(
-            $planning,
-            \PlanningParameters::fromArray(['planning_tracker_id' => '86']),
-            $project,
             $user
         );
     }
@@ -148,7 +107,6 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     public function testItReturnsWhenUpdateIsAllowed(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $project  = new \Project(['group_id' => '102']);
         $planning = new \Planning(15, '102', 'Not root planning', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -163,7 +121,6 @@ final class UpdateIsAllowedCheckerTest extends TestCase
         $this->checker->checkUpdateIsAllowed(
             $planning,
             \PlanningParameters::fromArray(['planning_tracker_id' => '86']),
-            $project,
             $user
         );
     }

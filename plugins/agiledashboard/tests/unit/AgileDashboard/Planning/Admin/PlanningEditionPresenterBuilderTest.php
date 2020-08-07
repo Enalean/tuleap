@@ -27,8 +27,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\Admin\ModificationBan;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
+use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -79,10 +81,11 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
 
     public function testBuildReturnsACompletePresenter(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
+        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
+        $user = UserTestBuilder::aUser()->build();
+        $project = new \Project(['group_id' => '109']);
         $milestone_tracker = M::mock(\Tracker::class);
         $milestone_tracker->shouldReceive('getId')->andReturn(127);
-        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
         $planning->setPlanningTracker($milestone_tracker);
 
         $this->mockBacklogAndMilestoneTrackers();
@@ -92,7 +95,24 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([$burnup]);
 
-        $presenter = $this->builder->build($user, $planning);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->andReturn($planning);
+        $this->event_manager->addClosureOnEvent(
+            RootPlanningEditionEvent::NAME,
+            function (RootPlanningEditionEvent $event) {
+                $event->prohibitMilestoneTrackerModification(
+                    new class implements ModificationBan {
+                        public function getMessage(): string
+                        {
+                            return 'Cannot update milestone';
+                        }
+                    }
+                );
+            }
+        );
+
+        $presenter = $this->builder->build($planning, $user, $project);
 
         $this->assertSame(89, $presenter->planning_id);
         $this->assertSame(109, $presenter->project_id);
@@ -107,18 +127,22 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
         $burnup_presenter = $presenter->warning_list[0];
         $this->assertSame('/plugins/tracker?tracker=127&func=admin-formElements', $burnup_presenter->url);
         $this->assertTrue($presenter->has_warning);
+        $this->assertSame('Cannot update milestone', $presenter->milestone_tracker_modification_ban->message);
     }
 
     public function testBuildAddsAWarningFromAnEvent(): void
     {
-        $user     = UserTestBuilder::aUser()->build();
         $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
+        $user = UserTestBuilder::aUser()->build();
+        $project = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $burnup = M::mock(Burnup::class);
         $burnup->shouldReceive('isUsed')->andReturnTrue();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([$burnup]);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->andReturnNull();
 
         $warning_presenter = new PlanningWarningPossibleMisconfigurationPresenter(
             '/some/configuration/url',
@@ -131,7 +155,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
             }
         );
 
-        $presenter = $this->builder->build($user, $planning);
+        $presenter = $this->builder->build($planning, $user, $project);
 
         $this->assertContains($warning_presenter, $presenter->warning_list);
         $this->assertTrue($presenter->has_warning);
@@ -139,17 +163,38 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
 
     public function testBuildAddsNoWarning(): void
     {
-        $user     = UserTestBuilder::aUser()->build();
         $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
+        $user = UserTestBuilder::aUser()->build();
+        $project = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
             ->andReturn([]);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->andReturnNull();
 
-        $presenter = $this->builder->build($user, $planning);
+        $presenter = $this->builder->build($planning, $user, $project);
 
         $this->assertEmpty($presenter->warning_list);
         $this->assertFalse($presenter->has_warning);
+    }
+
+    public function testBuildAllowsMilestoneTrackerUpdate(): void
+    {
+        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
+        $user = UserTestBuilder::aUser()->build();
+        $project = new \Project(['group_id' => '109']);
+        $this->mockBacklogAndMilestoneTrackers();
+        $this->stubCardwallConfiguration();
+        $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
+            ->andReturn([]);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->andReturn($planning);
+
+        $presenter = $this->builder->build($planning, $user, $project);
+
+        $this->assertNull($presenter->milestone_tracker_modification_ban);
     }
 
     private function mockBacklogAndMilestoneTrackers(): void

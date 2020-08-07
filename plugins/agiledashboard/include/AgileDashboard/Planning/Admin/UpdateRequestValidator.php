@@ -30,7 +30,8 @@ class UpdateRequestValidator
     public function getValidatedPlanning(
         \Planning $original_planning,
         \Codendi_Request $request,
-        array $unavailable_planning_tracker_ids
+        array $unavailable_planning_tracker_ids,
+        ?ModificationBan $milestone_tracker_modification_ban
     ): ?\PlanningParameters {
         $planning_from_request = $request->get('planning');
         if (! $planning_from_request) {
@@ -40,11 +41,11 @@ class UpdateRequestValidator
 
         $is_valid = $this->nameIsPresent($updated_planning)
             && $this->backlogTrackerIdsArePresentAndArePositiveIntegers($updated_planning)
-            && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($updated_planning)
             && $this->planningTrackerIsValid(
                 $unavailable_planning_tracker_ids,
                 $original_planning,
-                $updated_planning
+                $updated_planning,
+                $milestone_tracker_modification_ban
             );
         return ($is_valid) ? $updated_planning : null;
     }
@@ -71,29 +72,37 @@ class UpdateRequestValidator
         return $are_present && $are_valid;
     }
 
-    private function planningTrackerIdIsPresentAndIsAPositiveInteger(\PlanningParameters $planning_parameters): bool
-    {
-        $planning_tracker_id = new \Valid_UInt();
-        $planning_tracker_id->required();
-
-
-        return $planning_tracker_id->validate($planning_parameters->planning_tracker_id);
-    }
-
     /**
      * @param int[] $unavailable_planning_tracker_ids
-     * @psalm-pure
      */
     private function planningTrackerIsValid(
         array $unavailable_planning_tracker_ids,
         \Planning $original_planning,
-        \PlanningParameters $updated_planning
+        \PlanningParameters $updated_planning,
+        ?ModificationBan $milestone_tracker_modification_ban
     ): bool {
+        if ($milestone_tracker_modification_ban !== null) {
+            $updated_planning->planning_tracker_id = (string) $original_planning->getPlanningTrackerId();
+            return true;
+        }
+
+        if (! $this->planningTrackerIdIsPresentAndIsAPositiveInteger($updated_planning)) {
+            return false;
+        }
+
         return ($this->planningTrackerDidNotChange($original_planning, $updated_planning)
             || $this->planningTrackerIsNotUsedInAnotherPlanningInProject(
                 $unavailable_planning_tracker_ids,
                 $updated_planning
             ));
+    }
+
+    private function planningTrackerIdIsPresentAndIsAPositiveInteger(\PlanningParameters $planning_parameters): bool
+    {
+        $planning_tracker_id = new \Valid_UInt();
+        $planning_tracker_id->required();
+
+        return $planning_tracker_id->validate($planning_parameters->planning_tracker_id);
     }
 
     /**

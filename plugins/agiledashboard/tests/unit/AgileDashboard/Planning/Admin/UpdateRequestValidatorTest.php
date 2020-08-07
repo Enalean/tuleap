@@ -45,7 +45,12 @@ final class UpdateRequestValidatorTest extends TestCase
         $unavailable_planning_tracker_ids = [];
 
         $this->assertNull(
-            $this->validator->getValidatedPlanning($original_planning, $request, $unavailable_planning_tracker_ids)
+            $this->validator->getValidatedPlanning(
+                $original_planning,
+                $request,
+                $unavailable_planning_tracker_ids,
+                null
+            )
         );
     }
 
@@ -71,7 +76,33 @@ final class UpdateRequestValidatorTest extends TestCase
         ];
     }
 
-    public function testItRejectsThenRequestWhenPlanningTrackerIsUnavailable(): void
+    public function testWhenPlanningTrackerModificationIsBannedItForcesItToOriginal(): void
+    {
+        $request                          = $this->buildRequest(
+            [
+                \PlanningParameters::NAME                => 'Release Planning',
+                \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
+            ]
+        );
+        $original_planning                = new \Planning(1, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 54);
+        $unavailable_planning_tracker_ids = [];
+
+        $validated_updated_planning = $this->validator->getValidatedPlanning(
+            $original_planning,
+            $request,
+            $unavailable_planning_tracker_ids,
+            new class implements ModificationBan {
+                public function getMessage(): string
+                {
+                    return 'Cannot modify planning tracker';
+                }
+            }
+        );
+        $this->assertNotNull($validated_updated_planning);
+        $this->assertSame('54', $validated_updated_planning->planning_tracker_id);
+    }
+
+    public function testItRejectsTheRequestWhenPlanningTrackerIsUnavailable(): void
     {
         $request                          = $this->buildRequest(
             [
@@ -84,7 +115,12 @@ final class UpdateRequestValidatorTest extends TestCase
         $unavailable_planning_tracker_ids = [97];
 
         $this->assertNull(
-            $this->validator->getValidatedPlanning($original_planning, $request, $unavailable_planning_tracker_ids)
+            $this->validator->getValidatedPlanning(
+                $original_planning,
+                $request,
+                $unavailable_planning_tracker_ids,
+                null
+            )
         );
     }
 
@@ -105,7 +141,8 @@ final class UpdateRequestValidatorTest extends TestCase
         $validated_updated_planning = $this->validator->getValidatedPlanning(
             $original_planning,
             $request,
-            $unavailable_planning_tracker_ids
+            $unavailable_planning_tracker_ids,
+            null
         );
         $this->assertNotNull($validated_updated_planning);
         $this->assertSame('Release Planning', $validated_updated_planning->name);
@@ -131,7 +168,8 @@ final class UpdateRequestValidatorTest extends TestCase
         $validated_updated_planning = $this->validator->getValidatedPlanning(
             $original_planning,
             $request,
-            $unavailable_planning_tracker_ids
+            $unavailable_planning_tracker_ids,
+            null
         );
         $this->assertNotNull($validated_updated_planning);
     }
