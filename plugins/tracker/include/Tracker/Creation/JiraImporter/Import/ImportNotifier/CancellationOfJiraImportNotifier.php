@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
 class CancellationOfJiraImportNotifier
 {
