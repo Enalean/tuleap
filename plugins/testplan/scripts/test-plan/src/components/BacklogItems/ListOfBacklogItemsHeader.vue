@@ -21,13 +21,16 @@
 <template>
     <div class="test-plan-list-of-backlogitems-header">
         <translate tag="h2" class="test-plan-list-of-backlogitems-title">Test plan</translate>
+        <export-button />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-
-@Component
+import ExportButton from "./ExportButton.vue";
+@Component({
+    components: { ExportButton },
+})
 export default class ListOfBacklogItemsHeader extends Vue {}
 </script>

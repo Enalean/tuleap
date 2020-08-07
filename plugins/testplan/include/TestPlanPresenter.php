@@ -51,6 +51,12 @@ class TestPlanPresenter
      */
     public $project_id;
     /**
+     * @var string
+     *
+     * @psalm-readonly
+     */
+    public $project_name;
+    /**
      * @var bool
      *
      * @psalm-readonly
@@ -86,6 +92,7 @@ class TestPlanPresenter
         int $milestone_id,
         string $milestone_title,
         int $project_id,
+        string $project_name,
         bool $user_can_create_campaign,
         ?\Tracker $test_definition_tracker,
         int $expand_backlog_item_id,
@@ -95,6 +102,7 @@ class TestPlanPresenter
         $this->milestone_id                 = $milestone_id;
         $this->milestone_title              = $milestone_title;
         $this->project_id                   = $project_id;
+        $this->project_name                 = $project_name;
         $this->user_can_create_campaign     = $user_can_create_campaign;
         $this->expand_backlog_item_id       = $expand_backlog_item_id;
         $this->highlight_test_definition_id = $highlight_test_definition_id;

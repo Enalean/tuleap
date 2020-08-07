@@ -72,6 +72,7 @@ class TestPlanPresenterBuilder
             (int) $milestone_artifact->getId(),
             $milestone_artifact->getTitle() ?? '',
             (int) $project->getID(),
+            $project->getPublicName(),
             $this->canUserCreateACampaign($project, $user),
             $this->definition_tracker_retriever->getTestDefinitionTracker($project, $user),
             $expand_backlog_item_id,

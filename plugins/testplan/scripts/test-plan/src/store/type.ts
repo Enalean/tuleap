@@ -22,6 +22,7 @@ import { BacklogItemState } from "./backlog-item/type";
 
 export interface State {
     readonly project_id: number;
+    readonly project_name: string;
     readonly milestone_id: number;
     readonly milestone_title: string;
     readonly user_can_create_campaign: boolean;

@@ -86,6 +86,9 @@ msgstr "Créer une nouvelle campagne"
 msgid "Edit %{ item_type } #%{ item_id }"
 msgstr "Éditer %{ item_type } #%{ item_id }"
 
+msgid "Export"
+msgstr "Exporter"
+
 msgid "Failed"
 msgstr "Échoué"
 
@@ -96,6 +99,9 @@ msgstr[1] "Rapports de l’outil de suivi %{ tracker_name }"
 
 msgid "Go to the last execution in release %{ release_name }"
 msgstr "Se rendre à la dernière exécution dans la release %{ release_name }"
+
+msgid "Milestone"
+msgstr "Jalon"
 
 msgid "Name"
 msgstr "Nom"
@@ -114,6 +120,12 @@ msgstr "Non executé"
 
 msgid "Passed"
 msgstr "Passé"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Test Report %{ milestone_title }"
+msgstr "Rapport de test %{ milestone_title }"
 
 msgid "Test campaigns"
 msgstr "Campagnes de test"
