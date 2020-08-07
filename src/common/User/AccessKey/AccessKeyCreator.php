@@ -75,6 +75,7 @@ class AccessKeyCreator
     }
 
     /**
+     *
      * @throws AccessKeyAlreadyExpiredException
      * @throws NoValidAccessKeyScopeException
      */

@@ -117,7 +117,9 @@ class FrontRouter
                     break;
             }
             $http_response_code = http_response_code();
-            assert(is_int($http_response_code));
+            if (is_bool($http_response_code)) {
+                $http_response_code = 200;
+            }
             $this->request_instrumentation->increment($http_response_code, DetectedBrowser::detectFromTuleapHTTPRequest($request));
         } catch (NotFoundException $exception) {
             if ($this->shouldRedirectAnonymousUser($request)) {

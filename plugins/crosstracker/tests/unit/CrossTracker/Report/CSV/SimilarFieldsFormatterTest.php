@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 namespace Tuleap\CrossTracker\Report\CSV;
-
-require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -112,7 +110,7 @@ class SimilarFieldsFormatterTest extends TestCase
         $string_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $string_changeset_value->shouldReceive('getValue')->andReturn('safari');
 
-        $text_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $text_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $text_changeset_value->shouldReceive('getContentAsText')->andReturn('inappendiculate gas pearly');
 
         $float_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Float::class);

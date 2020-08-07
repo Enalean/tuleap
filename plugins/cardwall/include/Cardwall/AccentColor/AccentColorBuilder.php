@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,10 +57,10 @@ class AccentColorBuilder
             Tracker::TYPE_FIELD_NAME,
             $current_user
         );
-        \assert($selectbox instanceof \Tracker_FormElement_Field_List);
         if (! $selectbox) {
             return $no_color;
         }
+        \assert($selectbox instanceof \Tracker_FormElement_Field_List);
 
         if (! $selectbox->userCanRead($current_user)) {
             return $no_color;

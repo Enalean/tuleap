@@ -88,10 +88,10 @@ class ProjectRendererWidgetXMLImporter
     {
         $ref      = trim((string) $reference['REF']);
         $renderer = $event->getMappingsRegistry()->getReference($ref);
-        assert($renderer instanceof Tracker_Report_Renderer);
         if ($renderer === null) {
             throw new RuntimeException("Reference $ref for tracker renderer widget was not found");
         }
+        assert($renderer instanceof Tracker_Report_Renderer);
         return (int) $renderer->getId();
     }
 }

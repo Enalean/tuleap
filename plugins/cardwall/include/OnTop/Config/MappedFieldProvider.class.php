@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,7 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
         $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {
             $field = $mapping->getField();
-            assert($field === null || $field instanceof Tracker_FormElement_Field_Selectbox);
+            assert($field === null || $field instanceof Tracker_FormElement_Field_List);
             return $field;
         }
         return $this->semantic_status_provider->getField($tracker);

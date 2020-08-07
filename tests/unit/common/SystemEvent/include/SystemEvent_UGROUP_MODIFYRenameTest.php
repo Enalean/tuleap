@@ -101,7 +101,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
     {
         $this->project->shouldReceive('usesSVN')->andReturnTrue();
 
-        $backend_svn = Mockery::mock(\BackendCVS::class);
+        $backend_svn = Mockery::mock(\BackendSVN::class);
         $this->system_event->shouldReceive('getBackend')->with('SVN')->andReturn($backend_svn);
 
         $this->event_manager->shouldReceive('processEvent');
