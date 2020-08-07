@@ -37,4 +37,18 @@ class RelativeDatesAssetsRetriever
         }
         return $core_assets->getFileURL('tlp-relative-date.js');
     }
+
+    public static function includeAssetsInSnippet(): void
+    {
+        $core_assets = new IncludeAssets(
+            __DIR__ . '/../../www/assets/core',
+            '/assets/core'
+        );
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\HTTPRequest::instance());
+        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+            echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
+        } else {
+            echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
+        }
+    }
 }

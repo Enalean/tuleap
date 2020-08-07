@@ -109,8 +109,7 @@ class RepositoryHeaderPresenterBuilder
         $this->default_clone_url_selector = $default_clone_url_selector;
     }
 
-    /** @return RepositoryHeaderPresenter */
-    public function build(GitRepository $repository, PFUser $current_user)
+    public function build(GitRepository $repository, PFUser $current_user): RepositoryHeaderPresenter
     {
         $parent_repository_presenter = null;
         $parent_repository = $repository->getParent();
@@ -118,7 +117,7 @@ class RepositoryHeaderPresenterBuilder
             $parent_repository_presenter = $this->buildParentPresenter($parent_repository);
         }
 
-        $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository);
+        $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository, $current_user);
         $clone_presenter         = $this->buildClonePresenter($repository, $current_user);
 
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
@@ -149,13 +148,14 @@ class RepositoryHeaderPresenterBuilder
         );
     }
 
-    private function buildGerritStatusPresenter(GitRepository $repository)
+    private function buildGerritStatusPresenter(GitRepository $repository, PFUser $user): GerritStatusPresenter
     {
         return new GerritStatusPresenter(
             $repository,
             $this->project_creator_status,
             $this->driver_factory,
-            $this->gerrit_servers
+            $this->gerrit_servers,
+            $user
         );
     }
 
