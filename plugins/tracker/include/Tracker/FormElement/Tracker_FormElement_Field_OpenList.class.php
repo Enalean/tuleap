@@ -573,7 +573,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $v = new Tracker_FormElement_Field_List_OpenValue(
                     $row['id'],
                     $row['openvalue_label'],
-                    $row['is_hidden']
+                    $row['openvalue_is_hidden']
                 );
             } else {
                 $v = $this->getBind()->getValueFromRow($row);
