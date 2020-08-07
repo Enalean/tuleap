@@ -17,21 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextCell } from "./report-cells";
+import { DateCell, TextCell } from "./report-cells";
 
 export interface GeneralSection {
-    readonly rows: readonly [readonly [TextCell, TextCell], readonly [TextCell, TextCell]];
+    readonly rows: readonly [
+        readonly [TextCell, TextCell],
+        readonly [TextCell, TextCell],
+        readonly [TextCell, DateCell],
+        readonly [TextCell, TextCell]
+    ];
 }
 
 export function buildGeneralSection(
     gettext_provider: VueGettextProvider,
     project_name: string,
-    milestone_title: string
+    milestone_title: string,
+    user_display_name: string,
+    current_date: Date
 ): GeneralSection {
     return {
         rows: [
             [new TextCell(gettext_provider.$gettext("Project")), new TextCell(project_name)],
             [new TextCell(gettext_provider.$gettext("Milestone")), new TextCell(milestone_title)],
+            [
+                new TextCell(gettext_provider.$gettext("Report extracted on")),
+                new DateCell(current_date),
+            ],
+            [
+                new TextCell(gettext_provider.$gettext("Report extracted by")),
+                new TextCell(user_display_name),
+            ],
         ],
     };
 }

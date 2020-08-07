@@ -124,6 +124,12 @@ msgstr "Passé"
 msgid "Project"
 msgstr "Projet"
 
+msgid "Report extracted by"
+msgstr "Rapport extrait par"
+
+msgid "Report extracted on"
+msgstr "Rapport extrait le"
+
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"
 

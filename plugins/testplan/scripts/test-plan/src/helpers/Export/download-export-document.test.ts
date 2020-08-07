@@ -40,7 +40,7 @@ describe("Start download of export document", () => {
             .spyOn(report_transformer, "transformAReportIntoASheet")
             .mockReturnValue(actual_xlsx.utils.json_to_sheet([]));
 
-        downloadExportDocument(gettext_provider, "Project", "Milestone");
+        downloadExportDocument(gettext_provider, "Project", "Milestone", "User Name");
 
         expect(spyCreateReport).toHaveBeenCalledTimes(1);
         expect(spyCreateSheet).toHaveBeenCalledTimes(1);

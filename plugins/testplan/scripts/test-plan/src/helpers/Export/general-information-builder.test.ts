@@ -19,18 +19,27 @@
 
 import { buildGeneralSection } from "./general-information-builder";
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
-import { TextCell } from "./report-cells";
+import { DateCell, TextCell } from "./report-cells";
 
 describe("Build general information section", () => {
     it("builds section", () => {
         const gettext_provider = createVueGettextProviderPassthrough();
+        const current_date = new Date(2020, 8, 7, 17, 15);
 
-        const section = buildGeneralSection(gettext_provider, "My project", "My milestone");
+        const section = buildGeneralSection(
+            gettext_provider,
+            "My project",
+            "My milestone",
+            "User name",
+            current_date
+        );
 
         expect(section).toStrictEqual({
             rows: [
                 [new TextCell("Project"), new TextCell("My project")],
                 [new TextCell("Milestone"), new TextCell("My milestone")],
+                [new TextCell("Report extracted on"), new DateCell(current_date)],
+                [new TextCell("Report extracted by"), new TextCell("User name")],
             ],
         });
     });

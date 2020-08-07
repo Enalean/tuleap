@@ -21,6 +21,7 @@ import { CampaignState } from "./campaign/type";
 import { BacklogItemState } from "./backlog-item/type";
 
 export interface State {
+    readonly user_display_name: string;
     readonly project_id: number;
     readonly project_name: string;
     readonly milestone_id: number;

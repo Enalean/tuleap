@@ -25,6 +25,7 @@ namespace Tuleap\TestPlan;
 use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use UserHelper;
 
 class TestPlanPresenterBuilder
 {
@@ -44,17 +45,23 @@ class TestPlanPresenterBuilder
      * @var TestPlanTestDefinitionTrackerRetriever
      */
     private $definition_tracker_retriever;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
 
     public function __construct(
         Planning_MilestonePaneFactory $pane_factory,
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
-        TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever
+        TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever,
+        UserHelper $user_helper
     ) {
         $this->pane_factory                 = $pane_factory;
         $this->testmanagement_config        = $testmanagement_config;
         $this->tracker_factory              = $tracker_factory;
         $this->definition_tracker_retriever = $definition_tracker_retriever;
+        $this->user_helper                  = $user_helper;
     }
 
     public function getPresenter(
@@ -69,6 +76,7 @@ class TestPlanPresenterBuilder
 
         return new TestPlanPresenter(
             new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
+            $this->user_helper->getDisplayNameFromUser($user),
             (int) $milestone_artifact->getId(),
             $milestone_artifact->getTitle() ?? '',
             (int) $project->getID(),

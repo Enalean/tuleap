@@ -62,6 +62,9 @@ export default class ExportButton extends Vue {
     @State
     readonly milestone_title!: string;
 
+    @State
+    readonly user_display_name!: string;
+
     private is_preparing_the_download = false;
 
     get can_export(): boolean {
@@ -90,7 +93,12 @@ export default class ExportButton extends Vue {
         const { downloadExportDocument } = await import(
             /* webpackChunkName: "download-export-sheet" */ "../../helpers/Export/download-export-document"
         );
-        downloadExportDocument(this, this.project_name, this.milestone_title);
+        downloadExportDocument(
+            this,
+            this.project_name,
+            this.milestone_title,
+            this.user_display_name
+        );
 
         this.is_preparing_the_download = false;
     }

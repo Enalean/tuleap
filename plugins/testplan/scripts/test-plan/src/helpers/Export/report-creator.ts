@@ -31,9 +31,19 @@ export interface ExportReport {
 export function createExportReport(
     gettext_provider: VueGettextProvider,
     project_name: string,
-    milestone_title: string
+    milestone_title: string,
+    user_display_name: string,
+    current_date: Date
 ): ExportReport {
     return {
-        sections: [buildGeneralSection(gettext_provider, project_name, milestone_title)],
+        sections: [
+            buildGeneralSection(
+                gettext_provider,
+                project_name,
+                milestone_title,
+                user_display_name,
+                current_date
+            ),
+        ],
     };
 }

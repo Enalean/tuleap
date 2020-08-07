@@ -24,11 +24,19 @@ import { createExportReport } from "./report-creator";
 export function downloadExportDocument(
     gettext_provider: VueGettextProvider,
     project_name: string,
-    milestone_title: string
+    milestone_title: string,
+    user_display_name: string
 ): void {
+    const current_date = new Date();
     const book = utils.book_new();
     const sheet = transformAReportIntoASheet(
-        createExportReport(gettext_provider, project_name, milestone_title)
+        createExportReport(
+            gettext_provider,
+            project_name,
+            milestone_title,
+            user_display_name,
+            current_date
+        )
     );
 
     utils.book_append_sheet(book, sheet);

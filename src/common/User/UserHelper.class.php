@@ -206,16 +206,20 @@ class UserHelper
      * @return ?string the display name of the user $user or null if $user is null
      *
      * @see getDisplayName
+     *
+     * @template T as PFUser|null
+     * @psalm-param T $user
+     * @psalm-return (T is PFUser ? string : null)
      */
     public function getDisplayNameFromUser($user)
     {
-        if ($user == null) {
+        if ($user === null) {
             return null;
-        } elseif ($user->isNone()) {
-            return $user->getUserName();
-        } else {
-            return $this->getDisplayName($user->getUserName(), $user->getRealName());
         }
+        if ($user->isNone()) {
+            return $user->getUserName();
+        }
+        return $this->getDisplayName($user->getUserName(), $user->getRealName());
     }
 
     /**

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const user_display_name = vue_mount_point.dataset.userDisplayName || "";
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
     const project_name = vue_mount_point.dataset.projectName || "";
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
@@ -68,6 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const initial_state = ({
+        user_display_name,
         project_id,
         project_name,
         milestone_id,

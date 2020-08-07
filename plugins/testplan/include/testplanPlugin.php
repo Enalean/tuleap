@@ -165,7 +165,8 @@ final class testplanPlugin extends Plugin
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 $testmanagement_config,
                 $tracker_factory,
-                new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory)
+                new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory),
+                UserHelper::instance()
             ),
         );
     }
