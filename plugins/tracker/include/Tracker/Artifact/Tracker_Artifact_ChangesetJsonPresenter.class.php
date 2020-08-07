@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,12 @@
 
 class Tracker_Artifact_ChangesetJsonPresenter
 {
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_time;
+
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
     /**
@@ -29,19 +35,15 @@ class Tracker_Artifact_ChangesetJsonPresenter
 
     public function __construct(Tracker_Artifact_Changeset $changeset, \PFUser $current_user)
     {
-        $this->changeset    = $changeset;
-        $this->current_user = $current_user;
+        $this->changeset      = $changeset;
+        $this->current_user   = $current_user;
+        $this->purified_time = DateHelper::relativeDateInlineContext((int) $this->changeset->getSubmittedOn(), $this->current_user);
     }
 
     public function author_updated()
     {
         $user_str = UserHelper::instance()->getDisplayNameFromUserId($this->changeset->getSubmittedBy());
         return sprintf(dgettext('tuleap-tracker', '%1$s has just updated the artifact'), (string) $user_str);
-    }
-
-    public function time()
-    {
-        return DateHelper::timeAgoInWords($this->changeset->getSubmittedOn());
     }
 
     public function there_are_comments_and_diff()

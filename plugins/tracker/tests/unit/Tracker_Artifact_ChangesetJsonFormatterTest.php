@@ -22,6 +22,7 @@
 class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
     public function testItHasJsonRepresentation(): void
     {
@@ -36,8 +37,11 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\Tes
 
         $json_formatter = new Tracker_Artifact_ChangesetJsonFormatter($template_renderer);
 
+        $current_user = Mockery::mock(PFUser::class);
+        $current_user->shouldReceive('getPreference');
+        $current_user->shouldReceive('getLocale');
         $this->assertEquals(
-            $json_formatter->format($changeset, Mockery::mock(PFUser::class)),
+            $json_formatter->format($changeset, $current_user),
             [
                 'id'           => 15,
                 'submitted_by' => 45,
