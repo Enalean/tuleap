@@ -96,7 +96,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     public function fetchFormatted()
     {
-        return $this->getLabel();
+        return Codendi_HTMLPurifier::instance()->purify(html_entity_decode($this->getLabel()));
     }
 
     public function fetchFormattedForCSV()
