@@ -240,7 +240,10 @@ class RepositoryManager
         return $this->instantiateRepositoriesFromRow($deleted_repositories);
     }
 
-    public function getRestorableRepositoriesByProject(Project $project)
+    /**
+     * @return RestorableRepositoryPresenter[]
+     */
+    public function getRestorableRepositoriesByProject(Project $project, \PFUser $user): array
     {
         $deleted_repositories              = $this->dao->getRestorableRepositoriesByProject($project->getID());
         $deleted_repositories_instantiated = $this->instantiateRepositoriesFromRow($deleted_repositories);
@@ -248,13 +251,23 @@ class RepositoryManager
         foreach ($deleted_repositories_instantiated as $delete_repository) {
             $archive = $delete_repository->getBackupPath();
             if (file_exists($archive)) {
-                array_push($deleted_existed_repositories, $delete_repository);
+                $repository_presenter = new RestorableRepositoryPresenter(
+                    $user,
+                    $delete_repository->getName(),
+                    (int) $delete_repository->getDeletionDate(),
+                    $project->getID(),
+                    $delete_repository->getId()
+                );
+                array_push($deleted_existed_repositories, $repository_presenter);
             }
         }
         return $deleted_existed_repositories;
     }
 
-    private function instantiateRepositoriesFromRow($deleted_repositories)
+    /**
+     * @return Repository[]
+     */
+    private function instantiateRepositoriesFromRow($deleted_repositories): array
     {
         $archived_repositories = [];
         foreach ($deleted_repositories as $deleted_repository) {
@@ -264,10 +277,7 @@ class RepositoryManager
         return $archived_repositories;
     }
 
-    /**
-     * @return Repository
-     */
-    private function instantiateFromRow(array $row, Project $project)
+    private function instantiateFromRow(array $row, Project $project): Repository
     {
         return new Repository(
             $row['id'],
@@ -278,10 +288,7 @@ class RepositoryManager
         );
     }
 
-    /**
-     * @return Repository
-     */
-    private function instantiateFromRowWithoutProject(array $row)
+    private function instantiateFromRowWithoutProject(array $row): Repository
     {
         $project = $this->project_manager->getProject($row['project_id']);
 

@@ -22,11 +22,9 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
-use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
@@ -45,6 +43,11 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
+use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
+use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
+use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
@@ -65,11 +68,9 @@ use Tuleap\SVN\Admin\RestoreController;
 use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Dao;
-use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\DiskUsageCollector;
 use Tuleap\SVN\DiskUsage\DiskUsageDao;
 use Tuleap\SVN\DiskUsage\DiskUsageRetriever;
-use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 use Tuleap\svn\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
@@ -160,7 +161,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
         $this->addHook('codendi_daily_start');
-        $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user');
@@ -202,6 +202,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(StatisticsCollectorSVN::NAME);
         $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
         $this->addHook(\Tuleap\svn\Event\UpdateProjectAccessFilesEvent::NAME);
+        $this->addHook(PendingDocumentsRetriever::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -728,15 +729,19 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->getRepositoryManager()->purgeArchivedRepositories();
     }
 
-    public function show_pending_documents($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function pendingDocumentsRetriever(PendingDocumentsRetriever $documents_retriever): void
     {
-        $project_id            = $params['group_id'];
-        $project               = ProjectManager::instance()->getProject($project_id);
-        $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project);
+        $project = $documents_retriever->getProject();
+        $user = $documents_retriever->getUser();
+        $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project, $user);
 
         $restore_controller = new RestoreController($this->getRepositoryManager());
-        $tab_content        = $restore_controller->displayRestorableRepositories($params['csrf_token'], $archived_repositories, $project_id);
-        $params['html'][]   = $tab_content;
+        $tab_content        = $restore_controller->displayRestorableRepositories(
+            $documents_retriever->getToken(),
+            $archived_repositories,
+            $project->getID()
+        );
+        $documents_retriever->addPurifiedHTML($tab_content);
     }
 
     public function logs_daily($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName

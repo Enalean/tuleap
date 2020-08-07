@@ -20,6 +20,9 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
@@ -92,6 +95,17 @@ switch ($func) {
         break;
 }
 
+$core_assets = new IncludeAssets(
+    __DIR__ . '/../../../src/www/assets/core',
+    '/assets/core'
+);
+$detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
+    echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
+} else {
+    echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
+}
+
 $focus = $request->get('focus');
 if (! $focus) {
     $focus = 'frs_file';
@@ -101,17 +115,14 @@ $idArray   = [];
 $nomArray  = [];
 $htmlArray = [];
 
-frs_file_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
-wiki_attachment_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
+$user = $request->getCurrentUser();
 
-$params = ['group_id'   => $group_id,
-                'id'         => &$idArray,
-                'nom'        => &$nomArray,
-                'focus'      => $focus,
-                'html'       => &$htmlArray,
-                'csrf_token' => $csrf_token
-];
-$em->processEvent('show_pending_documents', $params);
+$event = new PendingDocumentsRetriever($project, $user, $csrf_token);
+
+frs_file_restore_view($group_id, $csrf_token, $event, $user);
+wiki_attachment_restore_view($group_id, $csrf_token, $event, $user);
+
+$em->processEvent($event);
 
 $purifier = Codendi_HTMLPurifier::instance();
 
@@ -138,14 +149,14 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
     </nav>
     <main role="main" class="tlp-framed">
     <?php
-        $project = $pm->getProject($group_id, false, true);
+        $project = $pm->getProject($group_id);
         echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', [ForgeConfig::get('sys_file_deletion_delay')]) . '</div>';
         echo '<div class="tlp-alert-info"><p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro') . '<br />';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system') . ' <a href="/admin/system_events/">system event</a> ';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system_end') . '</p>';
         echo '<p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_restaure') . '</p></div>';
 
-    foreach ($params['html'] as $html) {
+    foreach ($event->getHtml() as $html) {
         echo $html;
     }
     ?>
@@ -158,7 +169,7 @@ $renderer->footer();
  * Functions
  */
 
-function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray)
+function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, PendingDocumentsRetriever $event, PFUser $user)
 {
     $fileFactory       = new FRSFileFactory();
     $files             = $fileFactory->listPendingFiles($group_id, 0, 0);
@@ -198,8 +209,8 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<td><a href="' . $url . '">' . $purifier->purify(
                 html_entity_decode($file['package_name'])
             ) . '</a></td>';
-            $html .= '<td>' . \DateHelper::timeAgoInWords($file['delete_date'], false, true) . '</td>';
-            $html .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
+            $html .= '<td>' . DateHelper::relativeDateInlineContext((int) $file['delete_date'], $user) . '</td>';
+            $html .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user) . '</td>';
             $html .= '<td class="tlp-table-cell-actions">';
             $html .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
                 'admin_show_pending_documents',
@@ -298,7 +309,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
     $html .= '</div>
         </section>';
 
-    $htmlArray[] = $html;
+    $event->addPurifiedHTML($html);
 }
 
 function frs_file_restore_process($request, $group_id)
@@ -344,7 +355,7 @@ function frs_file_restore_process($request, $group_id)
     $GLOBALS['Response']->redirect('?group_id=' . (int) $group_id);
 }
 
-function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray)
+function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, PendingDocumentsRetriever $event, PFUser $user)
 {
     $wikiAttachment = new WikiAttachment($group_id);
     $attachments    = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
@@ -374,8 +385,8 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
             $tabbed_content .= '<tr>';
             $tabbed_content .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';
-            $tabbed_content .= '<td>' . \DateHelper::timeAgoInWords($wiki_attachment['delete_date'], false, true) . '</td>';
-            $tabbed_content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
+            $tabbed_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $wiki_attachment['delete_date'], $user) . '</td>';
+            $tabbed_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user)  . '</td>';
             $tabbed_content .= '<td class="tlp-table-cell-actions">';
             if ($nonRestorableAttachments->rowCount()) {
                 $tabbed_content .= '<button type="button"
@@ -408,7 +419,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
             </div>
         </section>';
 
-    $htmlArray[] = $tabbed_content;
+    $event->addPurifiedHTML($tabbed_content);
 }
 
 function wiki_attachment_restore_process($request, $group_id)
