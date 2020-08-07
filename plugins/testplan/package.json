@@ -14,9 +14,11 @@
   },
   "dependencies": {
     "vue": "^2.6.11",
+    "vue-gettext": "^2.1.10",
     "vue-property-decorator": "^8.4.2",
     "vuex": "^3.5.1",
-    "vuex-class": "^0.3.2"
+    "vuex-class": "^0.3.2",
+    "xlsx": "^0.16.5"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.3"

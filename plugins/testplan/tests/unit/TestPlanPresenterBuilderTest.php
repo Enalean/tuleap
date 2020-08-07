@@ -64,6 +64,7 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $this->milestone->shouldReceive('getArtifact')->andReturn($artifact);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn('102');
+        $project->shouldReceive('getPublicName')->andReturn('Project public name');
         $this->milestone->shouldReceive('getProject')->andReturn($project);
 
         $this->testmanagement_config       = \Mockery::mock(Config::class);
