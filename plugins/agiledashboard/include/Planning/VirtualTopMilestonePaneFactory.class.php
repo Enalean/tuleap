@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
+use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 
 /**
  * I build panes for a Planning_Milestone
@@ -57,9 +58,9 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
         ExplicitBacklogDao $explicit_backlog_dao,
         EventManager $event_manager
     ) {
-        $this->request                                         = $request;
-        $this->explicit_backlog_dao                            = $explicit_backlog_dao;
-        $this->event_manager                                   = $event_manager;
+        $this->request              = $request;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
+        $this->event_manager        = $event_manager;
     }
 
     /** @return PanePresenterData */
@@ -130,6 +131,14 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
         $pane_info->setActive(true);
         $project                                   = $this->request->getProject();
         $user                                      = $this->request->getCurrentUser();
+
+        assert($milestone instanceof Planning_VirtualTopMilestone);
+        $display_pv2_event = new DisplayTopPlanningAppEvent(
+            $milestone,
+            $user
+        );
+        $this->event_manager->processEvent($display_pv2_event);
+
         $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $pane_info,
             new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
@@ -138,7 +147,7 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
                 $milestone_artifact_id,
                 $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
                 $allowed_additional_panes_to_display_collector->getIdentifiers(),
-                true
+                $display_pv2_event->canUserCreateMilestone()
             )
         );
 
