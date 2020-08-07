@@ -19,7 +19,7 @@
     "angular-ui-router": "^0.3.2",
     "d3-drag": "^1.2.1",
     "d3-force": "^1.1.0",
-    "d3-selection": "^1.1.0",
+    "d3-selection": "^1.4.2",
     "d3-selection-multi": "^1.0.1",
     "d3-zoom": "^1.6.0",
     "dragula": "^3.7.2",
