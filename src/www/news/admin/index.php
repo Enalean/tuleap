@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -104,10 +104,10 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
     news_header(['title' => $Language->getText('news_admin_index', 'title'),
               'help' => 'collaboration.html#news-service']);
 
-    echo '<H3>' . $Language->getText('news_admin_index', 'news_admin') . '</H3>';
-    echo '<a href="/news/admin/choose_items.php?project_id=' . $group_id . '">' . $Language->getText('news_admin_index', 'choose_display') . '</a>';
-
     $purifier = Codendi_HTMLPurifier::instance();
+
+    echo '<H3>' . $Language->getText('news_admin_index', 'news_admin') . '</H3>';
+    echo '<a href="/news/admin/choose_items.php?project_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_admin_index', 'choose_display') . '</a>';
 
     if (! $request->get('post_changes') && $request->get('approve')) {
      /*

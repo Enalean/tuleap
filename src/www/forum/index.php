@@ -62,9 +62,11 @@ $result = db_query($sql);
 
 $rows = db_numrows($result);
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 if (! $result || $rows < 1) {
     $pm = ProjectManager::instance();
-    echo '<H1>' . $Language->getText('forum_index', 'no_forums', $pm->getProject($group_id)->getPublicName()) . '</H1>';
+    echo '<H1>' . $purifier->purify($Language->getText('forum_index', 'no_forums', $pm->getProject($group_id)->getPublicName())) . '</H1>';
     echo db_error();
     forum_footer($params);
     exit;
@@ -76,7 +78,7 @@ if (isset($pv) && $pv) {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<H3>' . $Language->getText('forum_forum_utils', 'discuss_forum') . '</H3>';
     echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
+        echo "<TD align='left'> ( <A HREF='?group_id=" . $purifier->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     echo "</TR></TABLE>";
 }
 
@@ -87,14 +89,14 @@ echo '<P>' . $Language->getText('forum_index', 'choose_forum') . '<P>';
 */
 
 for ($j = 0; $j < $rows; $j++) {
-    echo '<A HREF="forum.php?forum_id=' . db_result($result, $j, 'group_forum_id') . '">' .
+    echo '<A HREF="forum.php?forum_id=' . $purifier->purify(urlencode(db_result($result, $j, 'group_forum_id'))) . '">' .
         html_image("ic/cfolder15.png", ["border" => "0"]) .
         '&nbsp;' .
-        db_result($result, $j, 'forum_name') . '</A> ';
+        $purifier->purify(html_entity_decode(db_result($result, $j, 'forum_name'))) . '</A> ';
     //message count
-    echo '(' . ((db_result($result, $j, 'total')) ? db_result($result, $j, 'total') : '0') . ' msgs)';
+    echo '(' . $purifier->purify((db_result($result, $j, 'total')) ? db_result($result, $j, 'total') : '0') . ' msgs)';
     echo "<BR>\n";
-    echo db_result($result, $j, 'description') . '<P>';
+    echo $purifier->purify(html_entity_decode(db_result($result, $j, 'description'))) . '<P>';
 }
 // Display footer page
 forum_footer($params);

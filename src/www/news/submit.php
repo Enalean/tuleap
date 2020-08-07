@@ -91,7 +91,7 @@ if (user_isloggedin()) {
         ' . $Language->getText('news_submit', 'post_explain', ForgeConfig::get('sys_name')) . '
         <P>
         <FORM ACTION="" METHOD="POST">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $hp->purify($group_id) . '">
         <B>' . $Language->getText('news_submit', 'for_project', $hp->purify($project->getPublicName())) . '</B>
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <br><br>

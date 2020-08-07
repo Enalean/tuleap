@@ -580,6 +580,8 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
             }
         }
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         ?>
         <CENTER>
         <FORM ACTION="/forum/forum.php" METHOD="POST">
@@ -587,10 +589,10 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
           <TR>
             <TD>
         <INPUT TYPE="HIDDEN" NAME="post_message" VALUE="y">
-        <INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="<?php echo $forum_id; ?>">
-        <INPUT TYPE="HIDDEN" NAME="thread_id" VALUE="<?php echo $thread_id; ?>">
-        <INPUT TYPE="HIDDEN" NAME="msg_id" VALUE="<?php echo $is_followup_to; ?>">
-        <INPUT TYPE="HIDDEN" NAME="is_followup_to" VALUE="<?php echo $is_followup_to; ?>">
+        <INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="<?php echo $purifier->purify($forum_id); ?>">
+        <INPUT TYPE="HIDDEN" NAME="thread_id" VALUE="<?php echo $purifier->purify($thread_id); ?>">
+        <INPUT TYPE="HIDDEN" NAME="msg_id" VALUE="<?php echo $purifier->purify($is_followup_to); ?>">
+        <INPUT TYPE="HIDDEN" NAME="is_followup_to" VALUE="<?php echo $purifier->purify($is_followup_to); ?>">
         <B><?php echo $Language->getText('forum_forum_utils', 'subj'); ?>:
             </TD><TD>
         <INPUT TYPE="TEXT" NAME="subject" VALUE="<?php echo $subject; ?>" CLASS="textfield_medium">
