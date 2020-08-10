@@ -110,6 +110,7 @@ if (! $plugin) {
         'tuleap-core',
         [
             "$basedir/src/templates",
+            "$basedir/src/themes/BurningParrot/templates",
             "$basedir/src/common/FRS",
             "$basedir/src/common/User",
         ],

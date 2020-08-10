@@ -72,7 +72,7 @@ $nav-dropdown-content-border-radius: 3px;
 }
 
 .nav-dropdown-content-title {
-    padding: 10px;
+    padding: $tlp-small-spacing;
     border-top-left-radius: $nav-dropdown-content-border-radius;
     border-top-right-radius: $nav-dropdown-content-border-radius;
     background-color: $tlp-theme-color;
