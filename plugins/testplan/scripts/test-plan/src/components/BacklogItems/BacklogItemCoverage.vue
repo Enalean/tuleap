@@ -24,7 +24,7 @@
             <span class="tlp-skeleton-text test-plan-backlog-item-coverage-text-skeleton"></span>
             <span class="tlp-skeleton-text test-plan-backlog-item-coverage-icon-skeleton"></span>
         </template>
-        <template v-else-if="nb_tests > 0">
+        <template v-else-if="test_status !== null">
             <span class="test-plan-backlog-item-coverage-text" data-test="nb-tests">
                 {{ nb_tests_title }}
             </span>
@@ -46,13 +46,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
-
-interface TestStats {
-    passed: number;
-    failed: number;
-    blocked: number;
-    notrun: number;
-}
+import {
+    computeTestStats,
+    getTestStatusFromStats,
+    TestStats,
+} from "../../helpers/BacklogItems/compute-test-stats";
 
 @Component
 export default class BacklogItemCoverage extends Vue {
@@ -72,56 +70,46 @@ export default class BacklogItemCoverage extends Vue {
         );
     }
 
-    get stats(): TestStats {
-        const stats: TestStats = {
-            passed: 0,
-            failed: 0,
-            blocked: 0,
-            notrun: 0,
-        };
+    get stats(): Readonly<TestStats> {
+        return computeTestStats(this.backlog_item);
+    }
 
-        for (const test_definition of this.backlog_item.test_definitions) {
-            const status = test_definition.test_status;
-            if (status !== null) {
-                stats[status]++;
-            }
-        }
-
-        return stats;
+    get test_status(): keyof TestStats | null {
+        return getTestStatusFromStats(this.stats);
     }
 
     get icon_class(): string {
-        const stats = this.stats;
-        if (stats.failed > 0) {
-            return "fa-times-circle";
+        switch (this.test_status) {
+            case null:
+                return "";
+            case "failed":
+                return "fa-times-circle";
+            case "blocked":
+                return "fa-exclamation-circle";
+            case "notrun":
+                return "fa-question-circle";
+            case "passed":
+                return "fa-check-circle";
+            default:
+                return ((val: never): never => val)(this.test_status);
         }
-
-        if (stats.blocked > 0) {
-            return "fa-exclamation-circle";
-        }
-
-        if (stats.notrun > 0) {
-            return "fa-question-circle";
-        }
-
-        return "fa-check-circle";
     }
 
     get stack_class(): string {
-        const stats = this.stats;
-        if (stats.failed > 0) {
-            return "test-plan-backlog-item-coverage-icon-failed";
+        switch (this.test_status) {
+            case null:
+                return "";
+            case "failed":
+                return "test-plan-backlog-item-coverage-icon-failed";
+            case "blocked":
+                return "test-plan-backlog-item-coverage-icon-blocked";
+            case "notrun":
+                return "test-plan-backlog-item-coverage-icon-notrun";
+            case "passed":
+                return "test-plan-backlog-item-coverage-icon-passed";
+            default:
+                return ((val: never): never => val)(this.test_status);
         }
-
-        if (stats.blocked > 0) {
-            return "test-plan-backlog-item-coverage-icon-blocked";
-        }
-
-        if (stats.notrun > 0) {
-            return "test-plan-backlog-item-coverage-icon-notrun";
-        }
-
-        return "test-plan-backlog-item-coverage-icon-passed";
     }
 }
 </script>

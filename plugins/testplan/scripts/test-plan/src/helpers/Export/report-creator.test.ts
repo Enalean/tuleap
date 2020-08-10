@@ -20,8 +20,10 @@
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { createExportReport } from "./report-creator";
 import * as general_information_builder from "./general-information-builder";
+import * as requirements_builder from "./requirements-builder";
 import { GeneralSection } from "./general-information-builder";
 import { TextCell } from "./report-cells";
+import { RequirementsSection } from "./requirements-builder";
 
 describe("Create an export report", () => {
     it("generates the report", () => {
@@ -29,17 +31,24 @@ describe("Create an export report", () => {
         jest.spyOn(general_information_builder, "buildGeneralSection").mockReturnValue(({
             rows: [[new TextCell("General section")]],
         } as unknown) as GeneralSection);
+        jest.spyOn(requirements_builder, "buildRequirementsSection").mockReturnValue(({
+            rows: [[new TextCell("Requirements section")]],
+        } as unknown) as RequirementsSection);
 
         const report = createExportReport(
             gettext_provider,
             "Project",
             "Milestone",
             "Real Name",
-            new Date(2020)
+            new Date(2020),
+            []
         );
 
         expect(report).toStrictEqual({
-            sections: [{ rows: [[new TextCell("General section")]] }],
+            sections: [
+                { rows: [[new TextCell("General section")]] },
+                { rows: [[new TextCell("Requirements section")]] },
+            ],
         });
     });
 });

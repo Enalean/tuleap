@@ -100,6 +100,9 @@ msgstr[1] "Rapports de l’outil de suivi %{ tracker_name }"
 msgid "Go to the last execution in release %{ release_name }"
 msgstr "Se rendre à la dernière exécution dans la release %{ release_name }"
 
+msgid "ID"
+msgstr "ID"
+
 msgid "Milestone"
 msgstr "Jalon"
 
@@ -130,6 +133,9 @@ msgstr "Rapport extrait par"
 msgid "Report extracted on"
 msgstr "Rapport extrait le"
 
+msgid "Requirements"
+msgstr "Exigences"
+
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"
 
@@ -141,6 +147,9 @@ msgstr "Plan de test"
 
 msgid "Tests"
 msgstr "Tests"
+
+msgid "Tests status"
+msgstr "Statut des tests"
 
 msgid ""
 "The retrieval of the test definition tracker reports has failed, try again "
@@ -157,3 +166,9 @@ msgstr "Il n'y a pas de campagne de test."
 
 msgid "This item isn't covered yet."
 msgstr "Cet élément n'est pas encore couvert."
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Type"
+msgstr "Type"

@@ -18,9 +18,13 @@
  */
 
 import { buildGeneralSection } from "./general-information-builder";
-import { ReportCell } from "./report-cells";
+import { ReportCell, TextCell } from "./report-cells";
+import { buildRequirementsSection } from "./requirements-builder";
+import { BacklogItem } from "../../type";
 
 export interface ReportSection {
+    readonly title?: TextCell;
+    readonly headers?: ReadonlyArray<TextCell>;
     readonly rows: ReadonlyArray<ReadonlyArray<ReportCell>>;
 }
 
@@ -33,7 +37,8 @@ export function createExportReport(
     project_name: string,
     milestone_title: string,
     user_display_name: string,
-    current_date: Date
+    current_date: Date,
+    backlog_items: ReadonlyArray<BacklogItem>
 ): ExportReport {
     return {
         sections: [
@@ -44,6 +49,7 @@ export function createExportReport(
                 user_display_name,
                 current_date
             ),
+            buildRequirementsSection(gettext_provider, backlog_items),
         ],
     };
 }
