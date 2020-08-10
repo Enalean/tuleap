@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "Edge Legacy is not supported, please upgrade to the latest version."
+msgstr "Edge Legacy n'est pas supporté, veuillez mettre à jour à la dernière version."
+
 msgid "Integration between the agiledashboard and the testmanagement plugins"
 msgstr "Intégration entre les plugins agiledashboard et testmanagement"
 
@@ -46,7 +49,8 @@ msgstr "Vous êtes en train de créer un test qui couvrira : %s"
 
 #, php-format
 msgid "You are editing a backlog item included in the milestone: %s"
-msgstr "Vous êtes en train d'éditer un élément du backlog inclut dans le jalon : %s"
+msgstr ""
+"Vous êtes en train d'éditer un élément du backlog inclut dans le jalon : %s"
 
 #, php-format
 msgid "You are editing a test covering: %s"

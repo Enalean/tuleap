@@ -137,27 +137,19 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $highlight_test_definition_id = (int) ($variables['test_definition_id'] ?? 0);
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
+        $presenter        = $this->presenter_builder->getPresenter(
+            $milestone,
+            $user,
+            $expand_backlog_item_id,
+            $highlight_test_definition_id
+        );
         if ($detected_browser->isIE11()) {
-            $this->renderer->renderToPage(
-                'test-plan-unsupported-browser',
-                $this->presenter_builder->getPresenter(
-                    $milestone,
-                    $user,
-                    $expand_backlog_item_id,
-                    $highlight_test_definition_id
-                )
-            );
+            $this->renderer->renderToPage('test-plan-unsupported-browser-ie11', $presenter);
+        } elseif ($detected_browser->isEdgeLegacy()) {
+            $this->renderer->renderToPage('test-plan-unsupported-browser-edge-legacy', $presenter);
         } else {
             $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
-            $this->renderer->renderToPage(
-                'test-plan',
-                $this->presenter_builder->getPresenter(
-                    $milestone,
-                    $user,
-                    $expand_backlog_item_id,
-                    $highlight_test_definition_id
-                )
-            );
+            $this->renderer->renderToPage('test-plan', $presenter);
         }
         $service->displayFooter();
     }
