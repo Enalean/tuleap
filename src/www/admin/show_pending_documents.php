@@ -22,6 +22,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -100,11 +101,7 @@ $core_assets = new IncludeAssets(
     '/assets/core'
 );
 $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
-if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-    echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
-} else {
-    echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
-}
+RelativeDatesAssetsRetriever::includeAssetsInSnippet();
 
 $focus = $request->get('focus');
 if (! $focus) {

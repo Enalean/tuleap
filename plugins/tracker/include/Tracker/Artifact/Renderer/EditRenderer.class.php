@@ -22,8 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\BrowserDetection\DetectedBrowser;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
@@ -141,12 +140,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             )
         ];
 
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/core', '/assets/core');
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
-        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date-polyfills.js'));
-        }
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date.js'));
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
             __DIR__ . '/../../../../../../src/www/assets/trackers',
@@ -154,6 +147,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);

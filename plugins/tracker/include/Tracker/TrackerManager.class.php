@@ -20,9 +20,8 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Event\Events\ProjectProviderEvent;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
@@ -544,16 +543,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
         $html   .= '</p>';
 
-        $core_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
-
-        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            $GLOBALS['HTML']->includeFooterJavascriptFile(
-                $core_assets->getFileURL('tlp-relative-date-polyfills.js')
-            );
-        }
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($core_assets->getFileURL('tlp-relative-date.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         foreach ($trackers as $tracker) {
             if ($this->trackerCanBeDisplayed($tracker, $user)) {
