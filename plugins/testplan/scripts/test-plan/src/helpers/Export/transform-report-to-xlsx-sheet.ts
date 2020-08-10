@@ -44,11 +44,20 @@ function transformReportSectionRowsIntoSheetRows(
 }
 
 function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectWithCharacterWidth {
-    return {
-        t: "s",
-        v: report_cell.value,
-        character_width: report_cell.value.length,
-    };
+    switch (report_cell.type) {
+        case "text":
+            return {
+                t: "s",
+                v: report_cell.value,
+                character_width: report_cell.value.length,
+            };
+        case "date":
+            return {
+                t: "d",
+                v: report_cell.value,
+                character_width: 10,
+            };
+    }
 }
 
 function fitColumnWidthsToContent(cells: CellObjectWithCharacterWidth[][]): ColInfo[] {

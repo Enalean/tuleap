@@ -74,12 +74,15 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $test_def_tracker->shouldReceive('getId')->andReturn(146);
         $test_def_tracker->shouldReceive('getName')->andReturn('Test Def');
         $test_definition_tracker_retriever->shouldReceive('getTestDefinitionTracker')->andReturn($test_def_tracker);
+        $user_helper = \Mockery::mock(\UserHelper::class);
+        $user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('User Name');
 
         $this->builder = new TestPlanPresenterBuilder(
             $pane_factory,
             $this->testmanagement_config,
             $this->tracker_factory,
-            $test_definition_tracker_retriever
+            $test_definition_tracker_retriever,
+            $user_helper
         );
     }
 

@@ -30,7 +30,13 @@ describe("Create an export report", () => {
             rows: [[new TextCell("General section")]],
         } as unknown) as GeneralSection);
 
-        const report = createExportReport(gettext_provider, "Project", "Milestone");
+        const report = createExportReport(
+            gettext_provider,
+            "Project",
+            "Milestone",
+            "Real Name",
+            new Date(2020)
+        );
 
         expect(report).toStrictEqual({
             sections: [{ rows: [[new TextCell("General section")]] }],
