@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_RemoteServer_Gerrit_ProjectNameBuilder;
 use Git_RemoteServer_GerritServer;
 use GitRepository;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 use Tuleap\Git\GerritCanMigrateChecker;
 
@@ -113,7 +114,8 @@ class Gerrit extends Pane
     {
         if ($this->repository->isMigratedToGerrit()) {
             try {
-                return $this->getContentAlreadyMigrated();
+                $user = \HTTPRequest::instance()->getCurrentUser();
+                return $this->getContentAlreadyMigrated($user);
             } catch (UnsupportedGerritVersionException $exception) {
                 return '<p class="alert alert-error">' .
                     dgettext('tuleap-git', 'You are using a version of Gerrit that is not supported, please contact your site administrators.') .
@@ -260,7 +262,7 @@ class Gerrit extends Pane
         return true;
     }
 
-    private function getContentAlreadyMigrated()
+    private function getContentAlreadyMigrated(\PFUser $user): string
     {
         $btn_name      = 'confirm_disconnect_gerrit';
         if ($this->request->get($btn_name)) {
@@ -270,7 +272,7 @@ class Gerrit extends Pane
         $html  = '';
         $html .= '<fieldset class="gerrit_disconnect">';
         $html .= '<legend class="gerrit_disconnect">' . dgettext('tuleap-git', 'Migration to Gerrit') . '</legend>';
-        $html .= $this->getMessageAccordingToMigrationStatus();
+        $html .= $this->getMessageAccordingToMigrationStatus($user);
         $html .= '</fieldset>';
 
         $html .= '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
@@ -285,7 +287,7 @@ class Gerrit extends Pane
         return $html;
     }
 
-    private function getMessageAccordingToMigrationStatus()
+    private function getMessageAccordingToMigrationStatus(\PFUser $user): string
     {
         $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
             new Git_Driver_Gerrit_ProjectCreatorStatusDao()
@@ -299,11 +301,12 @@ class Gerrit extends Pane
                 return $this->getMigratedToGerritInfo();
 
             case Git_Driver_Gerrit_ProjectCreatorStatus::ERROR:
-                return $this->getMigratedToGerritError($project_creator_status);
+                return $this->getMigratedToGerritError($project_creator_status, $user);
         }
+         return '';
     }
 
-    private function getMigratedToGerritInfo()
+    private function getMigratedToGerritInfo(): string
     {
         $purifier       = Codendi_HTMLPurifier::instance();
         $driver         = $this->getGerritDriverForRepository($this->repository);
@@ -321,9 +324,10 @@ class Gerrit extends Pane
         return $html;
     }
 
-    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status)
+    private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status, \PFUser $user): string
     {
-        $date = DateHelper::timeAgoInWords($status->getEventDate($this->repository), false, true);
+        RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+        $date = DateHelper::relativeDateInlineContext((int) $status->getEventDate($this->repository), $user);
         return '<div class="alert alert-error">' . sprintf(dgettext('tuleap-git', 'The migration failed %1$s, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration'), $date) . '</div>' .
                '<pre class="pre-scrollable">' . $status->getLog($this->repository) . '</pre>';
     }
