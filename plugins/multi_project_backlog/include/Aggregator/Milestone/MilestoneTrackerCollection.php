@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,37 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-use Project;
-
-final class ContributorProjectsCollection
+final class MilestoneTrackerCollection
 {
     /**
-     * @var Project[]
+     * @var \Tracker[]
      * @psalm-readonly
      */
-    private $contributor_projects;
+    private $milestone_trackers;
 
     /**
-     * @param Project[] $contributor_projects
+     * @param \Tracker[] $milestone_trackers
      */
-    public function __construct(array $contributor_projects)
+    public function __construct(array $milestone_trackers)
     {
-        $this->contributor_projects = $contributor_projects;
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->contributor_projects);
+        $this->milestone_trackers = $milestone_trackers;
     }
 
     /**
-     * @return Project[]
+     * @return int[]
      * @psalm-mutation-free
      */
-    public function getContributorProjects(): array
+    public function getTrackerIds(): array
     {
-        return $this->contributor_projects;
+        return array_map(
+            function (\Tracker $tracker) {
+                return (int) $tracker->getId();
+            },
+            $this->milestone_trackers
+        );
     }
 }

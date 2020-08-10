@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,37 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-use Project;
-
-final class ContributorProjectsCollection
+interface MilestoneTrackerRetrievalException extends \Throwable
 {
-    /**
-     * @var Project[]
-     * @psalm-readonly
-     */
-    private $contributor_projects;
-
-    /**
-     * @param Project[] $contributor_projects
-     */
-    public function __construct(array $contributor_projects)
-    {
-        $this->contributor_projects = $contributor_projects;
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->contributor_projects);
-    }
-
-    /**
-     * @return Project[]
-     * @psalm-mutation-free
-     */
-    public function getContributorProjects(): array
-    {
-        return $this->contributor_projects;
-    }
 }

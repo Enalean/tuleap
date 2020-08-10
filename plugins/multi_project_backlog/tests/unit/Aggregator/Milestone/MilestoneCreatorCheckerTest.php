@@ -24,14 +24,12 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
-use Planning;
 use Planning_VirtualTopMilestone;
-use PlanningFactory;
 use Project;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class MilestoneCreatorCheckerTest extends TestCase
 {
@@ -41,112 +39,118 @@ class MilestoneCreatorCheckerTest extends TestCase
      * @var MilestoneCreatorChecker
      */
     private $checker;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ContributorProjectsCollectionBuilder
      */
-    private $collection_builder;
-
+    private $projects_builder;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneTrackerCollectionBuilder
      */
-    private $planning_factory;
-
+    private $trackers_builder;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_VirtualTopMilestone
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_TitleDao
      */
-    private $milestone;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private $title_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->collection_builder = Mockery::mock(ContributorProjectsCollectionBuilder::class);
-        $this->planning_factory   = Mockery::mock(PlanningFactory::class);
+        $this->projects_builder = Mockery::mock(ContributorProjectsCollectionBuilder::class);
+        $this->trackers_builder = Mockery::mock(MilestoneTrackerCollectionBuilder::class);
+        $this->title_dao        = Mockery::mock(\Tracker_Semantic_TitleDao::class);
 
         $this->checker = new MilestoneCreatorChecker(
-            $this->collection_builder,
-            $this->planning_factory
+            $this->projects_builder,
+            $this->trackers_builder,
+            $this->title_dao
         );
-
-        $this->milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $this->user      = Mockery::mock(PFUser::class);
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $project = Project::buildForTest();
-        $this->milestone->shouldReceive('getProject')->andReturn($project);
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
 
-        $contributor_project_01 = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('102')->getMock();
-        $contributor_project_02 = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('103')->getMock();
-
-        $this->collection_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->once()
-            ->with($project)
-            ->andReturn(
-                new ContributorProjectsCollection([
-                    $contributor_project_01,
-                    $contributor_project_02
-                ])
-            );
+            ->with([1024, 2048])
+            ->andReturn(0);
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->with($this->user, 102)
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class));
-
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->with($this->user, 103)
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class));
-
-        $this->assertTrue(
-            $this->checker->canMilestoneBeCreated(
-                $this->milestone,
-                $this->user
-            )
-        );
+        $this->assertTrue($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
 
-    public function testItReturnsFalseIfAProjectDoesNotHaveARootPlanning(): void
+    public function testItReturnsTrueWhenAProjectHasNoContributorProjects(): void
     {
-        $project = Project::buildForTest();
-        $this->milestone->shouldReceive('getProject')->andReturn($project);
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn(Project::buildForTest());
 
-        $contributor_project_01 = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('102')->getMock();
-        $contributor_project_02 = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('103')->getMock();
+        $this->projects_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
+            ->andReturn(new ContributorProjectsCollection([]));
 
-        $this->collection_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
+        $this->assertTrue($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $first_contributor_project  = new \Project(['group_id' => '104']);
+        $second_contributor_project = new \Project(['group_id' => '198']);
+        $this->projects_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
             ->once()
             ->with($project)
-            ->andReturn(
-                new ContributorProjectsCollection([
-                    $contributor_project_01,
-                    $contributor_project_02
-                ])
+            ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
+        $this->trackers_builder->shouldReceive('buildFromContributorProjects')
+            ->once()
+            ->andThrow(
+                new class extends \RuntimeException implements MilestoneTrackerRetrievalException {
+                }
             );
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->with($this->user, 102)
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class));
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->with($this->user, 103)
-            ->once()
-            ->andReturnFalse();
+    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
 
-        $this->assertFalse(
-            $this->checker->canMilestoneBeCreated(
-                $this->milestone,
-                $this->user
-            )
-        );
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturn(1);
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    private function mockContributorMilestoneTrackers(
+        Project $project,
+        int $first_milestone_tracker_id,
+        int $second_milestone_tracker_id
+    ): void {
+        $first_contributor_project  = new \Project(['group_id' => '104']);
+        $second_contributor_project = new \Project(['group_id' => '198']);
+        $this->projects_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
+            ->once()
+            ->with($project)
+            ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
+        $first_milestone_tracker = Mockery::mock(\Tracker::class);
+        $first_milestone_tracker->shouldReceive('getId')->andReturn($first_milestone_tracker_id);
+        $second_milestone_tracker = Mockery::mock(\Tracker::class);
+        $second_milestone_tracker->shouldReceive('getId')->andReturn($second_milestone_tracker_id);
+        $this->trackers_builder->shouldReceive('buildFromContributorProjects')
+            ->once()
+            ->andReturn(new MilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
     }
 }

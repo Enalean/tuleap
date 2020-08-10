@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,37 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-use Project;
-
-final class ContributorProjectsCollection
+final class MissingRootPlanningException extends \RuntimeException implements MilestoneTrackerRetrievalException
 {
-    /**
-     * @var Project[]
-     * @psalm-readonly
-     */
-    private $contributor_projects;
-
-    /**
-     * @param Project[] $contributor_projects
-     */
-    public function __construct(array $contributor_projects)
+    public function __construct(int $project_id)
     {
-        $this->contributor_projects = $contributor_projects;
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->contributor_projects);
-    }
-
-    /**
-     * @return Project[]
-     * @psalm-mutation-free
-     */
-    public function getContributorProjects(): array
-    {
-        return $this->contributor_projects;
+        parent::__construct("Project with id $project_id has no root planning");
     }
 }

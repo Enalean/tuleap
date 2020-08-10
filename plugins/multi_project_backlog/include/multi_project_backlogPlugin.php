@@ -175,7 +175,10 @@ final class multi_project_backlogPlugin extends Plugin
                 new AggregatorDao(),
                 ProjectManager::instance()
             ),
-            PlanningFactory::build()
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
+                \PlanningFactory::build()
+            ),
+            new \Tracker_Semantic_TitleDao()
         );
 
         $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(
