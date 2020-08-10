@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class SemanticTimeframeDao extends DataAccessObject
 {
+    private const SQL_TRUE_VALUE = 1;
+
     /**
      * @psalm-return array{start_date_field_id: int, duration_field_id: ?int, end_date_field_id: ?int}|null
      */
@@ -52,5 +55,31 @@ class SemanticTimeframeDao extends DataAccessObject
         $sql = 'DELETE FROM tracker_semantic_timeframe WHERE tracker_id = ?';
 
         $this->getDB()->run($sql, $tracker_id);
+    }
+
+    public function getNbOfTrackersWithoutTimeFrameSemanticDefined(array $tracker_ids): int
+    {
+        $tracker_ids_statement = EasyStatement::open()->in('(?*)', $tracker_ids);
+        $sql                   = "SELECT count(*) AS nb
+FROM tracker
+         LEFT JOIN tracker_semantic_timeframe AS timeframe
+ON (tracker.id = timeframe.tracker_id)
+WHERE tracker.id IN $tracker_ids_statement
+      AND timeframe.tracker_id IS NULL";
+
+        return $this->getDB()->single($sql, $tracker_ids_statement->values());
+    }
+
+    public function areTimeFrameSemanticsUsingSameTypeOfField(array $tracker_ids): bool
+    {
+        $tracker_ids_statement = EasyStatement::open()->in('(?*)', $tracker_ids);
+        $sql                   = "SELECT CASE 0 WHEN (count(*) - count(duration_field_id)) THEN true
+        WHEN (count(*) - count(end_date_field_id)) THEN true
+        ELSE false END AS same_field_type
+FROM tracker_semantic_timeframe AS timeframe
+WHERE tracker_id IN $tracker_ids_statement";
+
+        $result = $this->getDB()->single($sql, $tracker_ids_statement->values());
+        return $result === self::SQL_TRUE_VALUE;
     }
 }

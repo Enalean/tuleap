@@ -180,7 +180,8 @@ final class multi_project_backlogPlugin extends Plugin
             ),
             new \Tracker_Semantic_TitleDao(),
             new \Tracker_Semantic_DescriptionDao(),
-            new Tracker_Semantic_StatusDao()
+            new Tracker_Semantic_StatusDao(),
+            new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao()
         );
 
         $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(

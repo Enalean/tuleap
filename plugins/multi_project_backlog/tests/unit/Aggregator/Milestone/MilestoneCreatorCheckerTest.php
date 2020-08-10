@@ -30,6 +30,7 @@ use Project;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class MilestoneCreatorCheckerTest extends TestCase
 {
@@ -59,6 +60,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_StatusDao
      */
     private $status_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeDao
+     */
+    private $timeframe_dao;
 
     protected function setUp(): void
     {
@@ -69,13 +74,15 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->title_dao        = Mockery::mock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao  = Mockery::mock(\Tracker_Semantic_DescriptionDao::class);
         $this->status_dao       = Mockery::mock(\Tracker_Semantic_StatusDao::class);
+        $this->timeframe_dao    = Mockery::mock(SemanticTimeframeDao::class);
 
         $this->checker = new MilestoneCreatorChecker(
             $this->projects_builder,
             $this->trackers_builder,
             $this->title_dao,
             $this->description_dao,
-            $this->status_dao
+            $this->status_dao,
+            $this->timeframe_dao
         );
     }
 
@@ -99,6 +106,14 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->once()
             ->with([1024, 2048])
             ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturnTrue();
 
         $this->assertTrue($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
@@ -147,8 +162,6 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
         $this->mockContributorMilestoneTrackers($project, 1024, 2048);
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(1);
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
@@ -163,12 +176,8 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
         $this->mockContributorMilestoneTrackers($project, 1024, 2048);
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(1);
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
@@ -183,17 +192,53 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
         $this->mockContributorMilestoneTrackers($project, 1024, 2048);
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(0);
         $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->once()
-            ->with([1024, 2048])
             ->andReturn(1);
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->andReturn(0);
+        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(1);
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->andReturn(0);
+        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->andReturnFalse();
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
