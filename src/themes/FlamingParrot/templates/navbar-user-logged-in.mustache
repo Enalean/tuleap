@@ -1,12 +1,3 @@
-<li class="user-menu">
-    <a id="navbar-user-navigation" href="/my/" class="username">
-        <img class="user-avatar" src="{{ user_avatar }}" />
-        <div class="user-infos">
-            <span class="user-infos-real-name">{{ user_real_name }}</span>
-            <span class="user-infos-login-name">{{ user_login_name }}</span>
-        </div>
-    </a>
-</li>
 <li>
     <button
         title="{{ history }}"
@@ -18,27 +9,64 @@
     </button>
     {{> navbar-history }}
 </li>
-<li>
-    <a id="navbar-user-settings" href="/account/" title="{{ my_account_label }}">
-        <i class="fa fa-cog"></i>
-    </a>
-</li>
-<li>
-    <form
-            class="nav-form"
-            action="/account/logout"
-            method="POST"
-    >
-        {{# logout_csrf }}
-            {{> csrf_token_input }}
-        {{/ logout_csrf }}
-        <button
-                class="nav-form-button"
-                type="submit"
-                title="{{ logout_label }}"
-                data-test="user_logout"
-        >
-            <i class="icon fa fa-power-off nav-form-button-icon"></i>
-        </button>
-    </form>
+<li class="dropdown navbar-user-dropdown">
+    <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+        <img class="user-avatar" src="{{ user_avatar }}"/>
+    </button>
+    <ul class="dropdown-menu pull-right">
+        <li class="user-infos">
+            <img class="user-avatar" src="{{ user_avatar }}" />
+            <div class="user-infos-names">
+                <span class="user-infos-real-name">{{ user_real_name }}</span>
+                <span class="user-infos-login-name">{{ user_login_name }}</span>
+            </div>
+        </li>
+
+        {{# has_no_dashboards }}
+            <li>
+                <a href="/my/" class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard">{{# gettext }}My dashboard{{/ gettext }}</a>
+            </li>
+        {{/ has_no_dashboards }}
+        {{^ has_no_dashboards }}
+            {{^ has_one_dashboard }}
+                <li>
+                    <div class="nav-dropdown-content-item-title">Dashboards</div>
+                </li>
+            {{/ has_one_dashboard }}
+            {{# dashboards }}
+                <li>
+                    <a href="/my/?dashboard_id={{ getId }}" class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}">{{ getName }}</a>
+                </li>
+            {{/ dashboards }}
+        {{/ has_no_dashboards }}
+
+        <li class="divider"></li>
+
+        <li>
+            <a id="navbar-user-settings" href="/account/" title="{{ my_account_label }}">
+                <i class="fa fa-fw fa-cog nav-user-item-icon" aria-hidden="true"></i>
+                {{# gettext }}Preferences{{/ gettext }}
+            </a>
+        </li>
+        <li>
+            <form
+                class="nav-form"
+                action="/account/logout"
+                method="POST"
+            >
+                {{# logout_csrf }}
+                    {{> csrf_token_input }}
+                {{/ logout_csrf }}
+                <button
+                    class="nav-form-button-logout"
+                    type="submit"
+                    title="{{ logout_label }}"
+                    data-test="user_logout"
+                >
+                    <i class="icon fa fa-fw fa-power-off nav-user-item-icon" aria-hidden="true"></i>
+                    {{# gettext }}Logout{{/ gettext }}
+                </button>
+            </form>
+        </li>
+    </ul>
 </li>
