@@ -10,7 +10,7 @@ if (! $exchange_policy_url) {
     $exchange_policy_url = "javascript:;";
 }
 ?>
-<h2>Conditions générales d'utilisation de <?=\ForgeConfig::get(['sys_name'])?></h2>
+<h2>Conditions générales d'utilisation de <?=\ForgeConfig::get('sys_name')?></h2>
 <p>
 <B>1. ACCEPTATION DES CONDITIONS GENERALES</B> 
 </p>
