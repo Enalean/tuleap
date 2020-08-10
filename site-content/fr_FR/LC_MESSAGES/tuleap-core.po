@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -1076,6 +1076,9 @@ msgstr "Affiche la liste des membres du projet."
 msgid "Login"
 msgstr "Se connecter"
 
+msgid "Logout"
+msgstr "Se déconnecter"
+
 msgid "Low traffic, highly recommended."
 msgstr "Trafic faible, fortement recommandé."
 
@@ -1158,6 +1161,9 @@ msgstr "Mois"
 msgid "My comment so I won't forget the purpose of this token..."
 msgstr ""
 "Mon commentaire qui me permettra de ne pas oublier l'utilité de ce token..."
+
+msgid "My dashboard"
+msgstr "Mon tableau de bord"
 
 msgid "My personnal page"
 msgstr "Ma page personnelle"

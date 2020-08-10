@@ -22,6 +22,9 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use EventManager;
 use PFUser;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
@@ -29,7 +32,11 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectP
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\Widget\WidgetFactory;
 use URLRedirect;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 class PresenterBuilder
 {
@@ -53,6 +60,13 @@ class PresenterBuilder
         $this->extra_tabs      = $extra_tabs;
         $this->registration_user_permission_checker = $registration_user_permission_checker;
 
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+        $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
+
         return new Presenter(
             new GlobalNavPresenter(
                 $this->getGlobalMenuItems($current_user),
@@ -62,7 +76,8 @@ class PresenterBuilder
             new UserNavPresenter(
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
-                $url_redirect
+                $url_redirect,
+                $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
             new JoinCommunityPresenter()
         );

@@ -20,13 +20,13 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use PFUser;
 use CSRFSynchronizerToken;
-use URLRedirect;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
+use PFUser;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHistoryPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use URLRedirect;
 
 class UserNavPresenter
 {
@@ -39,15 +39,32 @@ class UserNavPresenter
      * @var URLRedirect
      */
     private $url_redirect;
+    /**
+     * @var array
+     */
+    public $dashboards;
+    /**
+     * @var bool
+     */
+    public $has_one_dashboard;
+    /**
+     * @var bool
+     */
+    public $has_no_dashboards;
 
     public function __construct(
         PFUser $current_user,
         $display_new_user_menu_item,
-        URLRedirect $url_redirect
+        URLRedirect $url_redirect,
+        array $dashboards
     ) {
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;
+
+        $this->dashboards          = $dashboards;
+        $this->has_no_dashboards   = count($dashboards) === 0;
+        $this->has_one_dashboard   = count($dashboards) === 1;
     }
 
     public function is_user_logged_in() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

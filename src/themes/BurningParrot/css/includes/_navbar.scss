@@ -98,30 +98,15 @@
     display: none;
 }
 
-.nav-form {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-}
-
 .nav-form-button {
-    padding: 0;
+    width: 100%;
+    margin: 0 0 $tlp-small-spacing;
     transition: color 100ms linear;
     border: 0;
     background: none;
-    color: $tlp-ui-dimmed;
-    font-size: 16px;
-    letter-spacing: 1px;
+    font-family: SourceSansPro, Helvetica, Arial, sans-serif;
+    text-align: left;
     cursor: pointer;
-
-    &:hover {
-        transition: color 100ms linear;
-        color: $tlp-theme-color;
-    }
-}
-
-.nav-form-button-icon {
-    font-size: 16px;
 }
 
 #logo {
@@ -156,36 +141,49 @@
     margin: 0 0 0 $tlp-small-spacing;
     border-left: 1px solid $tlp-ui-border-normal;
     white-space: nowrap;
+}
 
-    > .user-block {
-        display: flex;
-        align-items: center;
-        padding: 0 20px 0 10px;
+.user-block {
+    display: flex;
+    align-items: center;
+}
 
-        > .user-block-names {
-            display: flex;
-            flex-direction: column;
-            margin: 0 0 0 $tlp-small-spacing;
-            letter-spacing: normal;
-            text-transform: none;
+.user-block-names {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 0 $tlp-small-spacing;
+    letter-spacing: normal;
+    text-transform: none;
 
-            @media screen and (max-width: 1250px) {
-                display: none;
-            }
-
-            > .user-nav-display-name {
-                margin: 0 0 3px;
-                color: $tlp-theme-color;
-                font-size: 14px;
-                font-weight: 600;
-            }
-
-            > .user-nav-username {
-                font-size: 12px;
-                font-weight: 400;
-            }
-        }
+    > .user-nav-display-name {
+        margin: 0 0 3px;
+        color: $tlp-ui-white;
+        font-size: 14px;
+        font-weight: 600;
     }
+
+    > .user-nav-username {
+        font-size: 12px;
+        font-weight: 400;
+    }
+}
+
+#nav-dropdown-content-user {
+    left: calc(100% - 12px);
+}
+
+.nav-dropdown-content-user-link-icon {
+    margin: 0 $tlp-small-spacing 0 0;
+}
+
+.nav-dropdown-content-user-divider {
+    margin: $tlp-small-spacing 0;
+    border-top: 1px solid $tlp-ui-border-normal;
+}
+
+.nav-dropdown-content-item-unique-dashboard {
+    margin: $tlp-small-spacing 0 0;
 }
 
 #current-project-nav {
