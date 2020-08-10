@@ -24,7 +24,6 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
 use PFUser;
 use Planning_VirtualTopMilestone;
-use PlanningFactory;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 
 class MilestoneCreatorChecker
@@ -32,38 +31,50 @@ class MilestoneCreatorChecker
     /**
      * @var ContributorProjectsCollectionBuilder
      */
-    private $contributor_projects_collection_builder;
-
+    private $projects_builder;
     /**
-     * @var PlanningFactory
+     * @var MilestoneTrackerCollectionBuilder
      */
-    private $planning_factory;
+    private $trackers_builder;
+    /**
+     * @var \Tracker_Semantic_TitleDao
+     */
+    private $semantic_title_dao;
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
-        PlanningFactory $planning_factory
+        MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
+        \Tracker_Semantic_TitleDao $semantic_title_dao
     ) {
-        $this->contributor_projects_collection_builder = $contributor_projects_collection_builder;
-        $this->planning_factory                        = $planning_factory;
+        $this->projects_builder   = $contributor_projects_collection_builder;
+        $this->trackers_builder   = $milestone_trackers_builder;
+        $this->semantic_title_dao = $semantic_title_dao;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
     {
         $aggregator_project = $top_milestone->getProject();
 
-        $contributor_projects_collection = $this->contributor_projects_collection_builder->getContributorProjectForAGivenAggregatorProject(
+        $contributor_projects_collection = $this->projects_builder->getContributorProjectForAGivenAggregatorProject(
             $aggregator_project
         );
-
-        foreach ($contributor_projects_collection->getContributorProjects() as $contributor_project) {
-            $root_planning = $this->planning_factory->getRootPlanning(
-                $user,
-                (int) $contributor_project->getID()
+        if ($contributor_projects_collection->isEmpty()) {
+            return true;
+        }
+        try {
+            $milestone_tracker_collection = $this->trackers_builder->buildFromContributorProjects(
+                $contributor_projects_collection,
+                $user
             );
+        } catch (MilestoneTrackerRetrievalException $exception) {
+            return false;
+        }
 
-            if (! $root_planning) {
-                return false;
-            }
+        $nb_of_trackers_without_title = $this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined(
+            $milestone_tracker_collection->getTrackerIds()
+        );
+        if ($nb_of_trackers_without_title > 0) {
+            return false;
         }
 
         return true;
