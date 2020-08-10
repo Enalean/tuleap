@@ -15,8 +15,8 @@ setup_output_directory
 
 if [ "${SETUP_ONLY:-0}" -eq 1 ]; then
     set +x
-    echo "Command to launch: $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result"
+    echo "Command to launch: $PHP_CLI -dzend.assertions=1 /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result"
     exec bash
 else
-    sudo -E -u codendiadm $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result --log-junit /output/db_tests.xml
+    sudo -E -u codendiadm $PHP_CLI -dzend.assertions=1 /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result --log-junit /output/db_tests.xml
 fi
