@@ -198,7 +198,7 @@ XML;
         $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
         $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->new_artifact);
 
-        $this->new_artifact->shouldReceive('createNewChangesetWhitoutRequiredValidation')->once();
+        $this->new_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
 
         $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?aid=456'])->once();
 
@@ -352,7 +352,7 @@ XML;
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->tracker);
         $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->a_mocked_artifact);
 
-        $this->a_mocked_artifact->shouldReceive('createNewChangesetWhitoutRequiredValidation')
+        $this->a_mocked_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')
             ->withArgs([[], Mockery::any(), $this->user, true, Tracker_Artifact_Changeset_Comment::TEXT_COMMENT])
             ->once();
 
@@ -407,7 +407,7 @@ XML;
         $artifact789->shouldReceive('getId')->andReturn(789);
         $artifact789->shouldReceive('getTracker')->andReturn($tracker2);
 
-        $artifact123->shouldReceive('createNewChangesetWhitoutRequiredValidation')->once();
+        $artifact123->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
 
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(

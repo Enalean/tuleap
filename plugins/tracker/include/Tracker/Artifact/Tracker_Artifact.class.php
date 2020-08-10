@@ -1137,13 +1137,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
-    public function createNewChangesetWhitoutRequiredValidation(
+    public function createNewChangesetWithoutRequiredValidation(
         $fields_data,
         $comment,
         PFUser $submitter,
         $send_notification,
         $comment_format
-    ) {
+    ): ?Tracker_Artifact_Changeset {
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator($this->getFormElementFactory());
         $creator      = $this->getNewChangesetCreator($validator);
