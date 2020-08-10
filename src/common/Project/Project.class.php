@@ -187,14 +187,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $classname;
     }
 
-    /**
-     * Return service corresponding to project
-     *
-     * @param String $service_name
-     *
-     * @return Service|null
-     */
-    public function getService($service_name)
+    public function getService(string $service_name): ?Service
     {
         $this->cacheServices();
         return $this->usesService($service_name) ? $this->services[$service_name] : null;

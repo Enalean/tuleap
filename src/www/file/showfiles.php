@@ -59,6 +59,18 @@ if ($permission_manager->isAdmin($project, $user) || $permission_manager->userCa
     $authorized_user = true;
 }
 
+$service = $project->getService(Service::FILE);
+
+if (! $service) {
+    exit_error(
+        $GLOBALS['Language']->getText(
+            'project_service',
+            'service_not_used',
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_file_lbl_key')
+        )
+    );
+}
+
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
@@ -130,7 +142,7 @@ $params =  [
         'file_p_for',
         $hp->purify($project_manager->getProject($group_id)->getPublicName())
     ), 'pv' => $pv];
-$project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
+$service->displayFRSHeader($project, $params['title']);
 
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');

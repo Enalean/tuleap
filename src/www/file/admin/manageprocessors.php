@@ -48,6 +48,18 @@ if (! user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
+$service = $project->getService(Service::FILE);
+
+if (! $service) {
+    exit_error(
+        $GLOBALS['Language']->getText(
+            'project_service',
+            'service_not_used',
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_file_lbl_key')
+        )
+    );
+}
+
 $vMode = new Valid_WhiteList('mode', ['delete']);
 if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     // delete a processor from db
@@ -62,7 +74,7 @@ $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$project->getService(Service::FILE)->displayFRSHeader($project, _('Files Administration'));
+$service->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $vAdd      = new Valid_String('add');

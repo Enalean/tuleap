@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -47,6 +47,19 @@ if (! user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
+$service = $project->getService(Service::FILE);
+
+if (! $service) {
+    exit_error(
+        $GLOBALS['Language']->getText(
+            'project_service',
+            'service_not_used',
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_file_lbl_key')
+        )
+    );
+}
+
+
 $vProcId = new Valid_UInt('proc_id');
 $vProcId->required();
 if ($request->valid($vProcId)) {
@@ -61,7 +74,7 @@ $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$project->getService(Service::FILE)->displayFRSHeader($project, _('Files Administration'));
+$service->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $sql = "SELECT name,rank FROM frs_processor WHERE group_id=" . db_ei($group_id) . " AND processor_id=" . db_ei($proc_id);

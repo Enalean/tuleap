@@ -161,7 +161,7 @@ class TestPlanControllerTest extends TestCase
             ->shouldReceive('getService')
             ->with('plugin_agiledashboard')
             ->once()
-            ->andReturnFalse();
+            ->andReturnNull();
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
