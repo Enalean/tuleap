@@ -245,7 +245,10 @@ class TestPlanControllerTest extends TestCase
         );
     }
 
-    public function testItDisplaysUnsupportedBrowserPageIfBrowserIsIE11(): void
+    /**
+     * @dataProvider dataProviderUnsupportedBrowsers
+     */
+    public function testItDisplaysUnsupportedBrowserPageForUnsupportedBrowsers(string $unsupported_browser_user_agent, string $expected_template): void
     {
         $my_project = Mockery::mock(Project::class);
         $my_project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
@@ -269,14 +272,22 @@ class TestPlanControllerTest extends TestCase
 
         $this->visit_recorder->shouldReceive('record')->once();
 
-        $this->request->shouldReceive('getFromServer')->andReturn(DetectedBrowserTest::IE11_USER_AGENT_STRING);
+        $this->request->shouldReceive('getFromServer')->andReturn($unsupported_browser_user_agent);
 
-        $this->renderer->shouldReceive('renderToPage')->with('test-plan-unsupported-browser', Mockery::type(TestPlanPresenter::class));
+        $this->renderer->shouldReceive('renderToPage')->with($expected_template, Mockery::type(TestPlanPresenter::class));
 
         $this->controller->process(
             $this->request,
             Mockery::spy(BaseLayout::class),
             ['id' => 42, 'project_name' => 'my-project']
         );
+    }
+
+    public function dataProviderUnsupportedBrowsers(): array
+    {
+        return [
+            [DetectedBrowserTest::IE11_USER_AGENT_STRING, 'test-plan-unsupported-browser-ie11'],
+            [DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING, 'test-plan-unsupported-browser-edge-legacy'],
+        ];
     }
 }
