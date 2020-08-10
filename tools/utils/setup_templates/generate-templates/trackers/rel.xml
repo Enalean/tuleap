@@ -11,6 +11,11 @@
       <description><![CDATA[E.g. 1.4.12 or v0.2]]></description>
       <properties size="30"/>
     </formElement>
+    <formElement type="text" ID="F13037" rank="45">
+      <name>description</name>
+      <label><![CDATA[Description]]></label>
+      <properties rows="5" cols="100"/>
+    </formElement>
     <formElement type="fieldset" ID="F14345" rank="48">
       <name>details</name>
       <label><![CDATA[Release Details]]></label>
@@ -141,6 +146,12 @@
       <description>Define the title of an artifact</description>
       <field REF="F14344"/>
     </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="F13037"/>
+    </semantic>
     <semantic type="status">
       <shortname>status</shortname>
       <label>Status</label>
@@ -220,6 +231,9 @@
     <permission scope="field" REF="F14344" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F14344" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F14344" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F13037" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F13037" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F13037" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F14347" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F14347" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F14347" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
