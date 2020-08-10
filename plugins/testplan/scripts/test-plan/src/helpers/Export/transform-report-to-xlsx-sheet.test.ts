@@ -29,6 +29,8 @@ describe("Transform an export report into a XSLX sheet", () => {
                     rows: [[new TextCell("Section A")]],
                 },
                 {
+                    title: new TextCell("Section B"),
+                    headers: [new TextCell("Col 1"), new TextCell("Col 2")],
                     rows: [
                         [new TextCell("Section B"), new TextCell("Section B col 2")],
                         [new DateCell(new Date("2020-09-07T14:00:00.000Z"))],
@@ -49,28 +51,78 @@ describe("Transform an export report into a XSLX sheet", () => {
                   "wch": 15,
                 },
               ],
-              "!ref": "A1:B3",
+              "!merges": Array [
+                Object {
+                  "e": Object {
+                    "c": 1,
+                    "r": 2,
+                  },
+                  "s": Object {
+                    "c": 0,
+                    "r": 2,
+                  },
+                },
+              ],
+              "!ref": "A1:B7",
               "A1": Object {
                 "character_width": 9,
                 "t": "s",
                 "v": "Section A",
               },
               "A2": Object {
+                "character_width": 0,
+                "t": "z",
+              },
+              "A3": Object {
+                "character_width": 9,
+                "merge_columns": 1,
+                "t": "s",
+                "v": "Section B",
+              },
+              "A4": Object {
+                "character_width": 5,
+                "t": "s",
+                "v": "Col 1",
+              },
+              "A5": Object {
                 "character_width": 9,
                 "t": "s",
                 "v": "Section B",
               },
-              "A3": Object {
+              "A6": Object {
                 "character_width": 10,
                 "t": "d",
                 "v": 2020-09-07T14:00:00.000Z,
               },
-              "B2": Object {
+              "A7": Object {
+                "character_width": 0,
+                "t": "z",
+              },
+              "B4": Object {
+                "character_width": 5,
+                "t": "s",
+                "v": "Col 2",
+              },
+              "B5": Object {
                 "character_width": 15,
                 "t": "s",
                 "v": "Section B col 2",
               },
             }
         `);
+    });
+
+    it("builds a sheet with an empty row", () => {
+        const report: ExportReport = {
+            sections: [
+                {
+                    rows: [[]],
+                },
+            ],
+        };
+
+        const sheet = transformAReportIntoASheet(report);
+
+        expect(sheet).toMatchObject({ "!merges": [] });
     });
 });

@@ -17,54 +17,93 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CellObject, ColInfo, utils, WorkSheet } from "xlsx";
+import { CellObject, ColInfo, Range, utils, WorkSheet } from "xlsx";
 import { ExportReport, ReportSection } from "./report-creator";
 import { ReportCell } from "./report-cells";
 
-type CellObjectWithCharacterWidth = CellObject & { character_width: number };
+type CellObjectWithExtraInfo = CellObject & {
+    character_width: number;
+    merge_columns?: number;
+};
 
 export function transformAReportIntoASheet(report: ExportReport): WorkSheet {
     const cells = transformSectionsIntoSheetRows(report.sections);
     const worksheet = utils.aoa_to_sheet(transformSectionsIntoSheetRows(report.sections));
     worksheet["!cols"] = fitColumnWidthsToContent(cells);
+    worksheet["!merges"] = createMerges(cells);
 
     return worksheet;
 }
 
 function transformSectionsIntoSheetRows(
     sections: ReadonlyArray<ReportSection>
-): CellObjectWithCharacterWidth[][] {
-    return sections.flatMap((section) => section.rows.map(transformReportSectionRowsIntoSheetRows));
+): CellObjectWithExtraInfo[][] {
+    return sections.flatMap((section) => {
+        const section_cells: CellObjectWithExtraInfo[][] = [];
+
+        if (section.title) {
+            let nb_columns_to_merge = 0;
+            if (section.headers) {
+                nb_columns_to_merge = section.headers.length - 1;
+            }
+            section_cells.push([
+                {
+                    ...buildSheetTextCell(section.title.value),
+                    merge_columns: nb_columns_to_merge,
+                },
+            ]);
+        }
+
+        if (section.headers) {
+            section_cells.push(transformReportSectionRowsIntoSheetRows(section.headers));
+        }
+
+        section_cells.push(...section.rows.map(transformReportSectionRowsIntoSheetRows));
+        section_cells.push([
+            {
+                t: "z",
+                character_width: 0,
+            },
+        ]);
+
+        return section_cells;
+    });
 }
 
 function transformReportSectionRowsIntoSheetRows(
     report_section_row: ReadonlyArray<ReportCell>
-): CellObjectWithCharacterWidth[] {
+): CellObjectWithExtraInfo[] {
     return report_section_row.map(transformReportCellIntoASheetCell);
 }
 
-function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectWithCharacterWidth {
+function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectWithExtraInfo {
     switch (report_cell.type) {
         case "text":
-            return {
-                t: "s",
-                v: report_cell.value,
-                character_width: report_cell.value.length,
-            };
+            return buildSheetTextCell(report_cell.value);
         case "date":
             return {
                 t: "d",
                 v: report_cell.value,
                 character_width: 10,
             };
+        default:
+            return ((val: never): never => val)(report_cell);
     }
 }
 
-function fitColumnWidthsToContent(cells: CellObjectWithCharacterWidth[][]): ColInfo[] {
+function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
+    return {
+        t: "s",
+        v: value,
+        character_width: value.length,
+    };
+}
+
+function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): ColInfo[] {
     const max_column_width: number[] = [];
 
-    cells.forEach((row: CellObjectWithCharacterWidth[]): void => {
-        row.forEach((cell: CellObjectWithCharacterWidth, column_position: number): void => {
+    cells.forEach((row: CellObjectWithExtraInfo[]): void => {
+        row.forEach((cell: CellObjectWithExtraInfo, column_position: number): void => {
             const current_max_value = max_column_width[column_position];
             max_column_width[column_position] = Math.max(
                 isNaN(current_max_value) ? 0 : current_max_value,
@@ -78,4 +117,22 @@ function fitColumnWidthsToContent(cells: CellObjectWithCharacterWidth[][]): ColI
             return { wch: column_width };
         }
     );
+}
+
+function createMerges(cells: CellObjectWithExtraInfo[][]): Range[] {
+    return cells.flatMap((row: CellObjectWithExtraInfo[], row_line: number): Range[] => {
+        if (typeof row[0] === "undefined") {
+            return [];
+        }
+        const first_cell_row = row[0];
+        if (first_cell_row.merge_columns) {
+            return [
+                {
+                    s: { r: row_line, c: 0 },
+                    e: { r: row_line, c: first_cell_row.merge_columns },
+                },
+            ];
+        }
+        return [];
+    });
 }

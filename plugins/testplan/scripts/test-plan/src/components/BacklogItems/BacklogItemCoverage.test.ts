@@ -130,26 +130,6 @@ describe("BacklogItemCoverage", () => {
         ).toBe(true);
     });
 
-    it(`Marks the backlog item as notrun if there is no failed, no blocked, no notrun
-        and one test not planned in any campaign`, async () => {
-        const wrapper = await createWrapper({
-            is_loading_test_definitions: false,
-            test_definitions: [
-                { test_status: null },
-                { test_status: "passed" },
-                { test_status: "passed" },
-                { test_status: "passed" },
-                { test_status: "passed" },
-            ] as TestDefinition[],
-        } as BacklogItem);
-
-        expect(
-            wrapper
-                .find("[data-test=backlog-item-icon]")
-                .classes("test-plan-backlog-item-coverage-icon-passed")
-        ).toBe(true);
-    });
-
     it("Marks the backlog item as passed if all tests are passed", async () => {
         const wrapper = await createWrapper({
             is_loading_test_definitions: false,
