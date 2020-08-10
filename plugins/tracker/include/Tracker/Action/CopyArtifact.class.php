@@ -236,7 +236,7 @@ class Tracker_Action_CopyArtifact
         $original_artifact = $from_changeset->getArtifact();
         $comment           = $this->logger->getAllLogs();
         $comment[]         = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s #%2$s is finished.'), $original_artifact->getTracker()->getItemName(), $original_artifact->getId());
-        $artifact->createNewChangesetWhitoutRequiredValidation(
+        $artifact->createNewChangesetWithoutRequiredValidation(
             [],
             implode("\n", $comment),
             $user,
