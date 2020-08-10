@@ -31,7 +31,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class MilestoneCreatorCheckerTest extends TestCase
+final class MilestoneCreatorCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -51,6 +51,10 @@ class MilestoneCreatorCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_TitleDao
      */
     private $title_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_DescriptionDao
+     */
+    private $description_dao;
 
     protected function setUp(): void
     {
@@ -59,11 +63,13 @@ class MilestoneCreatorCheckerTest extends TestCase
         $this->projects_builder = Mockery::mock(ContributorProjectsCollectionBuilder::class);
         $this->trackers_builder = Mockery::mock(MilestoneTrackerCollectionBuilder::class);
         $this->title_dao        = Mockery::mock(\Tracker_Semantic_TitleDao::class);
+        $this->description_dao = Mockery::mock(\Tracker_Semantic_DescriptionDao::class);
 
         $this->checker = new MilestoneCreatorChecker(
             $this->projects_builder,
             $this->trackers_builder,
-            $this->title_dao
+            $this->title_dao,
+            $this->description_dao
         );
     }
 
@@ -76,6 +82,10 @@ class MilestoneCreatorCheckerTest extends TestCase
 
         $this->mockContributorMilestoneTrackers($project, 1024, 2048);
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->once()
             ->with([1024, 2048])
             ->andReturn(0);
@@ -127,6 +137,26 @@ class MilestoneCreatorCheckerTest extends TestCase
 
         $this->mockContributorMilestoneTrackers($project, 1024, 2048);
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturn(1);
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->once()
+            ->with([1024, 2048])
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->once()
             ->with([1024, 2048])
             ->andReturn(1);

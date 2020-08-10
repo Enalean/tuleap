@@ -40,15 +40,21 @@ class MilestoneCreatorChecker
      * @var \Tracker_Semantic_TitleDao
      */
     private $semantic_title_dao;
+    /**
+     * @var \Tracker_Semantic_DescriptionDao
+     */
+    private $semantic_description_dao;
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
         MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
-        \Tracker_Semantic_TitleDao $semantic_title_dao
+        \Tracker_Semantic_TitleDao $semantic_title_dao,
+        \Tracker_Semantic_DescriptionDao $semantic_description_dao
     ) {
-        $this->projects_builder   = $contributor_projects_collection_builder;
-        $this->trackers_builder   = $milestone_trackers_builder;
-        $this->semantic_title_dao = $semantic_title_dao;
+        $this->projects_builder         = $contributor_projects_collection_builder;
+        $this->trackers_builder         = $milestone_trackers_builder;
+        $this->semantic_title_dao       = $semantic_title_dao;
+        $this->semantic_description_dao = $semantic_description_dao;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
@@ -74,6 +80,12 @@ class MilestoneCreatorChecker
             $milestone_tracker_collection->getTrackerIds()
         );
         if ($nb_of_trackers_without_title > 0) {
+            return false;
+        }
+        $nb_of_trackers_without_description = $this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined(
+            $milestone_tracker_collection->getTrackerIds()
+        );
+        if ($nb_of_trackers_without_description > 0) {
             return false;
         }
 
