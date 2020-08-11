@@ -109,7 +109,8 @@ describe("Get planned test cases", () => {
                 test_exec_date: new Date("2020-08-11T10:00:00.000Z"),
                 test_exec_id: 741,
                 test_exec_runner: "Some user",
-                test_exec_status: "Passed",
+                test_exec_status: "passed",
+                test_exec_internationalized_status: "Passed",
             },
             {
                 campaign_id: 687,
@@ -119,7 +120,8 @@ describe("Get planned test cases", () => {
                 test_exec_date: new Date("2020-08-11T10:00:00.000Z"),
                 test_exec_id: 746,
                 test_exec_runner: "Some user",
-                test_exec_status: "Passed",
+                test_exec_status: "passed",
+                test_exec_internationalized_status: "Passed",
             },
             {
                 campaign_id: 688,
@@ -129,7 +131,8 @@ describe("Get planned test cases", () => {
                 test_exec_date: new Date("2020-08-11T10:00:00.000Z"),
                 test_exec_id: 745,
                 test_exec_runner: "Some user",
-                test_exec_status: "Failed",
+                test_exec_status: "failed",
+                test_exec_internationalized_status: "Failed",
             },
         ]);
     });

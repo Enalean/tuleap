@@ -22,10 +22,12 @@ import { createExportReport } from "./report-creator";
 import * as general_information_builder from "./general-information-builder";
 import * as requirements_builder from "./requirements-builder";
 import * as test_results_builder from "./test-results-builder";
+import * as justifications_builder from "./justifications-builder";
 import { GeneralSection } from "./general-information-builder";
 import { TextCell } from "./report-cells";
 import { RequirementsSection } from "./requirements-builder";
 import { TestResultsSection } from "./test-results-builder";
+import { JustificationsSection } from "./justifications-builder";
 
 describe("Create an export report", () => {
     it("generates the report", () => {
@@ -39,6 +41,9 @@ describe("Create an export report", () => {
         jest.spyOn(test_results_builder, "buildTestResultsSection").mockReturnValue(({
             rows: [[new TextCell("Test results section")]],
         } as unknown) as TestResultsSection);
+        jest.spyOn(justifications_builder, "buildJustificationsSection").mockReturnValue(({
+            rows: [[new TextCell("Justifications section")]],
+        } as unknown) as JustificationsSection);
 
         const report = createExportReport(
             gettext_provider,
@@ -55,6 +60,7 @@ describe("Create an export report", () => {
                 { rows: [[new TextCell("General section")]] },
                 { rows: [[new TextCell("Requirements section")]] },
                 { rows: [[new TextCell("Test results section")]] },
+                { rows: [[new TextCell("Justifications section")]] },
             ],
         });
     });

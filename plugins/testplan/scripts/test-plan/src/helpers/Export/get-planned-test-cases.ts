@@ -26,7 +26,8 @@ export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
     test_case_id: number;
     test_case_title: string;
     test_exec_id: number;
-    test_exec_status: string;
+    test_exec_internationalized_status: string;
+    test_exec_status: "passed" | "failed" | "blocked" | "notrun";
     test_exec_runner: string;
     test_exec_date: Date;
 }
@@ -69,7 +70,8 @@ export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
                 test_case_id: test_case.id,
                 test_case_title: test_case.summary,
                 test_exec_id: test_case.test_execution_used_to_define_status.id,
-                test_exec_status: getInternationalizedTestStatus(
+                test_exec_status: test_case.test_status,
+                test_exec_internationalized_status: getInternationalizedTestStatus(
                     gettext_provider,
                     test_case.test_status
                 ),

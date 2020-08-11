@@ -19,10 +19,10 @@
 
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
-import { buildTestResultsSection } from "./test-results-builder";
+import { buildJustificationsSection } from "./justifications-builder";
 import { DateCell, TextCell } from "./report-cells";
 
-describe("Build test results section", () => {
+describe("Build justifications section", () => {
     it("buids section", () => {
         const gettext_provider = createVueGettextProviderPassthrough();
 
@@ -51,37 +51,25 @@ describe("Build test results section", () => {
             },
         ];
 
-        const section = buildTestResultsSection(gettext_provider, planned_test_cases);
+        const section = buildJustificationsSection(gettext_provider, planned_test_cases);
 
         expect(section).toStrictEqual({
-            title: new TextCell("Test Results (planned tests)"),
+            title: new TextCell(
+                "Justifications (for planned tests that are not-run, failed, blocked)"
+            ),
             headers: [
-                new TextCell("Campaign ID"),
-                new TextCell("Campaign Name"),
+                new TextCell("Test execution ID"),
                 new TextCell("Test case ID"),
                 new TextCell("Test case title"),
-                new TextCell("Test execution ID"),
                 new TextCell("Test execution status"),
                 new TextCell("Test execution runner"),
                 new TextCell("Test execution date"),
             ],
             rows: [
                 [
-                    new TextCell("123"),
-                    new TextCell("Campaign name"),
-                    new TextCell("741"),
-                    new TextCell("Test case title"),
-                    new TextCell("9999"),
-                    new TextCell("Passed"),
-                    new TextCell("Some user"),
-                    new DateCell(new Date("2020-08-11T10:00:00.000Z")),
-                ],
-                [
-                    new TextCell("123"),
-                    new TextCell("Campaign name"),
+                    new TextCell("99992"),
                     new TextCell("741"),
                     new TextCell("Test case title 2"),
-                    new TextCell("99992"),
                     new TextCell("Failed"),
                     new TextCell("Some user"),
                     new DateCell(new Date("2020-08-11T10:20:00.000Z")),

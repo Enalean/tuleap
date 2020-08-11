@@ -60,7 +60,7 @@ export function buildTestResultsSection(
                 new TextCell(String(planned_test_case.test_case_id)),
                 new TextCell(planned_test_case.test_case_title),
                 new TextCell(String(planned_test_case.test_exec_id)),
-                new TextCell(planned_test_case.test_exec_status),
+                new TextCell(planned_test_case.test_exec_internationalized_status),
                 new TextCell(planned_test_case.test_exec_runner),
                 new DateCell(planned_test_case.test_exec_date),
             ];
