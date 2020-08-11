@@ -82,6 +82,18 @@ class FlamingParrot_NavBarPresenter
      * @var string
      */
     public $join_community_title;
+    /**
+     * @var array
+     */
+    public $dashboards;
+    /**
+     * @var bool
+     */
+    public $has_no_dashboards;
+    /**
+     * @var bool
+     */
+    public $has_one_dashboard;
 
     public function __construct(
         $imgroot,
@@ -95,7 +107,8 @@ class FlamingParrot_NavBarPresenter
         FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
         array $user_actions,
         CSRFSynchronizerToken $logout_csrf,
-        URLRedirect $url_redirect
+        URLRedirect $url_redirect,
+        array $dashboards
     ) {
         $this->imgroot                     = $imgroot;
         $this->user                        = $user;
@@ -111,6 +124,9 @@ class FlamingParrot_NavBarPresenter
         $this->user_actions                = $user_actions;
         $this->logout_csrf                 = $logout_csrf;
         $this->url_redirect                = $url_redirect;
+        $this->dashboards                  = $dashboards;
+        $this->has_no_dashboards           = count($dashboards) === 0;
+        $this->has_one_dashboard           = count($dashboards) === 1;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');

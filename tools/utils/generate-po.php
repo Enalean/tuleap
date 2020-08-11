@@ -111,6 +111,7 @@ if (! $plugin) {
         [
             "$basedir/src/templates",
             "$basedir/src/themes/BurningParrot/templates",
+            "$basedir/src/themes/FlamingParrot/templates",
             "$basedir/src/common/FRS",
             "$basedir/src/common/User",
         ],

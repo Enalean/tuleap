@@ -20,6 +20,9 @@
 
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
@@ -28,6 +31,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
+use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
 
@@ -228,6 +232,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
 
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+        $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
+
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -240,7 +251,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $navbar_items_builder->buildNavBarItemPresentersCollection(),
             $this->getUserActions($current_user),
             $csrf_logout_token,
-            $url_redirect
+            $url_redirect,
+            $user_dashboard_retriever->getAllUserDashboards($current_user),
         ));
 
         $this->container($params, $project_manager, $current_user, $banner);

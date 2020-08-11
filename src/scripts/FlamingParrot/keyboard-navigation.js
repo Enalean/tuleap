@@ -26,8 +26,6 @@ function deployKeyboardShortcuts() {
         logo = $("#navbar-logo"),
         project = $("#navbar-project"),
         project_dropdown = $("#dropdown-project"),
-        user_navigation = $("#navbar-user-navigation"),
-        user_navigation_dropdown = $("#dropdown-user-navigation"),
         sidebar_collapse = $("#sidebar-collapser"),
         sidebar_git = $("a#sidebar-plugin_git"),
         sidebar_project_home = $("a#sidebar-homepage"),
@@ -47,7 +45,6 @@ function deployKeyboardShortcuts() {
     setShortcutOnLink(["g", "m"], my);
     setShortcutOnLink(["g", "h"], logo);
     setShortcutOnProjectDropDown(["g", "p"], project, project_dropdown);
-    setShortcutOnUserDropDown(["g", "a"], user_navigation, user_navigation_dropdown);
     setShortcutOnSidebar("s", sidebar_collapse);
     setShortcutExitInput(27);
     setHelpModalShortcut(63);
@@ -73,18 +70,6 @@ function setShortcutOnProjectDropDown(shortCut, element, dropdown) {
             element.click();
             if (dropdown !== undefined) {
                 dropdown.find("input").first().focus();
-                return false;
-            }
-        }
-    });
-}
-
-function setShortcutOnUserDropDown(shortCut, element, dropdown) {
-    key.sequence(shortCut, function () {
-        if (element.length > 0) {
-            element.click();
-            if (dropdown !== undefined) {
-                dropdown.find("a")[1].focus();
                 return false;
             }
         }
