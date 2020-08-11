@@ -18,30 +18,25 @@
   -->
 
 <template>
-    <div>
-        <div class="release-content-description">
-            <div>
-                <release-description-badges-tracker
-                    v-if="display_badges_tracker"
-                    v-bind:release_data="release_data"
-                />
-                <test-management-displayer
-                    v-if="is_testmanagement_available"
-                    v-bind:release_data="release_data"
-                />
-            </div>
-            <chart-displayer class="release-charts-row" v-bind:release_data="release_data" />
+    <div class="release-content-description" v-bind:class="classes">
+        <release-description-badges-tracker
+            v-if="display_badges_tracker"
+            v-bind:release_data="release_data"
+        />
+        <div v-if="release_data.description" class="release-description-row">
+            <div class="release-description" v-dompurify-html="release_data.description"></div>
         </div>
-        <div class="release-description-row">
-            <div
-                v-if="release_data.description"
-                class="tlp-tooltip tlp-tooltip-top"
-                v-bind:data-tlp-tooltip="release_data.description"
-                data-test="tooltip-description"
-            >
-                <div class="release-description" v-dompurify-html="release_data.description"></div>
-            </div>
-        </div>
+        <chart-displayer
+            v-bind:class="{ 'only-one-chart': is_only_burndown || is_only_burnup }"
+            v-bind:release_data="release_data"
+            v-on:burndownExists="burndown_exists"
+            v-on:burnupExists="burnup_exists"
+        />
+        <test-management-displayer
+            v-if="is_testmanagement_available"
+            v-bind:release_data="release_data"
+            v-on:ttmExists="ttm_chart_exists"
+        />
     </div>
 </template>
 
@@ -65,6 +60,10 @@ export default class ReleaseDescription extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 
+    is_burndown = false;
+    is_burnup = false;
+    is_ttm = false;
+
     get is_testmanagement_available(): boolean {
         return is_testplan_activated(this.release_data);
     }
@@ -74,6 +73,84 @@ export default class ReleaseDescription extends Vue {
             (tracker) => tracker.total_artifact > 0
         );
         return trackers_to_display.length > 0;
+    }
+
+    get display_badges_on_line(): boolean {
+        if (this.is_description) {
+            return false;
+        }
+
+        return this.are_only_trackers || this.is_only_one_chart;
+    }
+
+    burndown_exists(): void {
+        this.is_burndown = true;
+    }
+
+    burnup_exists(): void {
+        this.is_burnup = true;
+    }
+
+    ttm_chart_exists(): void {
+        this.is_ttm = true;
+    }
+
+    get is_description(): boolean {
+        return this.release_data.description !== null && this.release_data.description !== "";
+    }
+
+    get are_only_trackers(): boolean {
+        return !this.is_description && !this.is_burnup && !this.is_burndown && !this.is_ttm;
+    }
+
+    get is_only_one_chart(): boolean {
+        return this.is_only_burndown || this.is_only_burnup || this.is_only_ttm;
+    }
+
+    get is_only_burndown(): boolean {
+        return this.is_burndown && !this.is_burnup && !this.is_ttm;
+    }
+
+    get is_only_burnup(): boolean {
+        return !this.is_burndown && this.is_burnup && !this.is_ttm;
+    }
+
+    get is_only_ttm(): boolean {
+        return !this.is_burndown && !this.is_burnup && this.is_ttm;
+    }
+
+    get classes(): string[] {
+        const classes: string[] = [];
+
+        if (this.display_badges_on_line) {
+            classes.push("project-milestones-display-on-line-tracker");
+        }
+
+        if (this.are_only_trackers) {
+            classes.push("project-milestones-only-trackers-to-display");
+        }
+
+        if (this.is_description) {
+            classes.push("project-milestones-display-description");
+        }
+
+        if (this.is_ttm) {
+            classes.push("project-milestones-display-ttm-chart");
+        }
+
+        if (this.is_burndown) {
+            classes.push("project-milestones-display-burndown-chart");
+        }
+
+        if (this.is_burnup) {
+            classes.push("project-milestones-display-burnup-chart");
+        }
+
+        if (this.is_only_ttm) {
+            classes.push("project-milestones-display-only-ttm");
+        }
+
+        return classes;
     }
 }
 </script>

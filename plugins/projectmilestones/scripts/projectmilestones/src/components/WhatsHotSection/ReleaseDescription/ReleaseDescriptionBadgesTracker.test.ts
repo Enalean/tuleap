@@ -124,4 +124,32 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
         expect(wrapper.find("[data-test=subtitle-tracker]").exists()).toBe(false);
     });
+
+    it("When trackers are displayed, Then there is a tooltip on the labels", async () => {
+        release_data = {
+            id: 2,
+            number_of_artifact_by_trackers: [
+                {
+                    label: "Bug",
+                    id: 1,
+                    total_artifact: 0,
+                    color_name: "red-fiesta",
+                },
+                {
+                    label: "Sprints",
+                    id: 2,
+                    total_artifact: 2,
+                    color_name: "deep-blue",
+                },
+            ],
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.get("[data-test=badges-tracker-tooltip-2]").text()).toEqual("Sprints");
+    });
 });

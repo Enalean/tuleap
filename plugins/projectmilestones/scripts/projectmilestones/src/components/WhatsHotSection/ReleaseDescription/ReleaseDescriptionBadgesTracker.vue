@@ -18,23 +18,31 @@
   -->
 
 <template>
-    <div class="release-number-artifact">
-        <h2 class="tlp-pane-subtitle" v-if="display_title" data-test="subtitle-tracker" v-translate>
+    <div v-if="display_badges_trackers_section" class="release-number-artifact">
+        <h2 class="tlp-pane-subtitle" data-test="subtitle-tracker" v-translate>
             Content
         </h2>
-        <div
-            v-for="tracker in trackers_to_display"
-            v-bind:key="tracker.id"
-            class="release-number-artifacts-tracker"
-            v-bind:class="['release-number-artifacts-tracker-' + tracker.color_name]"
-            v-bind:data-test="`color-name-tracker-${tracker.id}`"
-        >
-            <span class="release-number-artifacts-value" data-test="total-artifact-tracker">
-                {{ tracker.total_artifact }}
-            </span>
-            <span class="release-number-artifacts-text" data-test="artifact-tracker-name">
-                {{ tracker.label }}
-            </span>
+        <div class="release-number-artifact-container">
+            <div
+                v-for="tracker in trackers_to_display"
+                v-bind:key="tracker.id"
+                class="release-number-artifacts-tracker"
+                v-bind:class="['release-number-artifacts-tracker-' + tracker.color_name]"
+                v-bind:data-test="`color-name-tracker-${tracker.id}`"
+            >
+                <span class="release-number-artifacts-value" data-test="total-artifact-tracker">
+                    {{ tracker.total_artifact }}
+                </span>
+                <span
+                    class="tlp-tooltip tlp-tooltip-top"
+                    v-bind:data-tlp-tooltip="tracker.label"
+                    v-bind:data-test="`badges-tracker-tooltip-${tracker.id}`"
+                >
+                    <span class="release-number-artifacts-text" data-test="artifact-tracker-name">
+                        {{ tracker.label }}
+                    </span>
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -54,7 +62,7 @@ export default class ReleaseDescriptionBadgesTracker extends Vue {
         );
     }
 
-    get display_title(): boolean {
+    get display_badges_trackers_section(): boolean {
         return this.trackers_to_display.length > 0;
     }
 }
