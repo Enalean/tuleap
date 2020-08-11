@@ -68,6 +68,12 @@ msgstr ""
 msgid "Blocked"
 msgstr "Bloqué"
 
+msgid "Campaign ID"
+msgstr "ID de la campagne"
+
+msgid "Campaign Name"
+msgstr "Nom de la campagne"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -139,8 +145,29 @@ msgstr "Exigences"
 msgid "Test Report %{ milestone_title }"
 msgstr "Rapport de test %{ milestone_title }"
 
+msgid "Test Results (planned tests)"
+msgstr "Résultats des tests (tests planifiés)"
+
 msgid "Test campaigns"
 msgstr "Campagnes de test"
+
+msgid "Test case ID"
+msgstr "ID du cas de test"
+
+msgid "Test case title"
+msgstr "Titre du cas de test"
+
+msgid "Test execution ID"
+msgstr "ID de l'exécution du test"
+
+msgid "Test execution date"
+msgstr "Date de l'exécution du test"
+
+msgid "Test execution runner"
+msgstr "Personne ayant exécuté le test"
+
+msgid "Test execution status"
+msgstr "Statut de l'exécution du test"
 
 msgid "Test plan"
 msgstr "Plan de test"

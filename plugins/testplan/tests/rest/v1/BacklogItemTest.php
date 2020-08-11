@@ -44,6 +44,8 @@ final class BacklogItemTest extends \RestBase
         $this->assertEquals('test_case', $linked_test_definition['short_type']);
         $this->assertEquals('passed', $linked_test_definition['test_status']);
         $this->assertEquals($test_exec_id, $linked_test_definition['test_execution_used_to_define_status']['id']);
+        $this->assertEquals('rest_api_tester_1', $linked_test_definition['test_execution_used_to_define_status']['submitted_by']['username']);
+        $this->assertEquals('2020-06-22T14:49:29+02:00', $linked_test_definition['test_execution_used_to_define_status']['submitted_on']);
         $this->assertEquals($campaign_id, $linked_test_definition['test_campaign_defining_status']['id']);
     }
 

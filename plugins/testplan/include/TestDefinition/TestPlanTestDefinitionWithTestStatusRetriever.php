@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use PFUser;
 use Tracker_Artifact;
+use UserManager;
 
 class TestPlanTestDefinitionWithTestStatusRetriever
 {
@@ -35,13 +36,19 @@ class TestPlanTestDefinitionWithTestStatusRetriever
      * @var TestStatusPerTestDefinitionsInformationForUserRetriever
      */
     private $test_status_per_test_definitions_information_for_user_retriever;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         TestPlanTestDefinitionsTestStatusDAO $dao,
-        TestStatusPerTestDefinitionsInformationForUserRetriever $test_status_per_test_definitions_information_for_user_retriever
+        TestStatusPerTestDefinitionsInformationForUserRetriever $test_status_per_test_definitions_information_for_user_retriever,
+        UserManager $user_manager
     ) {
         $this->dao                                                             = $dao;
         $this->test_status_per_test_definitions_information_for_user_retriever = $test_status_per_test_definitions_information_for_user_retriever;
+        $this->user_manager                                                    = $user_manager;
     }
 
 
@@ -76,6 +83,8 @@ class TestPlanTestDefinitionWithTestStatusRetriever
                     $test_definition,
                     $rows[$test_definition_id]['test_status'],
                     $rows[$test_definition_id]['test_exec_id'],
+                    $rows[$test_definition_id]['test_exec_submitted_on'],
+                    $this->getSubmittedByUser($rows[$test_definition_id]['test_exec_submitted_by']),
                     $rows[$test_definition_id]['test_campaign_id'],
                 );
             } else {
@@ -85,5 +94,15 @@ class TestPlanTestDefinitionWithTestStatusRetriever
             }
         }
         return array_merge($test_definitions_with_test_status, $test_definitions_with_unknown_test_status);
+    }
+
+    private function getSubmittedByUser(int $submitted_by_user_id): PFUser
+    {
+        $submitted_by = $this->user_manager->getUserById($submitted_by_user_id);
+        if ($submitted_by !== null) {
+            return $submitted_by;
+        }
+
+        return $this->user_manager->getUserAnonymous();
     }
 }

@@ -38,6 +38,10 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TestStatusPerTestDefinitionsInformationForUserRetriever
      */
     private $information_retriever;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
 
     /**
      * @var TestPlanTestDefinitionWithTestStatusRetriever
@@ -48,10 +52,12 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
     {
         $this->dao                   = \Mockery::mock(TestPlanTestDefinitionsTestStatusDAO::class);
         $this->information_retriever = \Mockery::mock(TestStatusPerTestDefinitionsInformationForUserRetriever::class);
+        $this->user_manager          = \Mockery::mock(\UserManager::class);
 
         $this->retriever = new TestPlanTestDefinitionWithTestStatusRetriever(
             $this->dao,
             $this->information_retriever,
+            $this->user_manager,
         );
     }
 
@@ -74,10 +80,12 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
             ->andReturn($information);
 
         $this->dao->shouldReceive('searchTestStatusPerTestDefinitionInAMilestone')
-            ->andReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_campaign_id' => 23]]);
+            ->andReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_exec_submitted_on' => 10, 'test_exec_submitted_by' => 404, 'test_campaign_id' => 23]]);
 
         $milestone = \Mockery::mock(\Tracker_Artifact::class);
         $user      = UserTestBuilder::aUser()->build();
+        $this->user_manager->shouldReceive('getUserById')->with(404)->andReturn(null);
+        $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(UserTestBuilder::anAnonymousUser()->build());
 
         $test_definitions_with_test_status = $this->retriever->retrieveTestDefinitionWithTestStatus(
             $milestone,
@@ -87,7 +95,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
 
         $this->assertEquals(
             [
-                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed', 95147, 23),
+                TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_definition_2, 'passed', 95147, 10, UserTestBuilder::anAnonymousUser()->build(), 23),
                 TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_definition_1),
             ],
             $test_definitions_with_test_status

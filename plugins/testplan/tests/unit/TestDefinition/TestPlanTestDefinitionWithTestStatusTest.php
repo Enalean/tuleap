@@ -24,6 +24,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TestPlanTestDefinitionWithTestStatusTest extends TestCase
 {
@@ -38,18 +39,23 @@ final class TestPlanTestDefinitionWithTestStatusTest extends TestCase
         $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
         $this->assertEquals(null, $test_def_with_status->getStatus());
         $this->assertEquals(null, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        $this->assertEquals(null, $test_def_with_status->getTestExecutionDate());
+        $this->assertEquals(null, $test_def_with_status->getTestExecutionSubmittedBy());
         $this->assertEquals(null, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 
     public function testBuildWhenTestStatusIsKnown(): void
     {
-        $test_def = \Mockery::mock(\Tracker_Artifact::class);
+        $test_def     = \Mockery::mock(\Tracker_Artifact::class);
+        $submitted_by = UserTestBuilder::aUser()->build();
 
-        $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 14);
+        $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 10, $submitted_by, 14);
 
         $this->assertEquals($test_def, $test_def_with_status->getTestDefinition());
         $this->assertEquals("passed", $test_def_with_status->getStatus());
         $this->assertEquals(852, $test_def_with_status->getTestExecutionIdUsedToDefineStatus());
+        $this->assertEquals(10, $test_def_with_status->getTestExecutionDate());
+        $this->assertEquals($submitted_by, $test_def_with_status->getTestExecutionSubmittedBy());
         $this->assertEquals(14, $test_def_with_status->getTestCampaignIdDefiningTheStatus());
     }
 }

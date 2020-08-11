@@ -46,7 +46,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
      */
     public $test_status;
     /**
-     * @var ArtifactReferenceRepresentation | null
+     * @var TestExecutionUsedToDefineStatusRepresentation | null
      */
     public $test_execution_used_to_define_status;
     /**
@@ -63,7 +63,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
         PFUser $user,
         string $short_type,
         ?string $test_status,
-        ?ArtifactReferenceRepresentation $test_exec,
+        ?TestExecutionUsedToDefineStatusRepresentation $test_exec,
         ?ArtifactReferenceRepresentation $test_campaign
     ) {
         parent::__construct($artifact, $form_element_factory, $user, null);
@@ -85,7 +85,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
             $user,
             $test_definition->getTracker()->getItemName(),
             $test_definition_with_test_status->getStatus(),
-            self::buildArtifactReference($test_definition_with_test_status->getTestExecutionIdUsedToDefineStatus()),
+            TestExecutionUsedToDefineStatusRepresentation::fromTestPlanTestDefinitionWithStatus($test_definition_with_test_status),
             self::buildArtifactReference($test_definition_with_test_status->getTestCampaignIdDefiningTheStatus())
         );
     }

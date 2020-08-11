@@ -33,6 +33,13 @@ interface ArtifactReference {
     readonly id: number;
 }
 
+interface TestExecutionUsedToDefineStatus extends ArtifactReference {
+    submitted_on: string;
+    submitted_by: {
+        display_name: string;
+    };
+}
+
 export interface BacklogItemFromREST {
     readonly id: number;
     readonly label: string;
@@ -59,9 +66,10 @@ interface TestDefinitionFromRESTWithNoStatusInformation {
     readonly category: string | null;
 }
 
-interface PlannedTestDefinitionFromREST extends TestDefinitionFromRESTWithNoStatusInformation {
+export interface PlannedTestDefinitionFromREST
+    extends TestDefinitionFromRESTWithNoStatusInformation {
     readonly test_status: "passed" | "failed" | "blocked" | "notrun";
-    readonly test_execution_used_to_define_status: ArtifactReference;
+    readonly test_execution_used_to_define_status: TestExecutionUsedToDefineStatus;
     readonly test_campaign_defining_status: ArtifactReference;
 }
 

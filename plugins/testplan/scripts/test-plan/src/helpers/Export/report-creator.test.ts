@@ -21,9 +21,11 @@ import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for
 import { createExportReport } from "./report-creator";
 import * as general_information_builder from "./general-information-builder";
 import * as requirements_builder from "./requirements-builder";
+import * as test_results_builder from "./test-results-builder";
 import { GeneralSection } from "./general-information-builder";
 import { TextCell } from "./report-cells";
 import { RequirementsSection } from "./requirements-builder";
+import { TestResultsSection } from "./test-results-builder";
 
 describe("Create an export report", () => {
     it("generates the report", () => {
@@ -34,6 +36,9 @@ describe("Create an export report", () => {
         jest.spyOn(requirements_builder, "buildRequirementsSection").mockReturnValue(({
             rows: [[new TextCell("Requirements section")]],
         } as unknown) as RequirementsSection);
+        jest.spyOn(test_results_builder, "buildTestResultsSection").mockReturnValue(({
+            rows: [[new TextCell("Test results section")]],
+        } as unknown) as TestResultsSection);
 
         const report = createExportReport(
             gettext_provider,
@@ -41,6 +46,7 @@ describe("Create an export report", () => {
             "Milestone",
             "Real Name",
             new Date(2020),
+            [],
             []
         );
 
@@ -48,6 +54,7 @@ describe("Create an export report", () => {
             sections: [
                 { rows: [[new TextCell("General section")]] },
                 { rows: [[new TextCell("Requirements section")]] },
+                { rows: [[new TextCell("Test results section")]] },
             ],
         });
     });

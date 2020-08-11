@@ -20,7 +20,9 @@
 import { buildGeneralSection } from "./general-information-builder";
 import { ReportCell, TextCell } from "./report-cells";
 import { buildRequirementsSection } from "./requirements-builder";
-import { BacklogItem } from "../../type";
+import { BacklogItem, Campaign } from "../../type";
+import { buildTestResultsSection } from "./test-results-builder";
+import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
 
 export interface ReportSection {
     readonly title?: TextCell;
@@ -38,7 +40,8 @@ export function createExportReport(
     milestone_title: string,
     user_display_name: string,
     current_date: Date,
-    backlog_items: ReadonlyArray<BacklogItem>
+    backlog_items: ReadonlyArray<BacklogItem>,
+    campaigns: ReadonlyArray<Campaign>
 ): ExportReport {
     return {
         sections: [
@@ -50,6 +53,14 @@ export function createExportReport(
                 current_date
             ),
             buildRequirementsSection(gettext_provider, backlog_items),
+            buildTestResultsSection(
+                gettext_provider,
+                getPlannedTestCasesAssociatedWithCampaignAndTestExec(
+                    gettext_provider,
+                    backlog_items,
+                    campaigns
+                )
+            ),
         ],
     };
 }
