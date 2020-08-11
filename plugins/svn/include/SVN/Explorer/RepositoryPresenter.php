@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\SVN\Explorer;
 
-use Codendi_HTMLPurifier;
 use DateHelper;
 use Tuleap\SVN\Repository\Repository;
 
@@ -28,27 +29,33 @@ class RepositoryPresenter
 {
     /**
      * @var Repository
+     * @psalm-readonly
      */
     public $repository;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_commit_date;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
     private $commit_date;
+    /**
+     * @var \PFUser
+     * @psalm-readonly
+     */
+    private $user;
 
-    public function __construct(Repository $repository, $commit_date)
+    public function __construct(Repository $repository, int $commit_date, \PFUser $user)
     {
-        $this->repository  = $repository;
-        $this->commit_date = $commit_date;
-    }
-
-    public function getPurifiedHumanReadableCommitDate()
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        return $purifier->purify(
-            DateHelper::timeAgoInWords(
-                $this->commit_date,
-                false,
-                true
-            ),
-            CODENDI_PURIFIER_STRIP_HTML
+        $this->repository           = $repository;
+        $this->commit_date          = $commit_date;
+        $this->user                 = $user;
+        $this->purified_commit_date = (! $this->commit_date) ? '-' : DateHelper::relativeDateInlineContext(
+            $this->commit_date,
+            $this->user
         );
     }
 }

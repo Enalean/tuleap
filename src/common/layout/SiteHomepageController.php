@@ -30,6 +30,7 @@ use Event;
 use ProjectManager;
 use SVN_LogDao;
 use TemplateRendererFactory;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\News\NewsDao;
@@ -132,6 +133,10 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
         $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
         $news_collection = $news_collection_builder->build();
+
+        if ($news_collection->hasNews()) {
+            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+        }
 
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
