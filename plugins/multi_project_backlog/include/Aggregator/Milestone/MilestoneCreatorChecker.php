@@ -83,7 +83,8 @@ class MilestoneCreatorChecker
             return true;
         }
         try {
-            $milestone_tracker_collection = $this->trackers_builder->buildFromContributorProjects(
+            $milestone_tracker_collection = $this->trackers_builder->buildFromAggregatorProjectAndItsContributors(
+                $aggregator_project,
                 $contributor_projects_collection,
                 $user
             );

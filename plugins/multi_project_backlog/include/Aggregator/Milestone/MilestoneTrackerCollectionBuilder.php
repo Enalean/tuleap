@@ -39,15 +39,19 @@ class MilestoneTrackerCollectionBuilder
     /**
      * @throws MilestoneTrackerRetrievalException
      */
-    public function buildFromContributorProjects(
+    public function buildFromAggregatorProjectAndItsContributors(
+        \Project $aggregator_project,
         ContributorProjectsCollection $contributor_projects_collection,
         \PFUser $user
     ): MilestoneTrackerCollection {
+        $projects = array_values(
+            array_merge([$aggregator_project], $contributor_projects_collection->getContributorProjects())
+        );
         $trackers = [];
-        foreach ($contributor_projects_collection->getContributorProjects() as $contributor_project) {
-            $root_planning = $this->planning_factory->getRootPlanning($user, (int) $contributor_project->getID());
+        foreach ($projects as $project) {
+            $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
             if (! $root_planning) {
-                throw new MissingRootPlanningException((int) $contributor_project->getID());
+                throw new MissingRootPlanningException((int) $project->getID());
             }
             $milestone_tracker = $root_planning->getPlanningTracker();
             if (! $milestone_tracker || $milestone_tracker instanceof \NullTracker) {

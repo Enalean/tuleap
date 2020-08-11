@@ -45,69 +45,120 @@ final class MilestoneTrackerCollectionBuilderTest extends TestCase
         $this->builder          = new MilestoneTrackerCollectionBuilder($this->planning_factory);
     }
 
-    public function testBuildFromContributorProjects(): void
+    public function testBuildFromAggregatorProjectAndItsContributors(): void
     {
-        $first_project  = new \Project(['group_id' => '103']);
-        $second_project = new \Project(['group_id' => '123']);
-        $projects       = new ContributorProjectsCollection([$first_project, $second_project]);
-
+        $aggregator_project         = new \Project(['group_id' => '101']);
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
         $user = UserTestBuilder::aUser()->build();
 
-        $first_planning          = new \Planning(7, 'First Contributor Root Planning', 103, 'Irrelevant', 'Irrelevant');
-        $first_tracker_id        = 1024;
-        $first_milestone_tracker = M::mock(\Tracker::class);
-        $first_milestone_tracker->shouldReceive('getId')->andReturn($first_tracker_id);
-        $first_planning->setPlanningTracker($first_milestone_tracker);
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->with($user, 103)
-            ->andReturn($first_planning);
+        $aggregator_tracker_id = 512;
+        $this->mockRootPlanning($aggregator_tracker_id, 101, $user);
+        $first_tracker_id = 1024;
+        $this->mockRootPlanning($first_tracker_id, 103, $user);
+        $second_tracker_id = 2048;
+        $this->mockRootPlanning($second_tracker_id, 123, $user);
 
-        $second_planning          = new \Planning(9, 'Second Contributor Root Planning', 123, 'Irrelevant', 'Irrelevant');
-        $second_tracker_id        = 2048;
-        $second_milestone_tracker = M::mock(\Tracker::class);
-        $second_milestone_tracker->shouldReceive('getId')->andReturn($second_tracker_id);
-        $second_planning->setPlanningTracker($second_milestone_tracker);
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->with($user, 123)
-            ->andReturn($second_planning);
-
-        $trackers = $this->builder->buildFromContributorProjects($projects, $user);
-        $this->assertContains($first_tracker_id, $trackers->getTrackerIds());
-        $this->assertContains($second_tracker_id, $trackers->getTrackerIds());
+        $trackers = $this->builder->buildFromAggregatorProjectAndItsContributors(
+            $aggregator_project,
+            $contributors,
+            $user
+        );
+        $ids      = $trackers->getTrackerIds();
+        $this->assertContains($aggregator_tracker_id, $ids);
+        $this->assertContains($first_tracker_id, $ids);
+        $this->assertContains($second_tracker_id, $ids);
     }
 
-    public function testBuildFromContributorProjectsThrowsWhenContributorProjectHasNoRootPlanning(): void
+    public function testItThrowsWhenAggregatorProjectHasNoRootPlanning(): void
     {
-        $first_project  = new \Project(['group_id' => '103']);
-        $second_project = new \Project(['group_id' => '123']);
-        $projects       = new ContributorProjectsCollection([$first_project, $second_project]);
-
+        $aggregator_project         = new \Project(['group_id' => '101']);
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
         $user = UserTestBuilder::aUser()->build();
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->andReturnNull();
 
         $this->expectException(MissingRootPlanningException::class);
-        $this->builder->buildFromContributorProjects($projects, $user);
+        $this->builder->buildFromAggregatorProjectAndItsContributors($aggregator_project, $contributors, $user);
     }
 
-    public function testBuildFromContributorProjectsThrowsWhenPlanningIsMalformedAndHasNoMilestoneTracker(): void
+    public function testItThrowsWhenAggregatorPlanningIsMalformedAndHasNoMilestoneTracker(): void
     {
-        $first_project  = new \Project(['group_id' => '103']);
-        $second_project = new \Project(['group_id' => '123']);
-        $projects       = new ContributorProjectsCollection([$first_project, $second_project]);
-
+        $aggregator_project         = new \Project(['group_id' => '101']);
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
         $user = UserTestBuilder::aUser()->build();
 
-        $malformed_planning          = new \Planning(3, 'Malformed lanning', 103, 'Irrelevant', 'Irrelevant');
+        $malformed_planning = new \Planning(3, 'Malformed planning', 101, 'Irrelevant', 'Irrelevant');
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 101)
+            ->andReturn($malformed_planning);
+
+        $this->expectException(NoMilestoneTrackerException::class);
+        $this->builder->buildFromAggregatorProjectAndItsContributors($aggregator_project, $contributors, $user);
+    }
+
+    public function testItThrowsWhenContributorProjectHasNoRootPlanning(): void
+    {
+        $aggregator_project         = new \Project(['group_id' => '101']);
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->mockRootPlanning(512, 101, $user);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->with($user, 103)
+            ->andReturnNull();
+
+        $this->expectException(MissingRootPlanningException::class);
+        $this->builder->buildFromAggregatorProjectAndItsContributors($aggregator_project, $contributors, $user);
+    }
+
+    public function testItThrowsWhenContributorPlanningIsMalformedAndHasNoMilestoneTracker(): void
+    {
+        $aggregator_project         = new \Project(['group_id' => '101']);
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->mockRootPlanning(512, 101, $user);
+        $malformed_planning = new \Planning(3, 'Malformed planning', 103, 'Irrelevant', 'Irrelevant');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->with($user, 103)
             ->andReturn($malformed_planning);
 
         $this->expectException(NoMilestoneTrackerException::class);
-        $this->builder->buildFromContributorProjects($projects, $user);
+        $this->builder->buildFromAggregatorProjectAndItsContributors($aggregator_project, $contributors, $user);
+    }
+
+    private function mockRootPlanning(int $tracker_id, int $project_id, \PFUser $user): void
+    {
+        $root_planning     = new \Planning(7, 'Root Planning', $project_id, 'Irrelevant', 'Irrelevant');
+        $milestone_tracker = M::mock(\Tracker::class);
+        $milestone_tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $root_planning->setPlanningTracker($milestone_tracker);
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, $project_id)
+            ->andReturn($root_planning);
     }
 }
