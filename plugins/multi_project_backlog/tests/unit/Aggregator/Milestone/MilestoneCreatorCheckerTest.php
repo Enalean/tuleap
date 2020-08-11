@@ -248,10 +248,33 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
 
+    public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048, false);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->andReturn(0);
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->andReturnTrue();
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->andReturnTrue();
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
     private function mockContributorMilestoneTrackers(
         Project $project,
         int $first_milestone_tracker_id,
-        int $second_milestone_tracker_id
+        int $second_milestone_tracker_id,
+        bool $user_can_submit_artifact = true
     ): void {
         $first_contributor_project  = new \Project(['group_id' => '104']);
         $second_contributor_project = new \Project(['group_id' => '198']);
@@ -261,8 +284,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
         $first_milestone_tracker = Mockery::mock(\Tracker::class);
         $first_milestone_tracker->shouldReceive('getId')->andReturn($first_milestone_tracker_id);
+        $first_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
         $second_milestone_tracker = Mockery::mock(\Tracker::class);
         $second_milestone_tracker->shouldReceive('getId')->andReturn($second_milestone_tracker_id);
+        $second_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
         $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
             ->andReturn(new MilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));

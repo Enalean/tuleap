@@ -102,8 +102,10 @@ class MilestoneCreatorChecker
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
             return false;
         }
-
         if ($this->semantic_status_checker->areSemanticStatusWellConfigured($top_milestone, $milestone_tracker_collection) === false) {
+            return false;
+        }
+        if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllTrackers($user)) {
             return false;
         }
 
