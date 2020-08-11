@@ -24,31 +24,40 @@ namespace Tuleap\date;
 
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 
-class RelativeDatesAssetsRetriever
+final class RelativeDatesAssetsRetriever
 {
     public static function retrieveAssetsUrl(): string
     {
-        $core_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\HTTPRequest::instance());
-
-        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            return $core_assets->getFileURL('tlp-relative-date-polyfills.js');
-        }
-        return $core_assets->getFileURL('tlp-relative-date.js');
+        return self::getCoreAssets()->getFileURL(self::getScriptVersionDependingOfBrowser());
     }
 
     public static function includeAssetsInSnippet(): void
     {
-        $core_assets = new IncludeAssets(
-            __DIR__ . '/../../www/assets/core',
-            '/assets/core'
+        echo self::getCoreAssets()->getHTMLSnippet(self::getScriptVersionDependingOfBrowser());
+    }
+
+    public static function getAsJavascriptAssets(): JavascriptAsset
+    {
+        return new JavascriptAsset(
+            self::getCoreAssets(),
+            self::getScriptVersionDependingOfBrowser()
         );
+    }
+
+    private static function getScriptVersionDependingOfBrowser(): string
+    {
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\HTTPRequest::instance());
         if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
-        } else {
-            echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
+            return 'tlp-relative-date-polyfills.js';
         }
+
+        return 'tlp-relative-date.js';
+    }
+
+    private static function getCoreAssets(): IncludeAssets
+    {
+        return new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
     }
 }

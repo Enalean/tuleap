@@ -24,8 +24,8 @@ namespace Tuleap\date\Admin;
 
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -74,13 +74,12 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
                 DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
             )
         );
-        $core_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
+
         $this->admin_page_renderer->addJavascriptAsset(
-            new JavascriptAsset(
-                $core_assets,
-                $this->getScriptVersionDependingOfBrowser($request)
-            )
+            RelativeDatesAssetsRetriever::getAsJavascriptAssets()
         );
+
+        $core_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
         $this->admin_page_renderer->addJavascriptAsset(
             new JavascriptAsset(
                 $core_assets,
@@ -89,16 +88,6 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
         );
 
         $this->admin_page_renderer->footer();
-    }
-
-    private function getScriptVersionDependingOfBrowser(HTTPRequest $request): string
-    {
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
-        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            return 'tlp-relative-date-polyfills.js';
-        }
-
-        return 'tlp-relative-date.js';
     }
 
     public static function buildCSRFToken(): \CSRFSynchronizerToken
