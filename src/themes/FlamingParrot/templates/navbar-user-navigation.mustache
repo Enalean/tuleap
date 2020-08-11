@@ -3,6 +3,25 @@
 
     {{> join-tuleap-community }}
 
+    {{# is_project_registration_enabled }}
+
+        <li id="nav-dropdown-new" class="dropdown navbar-new-dropdown">
+            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
+                {{# gettext }}New{{/gettext}}
+            </button>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <div class="nav-dropdown-content-item-title">Tuleap</div>
+                    <a href="/project/new" class="nav-dropdown-content-item">
+                        <i class="fa fa-fw fa-archive nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
+                        {{# gettext }}Start a new project{{/ gettext }}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {{/ is_project_registration_enabled }}
+
     {{# user_is_logged_in }}
         {{# user_actions }}
             <li>

@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_NavBarItemPresentersCollectionBuilder
@@ -41,25 +40,19 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
 
     /** @var array */
     private $projects;
-    /**
-     * @var ProjectRegistrationUserPermissionChecker
-     */
-    private $registration_user_permission_checker;
 
     public function __construct(
         PFUser $user,
         $request_uri,
         $selected_top_tab,
         array $extra_tabs,
-        array $projects,
-        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
+        array $projects
     ) {
         $this->user             = $user;
         $this->request_uri      = $request_uri;
         $this->selected_top_tab = $selected_top_tab;
         $this->extra_tabs       = $extra_tabs;
         $this->projects         = $projects;
-        $this->registration_user_permission_checker = $registration_user_permission_checker;
     }
 
     public function buildNavBarItemPresentersCollection()
@@ -99,7 +92,6 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
         $collection->addItem(new FlamingParrot_NavBarItemProjectsPresenter(
             'project',
             $this->isNavBarItemActive(['/softwaremap/', '/projects/', '/project/']),
-            $this->registration_user_permission_checker->isUserAllowedToCreateProjects($this->user),
             $this->user,
             $this->projects
         ));

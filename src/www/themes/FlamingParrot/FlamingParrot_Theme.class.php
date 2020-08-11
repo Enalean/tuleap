@@ -216,10 +216,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
             $this->getExtraTabs(),
-            $projects_presenters,
-            new ProjectRegistrationUserPermissionChecker(
-                new ProjectDao()
-            )
+            $projects_presenters
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect(EventManager::instance());
@@ -239,6 +236,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
+        $registration_user_permission_checker = new ProjectRegistrationUserPermissionChecker(
+            new ProjectDao()
+        );
+
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -253,6 +254,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
+            $registration_user_permission_checker->isUserAllowedToCreateProjects($current_user),
         ));
 
         $this->container($params, $project_manager, $current_user, $banner);

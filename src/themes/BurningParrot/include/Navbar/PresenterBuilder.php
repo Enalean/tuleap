@@ -70,7 +70,7 @@ class PresenterBuilder
         return new Presenter(
             new GlobalNavPresenter(
                 $this->getGlobalMenuItems($current_user),
-                $this->getGlobalDropdownMenuItems($current_user)
+                $this->getGlobalDropdownMenuItems()
             ),
             new SearchPresenter($current_user),
             new UserNavPresenter(
@@ -79,11 +79,12 @@ class PresenterBuilder
                 $url_redirect,
                 $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
-            new JoinCommunityPresenter()
+            new JoinCommunityPresenter(),
+            $this->registration_user_permission_checker->isUserAllowedToCreateProjects($current_user),
         );
     }
 
-    private function getGlobalDropdownMenuItems(PFUser $user)
+    private function getGlobalDropdownMenuItems()
     {
         $global_dropdown_menu_items = [];
 
@@ -94,8 +95,7 @@ class PresenterBuilder
 
         $is_project_dropdown_visible = $this->current_user->isLoggedIn() && (
                 count($dropdown_menu_item_content_project_presenters) > 0 ||
-                \ForgeConfig::get('sys_use_trove') ||
-                $this->registration_user_permission_checker->isUserAllowedToCreateProjects($user)
+                \ForgeConfig::get('sys_use_trove')
             );
 
         if ($is_project_dropdown_visible) {
@@ -104,7 +104,6 @@ class PresenterBuilder
                 'fa fa-archive',
                 new ProjectsPresenter(
                     'projects',
-                    $this->registration_user_permission_checker->isUserAllowedToCreateProjects($user),
                     $dropdown_menu_item_content_project_presenters,
                 ),
                 'nav-dropdown-left'

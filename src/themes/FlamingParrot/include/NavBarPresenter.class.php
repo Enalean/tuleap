@@ -19,7 +19,7 @@
  */
 
 
-class FlamingParrot_NavBarPresenter
+class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $search_label;
     public $history;
@@ -94,6 +94,10 @@ class FlamingParrot_NavBarPresenter
      * @var bool
      */
     public $has_one_dashboard;
+    /**
+     * @var bool
+     */
+    public $is_project_registration_enabled;
 
     public function __construct(
         $imgroot,
@@ -108,7 +112,8 @@ class FlamingParrot_NavBarPresenter
         array $user_actions,
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
-        array $dashboards
+        array $dashboards,
+        bool $is_project_registration_enabled
     ) {
         $this->imgroot                     = $imgroot;
         $this->user                        = $user;
@@ -127,6 +132,8 @@ class FlamingParrot_NavBarPresenter
         $this->dashboards                  = $dashboards;
         $this->has_no_dashboards           = count($dashboards) === 0;
         $this->has_one_dashboard           = count($dashboards) === 1;
+
+        $this->is_project_registration_enabled = $is_project_registration_enabled;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
@@ -147,37 +154,37 @@ class FlamingParrot_NavBarPresenter
         return $this->imgroot;
     }
 
-    public function user_is_logged_in()
+    public function user_is_logged_in() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->isLoggedIn();
     }
 
-    public function user_can_search()
+    public function user_can_search() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->isActive();
     }
 
-    public function user_real_name()
+    public function user_real_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->getRealName();
     }
 
-    public function user_login_name()
+    public function user_login_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return "@" . $this->user->getUnixName();
     }
 
-    public function has_user_avatar()
+    public function has_user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->hasAvatar();
     }
 
-    public function user_avatar()
+    public function user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->getAvatarUrl();
     }
 
-    public function search_form_presenter()
+    public function search_form_presenter() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->userIsOnPageWithItsOwnSearchForm()) {
             return null;
@@ -190,32 +197,32 @@ class FlamingParrot_NavBarPresenter
         return $this->getClassnameNavItemActive('/search/');
     }
 
-    public function display_new_user()
+    public function display_new_user() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->display_new_account;
     }
 
-    public function account_options_text()
+    public function account_options_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_options', 'preferences');
     }
 
-    public function menu_home_text()
+    public function menu_home_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('menu', 'home');
     }
 
-    public function include_menu_login_text()
+    public function include_menu_login_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('include_menu', 'login');
     }
 
-    public function include_menu_new_user_text()
+    public function include_menu_new_user_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('include_menu', 'new_user');
     }
 
-    public function search_placeholder()
+    public function search_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('include_menu', 'search');
     }
@@ -237,7 +244,7 @@ class FlamingParrot_NavBarPresenter
         return '';
     }
 
-    public function login_url()
+    public function login_url() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->url_redirect->buildReturnToLogin($_SERVER);
     }

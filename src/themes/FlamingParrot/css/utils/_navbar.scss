@@ -390,10 +390,6 @@ $nav-dropdown-content-border-radius: 3px;
     }
 }
 
-.join-tuleap-community-container {
-    border-right: 1px solid #e3e5ed;
-}
-
 .join-tuleap-community-svg {
     fill: $navbar-color;
 }
@@ -595,6 +591,30 @@ $nav-dropdown-content-border-radius: 3px;
         border: 0;
         background: none;
     }
+}
+
+.navbar-new-dropdown {
+    border-right: 1px solid #e3e5ed;
+
+    > .dropdown-toggle {
+        margin: 0 16px 0 8px;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: #747474;
+
+        &:hover {
+            color: $main;
+        }
+    }
+}
+
+#nav-dropdown-new > .dropdown-menu > li:last-child {
+    margin: 0 0 8px;
+}
+
+.nav-dropdown-new-icon {
+    margin: 0 6px 0 0;
 }
 
 .nav-user-item-icon {

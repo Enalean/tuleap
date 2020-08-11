@@ -35,17 +35,24 @@ class Presenter
     public $community_presenter;
 
     public $homepage_label;
+    /**
+     * @var bool
+     */
+    public $is_project_registration_enabled;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
-        JoinCommunityPresenter $community_presenter
+        JoinCommunityPresenter $community_presenter,
+        bool $is_project_registration_enabled
     ) {
         $this->global_nav_presenter = $global_nav_presenter;
         $this->search_presenter     = $search_presenter;
         $this->user_nav_presenter   = $user_nav_presenter;
         $this->community_presenter  = $community_presenter;
         $this->homepage_label       = _('Homepage');
+
+        $this->is_project_registration_enabled = $is_project_registration_enabled;
     }
 }
