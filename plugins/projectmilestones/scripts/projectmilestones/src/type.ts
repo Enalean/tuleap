@@ -41,7 +41,7 @@ export interface MilestoneData {
     open_sprints: MilestoneData[] | null;
     burndown_data: BurndownData | null;
     burnup_data: BurnupData | null;
-    description: string | null;
+    post_processed_description: string | null;
     resources: MilestoneResourcesData;
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
     campaign: TestManagementCampaign | null;

@@ -569,6 +569,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $provider->getDescription($this);
     }
 
+    public function getPostProcessedDescription(): string
+    {
+        $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
+        return $provider->getPostProcessedDescription($this);
+    }
+
     public function getCachedTitle()
     {
         return $this->title;

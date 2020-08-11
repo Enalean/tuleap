@@ -23,8 +23,11 @@
             v-if="display_badges_tracker"
             v-bind:release_data="release_data"
         />
-        <div v-if="release_data.description" class="release-description-row">
-            <div class="release-description" v-dompurify-html="release_data.description"></div>
+        <div v-if="release_data.post_processed_description" class="release-description-row">
+            <div
+                class="release-description"
+                v-dompurify-html="release_data.post_processed_description"
+            ></div>
         </div>
         <chart-displayer
             v-bind:class="{ 'only-one-chart': is_only_burndown || is_only_burnup }"
@@ -96,7 +99,10 @@ export default class ReleaseDescription extends Vue {
     }
 
     get is_description(): boolean {
-        return this.release_data.description !== null && this.release_data.description !== "";
+        return (
+            this.release_data.post_processed_description !== null &&
+            this.release_data.post_processed_description !== ""
+        );
     }
 
     get are_only_trackers(): boolean {

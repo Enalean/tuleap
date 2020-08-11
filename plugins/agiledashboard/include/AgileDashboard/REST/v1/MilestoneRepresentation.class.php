@@ -51,6 +51,11 @@ class MilestoneRepresentation
     public $description;
 
     /**
+     * @var string
+     */
+    public $post_processed_description;
+
+    /**
      * @var String
      */
     public $uri;
@@ -203,6 +208,7 @@ class MilestoneRepresentation
         ProjectReference $project,
         ArtifactReference $artifact,
         string $description,
+        string $post_processed_description,
         ?string $start_date,
         ?int $number_days_since_start,
         ?string $end_date,
@@ -227,6 +233,7 @@ class MilestoneRepresentation
         $this->project                             = $project;
         $this->artifact                            = $artifact;
         $this->description                         = $description;
+        $this->post_processed_description          = $post_processed_description;
         $this->start_date                          = $start_date;
         $this->number_days_since_start             = $number_days_since_start;
         $this->end_date                            = $end_date;
@@ -346,7 +353,8 @@ class MilestoneRepresentation
             new PlanningReference($milestone->getPlanning()),
             new ProjectReference($milestone->getProject()),
             ArtifactReference::build($milestone->getArtifact()),
-            (string) $milestone->getArtifact()->getDescription(),
+            $milestone->getArtifact()->getDescription(),
+            $milestone->getArtifact()->getPostProcessedDescription(),
             $start_date,
             $number_days_since_start,
             $end_date,
