@@ -24,7 +24,6 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
 use PFUser;
 use Planning_VirtualTopMilestone;
-use Tracker_Semantic_StatusDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
@@ -46,29 +45,31 @@ class MilestoneCreatorChecker
      * @var \Tracker_Semantic_DescriptionDao
      */
     private $semantic_description_dao;
-    /**
-     * @var Tracker_Semantic_StatusDao
-     */
-    private $semantic_status_dao;
+
     /**
      * @var SemanticTimeframeDao
      */
     private $semantic_timeframe_dao;
+
+    /**
+     * @var MilestoneCreatorSemanticStatusChecker
+     */
+    private $semantic_status_checker;
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
         MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
-        Tracker_Semantic_StatusDao $semantic_status_dao,
-        SemanticTimeframeDao $semantic_timeframe_dao
+        SemanticTimeframeDao $semantic_timeframe_dao,
+        MilestoneCreatorSemanticStatusChecker $semantic_status_checker
     ) {
         $this->projects_builder         = $contributor_projects_collection_builder;
         $this->trackers_builder         = $milestone_trackers_builder;
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
-        $this->semantic_status_dao      = $semantic_status_dao;
         $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
+        $this->semantic_status_checker  = $semantic_status_checker;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
@@ -97,10 +98,11 @@ class MilestoneCreatorChecker
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
             return false;
         }
-        if ($this->semantic_status_dao->getNbOfTrackerWithoutSemanticStatusDefined($tracker_ids) > 0) {
+        if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
             return false;
         }
-        if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
+
+        if ($this->semantic_status_checker->areSemanticStatusWellConfigured($top_milestone, $milestone_tracker_collection) === false) {
             return false;
         }
 
