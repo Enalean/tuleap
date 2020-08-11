@@ -143,7 +143,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->once()
             ->with($project)
             ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
-        $this->trackers_builder->shouldReceive('buildFromContributorProjects')
+        $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
             ->andThrow(
                 new class extends \RuntimeException implements MilestoneTrackerRetrievalException {
@@ -263,7 +263,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $first_milestone_tracker->shouldReceive('getId')->andReturn($first_milestone_tracker_id);
         $second_milestone_tracker = Mockery::mock(\Tracker::class);
         $second_milestone_tracker->shouldReceive('getId')->andReturn($second_milestone_tracker_id);
-        $this->trackers_builder->shouldReceive('buildFromContributorProjects')
+        $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
             ->andReturn(new MilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
     }
