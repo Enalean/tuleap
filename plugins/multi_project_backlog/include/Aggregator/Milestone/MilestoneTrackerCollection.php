@@ -51,4 +51,12 @@ final class MilestoneTrackerCollection
             $this->milestone_trackers
         );
     }
+
+    /**
+     * @return \Tracker[]
+     */
+    public function getMilestoneTrackers(): array
+    {
+        return $this->milestone_trackers;
+    }
 }

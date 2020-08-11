@@ -185,10 +185,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     }
 
     /**
-     *
-     * @return array
+     * @return string[]
      */
-    private function getOpenLabels()
+    public function getOpenLabels(): array
     {
         $labels = [];
 

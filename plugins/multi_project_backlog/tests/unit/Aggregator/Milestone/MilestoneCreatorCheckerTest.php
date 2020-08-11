@@ -57,9 +57,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
      */
     private $description_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Semantic_StatusDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneCreatorSemanticStatusChecker
      */
-    private $status_dao;
+    private $semantic_status_checker;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeDao
      */
@@ -73,16 +74,16 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->trackers_builder = Mockery::mock(MilestoneTrackerCollectionBuilder::class);
         $this->title_dao        = Mockery::mock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao  = Mockery::mock(\Tracker_Semantic_DescriptionDao::class);
-        $this->status_dao       = Mockery::mock(\Tracker_Semantic_StatusDao::class);
         $this->timeframe_dao    = Mockery::mock(SemanticTimeframeDao::class);
+        $this->semantic_status_checker = Mockery::mock(MilestoneCreatorSemanticStatusChecker::class);
 
         $this->checker = new MilestoneCreatorChecker(
             $this->projects_builder,
             $this->trackers_builder,
             $this->title_dao,
             $this->description_dao,
-            $this->status_dao,
-            $this->timeframe_dao
+            $this->timeframe_dao,
+            $this->semantic_status_checker
         );
     }
 
@@ -102,10 +103,9 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->once()
             ->with([1024, 2048])
             ->andReturn(0);
-        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
             ->once()
-            ->with([1024, 2048])
-            ->andReturn(0);
+            ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->once()
             ->with([1024, 2048])
@@ -183,7 +183,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
 
-    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveStatusSemantic(): void
+    public function testItReturnsFalseIfOStatusSemanticAreNotWellConfigured(): void
     {
         $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
@@ -195,8 +195,13 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->andReturn(0);
-        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->andReturn(1);
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->andReturnTrue();
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->once()
+            ->andReturnFalse();
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
@@ -213,8 +218,8 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->andReturn(0);
-        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->andReturn(0);
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->andReturn(1);
 
@@ -233,8 +238,8 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->andReturn(0);
-        $this->status_dao->shouldReceive('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->andReturn(0);
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->andReturn(0);
         $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
