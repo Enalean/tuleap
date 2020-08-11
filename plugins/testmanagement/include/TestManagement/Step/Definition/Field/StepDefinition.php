@@ -459,6 +459,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
+    public function isCSVImportable(): bool
+    {
+        return false;
+    }
+
     /**
      * @return ViewAdmin
      */
