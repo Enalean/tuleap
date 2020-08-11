@@ -179,7 +179,8 @@ final class multi_project_backlogPlugin extends Plugin
                 \PlanningFactory::build()
             ),
             new \Tracker_Semantic_TitleDao(),
-            new \Tracker_Semantic_DescriptionDao()
+            new \Tracker_Semantic_DescriptionDao(),
+            new Tracker_Semantic_StatusDao()
         );
 
         $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(
