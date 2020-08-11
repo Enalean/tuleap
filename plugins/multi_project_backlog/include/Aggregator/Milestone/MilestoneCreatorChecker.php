@@ -26,6 +26,7 @@ use PFUser;
 use Planning_VirtualTopMilestone;
 use Tracker_Semantic_StatusDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 class MilestoneCreatorChecker
 {
@@ -45,24 +46,29 @@ class MilestoneCreatorChecker
      * @var \Tracker_Semantic_DescriptionDao
      */
     private $semantic_description_dao;
-
     /**
      * @var Tracker_Semantic_StatusDao
      */
     private $semantic_status_dao;
+    /**
+     * @var SemanticTimeframeDao
+     */
+    private $semantic_timeframe_dao;
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
         MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
-        Tracker_Semantic_StatusDao $semantic_status_dao
+        Tracker_Semantic_StatusDao $semantic_status_dao,
+        SemanticTimeframeDao $semantic_timeframe_dao
     ) {
         $this->projects_builder         = $contributor_projects_collection_builder;
         $this->trackers_builder         = $milestone_trackers_builder;
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
         $this->semantic_status_dao      = $semantic_status_dao;
+        $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
@@ -84,25 +90,34 @@ class MilestoneCreatorChecker
             return false;
         }
 
-        $nb_of_trackers_without_title = $this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined(
-            $milestone_tracker_collection->getTrackerIds()
-        );
-        if ($nb_of_trackers_without_title > 0) {
+        $tracker_ids = $milestone_tracker_collection->getTrackerIds();
+        if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
             return false;
         }
-        $nb_of_trackers_without_description = $this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined(
-            $milestone_tracker_collection->getTrackerIds()
-        );
-        if ($nb_of_trackers_without_description > 0) {
+        if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
             return false;
         }
-        $nb_of_trackers_without_status = $this->semantic_status_dao->getNbOfTrackerWithoutSemanticStatusDefined(
-            $milestone_tracker_collection->getTrackerIds()
-        );
-        if ($nb_of_trackers_without_status > 0) {
+        if ($this->semantic_status_dao->getNbOfTrackerWithoutSemanticStatusDefined($tracker_ids) > 0) {
+            return false;
+        }
+        if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * @param int[] $tracker_ids
+     */
+    private function areTimeFrameSemanticsAligned(array $tracker_ids): bool
+    {
+        if ($this->semantic_timeframe_dao->getNbOfTrackersWithoutTimeFrameSemanticDefined($tracker_ids) > 0) {
+            return false;
+        }
+        if (! $this->semantic_timeframe_dao->areTimeFrameSemanticsUsingSameTypeOfField($tracker_ids)) {
+            return false;
+        }
         return true;
     }
 }
