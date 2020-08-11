@@ -38,7 +38,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { BacklogItem } from "../../type";
+import { BacklogItem, Campaign } from "../../type";
 
 const backlog_item = namespace("backlog_item");
 const campaign = namespace("campaign");
@@ -59,6 +59,9 @@ export default class ExportButton extends Vue {
 
     @campaign.State("has_loading_error")
     readonly campains_has_loading_error!: boolean;
+
+    @campaign.State
+    readonly campaigns!: ReadonlyArray<Campaign>;
 
     @State
     readonly project_name!: string;
@@ -102,7 +105,8 @@ export default class ExportButton extends Vue {
             this.project_name,
             this.milestone_title,
             this.user_display_name,
-            this.backlog_items
+            this.backlog_items,
+            this.campaigns
         );
 
         this.is_preparing_the_download = false;

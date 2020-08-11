@@ -20,14 +20,15 @@
 import { utils, writeFile } from "xlsx";
 import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 import { createExportReport } from "./report-creator";
-import { BacklogItem } from "../../type";
+import { BacklogItem, Campaign } from "../../type";
 
 export function downloadExportDocument(
     gettext_provider: VueGettextProvider,
     project_name: string,
     milestone_title: string,
     user_display_name: string,
-    backlog_items: ReadonlyArray<BacklogItem>
+    backlog_items: ReadonlyArray<BacklogItem>,
+    campaigns: ReadonlyArray<Campaign>
 ): void {
     const current_date = new Date();
     const book = utils.book_new();
@@ -38,7 +39,8 @@ export function downloadExportDocument(
             milestone_title,
             user_display_name,
             current_date,
-            backlog_items
+            backlog_items,
+            campaigns
         )
     );
 

@@ -28,7 +28,7 @@ use Tuleap\DB\DataAccessObject;
 class TestPlanTestDefinitionsTestStatusDAO extends DataAccessObject
 {
     /**
-     * @psalm-return array<int,array{test_status: "notrun"|"passed"|"failed"|"blocked", test_exec_id: int, test_campaign_id: int}>
+     * @psalm-return array<int,array{test_status: "notrun"|"passed"|"failed"|"blocked", test_exec_id: int, test_exec_submitted_by: int, test_exec_submitted_on: int, test_campaign_id: int}>
      */
     public function searchTestStatusPerTestDefinitionInAMilestone(TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition $information): array
     {
@@ -63,7 +63,7 @@ class TestPlanTestDefinitionsTestStatusDAO extends DataAccessObject
         EOF;
 
         $sql = <<<EOF
-        SELECT test_exec_changeset_per_test_def.test_def_id, tracker_field_list_bind_static_value.label AS test_status, test_exec_changeset.artifact_id AS test_exec_id, test_campaign_id
+        SELECT test_exec_changeset_per_test_def.test_def_id, tracker_field_list_bind_static_value.label AS test_status, test_exec_changeset.artifact_id AS test_exec_id, test_exec_changeset.submitted_by AS test_exec_submitted_by, test_exec_changeset.submitted_on AS test_exec_submitted_on,  test_campaign_id
         FROM tracker_field_list_bind_static_value
         JOIN tracker_changeset_value_list ON (tracker_changeset_value_list.bindvalue_id = tracker_field_list_bind_static_value.id)
         JOIN tracker_changeset_value ON (tracker_changeset_value_list.changeset_value_id = tracker_changeset_value.id AND tracker_changeset_value.field_id = ?)

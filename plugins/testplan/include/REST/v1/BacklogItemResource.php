@@ -94,7 +94,8 @@ final class BacklogItemResource extends AuthenticatedResource
                     $testmanagement_config,
                     TrackerFactory::instance(),
                     $formelement_factory,
-                )
+                ),
+                $user_manager
             )
         );
         $linked_test_definitions = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact(

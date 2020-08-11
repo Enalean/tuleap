@@ -20,6 +20,7 @@
 import { TextCell } from "./report-cells";
 import { BacklogItem } from "../../type";
 import { computeTestStats, getTestStatusFromStats } from "../BacklogItems/compute-test-stats";
+import { getInternationalizedTestStatus } from "./internationalize-test-status";
 
 export interface RequirementsSection {
     readonly title: TextCell;
@@ -52,20 +53,10 @@ function getTestStatusCell(
     gettext_provider: VueGettextProvider,
     backlog_item: BacklogItem
 ): TextCell {
-    const test_status = getTestStatusFromStats(computeTestStats(backlog_item));
-
-    switch (test_status) {
-        case null:
-            return new TextCell("");
-        case "failed":
-            return new TextCell(gettext_provider.$gettext("Failed"));
-        case "blocked":
-            return new TextCell(gettext_provider.$gettext("Blocked"));
-        case "notrun":
-            return new TextCell(gettext_provider.$gettext("Not run"));
-        case "passed":
-            return new TextCell(gettext_provider.$gettext("Passed"));
-        default:
-            return ((val: never): never => val)(test_status);
-    }
+    return new TextCell(
+        getInternationalizedTestStatus(
+            gettext_provider,
+            getTestStatusFromStats(computeTestStats(backlog_item))
+        )
+    );
 }
