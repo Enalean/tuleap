@@ -903,6 +903,9 @@ msgstr "HTML"
 msgid "Heartbeat"
 msgstr "Activité"
 
+msgid "Help"
+msgstr "Aide"
+
 msgid ""
 "Here is your new SVN token. Please make sure you copy it, you won't be able "
 "to see it again!"
