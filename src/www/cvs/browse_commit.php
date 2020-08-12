@@ -67,7 +67,7 @@ if ($order !== false) {
     }
 }
 
-$order_by = '';
+$order_by = [];
 if ($morder !== false) {
     if (user_isloggedin()) {
         if ($morder != user_get_preference('commit_browse_order' . $group_id)) {
@@ -76,7 +76,7 @@ if ($morder !== false) {
     }
 
     if ($morder !== '') {
-        $order_by = ' ORDER BY ' . commit_criteria_list_to_query($morder);
+        $order_by = commit_criteria_list_to_query($morder);
     }
 }
 
