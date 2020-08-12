@@ -391,14 +391,26 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
     return(join(',', $arr));
 }
 
-// Transform criteria list to SQL query (+ means ascending
-// - is descending)
-function commit_criteria_list_to_query($criteria_list)
+/**
+ * @psalm-return array<array{order:"ASC"|"DESC", column: "id"|"revision"|"did"|"description"|"c_when"|"date"|"f_when"|"who"}>
+ */
+function commit_criteria_list_to_query(string $criteria_list): array
 {
-    $criteria_list = str_replace('>', ' ASC', $criteria_list);
-    $criteria_list = str_replace('<', ' DESC', $criteria_list);
-
-    return $criteria_list;
+    $order_list = [];
+    foreach (explode(',', $criteria_list) as $criteria) {
+        if (preg_match('/^(?<column>[a-z]+)(?<order>[<>]?)$/', $criteria, $matches) === 1) {
+            $column = $matches['column'];
+            if (! in_array($column, ['id', 'revision', 'did', 'description', 'c_when', 'date', 'f_when', 'who'], true)) {
+                continue;
+            }
+            $order = 'ASC';
+            if ($matches['order'] === '<') {
+                $order = 'DESC';
+            }
+            $order_list[] = ['order' => $order, 'column' => $column];
+        }
+    }
+    return $order_list;
 }
 
 // Transform criteria list to readable text statement
@@ -409,13 +421,15 @@ function commit_criteria_list_to_text($criteria_list, $url)
         $arr    = explode(',', $criteria_list);
         $morder = '';
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         foreach ($arr as $crit) {
             $morder .= ($morder ? "," . $crit : $crit);
             $attr = str_replace('>', '', $crit);
             $attr = str_replace('<', '', $attr);
 
-            $arr_text[] = '<a href="' . $url . '&morder=' . $morder . '#results">' .
-            commit_field_get_label($attr) . '</a><img src="' . util_get_dir_image_theme() .
+            $arr_text[] = '<a href="' . $url . '&morder=' . $purifier->purify(urlencode($morder)) . '#results">' .
+            $purifier->purify(commit_field_get_label($attr)) . '</a><img src="' . util_get_dir_image_theme() .
             ((substr($crit, -1) == '<') ? 'dn' : 'up') .
             '_arrow.png" border="0">';
         }
@@ -709,7 +723,10 @@ function get_group_id_from_repository($repository)
     return $project->getID();
 }
 
-function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0)
+/**
+ * @psalm-param array<array{order:"ASC"|"DESC", column: "id"|"revision"|"did"|"description"|"c_when"|"date"|"f_when"|"who"}> $order_by
+ */
+function cvs_get_revisions($project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', array $order_by = [], $pv = 0)
 {
     //if status selected, and more to where clause
     if ($_branch != 100) {
@@ -777,14 +794,26 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
         $limit = " LIMIT $offset,$chunksz";
     }
 
-    if (! $order_by) {
-        $order_by = " ORDER BY id desc, f_when desc ";
+    if (empty($order_by)) {
+        $order_by_sql = ' ORDER BY id desc, f_when desc ';
+    } else {
+        $order_by_sql = ' ORDER BY ';
+        $order_by_sql .= implode(
+            ',',
+            array_map(
+                static function (array $order_by_row) {
+                    return $order_by_row['column'] . ' ' . $order_by_row['order'];
+                },
+                $order_by
+            )
+        );
+        $order_by_sql .= ' ';
     }
 
     $sql = $select .
     $from .
     $where .
-    $order_by .
+    $order_by_sql .
     $limit;
 
     $result = db_query($sql);
