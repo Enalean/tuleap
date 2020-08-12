@@ -29,10 +29,10 @@ use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 
@@ -82,7 +82,7 @@ class HeaderPresenterBuilder
         CssAssetCollection $css_assets,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
-        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
+        NewDropdownPresenter $new_dropdown_presenter
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -105,7 +105,7 @@ class HeaderPresenterBuilder
                 $this->current_user,
                 $this->getExtraTabs(),
                 $url_redirect,
-                $registration_user_permission_checker
+                $new_dropdown_presenter
             ),
             $color,
             $this->getStylesheets($theme_variation),

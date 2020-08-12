@@ -23,14 +23,15 @@ use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
@@ -208,20 +209,22 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function navbar($params, PFUser $current_user, $selected_top_tab)
     {
-        $project_manager       = ProjectManager::instance();
-        $projects              = $project_manager->getActiveProjectsForUser($current_user);
-        $projects_presenters   = $this->getPresentersForProjects($projects);
-        $navbar_items_builder  = new FlamingParrot_NavBarItemPresentersCollectionBuilder(
+        $project_manager      = ProjectManager::instance();
+        $projects             = $project_manager->getActiveProjectsForUser($current_user);
+        $projects_presenters  = $this->getPresentersForProjects($projects);
+        $navbar_items_builder = new FlamingParrot_NavBarItemPresentersCollectionBuilder(
             $current_user,
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
             $this->getExtraTabs(),
             $projects_presenters
         );
-        $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
-        $url_redirect          = new URLRedirect(EventManager::instance());
+        $csrf_logout_token    = new CSRFSynchronizerToken('logout_action');
+        $event_manager        = EventManager::instance();
+        $url_redirect         = new URLRedirect($event_manager);
 
         $banner = null;
+        $project = null;
         if (! empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
             $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
@@ -232,12 +235,16 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
+            $event_manager
         );
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
         $registration_user_permission_checker = new ProjectRegistrationUserPermissionChecker(
             new ProjectDao()
+        );
+        $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
+            $event_manager,
+            $registration_user_permission_checker
         );
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
@@ -254,7 +261,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
-            $registration_user_permission_checker->isUserAllowedToCreateProjects($current_user),
+            $new_dropdown_presenter_builder->getPresenter($current_user, $project),
         ));
 
         $this->container($params, $project_manager, $current_user, $banner);

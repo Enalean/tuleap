@@ -30,6 +30,7 @@ use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -103,11 +104,17 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(array $params)
     {
+        $project = null;
+        if (! empty($params['group'])) {
+            $project = $this->project_manager->getProject($params['group']);
+        }
+
+
         $url_redirect                = new URLRedirect(EventManager::instance());
         $header_presenter_builder    = new HeaderPresenterBuilder();
         $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : [];
         $sidebar                     = $this->getSidebarFromParams($params);
-        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
+        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project);
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $current_project_navbar_info);
         $current_user                = UserManager::instance()->getCurrentUser();
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
@@ -118,6 +125,13 @@ class BurningParrotTheme extends BaseLayout
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder();
         $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+
+        $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
+            $this->event_manager,
+            new ProjectRegistrationUserPermissionChecker(
+                new \ProjectDao()
+            )
+        );
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -136,9 +150,7 @@ class BurningParrotTheme extends BaseLayout
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
-            new ProjectRegistrationUserPermissionChecker(
-                new \ProjectDao()
-            )
+            $new_dropdown_presenter_builder->getPresenter($current_user, $project)
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -284,13 +296,11 @@ class BurningParrotTheme extends BaseLayout
         );
     }
 
-    private function getCurrentProjectNavbarInfo(array $params): ?CurrentProjectNavbarInfoPresenter
+    private function getCurrentProjectNavbarInfo(?Project $project): ?CurrentProjectNavbarInfoPresenter
     {
-        if (empty($params['group'])) {
+        if (! $project) {
             return null;
         }
-
-        $project = $this->project_manager->getProject($params['group']);
 
         return new CurrentProjectNavbarInfoPresenter(
             $project,

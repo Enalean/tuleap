@@ -609,8 +609,18 @@ $nav-dropdown-content-border-radius: 3px;
     }
 }
 
-#nav-dropdown-new > .dropdown-menu > li:last-child {
-    margin: 0 0 8px;
+#nav-dropdown-new > .dropdown-menu > li {
+    &:first-child {
+        display: none;
+
+        + li {
+            margin-top: 8px;
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 8px;
+    }
 }
 
 .nav-dropdown-new-icon {

@@ -38,6 +38,7 @@ use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -81,9 +82,9 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
-use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
@@ -142,6 +143,8 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -324,6 +327,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
+        $this->addHook(NewDropdownProjectLinksCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2305,5 +2309,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getUserManager(),
             $jira_user_on_tuleap_cache
         );
+    }
+
+    public function collectNewDropdownLinksForProject(NewDropdownProjectLinksCollector $collector): void
+    {
+        (new \Tuleap\Tracker\NewDropdown\TrackerLinksInNewDropdownCollector(
+            new TrackerInNewDropdownRetriever(
+                new TrackerInNewDropdownDao(),
+                TrackerFactory::instance()
+            )
+        ))->collect($collector);
     }
 }
