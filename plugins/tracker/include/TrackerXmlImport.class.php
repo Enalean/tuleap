@@ -318,7 +318,6 @@ class TrackerXmlImport
         }
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {
-            assert($renderer_xml_mapping instanceof Tracker_Report_Renderer);
             $registery->addReference($xml_reference, $renderer_xml_mapping);
         }
 

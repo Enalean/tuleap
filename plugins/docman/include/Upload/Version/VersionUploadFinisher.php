@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -164,7 +164,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 $item = $this->docman_item_factory->getItemFromDb($upload_row['item_id']);
-                \assert($item instanceof Docman_File || $item === null);
                 if ($item === null) {
                     $this->logger->info('Item #' . $upload_row['item_id'] . ' could not found in the DB to add a new version');
                     return;
@@ -244,6 +243,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)
                 ) {
                     $item_current_version = $this->version_factory->getCurrentVersionForItem($item);
+                    assert($item instanceof Docman_File);
                     $item->setCurrentVersion($item_current_version);
                     $this->approval_table_updater->updateApprovalTable($item, $current_user, $approval_table_action);
                 }
