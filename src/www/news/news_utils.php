@@ -195,6 +195,10 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         $details = $purifier->purify($arr[0], CODENDI_PURIFIER_BASIC, $group_id);
     }
 
+    $user = UserManager::instance()->getCurrentUser();
+
+    \Tuleap\date\RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+
     $proj_name = '';
     if ($show_projectname && $limit) {
         //show the project name
@@ -204,7 +208,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     $forum_url = '/forum/forum.php?forum_id=' . urlencode($data['forum_id']);
     if (! $limit) {
         $html .= '<li><span class="news_summary"><a href="' . $purifier->purify($forum_url) . '">' . $purifier->purify($data['summary']) . '</a></span> ';
-        $html .= '<small><span class="news_date">' . \DateHelper::timeAgoInWords($data['date'], false, true) . '</span></small></li>';
+        $html .= '<small><span class="news_date">' . DateHelper::relativeDateInlineContext((int) $data['date'], $user) . '</span></small></li>';
     } else {
         $comments_txt = '';
         if (! $hide_nb_comments) {
@@ -225,7 +229,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         $html .= '<div>' . $details . '</div>';
         $html .= '<small>
                     <span class="news_author">' . $uh->getLinkOnUserFromUserId($data['submitted_by']) . '</span>
-                    <span class="news_date">' . \DateHelper::timeAgoInWords($data['date'], false, true) . '</span>' .
+                    <span class="news_date">' . DateHelper::relativeDateInlineContext((int) $data['date'], $user) . '</span>' .
                     $comments_txt .
                     $proj_name .
                     '</small>';

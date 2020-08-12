@@ -45,7 +45,7 @@
             {{# repository }}
                 <tr>
                     <td><a href="?roottype=svn&amp;root={{ getFullName }}" data-test="svn-repository-access-{{ getName }}">{{ getName }}</a></td>
-                    <td>{{ getPurifiedHumanReadableCommitDate }}</td>
+                    <td>{{{ purified_commit_date }}}</td>
                     {{# is_admin }}
                         <td>
                             <a href="{{ getSettingUrl }}" class="btn" data-test="svn-admin-repository-access">

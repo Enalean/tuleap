@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\SVN\Explorer;
 
 class RepositoryBuilder
 {
-    public function build(array $repositories)
+    /**
+     * @return RepositoryPresenter[]
+     */
+    public function build(array $repositories, \PFUser $user): array
     {
         $repository_list = [];
         foreach ($repositories as $repository) {
-            $repository_list[] = new RepositoryPresenter($repository['repository'], $repository['commit_date']);
+            $repository_list[] = new RepositoryPresenter($repository['repository'], (int) $repository['commit_date'], $user);
         }
 
         return $repository_list;

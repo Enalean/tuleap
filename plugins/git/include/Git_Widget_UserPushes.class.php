@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\date\RelativeDatesAssetsRetriever;
 
 /**
  * Widget displaying last git pushes for the user
@@ -75,7 +76,6 @@ class Git_Widget_UserPushes extends Widget
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
-        $dh      = new DateHelper();
         $hp      = Codendi_HTMLPurifier::instance();
         if (count($result) > 0) {
             foreach ($result as $entry) {
@@ -124,7 +124,7 @@ class Git_Widget_UserPushes extends Widget
                     $i   = 0;
                     foreach ($rows as $row) {
                         $content .= '<tr class="' . html_get_alt_row_color(++$i) . '">
-                                         <td><span title="' . $dh->timeAgoInWords($row['push_date'], true) . '">' . $hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])) . '</span></td>
+                                         <td>' . DateHelper::relativeDateInlineContext((int) $row['push_date'], $user) . '</td>
                                          <td>
                                              <a href="' . $this->pluginPath . '/index.php/' . $entry['group_id'] . '/view/' . $entry['repository_id'] . '/">
                                              ' . $hp->purify($row['commits_number']) . '
@@ -228,5 +228,12 @@ class Git_Widget_UserPushes extends Widget
                        placeholder="30">
             </div>
             ';
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        return [
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
+use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
@@ -68,13 +69,13 @@ class ExplorerController
         $this->renderIndex($service, $request);
     }
 
-    private function renderIndex(ServiceSvn $service, HTTPRequest $request)
+    private function renderIndex(ServiceSvn $service, HTTPRequest $request): void
     {
         $project = $request->getProject();
         $token   = $this->generateTokenForCeateRepository($request->getProject());
 
         $repository_list = $this->repository_manager->getRepositoriesInProjectWithLastCommitInfo($request->getProject());
-        $repositories    = $this->repository_builder->build($repository_list);
+        $repositories    = $this->repository_builder->build($repository_list, $request->getCurrentUser());
         $is_admin        = $this->permissions_manager->isAdmin($project, $request->getCurrentUser());
 
         $service->renderInPage(
@@ -89,6 +90,10 @@ class ExplorerController
                 $is_admin
             )
         );
+
+        if (count($repositories) > 0) {
+            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+        }
     }
 
     private function generateTokenForCeateRepository(Project $project)

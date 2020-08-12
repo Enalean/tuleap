@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\layout\HomePage;
 
 use DateHelper;
@@ -31,22 +33,64 @@ class HomePageNews
      * @var \Codendi_HTMLPurifier
      */
     private $purifier;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     private $unescaped_details;
+    /**
+     * @var Project
+     * @psalm-readonly
+     */
     private $project;
 
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $summary;
-    public $time_ago;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_time_ago;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $project_url;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $project_name;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $author_url;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $author_name;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $author_avatar_url;
 
-    public function __construct(\Codendi_HTMLPurifier $purifier, Project $project, PFUser $author, \DateTimeImmutable $date, $summary, $details)
-    {
-        $this->summary           = $summary;
-        $this->time_ago          = DateHelper::timeAgoInWords($date->getTimestamp());
-        $this->project_url       = $project->getUrl();
+    public function __construct(
+        \Codendi_HTMLPurifier $purifier,
+        Project $project,
+        PFUser $author,
+        \DateTimeImmutable $date,
+        string $summary,
+        string $details
+    ) {
+        $this->summary = $summary;
+        $this->purified_time_ago = DateHelper::relativeDateInlineContext((int) $date->getTimestamp(), $author);
+        $this->project_url = $project->getUrl();
         $this->project_name      = $project->getPublicName();
         $this->author_url        = $author->getPublicProfileUrl();
         $this->author_name       = $author->getRealName();
