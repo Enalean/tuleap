@@ -55,6 +55,10 @@ class MilestoneCreatorChecker
      * @var MilestoneCreatorSemanticStatusChecker
      */
     private $semantic_status_checker;
+    /**
+     * @var SynchronizedFieldCollectionBuilder
+     */
+    private $field_collection_builder;
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
@@ -62,7 +66,8 @@ class MilestoneCreatorChecker
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         SemanticTimeframeDao $semantic_timeframe_dao,
-        MilestoneCreatorSemanticStatusChecker $semantic_status_checker
+        MilestoneCreatorSemanticStatusChecker $semantic_status_checker,
+        SynchronizedFieldCollectionBuilder $field_collection_builder
     ) {
         $this->projects_builder         = $contributor_projects_collection_builder;
         $this->trackers_builder         = $milestone_trackers_builder;
@@ -70,6 +75,7 @@ class MilestoneCreatorChecker
         $this->semantic_description_dao = $semantic_description_dao;
         $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
         $this->semantic_status_checker  = $semantic_status_checker;
+        $this->field_collection_builder = $field_collection_builder;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
@@ -106,6 +112,14 @@ class MilestoneCreatorChecker
             return false;
         }
         if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllTrackers($user)) {
+            return false;
+        }
+        try {
+            $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
+        } catch (NoArtifactLinkFieldException $exception) {
+            return false;
+        }
+        if (! $fields->canUserSubmitAndUpdateAllFields($user)) {
             return false;
         }
 

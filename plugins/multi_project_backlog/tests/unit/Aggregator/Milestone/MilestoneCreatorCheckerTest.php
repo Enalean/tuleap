@@ -65,6 +65,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeDao
      */
     private $timeframe_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SynchronizedFieldCollectionBuilder
+     */
+    private $field_collection_builder;
 
     protected function setUp(): void
     {
@@ -76,6 +80,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->description_dao  = Mockery::mock(\Tracker_Semantic_DescriptionDao::class);
         $this->timeframe_dao    = Mockery::mock(SemanticTimeframeDao::class);
         $this->semantic_status_checker = Mockery::mock(MilestoneCreatorSemanticStatusChecker::class);
+        $this->field_collection_builder = Mockery::mock(SynchronizedFieldCollectionBuilder::class);
 
         $this->checker = new MilestoneCreatorChecker(
             $this->projects_builder,
@@ -83,7 +88,8 @@ final class MilestoneCreatorCheckerTest extends TestCase
             $this->title_dao,
             $this->description_dao,
             $this->timeframe_dao,
-            $this->semantic_status_checker
+            $this->semantic_status_checker,
+            $this->field_collection_builder
         );
     }
 
@@ -114,6 +120,12 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->once()
             ->with([1024, 2048])
             ->andReturnTrue();
+        $field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('userCanSubmit')->andReturnTrue();
+        $field->shouldReceive('userCanUpdate')->andReturnTrue();
+        $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
+            ->once()
+            ->andReturn(new SynchronizedFieldCollection([$field]));
 
         $this->assertTrue($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
@@ -266,6 +278,57 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(0);
         $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
             ->andReturnTrue();
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->andReturn(0);
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->andReturnTrue();
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->andReturnTrue();
+        $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
+            ->andThrow(new NoArtifactLinkFieldException(2048));
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
+    {
+        $project              = Project::buildForTest();
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->mockContributorMilestoneTrackers($project, 1024, 2048);
+        $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->andReturn(0);
+        $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->andReturn(0);
+        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+            ->andReturnTrue();
+        $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->andReturn(0);
+        $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->andReturnTrue();
+        $field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('userCanSubmit')->andReturnFalse();
+        $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
+            ->once()
+            ->andReturn(new SynchronizedFieldCollection([$field]));
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }
