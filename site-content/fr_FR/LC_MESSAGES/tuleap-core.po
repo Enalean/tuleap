@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 #, php-format
 msgid ""
@@ -143,11 +143,11 @@ msgstr ""
 msgid "API"
 msgstr "API"
 
-msgid "Absolute"
-msgstr "Absolue"
+msgid "Absolute date first"
+msgstr "Date absolue en premier"
 
-msgid "Absolute (relative)"
-msgstr "Absolue (relative)"
+msgid "Absolute date only"
+msgstr "Date absolue seulement"
 
 msgid "Access"
 msgstr "Accès"
@@ -1659,11 +1659,11 @@ msgstr "Références"
 msgid "Registered users"
 msgstr "Utilisateurs enregistrés"
 
-msgid "Relative"
-msgstr "Relative"
+msgid "Relative date first"
+msgstr "Date relative en premier"
 
-msgid "Relative (absolute)"
-msgstr "Relative (absolue)"
+msgid "Relative date only"
+msgstr "Date relative seulement"
 
 msgid "Relative dates display"
 msgstr "Affichage des dates relatives"
