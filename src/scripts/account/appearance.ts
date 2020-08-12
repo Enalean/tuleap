@@ -24,6 +24,7 @@ import $ from "jquery";
 
 initThemeColorSelector();
 initAccessibilitySelector();
+initSelectBoxesPreviews();
 
 function initThemeColorSelector(): void {
     const selector = document.getElementById("user-preferences-color-selector");
@@ -93,4 +94,78 @@ function initAccessibilitySelector(): void {
             preview.classList.add(classname);
         }
     }
+}
+
+function initSelectBoxesPreviews(): void {
+    // init relative dates preview
+    initSelectBoxPreview(
+        document,
+        "#relative-dates-display",
+        "#user-preferences-section-appearance-relative-dates-preview",
+        ".user-preferences-section-appearance-relative-dates-preview-option",
+        "data-relative-date-option-name"
+    );
+
+    // init usernames format preview
+    initSelectBoxPreview(
+        document,
+        "#user-prefs-username-display-format-select",
+        "#user-preferences-section-appearance-usernames-display-preview",
+        ".user-preference-appearance-section-usernames-display-preview-option",
+        "data-usernames-display-option-value"
+    );
+}
+
+export function initSelectBoxPreview(
+    doc: HTMLDocument,
+    selectbox_id: string,
+    preview_id: string,
+    option_css_class: string,
+    data_attribute_name: string
+): void {
+    const selector = doc.querySelector(selectbox_id);
+    const preview = doc.querySelector(preview_id);
+
+    if (selector === null || preview === null) {
+        return;
+    }
+
+    if (!(selector instanceof HTMLSelectElement) || !(preview instanceof SVGElement)) {
+        return;
+    }
+
+    changePreviewAccordingToSelectedValue(selector, preview, option_css_class, data_attribute_name);
+
+    selector.addEventListener("change", () => {
+        changePreviewAccordingToSelectedValue(
+            selector,
+            preview,
+            option_css_class,
+            data_attribute_name
+        );
+    });
+}
+
+function changePreviewAccordingToSelectedValue(
+    selector: HTMLSelectElement,
+    preview: SVGElement,
+    option_css_class: string,
+    data_attribute_name: string
+): void {
+    const previously_selected_option = preview.querySelector(option_css_class + ".shown");
+
+    if (previously_selected_option !== null && previously_selected_option instanceof SVGElement) {
+        previously_selected_option.classList.remove("shown");
+    }
+
+    const selected_option_name = selector.value;
+    const selected_option = preview.querySelector(
+        `[${data_attribute_name}="${selected_option_name}"]`
+    );
+
+    if (selected_option === null || !(selected_option instanceof SVGElement)) {
+        return;
+    }
+
+    selected_option.classList.toggle("shown");
 }

@@ -27,6 +27,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -39,6 +40,7 @@ class DisplayAppearanceControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
+    use GlobalLanguageMock;
 
     /**
      * @var DisplayExperimentalController
@@ -61,6 +63,8 @@ class DisplayAppearanceControllerTest extends TestCase
                 return $event;
             }
         };
+
+        $GLOBALS['Language']->shouldReceive('gettext')->with('system', 'datefmt_short')->andReturn('d/m/Y');
 
         $this->appearance_builder = M::mock(AppearancePresenterBuilder::class);
         $this->csrf_token = M::mock(CSRFSynchronizerToken::class);

@@ -67,6 +67,12 @@
     justify-content: space-between;
 }
 
+.user-preferences-section-appearance-preview {
+    position: relative;
+    top: 90px;
+    left: 25px;
+}
+
 .user-preferences-section-appearance-preview,
 .user-preferences-section-appearance-fields {
     width: calc(50% - #{$tlp-medium-spacing});
@@ -77,114 +83,139 @@
     font-weight: 600;
 }
 
+.user-preferences-section-appearance-preview-user-and-date-text {
+    font-size: 7px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.user-preferences-section-appearance-preview-property-label {
+    font-size: 8px;
+    font-weight: 600;
+}
+
+.user-preferences-section-appearance-preview-property-value {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.user-preference-appearance-section-usernames-display-preview-option,
+.user-preferences-section-appearance-relative-dates-preview-option {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}
+
 .user-preferences-section-appearance-preview-blue {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-blue;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-blue;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-blue;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-blue;
     }
 }
 
 .user-preferences-section-appearance-preview-grey {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-grey;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-grey;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-grey;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-grey;
     }
 }
 
 .user-preferences-section-appearance-preview-orange {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-orange;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-orange;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-orange;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-orange;
     }
 }
 
 .user-preferences-section-appearance-preview-red {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-red;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-red;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-red;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-red;
     }
 }
 
 .user-preferences-section-appearance-preview-green {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-green;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-green;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-green;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-green;
     }
 }
 
 .user-preferences-section-appearance-preview-purple {
-    > .user-preferences-section-appearance-preview-color-fill {
+    .user-preferences-section-appearance-preview-color-fill {
         fill: $tlp-theme-purple;
     }
 
-    > .user-preferences-section-appearance-preview-color-stroke {
+    .user-preferences-section-appearance-preview-color-stroke {
         stroke: $tlp-theme-purple;
     }
 
-    > .user-preferences-section-appearance-preview-background {
+    .user-preferences-section-appearance-preview-background {
         fill: $tlp-theme-background-purple;
     }
 
-    > .user-preferences-section-appearance-preview-sidebar {
+    .user-preferences-section-appearance-preview-sidebar {
         fill: $tlp-theme-sidebar-background-purple;
     }
 }
 
-.user-preferences-section-appearance-preview-without-accessibility > g > .user-preferences-section-appearance-preview-accessibility {
+.user-preferences-section-appearance-preview-without-accessibility > g > g > .user-preferences-section-appearance-preview-accessibility {
     display: none;
 }
