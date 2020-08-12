@@ -346,3 +346,19 @@
     padding: 0 0 0 $tlp-small-spacing;
     fill: $tlp-theme-color;
 }
+
+.nav-dropdown-new-icon {
+    margin: 0 $tlp-small-spacing 0 0;
+}
+
+#nav-dropdown-content-new {
+    white-space: nowrap;
+
+    > .nav-dropdown-content-arrow-up {
+        border-bottom-color: $tlp-ui-white;
+    }
+
+    > .nav-dropdown-content-item:last-child {
+        margin: 0 0 $tlp-small-spacing;
+    }
+}

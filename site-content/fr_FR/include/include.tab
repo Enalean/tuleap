@@ -125,7 +125,6 @@ include_menu	proj_admin	Administration du projet
 include_menu	summary_page	Sommaire
 include_menu	logged_in	Connecté
 include_menu	logout	Se déconnecter
-include_menu	register_new_proj	Enregistrer un projet
 include_menu	filter_project	Projet...
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle

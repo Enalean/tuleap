@@ -35,32 +35,20 @@ class ProjectsPresenter extends Presenter
     public $add_project;
     public $is_there_something_to_filter;
     public $filter;
-    public $is_project_registration_enabled;
     public $is_trove_cat_enabled;
-    /**
-     * @var string
-     */
-    public $project_registration_url;
 
-    public function __construct(
-        $id,
-        bool $is_project_registration_enabled,
-        array $projects
-    ) {
+    public function __construct($id, array $projects)
+    {
         parent::__construct($id);
 
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
 
         $this->projects    = $projects;
         $this->browse_all  = $GLOBALS['Language']->getText('include_menu', 'browse_all');
-        $this->add_project = $GLOBALS['Language']->getText('include_menu', 'add_project');
         $this->filter      = $GLOBALS['Language']->getText('include_menu', 'filter_projects');
-
-        $this->project_registration_url = '/project/new';
 
         $this->is_trove_cat_enabled              = ForgeConfig::get('sys_use_trove');
         $this->is_member_of_at_least_one_project = count($this->projects) > 0;
-        $this->is_project_registration_enabled   = $is_project_registration_enabled;
         $this->is_there_something_to_filter      = $this->is_member_of_at_least_one_project
             || $this->is_trove_cat_enabled;
     }

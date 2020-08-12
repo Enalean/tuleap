@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItemPresenter
+class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItemPresenter  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public $is_projects = true;
@@ -27,19 +27,13 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
     public $projects;
     public $has_projects;
     public $is_trove_cat_enabled;
-    public $is_project_registration_enabled;
     public $display_only_trovemap;
     public $display_dropdown;
     public $filter_project;
     public $menu_projects_text;
-    public $register_new_proj;
     public $browse_projects_text;
-    /**
-     * @var string
-     */
-    public $project_registration_url;
 
-    public function __construct($id, $is_active, bool $is_project_registration_enabled, PFUser $user, array $projects)
+    public function __construct($id, $is_active, PFUser $user, array $projects)
     {
         parent::__construct($id, $is_active);
 
@@ -50,18 +44,11 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
         $this->filter_project       = $GLOBALS['Language']->getText('include_menu', 'filter_project');
         $this->menu_projects_text   = $GLOBALS['Language']->getText('include_menu', 'projects');
         $this->browse_projects_text = $GLOBALS['Language']->getText('include_menu', 'browse_projects');
-        $this->register_new_proj    = $GLOBALS['Language']->getText('include_menu', 'register_new_proj');
 
         $this->is_trove_cat_enabled            = ForgeConfig::get('sys_use_trove');
-        $this->is_project_registration_enabled = $is_project_registration_enabled;
 
-        $this->project_registration_url = '/project/new';
-
-        $this->display_only_trovemap =
-            $this->is_trove_cat_enabled
-            && ! $this->is_project_registration_enabled
-            && ! $this->projects;
+        $this->display_only_trovemap = $this->is_trove_cat_enabled && ! $this->projects;
         $this->display_dropdown      = $user->isLoggedIn() &&
-            ($this->has_projects || $this->is_trove_cat_enabled || $this->is_project_registration_enabled);
+            ($this->has_projects || $this->is_trove_cat_enabled);
     }
 }

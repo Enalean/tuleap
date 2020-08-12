@@ -17,6 +17,24 @@
 
             {{> navbar/join-community }}
 
+            {{# is_project_registration_enabled }}
+                <div id="nav-dropdown-new" class="nav-dropdown nav-dropdown-right">
+                    <div class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-new">
+                        <i class="fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
+                        {{# gettext }}New{{/ gettext }}
+                    </div>
+
+                    <div id="nav-dropdown-content-new" class="nav-dropdown-content nav-dropdown-content-hidden">
+                        <div class="arrow-up nav-dropdown-content-arrow-up"></div>
+                        <div class="nav-dropdown-content-item-title">Tuleap</div>
+                        <a href="/project/new" class="nav-dropdown-content-item">
+                            <i class="fa fa-fw fa-archive nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
+                            {{# gettext }}Start a new project{{/ gettext }}
+                        </a>
+                    </div>
+                </div>
+            {{/ is_project_registration_enabled }}
+
             {{> navbar/user-nav }}
         </div>
     </div>

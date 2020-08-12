@@ -1192,6 +1192,9 @@ msgstr "Nb membres"
 msgid "Never"
 msgstr "Jamais"
 
+msgid "New"
+msgstr "Nouveau"
+
 msgid "New avatar"
 msgstr "Nouvel avatar"
 
@@ -1843,6 +1846,9 @@ msgstr "Des catégories sont manquantes"
 
 msgid "Source code management"
 msgstr "Gestion de code source"
+
+msgid "Start a new project"
+msgstr "Démarrer un nouveau projet"
 
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
