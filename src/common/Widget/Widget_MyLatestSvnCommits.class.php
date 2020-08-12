@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
  * This file is a part of Tuleap.
@@ -80,7 +80,7 @@ class Widget_MyLatestSvnCommits extends Widget
 
                 $html .= '<strong>' . $hp->purify($project->getPublicName()) . '</strong>';
                 if (! $hide_now) {
-                    list($latest_revisions, $nb_revisions) = svn_get_revisions($project, 0, $this->_nb_svn_commits, '', $user->getUserName(), '', '', 0, false);
+                    list($latest_revisions, $nb_revisions) = svn_get_revisions($project, 0, $this->_nb_svn_commits, '', $user->getUserName(), '', [], 0, false);
                     $revision_total += $nb_revisions;
                     if (db_numrows($latest_revisions) > 0) {
                         $i = 0;
