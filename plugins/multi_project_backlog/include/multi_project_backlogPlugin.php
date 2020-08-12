@@ -31,8 +31,8 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneCreatorChecker;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneCreatorSemanticStatusChecker;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\MilestoneCreatorChecker;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\StatusSemanticChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersUpdater;
@@ -179,15 +179,17 @@ final class multi_project_backlogPlugin extends Plugin
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
                 \PlanningFactory::build()
             ),
-            new \Tracker_Semantic_TitleDao(),
-            new \Tracker_Semantic_DescriptionDao(),
-            new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao(),
-            new MilestoneCreatorSemanticStatusChecker(
-                new Tracker_Semantic_StatusDao(),
-                Tracker_Semantic_StatusFactory::instance()
-            ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
                 \Tracker_FormElementFactory::instance()
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
+                new \Tracker_Semantic_TitleDao(),
+                new \Tracker_Semantic_DescriptionDao(),
+                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao(),
+                new StatusSemanticChecker(
+                    new Tracker_Semantic_StatusDao(),
+                    Tracker_Semantic_StatusFactory::instance()
+                ),
             )
         );
 

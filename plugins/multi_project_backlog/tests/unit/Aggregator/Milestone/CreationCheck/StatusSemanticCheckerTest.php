@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -32,14 +32,15 @@ use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
 use Tuleap\Tracker\TrackerColor;
 
-class MilestoneCreatorSemanticStatusCheckerTest extends TestCase
+class StatusSemanticCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var MilestoneCreatorSemanticStatusChecker
+     * @var StatusSemanticChecker
      */
     private $checker;
 
@@ -80,7 +81,7 @@ class MilestoneCreatorSemanticStatusCheckerTest extends TestCase
         $this->semantic_status_dao     = Mockery::mock(Tracker_Semantic_StatusDao::class);
         $this->semantic_status_factory = Mockery::mock(Tracker_Semantic_StatusFactory::class);
 
-        $this->checker = new MilestoneCreatorSemanticStatusChecker(
+        $this->checker = new StatusSemanticChecker(
             $this->semantic_status_dao,
             $this->semantic_status_factory
         );

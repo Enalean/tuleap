@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
 use Planning_VirtualTopMilestone;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
 
-class MilestoneCreatorSemanticStatusChecker
+class StatusSemanticChecker
 {
     /**
      * @var Tracker_Semantic_StatusDao

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,23 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
-use PFUser;
-use Planning_VirtualTopMilestone;
-use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
-class MilestoneCreatorChecker
+class SemanticChecker
 {
-    /**
-     * @var ContributorProjectsCollectionBuilder
-     */
-    private $projects_builder;
-    /**
-     * @var MilestoneTrackerCollectionBuilder
-     */
-    private $trackers_builder;
     /**
      * @var \Tracker_Semantic_TitleDao
      */
@@ -45,59 +35,31 @@ class MilestoneCreatorChecker
      * @var \Tracker_Semantic_DescriptionDao
      */
     private $semantic_description_dao;
-
     /**
      * @var SemanticTimeframeDao
      */
     private $semantic_timeframe_dao;
-
     /**
-     * @var MilestoneCreatorSemanticStatusChecker
+     * @var StatusSemanticChecker
      */
     private $semantic_status_checker;
-    /**
-     * @var SynchronizedFieldCollectionBuilder
-     */
-    private $field_collection_builder;
 
     public function __construct(
-        ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
-        MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         SemanticTimeframeDao $semantic_timeframe_dao,
-        MilestoneCreatorSemanticStatusChecker $semantic_status_checker,
-        SynchronizedFieldCollectionBuilder $field_collection_builder
+        StatusSemanticChecker $semantic_status_checker
     ) {
-        $this->projects_builder         = $contributor_projects_collection_builder;
-        $this->trackers_builder         = $milestone_trackers_builder;
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
         $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
         $this->semantic_status_checker  = $semantic_status_checker;
-        $this->field_collection_builder = $field_collection_builder;
     }
 
-    public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
-    {
-        $aggregator_project = $top_milestone->getProject();
-
-        $contributor_projects_collection = $this->projects_builder->getContributorProjectForAGivenAggregatorProject(
-            $aggregator_project
-        );
-        if ($contributor_projects_collection->isEmpty()) {
-            return true;
-        }
-        try {
-            $milestone_tracker_collection = $this->trackers_builder->buildFromAggregatorProjectAndItsContributors(
-                $aggregator_project,
-                $contributor_projects_collection,
-                $user
-            );
-        } catch (MilestoneTrackerRetrievalException $exception) {
-            return false;
-        }
-
+    public function areTrackerSemanticsWellConfigured(
+        \Planning_VirtualTopMilestone $top_milestone,
+        MilestoneTrackerCollection $milestone_tracker_collection
+    ): bool {
         $tracker_ids = $milestone_tracker_collection->getTrackerIds();
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
             return false;
@@ -108,18 +70,12 @@ class MilestoneCreatorChecker
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
             return false;
         }
-        if ($this->semantic_status_checker->areSemanticStatusWellConfigured($top_milestone, $milestone_tracker_collection) === false) {
-            return false;
-        }
-        if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllTrackers($user)) {
-            return false;
-        }
-        try {
-            $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
-        } catch (NoArtifactLinkFieldException $exception) {
-            return false;
-        }
-        if (! $fields->canUserSubmitAndUpdateAllFields($user)) {
+        if (
+            $this->semantic_status_checker->areSemanticStatusWellConfigured(
+                $top_milestone,
+                $milestone_tracker_collection
+            ) === false
+        ) {
             return false;
         }
 
