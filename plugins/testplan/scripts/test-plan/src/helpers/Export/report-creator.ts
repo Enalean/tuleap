@@ -23,6 +23,7 @@ import { buildRequirementsSection } from "./requirements-builder";
 import { BacklogItem, Campaign } from "../../type";
 import { buildTestResultsSection } from "./test-results-builder";
 import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
+import { buildJustificationsSection } from "./justifications-builder";
 
 export interface ReportSection {
     readonly title?: TextCell;
@@ -43,6 +44,12 @@ export function createExportReport(
     backlog_items: ReadonlyArray<BacklogItem>,
     campaigns: ReadonlyArray<Campaign>
 ): ExportReport {
+    const planned_test_cases = getPlannedTestCasesAssociatedWithCampaignAndTestExec(
+        gettext_provider,
+        backlog_items,
+        campaigns
+    );
+
     return {
         sections: [
             buildGeneralSection(
@@ -53,14 +60,8 @@ export function createExportReport(
                 current_date
             ),
             buildRequirementsSection(gettext_provider, backlog_items),
-            buildTestResultsSection(
-                gettext_provider,
-                getPlannedTestCasesAssociatedWithCampaignAndTestExec(
-                    gettext_provider,
-                    backlog_items,
-                    campaigns
-                )
-            ),
+            buildTestResultsSection(gettext_provider, planned_test_cases),
+            buildJustificationsSection(gettext_provider, planned_test_cases),
         ],
     };
 }
