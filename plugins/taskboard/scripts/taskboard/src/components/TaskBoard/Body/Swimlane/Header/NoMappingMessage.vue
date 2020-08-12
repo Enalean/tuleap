@@ -31,7 +31,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { sprintf } from "sprintf-js";
 import { Card } from "../../../../../type";
 
 @Component
@@ -44,11 +43,11 @@ export default class NoMappingMessage extends Vue {
             return this.$gettext("This card does not have any status.");
         }
 
-        return sprintf(
+        return this.$gettextInterpolate(
             this.$gettext(
-                "This card has status <strong>%s</strong> that does not map to current taskboard columns."
+                "This card has status <strong>%{ label }</strong> that does not map to current taskboard columns."
             ),
-            this.card.mapped_list_value.label
+            { label: this.card.mapped_list_value.label }
         );
     }
 }
