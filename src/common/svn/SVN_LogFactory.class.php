@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -138,7 +138,7 @@ class SVN_LogFactory
             '',
             $author->getUserName(),
             '',
-            '',
+            [],
             0,
             false
         );

@@ -81,7 +81,7 @@ if (! $request->valid($vGroupId)) {
         }
     }
 
-    $order_by = '';
+    $order_by = [];
     if (isset($morder)) {
         if (user_isloggedin()) {
             if ($morder != user_get_preference('svn_commit_browse_order' . $group_id)) {
@@ -90,7 +90,7 @@ if (! $request->valid($vGroupId)) {
         }
 
         if ($morder != '') {
-            $order_by = ' ORDER BY ' . svn_utils_criteria_list_to_query($morder);
+            $order_by = svn_utils_criteria_list_to_query($morder);
         }
     }
 

@@ -78674,7 +78674,7 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/svn_utils.php">
-    <DeprecatedFunction occurrences="20">
+    <DeprecatedFunction occurrences="25">
       <code>html_build_select_box_from_arrays($userids, $usernames, $name, $checked, true, $text_100, false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML)</code>
       <code>db_fetch_array($result)</code>
       <code>db_numrows($result)</code>
@@ -78695,6 +78695,10 @@
       <code>db_es(htmlspecialchars($_srch))</code>
       <code>db_ei($offset)</code>
       <code>db_ei($chunksz)</code>
+      <code>db_query($sql)</code>
+      <code>db_query($sql1)</code>
+      <code>db_fetch_array($sql1)</code>
+      <code>db_error()</code>
     </DeprecatedFunction>
     <MissingParamType occurrences="51">
       <code>$params</code>

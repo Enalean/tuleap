@@ -336,13 +336,30 @@ function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
     return(join(',', $arr));
 }
 
-// Transform criteria list to SQL query (+ means ascending
-// - is descending)
-function svn_utils_criteria_list_to_query($criteria_list)
+/**
+ * @psalm-return array<array{order:"ASC"|"DESC", column: "revision"|"commit_id"|"description"|"date"|"whoid"}>
+ */
+function svn_utils_criteria_list_to_query(string $criteria_list): array
 {
-    $criteria_list = str_replace('>', ' ASC', $criteria_list);
-    $criteria_list = str_replace('<', ' DESC', $criteria_list);
-    return $criteria_list;
+    $order_list = [];
+
+    foreach (explode(',', $criteria_list) as $criteria) {
+        if (preg_match('/^(?<column>[a-z]+)(?<order>[<>]?)$/', $criteria, $matches) === 1) {
+            $column = $matches['column'];
+            if (! in_array($column, ['revision', 'commit_id', 'description', 'date', 'whoid'], true)) {
+                continue;
+            }
+
+            $order = 'ASC';
+            if ($matches['order'] === '<') {
+                $order = 'DESC';
+            }
+
+            $order_list[] = ['order' => $order, 'column' => $column];
+        }
+    }
+
+    return $order_list;
 }
 
 // Transform criteria list to readable text statement
@@ -353,13 +370,15 @@ function svn_utils_criteria_list_to_text($criteria_list, $url)
         $morder = '';
         $arr = explode(',', $criteria_list);
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         foreach ($arr as $crit) {
             $morder .= ($morder ? "," . $crit : $crit);
             $attr = str_replace('>', '', $crit);
             $attr = str_replace('<', '', $attr);
 
-            $arr_text[] = '<a href="' . $url . '&morder=' . $morder . '#results">' .
-            svn_utils_field_get_label($attr) . '</a><img src="' . util_get_dir_image_theme() .
+            $arr_text[] = '<a href="' . $url . '&morder=' . $purifier->purify(urlencode($morder)) . '#results">' .
+            $purifier->purify(svn_utils_field_get_label($attr)) . '</a><img src="' . util_get_dir_image_theme() .
             ((substr($crit, -1) == '<') ? 'dn' : 'up') .
             '_arrow.png" border="0">';
         }
@@ -783,7 +802,10 @@ function svn_utils_is_there_specific_permission($project_svnroot)
     return ! $specifics || $specifics != '';
 }
 
-function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows = true)
+/**
+ * @psalm-param array<array{order:"ASC"|"DESC", column: "revision"|"commit_id"|"description"|"date"|"whoid"}> $order_by
+ */
+function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', array $order_by = [], $pv = 0, $foundRows = true)
 {
     global $_path;
 
@@ -852,17 +874,28 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
 
     $where .= $commiter_str . $commit_str . $srch_str . $path_str;
 
+    $limit = '';
     if (! isset($pv) || ! $pv) {
         $limit = " LIMIT " . db_ei($offset) . "," . db_ei($chunksz);
     }
 
-    // SQLi Warning: no real possibility to escape $order_by here.
-    // We rely on a proper filtering of user input by calling methods.
-    if (! isset($order_by) || $order_by == '') {
-        $order_by = " ORDER BY revision DESC ";
+    if (empty($order_by)) {
+        $order_by_sql = " ORDER BY revision DESC ";
+    } else {
+        $order_by_sql = ' ORDER BY ';
+        $order_by_sql .= implode(
+            ',',
+            array_map(
+                static function (array $order_by_row) {
+                    return $order_by_row['column'] . ' ' . $order_by_row['order'];
+                },
+                $order_by
+            )
+        );
+        $order_by_sql .= ' ';
     }
 
-    $sql = $select . $from . $where . $group_by . $order_by . $limit;
+    $sql = $select . $from . $where . $group_by . $order_by_sql . $limit;
     //echo $sql."<br>\n";
     $result = db_query($sql);
 
@@ -871,7 +904,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     if ($foundRows) {
         $sql1 = 'SELECT FOUND_ROWS() as nb';
         $result1 = db_query($sql1);
-        if ($result1 && ! db_error($result1)) {
+        if ($result1 && ! db_error()) {
             $row1 = db_fetch_array($result1);
             $totalrows = $row1['nb'];
         }
