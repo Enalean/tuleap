@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, TextCell } from "./report-cells";
+import { DateCell, HTMLCell, TextCell } from "./report-cells";
 import { ExportReport } from "./report-creator";
 import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 
@@ -34,6 +34,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                     rows: [
                         [new TextCell("Section B"), new TextCell("Section B col 2")],
                         [new DateCell(new Date("2020-09-07T14:00:00.000Z"))],
+                        [new HTMLCell("<div>HTML Content</div>")],
                     ],
                 },
             ],
@@ -45,7 +46,7 @@ describe("Transform an export report into a XSLX sheet", () => {
             Object {
               "!cols": Array [
                 Object {
-                  "wch": 10,
+                  "wch": 12,
                 },
                 Object {
                   "wch": 15,
@@ -63,7 +64,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                   },
                 },
               ],
-              "!ref": "A1:B7",
+              "!ref": "A1:B8",
               "A1": Object {
                 "character_width": 9,
                 "t": "s",
@@ -95,6 +96,11 @@ describe("Transform an export report into a XSLX sheet", () => {
                 "v": 2020-09-07T14:00:00.000Z,
               },
               "A7": Object {
+                "character_width": 12,
+                "t": "s",
+                "v": "HTML Content",
+              },
+              "A8": Object {
                 "character_width": 0,
                 "t": "z",
               },

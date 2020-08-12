@@ -109,8 +109,13 @@ msgstr "Se rendre à la dernière exécution dans la release %{ release_name }"
 msgid "ID"
 msgstr "ID"
 
+msgid "Justification comment"
+msgstr "Commentaire de justification"
+
 msgid "Justifications (for planned tests that are not-run, failed, blocked)"
-msgstr "Justifications (pour les tests planifiés qui sont non exécutés, échoués ou bloqués)"
+msgstr ""
+"Justifications (pour les tests planifiés qui sont non exécutés, échoués ou "
+"bloqués)"
 
 msgid "Milestone"
 msgstr "Jalon"

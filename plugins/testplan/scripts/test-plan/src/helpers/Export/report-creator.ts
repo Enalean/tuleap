@@ -35,7 +35,7 @@ export interface ExportReport {
     readonly sections: ReadonlyArray<ReportSection>;
 }
 
-export function createExportReport(
+export async function createExportReport(
     gettext_provider: VueGettextProvider,
     project_name: string,
     milestone_title: string,
@@ -43,7 +43,7 @@ export function createExportReport(
     current_date: Date,
     backlog_items: ReadonlyArray<BacklogItem>,
     campaigns: ReadonlyArray<Campaign>
-): ExportReport {
+): Promise<ExportReport> {
     const planned_test_cases = getPlannedTestCasesAssociatedWithCampaignAndTestExec(
         gettext_provider,
         backlog_items,
@@ -61,7 +61,7 @@ export function createExportReport(
             ),
             buildRequirementsSection(gettext_provider, backlog_items),
             buildTestResultsSection(gettext_provider, planned_test_cases),
-            buildJustificationsSection(gettext_provider, planned_test_cases),
+            await buildJustificationsSection(gettext_provider, planned_test_cases),
         ],
     };
 }

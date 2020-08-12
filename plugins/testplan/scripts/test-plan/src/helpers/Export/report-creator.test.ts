@@ -30,7 +30,7 @@ import { TestResultsSection } from "./test-results-builder";
 import { JustificationsSection } from "./justifications-builder";
 
 describe("Create an export report", () => {
-    it("generates the report", () => {
+    it("generates the report", async () => {
         const gettext_provider = createVueGettextProviderPassthrough();
         jest.spyOn(general_information_builder, "buildGeneralSection").mockReturnValue(({
             rows: [[new TextCell("General section")]],
@@ -41,11 +41,11 @@ describe("Create an export report", () => {
         jest.spyOn(test_results_builder, "buildTestResultsSection").mockReturnValue(({
             rows: [[new TextCell("Test results section")]],
         } as unknown) as TestResultsSection);
-        jest.spyOn(justifications_builder, "buildJustificationsSection").mockReturnValue(({
+        jest.spyOn(justifications_builder, "buildJustificationsSection").mockResolvedValue(({
             rows: [[new TextCell("Justifications section")]],
         } as unknown) as JustificationsSection);
 
-        const report = createExportReport(
+        const report = await createExportReport(
             gettext_provider,
             "Project",
             "Milestone",

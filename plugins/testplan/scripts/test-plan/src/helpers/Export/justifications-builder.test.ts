@@ -20,10 +20,11 @@
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
 import { buildJustificationsSection } from "./justifications-builder";
-import { DateCell, TextCell } from "./report-cells";
+import { DateCell, HTMLCell, TextCell } from "./report-cells";
+import * as artifacts_retriever from "./artifacts-retriever";
 
 describe("Build justifications section", () => {
-    it("buids section", () => {
+    it("buids section", async () => {
         const gettext_provider = createVueGettextProviderPassthrough();
 
         const planned_test_cases: PlannedTestCaseAssociatedWithTestExecAndCampaign[] = [
@@ -49,9 +50,43 @@ describe("Build justifications section", () => {
                 test_exec_runner: "Some user",
                 test_exec_date: new Date("2020-08-11T10:20:00.000Z"),
             },
+            {
+                campaign_id: 123,
+                campaign_name: "Campaign name",
+                test_case_id: 741,
+                test_case_title: "Test case title 3",
+                test_exec_id: 99993,
+                test_exec_status: "failed",
+                test_exec_internationalized_status: "Failed",
+                test_exec_runner: "Some user",
+                test_exec_date: new Date("2020-08-11T10:30:00.000Z"),
+            },
         ];
 
-        const section = buildJustificationsSection(gettext_provider, planned_test_cases);
+        jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
+            new Map([
+                [
+                    99992,
+                    {
+                        id: 99992,
+                        values_by_field: {
+                            results: { type: "text", value: "HTML Comment", format: "html" },
+                        },
+                    },
+                ],
+                [
+                    99993,
+                    {
+                        id: 99993,
+                        values_by_field: {
+                            results: { type: "text", value: "Plaintext Comment", format: "text" },
+                        },
+                    },
+                ],
+            ])
+        );
+
+        const section = await buildJustificationsSection(gettext_provider, planned_test_cases);
 
         expect(section).toStrictEqual({
             title: new TextCell(
@@ -64,6 +99,7 @@ describe("Build justifications section", () => {
                 new TextCell("Test execution status"),
                 new TextCell("Test execution runner"),
                 new TextCell("Test execution date"),
+                new TextCell("Justification comment"),
             ],
             rows: [
                 [
@@ -73,8 +109,88 @@ describe("Build justifications section", () => {
                     new TextCell("Failed"),
                     new TextCell("Some user"),
                     new DateCell(new Date("2020-08-11T10:20:00.000Z")),
+                    new HTMLCell("HTML Comment"),
+                ],
+                [
+                    new TextCell("99993"),
+                    new TextCell("741"),
+                    new TextCell("Test case title 3"),
+                    new TextCell("Failed"),
+                    new TextCell("Some user"),
+                    new DateCell(new Date("2020-08-11T10:30:00.000Z")),
+                    new TextCell("Plaintext Comment"),
                 ],
             ],
         });
+    });
+
+    it("buids section even when a test exec artifact cannot be found", async () => {
+        const gettext_provider = createVueGettextProviderPassthrough();
+
+        const planned_test_cases: PlannedTestCaseAssociatedWithTestExecAndCampaign[] = [
+            {
+                campaign_id: 123,
+                campaign_name: "Campaign name",
+                test_case_id: 741,
+                test_case_title: "Test case title 4",
+                test_exec_id: 99994,
+                test_exec_status: "failed",
+                test_exec_internationalized_status: "Failed",
+                test_exec_runner: "Some user",
+                test_exec_date: new Date("2020-08-11T10:40:00.000Z"),
+            },
+        ];
+
+        jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(new Map());
+
+        const section = await buildJustificationsSection(gettext_provider, planned_test_cases);
+
+        expect(section.rows).toStrictEqual([
+            [
+                new TextCell("99994"),
+                new TextCell("741"),
+                new TextCell("Test case title 4"),
+                new TextCell("Failed"),
+                new TextCell("Some user"),
+                new DateCell(new Date("2020-08-11T10:40:00.000Z")),
+                new TextCell(""),
+            ],
+        ]);
+    });
+
+    it("buids section even when the results field cannot be found on a test exec", async () => {
+        const gettext_provider = createVueGettextProviderPassthrough();
+
+        const planned_test_cases: PlannedTestCaseAssociatedWithTestExecAndCampaign[] = [
+            {
+                campaign_id: 123,
+                campaign_name: "Campaign name",
+                test_case_id: 741,
+                test_case_title: "Test case title 5",
+                test_exec_id: 99995,
+                test_exec_status: "failed",
+                test_exec_internationalized_status: "Failed",
+                test_exec_runner: "Some user",
+                test_exec_date: new Date("2020-08-11T10:50:00.000Z"),
+            },
+        ];
+
+        jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
+            new Map([[99995, { id: 99995, values_by_field: {} }]])
+        );
+
+        const section = await buildJustificationsSection(gettext_provider, planned_test_cases);
+
+        expect(section.rows).toStrictEqual([
+            [
+                new TextCell("99995"),
+                new TextCell("741"),
+                new TextCell("Test case title 5"),
+                new TextCell("Failed"),
+                new TextCell("Some user"),
+                new DateCell(new Date("2020-08-11T10:50:00.000Z")),
+                new TextCell(""),
+            ],
+        ]);
     });
 });

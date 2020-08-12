@@ -17,10 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ReportCell = TextCell | DateCell;
+export type ReportCell = TextCell | DateCell | HTMLCell;
 
 export class TextCell {
     readonly type = "text";
+
+    constructor(readonly value: string) {}
+}
+
+export class HTMLCell {
+    readonly type = "html";
 
     constructor(readonly value: string) {}
 }
