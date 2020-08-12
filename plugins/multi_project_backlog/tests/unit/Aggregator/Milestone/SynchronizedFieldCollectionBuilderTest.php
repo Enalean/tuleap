@@ -31,45 +31,72 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var SynchronizedFieldCollectionBuilder
+     */
+    private $builder;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|\Tracker_FormElementFactory
      */
     private $form_element_factory;
     /**
-     * @var SynchronizedFieldCollectionBuilder
+     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_TitleFactory
      */
-    private $builder;
+    private $title_factory;
 
     protected function setUp(): void
     {
         $this->form_element_factory = M::mock(\Tracker_FormElementFactory::class);
-        $this->builder              = new SynchronizedFieldCollectionBuilder($this->form_element_factory);
+        $this->title_factory        = M::mock(\Tracker_Semantic_TitleFactory::class);
+        $this->builder              = new SynchronizedFieldCollectionBuilder(
+            $this->form_element_factory,
+            $this->title_factory
+        );
     }
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $first_tracker              = $this->buildTestTracker(103);
-        $second_tracker             = $this->buildTestTracker(104);
-        $milestones                 = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
-        $user                       = UserTestBuilder::aUser()->build();
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockArtifactLinkField($second_tracker, $user);
+        $this->mockTitleField($first_tracker);
+        $this->mockTitleField($second_tracker);
 
         $this->assertNotNull($this->builder->buildFromMilestoneTrackers($milestones, $user));
     }
 
-    public function testBuildFromMilestoneTrackersReturnsNullWhenOneTrackerDoesNotHaveAnArtifactLinkField(): void
+    public function testItThrowsWhenOneTrackerDoesNotHaveAnArtifactLinkField(): void
     {
-        $first_tracker             = $this->buildTestTracker(103);
-        $second_tracker            = $this->buildTestTracker(104);
-        $milestones                = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
-        $user                      = UserTestBuilder::aUser()->build();
-        $this->mockArtifactLinkField($first_tracker, $user);
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
         $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
             ->once()
-            ->with($user, $second_tracker)
+            ->with($user, $first_tracker)
             ->andReturnNull();
 
         $this->expectException(NoArtifactLinkFieldException::class);
+        $this->builder->buildFromMilestoneTrackers($milestones, $user);
+    }
+
+    public function testItThrowsWhenOneTrackerDoesNotHaveATitleField(): void
+    {
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
+        $this->mockArtifactLinkField($first_tracker, $user);
+        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
+        $title_semantic->shouldReceive('getField')->andReturnNull();
+        $this->title_factory->shouldReceive('getByTracker')
+            ->once()
+            ->with($first_tracker)
+            ->andReturn($title_semantic);
+
+        $this->expectException(NoTitleFieldException::class);
         $this->builder->buildFromMilestoneTrackers($milestones, $user);
     }
 
@@ -101,5 +128,16 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             ->once()
             ->with($user, $tracker)
             ->andReturn($artifact_link_field);
+    }
+
+    private function mockTitleField(\Tracker $tracker): void
+    {
+        $title_field    = M::mock(\Tracker_FormElement_Field::class);
+        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
+        $title_semantic->shouldReceive('getField')->andReturn($title_field);
+        $this->title_factory->shouldReceive('getByTracker')
+            ->once()
+            ->with($tracker)
+            ->andReturn($title_semantic);
     }
 }

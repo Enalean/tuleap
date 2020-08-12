@@ -22,10 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-final class NoArtifactLinkFieldException extends \RuntimeException implements SynchronizedFieldRetrievalException
+interface SynchronizedFieldRetrievalException extends \Throwable
 {
-    public function __construct(int $tracker_id)
-    {
-        parent::__construct("Tracker with id $tracker_id has no artifact link field");
-    }
 }
