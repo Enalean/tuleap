@@ -28,11 +28,11 @@ function appendTheDisplayPreferencesSelect(doc: HTMLDocument): HTMLSelectElement
     const absolute_tooltip_option = document.createElement("option");
 
     relative_first_option.value = "relative_first-absolute_shown";
-    relative_first_option.text = "Relative (absolute)";
+    relative_first_option.text = "Relative date first";
     relative_first_option.selected = true;
 
     absolute_tooltip_option.value = "absolute_first-relative_tooltip";
-    absolute_tooltip_option.text = "Absolute";
+    absolute_tooltip_option.text = "Absolute date only";
 
     select.add(relative_first_option);
     select.add(absolute_tooltip_option);
