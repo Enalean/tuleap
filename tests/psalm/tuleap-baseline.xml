@@ -55599,11 +55599,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/Group.class.php">
-    <DeprecatedFunction occurrences="19">
-      <code>db_query("SELECT * FROM groups WHERE group_id=" . $this-&gt;group_id)</code>
+    <DeprecatedFunction occurrences="23">
+      <code>db_query("SELECT * FROM groups WHERE group_id=" . db_ei($this-&gt;group_id))</code>
       <code>db_numrows($this-&gt;db_result)</code>
       <code>db_fetch_array($this-&gt;db_result)</code>
-      <code>db_query("SELECT user_id FROM user_group WHERE group_id='" . $this-&gt;getGroupId() . "'")</code>
+      <code>db_query("SELECT user_id FROM user_group WHERE group_id='" . db_ei($this-&gt;getGroupId()) . "'")</code>
       <code>db_numrows($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_error()</code>
@@ -55617,7 +55617,8 @@
       <code>db_fetch_array($res)</code>
       <code>db_error()</code>
       <code>db_free_result($res)</code>
-      <code>db_query("UPDATE groups SET type='$type' WHERE group_id='" . $this-&gt;group_id . "'")</code>
+      <code>db_query("UPDATE groups SET type='$type' WHERE group_id='" . db_ei($this-&gt;group_id) . "'")</code>
+      <code>db_ei($this-&gt;group_id)</code>
     </DeprecatedFunction>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;members_data_array</code>
@@ -74694,7 +74695,7 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/www/forum/index.php">
-    <DeprecatedFunction occurrences="8">
+    <DeprecatedFunction occurrences="9">
       <code>db_query($sql)</code>
       <code>db_numrows($result)</code>
       <code>db_error()</code>
@@ -74703,6 +74704,7 @@
       <code>db_result($result, $j, 'total')</code>
       <code>db_result($result, $j, 'total')</code>
       <code>db_result($result, $j, 'description')</code>
+      <code>db_ei($group_id)</code>
     </DeprecatedFunction>
   </file>
   <file src="src/www/forum/message.php">
@@ -76015,7 +76017,7 @@
     </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/mail/mail_utils.php">
-    <DeprecatedFunction occurrences="7">
+    <DeprecatedFunction occurrences="8">
       <code>db_query($sql)</code>
       <code>db_result($res, 0, 'is_public')</code>
       <code>db_query($sql)</code>
@@ -76023,6 +76025,7 @@
       <code>db_result($res, 0, 'status')</code>
       <code>db_query($sql)</code>
       <code>db_result($res, 0, 'list_name')</code>
+      <code>db_ei($list_id)</code>
     </DeprecatedFunction>
     <MissingParamType occurrences="6">
       <code>$params</code>

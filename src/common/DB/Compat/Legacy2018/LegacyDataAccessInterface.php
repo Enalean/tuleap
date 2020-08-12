@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,9 @@ interface LegacyDataAccessInterface
      * @param $sql string the database query to run
      * @deprecated
      * @return object MySQLDataAccessResultInterface
+     *
+     * @psalm-taint-sink sql $sql
+     * @psalm-taint-sink sql $params
      */
     public function query($sql, $params = []);
 

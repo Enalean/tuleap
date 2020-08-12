@@ -29,6 +29,21 @@ $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 /**
+ * @psalm-return "user_name"|"realname"|"status"
+ * @psalm-taint-escape sql
+ */
+function getSortHeaderVerifiedParameter(HTTPRequest $request, string $parameter_name): string
+{
+    $value           = 'user_name';
+    $parameter_value = $request->get($parameter_name);
+    if ($parameter_value === 'realname' || $parameter_value === 'status') {
+        $value = $parameter_value;
+    }
+
+    return $value;
+}
+
+/**
 *   select the fields sort order and the header arrow direction
 *
 * @param String $previous_sort_header
@@ -81,18 +96,11 @@ if ($request->exist('export')) {
         }
     }
     //Get current sort header
-    $header_whitelist = ['user_name', 'realname', 'status'];
-    if (in_array($request->get('current_sort_header'), $header_whitelist)) {
-        $current_sort_header = $request->get('current_sort_header');
-    } else {
-        $current_sort_header = 'user_name';
-    }
+    $current_sort_header = getSortHeaderVerifiedParameter($request, 'current_sort_header');
     //Get current sort order
-    $sort_order_whitelist = ['ASC', 'DESC'];
-    if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
-        $sort_order = $request->get('sort_order');
-    } else {
-        $sort_order = 'ASC';
+    $sort_order = 'ASC';
+    if ($request->get('sort_order') === 'DESC') {
+        $sort_order = 'DESC';
     }
     //Get status values
     $status_values = [];
@@ -140,17 +148,11 @@ if (in_array($request->get('previous_sort_header'), $header_whitelist)) {
 } else {
     $previous_sort_header = '';
 }
-if (in_array($request->get('current_sort_header'), $header_whitelist)) {
-    $current_sort_header = $request->get('current_sort_header');
-} else {
-    $current_sort_header = 'user_name';
-}
+$current_sort_header = getSortHeaderVerifiedParameter($request, 'current_sort_header');
 
-$sort_order_whitelist = ['ASC', 'DESC'];
-if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
-    $sort_order = $request->get('sort_order');
-} else {
-    $sort_order = 'ASC';
+$sort_order = 'ASC';
+if ($request->get('sort_order') === 'DESC') {
+    $sort_order = 'DESC';
 }
 
 // Check if group_id is valid

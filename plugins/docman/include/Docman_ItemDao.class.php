@@ -149,8 +149,8 @@ class Docman_ItemDao extends DataAccessObject
                         ' AND (obsolescence_date > 0' .
                         '  AND obsolescence_date < %d)' .
                         ' ORDER BY obsolescence_date DESC',
-            $groupId,
-            $this->getObsoleteToday()
+            $this->da->escapeInt($groupId),
+            $this->da->escapeInt($this->getObsoleteToday())
         );
         return $this->retrieve($sql);
     }
@@ -417,7 +417,7 @@ class Docman_ItemDao extends DataAccessObject
         $cols   = ['item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
-                $arg[]    = $key;
+                $arg[]    = $this->da->quoteSmartSchema($key);
                 $values[] = $this->da->quoteSmart($value);
             }
         }
@@ -540,7 +540,7 @@ class Docman_ItemDao extends DataAccessObject
             $set_array = [];
             foreach ($row as $key => $value) {
                 if ($key !== 'id') {
-                    $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);
+                    $set_array[] = $this->da->quoteSmartSchema($key) . ' = ' . $this->da->quoteSmart($value);
                 }
             }
             if (empty($set_array)) {
@@ -575,7 +575,7 @@ class Docman_ItemDao extends DataAccessObject
                        ' SET item_dst.' . $mdLabel . ' = item_src.' . $mdLabel .
                        ' WHERE item_src.item_id = %d' .
                        '  AND item_dst.item_id IN (%s)',
-            $srcItemId,
+            $this->da->escapeInt($srcItemId),
             implode(',', $itemIdArray)
         );
         return $this->update($sql);

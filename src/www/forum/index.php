@@ -56,7 +56,7 @@ if (user_isloggedin() && user_ismember($group_id)) {
 $sql = "SELECT g.group_forum_id,g.forum_name, g.description, famc.count as total
     FROM forum_group_list g
     LEFT JOIN forum_agg_msg_count famc USING (group_forum_id)
-    WHERE g.group_id='$group_id' AND g.is_public $public_flag;";
+    WHERE g.group_id='" . db_ei($group_id) . "' AND g.is_public $public_flag;";
 
 $result = db_query($sql);
 

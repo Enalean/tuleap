@@ -349,6 +349,7 @@ function ugroup_db_get_dynamic_members(
     if ($user_ids) {
         $user_status .= ' AND user.user_id IN (' . $data_access->escapeIntImplode($user_ids) . ')';
     }
+    $group_id = $data_access->escapeInt($group_id);
     // Special Cases
     if ($ugroup_id == $GLOBALS['UGROUP_NONE']) {
         // Empty group

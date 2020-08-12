@@ -557,9 +557,10 @@ class UserDao extends DataAccessObject
      * @param string $pattern
      * @param int $offset
      * @param int $limit
-     * @param string $sort_header
-     * @param string $sort_order
      * @param array $status_values
+     *
+     * @psalm-param "user_name"|"realname"|"status" $sort_header
+     * @psalm-param "ASC"|"DESC" $sort_order
      *
      * @psalm-return array{
      *      users: DataAccessResult|false,
@@ -567,7 +568,7 @@ class UserDao extends DataAccessObject
      * }
      * @return array
      */
-    public function listAllUsers($group_id, $pattern, $offset, $limit, $sort_header, $sort_order, $status_values)
+    public function listAllUsers($group_id, $pattern, $offset, $limit, string $sort_header, string $sort_order, $status_values)
     {
         $group_id = $this->da->escapeInt($group_id);
         $offset   = $this->da->escapeInt($offset);

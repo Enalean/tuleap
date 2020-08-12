@@ -80,7 +80,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $this->data_array = $param;
         } elseif (intval($param) > 0) {
             $this->group_id = (int) $param; // TODO db_es()?
-            $this->db_result = db_query("SELECT * FROM groups WHERE group_id=" . $this->group_id);
+            $this->db_result = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($this->group_id));
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
                 $this->setError($GLOBALS['Language']->getText('include_group', 'g_not_found'));
@@ -255,7 +255,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($this->members_data_array) {
      //list of members already built
         } else {
-            $res = db_query("SELECT user_id FROM user_group WHERE group_id='" . $this->getGroupId() . "'");
+            $res = db_query("SELECT user_id FROM user_group WHERE group_id='" . db_ei($this->getGroupId()) . "'");
             if ($res && db_numrows($res) > 0) {
                     $mb_array = [];
                 while ($row = db_fetch_array($res)) {
@@ -364,7 +364,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             if (user_isloggedin()) {
                     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-                    $res = db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . $this->getGroupId() . "'");
+                    $res = db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . db_ei($this->getGroupId()) . "'");
                 if ($res && db_numrows($res) > 0) {
                     $this->perm_data_array = db_fetch_array($res);
                 } else {
@@ -401,7 +401,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function setType($type)
     {
-        db_query("UPDATE groups SET type='$type' WHERE group_id='" . $this->group_id . "'");
+        db_query("UPDATE groups SET type='$type' WHERE group_id='" . db_ei($this->group_id) . "'");
     }
 
     /**

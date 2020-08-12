@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -110,6 +110,8 @@ class DataAccessObject
      *
      * @deprecated
      * @return DataAccessResult|false
+     *
+     * @psalm-taint-sink sql $sql
      */
     public function retrieve($sql, $params = [])
     {
@@ -128,6 +130,8 @@ class DataAccessObject
      * @deprecated
      *
      * @return array|false
+     *
+     * @psalm-taint-sink sql $sql
      */
     protected function retrieveFirstRow($sql)
     {
@@ -142,6 +146,8 @@ class DataAccessObject
      * @deprecated
      *
      * @return int
+     *
+     * @psalm-taint-sink sql $sql
      */
     protected function retrieveCount($sql)
     {
@@ -156,6 +162,8 @@ class DataAccessObject
      * @deprecated
      *
      * @return array of string
+     *
+     * @psalm-taint-sink sql $sql
      */
     protected function retrieveIds($sql)
     {
@@ -190,6 +198,9 @@ class DataAccessObject
      * @deprecated
      *
      * @return bool true if success
+     *
+     * @psalm-taint-sink sql $sql
+     * @psalm-taint-sink sql $params
      */
     public function update($sql, $params = [])
     {
@@ -234,6 +245,8 @@ class DataAccessObject
      * @return int|false the last insert id or false if there is an error
      *
      * @psalm-ignore-falsable-return
+     *
+     * @psalm-taint-sink sql $sql
      */
     protected function updateAndGetLastId($sql)
     {
