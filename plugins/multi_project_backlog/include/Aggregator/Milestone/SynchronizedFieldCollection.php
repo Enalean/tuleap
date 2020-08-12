@@ -22,49 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-final class MilestoneTrackerCollection
+final class SynchronizedFieldCollection
 {
     /**
-     * @var \Tracker[]
+     * @var \Tracker_FormElement_Field[]
      * @psalm-readonly
      */
-    private $milestone_trackers;
+    private $synchronized_fields;
 
     /**
-     * @param \Tracker[] $milestone_trackers
+     * @param \Tracker_FormElement_Field[] $synchronized_fields
      */
-    public function __construct(array $milestone_trackers)
+    public function __construct(array $synchronized_fields)
     {
-        $this->milestone_trackers = $milestone_trackers;
+        $this->synchronized_fields = $synchronized_fields;
     }
 
-    /**
-     * @return int[]
-     * @psalm-mutation-free
-     */
-    public function getTrackerIds(): array
+    public function canUserSubmitAndUpdateAllFields(\PFUser $user): bool
     {
-        return array_map(
-            function (\Tracker $tracker) {
-                return (int) $tracker->getId();
-            },
-            $this->milestone_trackers
-        );
-    }
-
-    /**
-     * @return \Tracker[]
-     * @psalm-mutation-free
-     */
-    public function getMilestoneTrackers(): array
-    {
-        return $this->milestone_trackers;
-    }
-
-    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
-    {
-        foreach ($this->milestone_trackers as $milestone_tracker) {
-            if (! $milestone_tracker->userCanSubmitArtifact($user)) {
+        foreach ($this->synchronized_fields as $synchronized_field) {
+            if (! $synchronized_field->userCanSubmit($user)) {
+                return false;
+            }
+            if (! $synchronized_field->userCanUpdate($user)) {
                 return false;
             }
         }

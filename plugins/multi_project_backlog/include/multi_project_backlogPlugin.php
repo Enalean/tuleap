@@ -185,6 +185,9 @@ final class multi_project_backlogPlugin extends Plugin
             new MilestoneCreatorSemanticStatusChecker(
                 new Tracker_Semantic_StatusDao(),
                 Tracker_Semantic_StatusFactory::instance()
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
+                \Tracker_FormElementFactory::instance()
             )
         );
 
