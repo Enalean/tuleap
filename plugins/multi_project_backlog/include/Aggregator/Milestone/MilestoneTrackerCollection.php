@@ -59,4 +59,14 @@ final class MilestoneTrackerCollection
     {
         return $this->milestone_trackers;
     }
+
+    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
+    {
+        foreach ($this->milestone_trackers as $milestone_tracker) {
+            if (! $milestone_tracker->userCanSubmitArtifact($user)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
