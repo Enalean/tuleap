@@ -641,6 +641,9 @@ msgstr "Données"
 msgid "Date"
 msgstr "Date"
 
+msgid "Dates display"
+msgstr "Affichage des dates"
+
 msgid "Day"
 msgstr "Jour"
 
@@ -661,9 +664,6 @@ msgstr "Licence par défaut"
 
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
-
-msgid "Default relative dates display"
-msgstr "Affichage des dates relatives par défaut"
 
 msgid "Default relative dates display preference saved successfully."
 msgstr ""

@@ -1,15 +1,12 @@
 <section class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{# gettext }}Relative dates display{{/ gettext }}</h1>
-    <nav class="tlp-tabs">
-        <a href="#" class="tlp-tab tlp-tab-active">Settings</a>
-    </nav>
+    <h1 class="tlp-framed-horizontally">{{# gettext }}Dates display{{/ gettext }}</h1>
 
     <section class="tlp-framed-horizontally">
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-calendar tlp-pane-title-icon"></i>{{# gettext }}Default dates display{{/ gettext }}
+                        <i class="fa fa-calendar tlp-pane-title-icon"></i>{{# gettext }}Dates display{{/ gettext }}
                     </h1>
                 </div>
                 <form class="tlp-pane-section" method="POST">
@@ -19,7 +16,7 @@
 
                     <div class="siteadmin-dates-display-preference-with-preview">
                         <div class="tlp-form-element">
-                            <label for="relative-dates-display" class="tlp-label">{{# gettext }}Default relative dates display{{/ gettext }}</label>
+                            <label for="relative-dates-display" class="tlp-label">{{# gettext }}Default dates display{{/ gettext }}</label>
                             <select
                                     id="relative-dates-display"
                                     class="tlp-select tlp-select-adjusted"
@@ -41,7 +38,7 @@
                                 {{/ relative_dates_display_preference_sb_presenter }}
                             </select>
                         </div>
-                        <p class="tlp-text-muted">
+                        <p class="tlp-text-muted siteadmin-dates-display-preference-preview">
                             {{# gettext }} Preview: {{/ gettext }} {{{ tlp_relative_date_component_purified }}}
                         </p>
                     </div>
@@ -51,7 +48,6 @@
                             {{# gettext }} Force usage? {{/ gettext }}
                         </label>
                         <p class="tlp-text-info">
-                            <i class="fa fa-life-saver"></i>
                             {{# gettext }} Check this option if you want to force the usage of this preference for all users. {{/ gettext }}
                         </p>
                     </div>

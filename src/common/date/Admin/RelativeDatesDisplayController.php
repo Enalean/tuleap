@@ -64,17 +64,6 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
             throw new ForbiddenException();
         }
 
-        $this->admin_page_renderer->renderANoFramedPresenter(
-            _('Relative dates display'),
-            __DIR__ . '/../../../templates/admin/date',
-            'dates-display',
-            new RelativeDatesDisplayAdminPresenter(
-                $request->getCurrentUser(),
-                $this->csrf_token,
-                DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
-            )
-        );
-
         $this->admin_page_renderer->addJavascriptAsset(
             RelativeDatesAssetsRetriever::getAsJavascriptAssets()
         );
@@ -87,7 +76,16 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
             )
         );
 
-        $this->admin_page_renderer->footer();
+        $this->admin_page_renderer->renderANoFramedPresenter(
+            _('Relative dates display'),
+            __DIR__ . '/../../../templates/admin/date',
+            'dates-display',
+            new RelativeDatesDisplayAdminPresenter(
+                $request->getCurrentUser(),
+                $this->csrf_token,
+                DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
+            )
+        );
     }
 
     public static function buildCSRFToken(): \CSRFSynchronizerToken
