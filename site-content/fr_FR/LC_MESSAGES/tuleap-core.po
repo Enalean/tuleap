@@ -78,6 +78,9 @@ msgstr "(mois/jour/année)"
 msgid "-- None --"
 msgstr "-- Aucun --"
 
+msgid "5 days ago"
+msgstr "il y a 5 jours"
+
 msgid "A deleted project can not be restored."
 msgstr "Un projet détruit ne peut être restoré."
 
@@ -1425,6 +1428,9 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 msgid "Preferences"
 msgstr "Préférences"
 
+msgid "Preview"
+msgstr "Aperçu"
+
 msgid "Preview:"
 msgstr "Aperçu :"
 
@@ -2137,6 +2143,9 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr "Ce groupe n'a pas encore de membres."
 
+msgid "This is a preview"
+msgstr "Ceci est un aperçu"
+
 msgid "This is a private project."
 msgstr "Ce projet est privé."
 
@@ -2415,6 +2424,9 @@ msgstr "L'utilisateur '%s' n’existe pas"
 msgid "User added"
 msgstr "Utilisateur ajouté"
 
+msgid "User and date"
+msgstr "Utilisateur et date"
+
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
@@ -2452,6 +2464,9 @@ msgstr "Les préférences utilisateur ont été mises à jour"
 
 msgid "User status"
 msgstr "Statut de l'utilisateur"
+
+msgid "Username"
+msgstr "Nom utilisateur"
 
 msgid "Username display"
 msgstr "Affichage des noms"
@@ -2497,9 +2512,6 @@ msgstr "Webhooks"
 
 msgid "Week"
 msgstr "Semaine"
-
-msgid "Welcome"
-msgstr "Bienvenue"
 
 msgid "Welcome aboard"
 msgstr "Bienvenue à bord"

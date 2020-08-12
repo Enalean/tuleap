@@ -113,6 +113,12 @@ final class AppearancePresenter
     public $relative_dates_display_preference_sb_presenter;
 
     /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $date_for_preview = '';
+
+    /**
      * @param LanguagePresenter[]   $languages
      * @param ThemeColorPresenter[] $colors
      */
@@ -147,6 +153,15 @@ final class AppearancePresenter
 
         $presenter_builder = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
         $this->relative_dates_display_preference_sb_presenter = $presenter_builder->build($relative_dates_display);
+
+        $five_days_ago_timestamp = (new \DateTimeImmutable())->sub(
+            new \DateInterval('P5D')
+        )->getTimestamp();
+        $date_five_days_ago = date($GLOBALS['Language']->getText('system', 'datefmt_short'), $five_days_ago_timestamp);
+
+        if ($date_five_days_ago) {
+            $this->date_for_preview = $date_five_days_ago;
+        }
 
         $this->current_color = '';
         foreach ($colors as $color) {
