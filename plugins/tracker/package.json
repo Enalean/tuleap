@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/bootstrap": "^4.3.1",
     "@types/dompurify": "^2.0.2",
-    "@types/jquery": "^3.3.38",
+    "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.3",
