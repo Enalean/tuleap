@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/dompurify": "^2.0.2",
     "@types/fscreen": "^1.0.1",
-    "@types/jquery": "^3.3.38",
+    "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
     "@vue/test-utils": "^1.0.3",
     "jquery": "^3.5.1",

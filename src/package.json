@@ -45,7 +45,7 @@
     "@types/d3-scale": "^2.1.1",
     "@types/d3-selection": "^1.4.1",
     "@types/dompurify": "^2.0.2",
-    "@types/jquery": "^3.3.38",
+    "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
     "@types/node-gettext": "^3.0.1",
     "@types/sprintf-js": "^1.1.2",
