@@ -18,7 +18,10 @@
  */
 
 import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
-import { DateCell, TextCell } from "./report-cells";
+import { DateCell, HTMLCell, TextCell } from "./report-cells";
+import { Artifact, retrieveArtifacts } from "./artifacts-retriever";
+
+const TEST_EXEC_RESULT_FIELD_COMMENT_NAME = "results";
 
 type JustificationsSectionRow = readonly [
     TextCell,
@@ -26,38 +29,61 @@ type JustificationsSectionRow = readonly [
     TextCell,
     TextCell,
     TextCell,
-    DateCell
+    DateCell,
+    HTMLCell | TextCell
 ];
 
 export interface JustificationsSection {
     readonly title: TextCell;
-    readonly headers: readonly [TextCell, TextCell, TextCell, TextCell, TextCell, TextCell];
+    readonly headers: readonly [
+        TextCell,
+        TextCell,
+        TextCell,
+        TextCell,
+        TextCell,
+        TextCell,
+        TextCell
+    ];
     readonly rows: ReadonlyArray<JustificationsSectionRow>;
 }
 
-export function buildJustificationsSection(
+export async function buildJustificationsSection(
     gettext_provider: VueGettextProvider,
     planned_test_cases: ReadonlyArray<PlannedTestCaseAssociatedWithTestExecAndCampaign>
-): JustificationsSection {
-    const rows = planned_test_cases
-        .filter(
-            (value: PlannedTestCaseAssociatedWithTestExecAndCampaign): boolean =>
-                value.test_exec_status !== "passed"
+): Promise<JustificationsSection> {
+    const non_passed_test_cases = planned_test_cases.filter(
+        (value: PlannedTestCaseAssociatedWithTestExecAndCampaign): boolean =>
+            value.test_exec_status !== "passed"
+    );
+
+    const full_artifact_non_passed_test_execs: ReadonlyMap<
+        number,
+        Artifact
+    > = await retrieveArtifacts(
+        non_passed_test_cases.map(
+            (test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign): number =>
+                test_case.test_exec_id
         )
-        .map(
-            (
-                not_passed_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign
-            ): JustificationsSectionRow => {
-                return [
-                    new TextCell(String(not_passed_test_case.test_exec_id)),
-                    new TextCell(String(not_passed_test_case.test_case_id)),
-                    new TextCell(not_passed_test_case.test_case_title),
-                    new TextCell(not_passed_test_case.test_exec_internationalized_status),
-                    new TextCell(not_passed_test_case.test_exec_runner),
-                    new DateCell(not_passed_test_case.test_exec_date),
-                ];
-            }
-        );
+    );
+
+    const rows = non_passed_test_cases.map(
+        (
+            not_passed_test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign
+        ): JustificationsSectionRow => {
+            return [
+                new TextCell(String(not_passed_test_case.test_exec_id)),
+                new TextCell(String(not_passed_test_case.test_case_id)),
+                new TextCell(not_passed_test_case.test_case_title),
+                new TextCell(not_passed_test_case.test_exec_internationalized_status),
+                new TextCell(not_passed_test_case.test_exec_runner),
+                new DateCell(not_passed_test_case.test_exec_date),
+                findJustificationCommentCell(
+                    not_passed_test_case.test_exec_id,
+                    full_artifact_non_passed_test_execs
+                ),
+            ];
+        }
+    );
 
     return {
         title: new TextCell(
@@ -72,7 +98,30 @@ export function buildJustificationsSection(
             new TextCell(gettext_provider.$gettext("Test execution status")),
             new TextCell(gettext_provider.$gettext("Test execution runner")),
             new TextCell(gettext_provider.$gettext("Test execution date")),
+            new TextCell(gettext_provider.$gettext("Justification comment")),
         ],
         rows,
     };
+}
+
+function findJustificationCommentCell(
+    test_exec_id: number,
+    full_artifact_test_execs: ReadonlyMap<number, Artifact>
+): HTMLCell | TextCell {
+    const test_exec = full_artifact_test_execs.get(test_exec_id);
+
+    if (typeof test_exec === "undefined") {
+        return new TextCell("");
+    }
+
+    const result_field = test_exec.values_by_field[TEST_EXEC_RESULT_FIELD_COMMENT_NAME];
+    if (typeof result_field === "undefined" || result_field.type !== "text") {
+        return new TextCell("");
+    }
+
+    if (result_field.format === "text") {
+        return new TextCell(result_field.value);
+    }
+
+    return new HTMLCell(result_field.value);
 }

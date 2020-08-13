@@ -97,19 +97,22 @@ export default class ExportButton extends Vue {
         }
         this.is_preparing_the_download = true;
 
-        const { downloadExportDocument } = await import(
-            /* webpackChunkName: "download-export-sheet" */ "../../helpers/Export/download-export-document"
-        );
-        downloadExportDocument(
-            this,
-            this.project_name,
-            this.milestone_title,
-            this.user_display_name,
-            this.backlog_items,
-            this.campaigns
-        );
-
-        this.is_preparing_the_download = false;
+        try {
+            const { downloadExportDocument } = await import(
+                /* webpackChunkName: "download-export-sheet" */ "../../helpers/Export/download-export-document"
+            );
+            await downloadExportDocument(
+                this,
+                this.project_name,
+                this.milestone_title,
+                this.user_display_name,
+                this.backlog_items,
+                this.campaigns
+            );
+        } finally {
+            // We should display a message somewhere but we need to know where it should be displayed first...
+            this.is_preparing_the_download = false;
+        }
     }
 }
 </script>

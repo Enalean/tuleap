@@ -22,18 +22,18 @@ import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 import { createExportReport } from "./report-creator";
 import { BacklogItem, Campaign } from "../../type";
 
-export function downloadExportDocument(
+export async function downloadExportDocument(
     gettext_provider: VueGettextProvider,
     project_name: string,
     milestone_title: string,
     user_display_name: string,
     backlog_items: ReadonlyArray<BacklogItem>,
     campaigns: ReadonlyArray<Campaign>
-): void {
+): Promise<void> {
     const current_date = new Date();
     const book = utils.book_new();
     const sheet = transformAReportIntoASheet(
-        createExportReport(
+        await createExportReport(
             gettext_provider,
             project_name,
             milestone_title,

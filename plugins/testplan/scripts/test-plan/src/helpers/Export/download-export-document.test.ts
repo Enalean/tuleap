@@ -30,17 +30,17 @@ import * as report_creator from "./report-creator";
 import * as report_transformer from "./transform-report-to-xlsx-sheet";
 
 describe("Start download of export document", () => {
-    it("generates the report and start the download of the XLSX document", () => {
+    it("generates the report and start the download of the XLSX document", async () => {
         const gettext_provider = createVueGettextProviderPassthrough();
 
         const spyCreateReport = jest
             .spyOn(report_creator, "createExportReport")
-            .mockReturnValue({} as ExportReport);
+            .mockResolvedValue({} as ExportReport);
         const spyCreateSheet = jest
             .spyOn(report_transformer, "transformAReportIntoASheet")
             .mockReturnValue(actual_xlsx.utils.json_to_sheet([]));
 
-        downloadExportDocument(gettext_provider, "Project", "Milestone", "User Name", [], []);
+        await downloadExportDocument(gettext_provider, "Project", "Milestone", "User Name", [], []);
 
         expect(spyCreateReport).toHaveBeenCalledTimes(1);
         expect(spyCreateSheet).toHaveBeenCalledTimes(1);

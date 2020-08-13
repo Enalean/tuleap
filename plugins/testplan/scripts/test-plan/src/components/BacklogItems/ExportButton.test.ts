@@ -149,4 +149,39 @@ describe("ExportButton", () => {
 
         expect(wrapper.element.hasAttribute("disabled")).toBe(true);
     });
+
+    it("Export button icon does not stay in loading mode in case of failure", async () => {
+        const error = new Error("Something bad happened");
+        downloadExportDocument.mockRejectedValue(error);
+        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
+
+        const wrapper = await createWrapper(
+            {
+                is_loading: false,
+                has_loading_error: false,
+            } as BacklogItemState,
+            {
+                is_loading: false,
+                has_loading_error: false,
+            } as CampaignState
+        );
+
+        await wrapper.trigger("click");
+
+        try {
+            // Needs 3 ticks so the component can be rendered after the error in the v-on handler
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+        } finally {
+            expect(consoleErrorSpy).toHaveBeenCalled();
+            consoleErrorSpy.mockRestore();
+        }
+
+        expect(
+            wrapper
+                .get("[data-test=download-export-button-icon]")
+                .element.classList.contains("fa-spin")
+        ).toBe(false);
+    });
 });

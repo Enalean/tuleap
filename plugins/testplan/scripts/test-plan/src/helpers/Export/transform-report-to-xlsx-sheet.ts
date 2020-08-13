@@ -80,6 +80,8 @@ function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectW
     switch (report_cell.type) {
         case "text":
             return buildSheetTextCell(report_cell.value);
+        case "html":
+            return buildSheetTextCell(extractPlaintextFromHTMLString(report_cell.value));
         case "date":
             return {
                 t: "d",
@@ -97,6 +99,11 @@ function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
         v: value,
         character_width: value.length,
     };
+}
+
+function extractPlaintextFromHTMLString(html: string): string {
+    const dom_parser = new DOMParser();
+    return dom_parser.parseFromString(html, "text/html").body.textContent ?? "";
 }
 
 function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): ColInfo[] {
