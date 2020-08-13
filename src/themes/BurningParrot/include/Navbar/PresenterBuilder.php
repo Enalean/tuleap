@@ -25,7 +25,7 @@ use PFUser;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
@@ -45,20 +45,15 @@ class PresenterBuilder
 
     /** @var array */
     private $extra_tabs;
-    /**
-     * @var ProjectRegistrationUserPermissionChecker
-     */
-    private $registration_user_permission_checker;
 
     public function build(
         PFUser $current_user,
         array $extra_tabs,
         URLRedirect $url_redirect,
-        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
+        NewDropdownPresenter $new_dropdown_presenter
     ) {
         $this->current_user    = $current_user;
         $this->extra_tabs      = $extra_tabs;
-        $this->registration_user_permission_checker = $registration_user_permission_checker;
 
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
@@ -80,7 +75,7 @@ class PresenterBuilder
                 $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
             new JoinCommunityPresenter(),
-            $this->registration_user_permission_checker->isUserAllowedToCreateProjects($current_user),
+            $new_dropdown_presenter
         );
     }
 

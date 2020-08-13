@@ -20,6 +20,8 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+
 class Presenter
 {
     /** @var GlobalNavPresenter */
@@ -36,23 +38,22 @@ class Presenter
 
     public $homepage_label;
     /**
-     * @var bool
+     * @var NewDropdownPresenter
      */
-    public $is_project_registration_enabled;
+    public $new_dropdown;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
         JoinCommunityPresenter $community_presenter,
-        bool $is_project_registration_enabled
+        NewDropdownPresenter $new_dropdown
     ) {
         $this->global_nav_presenter = $global_nav_presenter;
         $this->search_presenter     = $search_presenter;
         $this->user_nav_presenter   = $user_nav_presenter;
         $this->community_presenter  = $community_presenter;
         $this->homepage_label       = _('Homepage');
-
-        $this->is_project_registration_enabled = $is_project_registration_enabled;
+        $this->new_dropdown         = $new_dropdown;
     }
 }

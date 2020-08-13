@@ -356,9 +356,18 @@
 
     > .nav-dropdown-content-arrow-up {
         border-bottom-color: $tlp-ui-white;
+
+        + .nav-dropdown-content-user-divider {
+            display: none;
+        }
     }
 
     > .nav-dropdown-content-item:last-child {
         margin: 0 0 $tlp-small-spacing;
+    }
+
+    > .nav-dropdown-content-user-divider,
+    > .nav-dropdown-content-arrow-up + .nav-dropdown-content-item {
+        margin: $tlp-small-spacing 0 0;
     }
 }

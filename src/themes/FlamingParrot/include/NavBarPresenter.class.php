@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -95,9 +96,9 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      */
     public $has_one_dashboard;
     /**
-     * @var bool
+     * @var NewDropdownPresenter
      */
-    public $is_project_registration_enabled;
+    public $new_dropdown;
 
     public function __construct(
         $imgroot,
@@ -113,7 +114,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
         array $dashboards,
-        bool $is_project_registration_enabled
+        NewDropdownPresenter $new_dropdown
     ) {
         $this->imgroot                     = $imgroot;
         $this->user                        = $user;
@@ -132,8 +133,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->dashboards                  = $dashboards;
         $this->has_no_dashboards           = count($dashboards) === 0;
         $this->has_one_dashboard           = count($dashboards) === 1;
+        $this->new_dropdown                = $new_dropdown;
 
-        $this->is_project_registration_enabled = $is_project_registration_enabled;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
