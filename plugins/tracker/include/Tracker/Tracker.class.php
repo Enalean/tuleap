@@ -134,11 +134,23 @@ class Tracker implements Tracker_Dispatchable_Interface
     private $color;
     public $item_name;
     public $allow_copy;
+    /**
+     * @var string
+     */
     public $submit_instructions;
+    /**
+     * @var string
+     */
     public $browse_instructions;
     public $status;
     public $deletion_date;
+    /**
+     * @var int
+     */
     public $instantiate_for_new_projects;
+    /**
+     * @var int
+     */
     public $log_priority_changes;
     private $notifications_level;
     private $formElementFactory;
@@ -1525,7 +1537,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new Tracker_ColorPresenterCollection($this),
                 $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus(),
-                $cannot_configure_instantiate_for_new_projects
+                $cannot_configure_instantiate_for_new_projects,
+                (new \Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao())->isContaining((int) $this->id),
             )
         );
 
@@ -1764,6 +1777,13 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
             $artifact_link_value_dao->updateItemName($this->group_id, $previous_shortname, $this->item_name);
+
+            $in_new_dropdown_dao = new \Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao();
+            if ($request->get('is_in_new_dropdown')) {
+                $in_new_dropdown_dao->insert((int) $this->id);
+            } else {
+                $in_new_dropdown_dao->delete((int) $this->id);
+            }
 
             $dao = new TrackerDao();
             if ($dao->save($this)) {
@@ -2269,10 +2289,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             $xmlElem->addAttribute('allow_copy', $this->allow_copy);
         }
         if ($this->instantiate_for_new_projects) {
-            $xmlElem->addAttribute('instantiate_for_new_projects', $this->instantiate_for_new_projects);
+            $xmlElem->addAttribute('instantiate_for_new_projects', (string) $this->instantiate_for_new_projects);
         }
         if ($this->log_priority_changes) {
-            $xmlElem->addAttribute('log_priority_changes', $this->log_priority_changes);
+            $xmlElem->addAttribute('log_priority_changes', (string) $this->log_priority_changes);
         }
         if ($this->notifications_level) {
             $xmlElem->addAttribute('notifications_level', $this->notifications_level);

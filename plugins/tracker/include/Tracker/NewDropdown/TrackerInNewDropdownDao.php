@@ -38,4 +38,21 @@ class TrackerInNewDropdownDao extends DataAccessObject
             $project_id
         );
     }
+
+    public function isContaining(int $tracker_id): bool
+    {
+        $statement = 'SELECT TRUE FROM plugin_tracker_in_new_dropdown WHERE tracker_id = ?';
+
+        return $this->getDB()->cell($statement, $tracker_id) !== false;
+    }
+
+    public function insert(int $tracker_id): void
+    {
+        $this->getDB()->insertIgnore('plugin_tracker_in_new_dropdown', ['tracker_id' => $tracker_id]);
+    }
+
+    public function delete(int $tracker_id): void
+    {
+        $this->getDB()->delete('plugin_tracker_in_new_dropdown', ['tracker_id' => $tracker_id]);
+    }
 }

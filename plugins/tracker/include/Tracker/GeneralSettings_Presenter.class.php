@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
-class Tracker_GeneralSettings_Presenter
+class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var bool
@@ -32,21 +32,145 @@ class Tracker_GeneralSettings_Presenter
      */
     public $max_tracker_length;
 
-    /** @var Tracker */
-    private $tracker;
-
+    /**
+     * @var string
+     */
     public $action_url;
 
-    /** @var Tracker_ColorPresenterCollection */
-    private $color_presenter_collection;
-
-    /** @var MailGatewayConfig */
-    private $config;
-
-    /** @var Tracker_ArtifactByEmailStatus */
-    private $artifactbyemail_status;
-    /** @var bool*/
+    /** @var bool */
     public $cannot_configure_instantiate_for_new_projects;
+    /**
+     * @var bool
+     */
+    public $is_in_new_dropdown;
+    /**
+     * @var bool
+     */
+    public $is_semantic_configured_for_insecure_emailgateway;
+    /**
+     * @var bool
+     */
+    public $are_required_fields_configured_for_insecure_emailgateway;
+    /**
+     * @var bool
+     */
+    public $is_insecure_emailgateway_properly_configured;
+    /**
+     * @var bool
+     */
+    public $enable_insecure_emailgateway;
+    /**
+     * @var bool
+     */
+    public $is_emailgateway_used;
+    /**
+     * @var Tracker_ColorPresenterCollection
+     */
+    public $colors;
+    /**
+     * @var string
+     */
+    public $tracker_name;
+    /**
+     * @var string
+     */
+    public $tracker_shortname;
+    /**
+     * @var string
+     */
+    public $tracker_description;
+    /**
+     * @var bool
+     */
+    public $is_instatiate_for_new_projects;
+    /**
+     * @var bool
+     */
+    public $is_log_priority_changes;
+    /**
+     * @var string
+     */
+    public $tracker_color;
+    /**
+     * @var string
+     */
+    public $submit_instructions;
+    /**
+     * @var string
+     */
+    public $browse_instructions;
+    /**
+     * @var string
+     */
+    public $submit_button;
+    /**
+     * @var string
+     */
+    public $tracker_emailgateway;
+    /**
+     * @var string
+     */
+    public $html_tags;
+    /**
+     * @var string
+     */
+    public $tracker_name_label;
+    /**
+     * @var string
+     */
+    public $tracker_description_label;
+    /**
+     * @var string
+     */
+    public $tracker_shortname_label;
+    /**
+     * @var string
+     */
+    public $tracker_instantiate_label;
+    /**
+     * @var string
+     */
+    public $tracker_log_priority_changes;
+    /**
+     * @var string
+     */
+    public $tracker_color_label;
+    /**
+     * @var string
+     */
+    public $preview_label;
+    /**
+     * @var string
+     */
+    public $submit_instructions_label;
+    /**
+     * @var string
+     */
+    public $browse_instructions_label;
+    /**
+     * @var string
+     */
+    public $reply_possible;
+    /**
+     * @var string
+     */
+    public $create_not_possible;
+    /**
+     * @var string
+     */
+    public $semantic_ok;
+    /**
+     * @var string
+     */
+    public $required_ok;
+    /**
+     * @var string
+     */
+    public $semantic_ko;
+    /**
+     * @var string
+     */
+    public $required_ko;
 
     public function __construct(
         Tracker $tracker,
@@ -54,176 +178,56 @@ class Tracker_GeneralSettings_Presenter
         Tracker_ColorPresenterCollection $color_presenter_collection,
         MailGatewayConfig $config,
         Tracker_ArtifactByEmailStatus $artifactbyemail_status,
-        $cannot_configure_instantiate_for_new_projects
+        $cannot_configure_instantiate_for_new_projects,
+        bool $is_in_new_dropdown
     ) {
-        $this->tracker                    = $tracker;
-        $this->action_url                 = $action_url;
-        $this->color_presenter_collection = $color_presenter_collection;
-        $this->config                     = $config;
-        $this->artifactbyemail_status     = $artifactbyemail_status;
+        $this->action_url                                    = $action_url;
         $this->cannot_configure_instantiate_for_new_projects = $cannot_configure_instantiate_for_new_projects;
-        $this->has_excessive_shortname_length = strlen($tracker->getItemName()) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
-        $this->max_tracker_length = Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
-    }
+        $this->has_excessive_shortname_length                = strlen(
+            $tracker->getItemName()
+        ) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
+        $this->max_tracker_length                            = Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
 
-    public function is_insecure_emailgateway_properly_configured()
-    {
-        return $this->is_semantic_configured_for_insecure_emailgateway()
-            && $this->are_required_fields_configured_for_insecure_emailgateway();
-    }
+        $this->is_in_new_dropdown = $is_in_new_dropdown;
 
-    public function is_semantic_configured_for_insecure_emailgateway()
-    {
-        return $this->artifactbyemail_status->isSemanticConfigured($this->tracker);
-    }
+        $this->is_semantic_configured_for_insecure_emailgateway         = $artifactbyemail_status->isSemanticConfigured(
+            $tracker
+        );
+        $this->are_required_fields_configured_for_insecure_emailgateway = $artifactbyemail_status->isRequiredFieldsConfigured(
+            $tracker
+        );
+        $this->is_insecure_emailgateway_properly_configured             = $this->is_semantic_configured_for_insecure_emailgateway
+            && $this->are_required_fields_configured_for_insecure_emailgateway;
 
-    public function are_required_fields_configured_for_insecure_emailgateway()
-    {
-        return $this->artifactbyemail_status->isRequiredFieldsConfigured($this->tracker);
-    }
+        $this->enable_insecure_emailgateway   = $config->isInsecureEmailgatewayEnabled();
+        $this->is_emailgateway_used           = $tracker->isEmailgatewayEnabled();
+        $this->colors                         = $color_presenter_collection;
+        $this->tracker_name                   = $tracker->getName();
+        $this->tracker_shortname              = $tracker->getItemName();
+        $this->tracker_description            = $tracker->getDescription();
+        $this->is_instatiate_for_new_projects = (bool) $tracker->instantiate_for_new_projects;
+        $this->is_log_priority_changes        = (bool) $tracker->log_priority_changes;
+        $this->tracker_color                  = $tracker->getColor()->getName();
+        $this->submit_instructions            = (string) $tracker->submit_instructions;
+        $this->browse_instructions            = (string) $tracker->browse_instructions;
 
-    public function enable_insecure_emailgateway()
-    {
-        return $this->config->isInsecureEmailgatewayEnabled();
-    }
-
-    public function tracker_emailgateway()
-    {
-        return dgettext('tuleap-tracker', 'Enable to create/reply to artifacts by mail');
-    }
-
-    public function is_emailgateway_used()
-    {
-        return $this->tracker->isEmailgatewayEnabled();
-    }
-
-    public function colors()
-    {
-        return $this->color_presenter_collection;
-    }
-
-    public function html_tags()
-    {
-        return dgettext('tuleap-tracker', '(HTML tags allowed)');
-    }
-
-    public function tracker_name()
-    {
-        return $this->tracker->getName();
-    }
-
-    public function tracker_shortname()
-    {
-        return $this->tracker->getItemName();
-    }
-
-    public function tracker_description()
-    {
-        return $this->tracker->getDescription();
-    }
-
-    public function tracker_name_label()
-    {
-        return dgettext('tuleap-tracker', 'Name');
-    }
-
-    public function tracker_description_label()
-    {
-        return dgettext('tuleap-tracker', 'Description');
-    }
-
-    public function tracker_shortname_label()
-    {
-        return dgettext('tuleap-tracker', 'Short name');
-    }
-
-    public function tracker_instantiate_label()
-    {
-        return dgettext('tuleap-tracker', 'Instantiate for new projects');
-    }
-
-    public function tracker_log_priority_changes()
-    {
-        return dgettext('tuleap-tracker', 'Log priority changes in follow-up comments');
-    }
-
-    public function is_instatiate_for_new_projects()
-    {
-        return $this->tracker->instantiate_for_new_projects;
-    }
-
-    public function is_log_priority_changes()
-    {
-        return $this->tracker->log_priority_changes;
-    }
-
-    public function tracker_color_label()
-    {
-        return dgettext('tuleap-tracker', 'Color');
-    }
-
-    public function tracker_color()
-    {
-        return $this->tracker->getColor()->getName();
-    }
-
-    public function preview_label()
-    {
-        return dgettext('tuleap-tracker', 'Preview:');
-    }
-
-    public function submit_instructions_label()
-    {
-        return dgettext('tuleap-tracker', 'Submit instructions');
-    }
-
-    public function submit_instructions()
-    {
-        return $this->tracker->submit_instructions;
-    }
-
-    public function browse_instructions_label()
-    {
-        return dgettext('tuleap-tracker', 'Browse instructions');
-    }
-
-    public function browse_instructions()
-    {
-        return $this->tracker->browse_instructions;
-    }
-
-    public function submit_button()
-    {
-        return $GLOBALS['Language']->getText('global', 'save_change');
-    }
-
-    public function reply_possible()
-    {
-        return dgettext('tuleap-tracker', 'Reply to artifact by mail is possible');
-    }
-
-    public function create_not_possible()
-    {
-        return dgettext('tuleap-tracker', 'Create artifact by mail is <b>not</b> possible:');
-    }
-
-    public function semantic_ok()
-    {
-        return dgettext('tuleap-tracker', 'Semantic is properly configured');
-    }
-
-    public function required_ok()
-    {
-        return dgettext('tuleap-tracker', 'Required fields are properly configured');
-    }
-
-    public function semantic_ko()
-    {
-        return dgettext('tuleap-tracker', 'Semantic title and/or description are not configured');
-    }
-
-    public function required_ko()
-    {
-        return dgettext('tuleap-tracker', 'Other fields than title or description cannot be required');
+        $this->submit_button                = $GLOBALS['Language']->getText('global', 'save_change');
+        $this->tracker_emailgateway         = dgettext('tuleap-tracker', 'Enable to create/reply to artifacts by mail');
+        $this->html_tags                    = dgettext('tuleap-tracker', '(HTML tags allowed)');
+        $this->tracker_name_label           = dgettext('tuleap-tracker', 'Name');
+        $this->tracker_description_label    = dgettext('tuleap-tracker', 'Description');
+        $this->tracker_shortname_label      = dgettext('tuleap-tracker', 'Short name');
+        $this->tracker_instantiate_label    = dgettext('tuleap-tracker', 'Instantiate for new projects');
+        $this->tracker_log_priority_changes = dgettext('tuleap-tracker', 'Log priority changes in follow-up comments');
+        $this->tracker_color_label          = dgettext('tuleap-tracker', 'Color');
+        $this->preview_label                = dgettext('tuleap-tracker', 'Preview:');
+        $this->submit_instructions_label    = dgettext('tuleap-tracker', 'Submit instructions');
+        $this->browse_instructions_label    = dgettext('tuleap-tracker', 'Browse instructions');
+        $this->reply_possible               = dgettext('tuleap-tracker', 'Reply to artifact by mail is possible');
+        $this->create_not_possible          = dgettext('tuleap-tracker', 'Create artifact by mail is <b>not</b> possible:');
+        $this->semantic_ok                  = dgettext('tuleap-tracker', 'Semantic is properly configured');
+        $this->required_ok                  = dgettext('tuleap-tracker', 'Required fields are properly configured');
+        $this->semantic_ko                  = dgettext('tuleap-tracker', 'Semantic title and/or description are not configured');
+        $this->required_ko                  = dgettext('tuleap-tracker', 'Other fields than title or description cannot be required');
     }
 }
