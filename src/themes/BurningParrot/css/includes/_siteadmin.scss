@@ -78,4 +78,8 @@
 .siteadmin-dates-display-preference-with-preview {
     display: flex;
     align-items: center;
+
+    > .siteadmin-dates-display-preference-preview {
+        margin: 0 0 0 $tlp-x-large-spacing;
+    }
 }
