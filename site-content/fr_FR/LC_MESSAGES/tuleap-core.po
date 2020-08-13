@@ -1630,6 +1630,9 @@ msgstr "Date relative seulement"
 msgid "Relative dates display"
 msgstr "Affichage des dates relatives"
 
+msgid "Release Note"
+msgstr "Information de mise à jour"
+
 msgid "Removal from projects"
 msgstr "Retrait de projets"
 

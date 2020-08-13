@@ -125,7 +125,7 @@ class BurningParrotTheme extends BaseLayout
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder();
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user, $this->version->version_number);
 
         $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
             $this->event_manager,

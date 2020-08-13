@@ -25,54 +25,56 @@ use PFUser;
 
 class HelpDropdownPresenterBuilder
 {
-    public function build(PFUser $current_user): HelpDropdownPresenter
+    public function build(PFUser $current_user, string $tuleap_version): HelpDropdownPresenter
     {
         $documentation = "/doc/" . urlencode($current_user->getShortLocale()) . "/";
 
         $main_items = [
-            $link_get_help = new HelpLinkPresenter(
+            new HelpLinkPresenter(
                 dgettext(
                     'tuleap-core',
                     'Get help'
                 ),
-                "/help/"
+                "/help/",
+                "fa-life-saver"
             ),
-            $link_documentation = new HelpLinkPresenter(
+            new HelpLinkPresenter(
                 dgettext(
                     'tuleap-core',
                     'Documentation'
                 ),
-                $documentation
+                $documentation,
+                "fa-book"
             )
         ];
 
-        $footer_items = [
-            $link_api = new HelpLinkPresenter(
-                dgettext(
-                    'tuleap-core',
-                    'API'
-                ),
-                "/help/api.php"
-            ),
-            $link_terms = new HelpLinkPresenter(
-                dgettext(
-                    'tuleap-core',
-                    'Terms'
-                ),
-                "/tos/tos.php"
-            ),
-            $link_contact = new HelpLinkPresenter(
-                dgettext(
-                    'tuleap-core',
-                    'Contact'
-                ),
-                "/contact.php"
-            )
-        ];
+        $release_note = $this->getReleaseNoteLink($current_user, $tuleap_version);
 
         return new HelpDropdownPresenter(
             $main_items,
-            $footer_items
+            $release_note
         );
+    }
+
+    private function getReleaseNoteLink(PFUser $current_user, string $tuleap_version): ?HelpLinkPresenter
+    {
+        if ($current_user->useLabFeatures()) {
+            return new HelpLinkPresenter(
+                dgettext(
+                    'tuleap-core',
+                    'Release Note'
+                ),
+                $this->getActualReleaseLink($tuleap_version),
+                "fa-star"
+            );
+        }
+        return null;
+    }
+
+    private function getActualReleaseLink(string $tuleap_version): string
+    {
+        $version_number = str_replace(".", "-", substr($tuleap_version, 0, 5));
+
+        return 'https://www.tuleap.org/ressources/release-notes/tuleap-' . urlencode($version_number);
     }
 }
