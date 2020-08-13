@@ -9,7 +9,6 @@
     "fscreen": "^1.0.2",
     "mustache": "^4.0.1",
     "p-retry": "^4.2.0",
-    "sprintf-js": "^1.1.2",
     "vue": "^2.6.11",
     "vue-dompurify-html": "^2.2.1",
     "vuex": "^3.5.1"
@@ -19,7 +18,6 @@
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.3.38",
     "@types/mustache": "^4.0.1",
-    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.3",
     "jquery": "^3.5.1",
     "vue-property-decorator": "^8.4.2",

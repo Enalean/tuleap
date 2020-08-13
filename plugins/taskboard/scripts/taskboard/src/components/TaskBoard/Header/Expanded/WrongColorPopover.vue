@@ -51,7 +51,6 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { createPopover } from "tlp";
 import { State } from "vuex-class";
-import { sprintf } from "sprintf-js";
 
 @Component
 export default class TaskBoardHeaderCell extends Vue {
@@ -70,17 +69,24 @@ export default class TaskBoardHeaderCell extends Vue {
     }
 
     get legacy_palette_message(): string {
-        return sprintf(
-            this.$gettext("The column is configured to use a color (%s) from the legacy palette."),
-            `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${this.color};"></span>
-                <code>${this.color}</code></span>`
+        return this.$gettextInterpolate(
+            this.$gettext(
+                "The column is configured to use a color (%{ color }) from the legacy palette."
+            ),
+            {
+                color: `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${this.color};"></span>
+                <code>${this.color}</code></span>`,
+            },
+            true
         );
     }
 
     get adjust_configuration_message(): string {
-        return sprintf(
-            this.$gettext('Please <a href="%s">adjust configuration</a> to use a suitable color.'),
-            this.admin_url
+        return this.$gettextInterpolate(
+            this.$gettext(
+                'Please <a href="%{ admin_url }">adjust configuration</a> to use a suitable color.'
+            ),
+            { admin_url: this.admin_url }
         );
     }
 }
