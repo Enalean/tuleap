@@ -70,6 +70,34 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
         $this->assertEquals('Problems with my code: example', $text->getContentAsText());
     }
 
+    public function testReturnsUnconvertedHTMLWhenFormatIsHTML(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+        );
+        $this->assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(101));
+    }
+
+    public function testReturnsUnconvertedTextWhenFormatIsText(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+        );
+        $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(101));
+    }
+
     public function testItReturnsTheRESTValue(): void
     {
         $field = $this->getTextFieldWithProject();

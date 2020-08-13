@@ -258,6 +258,16 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->getText();
     }
 
+    public function getTextWithReferences(int $group_id): string
+    {
+        $hp = Codendi_HTMLPurifier::instance();
+        if ($this->isInHTMLFormat()) {
+            return $hp->purifyHTMLWithReferences($this->getText(), $group_id);
+        }
+
+        return $hp->purifyTextWithReferences($this->getText(), $group_id);
+    }
+
     private function isInHTMLFormat(): bool
     {
         return $this->getFormat() === self::HTML_CONTENT;
