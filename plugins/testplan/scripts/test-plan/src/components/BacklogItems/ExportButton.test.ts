@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import ExportError from "./ExportError.vue";
+
 const downloadExportDocument = jest.fn();
 jest.mock("../../helpers/Export/download-export-document", () => {
     return {
@@ -67,27 +69,30 @@ describe("ExportButton", () => {
                 has_loading_error: false,
             } as CampaignState
         );
+        const download_button = wrapper.get("[data-test=testplan-export-button]");
 
-        expect(wrapper.element.hasAttribute("disabled")).toBe(false);
+        expect(download_button.element.hasAttribute("disabled")).toBe(false);
         expect(
-            wrapper
+            download_button
                 .get("[data-test=download-export-button-icon]")
                 .element.classList.contains("fa-spin")
         ).toBe(false);
 
         downloadExportDocument.mockImplementation((): void => {
             expect(
-                wrapper
+                download_button
                     .get("[data-test=download-export-button-icon]")
                     .element.classList.contains("fa-spin")
             ).toBe(true);
 
             // This is here to make sure the user cannot spam-click the export button
             // Only one report should be generated at a time, subsequent clicks should do nothing
-            wrapper.trigger("click");
+            download_button.trigger("click");
+
+            expect(wrapper.findComponent(ExportError).exists()).toBe(false);
         });
 
-        wrapper.trigger("click");
+        download_button.trigger("click");
     });
 
     it("Does not allow to download the report when the backlog items are not loaded", async () => {
@@ -102,7 +107,9 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        expect(wrapper.element.hasAttribute("disabled")).toBe(true);
+        expect(
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+        ).toBe(true);
     });
 
     it("Does not allow to download the report when the campaigns are not loaded", async () => {
@@ -117,7 +124,9 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        expect(wrapper.element.hasAttribute("disabled")).toBe(true);
+        expect(
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+        ).toBe(true);
     });
 
     it("Does not allow to download the report when the backlog items have a loading error", async () => {
@@ -132,7 +141,9 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        expect(wrapper.element.hasAttribute("disabled")).toBe(true);
+        expect(
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+        ).toBe(true);
     });
 
     it("Does not allow to download the report when the campaigns have a loading error", async () => {
@@ -147,7 +158,9 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        expect(wrapper.element.hasAttribute("disabled")).toBe(true);
+        expect(
+            wrapper.get("[data-test=testplan-export-button]").element.hasAttribute("disabled")
+        ).toBe(true);
     });
 
     it("Export button icon does not stay in loading mode in case of failure", async () => {
@@ -166,10 +179,12 @@ describe("ExportButton", () => {
             } as CampaignState
         );
 
-        await wrapper.trigger("click");
+        const download_button = wrapper.get("[data-test=testplan-export-button]");
+
+        await download_button.trigger("click");
 
         try {
-            // Needs 3 ticks so the component can be rendered after the error in the v-on handler
+            // Needs 3 ticks so the component can be rendered after the error in the async v-on handler
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
@@ -179,9 +194,10 @@ describe("ExportButton", () => {
         }
 
         expect(
-            wrapper
+            download_button
                 .get("[data-test=download-export-button-icon]")
                 .element.classList.contains("fa-spin")
         ).toBe(false);
+        expect(wrapper.findComponent(ExportError).exists()).toBe(true);
     });
 });
