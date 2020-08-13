@@ -36,15 +36,21 @@ class SynchronizedFieldCollectionBuilder
      * @var \Tracker_Semantic_DescriptionFactory
      */
     private $description_factory;
+    /**
+     * @var \Tracker_Semantic_StatusFactory
+     */
+    private $status_factory;
 
     public function __construct(
         \Tracker_FormElementFactory $form_element_factory,
         \Tracker_Semantic_TitleFactory $title_factory,
-        \Tracker_Semantic_DescriptionFactory $description_factory
+        \Tracker_Semantic_DescriptionFactory $description_factory,
+        \Tracker_Semantic_StatusFactory $status_factory
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->title_factory        = $title_factory;
         $this->description_factory  = $description_factory;
+        $this->status_factory       = $status_factory;
     }
 
     /**
@@ -59,6 +65,7 @@ class SynchronizedFieldCollectionBuilder
             $fields[] = $this->addArtifactLinkField($milestone_tracker, $user);
             $fields[] = $this->addTitleField($milestone_tracker);
             $fields[] = $this->addDescriptionField($milestone_tracker);
+            $fields[] = $this->addStatusField($milestone_tracker);
         }
         return new SynchronizedFieldCollection($fields);
     }
@@ -97,5 +104,17 @@ class SynchronizedFieldCollectionBuilder
             throw new NoDescriptionFieldException((int) $milestone_tracker->getId());
         }
         return $description_field;
+    }
+
+    /**
+     * @throws NoStatusFieldException
+     */
+    public function addStatusField(\Tracker $milestone_tracker): \Tracker_FormElement_Field
+    {
+        $status_field = $this->status_factory->getByTracker($milestone_tracker)->getField();
+        if (! $status_field) {
+            throw new NoStatusFieldException((int) $milestone_tracker->getId());
+        }
+        return $status_field;
     }
 }

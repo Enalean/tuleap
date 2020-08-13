@@ -171,6 +171,7 @@ final class multi_project_backlogPlugin extends Plugin
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
     {
+        $semantic_status_factory   = new Tracker_Semantic_StatusFactory();
         $milestone_creator_checker = new MilestoneCreatorChecker(
             new ContributorProjectsCollectionBuilder(
                 new AggregatorDao(),
@@ -182,16 +183,14 @@ final class multi_project_backlogPlugin extends Plugin
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
                 \Tracker_FormElementFactory::instance(),
                 new Tracker_Semantic_TitleFactory(),
-                new Tracker_Semantic_DescriptionFactory()
+                new Tracker_Semantic_DescriptionFactory(),
+                $semantic_status_factory
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao(),
-                new StatusSemanticChecker(
-                    new Tracker_Semantic_StatusDao(),
-                    Tracker_Semantic_StatusFactory::instance()
-                ),
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
             )
         );
 
