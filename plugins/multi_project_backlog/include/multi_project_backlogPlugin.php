@@ -181,7 +181,8 @@ final class multi_project_backlogPlugin extends Plugin
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
                 \Tracker_FormElementFactory::instance(),
-                new Tracker_Semantic_TitleFactory()
+                new Tracker_Semantic_TitleFactory(),
+                new Tracker_Semantic_DescriptionFactory()
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
                 new \Tracker_Semantic_TitleDao(),
