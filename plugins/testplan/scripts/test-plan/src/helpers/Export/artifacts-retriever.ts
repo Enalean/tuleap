@@ -18,8 +18,10 @@
  */
 
 import { get } from "tlp";
+import { limitConcurrencyPool } from "./concurrency-limit-pool";
 
 const MAX_CHUNK_SIZE_ARTIFACTS = 100;
+const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS = 5;
 
 export interface Artifact {
     id: number;
@@ -42,9 +44,13 @@ export async function retrieveArtifacts(
     artifact_ids: ReadonlyArray<number>
 ): Promise<Map<number, Artifact>> {
     const artifacts: Map<number, Artifact> = new Map();
-    const responses = getArtifactIDsChunksResponses(getArtifactIDsChunks(artifact_ids));
+    const responses = await limitConcurrencyPool(
+        MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS,
+        getArtifactIDsChunks(artifact_ids),
+        getArtifactIDsChunkResponse
+    );
 
-    for await (const response of responses) {
+    for (const response of responses) {
         const artifacts_collection: ArtifactsCollection = await response.json();
 
         for (const artifact of artifacts_collection.collection) {
@@ -69,16 +75,8 @@ function getArtifactIDsChunks(
     return artifact_ids_chunks;
 }
 
-function getArtifactIDsChunksResponses(
-    artifact_ids_chunks: ReadonlyArray<ReadonlyArray<number>>
-): ReadonlyArray<Promise<Response>> {
-    return artifact_ids_chunks.map(
-        (artifact_ids_chunk: ReadonlyArray<number>): Promise<Response> => {
-            return get(
-                `/api/v1/artifacts?query=${encodeURIComponent(
-                    JSON.stringify({ id: artifact_ids_chunk })
-                )}`
-            );
-        }
+function getArtifactIDsChunkResponse(artifact_ids_chunk: ReadonlyArray<number>): Promise<Response> {
+    return get(
+        `/api/v1/artifacts?query=${encodeURIComponent(JSON.stringify({ id: artifact_ids_chunk }))}`
     );
 }
