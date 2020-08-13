@@ -27,8 +27,8 @@ use Planning_VirtualTopMilestone;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoArtifactLinkFieldException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 
 class MilestoneCreatorChecker
 {
@@ -89,7 +89,7 @@ class MilestoneCreatorChecker
 
         try {
             $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
-        } catch (NoArtifactLinkFieldException $exception) {
+        } catch (SynchronizedFieldRetrievalException $exception) {
             return false;
         }
         if (! $fields->canUserSubmitAndUpdateAllFields($user)) {

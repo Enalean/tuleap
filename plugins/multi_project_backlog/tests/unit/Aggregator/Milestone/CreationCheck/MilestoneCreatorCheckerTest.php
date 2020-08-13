@@ -32,9 +32,9 @@ use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoArtifactLinkFieldException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MilestoneCreatorCheckerTest extends TestCase
@@ -175,7 +175,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
         $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
-            ->andThrow(new NoArtifactLinkFieldException(2048));
+            ->andThrow(
+                new class extends \RuntimeException implements SynchronizedFieldRetrievalException {
+                }
+            );
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
     }

@@ -28,10 +28,17 @@ class SynchronizedFieldCollectionBuilder
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var \Tracker_Semantic_TitleFactory
+     */
+    private $title_factory;
 
-    public function __construct(\Tracker_FormElementFactory $form_element_factory)
-    {
+    public function __construct(
+        \Tracker_FormElementFactory $form_element_factory,
+        \Tracker_Semantic_TitleFactory $title_factory
+    ) {
         $this->form_element_factory = $form_element_factory;
+        $this->title_factory        = $title_factory;
     }
 
     /**
@@ -48,6 +55,11 @@ class SynchronizedFieldCollectionBuilder
                 throw new NoArtifactLinkFieldException((int) $milestone_tracker->getId());
             }
             $fields[] = $artifact_link_field;
+            $title_field = $this->title_factory->getByTracker($milestone_tracker)->getField();
+            if (! $title_field) {
+                throw new NoTitleFieldException((int) $milestone_tracker->getId());
+            }
+            $fields[] = $title_field;
         }
         return new SynchronizedFieldCollection($fields);
     }
