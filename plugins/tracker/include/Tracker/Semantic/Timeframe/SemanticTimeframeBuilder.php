@@ -43,6 +43,9 @@ class SemanticTimeframeBuilder
         $this->form_element_factory = $form_element_factory;
     }
 
+    /**
+     * @throws TimeframeBrokenConfigurationException
+     */
     public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
         $row = $this->dao->searchByTrackerId((int) $tracker->getId());
