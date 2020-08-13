@@ -24,6 +24,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 final class SynchronizedFieldCollectionBuilderTest extends TestCase
@@ -50,6 +52,10 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_StatusFactory
      */
     private $status_factory;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|SemanticTimeframeBuilder
+     */
+    private $time_frame_builder;
 
     protected function setUp(): void
     {
@@ -57,11 +63,13 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         $this->title_factory        = M::mock(\Tracker_Semantic_TitleFactory::class);
         $this->description_factory  = M::mock(\Tracker_Semantic_DescriptionFactory::class);
         $this->status_factory       = M::mock(\Tracker_Semantic_StatusFactory::class);
+        $this->time_frame_builder   = M::mock(SemanticTimeframeBuilder::class);
         $this->builder              = new SynchronizedFieldCollectionBuilder(
             $this->form_element_factory,
             $this->title_factory,
             $this->description_factory,
-            $this->status_factory
+            $this->status_factory,
+            $this->time_frame_builder
         );
     }
 
@@ -79,6 +87,28 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         $this->mockDescriptionField($second_tracker);
         $this->mockStatusField($first_tracker);
         $this->mockStatusField($second_tracker);
+        $this->mockTimeFrameFields($first_tracker);
+        $this->mockTimeFrameFields($second_tracker);
+
+        $this->assertNotNull($this->builder->buildFromMilestoneTrackers($milestones, $user));
+    }
+
+    public function testBuildFromMilestoneTrackersAcceptsEndDateFields(): void
+    {
+        $tracker    = $this->buildTestTracker(103);
+        $milestones = new MilestoneTrackerCollection([$tracker]);
+        $user       = UserTestBuilder::aUser()->build();
+        $this->mockArtifactLinkField($tracker, $user);
+        $this->mockTitleField($tracker);
+        $this->mockDescriptionField($tracker);
+        $this->mockStatusField($tracker);
+        $start_date_field    = M::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field      = M::mock(\Tracker_FormElement_Field_Date::class);
+        $time_frame_semantic = new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field);
+        $this->time_frame_builder->shouldReceive('getSemantic')
+            ->once()
+            ->with($tracker)
+            ->andReturn($time_frame_semantic);
 
         $this->assertNotNull($this->builder->buildFromMilestoneTrackers($milestones, $user));
     }
@@ -155,6 +185,47 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         $this->builder->buildFromMilestoneTrackers($milestones, $user);
     }
 
+    public function testItThrowsWhenOneTrackerDoesNotHaveAStartDateField(): void
+    {
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
+        $this->mockArtifactLinkField($first_tracker, $user);
+        $this->mockTitleField($first_tracker);
+        $this->mockDescriptionField($first_tracker);
+        $this->mockStatusField($first_tracker);
+        $time_frame_semantic = new SemanticTimeframe($first_tracker, null, null, null);
+        $this->time_frame_builder->shouldReceive('getSemantic')
+            ->once()
+            ->with($first_tracker)
+            ->andReturn($time_frame_semantic);
+
+        $this->expectException(MissingTimeFrameFieldException::class);
+        $this->builder->buildFromMilestoneTrackers($milestones, $user);
+    }
+
+    public function testItThrowsWhenOneTrackerHasNeitherEndDateNorDuration(): void
+    {
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
+        $this->mockArtifactLinkField($first_tracker, $user);
+        $this->mockTitleField($first_tracker);
+        $this->mockDescriptionField($first_tracker);
+        $this->mockStatusField($first_tracker);
+        $start_date_field    = M::mock(\Tracker_FormElement_Field_Date::class);
+        $time_frame_semantic = new SemanticTimeframe($first_tracker, $start_date_field, null, null);
+        $this->time_frame_builder->shouldReceive('getSemantic')
+            ->once()
+            ->with($first_tracker)
+            ->andReturn($time_frame_semantic);
+
+        $this->expectException(MissingTimeFrameFieldException::class);
+        $this->builder->buildFromMilestoneTrackers($milestones, $user);
+    }
+
     private function buildTestTracker(int $tracker_id): \Tracker
     {
         return new \Tracker(
@@ -216,5 +287,16 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             ->once()
             ->with($tracker)
             ->andReturn($status_semantic);
+    }
+
+    private function mockTimeFrameFields(\Tracker $tracker): void
+    {
+        $start_date_field    = M::mock(\Tracker_FormElement_Field_Date::class);
+        $duration_field      = M::mock(\Tracker_FormElement_Field_Numeric::class);
+        $time_frame_semantic = new SemanticTimeframe($tracker, $start_date_field, $duration_field, null);
+        $this->time_frame_builder->shouldReceive('getSemantic')
+            ->once()
+            ->with($tracker)
+            ->andReturn($time_frame_semantic);
     }
 }

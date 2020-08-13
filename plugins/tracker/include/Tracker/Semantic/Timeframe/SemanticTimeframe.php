@@ -55,6 +55,9 @@ class SemanticTimeframe extends Tracker_Semantic
      */
     private $end_date_field;
 
+    /**
+     * @throws TimeframeBrokenConfigurationException
+     */
     public function __construct(
         Tracker $tracker,
         ?Tracker_FormElement_Field_Date $start_date_field,
