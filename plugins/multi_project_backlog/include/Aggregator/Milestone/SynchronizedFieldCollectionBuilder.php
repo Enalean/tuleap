@@ -32,17 +32,23 @@ class SynchronizedFieldCollectionBuilder
      * @var \Tracker_Semantic_TitleFactory
      */
     private $title_factory;
+    /**
+     * @var \Tracker_Semantic_DescriptionFactory
+     */
+    private $description_factory;
 
     public function __construct(
         \Tracker_FormElementFactory $form_element_factory,
-        \Tracker_Semantic_TitleFactory $title_factory
+        \Tracker_Semantic_TitleFactory $title_factory,
+        \Tracker_Semantic_DescriptionFactory $description_factory
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->title_factory        = $title_factory;
+        $this->description_factory  = $description_factory;
     }
 
     /**
-     * @throws NoArtifactLinkFieldException
+     * @throws SynchronizedFieldRetrievalException
      */
     public function buildFromMilestoneTrackers(
         MilestoneTrackerCollection $milestone_tracker_collection,
@@ -50,17 +56,46 @@ class SynchronizedFieldCollectionBuilder
     ): SynchronizedFieldCollection {
         $fields = [];
         foreach ($milestone_tracker_collection->getMilestoneTrackers() as $milestone_tracker) {
-            $artifact_link_field = $this->form_element_factory->getAnArtifactLinkField($user, $milestone_tracker);
-            if (! $artifact_link_field) {
-                throw new NoArtifactLinkFieldException((int) $milestone_tracker->getId());
-            }
-            $fields[] = $artifact_link_field;
-            $title_field = $this->title_factory->getByTracker($milestone_tracker)->getField();
-            if (! $title_field) {
-                throw new NoTitleFieldException((int) $milestone_tracker->getId());
-            }
-            $fields[] = $title_field;
+            $fields[] = $this->addArtifactLinkField($milestone_tracker, $user);
+            $fields[] = $this->addTitleField($milestone_tracker);
+            $fields[] = $this->addDescriptionField($milestone_tracker);
         }
         return new SynchronizedFieldCollection($fields);
+    }
+
+    /**
+     * @throws NoArtifactLinkFieldException
+     */
+    private function addArtifactLinkField(\Tracker $milestone_tracker, \PFUser $user): \Tracker_FormElement_Field
+    {
+        $artifact_link_field = $this->form_element_factory->getAnArtifactLinkField($user, $milestone_tracker);
+        if (! $artifact_link_field) {
+            throw new NoArtifactLinkFieldException((int) $milestone_tracker->getId());
+        }
+        return $artifact_link_field;
+    }
+
+    /**
+     * @throws NoTitleFieldException
+     */
+    private function addTitleField(\Tracker $milestone_tracker): \Tracker_FormElement_Field
+    {
+        $title_field = $this->title_factory->getByTracker($milestone_tracker)->getField();
+        if (! $title_field) {
+            throw new NoTitleFieldException((int) $milestone_tracker->getId());
+        }
+        return $title_field;
+    }
+
+    /**
+     * @throws NoDescriptionFieldException
+     */
+    public function addDescriptionField(\Tracker $milestone_tracker): \Tracker_FormElement_Field
+    {
+        $description_field = $this->description_factory->getByTracker($milestone_tracker)->getField();
+        if (! $description_field) {
+            throw new NoDescriptionFieldException((int) $milestone_tracker->getId());
+        }
+        return $description_field;
     }
 }

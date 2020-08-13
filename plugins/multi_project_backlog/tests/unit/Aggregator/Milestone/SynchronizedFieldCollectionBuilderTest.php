@@ -42,14 +42,20 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_TitleFactory
      */
     private $title_factory;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_DescriptionFactory
+     */
+    private $description_factory;
 
     protected function setUp(): void
     {
         $this->form_element_factory = M::mock(\Tracker_FormElementFactory::class);
         $this->title_factory        = M::mock(\Tracker_Semantic_TitleFactory::class);
+        $this->description_factory  = M::mock(\Tracker_Semantic_DescriptionFactory::class);
         $this->builder              = new SynchronizedFieldCollectionBuilder(
             $this->form_element_factory,
-            $this->title_factory
+            $this->title_factory,
+            $this->description_factory
         );
     }
 
@@ -63,6 +69,8 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         $this->mockArtifactLinkField($second_tracker, $user);
         $this->mockTitleField($first_tracker);
         $this->mockTitleField($second_tracker);
+        $this->mockDescriptionField($first_tracker);
+        $this->mockDescriptionField($second_tracker);
 
         $this->assertNotNull($this->builder->buildFromMilestoneTrackers($milestones, $user));
     }
@@ -97,6 +105,25 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             ->andReturn($title_semantic);
 
         $this->expectException(NoTitleFieldException::class);
+        $this->builder->buildFromMilestoneTrackers($milestones, $user);
+    }
+
+    public function testItThrowsWhenOneTrackerDoesNotHaveADescriptionField(): void
+    {
+        $first_tracker  = $this->buildTestTracker(103);
+        $second_tracker = $this->buildTestTracker(104);
+        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $user           = UserTestBuilder::aUser()->build();
+        $this->mockArtifactLinkField($first_tracker, $user);
+        $this->mockTitleField($first_tracker);
+        $description_semantic = M::mock(\Tracker_Semantic_Description::class);
+        $description_semantic->shouldReceive('getField')->andReturnNull();
+        $this->description_factory->shouldReceive('getByTracker')
+            ->once()
+            ->with($first_tracker)
+            ->andReturn($description_semantic);
+
+        $this->expectException(NoDescriptionFieldException::class);
         $this->builder->buildFromMilestoneTrackers($milestones, $user);
     }
 
@@ -139,5 +166,16 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             ->once()
             ->with($tracker)
             ->andReturn($title_semantic);
+    }
+
+    private function mockDescriptionField(\Tracker $tracker): void
+    {
+        $description_field    = M::mock(\Tracker_FormElement_Field::class);
+        $description_semantic = M::mock(\Tracker_Semantic_Title::class);
+        $description_semantic->shouldReceive('getField')->andReturn($description_field);
+        $this->description_factory->shouldReceive('getByTracker')
+            ->once()
+            ->with($tracker)
+            ->andReturn($description_semantic);
     }
 }
