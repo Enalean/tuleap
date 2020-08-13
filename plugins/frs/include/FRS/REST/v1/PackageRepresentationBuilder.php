@@ -55,9 +55,7 @@ class PackageRepresentationBuilder
 
     public function getPackageForUser(PFUser $user, FRSPackage $package, Project $project): PackageRepresentation
     {
-        $representation = new PackageRepresentation();
-        $representation->buildFullRepresentation($package, $project, $this->getPermissionsForGroupsRepresentation($user, $package, $project));
-        return $representation;
+        return new PackageRepresentation($package, $project, $this->getPermissionsForGroupsRepresentation($user, $package, $project));
     }
 
     private function getPermissionsForGroupsRepresentation(PFUser $user, FRSPackage $package, Project $project): ?PermissionsForGroupsRepresentation
@@ -66,7 +64,7 @@ class PackageRepresentationBuilder
             return null;
         }
         $permissions_for_groups = $this->getPermissionsForGroups($package, $project);
-        return (new PermissionsForGroupsRepresentation())->build($permissions_for_groups);
+        return new PermissionsForGroupsRepresentation($permissions_for_groups);
     }
 
     /**
@@ -83,8 +81,7 @@ class PackageRepresentationBuilder
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
             if ($ugroup) {
-                $ugroup_representation = new MinimalUserGroupRepresentation();
-                $ugroup_representation->build((int) $project->getID(), $ugroup);
+                $ugroup_representation = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
                 $permissions_for_groups[] = $ugroup_representation;
             }
         }

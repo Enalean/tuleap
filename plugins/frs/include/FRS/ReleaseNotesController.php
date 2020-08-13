@@ -116,8 +116,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         }
         $user = $request->getCurrentUser();
 
-        $representation = new ReleaseRepresentation();
-        $representation->build(
+        $representation = new ReleaseRepresentation(
             $release,
             $this->link_retriever,
             $user,

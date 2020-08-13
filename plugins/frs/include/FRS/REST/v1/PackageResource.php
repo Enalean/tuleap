@@ -211,8 +211,7 @@ class PackageResource extends AuthenticatedResource
 
         $releases = [];
         foreach ($paginated_releases->getReleases() as $release) {
-            $representation = new ReleaseRepresentation();
-            $representation->build($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder);
+            $representation = new ReleaseRepresentation($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder);
 
             $releases[] = $representation;
         }
@@ -220,10 +219,7 @@ class PackageResource extends AuthenticatedResource
         $this->sendOptionsHeadersForReleases();
         $this->sendPaginationHeaders($limit, $offset, $total_size);
 
-        $collection = new ReleaseRepresentationPaginatedCollectionRepresentation();
-        $collection->build($releases, $total_size);
-
-        return $collection;
+        return new ReleaseRepresentationPaginatedCollectionRepresentation($releases, $total_size);
     }
 
     /**

@@ -129,8 +129,7 @@ class ProjectResource extends AuthenticatedResource
             $offset
         );
         foreach ($paginated_packages->getPackages() as $package) {
-            $representation = new PackageMinimalRepresentation();
-            $representation->build($package);
+            $representation = new PackageMinimalRepresentation($package);
 
             $packages[] = $representation;
         }

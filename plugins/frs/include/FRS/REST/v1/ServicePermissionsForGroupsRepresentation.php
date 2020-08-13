@@ -25,6 +25,9 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ServicePermissionsForGroupsRepresentation
 {
     /**
@@ -42,12 +45,10 @@ class ServicePermissionsForGroupsRepresentation
     /**
      * @param MinimalUserGroupRepresentation[] $can_admin
      * @param MinimalUserGroupRepresentation[] $can_read
-     * @return ServicePermissionsForGroupsRepresentation
      */
-    public function build(array $can_admin, array $can_read): self
+    public function __construct(array $can_admin, array $can_read)
     {
         $this->can_admin = $can_admin;
         $this->can_read  = $can_read;
-        return $this;
     }
 }

@@ -222,10 +222,6 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     {
         $ugroup_manager = new UGroupManager($this->getDao());
         $u_group        = $ugroup_manager->getById($u_group_id);
-        $representation = new MinimalUserGroupRepresentation();
-
-        $representation->build($this->getField()->getTracker()->getProject()->getID(), $u_group);
-
-        return $representation;
+        return new MinimalUserGroupRepresentation($this->getField()->getTracker()->getProject()->getID(), $u_group);
     }
 }

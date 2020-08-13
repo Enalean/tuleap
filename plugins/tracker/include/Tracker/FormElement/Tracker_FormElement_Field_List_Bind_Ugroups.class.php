@@ -693,8 +693,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if (! $ugroup) {
             throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
         }
-        $ugroup_representation = new MinimalUserGroupRepresentation();
-        $ugroup_representation->build((int) $project->getID(), $ugroup);
+        $ugroup_representation = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
 
         $representation = new FieldListBindUGroupValueRepresentation();
         $representation->build($value, $ugroup_representation);
@@ -709,8 +708,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         $rest_array = [];
         foreach ($bind_values as $value) {
-            $representation = new MinimalUserGroupRepresentation();
-            $representation->build((int) $project_id, $value->getUgroup());
+            $representation = new MinimalUserGroupRepresentation((int) $project_id, $value->getUgroup());
             $rest_array[] = $representation;
         }
         return $rest_array;
@@ -764,14 +762,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
-        $ugroup_representation = new MinimalUserGroupRepresentation();
-
         $ugroup_manager = new UGroupManager();
         $project        = $this->getField()->getTracker()->getProject();
         $user_group     = $ugroup_manager->getUGroupByName($project, $value->getLabel());
 
-        $ugroup_representation->build($project->getID(), $user_group);
-        return $ugroup_representation;
+        return new MinimalUserGroupRepresentation($project->getID(), $user_group);
     }
 
     public function getFieldDataFromRESTValue($rest_data): int

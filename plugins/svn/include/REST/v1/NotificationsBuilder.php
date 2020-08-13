@@ -124,8 +124,7 @@ class NotificationsBuilder
         foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
             $group = $this->ugroup_manager->getById($row['ugroup_id']);
 
-            $ugroup_representation = new MinimalUserGroupRepresentation();
-            $ugroup_representation->build((int) $notification->getRepository()->getProject()->getID(), $group);
+            $ugroup_representation = new MinimalUserGroupRepresentation((int) $notification->getRepository()->getProject()->getID(), $group);
 
             $ugroups[] = $ugroup_representation;
         }

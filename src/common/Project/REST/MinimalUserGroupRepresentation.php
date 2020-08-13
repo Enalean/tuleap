@@ -22,6 +22,9 @@ namespace Tuleap\Project\REST;
 use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 
+/**
+ * @psalm-immutable
+ */
 class MinimalUserGroupRepresentation
 {
 
@@ -56,7 +59,7 @@ class MinimalUserGroupRepresentation
      */
     public $key;
 
-    public function build(int $project_id, ProjectUGroup $ugroup): self
+    public function __construct(int $project_id, ProjectUGroup $ugroup)
     {
         $this->id         = UserGroupRepresentation::getRESTIdForProject($project_id, $ugroup->getId());
         $this->uri        = UserGroupRepresentation::ROUTE . '/' . $this->id;
@@ -64,6 +67,5 @@ class MinimalUserGroupRepresentation
         $this->key        = $ugroup->getName();
         $this->users_uri  = UserGroupRepresentation::ROUTE . '/' . $this->id . '/users';
         $this->short_name = $ugroup->getNormalizedName();
-        return $this;
     }
 }

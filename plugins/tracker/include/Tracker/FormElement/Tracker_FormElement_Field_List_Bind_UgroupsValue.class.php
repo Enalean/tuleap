@@ -89,13 +89,10 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
-        $ugroup_representation = new MinimalUserGroupRepresentation();
-
         $ugroup_manager = new UGroupManager();
         $project        = $field->getTracker()->getProject();
 
-        $ugroup_representation->build($project->getID(), $ugroup_manager->getById($this->getUgroupId()));
-        return $ugroup_representation;
+        return new MinimalUserGroupRepresentation($project->getID(), $ugroup_manager->getById($this->getUgroupId()));
     }
 
     public function getRESTId()

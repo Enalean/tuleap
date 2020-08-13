@@ -108,10 +108,7 @@ class ReleaseResource extends AuthenticatedResource
 
         $this->checkUserCanReadRelease($release, $user);
 
-        $release_representation = new ReleaseRepresentation();
-        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
-
-        return $release_representation;
+        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
     }
 
     /**
@@ -145,18 +142,14 @@ class ReleaseResource extends AuthenticatedResource
         $files_in_release = $release->getFiles();
         $representations  = [];
         foreach (array_slice($files_in_release, $offset, $limit) as $file) {
-            $file_representation = new FileRepresentation();
-            $file_representation->build($file);
-            $representations[] = $file_representation;
+            $file_representation = new FileRepresentation($file);
+            $representations[]   = $file_representation;
         }
 
         $this->sendAllowOptionsForFiles();
         Header::sendPaginationHeaders($limit, $offset, count($files_in_release), self::MAX_LIMIT);
 
-        $collection = new CollectionOfFileRepresentation();
-        $collection->build($representations);
-
-        return $collection;
+        return new CollectionOfFileRepresentation($representations);
     }
 
     /**
@@ -234,10 +227,7 @@ class ReleaseResource extends AuthenticatedResource
         if (! $release) {
             throw new RestException(500, "Unable to retrieve the release from the DB. Please contact site administrators");
         }
-        $release_representation = new ReleaseRepresentation();
-        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
-
-        return $release_representation;
+        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
     }
 
     /**

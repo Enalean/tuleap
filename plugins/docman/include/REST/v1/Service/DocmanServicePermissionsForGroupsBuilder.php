@@ -63,7 +63,7 @@ class DocmanServicePermissionsForGroupsBuilder
             }
             $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
             if ($ugroup !== null) {
-                $user_group_representations[] = (new MinimalUserGroupRepresentation())->build((int) $project_id, $ugroup);
+                $user_group_representations[] = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
             }
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -37,8 +37,7 @@ class PermissionsOnArtifacts
         $ugroup_representations = [];
 
         foreach ($ugroups as $user_group) {
-            $ugroup_representation = new MinimalUserGroupRepresentation();
-            $ugroup_representation->build((int) $project_id, $user_group);
+            $ugroup_representation    = new MinimalUserGroupRepresentation((int) $project_id, $user_group);
             $ugroup_representations[] = $ugroup_representation;
         }
 

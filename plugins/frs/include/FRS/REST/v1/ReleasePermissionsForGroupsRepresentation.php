@@ -23,16 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
+use Tuleap\Project\REST\UserGroupRepresentation;
+
+/**
+ * @psalm-immutable
+ */
 class ReleasePermissionsForGroupsRepresentation
 {
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
+     * @var UserGroupRepresentation[] {@type UserGroupRepresentation}
      */
     public $can_read = [];
 
-    public function build(array $can_read)
+    /**
+     * @param UserGroupRepresentation[] $can_read
+     */
+    public function __construct(array $can_read)
     {
         $this->can_read = $can_read;
-        return $this;
     }
 }
