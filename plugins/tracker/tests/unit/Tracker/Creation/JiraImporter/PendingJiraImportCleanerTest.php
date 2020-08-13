@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\CancellationOfJiraImportNotifier;
 
 class PendingJiraImportCleanerTest extends TestCase
 {

@@ -26,6 +26,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\CancellationOfJiraImportNotifier;
 
 class PendingJiraImportCleaner
 {
