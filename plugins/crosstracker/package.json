@@ -7,7 +7,7 @@
   "dependencies": {
     "@tuleap/plugin-tracker": "file:../tracker",
     "extendable-error": "^0.1.5",
-    "moment": "^2.26.0",
+    "moment": "^2.27.0",
     "phptomoment": "0.0.2",
     "vue": "^2.6.11",
     "vue-gettext": "^2.1.10",
