@@ -19,19 +19,23 @@
   -->
 
 <template>
-    <button
-        class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small test-plan-export-button"
-        v-bind:disabled="!can_export"
-        v-on:click="exportTestPlan"
-    >
-        <i
-            class="fa tlp-button-icon"
-            v-bind:class="icon_classes"
-            aria-hidden="true"
-            data-test="download-export-button-icon"
-        ></i>
-        <translate>Export</translate>
-    </button>
+    <div>
+        <button
+            class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small test-plan-export-button"
+            v-bind:disabled="!can_export"
+            v-on:click="exportTestPlan"
+            data-test="testplan-export-button"
+        >
+            <i
+                class="fa tlp-button-icon"
+                v-bind:class="icon_classes"
+                aria-hidden="true"
+                data-test="download-export-button-icon"
+            ></i>
+            <translate>Export</translate>
+        </button>
+        <export-error v-if="has_encountered_error_during_the_export" />
+    </div>
 </template>
 
 <script lang="ts">
@@ -39,11 +43,15 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import { BacklogItem, Campaign } from "../../type";
+import ExportError from "./ExportError.vue";
 
 const backlog_item = namespace("backlog_item");
 const campaign = namespace("campaign");
-
-@Component
+@Component({
+    components: {
+        ExportError,
+    },
+})
 export default class ExportButton extends Vue {
     @backlog_item.State("is_loading")
     readonly backlog_items_is_loading!: boolean;
@@ -74,6 +82,8 @@ export default class ExportButton extends Vue {
 
     private is_preparing_the_download = false;
 
+    private has_encountered_error_during_the_export = false;
+
     get can_export(): boolean {
         return (
             !this.backlog_items_is_loading &&
@@ -96,6 +106,7 @@ export default class ExportButton extends Vue {
             return;
         }
         this.is_preparing_the_download = true;
+        this.has_encountered_error_during_the_export = false;
 
         try {
             const { downloadExportDocument } = await import(
@@ -109,8 +120,10 @@ export default class ExportButton extends Vue {
                 this.backlog_items,
                 this.campaigns
             );
+        } catch (e) {
+            this.has_encountered_error_during_the_export = true;
+            throw e;
         } finally {
-            // We should display a message somewhere but we need to know where it should be displayed first...
             this.is_preparing_the_download = false;
         }
     }

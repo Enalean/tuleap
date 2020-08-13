@@ -135,6 +135,9 @@ msgstr "Non planifié dans la release %{ release_name }"
 msgid "Not run"
 msgstr "Non executé"
 
+msgid "Oops, there's an issue"
+msgstr "Oups, il y a eu un problème"
+
 msgid "Passed"
 msgstr "Passé"
 
@@ -185,6 +188,9 @@ msgstr "Tests"
 
 msgid "Tests status"
 msgstr "Statut des tests"
+
+msgid "The export did not succeed, please try again."
+msgstr "L'export n'a pas réussi, veuillez réessayer."
 
 msgid ""
 "The retrieval of the test definition tracker reports has failed, try again "
