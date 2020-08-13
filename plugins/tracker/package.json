@@ -48,7 +48,8 @@
     "gulp": "^4.0.2",
     "gulp-angular-gettext": "^2.3.0",
     "jquery": "^3.5.1",
-    "vue-property-decorator": "^8.4.2",
+    "vue-class-component": "^7.2.5",
+    "vue-property-decorator": "^9.0.0",
     "vuex-class": "^0.3.2"
   },
   "config": {
