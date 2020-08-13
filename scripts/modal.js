@@ -43,7 +43,7 @@ export function contactSupportModalShown() {
                     contact_support_modal_form.getAttribute("action"),
                     jQuery(contact_support_modal_form).serialize()
                 )
-                .success(function () {
+                .done(function () {
                     hideErrorMessage(contact_support_modal_error_message);
                     switchSubmitButtonToThankYouState(contact_support_modal_submit);
                     showSuccessMessage(contact_support_modal_success_message);
@@ -54,7 +54,7 @@ export function contactSupportModalShown() {
                         hideSuccessMessage(contact_support_modal_success_message);
                     }, 5000);
                 })
-                .error(function () {
+                .fail(function () {
                     switchSubmitButtonToNormalState(contact_support_modal_submit);
                     showErrorMessage(contact_support_modal_error_message);
                 });
