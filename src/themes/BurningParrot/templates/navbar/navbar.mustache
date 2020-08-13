@@ -20,7 +20,7 @@
             {{# new_dropdown }}
                 {{# has_sections }}
                     <div id="nav-dropdown-new" class="nav-dropdown nav-dropdown-right">
-                        <div class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-new">
+                        <div class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-new" data-shortcut-create>
                             <i class="fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
                             {{# gettext }}New{{/ gettext }}
                         </div>
@@ -31,7 +31,7 @@
                                 <hr class="nav-dropdown-content-user-divider">
                                 <div class="nav-dropdown-content-item-title">{{ label }}</div>
                                 {{# links }}
-                                    <a href="{{ url }}" class="nav-dropdown-content-item">
+                                    <a href="{{ url }}" class="nav-dropdown-content-item" data-shortcut-create-option>
                                         <i class="fa fa-fw {{ icon }} nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
                                         {{ label }}
                                     </a>

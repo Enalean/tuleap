@@ -347,13 +347,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_user,
             $project
         ));
-
-        $this->keyboardModal();
-    }
-
-    private function keyboardModal()
-    {
-        $this->render('keyboard_navigation_help_modal', new KeyboardNavigationModalPresenter());
     }
 
     private function getProjectLink(Project $project)

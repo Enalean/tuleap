@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -265,9 +265,6 @@ msgstr "Administrateurs"
 msgid "Agile ALM"
 msgstr "ALM Agile"
 
-msgid "Agile Dashboard"
-msgstr "Agile Dashboard"
-
 msgid "All groups"
 msgstr "Tous les groupes"
 
@@ -342,9 +339,6 @@ msgstr ""
 
 msgid "An issue occurred while retrieving the RSS feed"
 msgstr "Une erreur est survenue lors de la récupération du flux RSS"
-
-msgid "And more..."
-msgstr "Et plus ..."
 
 msgid "And one other users group you are not allowed to administrate."
 msgid_plural "And %d other users groups you are not allowed to administrate."
@@ -632,9 +626,6 @@ msgstr "Le tableau de bord a correctement été modifié."
 msgid "Dashboard name"
 msgstr "Nom du tableau de bord"
 
-msgid "Dashboard of the project"
-msgstr "Dashboard du projet"
-
 msgid "Data"
 msgstr "Données"
 
@@ -728,14 +719,6 @@ msgstr "Ne répondez pas à ce courriel."
 msgid "Documentation"
 msgstr "Documentation"
 
-msgid "Documents"
-msgstr "Documents"
-
-msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
-msgstr ""
-"N'oubliez pas d'utiliser tab/shift+tab pour naviguer dans les menus "
-"déroulants"
-
 msgid "Download agreement"
 msgstr "Accord de téléchargement"
 
@@ -794,9 +777,6 @@ msgstr "Activer le mode experimental"
 
 msgid "Enabled?"
 msgstr "Activé ?"
-
-msgid "Escape from input/textarea, close dropdown or modal"
-msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 
 msgid "Experimental"
 msgstr "Expérimental"
@@ -857,9 +837,6 @@ msgstr "Générée le"
 
 msgid "Get help"
 msgstr "Rubriques d'aide"
-
-msgid "Git"
-msgstr "Git"
 
 msgid "Global access"
 msgstr "Accès global"
@@ -1073,9 +1050,6 @@ msgstr "Lien"
 msgid "Links"
 msgstr "Liens"
 
-msgid "Lists"
-msgstr "Listes"
-
 msgid "Lists the project members."
 msgstr "Affiche la liste des membres du projet."
 
@@ -1111,9 +1085,6 @@ msgstr ""
 
 msgid "Meaningful description of the group"
 msgstr "Description du groupe"
-
-msgid "Mediawiki"
-msgstr "Mediawiki"
 
 msgid "Member"
 msgid_plural "Members"
@@ -1171,9 +1142,6 @@ msgstr ""
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
 
-msgid "My personnal page"
-msgstr "Ma page personnelle"
-
 msgid "Name"
 msgstr "Nom"
 
@@ -1182,9 +1150,6 @@ msgstr "Nom ou description"
 
 msgid "Name, type..."
 msgstr "Nom, type …"
-
-msgid "Navebar"
-msgstr "Barre de menu"
 
 msgid "Nb maximum of allowed values"
 msgstr "Nb maximum de valeurs autorisées"
@@ -1276,24 +1241,6 @@ msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
-
-msgid "Open \"Help\" dropdown"
-msgstr "Affiche l'onglet \"Aide\""
-
-msgid "Open \"More\" dropdown"
-msgstr "Affiche l'onglet \"Plus\""
-
-msgid "Open \"Projects\" dropdown"
-msgstr "Affiche l'onglet \"Projets\""
-
-msgid "Open the account management dropdown (need to be connected)"
-msgstr "Affiche l'onglet de gestion du compte (si connecté)"
-
-msgid "Open/Close the shortcut window"
-msgstr "Ouvre/Ferme la fenêtre d'aide des raccourcis"
-
-msgid "Open/Collapse the sidebar"
-msgstr "Ouvre/Ferme la barre de service"
 
 msgid "Orange"
 msgstr "Orange"
@@ -1584,9 +1531,6 @@ msgstr "Visibilité du projet"
 msgid "Project web pages (Home Page Service)"
 msgstr "Pages web de project (Service Site Web)"
 
-msgid "Project web site"
-msgstr "Site web du projet"
-
 msgid "Projects"
 msgstr "ProjetS"
 
@@ -1728,9 +1672,6 @@ msgstr "Clef SSH"
 msgid "SSH keys"
 msgstr "Clefs SSH"
 
-msgid "SVN"
-msgstr "SVN"
-
 msgid "SVN Commits"
 msgstr "Commits SVN"
 
@@ -1818,9 +1759,6 @@ msgstr "Description courte"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
 
-msgid "Shortcut list"
-msgstr "Liste des raccourcis"
-
 msgid ""
 "Should you still need this account, please connect once to "
 "{{ tuleap_server_name}} web interface, this will automatically renew your "
@@ -1837,9 +1775,6 @@ msgid ""
 "project."
 msgstr ""
 "Si vous voulez garder votre compte, notifiez votre contact %s pour ce projet."
-
-msgid "Sidebar (project)"
-msgstr "Barre de service (projet)"
 
 msgid "Site content customisations"
 msgstr "Personnalisations du site content"
@@ -2309,9 +2244,6 @@ msgstr "Commentaire du jeton"
 
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
-
-msgid "Tracker"
-msgstr "Suivi"
 
 msgid "Tracker email format"
 msgstr "Format des notifications de l'outil de suivi"
