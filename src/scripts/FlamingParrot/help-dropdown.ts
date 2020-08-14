@@ -24,4 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (help_dropdown) {
         dropdown(document, help_dropdown);
     }
+
+    const help_shortcuts_trigger = document.getElementById("help-dropdomn-shortcuts");
+    if (help_shortcuts_trigger) {
+        help_shortcuts_trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+        });
+    }
 });

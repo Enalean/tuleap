@@ -992,6 +992,9 @@ msgstr "Kanban"
 msgid "Key"
 msgstr "Clef"
 
+msgid "Keyboard shortcuts"
+msgstr "Raccourcis clavier"
+
 msgid "Keys & Tokens"
 msgstr "Clefs et Tokens"
 
@@ -1241,6 +1244,12 @@ msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
+
+msgid "Open \"+ New\" dropdown"
+msgstr "Ouvre le menu déroulant \"+ Nouveau\""
+
+msgid "Open this window"
+msgstr "Ouvre cette fenêtre"
 
 msgid "Orange"
 msgstr "Orange"
@@ -1758,6 +1767,9 @@ msgstr "Description courte"
 
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
+
+msgid "Shortcuts"
+msgstr "Raccourcis"
 
 msgid ""
 "Should you still need this account, please connect once to "
