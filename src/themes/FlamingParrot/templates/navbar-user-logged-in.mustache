@@ -10,7 +10,7 @@
     {{> navbar-history }}
 </li>
 <li class="dropdown navbar-user-dropdown">
-    <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="dropdown-toggle" data-toggle="dropdown" data-shortcut-mydashboard>
         <img class="user-avatar" src="{{ user_avatar }}"/>
     </button>
     <ul class="dropdown-menu pull-right">
@@ -24,7 +24,12 @@
 
         {{# has_no_dashboards }}
             <li>
-                <a href="/my/" class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard">{{# gettext }}My dashboard{{/ gettext }}</a>
+                <a href="/my/"
+                   class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard"
+                   data-shortcut-mydashboard-option
+                >
+                    {{# gettext }}My dashboard{{/ gettext }}
+                </a>
             </li>
         {{/ has_no_dashboards }}
         {{^ has_no_dashboards }}
@@ -35,7 +40,12 @@
             {{/ has_one_dashboard }}
             {{# dashboards }}
                 <li>
-                    <a href="/my/?dashboard_id={{ getId }}" class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}">{{ getName }}</a>
+                    <a href="/my/?dashboard_id={{ getId }}"
+                        class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}"
+                        data-shortcut-mydashboard-option
+                    >
+                        {{ getName }}
+                    </a>
                 </li>
             {{/ dashboards }}
         {{/ has_no_dashboards }}
