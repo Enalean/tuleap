@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\XML;
 
 use Mockery;
@@ -32,11 +34,12 @@ use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tracker_RulesManager;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use UserManager;
 
-class TrackerExportToXmlTest extends TestCase
+final class TrackerExportToXmlTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -113,9 +116,13 @@ class TrackerExportToXmlTest extends TestCase
         $webhook_xml_exporter = Mockery::mock(WebhookXMLExporter::class);
         $webhook_xml_exporter->shouldReceive('exportTrackerWebhooksInXML')->once();
         $this->tracker->shouldReceive('getWebhookXMLExporter')->andReturn($webhook_xml_exporter);
+
+        $dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
+        $dropdown_dao->shouldReceive('isContaining')->andReturnTrue()->once();
+        $this->tracker->shouldReceive('getDropDownDao')->andReturn($dropdown_dao);
     }
 
-    public function testPermissionsExport()
+    public function testPermissionsExport(): void
     {
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn(
             [
@@ -154,7 +161,7 @@ class TrackerExportToXmlTest extends TestCase
         $this->assertEquals('PERM_3', (string) $xml->permissions->permission[2]['type']);
     }
 
-    public function testItExportsTheTrackerID()
+    public function testItExportsTheTrackerID(): void
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
@@ -168,7 +175,7 @@ class TrackerExportToXmlTest extends TestCase
         $this->assertEquals('T110', (string) $attributes['id']);
     }
 
-    public function testItExportsNoParentIfNotInAHierarchy()
+    public function testItExportsNoParentIfNotInAHierarchy(): void
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
@@ -182,7 +189,7 @@ class TrackerExportToXmlTest extends TestCase
         $this->assertEquals("0", (string) $attributes['parent_id']);
     }
 
-    public function testItExportsTheParentId()
+    public function testItExportsTheParentId(): void
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
@@ -197,7 +204,7 @@ class TrackerExportToXmlTest extends TestCase
         $this->assertEquals("T9001", (string) $attributes['parent_id']);
     }
 
-    public function testItExportsTheTrackerColor()
+    public function testItExportsTheTrackerColor(): void
     {
         $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
@@ -209,5 +216,19 @@ class TrackerExportToXmlTest extends TestCase
 
         $color = $xml->color;
         $this->assertEquals(TrackerColor::default()->getName(), (string) $color);
+    }
+
+    public function testItExportTheTrackerUsageInNewDropDown(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $is_displayed_in_new_dropdown = $xml->is_displayed_in_new_dropdown;
+        $this->assertEquals(0, (int) $is_displayed_in_new_dropdown);
     }
 }

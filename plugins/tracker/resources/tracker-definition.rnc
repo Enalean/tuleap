@@ -32,6 +32,7 @@ tracker =
         attribute stop_notification { "0" | "1" }?, # default is false (deprecated, use notifications_level instead)
         attribute notifications_level { "0" | "1" | "2" }?, # default is 0
         attribute is_folder { xsd:boolean }?,
+        attribute is_displayed_in_new_dropdown { xsd:boolean }?,
 
         # these elements are not used, they are provided by the user during the import
         element name { non_empty_string }?,

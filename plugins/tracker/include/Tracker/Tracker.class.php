@@ -56,6 +56,7 @@ use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -2298,6 +2299,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             $xmlElem->addAttribute('notifications_level', $this->notifications_level);
         }
 
+        if ($this->getDropDownDao()->isContaining($this->id)) {
+            $xmlElem->addAttribute('is_displayed_in_new_dropdown', (string) true);
+        }
+
         // these will not be used at the import
         $cdata_section_factory->insert($xmlElem, 'name', $this->getName());
         $cdata = new XML_SimpleXMLCDATAFactory();
@@ -3554,5 +3559,13 @@ class Tracker implements Tracker_Dispatchable_Interface
             $this->getFormElementFactory(),
             $workflow_update_checker
         );
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getDropDownDao(): TrackerInNewDropdownDao
+    {
+        return new TrackerInNewDropdownDao();
     }
 }
