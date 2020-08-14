@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\PlannableItems;
 
-use Project;
+use Planning;
 use ProjectManager;
 use TrackerFactory;
 
@@ -53,9 +53,9 @@ class PlannableItemsCollectionBuilder
         $this->project_manager = $project_manager;
     }
 
-    public function buildCollection(Project $project): PlannableItemsCollection
+    public function buildCollection(Planning $project_root_planning): PlannableItemsCollection
     {
-        $plannable_items_rows = $this->dao->getPlannableItemsTrackerIds((int) $project->getID());
+        $plannable_items_rows = $this->dao->getPlannableItemsTrackerIds((int) $project_root_planning->getID());
 
         $plannable_items = [];
         foreach ($plannable_items_rows as $plannable_item_row) {

@@ -705,7 +705,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 //refresh the planning
                 $planning = $this->planning_factory->getPlanning($updated_planning_id);
                 if ($planning !== null) {
-                    $event = new PlanningUpdatedEvent($planning);
+                    $event = new PlanningUpdatedEvent($planning, $user);
                     $this->event_manager->dispatch($event);
                 }
 

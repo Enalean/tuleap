@@ -29,47 +29,53 @@ class PlannableItemsTrackersDao extends DataAccessObject
     /**
      * @psalm-return list<array{project_id:int, tracker_ids:string}>
      */
-    public function getPlannableItemsTrackerIds(int $project_id): array
+    public function getPlannableItemsTrackerIds(int $aggregator_top_planning_id): array
     {
         $sql = "SELECT tracker.group_id as project_id, GROUP_CONCAT(tracker.id ORDER BY tracker.id ASC) as tracker_ids
-                FROM plugin_multi_project_backlog_plannable_item_trackers
+                FROM plugin_agiledashboard_planning_backlog_tracker
                     INNER JOIN tracker ON (
-                        tracker.id = plugin_multi_project_backlog_plannable_item_trackers.contributor_backlog_item_tracker_id
+                        tracker.id = plugin_agiledashboard_planning_backlog_tracker.tracker_id
                     )
-                WHERE aggregator_project_id = ?
+                WHERE plugin_agiledashboard_planning_backlog_tracker.planning_id = ?
                 GROUP BY tracker.group_id";
 
-        return $this->getDB()->run($sql, $project_id);
+        return $this->getDB()->run($sql, $aggregator_top_planning_id);
     }
 
-    public function deletePlannableItemsTrackerIdsOfAGivenContributorProject(int $contributor_project_id): void
-    {
-        $sql = "DELETE plugin_multi_project_backlog_plannable_item_trackers.*
-                FROM plugin_multi_project_backlog_plannable_item_trackers
+    public function deletePlannableItemsTrackerIdsOfAGivenContributorProject(
+        int $contributor_project_id,
+        int $aggregator_top_planning_id
+    ): void {
+        $sql = "DELETE plugin_agiledashboard_planning_backlog_tracker.*
+                FROM plugin_agiledashboard_planning_backlog_tracker
                     INNER JOIN tracker ON (
-                        tracker.id = plugin_multi_project_backlog_plannable_item_trackers.contributor_backlog_item_tracker_id
+                        tracker.id = plugin_agiledashboard_planning_backlog_tracker.tracker_id
                     )
-                WHERE tracker.group_id = ?";
+                    INNER JOIN plugin_agiledashboard_planning ON (
+                        plugin_agiledashboard_planning.id = plugin_agiledashboard_planning_backlog_tracker.planning_id
+                    )
+                WHERE tracker.group_id = ?
+                    AND plugin_agiledashboard_planning.id = ?";
 
-        $this->getDB()->run($sql, $contributor_project_id);
+        $this->getDB()->run($sql, $contributor_project_id, $aggregator_top_planning_id);
     }
 
     /**
      * @param int[] $plannable_items_tracker_ids
      */
-    public function addPlannableItemsTrackerIds(int $aggregator_project_id, array $plannable_items_tracker_ids): void
+    public function addPlannableItemsTrackerIds(int $aggregator_top_planning_id, array $plannable_items_tracker_ids): void
     {
         $data_to_insert = [];
         foreach ($plannable_items_tracker_ids as $plannable_items_tracker_id) {
             $data_to_insert[] = [
-                'aggregator_project_id' => $aggregator_project_id,
-                'contributor_backlog_item_tracker_id' => $plannable_items_tracker_id
+                'planning_id' => $aggregator_top_planning_id,
+                'tracker_id'  => $plannable_items_tracker_id
             ];
         }
 
         if (! empty($data_to_insert)) {
             $this->getDB()->insertMany(
-                'plugin_multi_project_backlog_plannable_item_trackers',
+                'plugin_agiledashboard_planning_backlog_tracker',
                 $data_to_insert
             );
         }

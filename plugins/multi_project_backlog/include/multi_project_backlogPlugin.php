@@ -156,11 +156,13 @@ final class multi_project_backlogPlugin extends Plugin
         (new PlannableItemsTrackersUpdater(
             new ContributorDao(),
             new PlannableItemsTrackersDao(),
+            PlanningFactory::build(),
             new DBTransactionExecutorWithConnection(
                 DBFactory::getMainTuleapDBConnection()
             )
         ))->updatePlannableItemsTrackersFromPlanning(
-            $event->getPlanning()
+            $event->getPlanning(),
+            $event->getUser()
         );
     }
 

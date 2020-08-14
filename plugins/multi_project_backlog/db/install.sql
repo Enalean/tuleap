@@ -22,9 +22,3 @@ CREATE TABLE plugin_multi_project_backlog_contributor_projects(
     contributor_project_id INT(11) NOT NULL,
     PRIMARY KEY (aggregator_project_id, contributor_project_id)
 ) ENGINE=InnoDB;
-
-CREATE TABLE plugin_multi_project_backlog_plannable_item_trackers(
-    aggregator_project_id INT(11) NOT NULL,
-    contributor_backlog_item_tracker_id INT(11) NOT NULL,
-    PRIMARY KEY (aggregator_project_id, contributor_backlog_item_tracker_id)
-) ENGINE=InnoDB;

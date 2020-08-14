@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,4 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_multi_project_backlog_contributor_projects;
+declare(strict_types=1);
+
+namespace Tuleap\MultiProjectBacklog\Aggregator\PlannableItems;
+
+class TopPlanningNotFoundInAggregatorProjectException extends \Exception
+{
+    public function __construct(int $aggregator_project_id)
+    {
+        parent::__construct("Top planning not found in aggregator project #$aggregator_project_id.");
+    }
+}

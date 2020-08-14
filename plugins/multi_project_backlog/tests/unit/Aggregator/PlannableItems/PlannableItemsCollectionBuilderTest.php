@@ -25,6 +25,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\PlannableItems;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Planning;
 use Project;
 use ProjectManager;
 use Tracker;
@@ -71,12 +72,11 @@ class PlannableItemsCollectionBuilderTest extends TestCase
 
     public function testItBuildsAPlannableItemsCollection(): void
     {
-        $aggregator_project = Mockery::mock(Project::class);
-        $aggregator_project->shouldReceive('getID')->andReturn(143);
+        $aggregator_top_planning = new Planning(1, 'Release Planning', 104, 'Release Backlog', 'Sprint Plan', []);
 
         $this->dao->shouldReceive('getPlannableItemsTrackerIds')
             ->once()
-            ->with(143)
+            ->with(1)
             ->andReturn([
                 [
                     'project_id' => 144,
@@ -108,7 +108,7 @@ class PlannableItemsCollectionBuilderTest extends TestCase
             $contributor_project_02_tracker_02
         );
 
-        $collection = $this->builder->buildCollection($aggregator_project);
+        $collection = $this->builder->buildCollection($aggregator_top_planning);
 
         $this->assertCount(2, $collection->getPlannableItems());
 

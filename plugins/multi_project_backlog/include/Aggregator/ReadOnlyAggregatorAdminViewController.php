@@ -157,7 +157,7 @@ final class ReadOnlyAggregatorAdminViewController implements DispatchableWithReq
 
         $this->displayHeader($service, $user, $project);
 
-        $plannable_items_collection           = $this->plannable_items_collection_builder->buildCollection($project);
+        $plannable_items_collection           = $this->plannable_items_collection_builder->buildCollection($project_root_planning);
         $plannable_items_presenter_collection = $this->per_contributor_presenter_collection_builder
             ->buildPresenterCollectionFromObjectCollection($user, $plannable_items_collection);
 
