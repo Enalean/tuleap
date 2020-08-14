@@ -12,7 +12,7 @@
     "@formatjs/intl-pluralrules": "^3.2.1",
     "@formatjs/intl-relativetimeformat": "^6.2.1",
     "@webcomponents/custom-elements": "^1.4.1",
-    "flatpickr": "^4.6.2",
+    "flatpickr": "^4.6.6",
     "jquery": "^3.5.1",
     "popper.js": "^1.14.7",
     "select2": "^4.0.10"
