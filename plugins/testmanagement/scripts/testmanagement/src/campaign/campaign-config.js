@@ -11,7 +11,7 @@ function CampaignConfig($stateProvider) {
         .state("campaigns", {
             abstract: true,
             url: "/campaigns",
-            template: "<ui-view />",
+            template: "<ui-view></ui-view>",
             controller: CampaignCtrl,
             resolve: {
                 milestone: [
