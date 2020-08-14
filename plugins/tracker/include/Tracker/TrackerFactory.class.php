@@ -19,7 +19,11 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Creation\PostCreationProcessor;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationSettings;
+use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
+use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -435,7 +439,8 @@ class TrackerFactory
         }
         $this->duplicateWebhooks($source_tracker, $tracker);
 
-        $this->postCreateActions($tracker);
+        $builder = new TrackerCreationSettingsBuilder(new TrackerInNewDropdownDao());
+        $this->postCreateActions($tracker, $builder->build($source_tracker));
 
         return [
             'tracker'        => $tracker,
@@ -484,23 +489,10 @@ class TrackerFactory
         }
     }
 
-    /**
-     * Do all stuff which have to be done after a tracker creation, like reference creation for example
-     *
-     * @param Tracker $tracker The tracker
-     *
-     * @return void
-     */
-    protected function postCreateActions(Tracker $tracker)
+    protected function postCreateActions(Tracker $tracker, TrackerCreationSettings $settings): void
     {
-        $keyword   = strtolower($tracker->getItemName());
-        $reference = new Tracker_Reference(
-            $tracker,
-            $keyword
-        );
-
-        // Force reference creation because default trackers use reserved keywords
-        $this->getReferenceManager()->createReference($reference, true);
+        $processor = PostCreationProcessor::build();
+        $processor->postCreationProcess($tracker, $settings);
     }
 
     /**
@@ -667,19 +659,13 @@ class TrackerFactory
         return true;
     }
 
-    /**
-     * Saves a Tracker object into the DataBase
-     *
-     * @param Tracker $tracker object to save
-     * @return int id of the newly created tracker
-     */
-    public function saveObject($tracker): int
+    public function saveObject(Tracker $tracker, TrackerCreationSettings $settings): int
     {
         // create tracker
         $transaction_executor = $this->getTransactionExecutor();
 
         return $transaction_executor->execute(
-            function () use ($tracker) {
+            function () use ($tracker, $settings) {
                 $tracker_id = $this->getDao()->create(
                     $tracker->group_id,
                     $tracker->name,
@@ -746,7 +732,7 @@ class TrackerFactory
                         $this->saveTrackerDefaultPermission($tracker_id);
                     }
 
-                    $this->postCreateActions($trackerDB);
+                    $this->postCreateActions($trackerDB, $settings);
                 }
 
                 return (int) $tracker_id;
@@ -811,7 +797,8 @@ class TrackerFactory
             $migration_v3 = new Tracker_Migration_V3($this);
             $tracker      = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
 
-            $this->postCreateActions($tracker);
+            $settings = new TrackerCreationSettings(false);
+            $this->postCreateActions($tracker, $settings);
 
             return $tracker;
         } catch (TrackerIsInvalidException $exception) {

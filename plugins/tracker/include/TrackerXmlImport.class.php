@@ -26,6 +26,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -766,12 +767,21 @@ class TrackerXmlImport
         );
         //Testing consistency of the imported tracker before updating database
         if ($tracker->testImport()) {
-            if ($tracker_id = $this->tracker_factory->saveObject($tracker)) {
+            $attributes                   = $xml_element->attributes();
+            $is_displayed_in_new_dropdown = isset($attributes['is_displayed_in_new_dropdown']) ?
+                (bool) $attributes['is_displayed_in_new_dropdown'] : false;
+
+            $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown);
+
+            if ($tracker_id = $this->tracker_factory->saveObject($tracker, $settings)) {
                 $this->addTrackerProperties($tracker_id, $project, $xml_element);
                 $tracker->setId($tracker_id);
             } else {
                 throw new TrackerFromXmlException(
-                    dgettext('tuleap-tracker', 'Oops. Something weird occured. Unable to create the tracker. Please try again.')
+                    dgettext(
+                        'tuleap-tracker',
+                        'Oops. Something weird occured. Unable to create the tracker. Please try again.'
+                    )
                 );
             }
         } else {
