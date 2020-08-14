@@ -336,7 +336,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     /**
      * @depends testPostArtifact
      */
-    public function testGetArtifacts()
+    public function testGetArtifacts(): void
     {
         $do_not_exist_artifact_id = 999999999999999999;
         $existing_artifact_ids    = array_merge($this->level_one_artifact_ids, $this->level_two_artifact_ids);
@@ -357,6 +357,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $artifacts = $response_with_read_only_user->json();
 
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
+        $tracker_ids = [];
+        foreach ($artifacts['collection'] as $artifact) {
+            $artifact_tracker_id = $artifact['tracker']['id'];
+            if (! in_array($artifact_tracker_id, $tracker_ids, true)) {
+                $tracker_ids[] = $artifact_tracker_id;
+            }
+        }
+        $this->assertCount(2, $tracker_ids);
     }
 
     public function testGetTooManyArtifacts()
