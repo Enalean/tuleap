@@ -287,10 +287,11 @@ class ArtifactsResource extends AuthenticatedResource
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array
+     * @psalm-return array{"collection":ArtifactRepresentation[]}
      *
      * @throws RestException 403
      */
-    public function getArtifacts($query, $limit = self::MAX_ARTIFACT_BATCH, $offset = self::DEFAULT_OFFSET)
+    public function getArtifacts(string $query, int $limit = self::MAX_ARTIFACT_BATCH, int $offset = self::DEFAULT_OFFSET): array
     {
         $this->checkAccess();
 
@@ -314,23 +315,18 @@ class ArtifactsResource extends AuthenticatedResource
             array_slice($requested_artifact_ids, $offset, $limit)
         );
 
-        if (! count($artifacts) > 0) {
+        if (! (count($artifacts) > 0)) {
             Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
             return [self::VALUES_FORMAT_COLLECTION => $artifact_representations];
         }
 
-        $first_artifact = $artifacts[0];
-
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
-            $user,
-            $first_artifact->getTracker()->getProject()
-        );
-
-        $tracker_representation = MinimalTrackerRepresentation::build($first_artifact->getTracker());
-
         foreach ($artifacts as $artifact) {
             if ($artifact->userCanView($user)) {
-                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact, $tracker_representation);
+                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
+                    $user,
+                    $artifact,
+                    MinimalTrackerRepresentation::build($artifact->getTracker())
+                );
             }
         }
 
