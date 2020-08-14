@@ -17,22 +17,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ReportCell = TextCell | DateCell | HTMLCell;
+export type ReportCell = TextCell | DateCell | HTMLCell | NumberCell | EmptyCell;
 
-export class TextCell {
+abstract class CommentCell {
+    readonly comment?: string;
+
+    withComment(comment: string): this {
+        return Object.assign(Object.create(Object.getPrototypeOf(this)), this, { comment });
+    }
+}
+
+export class TextCell extends CommentCell {
     readonly type = "text";
 
-    constructor(readonly value: string) {}
+    constructor(readonly value: string) {
+        super();
+    }
 }
 
-export class HTMLCell {
+export class HTMLCell extends CommentCell {
     readonly type = "html";
 
-    constructor(readonly value: string) {}
+    constructor(readonly value: string) {
+        super();
+    }
 }
 
-export class DateCell {
+export class DateCell extends CommentCell {
     readonly type = "date";
 
-    constructor(readonly value: Date) {}
+    constructor(readonly value: Date) {
+        super();
+    }
+}
+
+export class NumberCell extends CommentCell {
+    readonly type = "number";
+
+    constructor(readonly value: number) {
+        super();
+    }
+}
+
+export class EmptyCell extends CommentCell {
+    readonly type = "empty";
 }

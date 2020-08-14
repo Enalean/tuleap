@@ -50,6 +50,9 @@ export async function createExportReport(
         campaigns
     );
 
+    const requirements_section = buildRequirementsSection(gettext_provider, backlog_items);
+    const justifications_section = buildJustificationsSection(gettext_provider, planned_test_cases);
+
     return {
         sections: [
             buildGeneralSection(
@@ -59,9 +62,9 @@ export async function createExportReport(
                 user_display_name,
                 current_date
             ),
-            buildRequirementsSection(gettext_provider, backlog_items),
+            await requirements_section,
             buildTestResultsSection(gettext_provider, planned_test_cases),
-            await buildJustificationsSection(gettext_provider, planned_test_cases),
+            await justifications_section,
         ],
     };
 }

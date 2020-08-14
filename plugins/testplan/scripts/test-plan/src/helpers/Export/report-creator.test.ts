@@ -35,7 +35,7 @@ describe("Create an export report", () => {
         jest.spyOn(general_information_builder, "buildGeneralSection").mockReturnValue(({
             rows: [[new TextCell("General section")]],
         } as unknown) as GeneralSection);
-        jest.spyOn(requirements_builder, "buildRequirementsSection").mockReturnValue(({
+        jest.spyOn(requirements_builder, "buildRequirementsSection").mockResolvedValue(({
             rows: [[new TextCell("Requirements section")]],
         } as unknown) as RequirementsSection);
         jest.spyOn(test_results_builder, "buildTestResultsSection").mockReturnValue(({

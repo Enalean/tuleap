@@ -19,7 +19,9 @@
 
 import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
 import { DateCell, HTMLCell, TextCell } from "./report-cells";
-import { Artifact, retrieveArtifacts } from "./artifacts-retriever";
+import { retrieveArtifacts } from "./artifacts-retriever";
+import { transformTextFieldValueIntoACell } from "./transform-field-value-into-cell";
+import { Artifact } from "./artifact";
 
 const TEST_EXEC_RESULT_FIELD_COMMENT_NAME = "results";
 
@@ -119,9 +121,5 @@ function findJustificationCommentCell(
         return new TextCell("");
     }
 
-    if (result_field.format === "text") {
-        return new TextCell(result_field.value);
-    }
-
-    return new HTMLCell(result_field.value);
+    return transformTextFieldValueIntoACell(result_field);
 }
