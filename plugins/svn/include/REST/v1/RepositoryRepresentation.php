@@ -20,21 +20,31 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Project;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
 use Tuleap\SVN\Repository\Repository;
 
+/**
+ * @psalm-immutable
+ */
 class RepositoryRepresentation extends SvnRepositoryRepresentationBase
 {
-    public function build(Repository $repository)
+    protected function __construct(Project $project, int $id, string $name, string $svn_url)
     {
-        $project_representation = new MinimalProjectRepresentation($repository->getProject());
+        parent::__construct();
+        $project_representation = new MinimalProjectRepresentation($project);
 
-        $this->id      = JsonCast::toInt($repository->getId());
+        $this->id      = JsonCast::toInt($id);
         $this->project = $project_representation;
         $this->uri     = self::ROUTE . '/' . $this->id;
-        $this->name    = $repository->getName();
-        $this->svn_url = $repository->getSvnUrl();
+        $this->name    = $name;
+        $this->svn_url = $svn_url;
+    }
+
+    public static function build(Repository $repository): RepositoryRepresentation
+    {
+        return new self($repository->getProject(), JsonCast::toInt($repository->getId()), $repository->getName(), $repository->getSvnUrl());
     }
 }

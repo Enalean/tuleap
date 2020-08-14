@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,27 +22,28 @@ namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\SVN\Repository\Repository;
 
+/**
+ * @psalm-immutable
+ */
 class AccessFileHistory
 {
 
-    private $id;
+    protected $id;
     private $version_number;
     private $content;
     private $version_date;
+    /**
+     * @var Repository
+     */
     private $repository;
 
-    public function __construct(Repository $repository, $id, $version_number, $content, $version_date)
+    public function __construct(Repository $repository, int $id, $version_number, $content, $version_date)
     {
         $this->id             = $id;
         $this->version_number = $version_number;
         $this->content        = $content;
         $this->version_date   = $version_date;
-        $this->repository     = $repository;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
+        $this->repository     = clone $repository;
     }
 
     public function getId()
@@ -50,29 +51,14 @@ class AccessFileHistory
         return $this->id;
     }
 
-    public function setVersionNumber($version_number)
-    {
-        $this->version_number = $version_number;
-    }
-
     public function getVersionNumber()
     {
         return (int) $this->version_number;
     }
 
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
     public function getContent()
     {
         return $this->content;
-    }
-
-    public function setVersionDate($version_date)
-    {
-        $this->version_date = $version_date;
     }
 
     public function getVersionDate()

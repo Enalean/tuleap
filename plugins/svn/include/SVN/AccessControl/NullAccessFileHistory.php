@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +22,19 @@ namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\SVN\Repository\Repository;
 
+/**
+ * @psalm-immutable
+ */
 class NullAccessFileHistory extends AccessFileHistory
 {
 
     public function __construct(Repository $repository)
     {
-        $id             = null;
         $version_number = 0;
         $content        = '';
         $version_date   = 0;
 
-        parent::__construct($repository, $id, $version_number, $content, $version_date);
+        parent::__construct($repository, 0, $version_number, $content, $version_date);
+        $this->id = null;
     }
 }

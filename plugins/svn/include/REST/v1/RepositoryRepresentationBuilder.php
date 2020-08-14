@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,23 +75,17 @@ class RepositoryRepresentationBuilder
     public function build(Repository $repository, PFUser $user)
     {
         if ($this->permission_manager->isAdmin($repository->getProject(), $user)) {
-            $representation     = new FullRepositoryRepresentation();
             $mail_notifications = $this->mail_notification_manager->getByRepository($repository);
             $notification_list  = $this->notification_list_builder->getNotifications($mail_notifications);
-            $representation->fullBuild(
+            return FullRepositoryRepresentation::fullBuild(
                 $repository,
                 $this->hook_config_retriever->getHookConfig($repository),
                 $this->immutable_tag_factory->getByRepositoryId($repository),
                 $this->access_file_history_factory->getCurrentVersion($repository),
                 $notification_list
             );
-
-            return $representation;
         }
 
-        $representation = new RepositoryRepresentation();
-        $representation->build($repository);
-
-        return $representation;
+        return RepositoryRepresentation::build($repository);
     }
 }

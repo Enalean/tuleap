@@ -160,23 +160,22 @@ class AccessFileHistoryCreator
      */
     public function storeInDBWithoutCleaningContent(Repository $repository, $content, $timestamp)
     {
-        $id             = 0;
         $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
-        $file_history = new AccessFileHistory(
-            $repository,
-            $id,
-            $version_number + 1,
-            $content,
-            $timestamp
-        );
-        if (! $this->dao->create($file_history)) {
+        $file_history_id = $this->dao->create($version_number, $repository->getId(), $content, $timestamp);
+        if ($file_history_id === false) {
             throw new CannotCreateAccessFileHistoryException(
                 dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );
         }
 
-        return $file_history;
+        return new AccessFileHistory(
+            $repository,
+            $file_history_id,
+            $version_number + 1,
+            $content,
+            $timestamp
+        );
     }
 
     private function logHistory(Repository $repository, $content)

@@ -38,146 +38,189 @@ class SettingsRepresentationValidatorTest extends TestCase
 
     public function testItThrowAnExceptionWHenPathAreNotUnique(): void
     {
-        $notification_representation_01         = new NotificationRepresentation();
-        $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = ['test@example.com'];
-        $notification_representation_01->users  = [];
+        $notification_representation_01         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $notification_representation_02         = new NotificationRepresentation();
-        $notification_representation_02->path   = "/tags";
-        $notification_representation_02->emails = ['user@example.com'];
-        $notification_representation_02->users  = [];
+        $notification_representation_02         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $settings = new SettingsPOSTRepresentation();
+        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
         $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
 
-        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
     public function testItDontThrowExceptionWhenPathAreUnique(): void
     {
-        $notification_representation_01         = new NotificationRepresentation();
-        $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = ['test@example.com'];
-        $notification_representation_01->users  = [];
+        $notification_representation_01         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $notification_representation_02         = new NotificationRepresentation();
-        $notification_representation_02->path   = "/trunks";
-        $notification_representation_02->emails = ['user@example.com'];
-        $notification_representation_02->users  = [];
+        $notification_representation_02         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/trunks'
+        );
 
-        $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
+        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
 
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
 
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
     public function testItDontThrowAnExceptionAccessFileIsSentEmpty(): void
     {
-        $settings = new SettingsPUTRepresentation();
-        $settings->access_file = "";
+        $settings = new class ('') extends SettingsPUTRepresentation {
+            public function __construct(string $access_file)
+            {
+                $this->access_file = $access_file;
+            }
+        };
 
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
 
         $this->validator->validateForPUTRepresentation($settings);
     }
 
     public function testItThrowAnExceptionAccessFileKeyIsNotPresent(): void
     {
-        $settings = new SettingsPUTRepresentation();
+        $settings = new class extends SettingsPUTRepresentation {
+            public function __construct()
+            {
+            }
+        };
 
-        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPUTRepresentation($settings);
     }
 
     public function testItDontRaiseErrorWhenSettingsAreNotProvided(): void
     {
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
 
         $this->validator->validateForPUTRepresentation(null);
     }
 
     public function testItThrowsAnExceptionWhenUsersAndEmailAreBothEmpty(): void
     {
-        $notification_representation_01         = new NotificationRepresentation();
-        $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = [];
-        $notification_representation_01->users  = [];
+        $notification_representation_01         = new NotificationRepresentation(
+            ['emails' =>  [], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $settings                      = new SettingsPOSTRepresentation();
-        $settings->email_notifications = [$notification_representation_01];
+        $settings = new class ($notification_representation_01) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
 
-        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
     public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPOST(): void
     {
-        $notification_representation_01 = new NotificationRepresentation();
-        $notification_representation_01->path = "/tags";
-        $notification_representation_01->emails = ['test@example.com', 'test1@example.com', 'test@example.com'];
+        $notification_representation_01 = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com', 'test1@example.com', 'test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = [$notification_representation_01];
+        $settings = new class ($notification_representation_01) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
 
-        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
     public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPOST(): void
     {
-        $notification_representation_01 = new NotificationRepresentation();
-        $notification_representation_01->path = "/tags";
-        $notification_representation_01->emails = ['test@example.com'];
+        $notification_representation_01 = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $notification_representation_02 = new NotificationRepresentation();
-        $notification_representation_02->path = "/trunks";
-        $notification_representation_02->emails = ['test@example.com'];
+        $notification_representation_02 = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/trunks'
+        );
 
-        $settings = new SettingsPOSTRepresentation();
-        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
+        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+            }
+        };
 
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
 
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
     public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT(): void
     {
-        $notification_representation_01         = new NotificationRepresentation();
-        $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = ['test@example.com', 'test1@example.com', 'test@example.com'];
+        $notification_representation_01 = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com', 'test1@example.com', 'test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $settings                      = new SettingsPUTRepresentation();
-        $settings->email_notifications = [$notification_representation_01];
-        $settings->access_file         = "";
-        $settings->immutable_tags      = [];
-        $settings->commit_rules        = [];
+        $settings = new class ($notification_representation_01) extends SettingsPUTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+                $this->access_file         = '';
+                $this->immutable_tags      = [];
+                $this->commit_rules        = [];
+            }
+        };
 
-        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->expectException(SettingsInvalidException::class);
         $this->validator->validateForPUTRepresentation($settings);
     }
 
     public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT(): void
     {
-        $notification_representation_01         = new NotificationRepresentation();
-        $notification_representation_01->path   = "/tags";
-        $notification_representation_01->emails = ['test@example.com'];
+        $notification_representation_01         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/tags'
+        );
 
-        $notification_representation_02         = new NotificationRepresentation();
-        $notification_representation_02->path   = "/trunks";
-        $notification_representation_02->emails = ['test@example.com'];
+        $notification_representation_02         = new NotificationRepresentation(
+            ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
+            '/trunks'
+        );
 
-        $settings                      = new SettingsPUTRepresentation();
-        $settings->email_notifications = [$notification_representation_01, $notification_representation_02];
-        $settings->access_file         = "";
-        $settings->immutable_tags      = [];
-        $settings->commit_rules        = [];
+        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPUTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+                $this->access_file         = '';
+                $this->immutable_tags      = [];
+                $this->commit_rules        = [];
+            }
+        };
 
-        $this->addToAssertionCount(1);
+        $this->expectNotToPerformAssertions();
 
         $this->validator->validateForPUTRepresentation($settings);
     }

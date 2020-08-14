@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -97,8 +97,7 @@ class ProjectResource
         $representations = [];
 
         foreach ($svn_repositories as $repository) {
-            $representation = new RepositoryRepresentation();
-            $representation->build($repository);
+            $representation = RepositoryRepresentation::build($repository);
 
             $representations[] = $representation;
         }
