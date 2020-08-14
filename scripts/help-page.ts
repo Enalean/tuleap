@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { contactSupportModalShown } from "./modal.js";
+import { contactSupportModalShown } from "./modal";
+import { post } from "tlp";
 
-document.addEventListener("DOMContentLoaded", contactSupportModalShown);
+document.addEventListener("DOMContentLoaded", contactSupportModalShown(document, post));

@@ -22,9 +22,9 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     "style-flamingparrot": "./themes/FlamingParrot/css/style.scss",
-    "help-page": "./scripts/help-page.js",
-    "modal-burning-parrot": "./scripts/modal-burning-parrot.js",
-    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.js",
+    "help-page": "./scripts/help-page.ts",
+    "modal-burning-parrot": "./scripts/modal-burning-parrot.ts",
+    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.ts",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -48,9 +48,14 @@ module.exports = [
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_ie11
+                ),
                 webpack_configurator.rule_scss_loader,
             ],
+        },
+        resolve: {
+            extensions: [".ts"],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
