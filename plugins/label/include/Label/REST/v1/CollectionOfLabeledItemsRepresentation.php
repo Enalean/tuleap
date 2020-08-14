@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\Label\REST\v1;
 
 use Tuleap\Label\LabeledItemCollection;
 
+/**
+ * @psalm-immutable
+ */
 class CollectionOfLabeledItemsRepresentation
 {
     public const ROUTE = 'labeled_items';
@@ -36,16 +39,27 @@ class CollectionOfLabeledItemsRepresentation
      */
     public $are_there_items_user_cannot_see;
 
-    public function build(LabeledItemCollection $labeled_items)
+    /**
+     * @param LabeledItemRepresentation[] $labeled_items
+     */
+    private function __construct(array $labeled_items, bool $are_there_items_user_cannot_see)
     {
-        $this->labeled_items = [];
-        foreach ($labeled_items->getItems() as $item) {
-            $representation = new LabeledItemRepresentation();
-            $representation->build($item);
+        $this->labeled_items                   = $labeled_items;
+        $this->are_there_items_user_cannot_see = $are_there_items_user_cannot_see;
+    }
 
-            $this->labeled_items[] = $representation;
+    public static function build(LabeledItemCollection $labeled_items): self
+    {
+        $labeled_item_representations = [];
+        foreach ($labeled_items->getItems() as $item) {
+            $representation = new LabeledItemRepresentation($item);
+
+            $labeled_item_representations[] = $representation;
         }
 
-        $this->are_there_items_user_cannot_see = $labeled_items->areThereItemsUserCannotSee();
+        return new self(
+            $labeled_item_representations,
+            $labeled_items->areThereItemsUserCannotSee()
+        );
     }
 }
