@@ -33,9 +33,6 @@ class Presenter
     /** @var UserNavPresenter */
     public $user_nav_presenter;
 
-    /** @var JoinCommunityPresenter */
-    public $community_presenter;
-
     public $homepage_label;
     /**
      * @var NewDropdownPresenter
@@ -46,13 +43,11 @@ class Presenter
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
-        JoinCommunityPresenter $community_presenter,
         NewDropdownPresenter $new_dropdown
     ) {
         $this->global_nav_presenter = $global_nav_presenter;
         $this->search_presenter     = $search_presenter;
         $this->user_nav_presenter   = $user_nav_presenter;
-        $this->community_presenter  = $community_presenter;
         $this->homepage_label       = _('Homepage');
         $this->new_dropdown         = $new_dropdown;
     }

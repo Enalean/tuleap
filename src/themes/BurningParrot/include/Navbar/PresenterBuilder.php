@@ -74,7 +74,6 @@ class PresenterBuilder
                 $url_redirect,
                 $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
-            new JoinCommunityPresenter(),
             $new_dropdown_presenter
         );
     }

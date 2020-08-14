@@ -80,10 +80,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public $my_account_label;
 
     /**
-     * @var string
-     */
-    public $join_community_title;
-    /**
      * @var array
      */
     public $dashboards;
@@ -138,7 +134,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
-        $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
         $this->search_label         = $GLOBALS['Language']->getText('include_menu', 'search');
 
         $this->current_user_id = $user->getId();
