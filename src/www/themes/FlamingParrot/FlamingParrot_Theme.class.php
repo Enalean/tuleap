@@ -24,6 +24,8 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
+use Tuleap\HelpDropdown\ReleaseLinkDao;
+use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -32,6 +34,7 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
@@ -184,8 +187,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $has_sidebar;
         $body_class[] = $sidebar_state;
 
-        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder($this->getEventManager());
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user, $this->tuleap_version->version_number);
+        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
+            new ReleaseNoteManager(new ReleaseLinkDao(), $this->tuleap_version->version_number),
+            $this->getEventManager(),
+            new URISanitizer(new Valid_HTTPURI()),
+        );
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
 
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,

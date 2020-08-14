@@ -1683,6 +1683,13 @@ CREATE TABLE project_banner (
     project_id INT(11) NOT NULL PRIMARY KEY,
     message text
 );
+
+DROP TABLE IF EXISTS release_note_link;
+CREATE TABLE release_note_link (
+    enforce_one_row_table ENUM('SHOULD_HAVE_AT_MOST_ONE_ROW') NOT NULL PRIMARY KEY DEFAULT 'SHOULD_HAVE_AT_MOST_ONE_ROW',
+    actual_link TEXT,
+    tuleap_version TEXT NOT NULL
+);
 #
 # EOF
 #

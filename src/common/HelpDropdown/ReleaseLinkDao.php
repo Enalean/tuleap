@@ -21,36 +21,31 @@ declare(strict_types=1);
 
 namespace Tuleap\HelpDropdown;
 
-use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\DB\DataAccessObject;
 
-/**
- * @psalm-immutable
- */
-class HelpLinkPresenter
+class ReleaseLinkDao extends DataAccessObject
 {
-    /**
-     * @var string
-     */
-    public $title;
-
-    /**
-     * @var string
-     */
-    public $link;
-    /**
-     * @var string
-     */
-    public $icon;
-
-    private function __construct(string $title, string $link, string $icon)
+    public function getReleaseLink(): ?array
     {
-        $this->title = $title;
-        $this->link  = $link;
-        $this->icon  = $icon;
+        $sql = "SELECT * FROM release_note_link LIMIT 1";
+
+        return $this->getDB()->row($sql);
     }
 
-    public static function build(string $title, string $link, string $icon, URISanitizer $uri_sanitizer): self
+    public function updateTuleapVersion(string $tuleap_version): void
     {
-        return new self($title, $uri_sanitizer->sanitizeForHTMLAttribute($link), $icon);
+        $sql = "UPDATE release_note_link SET tuleap_version = ?";
+
+        $this->getDB()->run($sql, $tuleap_version);
+    }
+
+    public function createReleaseNoteLink(string $tuleap_version): void
+    {
+        $this->getDB()->insert(
+            "release_note_link",
+            [
+                "tuleap_version" => $tuleap_version
+            ]
+        );
     }
 }

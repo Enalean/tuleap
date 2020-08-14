@@ -26,6 +26,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
+use Tuleap\Sanitizer\URISanitizer;
 
 class HelpDropdownPresenterBuilderTest extends TestCase
 {
@@ -40,6 +41,14 @@ class HelpDropdownPresenterBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReleaseNoteManager
+     */
+    private $release_note_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|URISanitizer
+     */
+    private $uri_sanitizer;
 
     protected function setUp(): void
     {
@@ -51,35 +60,64 @@ class HelpDropdownPresenterBuilderTest extends TestCase
             new ExplorerEndpointAvailableEvent()
         );
 
-        $this->help_dropdown_builder = new HelpDropdownPresenterBuilder($event_dispatcher);
+        $this->release_note_manager = Mockery::mock(ReleaseNoteManager::class);
+        $this->uri_sanitizer        = Mockery::mock(URISanitizer::class);
+
+        $this->uri_sanitizer
+            ->shouldReceive('sanitizeForHTMLAttribute')
+            ->withArgs(["/help/"])
+            ->andReturn("/help/");
+
+        $this->uri_sanitizer
+            ->shouldReceive('sanitizeForHTMLAttribute')
+            ->withArgs(["/doc/en/"])
+            ->andReturn("/doc/en/");
+
+        $this->help_dropdown_builder = new HelpDropdownPresenterBuilder(
+            $this->release_note_manager,
+            $event_dispatcher,
+            $this->uri_sanitizer
+        );
     }
 
     public function testBuildPresenterWithLabMod(): void
     {
         $this->user->shouldReceive('useLabFeatures')->andReturn(true);
 
+        $this->uri_sanitizer
+            ->shouldReceive('sanitizeForHTMLAttribute')
+            ->withArgs(["https://www.tuleap.org/ressources/release-notes/tuleap-11-17"])
+            ->andReturn("https://www.tuleap.org/ressources/release-notes/tuleap-11-17");
+
         $expected_result = new HelpDropdownPresenter(
             [
-                new HelpLinkPresenter(
+                HelpLinkPresenter::build(
                     'Get help',
                     "/help/",
-                    "fa-life-saver"
+                    "fa-life-saver",
+                    $this->uri_sanitizer
                 ),
-                new HelpLinkPresenter(
+                HelpLinkPresenter::build(
                     'Documentation',
                     "/doc/en/",
-                    "fa-book"
+                    "fa-book",
+                    $this->uri_sanitizer
                 )
             ],
             null,
-            new HelpLinkPresenter(
+            HelpLinkPresenter::build(
                 'Release Note',
                 'https://www.tuleap.org/ressources/release-notes/tuleap-11-17',
-                "fa-star"
+                "fa-star",
+                $this->uri_sanitizer
             )
         );
 
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17.99.234"));
+        $this->release_note_manager
+            ->shouldReceive('getReleaseNoteLink')
+            ->andReturn("https://www.tuleap.org/ressources/release-notes/tuleap-11-17");
+
+        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
     }
 
     public function testBuildPresenterWithoutLabMod(): void
@@ -88,21 +126,24 @@ class HelpDropdownPresenterBuilderTest extends TestCase
 
         $expected_result = new HelpDropdownPresenter(
             [
-                new HelpLinkPresenter(
+                HelpLinkPresenter::build(
                     'Get help',
                     "/help/",
-                    "fa-life-saver"
+                    "fa-life-saver",
+                    $this->uri_sanitizer
                 ),
-                new HelpLinkPresenter(
+                HelpLinkPresenter::build(
                     'Documentation',
                     "/doc/en/",
-                    "fa-book"
+                    "fa-book",
+                    $this->uri_sanitizer
                 )
             ],
             null,
             null
         );
+        $this->release_note_manager->shouldReceive('getReleaseNoteLink');
 
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17.99.234"));
+        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
     }
 }
