@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,17 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Project;
+use Tuleap\REST\JsonCast;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\Repository;
 
+/**
+ * @psalm-immutable
+ */
 class FullRepositoryRepresentation extends RepositoryRepresentation
 {
     /**
@@ -33,32 +38,39 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
      */
     public $settings;
 
+    protected function __construct(Project $project, int $id, string $name, string $svn_url, SettingsRepresentation $settings)
+    {
+        parent::__construct($project, $id, $name, $svn_url);
+        $this->settings = $settings;
+    }
+
     /**
      * @param MailNotification[] $notifications
      */
-    public function fullBuild(
+    public static function fullBuild(
         Repository $repository,
         HookConfig $hook_config,
         ImmutableTag $immutable_tag,
         AccessFileHistory $access_file_history,
         array $notifications
-    ) {
-        parent::build($repository);
+    ): self {
+        $immutable_tag_representation = ImmutableTagRepresentation::build($immutable_tag);
 
-        $immutable_tag_representation = new ImmutableTagRepresentation();
-        $immutable_tag_representation->build($immutable_tag);
+        $commit_rules_representation = CommitRulesRepresentation::build($hook_config);
 
-        $commit_rules_representation = new CommitRulesRepresentation();
-        $commit_rules_representation->build($hook_config);
-
-        $settings_representation = new SettingsRepresentation();
-        $settings_representation->build(
+        $settings_representation = SettingsRepresentation::build(
             $commit_rules_representation,
             $immutable_tag_representation,
             $access_file_history,
             $notifications
         );
 
-        $this->settings = $settings_representation;
+        return new self(
+            $repository->getProject(),
+            JsonCast::toInt($repository->getId()),
+            $repository->getName(),
+            $repository->getSvnUrl(),
+            $settings_representation
+        );
     }
 }

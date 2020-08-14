@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,10 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\SVN\AccessControl\AccessFileHistory;
 
+/**
+ * @psalm-immutable
+ */
 class SettingsPOSTRepresentation extends SettingsRepresentation
 {
     /**
@@ -48,16 +50,4 @@ class SettingsPOSTRepresentation extends SettingsRepresentation
      * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required false}
      */
     public $email_notifications;
-
-    public function build(
-        CommitRulesRepresentation $commit_hook_representation,
-        ImmutableTagRepresentation $immutable_tag_representation,
-        AccessFileHistory $access_file_history,
-        array $email_representation
-    ) {
-        $this->commit_rules        = $commit_hook_representation;
-        $this->immutable_tags      = $immutable_tag_representation;
-        $this->access_file         = $access_file_history->getContent();
-        $this->email_notifications = $email_representation;
-    }
 }

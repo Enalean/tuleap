@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,9 @@ namespace Tuleap\SVN\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\SVN\Repository\HookConfig;
 
+/**
+ * @psalm-immutable
+ */
 class CommitRulesRepresentation
 {
     /**
@@ -35,18 +38,25 @@ class CommitRulesRepresentation
      */
     public $is_commit_message_change_allowed;
 
-    public function build(HookConfig $hook_config)
+    private function __construct(bool $is_reference_mandatory, bool $is_commit_message_change_allowed)
     {
-        $this->is_reference_mandatory = JsonCast::toBoolean(
-            $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
-        );
+        $this->is_reference_mandatory           = $is_reference_mandatory;
+        $this->is_commit_message_change_allowed = $is_commit_message_change_allowed;
+    }
 
-        $this->is_commit_message_change_allowed = JsonCast::toBoolean(
-            $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
+    public static function build(HookConfig $hook_config): self
+    {
+        return new self(
+            JsonCast::toBoolean(
+                $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
+            ),
+            JsonCast::toBoolean(
+                $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
+            )
         );
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             HookConfig::MANDATORY_REFERENCE       => $this->is_reference_mandatory,

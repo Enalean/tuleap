@@ -24,6 +24,7 @@ namespace Tuleap\SVN\AccessControl;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
 use SVN_AccessFile_Writer;
@@ -52,10 +53,6 @@ class AccessFileHistoryCreatorTest extends TestCase
      * @var \BackendSVN|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $backend_svn;
-    /**
-     * @var string
-     */
-    private $fixtures_dir;
     /**
      * @var bool
      */
@@ -103,13 +100,9 @@ class AccessFileHistoryCreatorTest extends TestCase
             $this->backend_svn
         );
 
-        $this->repository = Mockery::mock(Repository::class);
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(100);
-        $this->repository->shouldReceive('getProject')->andReturn($project);
-        $this->repository->shouldReceive('getName')->andReturn("repo name");
-
-        $this->fixtures_dir = "/tmp/test";
+        $this->repository = new Repository(1, 'repo name', vfsStream::setup()->url(), null, $project);
 
         $access_file_history = new NullAccessFileHistory($this->repository);
         $this->access_file_factory->shouldReceive('getLastVersion')->withArgs([$this->repository])->andReturn($access_file_history);
@@ -140,7 +133,6 @@ class AccessFileHistoryCreatorTest extends TestCase
             time()
         );
 
-        $this->repository->shouldReceive('getSystemPath')->andReturn($this->fixtures_dir);
         $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
         $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
 
@@ -164,7 +156,6 @@ class AccessFileHistoryCreatorTest extends TestCase
         );
 
 
-        $this->repository->shouldReceive('getSystemPath')->andReturn("/incorrect/path");
         $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
         $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
 
@@ -205,7 +196,6 @@ EOT;
 
         $this->backend_svn->shouldReceive('exportSVNAccessFileDefaultBloc')->andReturn($default_block);
 
-        $this->repository->shouldReceive('getSystemPath')->andReturn($this->fixtures_dir);
         $this->access_file_factory->shouldReceive('getCurrentVersion')->withArgs([$this->repository])->andReturn($current_access_file);
         $this->access_file_dao->shouldReceive('create')->once()->andReturnTrue();
 

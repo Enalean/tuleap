@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\SVN\Admin\ImmutableTag;
 
+/**
+ * @psalm-immutable
+ */
 class ImmutableTagRepresentation
 {
     /**
@@ -34,9 +37,21 @@ class ImmutableTagRepresentation
      */
     public $whitelist;
 
-    public function build(ImmutableTag $immutable_tag)
+    /**
+     * @param string[] $paths
+     * @param string[] $whitelist
+     */
+    private function __construct(array $paths, array $whitelist)
     {
-        $this->paths     = $immutable_tag->getPaths();
-        $this->whitelist = $immutable_tag->getWhitelist();
+        $this->paths     = $paths;
+        $this->whitelist = $whitelist;
+    }
+
+    public static function build(ImmutableTag $immutable_tag): self
+    {
+        return new self(
+            $immutable_tag->getPaths(),
+            $immutable_tag->getWhitelist()
+        );
     }
 }
