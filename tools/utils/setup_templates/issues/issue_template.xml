@@ -70,7 +70,7 @@ Customize workflow options.
         </dashboard>
     </dashboards>
     <trackers use-natures="true">
-        <tracker id="T448" parent_id="0" instantiate_for_new_projects="1">
+        <tracker id="T448" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
             <name><![CDATA[Issues]]></name>
             <item_name>issue</item_name>
             <description><![CDATA[requests, bugs, tasks, activities]]></description>
