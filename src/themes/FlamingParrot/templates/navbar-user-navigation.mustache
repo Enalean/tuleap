@@ -6,7 +6,7 @@
     {{# new_dropdown }}
         {{# has_sections }}
             <li id="nav-dropdown-new" class="dropdown navbar-new-dropdown">
-                <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="dropdown-toggle" data-toggle="dropdown" data-shortcut-create>
                     <i class="fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
                     {{# gettext }}New{{/gettext}}
                 </button>
@@ -18,7 +18,7 @@
                         </li>
                         {{# links }}
                             <li>
-                                <a href="{{ url }}" class="nav-dropdown-content-item">
+                                <a href="{{ url }}" class="nav-dropdown-content-item" data-shortcut-create-option>
                                     <i class="fa fa-fw {{ icon }} nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
                                     {{ label }}
                                 </a>

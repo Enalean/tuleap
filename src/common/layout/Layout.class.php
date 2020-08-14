@@ -395,6 +395,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         echo $this->include_asset->getHTMLSnippet("ckeditor.js");
         echo $this->include_asset->getHTMLSnippet("rich-text-editor.js");
+        echo $this->include_asset->getHTMLSnippet('keyboard-navigation.js');
 
         //Javascript i18n
         echo '<script type="text/javascript">' . "\n";

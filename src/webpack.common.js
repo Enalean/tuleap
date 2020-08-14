@@ -157,14 +157,7 @@ const webpack_config_for_flaming_parrot_code = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
-            webpack_configurator.tlp_fetch_alias,
-            {
-                // keymaster-sequence isn't on npm
-                "keymaster-sequence": path.resolve(
-                    __dirname,
-                    "./scripts/FlamingParrot/keymaster-sequence/keymaster.sequence.min.js"
-                ),
-            }
+            webpack_configurator.tlp_fetch_alias
         ),
         extensions: [".ts", ".js"],
     },
@@ -174,10 +167,6 @@ const webpack_config_for_flaming_parrot_code = {
                 webpack_configurator.babel_options_ie11
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            {
-                test: /keymaster\.sequence\.min\.js$/,
-                use: "imports-loader?key=keymaster",
-            },
         ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
@@ -259,6 +248,7 @@ const webpack_config_for_burning_parrot_code = {
             "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
         "trovecat-admin": "./scripts/tuleap/trovecat.js",
         "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
+        "keyboard-navigation": "./scripts/keyboard-navigation/index.ts",
     },
     context,
     output,

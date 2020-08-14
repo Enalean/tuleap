@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import hotkeys from "hotkeys-js";
 
-import "../navbar-history/index-flamingparrot.js";
-import "./navbar.js";
-import "./sidebar.js";
-import "./motd.js";
-import "./project-flags.js";
-import "./project-privacy.js";
-import "./help-dropdown.ts";
+hotkeys("c", function (): void {
+    const new_dropdown_trigger = document.querySelector("[data-shortcut-create]");
+    if (new_dropdown_trigger instanceof HTMLElement) {
+        new_dropdown_trigger.click();
+        const option = document.querySelector("[data-shortcut-create-option]");
+        if (option instanceof HTMLElement) {
+            option.focus();
+        }
+    }
+});
