@@ -185,7 +185,7 @@ function EditKanbanCtrl(
 
     function ancestorCannotBeDragged(handle_element) {
         return (
-            element(handle_element).parentsUntil(".column").andSelf().filter('[data-nodrag="true"]')
+            element(handle_element).parentsUntil(".column").addBack().filter('[data-nodrag="true"]')
                 .length > 0
         );
     }
