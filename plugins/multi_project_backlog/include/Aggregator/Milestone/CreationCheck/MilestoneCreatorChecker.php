@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
 use PFUser;
 use Planning_VirtualTopMilestone;
+use Psr\Log\LoggerInterface;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
@@ -49,26 +50,39 @@ class MilestoneCreatorChecker
      */
     private $semantic_checker;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
         MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
         SynchronizedFieldCollectionBuilder $field_collection_builder,
-        SemanticChecker $semantic_checker
+        SemanticChecker $semantic_checker,
+        LoggerInterface $logger
     ) {
         $this->projects_builder         = $contributor_projects_collection_builder;
         $this->trackers_builder         = $milestone_trackers_builder;
         $this->field_collection_builder = $field_collection_builder;
         $this->semantic_checker         = $semantic_checker;
+        $this->logger                   = $logger;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
     {
+        $this->logger->info(
+            "Checking if milestone can be created in top plannning of project " . $top_milestone->getProject()->getUnixName() .
+            " by user " . $user->getName() . ' (#' . $user->getId() . ')'
+        );
+
         $aggregator_project = $top_milestone->getProject();
 
         $contributor_projects_collection = $this->projects_builder->getContributorProjectForAGivenAggregatorProject(
             $aggregator_project
         );
         if ($contributor_projects_collection->isEmpty()) {
+            $this->logger->debug("No contributor project found.");
             return true;
         }
         try {
@@ -78,24 +92,30 @@ class MilestoneCreatorChecker
                 $user
             );
         } catch (MilestoneTrackerRetrievalException $exception) {
+            $this->logger->error($exception->getMessage());
             return false;
         }
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($top_milestone, $milestone_tracker_collection)) {
+            $this->logger->error("Semantics are not well configured.");
             return false;
         }
         if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllTrackers($user)) {
+            $this->logger->error("User cannot submit an artifact in all trackers.");
             return false;
         }
 
         try {
             $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
         } catch (SynchronizedFieldRetrievalException $exception) {
+            $this->logger->error($exception->getMessage());
             return false;
         }
         if (! $fields->canUserSubmitAndUpdateAllFields($user)) {
+            $this->logger->error("User cannot submit and update all needed fields in all trackers.");
             return false;
         }
 
+        $this->logger->info("User can create a milestone in the project.");
         return true;
     }
 }

@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning_VirtualTopMilestone;
 use Project;
+use Psr\Log\NullLogger;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
@@ -62,6 +63,11 @@ final class MilestoneCreatorCheckerTest extends TestCase
      */
     private $semantic_checker;
 
+    /**
+     * @var Project
+     */
+    private $project;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -75,18 +81,23 @@ final class MilestoneCreatorCheckerTest extends TestCase
             $this->projects_builder,
             $this->trackers_builder,
             $this->field_collection_builder,
-            $this->semantic_checker
+            $this->semantic_checker,
+            new NullLogger()
         );
+
+        $this->project = new Project([
+            'group_id'   => '101',
+            'unix_group_name' => 'proj01'
+        ]);
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
-        $this->mockContributorMilestoneTrackers($project);
+        $this->mockContributorMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->once()
             ->andReturnTrue();
@@ -105,7 +116,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
     {
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn(Project::buildForTest());
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
         $this->projects_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
             ->andReturn(new ContributorProjectsCollection([]));
@@ -115,16 +126,15 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
         $first_contributor_project  = new \Project(['group_id' => '104']);
         $second_contributor_project = new \Project(['group_id' => '198']);
         $this->projects_builder->shouldReceive('getContributorProjectForAGivenAggregatorProject')
             ->once()
-            ->with($project)
+            ->with($this->project)
             ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
         $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
@@ -138,12 +148,11 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfSemanticsAreNotWellConfigured(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
-        $this->mockContributorMilestoneTrackers($project);
+        $this->mockContributorMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnFalse();
 
@@ -152,12 +161,11 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
-        $this->mockContributorMilestoneTrackers($project, false);
+        $this->mockContributorMilestoneTrackers($this->project, false);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
@@ -166,12 +174,11 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
-        $this->mockContributorMilestoneTrackers($project);
+        $this->mockContributorMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
         $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
@@ -185,12 +192,11 @@ final class MilestoneCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
     {
-        $project              = Project::buildForTest();
         $user                 = UserTestBuilder::aUser()->build();
         $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $aggregator_milestone->shouldReceive('getProject')->andReturn($project);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
 
-        $this->mockContributorMilestoneTrackers($project);
+        $this->mockContributorMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
         $field = Mockery::mock(\Tracker_FormElement_Field::class);

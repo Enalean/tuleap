@@ -194,7 +194,8 @@ final class multi_project_backlogPlugin extends Plugin
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
-            )
+            ),
+            BackendLogger::getDefaultLogger("multi_project_backlog_syslog")
         );
 
         $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(

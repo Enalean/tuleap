@@ -1,0 +1,6 @@
+/var/log/%PROJECT_NAME%/multi_project_backlog_syslog {
+    missingok
+    weekly
+    rotate 4
+    create 640 %APP_USER% %APP_USER%
+}
