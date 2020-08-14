@@ -29,17 +29,17 @@ class HelpDropdownPresenter
     /**
      * @var HelpLinkPresenter[]
      */
-    public $main_items;
+    public $platform_links;
     /**
-     * @var HelpLinkPresenter[]
+     * @var HelpLinkPresenter|null
      */
-    public $footer_items;
+    public $release_note_link;
 
     public function __construct(
-        array $main_items,
-        array $footer_items
+        array $platform_links,
+        ?HelpLinkPresenter $release_note_link
     ) {
-        $this->main_items   = $main_items;
-        $this->footer_items = $footer_items;
+        $this->platform_links    = $platform_links;
+        $this->release_note_link = $release_note_link;
     }
 }

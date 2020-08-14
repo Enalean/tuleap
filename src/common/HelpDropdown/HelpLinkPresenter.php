@@ -35,10 +35,15 @@ class HelpLinkPresenter
      * @var string
      */
     public $link;
+    /**
+     * @var string
+     */
+    public $icon;
 
-    public function __construct(string $title, string $link)
+    public function __construct(string $title, string $link, string $icon)
     {
-        $this->title = $title;
-        $this->link  = $link;
+        $this->title     = $title;
+        $this->link      = $link;
+        $this->icon      = $icon;
     }
 }

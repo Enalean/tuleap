@@ -1,19 +1,28 @@
 {{# help_dropdown }}
     <div class="tlp-dropdown help-dropdown">
-        <button type="button" aria-label="{{# gettext }}Help{{/ gettext }}" id="help" class="tlp-button-primary tlp-button-outline">
+        <button type="button" aria-label="{{# gettext }}Help{{/ gettext }}" id="help"
+                class="tlp-button-primary tlp-button-outline">
             <i class="fa fa-question" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu tlp-dropdown-menu-top tlp-dropdown-menu-right" role="menu">
-            {{# main_items }}
+            {{# platform_links }}
                 <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item" role="menuitem">
-                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-life-saver"></i>{{ title }}
+                    <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
                 </a>
-            {{/ main_items }}
+            {{/ platform_links }}
+            {{# release_note_link }}
+                <span class="tlp-dropdown-menu-separator" role="separator"></span>
+
+                <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item"
+                   role="menuitem">
+                    <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
+                </a>
+            {{/ release_note_link }}
             <span class="tlp-dropdown-menu-separator" role="separator"></span>
             <span class="tlp-dropdown-menu-item-alt tlp-text-muted">
-                {{# footer_items }}
-                    <a href="{{ link }}" role="menuitem">{{ title }}</a>
-                {{/ footer_items }}
+                <a href="/help/api.php" role="menuitem">{{# gettext }} API {{/ gettext }}</a>
+                <a href="/tos/tos.php" role="menuitem">{{# gettext }} Terms {{/ gettext }}</a>
+                <a href="/contact.php" role="menuitem">{{# gettext }} Contact {{/ gettext }}</a>
                 <a href="#" role="menuitem" id="help-dropdomn-shortcuts">{{# gettext }}Shortcuts{{/ gettext }}</a>
             </span>
         </div>

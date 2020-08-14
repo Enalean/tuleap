@@ -49,12 +49,17 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
+    /**
+     * @var VersionPresenter
+     */
+    private $tuleap_version;
 
     public function __construct($root)
     {
         parent::__construct($root);
 
-        $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->renderer       = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->tuleap_version = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
     }
@@ -180,7 +185,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $sidebar_state;
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder();
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user, $this->tuleap_version->version_number);
 
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
@@ -341,7 +346,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
-            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
+            $this->tuleap_version,
             $sidebar_collapsable,
             $banner,
             $current_user,
