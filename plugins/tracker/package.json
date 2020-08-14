@@ -20,7 +20,7 @@
     "dompurify": "^2.0.11",
     "imports-loader": "^0.7.1",
     "lodash": "2.4.0",
-    "moment": "^2.26.0",
+    "moment": "^2.27.0",
     "mustache": "^4.0.1",
     "ngVue": "^1.7.6",
     "node-gettext": "^3.0.0",
