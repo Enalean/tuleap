@@ -29,3 +29,17 @@ hotkeys("c", function (): void {
         }
     }
 });
+
+hotkeys("*", function (event): void {
+    // Should be hotkeys("?", …),
+    // however for unknown reason it does not work (maybe due to shift key?),
+    // therefore we're using wildcard as a workaround
+    if (event.key !== "?") {
+        return;
+    }
+
+    const help_trigger = document.getElementById("help-dropdomn-shortcuts");
+    if (help_trigger instanceof HTMLElement) {
+        help_trigger.click();
+    }
+});

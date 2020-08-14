@@ -14,7 +14,30 @@
                 {{# footer_items }}
                     <a href="{{ link }}" role="menuitem">{{ title }}</a>
                 {{/ footer_items }}
+                <a href="#" role="menuitem" id="help-dropdomn-shortcuts">{{# gettext }}Shortcuts{{/ gettext }}</a>
             </span>
         </div>
     </div>
 {{/ help_dropdown }}
+
+<div id="help-modal-shortcuts"
+     class="tlp-modal"
+     role="dialog"
+     aria-labelledby="help-modal-shortcuts-label"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="help-modal-shortcuts-label">{{# gettext }}Keyboard shortcuts{{/ gettext }}</h1>
+        <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <p><code>?</code> {{# gettext }}Open this window{{/ gettext }}</p>
+        <p><code>c</code> {{# gettext }}Open "+ New" dropdown{{/ gettext }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Close{{/ gettext }}
+        </button>
+    </div>
+</div>
