@@ -29,7 +29,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                     rows: [[new TextCell("Section A")]],
                 },
                 {
-                    title: new TextCell("Section B"),
+                    title: new TextCell("Section B with a very very very very very long title"),
                     headers: [new TextCell("Col 1"), new TextCell("Col 2")],
                     rows: [
                         [new TextCell("Section B"), new TextCell("Section B col 2")],
@@ -75,10 +75,10 @@ describe("Transform an export report into a XSLX sheet", () => {
                 "t": "z",
               },
               "A3": Object {
-                "character_width": 9,
+                "character_width": 10,
                 "merge_columns": 1,
                 "t": "s",
-                "v": "Section B",
+                "v": "Section B with a very very very very very long title",
               },
               "A4": Object {
                 "character_width": 5,
