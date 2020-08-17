@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
@@ -26,6 +45,21 @@ describe("BacklogItemService", () => {
     afterEach(() => {
         mockBackend.verifyNoOutstandingExpectation(false); // We already trigger $digest
         mockBackend.verifyNoOutstandingRequest(false); // We already trigger $digest
+    });
+
+    describe(`getBacklogItem`, () => {
+        it(`will call GET on the backlog_item
+            and will return it`, async () => {
+            mockBackend
+                .expectGET("/api/v1/backlog_items/122")
+                .respond({ id: 122, label: "A User Story" });
+
+            const promise = BacklogItemService.getBacklogItem(122);
+            mockBackend.flush();
+
+            const response = await wrapPromise(promise);
+            expect(response.backlog_item).toEqual(expect.objectContaining({ id: 122 }));
+        });
     });
 
     describe("getProjectBacklogItems()", () => {
@@ -111,6 +145,80 @@ describe("BacklogItemService", () => {
             mockBackend.flush();
 
             return wrapPromise(promise);
+        });
+    });
+
+    describe(`reorderBacklogItemChildren`, () => {
+        it(`will call PATCH on the backlog item's children
+            and reorder items`, async () => {
+            mockBackend
+                .expectPATCH("/api/v1/backlog_items/307/children", {
+                    order: {
+                        ids: [99, 187],
+                        direction: "before",
+                        compared_to: 265,
+                    },
+                })
+                .respond(200);
+
+            const promise = BacklogItemService.reorderBacklogItemChildren(307, [99, 187], {
+                direction: "before",
+                item_id: 265,
+            });
+            mockBackend.flush();
+
+            expect(await wrapPromise(promise)).toBeTruthy();
+        });
+    });
+
+    describe(`removeAddReorderBacklogItemChildren`, () => {
+        it(`will call PATCH on the backlog item's children
+            and reorder items while moving them from another backlog item`, async () => {
+            mockBackend
+                .expectPATCH("/api/v1/backlog_items/307/children", {
+                    order: {
+                        ids: [99, 187],
+                        direction: "after",
+                        compared_to: 265,
+                    },
+                    add: [
+                        { id: 99, remove_from: 122 },
+                        { id: 187, remove_from: 122 },
+                    ],
+                })
+                .respond(200);
+
+            const promise = BacklogItemService.removeAddReorderBacklogItemChildren(
+                122,
+                307,
+                [99, 187],
+                {
+                    direction: "after",
+                    item_id: 265,
+                }
+            );
+            mockBackend.flush();
+
+            expect(await wrapPromise(promise)).toBeTruthy();
+        });
+    });
+
+    describe(`removeAddBacklogItemChildren`, () => {
+        it(`will call PATCH on the backlog item's children
+            and move items from another backlog item`, async () => {
+            mockBackend
+                .expectPATCH("/api/v1/backlog_items/307/children", {
+                    add: [
+                        { id: 99, remove_from: 122 },
+                        { id: 187, remove_from: 122 },
+                    ],
+                })
+                .respond(200);
+
+            const promise = BacklogItemService.removeAddBacklogItemChildren(122, 307, [99, 187]);
+            mockBackend.flush();
+
+            expect(await wrapPromise(promise)).toBeTruthy();
         });
     });
 });
