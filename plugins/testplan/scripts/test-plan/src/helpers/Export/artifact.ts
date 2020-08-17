@@ -20,7 +20,13 @@
 import { MinimalTracker } from "./tracker";
 
 interface BaseTrackerFieldValue {
+    field_id: number;
     label: string;
+}
+
+export interface StringValueField extends BaseTrackerFieldValue {
+    type: "string";
+    value: string;
 }
 
 export interface TextValueField extends BaseTrackerFieldValue {
@@ -51,6 +57,7 @@ interface OtherNonSupportedFieldValue extends BaseTrackerFieldValue {
 }
 
 export type TrackerFieldValue =
+    | StringValueField
     | TextValueField
     | NumberValueField
     | ComputedValueWithAutomaticValueField

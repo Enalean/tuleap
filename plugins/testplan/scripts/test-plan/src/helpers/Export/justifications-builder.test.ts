@@ -71,6 +71,7 @@ describe("Build justifications section", () => {
                         id: 99992,
                         values_by_field: {
                             results: {
+                                field_id: 444,
                                 type: "text",
                                 value: "HTML Comment",
                                 format: "html",
@@ -88,6 +89,7 @@ describe("Build justifications section", () => {
                         id: 99993,
                         values_by_field: {
                             results: {
+                                field_id: 444,
                                 type: "text",
                                 value: "Plaintext Comment",
                                 format: "text",

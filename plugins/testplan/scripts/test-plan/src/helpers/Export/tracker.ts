@@ -22,6 +22,7 @@ export interface MinimalTracker {
 }
 
 interface TrackerField {
+    field_id: number;
     label: string;
 }
 
@@ -41,4 +42,9 @@ type AllTrackerField = NumberField | ComputedField | OtherNonSupportedField;
 
 export interface Tracker extends MinimalTracker {
     fields: AllTrackerField[];
+    semantics: {
+        title?: {
+            field_id: number;
+        };
+    };
 }
