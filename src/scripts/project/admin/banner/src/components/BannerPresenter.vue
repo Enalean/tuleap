@@ -72,7 +72,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BannerState } from "../type";
-import "ckeditor";
+import "ckeditor4";
 
 @Component
 export default class BannerPresenter extends Vue {

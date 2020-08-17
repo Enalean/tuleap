@@ -19,7 +19,7 @@
 
 import { datePicker, createModal } from "tlp";
 import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 
 document.addEventListener("DOMContentLoaded", function () {

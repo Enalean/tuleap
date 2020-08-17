@@ -44,10 +44,10 @@ const manifest_plugin = new WebpackAssetsManifest({
 });
 
 const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
-const ckeditor_version = pkg.dependencies.ckeditor.version;
+const ckeditor_version = pkg.dependencies.ckeditor4.version;
 const webpack_config_for_ckeditor = {
     entry: {
-        ckeditor: "./node_modules/ckeditor/ckeditor.js",
+        ckeditor: "./node_modules/ckeditor4/ckeditor.js",
     },
     context,
     output,
@@ -55,11 +55,18 @@ const webpack_config_for_ckeditor = {
         manifest_plugin,
         webpack_configurator.getCopyPlugin([
             {
-                from: path.resolve(__dirname, "./node_modules/ckeditor"),
+                from: path.resolve(__dirname, "./node_modules/ckeditor4"),
                 to: path.resolve(__dirname, `./www/assets/core/ckeditor-${ckeditor_version}/`),
                 toType: "dir",
                 globOptions: {
-                    ignore: ["**/samples/**", "**/.github/**", "**/*.!(js|css|png)"],
+                    ignore: [
+                        "**/samples/**",
+                        "**/.github/**",
+                        "**/*.!(js|css|png)",
+                        "**/assets/ckeditor4.png",
+                        "**/adapters/**",
+                        "**/vendor/**",
+                    ],
                 },
             },
         ]),
@@ -179,7 +186,7 @@ const webpack_config_for_rich_text_editor = {
     context,
     output,
     externals: {
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
         tuleap: "tuleap",
     },
     resolve: {
@@ -255,7 +262,7 @@ const webpack_config_for_burning_parrot_code = {
     externals: {
         tlp: "tlp",
         tuleap: "tuleap",
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
         jquery: "jQuery",
     },
     module: {
@@ -292,7 +299,7 @@ const webpack_config_for_vue = {
     output,
     externals: {
         tlp: "tlp",
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
         jquery: "jQuery",
     },
     module: {

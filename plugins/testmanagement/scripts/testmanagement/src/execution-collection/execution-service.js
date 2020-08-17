@@ -18,7 +18,7 @@
  */
 
 import _ from "lodash";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import prettyKibibytes from "pretty-kibibytes";
 
 import {

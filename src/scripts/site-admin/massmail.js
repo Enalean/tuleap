@@ -16,7 +16,7 @@
  */
 
 import { createModal } from "tlp";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 
 import { autocomplete_users_for_select2 as autocomplete } from "../tuleap/autocomplete-for-select2.js";

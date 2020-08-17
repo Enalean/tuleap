@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import { config as ckeditor_config } from "../../../www/scripts/tuleap/tuleap-ckeditor-toolbar";
 import { createModal } from "tlp";
 

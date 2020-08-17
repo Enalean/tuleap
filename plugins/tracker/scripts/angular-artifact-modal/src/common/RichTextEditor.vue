@@ -36,7 +36,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import {

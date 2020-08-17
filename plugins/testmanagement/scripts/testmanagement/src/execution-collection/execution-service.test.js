@@ -18,7 +18,7 @@
  */
 
 import _ from "lodash";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";

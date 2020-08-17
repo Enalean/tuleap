@@ -18,7 +18,7 @@
  *
  */
 
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 
 CKEDITOR.replace("license-agreement-content", tuleap.ckeditor.config);

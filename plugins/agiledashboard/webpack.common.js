@@ -145,7 +145,7 @@ const webpack_config_for_kanban = {
     externals: {
         tlp: "tlp",
         jquery: "jQuery",
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
     },
     resolve: {
         alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias, {
@@ -201,7 +201,7 @@ const webpack_config_for_planning_v2 = {
     externals: {
         tlp: "tlp",
         jquery: "jQuery",
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
     },
     resolve: {
         alias: webpack_configurator.extendAliases(

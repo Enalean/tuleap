@@ -40,7 +40,7 @@ module.exports = [
         ),
         externals: {
             tlp: "tlp",
-            ckeditor: "CKEDITOR",
+            ckeditor4: "CKEDITOR",
             tuleap: "tuleap",
         },
         resolve: {
