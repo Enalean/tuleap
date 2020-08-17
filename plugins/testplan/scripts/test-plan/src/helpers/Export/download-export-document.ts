@@ -50,6 +50,7 @@ export async function downloadExportDocument(
         gettext_provider.$gettextInterpolate(
             gettext_provider.$gettext("Test Report %{ milestone_title }"),
             { milestone_title }
-        ) + ".xlsx"
+        ) + ".xlsx",
+        { bookSST: true }
     );
 }

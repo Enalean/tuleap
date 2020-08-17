@@ -37,6 +37,14 @@ describe("Transform an export report into a XSLX sheet", () => {
                         [new HTMLCell("<div>HTML Content</div>")],
                         [new EmptyCell()],
                         [new NumberCell(2020).withComment("A comment")],
+                        [
+                            new EmptyCell(),
+                            new EmptyCell(),
+                            new TextCell(
+                                "I'm a very (very very very very very very very very very very very very very very very very very very very very very very very very very) long text line\n"
+                            ),
+                            new TextCell("I'm a text line\r\nwith\r\nsome\r\nline breaks\r\n"),
+                        ],
                     ],
                 },
             ],
@@ -49,6 +57,12 @@ describe("Transform an export report into a XSLX sheet", () => {
               "!cols": Array [
                 Object {
                   "wch": 12,
+                },
+                Object {
+                  "wch": 15,
+                },
+                Object {
+                  "wch": 65,
                 },
                 Object {
                   "wch": 15,
@@ -66,48 +80,77 @@ describe("Transform an export report into a XSLX sheet", () => {
                   },
                 },
               ],
-              "!ref": "A1:B10",
+              "!ref": "A1:D11",
+              "!rows": Array [
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "hpt": 48,
+                },
+                Object {},
+              ],
               "A1": Object {
                 "character_width": 9,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Section A",
               },
               "A10": Object {
                 "character_width": 0,
+                "nb_lines": 1,
+                "t": "z",
+              },
+              "A11": Object {
+                "character_width": 0,
+                "nb_lines": 1,
                 "t": "z",
               },
               "A2": Object {
                 "character_width": 0,
+                "nb_lines": 1,
                 "t": "z",
               },
               "A3": Object {
                 "character_width": 10,
                 "merge_columns": 1,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Section B with a very very very very very long title",
               },
               "A4": Object {
                 "character_width": 5,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Col 1",
               },
               "A5": Object {
                 "character_width": 9,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Section B",
               },
               "A6": Object {
                 "character_width": 10,
+                "nb_lines": 1,
                 "t": "d",
                 "v": 2020-09-07T14:00:00.000Z,
               },
               "A7": Object {
                 "character_width": 12,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "HTML Content",
               },
               "A8": Object {
                 "character_width": 0,
+                "nb_lines": 1,
                 "t": "z",
               },
               "A9": Object {
@@ -117,18 +160,41 @@ describe("Transform an export report into a XSLX sheet", () => {
                   },
                 ],
                 "character_width": 4,
+                "nb_lines": 1,
                 "t": "n",
                 "v": 2020,
               },
+              "B10": Object {
+                "character_width": 0,
+                "nb_lines": 1,
+                "t": "z",
+              },
               "B4": Object {
                 "character_width": 5,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Col 2",
               },
               "B5": Object {
                 "character_width": 15,
+                "nb_lines": 1,
                 "t": "s",
                 "v": "Section B col 2",
+              },
+              "C10": Object {
+                "character_width": 152,
+                "nb_lines": 1,
+                "t": "s",
+                "v": "I'm a very (very very very very very very very very very very very very very very very very very very very very very very very very very) long text line",
+              },
+              "D10": Object {
+                "character_width": 15,
+                "nb_lines": 4,
+                "t": "s",
+                "v": "I'm a text line
+            with
+            some
+            line breaks",
               },
             }
         `);

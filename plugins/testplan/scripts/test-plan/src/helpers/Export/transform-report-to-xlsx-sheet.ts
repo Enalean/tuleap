@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CellObject, ColInfo, Comments, Range, utils, WorkSheet } from "xlsx";
+import { CellObject, ColInfo, Comments, Range, RowInfo, utils, WorkSheet } from "xlsx";
 import { ExportReport, ReportSection } from "./report-creator";
 import { ReportCell } from "./report-cells";
 
 const CELL_BASE_CHARACTER_WIDTH = 10;
+const CELL_MAX_CHARACTER_WIDTH = 65;
+const LINE_HEIGHT_POINTS = 12;
 
 type CellObjectWithExtraInfo = CellObject & {
     character_width: number;
+    nb_lines: number;
     merge_columns?: number;
 };
 
@@ -32,6 +35,7 @@ export function transformAReportIntoASheet(report: ExportReport): WorkSheet {
     const cells = transformSectionsIntoSheetRows(report.sections);
     const worksheet = utils.aoa_to_sheet(transformSectionsIntoSheetRows(report.sections));
     worksheet["!cols"] = fitColumnWidthsToContent(cells);
+    worksheet["!rows"] = fitRowHeightsToContent(cells);
     worksheet["!merges"] = createMerges(cells);
 
     return worksheet;
@@ -90,6 +94,7 @@ function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectW
                 t: "d",
                 v: report_cell.value,
                 character_width: CELL_BASE_CHARACTER_WIDTH,
+                nb_lines: 1,
             };
             break;
         case "number":
@@ -97,6 +102,7 @@ function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectW
                 t: "n",
                 v: report_cell.value,
                 character_width: String(report_cell.value).length,
+                nb_lines: 1,
             };
             break;
         case "empty":
@@ -119,10 +125,18 @@ function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectW
 }
 
 function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
+    const text_value = value.replace(/\r\n/g, "\n").trim();
+    const text_value_by_lines = text_value.split("\n");
+    const max_length_line = text_value_by_lines.reduce(
+        (previous: string, current: string) =>
+            previous.length > current.length ? previous : current,
+        ""
+    ).length;
     return {
         t: "s",
-        v: value,
-        character_width: value.length,
+        v: text_value,
+        character_width: max_length_line,
+        nb_lines: text_value_by_lines.length,
     };
 }
 
@@ -130,6 +144,7 @@ function buildSheetEmptyCell(): CellObjectWithExtraInfo {
     return {
         t: "z",
         character_width: 0,
+        nb_lines: 1,
     };
 }
 
@@ -144,9 +159,9 @@ function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): ColInfo[]
     cells.forEach((row: CellObjectWithExtraInfo[]): void => {
         row.forEach((cell: CellObjectWithExtraInfo, column_position: number): void => {
             const current_max_value = max_column_width[column_position];
-            max_column_width[column_position] = Math.max(
-                isNaN(current_max_value) ? 0 : current_max_value,
-                cell.character_width
+            max_column_width[column_position] = Math.min(
+                Math.max(isNaN(current_max_value) ? 0 : current_max_value, cell.character_width),
+                CELL_MAX_CHARACTER_WIDTH
             );
         });
     });
@@ -156,6 +171,24 @@ function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): ColInfo[]
             return { wch: column_width };
         }
     );
+}
+
+function fitRowHeightsToContent(cells: CellObjectWithExtraInfo[][]): RowInfo[] {
+    const row_info: RowInfo[] = [];
+    cells.forEach((row: CellObjectWithExtraInfo[]): void => {
+        const nb_lines_row = row.reduce(
+            (previous: { nb_lines: number }, current: { nb_lines: number }) =>
+                previous.nb_lines > current.nb_lines ? previous : current,
+            { nb_lines: 1 }
+        ).nb_lines;
+        if (nb_lines_row >= 2) {
+            row_info.push({ hpt: nb_lines_row * LINE_HEIGHT_POINTS });
+        } else {
+            row_info.push({});
+        }
+    });
+
+    return row_info;
 }
 
 function createMerges(cells: CellObjectWithExtraInfo[][]): Range[] {
