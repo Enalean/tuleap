@@ -35,7 +35,7 @@ const webpack_config_for_angular = {
     externals: {
         tlp: "tlp",
         jquery: "jQuery",
-        ckeditor: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
     },
     resolve: {
         alias: webpack_configurator.extendAliases(

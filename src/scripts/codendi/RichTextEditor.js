@@ -22,7 +22,7 @@ import {
     getUploadImageOptions,
     initiateUploadImage,
 } from "../tuleap/ckeditor/get-upload-image-options.js";
-import CKEDITOR from "ckeditor";
+import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 
 /* global Prototype:readonly Class:readonly $:readonly */
