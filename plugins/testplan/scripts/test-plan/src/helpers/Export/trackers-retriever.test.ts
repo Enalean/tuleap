@@ -18,26 +18,28 @@
  */
 
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
-import { retrieveArtifacts } from "./artifacts-retriever";
-import { Artifact } from "./artifact";
+import { retrieveTrackers } from "./trackers-retriever";
 
 jest.mock("tlp");
 
-describe("artifacts-retriever", () => {
-    it("Retrieves all artifacts", async () => {
-        const spyTlpGet = jest.spyOn(tlp, "get");
+describe("trackers-retriever", () => {
+    it("Retrieves each tracker only once", async () => {
+        const spy_tlp_get = jest.spyOn(tlp, "get");
 
-        const expected_artifacts = [{ id: 12 } as Artifact, { id: 35 } as Artifact];
+        const expected_trackers = [{ id: 85 }, { id: 23 }];
 
-        mockFetchSuccess(spyTlpGet, {
-            return_json: {
-                collection: expected_artifacts,
-            },
-        });
+        spy_tlp_get.mockResolvedValueOnce({
+            ok: true,
+            json: () => Promise.resolve({ id: 85 }),
+        } as Response);
+        spy_tlp_get.mockResolvedValueOnce({
+            ok: true,
+            json: () => Promise.resolve({ id: 23 }),
+        } as Response);
 
-        const artifacts = await retrieveArtifacts([...Array(350).keys()]);
-        expect([...artifacts.values()]).toStrictEqual(expected_artifacts);
-        expect(spyTlpGet).toHaveBeenCalledTimes(4);
+        const trackers = await retrieveTrackers([...expected_trackers, { id: 85 }]);
+
+        expect(trackers).toStrictEqual(expected_trackers);
+        expect(spy_tlp_get).toHaveBeenCalledTimes(2);
     });
 });

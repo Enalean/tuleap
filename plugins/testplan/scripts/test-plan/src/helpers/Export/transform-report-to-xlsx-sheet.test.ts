@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, HTMLCell, TextCell } from "./report-cells";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "./report-cells";
 import { ExportReport } from "./report-creator";
 import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 
@@ -35,6 +35,8 @@ describe("Transform an export report into a XSLX sheet", () => {
                         [new TextCell("Section B"), new TextCell("Section B col 2")],
                         [new DateCell(new Date("2020-09-07T14:00:00.000Z"))],
                         [new HTMLCell("<div>HTML Content</div>")],
+                        [new EmptyCell()],
+                        [new NumberCell(2020).withComment("A comment")],
                     ],
                 },
             ],
@@ -64,11 +66,15 @@ describe("Transform an export report into a XSLX sheet", () => {
                   },
                 },
               ],
-              "!ref": "A1:B8",
+              "!ref": "A1:B10",
               "A1": Object {
                 "character_width": 9,
                 "t": "s",
                 "v": "Section A",
+              },
+              "A10": Object {
+                "character_width": 0,
+                "t": "z",
               },
               "A2": Object {
                 "character_width": 0,
@@ -103,6 +109,16 @@ describe("Transform an export report into a XSLX sheet", () => {
               "A8": Object {
                 "character_width": 0,
                 "t": "z",
+              },
+              "A9": Object {
+                "c": Array [
+                  Object {
+                    "t": "A comment",
+                  },
+                ],
+                "character_width": 4,
+                "t": "n",
+                "v": 2020,
               },
               "B4": Object {
                 "character_width": 5,

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CellObject, ColInfo, Range, utils, WorkSheet } from "xlsx";
+import { CellObject, ColInfo, Comments, Range, utils, WorkSheet } from "xlsx";
 import { ExportReport, ReportSection } from "./report-creator";
 import { ReportCell } from "./report-cells";
 
@@ -59,12 +59,7 @@ function transformSectionsIntoSheetRows(
         }
 
         section_cells.push(...section.rows.map(transformReportSectionRowsIntoSheetRows));
-        section_cells.push([
-            {
-                t: "z",
-                character_width: 0,
-            },
-        ]);
+        section_cells.push([buildSheetEmptyCell()]);
 
         return section_cells;
     });
@@ -77,20 +72,45 @@ function transformReportSectionRowsIntoSheetRows(
 }
 
 function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectWithExtraInfo {
+    let sheet_cell: CellObjectWithExtraInfo;
     switch (report_cell.type) {
         case "text":
-            return buildSheetTextCell(report_cell.value);
+            sheet_cell = buildSheetTextCell(report_cell.value);
+            break;
         case "html":
-            return buildSheetTextCell(extractPlaintextFromHTMLString(report_cell.value));
+            sheet_cell = buildSheetTextCell(extractPlaintextFromHTMLString(report_cell.value));
+            break;
         case "date":
-            return {
+            sheet_cell = {
                 t: "d",
                 v: report_cell.value,
                 character_width: 10,
             };
+            break;
+        case "number":
+            sheet_cell = {
+                t: "n",
+                v: report_cell.value,
+                character_width: String(report_cell.value).length,
+            };
+            break;
+        case "empty":
+            sheet_cell = buildSheetEmptyCell();
+            break;
         default:
             return ((val: never): never => val)(report_cell);
     }
+
+    if (report_cell.comment) {
+        const comments: Comments = [{ t: report_cell.comment }];
+        comments.hidden = true;
+        return {
+            ...sheet_cell,
+            c: comments,
+        };
+    }
+
+    return sheet_cell;
 }
 
 function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
@@ -98,6 +118,13 @@ function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
         t: "s",
         v: value,
         character_width: value.length,
+    };
+}
+
+function buildSheetEmptyCell(): CellObjectWithExtraInfo {
+    return {
+        t: "z",
+        character_width: 0,
     };
 }
 

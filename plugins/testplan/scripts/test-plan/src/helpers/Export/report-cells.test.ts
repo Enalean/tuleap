@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, HTMLCell, TextCell } from "./report-cells";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "./report-cells";
 
 describe("Report cells", () => {
     it("has a plaintext cell", () => {
@@ -37,5 +37,26 @@ describe("Report cells", () => {
         const cell = new DateCell(date);
 
         expect(cell).toEqual({ type: "date", value: date });
+    });
+
+    it("has a number cell", () => {
+        const n = 2020;
+        const cell = new NumberCell(n);
+
+        expect(cell).toEqual({ type: "number", value: n });
+    });
+
+    it("has an empty cell", () => {
+        const cell = new EmptyCell();
+
+        expect(cell).toEqual({ type: "empty" });
+    });
+
+    it("can have a comment", () => {
+        const cell = new TextCell("Text");
+        const cell_with_comment = cell.withComment("A comment").withComment("A comment 2");
+
+        expect(cell.comment).toBe(undefined);
+        expect(cell_with_comment).toEqual({ type: "text", value: "Text", comment: "A comment 2" });
     });
 });

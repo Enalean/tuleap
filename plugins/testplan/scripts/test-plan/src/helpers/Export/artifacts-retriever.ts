@@ -19,22 +19,10 @@
 
 import { get } from "tlp";
 import { limitConcurrencyPool } from "./concurrency-limit-pool";
+import { Artifact } from "./artifact";
 
 const MAX_CHUNK_SIZE_ARTIFACTS = 100;
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS = 5;
-
-export interface Artifact {
-    id: number;
-    values_by_field: {
-        [field_name: string]:
-            | { type: never }
-            | {
-                  type: "text";
-                  format: "text" | "html";
-                  value: string;
-              };
-    };
-}
 
 interface ArtifactsCollection {
     collection: Artifact[];

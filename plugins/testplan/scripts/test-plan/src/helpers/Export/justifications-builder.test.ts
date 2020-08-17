@@ -70,7 +70,15 @@ describe("Build justifications section", () => {
                     {
                         id: 99992,
                         values_by_field: {
-                            results: { type: "text", value: "HTML Comment", format: "html" },
+                            results: {
+                                type: "text",
+                                value: "HTML Comment",
+                                format: "html",
+                                label: "Results",
+                            },
+                        },
+                        tracker: {
+                            id: 12,
                         },
                     },
                 ],
@@ -79,7 +87,15 @@ describe("Build justifications section", () => {
                     {
                         id: 99993,
                         values_by_field: {
-                            results: { type: "text", value: "Plaintext Comment", format: "text" },
+                            results: {
+                                type: "text",
+                                value: "Plaintext Comment",
+                                format: "text",
+                                label: "Results",
+                            },
+                        },
+                        tracker: {
+                            id: 12,
                         },
                     },
                 ],
@@ -176,7 +192,7 @@ describe("Build justifications section", () => {
         ];
 
         jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
-            new Map([[99995, { id: 99995, values_by_field: {} }]])
+            new Map([[99995, { id: 99995, values_by_field: {}, tracker: { id: 12 } }]])
         );
 
         const section = await buildJustificationsSection(gettext_provider, planned_test_cases);

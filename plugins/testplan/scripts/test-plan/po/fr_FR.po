@@ -208,6 +208,12 @@ msgstr "Il n'y a pas de campagne de test."
 msgid "This item isn't covered yet."
 msgstr "Cet élément n'est pas encore couvert."
 
+msgid ""
+"This requirement have multiple fields with this label, only one value is "
+"visible"
+msgstr ""
+"Cette exigence a plusieurs champs avec ce label, seule une valeur est visible"
+
 msgid "Title"
 msgstr "Titre"
 
