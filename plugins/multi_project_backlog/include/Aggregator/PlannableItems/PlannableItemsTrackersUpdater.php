@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\PlannableItems;
 
+use PFUser;
 use Planning;
+use PlanningFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
 
@@ -43,17 +45,27 @@ class PlannableItemsTrackersUpdater
      */
     private $transaction_executor;
 
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
     public function __construct(
         ContributorDao $contributor_dao,
         PlannableItemsTrackersDao $plannable_items_trackers_dao,
+        PlanningFactory $planning_factory,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->contributor_dao              = $contributor_dao;
         $this->plannable_items_trackers_dao = $plannable_items_trackers_dao;
         $this->transaction_executor         = $transaction_executor;
+        $this->planning_factory             = $planning_factory;
     }
 
-    public function updatePlannableItemsTrackersFromPlanning(Planning $updated_planning): void
+    /**
+     * @throws TopPlanningNotFoundInAggregatorProjectException
+     */
+    public function updatePlannableItemsTrackersFromPlanning(Planning $updated_planning, PFUser $user): void
     {
         $project_id = (int) $updated_planning->getGroupId();
 
@@ -62,18 +74,32 @@ class PlannableItemsTrackersUpdater
         }
 
         $this->transaction_executor->execute(
-            function () use ($updated_planning, $project_id) {
-                $this->plannable_items_trackers_dao->deletePlannableItemsTrackerIdsOfAGivenContributorProject(
-                    $project_id
-                );
-
+            function () use ($updated_planning, $user, $project_id) {
                 $aggregator_project_ids_rows = $this->contributor_dao->getAggregatorProjectsOfAGivenContributorProject(
                     $project_id
                 );
 
                 foreach ($aggregator_project_ids_rows as $aggregator_project_ids_row) {
+                    $aggregator_project_id = (int) $aggregator_project_ids_row['aggregator_project_id'];
+
+                    $aggregator_top_planning = $this->planning_factory->getRootPlanning(
+                        $user,
+                        $aggregator_project_id
+                    );
+
+                    if (! $aggregator_top_planning) {
+                        throw new TopPlanningNotFoundInAggregatorProjectException($aggregator_project_id);
+                    }
+
+                    $aggregator_top_planning_id = (int) $aggregator_top_planning->getId();
+
+                    $this->plannable_items_trackers_dao->deletePlannableItemsTrackerIdsOfAGivenContributorProject(
+                        $project_id,
+                        $aggregator_top_planning_id
+                    );
+
                     $this->plannable_items_trackers_dao->addPlannableItemsTrackerIds(
-                        (int) $aggregator_project_ids_row['aggregator_project_id'],
+                        $aggregator_top_planning_id,
                         $updated_planning->getBacklogTrackersIds()
                     );
                 }

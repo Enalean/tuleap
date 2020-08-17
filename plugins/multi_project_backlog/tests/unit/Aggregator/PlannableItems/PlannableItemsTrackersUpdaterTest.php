@@ -26,7 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning;
+use PlanningFactory;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class PlannableItemsTrackersUpdaterTest extends TestCase
@@ -48,55 +50,71 @@ class PlannableItemsTrackersUpdaterTest extends TestCase
      */
     private $plannable_items_trackers_dao;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
+     */
+    private $planning_factory;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->contributor_dao              = Mockery::mock(ContributorDao::class);
         $this->plannable_items_trackers_dao = Mockery::mock(PlannableItemsTrackersDao::class);
+        $this->planning_factory             = Mockery::mock(PlanningFactory::class);
 
         $this->updater = new PlannableItemsTrackersUpdater(
             $this->contributor_dao,
             $this->plannable_items_trackers_dao,
+            $this->planning_factory,
             new DBTransactionExecutorPassthrough()
         );
     }
 
     public function testItUpdatesThePlannableItemsTrackers(): void
     {
-        $planning = new Planning(1, 'Release Planning', 104, 'Release Backlog', 'Sprint Plan', [302, 504]);
+        $aggregator_top_planning = new Planning(1, 'Release Planning', 104, 'Release Backlog', 'Sprint Plan', []);
+        $updated_planning        = new Planning(3, 'Release Planning', 105, 'Release Backlog', 'Sprint Plan', [302, 504]);
+
+        $user = UserTestBuilder::aUser()->build();
 
         $this->contributor_dao->shouldReceive('isProjectAContributorProject')
-            ->with(104)
+            ->with(105)
             ->once()
             ->andReturnTrue();
 
-        $this->plannable_items_trackers_dao->shouldReceive('deletePlannableItemsTrackerIdsOfAGivenContributorProject')
-            ->once();
-
         $this->contributor_dao->shouldReceive('getAggregatorProjectsOfAGivenContributorProject')
-            ->with(104)
+            ->with(105)
             ->once()
             ->andReturn([
                 ['aggregator_project_id' => 102]
             ]);
 
+        $this->plannable_items_trackers_dao->shouldReceive('deletePlannableItemsTrackerIdsOfAGivenContributorProject')
+            ->once();
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturn($aggregator_top_planning);
+
         $this->plannable_items_trackers_dao->shouldReceive('addPlannableItemsTrackerIds')
             ->with(
-                102,
+                1,
                 [302, 504]
             )
             ->once();
 
-        $this->updater->updatePlannableItemsTrackersFromPlanning($planning);
+        $this->updater->updatePlannableItemsTrackersFromPlanning($updated_planning, $user);
     }
 
     public function testItDoesNothingIfThePlanningIsNotInAContributorProject(): void
     {
-        $planning = new Planning(1, 'Release Planning', 104, 'Release Backlog', 'Sprint Plan', [302, 504]);
+        $updated_planning = new Planning(3, 'Release Planning', 105, 'Release Backlog', 'Sprint Plan', [302, 504]);
+        $user             = UserTestBuilder::aUser()->build();
 
         $this->contributor_dao->shouldReceive('isProjectAContributorProject')
-            ->with(104)
+            ->with(105)
             ->once()
             ->andReturnFalse();
 
@@ -104,6 +122,36 @@ class PlannableItemsTrackersUpdaterTest extends TestCase
         $this->contributor_dao->shouldNotReceive('getAggregatorProjectsOfAGivenContributorProject');
         $this->plannable_items_trackers_dao->shouldNotReceive('addPlannableItemsTrackerIds');
 
-        $this->updater->updatePlannableItemsTrackersFromPlanning($planning);
+        $this->updater->updatePlannableItemsTrackersFromPlanning($updated_planning, $user);
+    }
+
+    public function testItThrowsAnExceptionIfThereIsNotTopPlanningInAggregatorProject(): void
+    {
+        $updated_planning = new Planning(3, 'Release Planning', 105, 'Release Backlog', 'Sprint Plan', [302, 504]);
+        $user             = UserTestBuilder::aUser()->build();
+
+        $this->contributor_dao->shouldReceive('isProjectAContributorProject')
+            ->with(105)
+            ->once()
+            ->andReturnTrue();
+
+        $this->contributor_dao->shouldReceive('getAggregatorProjectsOfAGivenContributorProject')
+            ->with(105)
+            ->once()
+            ->andReturn([
+                ['aggregator_project_id' => 102]
+            ]);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturnFalse();
+
+        $this->plannable_items_trackers_dao->shouldNotReceive('deletePlannableItemsTrackerIdsOfAGivenContributorProject');
+        $this->plannable_items_trackers_dao->shouldNotReceive('addPlannableItemsTrackerIds');
+
+        $this->expectException(TopPlanningNotFoundInAggregatorProjectException::class);
+
+        $this->updater->updatePlannableItemsTrackersFromPlanning($updated_planning, $user);
     }
 }

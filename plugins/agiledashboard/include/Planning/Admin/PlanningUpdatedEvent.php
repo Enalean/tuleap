@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
+use PFUser;
 use Planning;
 use Tuleap\Event\Dispatchable;
 
@@ -36,9 +37,16 @@ final class PlanningUpdatedEvent implements Dispatchable
      */
     private $planning;
 
-    public function __construct(Planning $planning)
+    /**
+     * @var PFUser
+     * @psalm-readonly
+     */
+    private $user;
+
+    public function __construct(Planning $planning, PFUser $user)
     {
         $this->planning = $planning;
+        $this->user     = $user;
     }
 
     /**
@@ -47,5 +55,13 @@ final class PlanningUpdatedEvent implements Dispatchable
     public function getPlanning(): Planning
     {
         return $this->planning;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getUser(): PFUser
+    {
+        return $this->user;
     }
 }
