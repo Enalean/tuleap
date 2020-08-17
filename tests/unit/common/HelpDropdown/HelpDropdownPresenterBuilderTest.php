@@ -24,6 +24,8 @@ namespace Tuleap\HelpDropdown;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\REST\ExplorerEndpointAvailableEvent;
 
 class HelpDropdownPresenterBuilderTest extends TestCase
 {
@@ -41,10 +43,15 @@ class HelpDropdownPresenterBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user                  = Mockery::mock(PFUser::class);
+        $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive("getShortLocale")->andReturn('en');
 
-        $this->help_dropdown_builder = new HelpDropdownPresenterBuilder();
+        $event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
+        $event_dispatcher->shouldReceive('dispatch')->andReturn(
+            new ExplorerEndpointAvailableEvent()
+        );
+
+        $this->help_dropdown_builder = new HelpDropdownPresenterBuilder($event_dispatcher);
     }
 
     public function testBuildPresenterWithLabMod(): void
@@ -64,6 +71,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
                     "fa-book"
                 )
             ],
+            null,
             new HelpLinkPresenter(
                 'Release Note',
                 'https://www.tuleap.org/ressources/release-notes/tuleap-11-17',
@@ -91,6 +99,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
                     "fa-book"
                 )
             ],
+            null,
             null
         );
 

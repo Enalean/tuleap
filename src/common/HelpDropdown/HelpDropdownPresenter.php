@@ -34,12 +34,18 @@ class HelpDropdownPresenter
      * @var HelpLinkPresenter|null
      */
     public $release_note_link;
+    /**
+     * @var string|null
+     */
+    public $explorer_url;
 
     public function __construct(
         array $platform_links,
+        ?string $explorer_url,
         ?HelpLinkPresenter $release_note_link
     ) {
         $this->platform_links    = $platform_links;
         $this->release_note_link = $release_note_link;
+        $this->explorer_url      = $explorer_url;
     }
 }

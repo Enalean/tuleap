@@ -18,7 +18,9 @@
             {{/ release_note_link }}
             <span class="dropdown-menu-separator" role="separator"></span>
             <span class="dropdown-menu-item-alt text-muted">
-                <a href="/help/api.php" role="menuitem">{{# gettext }} API {{/ gettext }}</a>
+                {{# explorer_url }}
+                    <a href="{{ explorer_url }}" role="menuitem">{{# gettext }} API {{/ gettext }}</a>
+                {{/ explorer_url }}
                 <a href="/tos/tos.php" role="menuitem">{{# gettext }} Terms {{/ gettext }}</a>
                 <a href="/contact.php" role="menuitem">{{# gettext }} Contact {{/ gettext }}</a>
                  <a href="#help-modal-shortcuts"

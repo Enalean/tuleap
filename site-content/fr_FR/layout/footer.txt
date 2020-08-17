@@ -1,9 +1,11 @@
 <section class="footer-section">
     <?php include($GLOBALS['Language']->getContent('layout/footer_about', null, null, '.php')); ?>
 </section>
+<?php if ($endpoint_url) { ?>
 <section class="footer-section">
     <?php include($GLOBALS['Language']->getContent('layout/footer_cli', null, null, '.php')); ?>
 </section>
+<?php } ?>
 <section class="footer-section">
     <?php include($GLOBALS['Language']->getContent('layout/footer_help', null, null, '.php')); ?>
 </section>

@@ -19,4 +19,7 @@
  */
 ?>
 <h3 class="footer-section-title">API</h3>
-<p class="footer-paragraph"><?php echo \ForgeConfig::get('sys_name') ?> provides a <a href="/help/api.php">REST&nbsp;API</a>.</p>
+<p class="footer-paragraph">
+    <?php echo \ForgeConfig::get('sys_name') ?>
+    provides a <a href="<?php echo Codendi_HTMLPurifier::instance()->purify($endpoint_url); ?>">REST&nbsp;API</a>.
+</p>
