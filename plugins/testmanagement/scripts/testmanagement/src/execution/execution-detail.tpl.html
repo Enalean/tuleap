@@ -18,6 +18,7 @@
 <section id="test" class="tlp-pane current-test" ng-class="execution.status" data-test="current-test">
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
+            <div class="loader" ng-if="! execution.id"></div>
             <h1 class="current-test-header-title" data-test="current-test-header-title">
                 <i ng-if="execution.is_automated" class="fa current-test-title-icon-auto" ng-class="{
                     'fa-tlp-robot notrun': execution.status === 'notrun',
