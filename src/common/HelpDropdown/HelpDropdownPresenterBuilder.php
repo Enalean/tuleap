@@ -22,9 +22,20 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class HelpDropdownPresenterBuilder
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
+
+    public function __construct(EventDispatcherInterface $event_dispatcher)
+    {
+        $this->event_dispatcher = $event_dispatcher;
+    }
+
     public function build(PFUser $current_user, string $tuleap_version): HelpDropdownPresenter
     {
         $documentation = "/doc/" . urlencode($current_user->getShortLocale()) . "/";
@@ -50,8 +61,11 @@ class HelpDropdownPresenterBuilder
 
         $release_note = $this->getReleaseNoteLink($current_user, $tuleap_version);
 
+        $explorer_endpoint_event = $this->event_dispatcher->dispatch(new \Tuleap\REST\ExplorerEndpointAvailableEvent());
+
         return new HelpDropdownPresenter(
             $main_items,
+            $explorer_endpoint_event->getEndpointURL(),
             $release_note
         );
     }

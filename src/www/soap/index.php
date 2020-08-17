@@ -29,7 +29,7 @@ require_once __DIR__ . '/../include/pre.php';
     DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
 );
 
-define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__) . '/VERSION'));
+define('CODENDI_WS_API_VERSION', file_get_contents(__DIR__ . '/VERSION'));
 
 // Check if we the server is in secure mode or not.
 $request = HTTPRequest::instance();
@@ -79,6 +79,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     site_header(['title' => "SOAP API"]);
     $renderer = new MustacheRenderer(new TemplateCache(), 'templates');
-    $renderer->renderToPage('soap_index', []);
+    $renderer->renderToPage('soap_index', [
+        'end_points'         => [
+            [
+                'title'       => 'Core',
+                'wsdl'        => '/soap/?wsdl',
+                'wsdl_viewer' => '/soap/wsdl.php',
+                'changelog'   => '/soap/ChangeLog',
+                'version'     => file_get_contents(__DIR__ . '/VERSION'),
+                'description' => <<<EOT
+Historically the sole end point, therefore it groups multiple different functions:
+<ul>
+    <li>Session management: login, logout, projects, ...</li>
+    <li>File Release System access (FRS): addPackage, addRelease, addFile, ...</li>
+    <li>Tracker v3 (for historical deployments): get/updateTracker, get/updateArtifact, ...</li>
+    <li>Documentation: get/updateDocman, ...</li>
+</ul>
+EOT
+            ],
+            [
+                'title'       => 'Subversion',
+                'wsdl'        => '/soap/svn/?wsdl',
+                'wsdl_viewer' => '/soap/svn/wsdl-viewer.php',
+                'changelog'   => '/soap/svn/ChangeLog',
+                'version'     => file_get_contents(__DIR__ . '/svn/VERSION'),
+                'description' => 'Get informations about Subversion usage in project.',
+            ],
+            [
+                'title'       => 'Project',
+                'wsdl'        => '/soap/project/?wsdl',
+                'wsdl_viewer' => '/soap/project/wsdl-viewer.php',
+                'changelog'   => '/soap/project/ChangeLog',
+                'version'     => file_get_contents(__DIR__ . '/project/VERSION'),
+                'description' => 'Create and administrate projects.',
+            ],
+        ]
+    ]);
     site_footer([]);
 }

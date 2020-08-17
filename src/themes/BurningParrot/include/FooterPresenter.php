@@ -69,6 +69,9 @@ class FooterPresenter
 
     private function getFooter()
     {
+        $explorer_endpoint_event = \EventManager::instance()->dispatch(new \Tuleap\REST\ExplorerEndpointAvailableEvent());
+        $endpoint_url            = $explorer_endpoint_event->getEndpointURL();
+
         $version = $this->tuleap_version;
         ob_start();
         include($GLOBALS['Language']->getContent('layout/footer'));
