@@ -24,6 +24,15 @@ import { TrackerFieldValue } from "./artifact";
 describe("transform-field-value-into-cell", () => {
     it.each([
         [
+            "string field",
+            {
+                label: "String field",
+                type: "string",
+                value: "A string",
+            } as TrackerFieldValue,
+            new TextCell("A string"),
+        ],
+        [
             "text field value plaintext formatted",
             {
                 label: "Plaintext Text",

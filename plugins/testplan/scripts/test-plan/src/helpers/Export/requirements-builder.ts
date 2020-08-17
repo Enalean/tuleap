@@ -27,7 +27,13 @@ import { transformFieldValueIntoACell } from "./transform-field-value-into-cell"
 import { Artifact } from "./artifact";
 import { Tracker } from "./tracker";
 
-const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set(["int", "float", "computed"]);
+const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set([
+    "int",
+    "float",
+    "computed",
+    "string",
+    "text",
+]);
 
 export interface RequirementsSection {
     readonly title: TextCell;
@@ -51,6 +57,11 @@ export interface RequirementsSection {
     >;
 }
 
+interface ExtraFieldsToExtract {
+    labels: ReadonlySet<string>;
+    banned_fields: ReadonlySet<number>;
+}
+
 export async function buildRequirementsSection(
     gettext_provider: VueGettextProvider,
     backlog_items: ReadonlyArray<BacklogItem>
@@ -62,7 +73,7 @@ export async function buildRequirementsSection(
     const trackers = await retrieveTrackers(
         [...all_full_requirements.values()].map((value) => value.tracker)
     );
-    const extra_field_labels = getExtraFieldLabels(trackers);
+    const extra_fields_to_extract = getExtraFieldToExtract(trackers);
 
     return {
         title: new TextCell(gettext_provider.$gettext("Requirements")),
@@ -71,7 +82,7 @@ export async function buildRequirementsSection(
             new TextCell(gettext_provider.$gettext("ID")),
             new TextCell(gettext_provider.$gettext("Title")),
             new TextCell(gettext_provider.$gettext("Tests status")),
-            ...[...extra_field_labels]
+            ...[...extra_fields_to_extract.labels]
                 .sort(sortFieldLabel)
                 .map((label: string): TextCell => new TextCell(label)),
         ],
@@ -81,7 +92,7 @@ export async function buildRequirementsSection(
             let extra_cells: ReportCell[] = [];
             if (requirement) {
                 extra_cells = sortExtraCells(
-                    getExtraCells(gettext_provider, requirement, extra_field_labels)
+                    getExtraCells(gettext_provider, requirement, extra_fields_to_extract)
                 );
             }
 
@@ -112,24 +123,29 @@ function sortFieldLabel(label_a: string, label_b: string): number {
     return label_a.localeCompare(label_b);
 }
 
-function getExtraFieldLabels(trackers: ReadonlyArray<Tracker>): Set<string> {
+function getExtraFieldToExtract(trackers: ReadonlyArray<Tracker>): ExtraFieldsToExtract {
     const labels: Set<string> = new Set();
+    const banned_fields: Set<number> = new Set();
 
     for (const tracker of trackers) {
+        if (tracker.semantics.title) {
+            banned_fields.add(tracker.semantics.title.field_id);
+        }
+
         for (const field of tracker.fields) {
-            if (SUPPORTED_EXTRA_FIELD_TYPES.has(field.type)) {
+            if (SUPPORTED_EXTRA_FIELD_TYPES.has(field.type) && !banned_fields.has(field.field_id)) {
                 labels.add(field.label);
             }
         }
     }
 
-    return labels;
+    return { labels, banned_fields };
 }
 
 function getExtraCells(
     gettext_provider: VueGettextProvider,
     requirement: Artifact,
-    extra_field_labels: ReadonlySet<string>
+    extra_fields: ExtraFieldsToExtract
 ): Map<string, ReportCell> {
     const extra_cells: Map<string, ReportCell> = new Map();
 
@@ -138,7 +154,8 @@ function getExtraCells(
 
         if (
             !SUPPORTED_EXTRA_FIELD_TYPES.has(field_value.type) ||
-            !extra_field_labels.has(field_value.label)
+            !extra_fields.labels.has(field_value.label) ||
+            extra_fields.banned_fields.has(field_value.field_id)
         ) {
             continue;
         }
@@ -163,7 +180,7 @@ function getExtraCells(
     }
 
     const extra_field_labels_of_artifact = new Set(extra_cells.keys());
-    const extra_field_labels_not_existing_for_the_artifact = [...extra_field_labels].filter(
+    const extra_field_labels_not_existing_for_the_artifact = [...extra_fields.labels].filter(
         (label: string) => !extra_field_labels_of_artifact.has(label)
     );
     for (const missing_extra_field_label of extra_field_labels_not_existing_for_the_artifact) {

@@ -24,6 +24,8 @@ export function transformFieldValueIntoACell(
     field_value: Readonly<TrackerFieldValue>
 ): ReportCell | null {
     switch (field_value.type) {
+        case "string":
+            return new TextCell(field_value.value);
         case "text":
             return transformTextFieldValueIntoACell(field_value);
         case "int":

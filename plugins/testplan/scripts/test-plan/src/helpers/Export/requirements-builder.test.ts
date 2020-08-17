@@ -66,31 +66,55 @@ describe("Build requirements section", () => {
             id: 91,
             fields: [
                 {
+                    field_id: 191,
                     label: "MyNumber",
                     type: "float",
                 },
                 {
+                    field_id: 291,
                     label: "Computed",
                     type: "computed",
                 },
                 {
+                    field_id: 391,
                     label: "MyNumber",
                     type: "int",
                 },
                 {
+                    field_id: 491,
                     label: "Artifact ID",
                     type: "aid",
                 },
+                {
+                    field_id: 591,
+                    label: "Text",
+                    type: "text",
+                    format: "text",
+                    value: "Some text",
+                },
+                {
+                    field_id: 691,
+                    label: "title",
+                    type: "string",
+                    value: "Some string",
+                },
             ],
+            semantics: {
+                title: {
+                    field_id: 691,
+                },
+            },
         } as Tracker;
         const bug_tracker: Tracker = {
             id: 92,
             fields: [
                 {
+                    field_id: 792,
                     label: "MyNumber",
                     type: "float",
                 },
             ],
+            semantics: {},
         };
         jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
             new Map([
@@ -100,25 +124,42 @@ describe("Build requirements section", () => {
                         id: 1,
                         values_by_field: {
                             int: {
+                                field_id: 191,
                                 label: "MyNumber",
                                 type: "int",
                                 value: 12,
                             },
                             computed: {
+                                field_id: 291,
                                 label: "Computed",
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: null,
                             },
                             float: {
+                                field_id: 391,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 13,
                             },
                             aid: {
+                                field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
                             } as TrackerFieldValue,
+                            text: {
+                                field_id: 591,
+                                label: "Text",
+                                type: "text",
+                                format: "text",
+                                value: "Text 1",
+                            },
+                            title: {
+                                field_id: 691,
+                                label: "title",
+                                type: "string",
+                                value: "Label 1",
+                            },
                         },
                         tracker: story_tracker,
                     } as Artifact,
@@ -129,25 +170,42 @@ describe("Build requirements section", () => {
                         id: 2,
                         values_by_field: {
                             int: {
+                                field_id: 191,
                                 label: "MyNumber",
                                 type: "int",
                                 value: 22,
                             },
                             computed: {
+                                field_id: 291,
                                 label: "Computed",
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: 24,
                             },
                             float: {
+                                field_id: 391,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 23,
                             },
                             aid: {
+                                field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
                             } as TrackerFieldValue,
+                            text: {
+                                field_id: 591,
+                                label: "Text",
+                                type: "text",
+                                format: "text",
+                                value: "Text 2",
+                            },
+                            title: {
+                                field_id: 691,
+                                label: "title",
+                                type: "string",
+                                value: "Label 2",
+                            },
                         },
                         tracker: story_tracker,
                     },
@@ -158,6 +216,7 @@ describe("Build requirements section", () => {
                         id: 3,
                         values_by_field: {
                             somefloat: {
+                                field_id: 792,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 33.33,
@@ -172,6 +231,7 @@ describe("Build requirements section", () => {
                         id: 4,
                         values_by_field: {
                             somefloat: {
+                                field_id: 792,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 44.44,
@@ -198,6 +258,7 @@ describe("Build requirements section", () => {
                 new TextCell("Tests status"),
                 new TextCell("Computed"),
                 new TextCell("MyNumber"),
+                new TextCell("Text"),
             ],
             rows: [
                 [
@@ -209,6 +270,7 @@ describe("Build requirements section", () => {
                     new NumberCell(12).withComment(
                         "This requirement have multiple fields with this label, only one value is visible"
                     ),
+                    new TextCell("Text 1"),
                 ],
                 [
                     new TextCell("story"),
@@ -219,6 +281,7 @@ describe("Build requirements section", () => {
                     new NumberCell(22).withComment(
                         "This requirement have multiple fields with this label, only one value is visible"
                     ),
+                    new TextCell("Text 2"),
                 ],
                 [
                     new TextCell("bug"),
@@ -227,6 +290,7 @@ describe("Build requirements section", () => {
                     new TextCell("Failed"),
                     new EmptyCell(),
                     new NumberCell(33.33),
+                    new EmptyCell(),
                 ],
                 [
                     new TextCell("bug"),
@@ -235,6 +299,7 @@ describe("Build requirements section", () => {
                     new TextCell("Not run"),
                     new EmptyCell(),
                     new NumberCell(44.44),
+                    new EmptyCell(),
                 ],
                 [new TextCell("bug"), new TextCell("5"), new TextCell("Label 5"), new TextCell("")],
             ],
