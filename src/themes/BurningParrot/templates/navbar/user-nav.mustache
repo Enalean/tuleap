@@ -9,7 +9,10 @@
         {{/ logout_menu_item }}
 
         <div id="nav-dropdown-user" class="nav-dropdown nav-dropdown-right">
-            <div class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-user">
+            <div class="nav-dropdown-link"
+                 data-nav-dropdown-content-id="nav-dropdown-content-user"
+                 data-shortcut-mydashboard
+            >
                 <div class="tlp-avatar">
                     {{# user_has_avatar }}
                         <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
@@ -32,7 +35,12 @@
                 </div>
 
                 {{# has_no_dashboards }}
-                    <a href="/my/" class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard">{{# gettext }}My dashboard{{/ gettext }}</a>
+                    <a href="/my/"
+                       class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard"
+                       data-shortcut-mydashboard-option
+                    >
+                        {{# gettext }}My dashboard{{/ gettext }}
+                    </a>
                 {{/ has_no_dashboards }}
                 {{^ has_no_dashboards }}
                     {{^ has_one_dashboard }}
@@ -40,7 +48,12 @@
                     {{/ has_one_dashboard }}
                     <div>
                         {{# dashboards }}
-                            <a href="/my/?dashboard_id={{ getId }}" class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}">{{ getName }}</a>
+                            <a href="/my/?dashboard_id={{ getId }}"
+                                class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}"
+                                data-shortcut-mydashboard-option
+                            >
+                                {{ getName }}
+                            </a>
                         {{/ dashboards }}
                     </div>
                 {{/ has_no_dashboards }}

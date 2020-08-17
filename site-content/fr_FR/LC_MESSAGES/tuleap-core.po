@@ -847,6 +847,9 @@ msgstr "Permissions globales"
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
+msgid "Go to personal dashboard"
+msgstr "Aller au dashboard personnel"
+
 msgid "Go up"
 msgstr "Niveau supérieur"
 

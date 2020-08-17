@@ -30,6 +30,27 @@ hotkeys("c", function (): void {
     }
 });
 
+hotkeys("d", function (): void {
+    const options = document.querySelectorAll("[data-shortcut-mydashboard-option]");
+    if (options.length === 0) {
+        return;
+    }
+
+    if (options.length === 1 && options[0] instanceof HTMLElement) {
+        options[0].click();
+        return;
+    }
+
+    const new_dropdown_trigger = document.querySelector("[data-shortcut-mydashboard]");
+    if (new_dropdown_trigger instanceof HTMLElement) {
+        new_dropdown_trigger.click();
+
+        if (options[0] instanceof HTMLElement) {
+            options[0].focus();
+        }
+    }
+});
+
 hotkeys("*", function (event): void {
     // Should be hotkeys("?", …),
     // however for unknown reason it does not work (maybe due to shift key?),
