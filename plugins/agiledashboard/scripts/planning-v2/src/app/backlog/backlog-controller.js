@@ -89,6 +89,7 @@ function BacklogController(
         showAddBacklogItemModal,
         showAddBacklogItemParentModal,
         soloButtonCanBeDisplayed,
+        addItemButtonCanBeDisplayed,
     });
 
     function init() {
@@ -531,11 +532,23 @@ function BacklogController(
 
     function soloButtonCanBeDisplayed() {
         return (
+            SharedPropertiesService.getAddItemInBacklogAllowed() &&
             self.canUserMoveCards() &&
             "content" in self.details.accepted_types &&
             self.details.accepted_types.content.length === 1 &&
             ("parent_trackers" in self.details.accepted_types === false ||
                 self.details.accepted_types.parent_trackers.length === 0)
+        );
+    }
+
+    function addItemButtonCanBeDisplayed() {
+        return (
+            SharedPropertiesService.getAddItemInBacklogAllowed() &&
+            "content" in self.details.accepted_types &&
+            "parent_trackers" in self.details.accepted_types &&
+            (self.details.accepted_types.content.length > 1 ||
+                self.details.accepted_types.parent_trackers.length > 0) &&
+            self.details.user_can_move_cards
         );
     }
 }

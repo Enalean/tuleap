@@ -2,8 +2,7 @@
     <h2 class="planning-header-title" translate>To be planned</h2>
 
     <div class="tlp-dropdown backlog-add-item-button"
-        ng-if="(backlog.details.accepted_types.content.length > 1 || backlog.details.accepted_types.parent_trackers.length > 0) &&
-                backlog.details.user_can_move_cards"
+        ng-if="backlog.addItemButtonCanBeDisplayed()"
     >
         <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small"

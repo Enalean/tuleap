@@ -191,6 +191,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $milestone->getArtifactId(),
                 false,
                 $allowed_additional_panes_to_display_collector->getIdentifiers(),
+                true,
                 true
             )
         );

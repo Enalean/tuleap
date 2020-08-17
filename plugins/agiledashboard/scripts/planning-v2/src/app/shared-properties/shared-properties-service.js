@@ -26,6 +26,7 @@ export default function SharedPropertiesService() {
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
         create_milestone_allowed: undefined,
+        add_item_in_backlog_allowed: undefined,
     };
 
     return {
@@ -43,6 +44,8 @@ export default function SharedPropertiesService() {
         getAllowedAdditionalPanesToDisplay,
         setCreateMilestoneAllowed,
         getCreateMilestoneAllowed,
+        setAddItemInBacklogAllowed,
+        getAddItemInBacklogAllowed,
     };
 
     function getUserId() {
@@ -99,5 +102,13 @@ export default function SharedPropertiesService() {
 
     function getCreateMilestoneAllowed() {
         return property.create_milestone_allowed;
+    }
+
+    function setAddItemInBacklogAllowed(add_item_in_backlog_allowed) {
+        property.add_item_in_backlog_allowed = add_item_in_backlog_allowed;
+    }
+
+    function getAddItemInBacklogAllowed() {
+        return property.add_item_in_backlog_allowed;
     }
 }

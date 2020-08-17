@@ -173,14 +173,27 @@ final class multi_project_backlogPlugin extends Plugin
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
     {
-        $form_element_factory      = \Tracker_FormElementFactory::instance();
-        $timeframe_dao             = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
-        $semantic_status_factory   = new Tracker_Semantic_StatusFactory();
+        $contributor_projects_collection_builder = new ContributorProjectsCollectionBuilder(
+            new AggregatorDao(),
+            ProjectManager::instance()
+        );
+
+        $contributor_project_collection = $contributor_projects_collection_builder->getContributorProjectForAGivenAggregatorProject(
+            $event->getTopMilestone()->getProject()
+        );
+
+        if ($contributor_project_collection->isEmpty() === true) {
+            return;
+        }
+
+        $event->setBacklogItemsCannotBeAdded();
+
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+
         $milestone_creator_checker = new MilestoneCreatorChecker(
-            new ContributorProjectsCollectionBuilder(
-                new AggregatorDao(),
-                ProjectManager::instance()
-            ),
+            $contributor_projects_collection_builder,
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
                 \PlanningFactory::build()
             ),
