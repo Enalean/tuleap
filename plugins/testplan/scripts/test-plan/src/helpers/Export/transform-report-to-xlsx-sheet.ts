@@ -21,6 +21,8 @@ import { CellObject, ColInfo, Comments, Range, utils, WorkSheet } from "xlsx";
 import { ExportReport, ReportSection } from "./report-creator";
 import { ReportCell } from "./report-cells";
 
+const CELL_BASE_CHARACTER_WIDTH = 10;
+
 type CellObjectWithExtraInfo = CellObject & {
     character_width: number;
     merge_columns?: number;
@@ -49,6 +51,9 @@ function transformSectionsIntoSheetRows(
             section_cells.push([
                 {
                     ...buildSheetTextCell(section.title.value),
+                    ...(nb_columns_to_merge > 0
+                        ? { character_width: CELL_BASE_CHARACTER_WIDTH }
+                        : {}),
                     merge_columns: nb_columns_to_merge,
                 },
             ]);
@@ -84,7 +89,7 @@ function transformReportCellIntoASheetCell(report_cell: ReportCell): CellObjectW
             sheet_cell = {
                 t: "d",
                 v: report_cell.value,
-                character_width: 10,
+                character_width: CELL_BASE_CHARACTER_WIDTH,
             };
             break;
         case "number":
