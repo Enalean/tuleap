@@ -383,10 +383,8 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     /**
      * @throws Tracker_Workflow_Transition_InvalidConditionForTransitionException
-     *
-     * @return void
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
+    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): void
     {
         if (! $this->is_used) {
             return;
@@ -394,7 +392,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
         $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
         if (isset($transition)) {
-            if (! $transition->validate($fields_data, $artifact, $comment_body)) {
+            if (! $transition->validate($fields_data, $artifact, $comment_body, $current_user)) {
                 throw new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition);
             }
         }

@@ -30,18 +30,24 @@ use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class CommentNotEmpty_validateTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     private $empty_data = '';
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $current_user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao        = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
-        $this->transition = Mockery::mock(Transition::class);
-        $this->artifact   = Mockery::mock(Tracker_Artifact::class);
+        $this->dao          = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
+        $this->transition   = Mockery::mock(Transition::class);
+        $this->artifact     = Mockery::mock(Tracker_Artifact::class);
+        $this->current_user = \Mockery::spy(\PFUser::class);
 
         $this->transition->shouldReceive('getId')->andReturn(42);
 
@@ -64,8 +70,8 @@ class CommentNotEmpty_validateTest extends TestCase
             $is_comment_required
         );
 
-        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, 'coin'));
-        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, ''));
+        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, 'coin', $this->current_user));
+        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, '', $this->current_user));
     }
 
     public function testItReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided()
@@ -77,7 +83,7 @@ class CommentNotEmpty_validateTest extends TestCase
             $is_comment_required
         );
 
-        $this->assertFalse($condition->validate($this->empty_data, $this->artifact, ''));
+        $this->assertFalse($condition->validate($this->empty_data, $this->artifact, '', $this->current_user));
     }
 
     public function testItReturnsTrueIfCommentIsRequiredAndCommentIsProvided()
@@ -89,6 +95,6 @@ class CommentNotEmpty_validateTest extends TestCase
             $is_comment_required
         );
 
-        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, 'coin'));
+        $this->assertTrue($condition->validate($this->empty_data, $this->artifact, 'coin', $this->current_user));
     }
 }

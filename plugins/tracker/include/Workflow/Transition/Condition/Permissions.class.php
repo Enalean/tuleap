@@ -98,10 +98,8 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
-    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
+    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
-        $current_user = UserManager::instance()->getCurrentUser();
-
         if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker())) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -115,7 +113,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
 
     public function isUserAllowedToSeeTransition(PFUser $user, Tracker $tracker)
     {
-        if ($tracker->userIsAdmin($user)) {
+        if (($user instanceof Tracker_Workflow_WorkflowUser) || ($tracker->userIsAdmin($user))) {
             return true;
         }
 

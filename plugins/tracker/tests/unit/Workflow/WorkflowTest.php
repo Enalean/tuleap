@@ -454,7 +454,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $fields_data = [];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
 
-        $this->unused_workflow->validate($fields_data, $artifact, '');
+        $this->unused_workflow->validate($fields_data, $artifact, '', $this->current_user);
     }
 
     public function testItRaisesExceptionIfWorkflowIsEnabledAndTransitionNotValid(): void
@@ -484,7 +484,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $transition->shouldReceive('validate')->once()->andReturns(false);
         $this->expectExceptionObject(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
 
-        $workflow->validate($fields_data, $artifact, '');
+        $workflow->validate($fields_data, $artifact, '', $this->current_user);
     }
 
     public function testItDelegatesValidationToRulesManager(): void
@@ -532,7 +532,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         );
 
         $this->expectExceptionObject(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
-        $workflow->validate($fields_data, $this->artifact, '');
+        $workflow->validate($fields_data, $this->artifact, '', $this->current_user);
     }
 
     public function testItDisablesTheValidationOfTransitions(): void
@@ -559,7 +559,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
         $transition->shouldReceive('validate')->never();
 
-        $workflow->validate($fields_data, \Mockery::spy(\Tracker_Artifact::class), '');
+        $workflow->validate($fields_data, \Mockery::spy(\Tracker_Artifact::class), '', $this->current_user);
     }
 
     public function testItDisablesTheGlobalRulesValidation(): void
