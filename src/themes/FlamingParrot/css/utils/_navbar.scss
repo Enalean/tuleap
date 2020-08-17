@@ -124,10 +124,6 @@ $nav-dropdown-content-border-radius: 3px;
             display: flex;
             align-items: center;
             height: $navbar-height;
-
-            .join-tuleap-community {
-                padding: 12px 10px 10px 0;
-            }
         }
 
         > li > a {
@@ -388,10 +384,6 @@ $nav-dropdown-content-border-radius: 3px;
             margin-bottom: 0;
         }
     }
-}
-
-.join-tuleap-community-svg {
-    fill: $navbar-color;
 }
 
 .header-navbar-container {
