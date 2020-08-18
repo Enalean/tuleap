@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
 import { TextValueField, TrackerFieldValue } from "./artifact";
 
 export function transformFieldValueIntoACell(
@@ -40,6 +40,13 @@ export function transformFieldValueIntoACell(
             }
             return getCellFromPossibleNumber(value);
         }
+        case "date":
+        case "lud":
+        case "subon":
+            if (field_value.value === null) {
+                return null;
+            }
+            return new DateCell(new Date(field_value.value));
         default:
             return null;
     }
