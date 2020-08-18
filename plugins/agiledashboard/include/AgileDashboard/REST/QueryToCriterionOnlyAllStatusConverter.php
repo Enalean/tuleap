@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST;
 
-use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
-use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use stdClass;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
+use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 
 class QueryToCriterionOnlyAllStatusConverter
 {

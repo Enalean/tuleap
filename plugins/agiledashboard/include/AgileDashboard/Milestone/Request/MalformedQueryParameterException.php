@@ -20,13 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\REST;
+namespace Tuleap\AgileDashboard\Milestone\Request;
 
 use Exception;
 
-class MalformedQueryParameterException extends Exception
+final class MalformedQueryParameterException extends Exception
 {
-
     private function __construct(string $message)
     {
         parent::__construct($message);

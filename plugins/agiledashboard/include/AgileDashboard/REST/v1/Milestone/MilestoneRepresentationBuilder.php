@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,48 +18,68 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\REST\v1\Milestone;
+
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
+use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 
-class AgileDashboard_Milestone_MilestoneRepresentationBuilder
+class MilestoneRepresentationBuilder
 {
-
-    /** @var Planning_MilestoneFactory */
+    /**
+     * @var \Planning_MilestoneFactory
+     */
     private $milestone_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
+    /**
+     * @var \AgileDashboard_Milestone_Backlog_BacklogFactory
+     */
     private $backlog_factory;
-
-    /** @var EventManager */
+    /**
+     * @var \EventManager
+     */
     private $event_manager;
-
     /**
      * @var ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
-
     /**
      * @var ParentTrackerRetriever
      */
     private $parent_tracker_retriever;
+    /**
+     * @var \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+     */
+    private $sub_milestone_finder;
+    /**
+     * @var \PlanningFactory
+     */
+    private $planning_factory;
 
     public function __construct(
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        EventManager $event_manager,
+        \Planning_MilestoneFactory $milestone_factory,
+        \AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        \EventManager $event_manager,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ParentTrackerRetriever $parent_tracker_retriever
+        ParentTrackerRetriever $parent_tracker_retriever,
+        \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,
+        \PlanningFactory $planning_factory
     ) {
-        $this->milestone_factory            = $milestone_factory;
-        $this->backlog_factory              = $backlog_factory;
-        $this->event_manager                = $event_manager;
+        $this->milestone_factory = $milestone_factory;
+        $this->backlog_factory = $backlog_factory;
+        $this->event_manager = $event_manager;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->parent_tracker_retriever     = $parent_tracker_retriever;
+        $this->parent_tracker_retriever = $parent_tracker_retriever;
+        $this->sub_milestone_finder = $sub_milestone_finder;
+        $this->planning_factory = $planning_factory;
     }
 
-    public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type)
-    {
+    public function getMilestoneRepresentation(
+        \Planning_Milestone $milestone,
+        \PFUser $user,
+        string $representation_type
+    ): MilestoneRepresentation {
         $status_count = [];
         if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
@@ -79,7 +99,9 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             null,
             $user,
         );
-        EventManager::instance()->processEvent($pane_info_collector);
+        $this->event_manager->processEvent($pane_info_collector);
+
+        $submilestone_tracker = $this->sub_milestone_finder->findFirstSubmilestoneTracker($milestone);
 
         $milestone_representation = MilestoneRepresentation::build(
             $milestone,
@@ -88,8 +110,9 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $backlog_trackers),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
             $representation_type,
-            $is_scrum_mono_milestone_enabled,
-            $pane_info_collector
+            $this->getSubPlanning($milestone, $is_scrum_mono_milestone_enabled),
+            $pane_info_collector,
+            $submilestone_tracker
         );
 
         $milestone_representation_reference_holder = new class
@@ -115,36 +138,40 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
     }
 
     public function getPaginatedSubMilestonesRepresentations(
-        Planning_Milestone $milestone,
-        PFUser $user,
-        $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
+        \Planning_Milestone $milestone,
+        \PFUser $user,
+        string $representation_type,
+        ISearchOnStatus $criterion,
+        int $limit,
+        int $offset,
+        string $order
+    ): PaginatedMilestonesRepresentations {
         $sub_milestones = $this->milestone_factory
             ->getPaginatedSubMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = [];
         foreach ($sub_milestones->getMilestones() as $submilestone) {
-            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
+            $submilestones_representations[] = $this->getMilestoneRepresentation(
+                $submilestone,
+                $user,
+                $representation_type
+            );
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
+        return new PaginatedMilestonesRepresentations(
             $submilestones_representations,
             $sub_milestones->getTotalSize()
         );
     }
 
     public function getPaginatedSiblingMilestonesRepresentations(
-        Planning_Milestone $milestone,
-        PFUser $user,
-        $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset
-    ) {
+        \Planning_Milestone $milestone,
+        \PFUser $user,
+        string $representation_type,
+        ISearchOnStatus $criterion,
+        int $limit,
+        int $offset
+    ): PaginatedMilestonesRepresentations {
         $siblings = $this->milestone_factory
             ->getPaginatedSiblingMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset);
 
@@ -157,37 +184,38 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             );
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
+        return new PaginatedMilestonesRepresentations(
             $sibling_representations,
             $siblings->getTotalSize()
         );
     }
 
-    public function getPaginatedTopMilestonesRepresentations(
-        Project $project,
-        PFUser $user,
-        $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
-        $sub_milestones = $this->milestone_factory
-            ->getPaginatedTopMilestonesWithStatusCriterion($user, $project, $criterion, $limit, $offset, $order);
-
-        $submilestones_representations = [];
-        foreach ($sub_milestones->getMilestones() as $submilestone) {
-            $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
+    public function buildRepresentationsFromCollection(
+        PaginatedMilestones $collection,
+        \PFUser $user,
+        string $representation_type
+    ): PaginatedMilestonesRepresentations {
+        $representations = [];
+        foreach ($collection->getMilestones() as $milestone) {
+            $representations[] = $this->getMilestoneRepresentation($milestone, $user, $representation_type);
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestonesRepresentations(
-            $submilestones_representations,
-            $sub_milestones->getTotalSize()
-        );
+        return new PaginatedMilestonesRepresentations($representations, $collection->getTotalSize());
     }
 
-    private function getBacklogTrackers(Planning_Milestone $milestone)
+    /**
+     * @return \Tracker[]
+     */
+    private function getBacklogTrackers(\Planning_Milestone $milestone): array
     {
         return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
+    }
+
+    private function getSubPlanning(\Planning_Milestone $milestone, bool $is_mono_milestone_enabled): ?\Planning
+    {
+        if ($is_mono_milestone_enabled) {
+            return $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
+        }
+        return $this->planning_factory->getPlanning($milestone->getPlanning()->getId());
     }
 }

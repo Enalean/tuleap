@@ -21,12 +21,12 @@
 namespace unit\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
+use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
-use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
-use PHPUnit\Framework\TestCase;
+use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
+use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 
 class QueryToCriterionOnlyAllStatusConverterTest extends TestCase
 {

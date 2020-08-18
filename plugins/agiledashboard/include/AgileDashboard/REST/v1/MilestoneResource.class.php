@@ -26,7 +26,6 @@ use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_MilestoneDao;
-use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use BacklogItemReference;
 use EventManager;
@@ -48,15 +47,17 @@ use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
+use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
@@ -73,7 +74,6 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
-use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
 
 /**
  * Wrapper for milestone related REST methods
@@ -110,7 +110,7 @@ class MilestoneResource extends AuthenticatedResource
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
-    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
+    /** @var \Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder */
     private $milestone_representation_builder;
 
     /** @var QueryToCriterionStatusConverter */
@@ -212,12 +212,20 @@ class MilestoneResource extends AuthenticatedResource
 
         $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
 
-        $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+        $sub_milestone_finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+            \Tracker_HierarchyFactory::instance(),
+            $planning_factory,
+            $scrum_for_mono_milestone_checker
+        );
+
+        $this->milestone_representation_builder = new MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $this->backlog_factory,
             $this->event_manager,
             $scrum_for_mono_milestone_checker,
-            $parent_tracker_retriever
+            $parent_tracker_retriever,
+            $sub_milestone_finder,
+            $planning_factory
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();

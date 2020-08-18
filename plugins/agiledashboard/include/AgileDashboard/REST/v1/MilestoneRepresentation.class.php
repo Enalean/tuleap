@@ -21,10 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_MilestonesCardwallRepresentation;
 use Planning_Milestone;
-use PlanningFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -255,8 +252,9 @@ class MilestoneRepresentation
         array $parent_trackers,
         $has_user_priority_change_permission,
         $representation_type,
-        $is_mono_milestone_enabled,
-        PaneInfoCollector $pane_info_collector
+        ?\Planning $sub_planning,
+        PaneInfoCollector $pane_info_collector,
+        ?\Tracker $sub_milestone_tracker
     ): self {
         $artifact_id = $milestone->getArtifactId();
         $uri         = self::ROUTE . '/' . $artifact_id;
@@ -292,16 +290,9 @@ class MilestoneRepresentation
             $status_count_ref = $status_count;
         }
 
-        $finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
-            \Tracker_HierarchyFactory::instance(),
-            PlanningFactory::build(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
-        );
-        $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
-
         $submilestone_trackers = [];
-        if ($submilestone_tracker) {
-            $submilestone_tracker_ref = TrackerReference::build($finder->findFirstSubmilestoneTracker($milestone));
+        if ($sub_milestone_tracker) {
+            $submilestone_tracker_ref = TrackerReference::build($sub_milestone_tracker);
             $submilestone_trackers = [$submilestone_tracker_ref];
         }
 
@@ -349,7 +340,7 @@ class MilestoneRepresentation
             JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn()),
             JsonCast::toFloat($milestone->getCapacity()),
             JsonCast::toFloat($milestone->getRemainingEffort()),
-            self::getSubmilestoneType($milestone, $is_mono_milestone_enabled),
+            self::getSubmilestoneType($sub_planning),
             new PlanningReference($milestone->getPlanning()),
             new ProjectReference($milestone->getProject()),
             ArtifactReference::build($milestone->getArtifact()),
@@ -408,15 +399,9 @@ class MilestoneRepresentation
         return $trackers_representation;
     }
 
-    private static function getSubmilestoneType(Planning_Milestone $milestone, $is_mono_milestone_enabled)
+    private static function getSubmilestoneType(?\Planning $planning): ?TrackerReference
     {
         $submilestone_type = null;
-
-        if ($is_mono_milestone_enabled === true) {
-            $planning = self::getPlanning($milestone);
-        } else {
-            $planning = self::getChildrenPlanning($milestone);
-        }
 
         if ($planning) {
             $tracker_reference = TrackerReference::build($planning->getPlanningTracker());
@@ -425,15 +410,5 @@ class MilestoneRepresentation
         }
 
         return $submilestone_type;
-    }
-
-    private static function getChildrenPlanning(Planning_Milestone $milestone)
-    {
-        return PlanningFactory::build()->getChildrenPlanning($milestone->getPlanning());
-    }
-
-    private static function getPlanning(Planning_Milestone $milestone)
-    {
-        return PlanningFactory::build()->getPlanning($milestone->getPlanning()->getId());
     }
 }

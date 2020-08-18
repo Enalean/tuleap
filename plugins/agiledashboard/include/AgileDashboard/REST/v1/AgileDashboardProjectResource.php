@@ -22,10 +22,22 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequestRefiner;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Milestone\ProjectMilestonesResource;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 
 final class AgileDashboardProjectResource extends AuthenticatedResource
@@ -109,7 +121,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
         $this->checkAccess();
 
         $this->sendAllowHeadersForMilestones();
-        $project_milestone_resources = new ProjectMilestonesResource();
+        $project_milestone_resources = $this->getProjectMilestonesResource();
         try {
             $milestones = $project_milestone_resources->get(
                 \UserManager::instance()->getCurrentUser(),
@@ -307,5 +319,71 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
 
         return $project;
+    }
+
+    private function getProjectMilestonesResource(): ProjectMilestonesResource
+    {
+        $tracker_form_element_factory = \Tracker_FormElementFactory::instance();
+        $planning_factory             = \PlanningFactory::build();
+        $tracker_artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $status_counter               = new \AgileDashboard_Milestone_MilestoneStatusCounter(
+            new \AgileDashboard_BacklogItemDao(),
+            new \Tracker_ArtifactDao(),
+            $tracker_artifact_factory
+        );
+        $scrum_for_mono_milestone_dao = new ScrumForMonoMilestoneDao();
+
+        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
+            $scrum_for_mono_milestone_dao,
+            $planning_factory
+        );
+
+        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
+            new MonoMilestoneBacklogItemDao(),
+            $tracker_artifact_factory
+        );
+
+        $milestone_factory = new \Planning_MilestoneFactory(
+            $planning_factory,
+            $tracker_artifact_factory,
+            $tracker_form_element_factory,
+            $status_counter,
+            new \PlanningPermissionsManager(),
+            new \AgileDashboard_Milestone_MilestoneDao(),
+            $scrum_mono_milestone_checker,
+            new TimeframeBuilder(
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory),
+                \BackendLogger::getDefaultLogger()
+            ),
+            new MilestoneBurndownFieldChecker($tracker_form_element_factory)
+        );
+
+        $backlog_factory = new \AgileDashboard_Milestone_Backlog_BacklogFactory(
+            new \AgileDashboard_BacklogItemDao(),
+            $tracker_artifact_factory,
+            $planning_factory,
+            $scrum_mono_milestone_checker,
+            $mono_milestone_items_finder
+        );
+
+        $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
+
+        $sub_milestone_finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+            \Tracker_HierarchyFactory::instance(),
+            $planning_factory,
+            $scrum_mono_milestone_checker
+        );
+
+        $milestone_representation_builder = new MilestoneRepresentationBuilder(
+            $milestone_factory,
+            $backlog_factory,
+            \EventManager::instance(),
+            $scrum_mono_milestone_checker,
+            $parent_tracker_retriever,
+            $sub_milestone_finder,
+            $planning_factory
+        );
+        $request_refiner = new TopMilestoneRequestRefiner();
+        return new ProjectMilestonesResource($request_refiner, $milestone_factory, $milestone_representation_builder);
     }
 }
