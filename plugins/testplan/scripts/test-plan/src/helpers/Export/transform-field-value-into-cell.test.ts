@@ -18,7 +18,7 @@
  */
 
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
-import { EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
 import { TrackerFieldValue } from "./artifact";
 
 describe("transform-field-value-into-cell", () => {
@@ -89,6 +89,33 @@ describe("transform-field-value-into-cell", () => {
                 manual_value: 14.14,
             } as TrackerFieldValue,
             new NumberCell(14.14),
+        ],
+        [
+            "date field with null value",
+            {
+                label: "Date null value",
+                type: "date",
+                value: null,
+            } as TrackerFieldValue,
+            null,
+        ],
+        [
+            "submitted on value",
+            {
+                label: "Submitted on",
+                type: "subon",
+                value: "2020-08-18T10:40:03+01:00",
+            } as TrackerFieldValue,
+            new DateCell(new Date("2020-08-18T10:40:03+01:00")),
+        ],
+        [
+            "last updated on value",
+            {
+                label: "Last updated on",
+                type: "lud",
+                value: "2020-08-18T10:40:03+01:00",
+            } as TrackerFieldValue,
+            new DateCell(new Date("2020-08-18T10:40:03+01:00")),
         ],
         [
             "unknown field value",

@@ -33,6 +33,9 @@ const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set([
     "computed",
     "string",
     "text",
+    "date",
+    "subon",
+    "lud",
 ]);
 
 export interface RequirementsSection {
@@ -149,9 +152,7 @@ function getExtraCells(
 ): Map<string, ReportCell> {
     const extra_cells: Map<string, ReportCell> = new Map();
 
-    for (const field_name in requirement.values_by_field) {
-        const field_value = requirement.values_by_field[field_name];
-
+    for (const field_value of requirement.values) {
         if (
             !SUPPORTED_EXTRA_FIELD_TYPES.has(field_value.type) ||
             !extra_fields.labels.has(field_value.label) ||

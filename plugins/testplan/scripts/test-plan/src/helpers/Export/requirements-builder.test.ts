@@ -18,7 +18,7 @@
  */
 
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
-import { EmptyCell, NumberCell, TextCell } from "./report-cells";
+import { DateCell, EmptyCell, NumberCell, TextCell } from "./report-cells";
 import { BacklogItem, TestDefinition } from "../../type";
 import { buildRequirementsSection } from "./requirements-builder";
 import { Tracker } from "./tracker";
@@ -90,13 +90,16 @@ describe("Build requirements section", () => {
                     label: "Text",
                     type: "text",
                     format: "text",
-                    value: "Some text",
                 },
                 {
                     field_id: 691,
                     label: "title",
                     type: "string",
-                    value: "Some string",
+                },
+                {
+                    field_id: 791,
+                    label: "some_date",
+                    type: "date",
                 },
             ],
             semantics: {
@@ -122,45 +125,58 @@ describe("Build requirements section", () => {
                     1,
                     {
                         id: 1,
-                        values_by_field: {
-                            int: {
+                        values: [
+                            {
                                 field_id: 191,
                                 label: "MyNumber",
                                 type: "int",
                                 value: 12,
                             },
-                            computed: {
+                            {
                                 field_id: 291,
                                 label: "Computed",
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: null,
                             },
-                            float: {
+                            {
                                 field_id: 391,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 13,
                             },
-                            aid: {
+                            {
                                 field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
                             } as TrackerFieldValue,
-                            text: {
+                            {
                                 field_id: 591,
                                 label: "Text",
                                 type: "text",
                                 format: "text",
                                 value: "Text 1",
                             },
-                            title: {
+                            {
                                 field_id: 691,
                                 label: "title",
                                 type: "string",
                                 value: "Label 1",
                             },
-                        },
+                            {
+                                field_id: 691,
+                                label: "title",
+                                type: "string",
+                                value: "Label 1",
+                            },
+                            {
+                                field_id: 791,
+                                label: "some_date",
+                                type: "date",
+                                value: "2020-08-01T00:00:00+01:00",
+                            },
+                        ],
+                        values_by_field: {},
                         tracker: story_tracker,
                     } as Artifact,
                 ],
@@ -168,45 +184,52 @@ describe("Build requirements section", () => {
                     2,
                     {
                         id: 2,
-                        values_by_field: {
-                            int: {
+                        values: [
+                            {
                                 field_id: 191,
                                 label: "MyNumber",
                                 type: "int",
                                 value: 22,
                             },
-                            computed: {
+                            {
                                 field_id: 291,
                                 label: "Computed",
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: 24,
                             },
-                            float: {
+                            {
                                 field_id: 391,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 23,
                             },
-                            aid: {
+                            {
                                 field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
                             } as TrackerFieldValue,
-                            text: {
+                            {
                                 field_id: 591,
                                 label: "Text",
                                 type: "text",
                                 format: "text",
                                 value: "Text 2",
                             },
-                            title: {
+                            {
                                 field_id: 691,
                                 label: "title",
                                 type: "string",
                                 value: "Label 2",
                             },
-                        },
+                            {
+                                field_id: 791,
+                                label: "some_date",
+                                type: "date",
+                                value: null,
+                            },
+                        ],
+                        values_by_field: {},
                         tracker: story_tracker,
                     },
                 ],
@@ -214,14 +237,15 @@ describe("Build requirements section", () => {
                     3,
                     {
                         id: 3,
-                        values_by_field: {
-                            somefloat: {
+                        values: [
+                            {
                                 field_id: 792,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 33.33,
                             },
-                        },
+                        ],
+                        values_by_field: {},
                         tracker: bug_tracker,
                     },
                 ],
@@ -229,14 +253,15 @@ describe("Build requirements section", () => {
                     4,
                     {
                         id: 4,
-                        values_by_field: {
-                            somefloat: {
+                        values: [
+                            {
                                 field_id: 792,
                                 label: "MyNumber",
                                 type: "float",
                                 value: 44.44,
                             },
-                        },
+                        ],
+                        values_by_field: {},
                         tracker: bug_tracker,
                     },
                 ],
@@ -258,6 +283,7 @@ describe("Build requirements section", () => {
                 new TextCell("Tests status"),
                 new TextCell("Computed"),
                 new TextCell("MyNumber"),
+                new TextCell("some_date"),
                 new TextCell("Text"),
             ],
             rows: [
@@ -270,6 +296,7 @@ describe("Build requirements section", () => {
                     new NumberCell(12).withComment(
                         "This requirement have multiple fields with this label, only one value is visible"
                     ),
+                    new DateCell(new Date("2020-08-01T00:00:00+01:00")),
                     new TextCell("Text 1"),
                 ],
                 [
@@ -281,6 +308,7 @@ describe("Build requirements section", () => {
                     new NumberCell(22).withComment(
                         "This requirement have multiple fields with this label, only one value is visible"
                     ),
+                    new EmptyCell(),
                     new TextCell("Text 2"),
                 ],
                 [
@@ -291,6 +319,7 @@ describe("Build requirements section", () => {
                     new EmptyCell(),
                     new NumberCell(33.33),
                     new EmptyCell(),
+                    new EmptyCell(),
                 ],
                 [
                     new TextCell("bug"),
@@ -299,6 +328,7 @@ describe("Build requirements section", () => {
                     new TextCell("Not run"),
                     new EmptyCell(),
                     new NumberCell(44.44),
+                    new EmptyCell(),
                     new EmptyCell(),
                 ],
                 [new TextCell("bug"), new TextCell("5"), new TextCell("Label 5"), new TextCell("")],

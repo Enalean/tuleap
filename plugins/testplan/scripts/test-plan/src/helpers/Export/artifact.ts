@@ -52,6 +52,21 @@ interface ComputedValueWithManualValueField extends BaseTrackerFieldValue {
     manual_value: null | number;
 }
 
+interface SubmittedOnValueField extends BaseTrackerFieldValue {
+    type: "subon";
+    value: string;
+}
+
+interface LastUpdateOnValueField extends BaseTrackerFieldValue {
+    type: "lud";
+    value: string;
+}
+
+interface DateValueField extends BaseTrackerFieldValue {
+    type: "date";
+    value: string | null;
+}
+
 interface OtherNonSupportedFieldValue extends BaseTrackerFieldValue {
     type: never;
 }
@@ -62,10 +77,14 @@ export type TrackerFieldValue =
     | NumberValueField
     | ComputedValueWithAutomaticValueField
     | ComputedValueWithManualValueField
+    | SubmittedOnValueField
+    | LastUpdateOnValueField
+    | DateValueField
     | OtherNonSupportedFieldValue;
 
 export interface Artifact {
     id: number;
+    values: TrackerFieldValue[];
     values_by_field: {
         [field_name: string]: TrackerFieldValue;
     };

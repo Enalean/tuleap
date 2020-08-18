@@ -78,6 +78,7 @@ describe("Build justifications section", () => {
                                 label: "Results",
                             },
                         },
+                        values: [],
                         tracker: {
                             id: 12,
                         },
@@ -96,6 +97,7 @@ describe("Build justifications section", () => {
                                 label: "Results",
                             },
                         },
+                        values: [],
                         tracker: {
                             id: 12,
                         },
@@ -194,7 +196,7 @@ describe("Build justifications section", () => {
         ];
 
         jest.spyOn(artifacts_retriever, "retrieveArtifacts").mockResolvedValue(
-            new Map([[99995, { id: 99995, values_by_field: {}, tracker: { id: 12 } }]])
+            new Map([[99995, { id: 99995, values_by_field: {}, values: [], tracker: { id: 12 } }]])
         );
 
         const section = await buildJustificationsSection(gettext_provider, planned_test_cases);
