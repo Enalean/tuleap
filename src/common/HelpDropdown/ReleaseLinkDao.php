@@ -34,7 +34,7 @@ class ReleaseLinkDao extends DataAccessObject
 
     public function updateTuleapVersion(string $tuleap_version): void
     {
-        $sql = "UPDATE release_note_link SET tuleap_version = ?";
+        $sql = "UPDATE release_note_link SET actual_link = null, tuleap_version = ?";
 
         $this->getDB()->run($sql, $tuleap_version);
     }
