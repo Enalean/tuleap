@@ -143,7 +143,7 @@ class MilestoneCrumbBuilder
             new SubItemsSection(
                 sprintf(
                     dngettext('tuleap-agiledashboard', 'Other %s', 'Other %s', count($links)),
-                    $milestone->getArtifact()->getTracker()->getName()
+                    $milestone->getArtifact()->getTracker()->getItemName()
                 ),
                 new BreadCrumbLinkCollection($links)
             )

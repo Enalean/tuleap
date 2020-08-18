@@ -35,13 +35,13 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
     {
         $bug_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
-                'getName' => 'Bugs',
+                'getItemName' => 'bug',
                 'getSubmitUrl' => '/path/to/submit/bugs'
             ])
             ->getMock();
         $story_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
-                'getName' => 'Story',
+                'getItemName' => 'story',
                 'getSubmitUrl' => '/path/to/submit/story'
             ])
             ->getMock();

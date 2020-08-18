@@ -49,7 +49,7 @@ class TrackerLinksInNewDropdownCollector
                     $tracker->getSubmitUrl(),
                     sprintf(
                         dgettext('tuleap-tracker', 'New %s'),
-                        $tracker->getName()
+                        $tracker->getItemName()
                     ),
                     'fa-plus'
                 )
