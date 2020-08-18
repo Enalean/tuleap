@@ -59,12 +59,12 @@ use UserManager;
 class Home implements DispatchableWithRequest
 {
     /**
-     * @param array $args
+     * @param array $variables
      * @throws NotFoundException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $args)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = ProjectManager::instance()->getProjectFromAutocompleter($args['name']);
+        $project = ProjectManager::instance()->getProjectFromAutocompleter($variables['name']);
         if ($project && ! $project->isError()) {
             $group_id = $project->getId();
 

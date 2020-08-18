@@ -267,15 +267,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Get the field data (REST or CSV) for artifact submission
      *
-     * @param string           $string_value The rest field value
+     * @param string           $value The rest field value
      * @param Tracker_Artifact $artifact     The artifact the value is to be added/removed
      *
      * @return array
      */
-    public function getFieldData($string_value, ?Tracker_Artifact $artifact = null)
+    public function getFieldData($value, ?Tracker_Artifact $artifact = null)
     {
-        $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($string_value);
-        return $this->getDataLikeWebUI($submitted_ids, [$string_value], $artifact);
+        $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($value);
+        return $this->getDataLikeWebUI($submitted_ids, [$value], $artifact);
     }
 
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
@@ -1462,14 +1462,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * Validate a required field
      *
      * @param Tracker_Artifact                $artifact             The artifact to check
-     * @param mixed                           $value      The submitted value
+     * @param mixed                           $submitted_value      The submitted value
      *
      * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value)
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value)
     {
-        if ((! is_array($value) || empty($value['new_values'])) && $this->isRequired()) {
-            if (! $this->isEmpty($value, $artifact)) {
+        if ((! is_array($submitted_value) || empty($value['new_values'])) && $this->isRequired()) {
+            if (! $this->isEmpty($submitted_value, $artifact)) {
                 // Field is required but there are values, so field is valid
                 $this->has_errors = false;
             } else {

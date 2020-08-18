@@ -186,7 +186,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
     {
     }
 
@@ -339,7 +339,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $id_mapping
+        CreatedFileURLMapping $url_mapping
     ) {
         return false;
     }

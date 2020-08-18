@@ -95,7 +95,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         $this->tracker_manager         = $tracker_manager;
     }
 
-    public function process(\HTTPRequest $request, BaseLayout $response, array $variables)
+    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
         if (
@@ -107,7 +107,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         switch ($request->get('func')) {
             case 'edit-global-admin':
                 $this->updateGlobalAdministration($project);
-                $response->redirect(self::getTrackerGlobalAdministrationURL($project));
+                $layout->redirect(self::getTrackerGlobalAdministrationURL($project));
                 break;
             case 'use-artifact-link-type':
                 $type_shortname = $request->get('type-shortname');
@@ -116,7 +116,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
                 break;
             case 'global-admin':
             default:
-                $this->displayGlobalAdministration($project, $response);
+                $this->displayGlobalAdministration($project, $layout);
                 break;
         }
     }

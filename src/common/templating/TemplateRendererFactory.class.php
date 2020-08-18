@@ -28,7 +28,7 @@ class TemplateRendererFactory
      */
     private $template_cache;
 
-    public function __construct(TemplateCacheInterface $template_cache)
+    final public function __construct(TemplateCacheInterface $template_cache)
     {
         $this->template_cache = $template_cache;
     }

@@ -274,20 +274,20 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
      * Export semantic to XML
      *
      * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     * @param array            $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
-        if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
+        if ($this->getFieldId() && in_array($this->getFieldId(), $xml_mapping)) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
             $cdata = new XML_SimpleXMLCDATAFactory();
             $cdata->insert($child, 'shortname', $this->getShortName());
             $cdata->insert($child, 'label', $this->getLabel());
             $cdata->insert($child, 'description', $this->getDescription());
-            $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+            $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xml_mapping));
         }
     }
 

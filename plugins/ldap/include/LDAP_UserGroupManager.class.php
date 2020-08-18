@@ -80,27 +80,27 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Add user to a user group
      *
-     * @param int $ugroupId Codendi Group ID
+     * @param int $id Codendi Group ID
      * @param int $userId User ID
      *
      * @return bool
      */
-    protected function addUserToGroup($ugroupId, $userId)
+    protected function addUserToGroup($id, $userId)
     {
-        return $this->getDao()->addUserToGroup($ugroupId, $userId);
+        return $this->getDao()->addUserToGroup($id, $userId);
     }
 
     /**
      * Remove user from a user group
      *
-     * @param int $ugroupId Codendi Group ID
+     * @param int $id Codendi Group ID
      * @param int $userId User ID
      *
      * @return bool
      */
-    protected function removeUserFromGroup($ugroupId, $userId)
+    protected function removeUserFromGroup($id, $userId)
     {
-        return $this->getDao()->removeUserFromGroup($ugroupId, $userId);
+        return $this->getDao()->removeUserFromGroup($id, $userId);
     }
 
     /**

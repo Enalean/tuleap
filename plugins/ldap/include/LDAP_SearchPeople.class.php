@@ -33,7 +33,7 @@ class LDAP_SearchPeople extends Search_SearchPeople
         $this->ldap    = $ldap;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $result)
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
     {
         $limit = $query->getNumberOfResults();
 
@@ -44,7 +44,7 @@ class LDAP_SearchPeople extends Search_SearchPeople
         }
 
         $has_more = count($users) == $limit ? true : false;
-        $result->setHasMore($has_more);
+        $search_results->setHasMore($has_more);
 
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($users, $query->getWords()),

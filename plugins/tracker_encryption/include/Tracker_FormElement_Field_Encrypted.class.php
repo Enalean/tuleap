@@ -118,7 +118,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $id_mapping
+        CreatedFileURLMapping $url_mapping
     ) {
         if ($value != "") {
             $dao_pub_key        = new TrackerPublicKeyDao();

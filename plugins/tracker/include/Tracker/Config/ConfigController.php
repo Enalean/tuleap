@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 — 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,58 +69,58 @@ class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWi
         $this->deletion_controller      = $deletion_controller;
     }
 
-    public function process(\HTTPRequest $request, BaseLayout $response, array $variables)
+    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
-        $this->checkUserIsSiteadmin($user, $response);
+        $this->checkUserIsSiteadmin($user, $layout);
 
         switch ($request->get('action')) {
             case 'create-nature':
                 $this->csrf->check();
-                $this->nature_controller->createNature($request, $response);
+                $this->nature_controller->createNature($request, $layout);
                 break;
             case 'edit-nature':
                 $this->csrf->check();
-                $this->nature_controller->editNature($request, $response);
+                $this->nature_controller->editNature($request, $layout);
                 break;
             case 'delete-nature':
                 $this->csrf->check();
-                $this->nature_controller->deleteNature($request, $response);
+                $this->nature_controller->deleteNature($request, $layout);
                 break;
             case 'restrict-natures':
                 $this->csrf->check();
                 if ($request->exist('allow-project')) {
-                    $this->nature_controller->allowProject($request, $response);
+                    $this->nature_controller->allowProject($request, $layout);
                 } elseif ($request->exist('revoke-project')) {
-                    $this->nature_controller->revokeProject($request, $response);
+                    $this->nature_controller->revokeProject($request, $layout);
                 } else {
-                    $this->nature_controller->index($this->csrf, $response);
+                    $this->nature_controller->index($this->csrf, $layout);
                 }
                 break;
             case 'natures':
-                $this->nature_controller->index($this->csrf, $response);
+                $this->nature_controller->index($this->csrf, $layout);
                 break;
             case 'update-emailgateway':
                 $this->csrf->check();
-                $this->mailgateway_controller->update($request, $response);
+                $this->mailgateway_controller->update($request, $layout);
                 break;
             case 'report-config':
                 $this->report_config_controller->display($this->csrf);
                 break;
             case 'update-report-config':
                 $this->csrf->check();
-                $this->report_config_controller->update($request, $response);
+                $this->report_config_controller->update($request, $layout);
                 break;
             case 'artifacts-deletion':
                 $this->deletion_controller->index($this->csrf);
                 break;
             case 'artifacts-deletion-update-limit':
                 $this->csrf->check();
-                $this->deletion_controller->update($request, $response);
+                $this->deletion_controller->update($request, $layout);
                 break;
             case 'emailgateway':
             default:
-                $this->mailgateway_controller->index($this->csrf, $response);
+                $this->mailgateway_controller->index($this->csrf, $layout);
         }
     }
 

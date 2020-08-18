@@ -26,9 +26,9 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
         $this->table_name = 'tracker_report_criteria_list_value';
     }
 
-    public function save($id, $values)
+    public function save($id, $value)
     {
-        if (is_array($values)) {
+        if (is_array($value)) {
             $id = $this->da->escapeInt($id);
             //First clear the list
             $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
@@ -36,8 +36,8 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
 
             //Then fill it with new values
             $new_values = [];
-            if (is_array($values)) {
-                foreach ($values as $val) {
+            if (is_array($value)) {
+                foreach ($value as $val) {
                     if ($v = $this->da->escapeInt($val)) {
                         $new_values[] = "($id, $v)";
                     }

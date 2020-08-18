@@ -106,7 +106,7 @@ class ProjectCrossTrackerSearch extends Widget
         Project $template_project,
         Project $new_project,
         $id,
-        $new_project_id,
+        $owner_id,
         $owner_type
     ) {
         $content_id      = $this->getDao()->create();
@@ -119,7 +119,7 @@ class ProjectCrossTrackerSearch extends Widget
             if ($this->owner_id == $tracker->getGroupId()) {
                 $trackers_new_widget[] = $tracker_factory->getTrackerByShortnameAndProjectId(
                     $tracker->getItemName(),
-                    $new_project_id
+                    $owner_id
                 );
             } else {
                 $trackers_new_widget[] = $tracker;

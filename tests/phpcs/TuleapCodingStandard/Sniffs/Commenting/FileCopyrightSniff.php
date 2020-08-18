@@ -32,44 +32,44 @@ final class FileCopyrightSniff implements Sniff
         return [T_OPEN_TAG];
     }
 
-    public function process(File $file, $stack_pointer)
+    public function process(File $phpcsFile, $stackPtr)
     {
-        $first_non_whitespace_instruction_pos = $file->findNext(T_WHITESPACE, $stack_pointer + 1, null, true);
+        $first_non_whitespace_instruction_pos = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
 
         if (! is_int($first_non_whitespace_instruction_pos)) {
-            $this->addErrorMissingCopyright($file, $stack_pointer);
-            return $file->numTokens + 1;
+            $this->addErrorMissingCopyright($phpcsFile, $stackPtr);
+            return $phpcsFile->numTokens + 1;
         }
 
-        $tokens = $file->getTokens();
+        $tokens = $phpcsFile->getTokens();
 
         $first_non_whitespace_instruction      = $tokens[$first_non_whitespace_instruction_pos];
         $first_non_whitespace_instruction_code = $first_non_whitespace_instruction['code'];
         /** @psalm-suppress UndefinedConstant T_DOC_COMMENT_OPEN_TAG is created when the Tokens class is autoloaded, Psalm cannot know about it */
         if ($first_non_whitespace_instruction_code !== T_COMMENT && $first_non_whitespace_instruction_code !== T_DOC_COMMENT_OPEN_TAG) {
-            $this->addErrorMissingCopyright($file, $first_non_whitespace_instruction_pos);
-            return $file->numTokens + 1;
+            $this->addErrorMissingCopyright($phpcsFile, $first_non_whitespace_instruction_pos);
+            return $phpcsFile->numTokens + 1;
         }
 
         $first_non_whitespace_instruction_line = $tokens[$first_non_whitespace_instruction_pos]['line'];
-        $open_tag_line                         = $tokens[$stack_pointer]['line'];
+        $open_tag_line                         = $tokens[$stackPtr]['line'];
 
         if (
-            $first_non_whitespace_instruction_pos === ($stack_pointer + 1) &&
+            $first_non_whitespace_instruction_pos === ($stackPtr + 1) &&
             ($open_tag_line + 1) === $first_non_whitespace_instruction_line
         ) {
-            return $file->numTokens + 1;
+            return $phpcsFile->numTokens + 1;
         }
 
-        $nb_empty_lines = $first_non_whitespace_instruction_pos - $stack_pointer - 1;
+        $nb_empty_lines = $first_non_whitespace_instruction_pos - $stackPtr - 1;
         if ($nb_empty_lines > 0) {
-            $fix = $file->addFixableError(
+            $fix = $phpcsFile->addFixableError(
                 sprintf('Copyright block must be at the very beginning of the file, found %d empty lines', $nb_empty_lines),
                 $first_non_whitespace_instruction_pos,
                 'EmptyLinesBeforeCopyright'
             );
         } else {
-            $fix = $file->addFixableError(
+            $fix = $phpcsFile->addFixableError(
                 'Copyright block must not be on the same line than the PHP open tag',
                 $first_non_whitespace_instruction_pos,
                 'NoNewLineBetweenOpenTagAndCopyright'
@@ -77,18 +77,18 @@ final class FileCopyrightSniff implements Sniff
         }
 
         if (! $fix) {
-            return $file->numTokens + 1;
+            return $phpcsFile->numTokens + 1;
         }
 
-        $fixer = $file->fixer;
+        $fixer = $phpcsFile->fixer;
         $fixer->beginChangeset();
-        $fixer->replaceToken($stack_pointer, "<?php\n");
-        for ($i = $stack_pointer + 1; $i < $first_non_whitespace_instruction_pos; $i++) {
+        $fixer->replaceToken($stackPtr, "<?php\n");
+        for ($i = $stackPtr + 1; $i < $first_non_whitespace_instruction_pos; $i++) {
             $fixer->replaceToken($i, '');
         }
         $fixer->endChangeset();
 
-        return $file->numTokens + 1;
+        return $phpcsFile->numTokens + 1;
     }
 
     private function addErrorMissingCopyright(File $file, int $pointer): void
