@@ -7,7 +7,6 @@
     },
     "require": {
         "ext-gettext": "*",
-        "nikic/php-parser": "4.6.*",
         "php-di/php-di": "^6.0"
     },
     "config": {
