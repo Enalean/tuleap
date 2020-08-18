@@ -2,13 +2,8 @@
 
 set -ex
 
-generate_testsuite() {
-    "$PHP_CLI" /usr/share/tuleap/tests/soap/bin/generate-testsuite.php /tmp /output
-}
-
 run_testsuite() {
-    "$PHP_CLI" /usr/share/tuleap/src/vendor/bin/phpunit --do-not-cache-result --configuration /tmp/suite.xml
+    "$PHP_CLI" /usr/share/tuleap/src/vendor/bin/phpunit --do-not-cache-result --configuration /usr/share/tuleap/tests/soap/phpunit.xml  --log-junit /output/soap_tests.xml
 }
 
-generate_testsuite
 run_testsuite

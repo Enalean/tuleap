@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0"?>
 <phpunit bootstrap="bootstrap.php"
          verbose="true"
          colors="true"
@@ -22,51 +22,51 @@
         <extension class="\Tuleap\Test\PHPUnit\NoMockeryMockInDataProviderExtension"/>
         <extension class="\Tuleap\Test\PHPUnit\XMLEntityLoadingNotRestoredToDisabledState"/>
     </extensions>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">../../src/common/</directory>
             <directory suffix=".php">../../src/core/</directory>
             <directory suffix=".php">../../src/tuleap-cfg/</directory>
             <directory suffix=".php">../../plugins/*/include/</directory>
             <directory suffix=".php">../../tests/lib/</directory>
             <directory suffix=".php">../../tests/phpcs/TuleapCodingStandard/</directory>
-            <exclude>
-                <directory suffix="DAO.php">../../</directory>
-                <directory suffix="Dao.php">../../</directory>
-                <directory suffix=".php">../../src/common/wiki/</directory>
-                <directory suffix=".php">../../src/common/chart/</directory>
-                <file>../../src/common/admin/Homepage/Controller.php</file>
-                <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
-                <file>../../plugins/docman/include/soap.php</file>
-                <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php</file> <!-- To investigate -->
-                <file>../../plugins/ldap/include/LDAP_SearchPeople.class.php</file>
-                <file>../../plugins/mediawiki/include/MediawikiInstantiater.class.php</file>
-                <file>../../plugins/mediawiki/include/mediawiki-init.php</file>
-                <file>../../plugins/git/include/Git/Statistics/FrequenciesSample.php</file> <!-- To investigate -->
-                <file>../../plugins/git/include/GitXmlImporter.class.php</file>
-                <file>../../plugins/statistics/include/DiskUsageProjectsSearchFieldsPresenter.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/CartifactSample.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FiledSample.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FilerSample.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ForumSample.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/OartifactSample.php</file> <!-- To investigate -->
-                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ProjectSample.php</file> <!-- To investigate -->
-                <file>../../plugins/webdav/include/BrowserPlugin.class.php</file>
-                <directory suffix=".php">../../plugins/webdav/include/FS/</directory>
-                <file>../../plugins/webdav/include/WebDAVTree.class.php</file>
-                <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
-                <file>../../tests/lib/TuleapDbTestCase.class.php</file>
-                <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
-                <file>../../src/core/contact.php</file>
-                <file>../../src/core/goto.php</file>
-                <file>../../src/core/info.php</file>
-                <file>../../src/core/make_links.php</file>
-                <file>../../src/core/robots.php</file>
-                <file>../../src/core/sparklines.php</file>
-                <file>../../src/core/toggler.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory suffix="DAO.php">../../</directory>
+            <directory suffix="Dao.php">../../</directory>
+            <directory suffix=".php">../../src/common/wiki/</directory>
+            <directory suffix=".php">../../src/common/chart/</directory>
+            <file>../../src/common/admin/Homepage/Controller.php</file>
+            <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
+            <file>../../plugins/docman/include/soap.php</file>
+            <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php</file> <!-- To investigate -->
+            <file>../../plugins/ldap/include/LDAP_SearchPeople.class.php</file>
+            <file>../../plugins/mediawiki/include/MediawikiInstantiater.class.php</file>
+            <file>../../plugins/mediawiki/include/mediawiki-init.php</file>
+            <file>../../plugins/git/include/Git/Statistics/FrequenciesSample.php</file> <!-- To investigate -->
+            <file>../../plugins/git/include/GitXmlImporter.class.php</file>
+            <file>../../plugins/statistics/include/DiskUsageProjectsSearchFieldsPresenter.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/CartifactSample.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FiledSample.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FilerSample.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ForumSample.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/OartifactSample.php</file> <!-- To investigate -->
+            <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ProjectSample.php</file> <!-- To investigate -->
+            <file>../../plugins/webdav/include/BrowserPlugin.class.php</file>
+            <directory suffix=".php">../../plugins/webdav/include/FS/</directory>
+            <file>../../plugins/webdav/include/WebDAVTree.class.php</file>
+            <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
+            <file>../../tests/lib/TuleapDbTestCase.class.php</file>
+            <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
+            <file>../../src/core/contact.php</file>
+            <file>../../src/core/goto.php</file>
+            <file>../../src/core/info.php</file>
+            <file>../../src/core/make_links.php</file>
+            <file>../../src/core/robots.php</file>
+            <file>../../src/core/sparklines.php</file>
+            <file>../../src/core/toggler.php</file>
+        </exclude>
+    </coverage>
     <testsuites>
         <testsuite name="Core Tests">
             <directory>.</directory>
