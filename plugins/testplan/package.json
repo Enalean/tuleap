@@ -17,7 +17,7 @@
     "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1",
     "vuex-class": "^0.3.2",
-    "xlsx": "^0.16.5"
+    "xlsx": "^0.16.6"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.3",
