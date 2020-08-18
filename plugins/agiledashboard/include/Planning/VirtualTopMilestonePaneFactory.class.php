@@ -147,7 +147,8 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
                 $milestone_artifact_id,
                 $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
                 $allowed_additional_panes_to_display_collector->getIdentifiers(),
-                $display_pv2_event->canUserCreateMilestone()
+                $display_pv2_event->canUserCreateMilestone(),
+                $display_pv2_event->canBacklogItemsBeAdded()
             )
         );
 

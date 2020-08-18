@@ -57,6 +57,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
     public $create_milestone_allowed;
 
     /**
+     * @var string
+     */
+    public $backlog_add_item_allowed;
+
+    /**
      * @param string[] $allowed_additional_panes_to_display
      */
     public function __construct(
@@ -65,7 +70,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $milestone_id,
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
-        bool $create_milestone_allowed
+        bool $create_milestone_allowed,
+        bool $backlog_add_item_allowed
     ) {
         $this->user_id                             = $current_user->getId();
         $this->lang                                = $this->getLanguageAbbreviation($current_user);
@@ -76,6 +82,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->is_in_explicit_top_backlog          = $is_in_explicit_top_backlog;
         $this->allowed_additional_panes_to_display = json_encode($allowed_additional_panes_to_display);
         $this->create_milestone_allowed            = json_encode($create_milestone_allowed);
+        $this->backlog_add_item_allowed            = json_encode($backlog_add_item_allowed);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user)

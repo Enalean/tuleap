@@ -47,6 +47,9 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setCreateMilestoneAllowed(
             JSON.parse(planning_init_data.createMilestoneAllowed)
         );
+        SharedPropertiesService.setAddItemInBacklogAllowed(
+            JSON.parse(planning_init_data.backlogAddItemAllowed)
+        );
 
         const language = planning_init_data.language;
         initLocale(language);

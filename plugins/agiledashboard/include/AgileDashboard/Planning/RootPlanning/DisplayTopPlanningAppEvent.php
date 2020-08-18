@@ -48,6 +48,11 @@ class DisplayTopPlanningAppEvent implements Dispatchable
      */
     private $user_can_create_milestone = true;
 
+    /**
+     * @var bool
+     */
+    private $backlog_items_can_be_added = true;
+
     public function __construct(Planning_VirtualTopMilestone $top_milestone, PFUser $user)
     {
         $this->top_milestone = $top_milestone;
@@ -78,5 +83,15 @@ class DisplayTopPlanningAppEvent implements Dispatchable
     public function setUserCannotCreateMilestone(): void
     {
         $this->user_can_create_milestone = false;
+    }
+
+    public function canBacklogItemsBeAdded(): bool
+    {
+        return $this->backlog_items_can_be_added;
+    }
+
+    public function setBacklogItemsCannotBeAdded(): void
+    {
+        $this->backlog_items_can_be_added = false;
     }
 }
