@@ -28,6 +28,8 @@ use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
+use Tuleap\HelpDropdown\ReleaseLinkDao;
+use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -36,9 +38,11 @@ use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use UserManager;
+use Valid_HTTPURI;
 use Widget_Static;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -124,8 +128,12 @@ class BurningParrotTheme extends BaseLayout
 
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
-        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder($this->event_manager);
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user, $this->version->version_number);
+        $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
+            new ReleaseNoteManager(new ReleaseLinkDao(), $this->version->version_number),
+            $this->event_manager,
+            new URISanitizer(new Valid_HTTPURI())
+        );
+        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
 
         $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
             $this->event_manager,

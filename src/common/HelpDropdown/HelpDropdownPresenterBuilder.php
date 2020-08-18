@@ -23,6 +23,7 @@ namespace Tuleap\HelpDropdown;
 
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Sanitizer\URISanitizer;
 
 class HelpDropdownPresenterBuilder
 {
@@ -30,36 +31,51 @@ class HelpDropdownPresenterBuilder
      * @var EventDispatcherInterface
      */
     private $event_dispatcher;
+    /**
+     * @var ReleaseNoteManager
+     */
+    private $release_note_manager;
+    /**
+     * @var URISanitizer
+     */
+    private $uri_sanitizer;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher)
-    {
-        $this->event_dispatcher = $event_dispatcher;
+    public function __construct(
+        ReleaseNoteManager $release_note_manager,
+        EventDispatcherInterface $event_dispatcher,
+        URISanitizer $uri_sanitizer
+    ) {
+        $this->event_dispatcher     = $event_dispatcher;
+        $this->uri_sanitizer        = $uri_sanitizer;
+        $this->release_note_manager = $release_note_manager;
     }
 
-    public function build(PFUser $current_user, string $tuleap_version): HelpDropdownPresenter
+    public function build(PFUser $current_user): HelpDropdownPresenter
     {
         $documentation = "/doc/" . urlencode($current_user->getShortLocale()) . "/";
 
         $main_items = [
-            new HelpLinkPresenter(
+            HelpLinkPresenter::build(
                 dgettext(
                     'tuleap-core',
                     'Get help'
                 ),
                 "/help/",
-                "fa-life-saver"
+                "fa-life-saver",
+                $this->uri_sanitizer
             ),
-            new HelpLinkPresenter(
+            HelpLinkPresenter::build(
                 dgettext(
                     'tuleap-core',
                     'Documentation'
                 ),
                 $documentation,
-                "fa-book"
+                "fa-book",
+                $this->uri_sanitizer
             )
         ];
 
-        $release_note = $this->getReleaseNoteLink($current_user, $tuleap_version);
+        $release_note = $this->getReleaseNoteLink($current_user);
 
         $explorer_endpoint_event = $this->event_dispatcher->dispatch(new \Tuleap\REST\ExplorerEndpointAvailableEvent());
 
@@ -70,25 +86,20 @@ class HelpDropdownPresenterBuilder
         );
     }
 
-    private function getReleaseNoteLink(PFUser $current_user, string $tuleap_version): ?HelpLinkPresenter
+    private function getReleaseNoteLink(PFUser $current_user): ?HelpLinkPresenter
     {
+        $release_note_link = $this->release_note_manager->getReleaseNoteLink();
         if ($current_user->useLabFeatures()) {
-            return new HelpLinkPresenter(
+            return HelpLinkPresenter::build(
                 dgettext(
                     'tuleap-core',
                     'Release Note'
                 ),
-                $this->getActualReleaseLink($tuleap_version),
-                "fa-star"
+                $release_note_link,
+                "fa-star",
+                $this->uri_sanitizer
             );
         }
         return null;
-    }
-
-    private function getActualReleaseLink(string $tuleap_version): string
-    {
-        $version_number = str_replace(".", "-", substr($tuleap_version, 0, 5));
-
-        return 'https://www.tuleap.org/ressources/release-notes/tuleap-' . urlencode($version_number);
     }
 }
