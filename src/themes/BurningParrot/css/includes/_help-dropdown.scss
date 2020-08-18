@@ -24,20 +24,26 @@
     bottom: $tlp-medium-spacing;
 
     #help {
+        display: flex;
         position: relative;
-        width: 46px;
-        height: 46px;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
         overflow: visible;
         border-radius: 50%;
-        text-align: center;
-
-        > .fa {
-            font-size: 20px;
-        }
+        border-color: $tlp-theme-sidebar-background-color;
+        background: $tlp-theme-sidebar-background-color;
     }
 
     .tlp-dropdown-menu {
+        border-color: $tlp-theme-sidebar-background-color;
         background: $tlp-theme-sidebar-background-color;
+
+        &::before {
+            display: none;
+        }
 
         &::after {
             border-top-color: $tlp-theme-sidebar-background-color;
@@ -47,15 +53,16 @@
             &.tlp-dropdown-menu-item {
                 background: $tlp-theme-sidebar-background-color;
                 color: $tlp-ui-border-dark;
+                font-size: 13px;
 
                 &:hover {
-                    background: #25383f;
+                    background: darken($tlp-theme-sidebar-background-color, 3%);
                 }
             }
         }
 
         .tlp-dropdown-menu-separator {
-            opacity: .2;
+            opacity: .1;
             background: $tlp-ui-border-dark;
         }
 
@@ -63,7 +70,7 @@
             display: flex;
             align-items: baseline;
             padding: 10px 20px;
-            font-size: 13px;
+            font-size: 12px;
 
             > a {
                 margin: 0 10px 0 0;
