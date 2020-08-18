@@ -1343,7 +1343,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $links_collection = new BreadCrumbLinkCollection([
             new BreadCrumbLinkWithIcon(
-                sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getName()),
+                sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName()),
                 $this->getSubmitUrl(),
                 'fa-plus'
             )
