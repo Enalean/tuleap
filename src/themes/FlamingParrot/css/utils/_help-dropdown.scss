@@ -113,6 +113,7 @@
             background: $sidebar-background;
             color: #d4d7e1;
             font-size: 13px;
+            text-align: left;
 
             &:hover {
                 background: darken($sidebar-background, 3%);
