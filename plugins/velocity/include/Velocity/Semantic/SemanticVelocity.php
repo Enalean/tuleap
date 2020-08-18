@@ -107,12 +107,12 @@ class SemanticVelocity extends Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $sm,
+        Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user
     ) {
-        $sm->displaySemanticHeader($this, $tracker_manager);
+        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
         $builder = new SemanticVelocityAdminPresenterBuilder(
             $this->getMissingRequirementRetriever(),
@@ -131,11 +131,11 @@ class SemanticVelocity extends Tracker_Semantic
 
         $renderer->renderToPage('velocity-admin', $presenter);
 
-        $sm->displaySemanticFooter($this, $tracker_manager);
+        $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
     public function process(
-        Tracker_SemanticManager $sm,
+        Tracker_SemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user
@@ -182,24 +182,24 @@ class SemanticVelocity extends Tracker_Semantic
             $this->redirectToVelocityAdmin($request->get('tracker'));
         }
 
-        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+        $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         if (! $this->semantic_done->isSemanticDefined()) {
             return;
         }
 
         $status_field = $this->semantic_done->getSemanticStatus()->getField();
-        if (in_array($status_field->getId(), $xmlMapping) && $this->getFieldId() > 0) {
+        if (in_array($status_field->getId(), $xml_mapping) && $this->getFieldId() > 0) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
             $cdata = new \XML_SimpleXMLCDATAFactory();
             $cdata->insert($child, 'shortname', $this->getShortName());
             $cdata->insert($child, 'label', $this->getLabel());
             $cdata->insert($child, 'description', $this->getDescription());
-            $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+            $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xml_mapping));
         }
     }
 

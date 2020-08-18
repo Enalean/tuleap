@@ -306,15 +306,15 @@ class Valid_File extends Valid
     /**
      * Check rules on given file.
      *
-     * @param  Array  $files $_FILES superarray.
+     * @param  Array  $value $_FILES superarray.
      * @param  String Index of file to check in $_FILES array.
      * @return bool
      */
-    public function validate($files, $index = '')
+    public function validate($value, $index = '')
     {
-        if (is_array($files) && isset($files[$index])) {
+        if (is_array($value) && isset($value[$index])) {
             $this->addRule(new Rule_File());
-            return parent::validate($files[$index]);
+            return parent::validate($value[$index]);
         } elseif ($this->isRequired) {
             return false;
         } else {

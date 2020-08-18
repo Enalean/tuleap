@@ -281,12 +281,12 @@ class ProjectLabeledItems extends Widget
     public function cloneContent(
         Project $template_project,
         Project $new_project,
-        $template_content_id,
+        $id,
         $owner_id,
         $owner_type
     ) {
         $this->storeContentId();
-        $this->duplicateContent($template_project, $new_project, $template_content_id);
+        $this->duplicateContent($template_project, $new_project, $id);
 
         return $this->content_id;
     }

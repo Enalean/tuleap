@@ -1711,14 +1711,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Duplicate the renderer
      */
-    public function duplicate($from_renderer, $field_mapping)
+    public function duplicate($from_report_id, $field_mapping)
     {
         //duplicate sort
-        $this->getSortDao()->duplicate($from_renderer->id, $this->id, $field_mapping);
+        $this->getSortDao()->duplicate($from_report_id->id, $this->id, $field_mapping);
         //duplicate columns
-        $this->getColumnsDao()->duplicate($from_renderer->id, $this->id, $field_mapping);
+        $this->getColumnsDao()->duplicate($from_report_id->id, $this->id, $field_mapping);
         //duplicate aggregates
-        $this->getAggregatesDao()->duplicate($from_renderer->id, $this->id, $field_mapping);
+        $this->getAggregatesDao()->duplicate($from_report_id->id, $this->id, $field_mapping);
     }
 
     public function getType()

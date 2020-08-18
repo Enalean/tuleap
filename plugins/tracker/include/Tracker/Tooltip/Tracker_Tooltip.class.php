@@ -69,14 +69,14 @@ class Tracker_Tooltip extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $sm              The semantic manager
+     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->get('add-field') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();
@@ -93,7 +93,7 @@ class Tracker_Tooltip extends Tracker_Semantic
             //store the new field
             $this->getDao()->remove($this->tracker->id, $f->id);
         }
-        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+        $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
     /**
@@ -129,17 +129,17 @@ class Tracker_Tooltip extends Tracker_Semantic
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $sm              The semantic manager
+     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $sm->displaySemanticHeader($this, $tracker_manager);
+        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
         $html   = '';
         $fields = $this->getFields();
@@ -190,7 +190,7 @@ class Tracker_Tooltip extends Tracker_Semantic
 
         $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
         echo $html;
-        $sm->displaySemanticFooter($this, $tracker_manager);
+        $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
     /**
@@ -222,16 +222,16 @@ class Tracker_Tooltip extends Tracker_Semantic
      * Transforms tooltip into a SimpleXMLElement
      *
      * @param SimpleXMLElement &$root         the node to which the semantic is attached (passed by reference)
-     * @param array            $xmlMapping  correspondance between real field ids and xml IDs
+     * @param array            $xml_mapping  correspondance between real field ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         $child = $root->addChild('semantic');
         $child->addAttribute('type', $this->getShortName());
         foreach ($this->getFields() as $field) {
-            $child->addChild('field')->addAttribute('REF', array_search($field->id, $xmlMapping));
+            $child->addChild('field')->addAttribute('REF', array_search($field->id, $xml_mapping));
         }
     }
 

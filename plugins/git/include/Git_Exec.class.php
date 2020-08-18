@@ -38,7 +38,7 @@ class Git_Exec
     /**
      * @param String $work_tree The git repository path where we should operate
      */
-    public function __construct($work_tree, $git_dir = null)
+    final public function __construct($work_tree, $git_dir = null)
     {
         if (! $git_dir) {
             $this->setWorkTree($work_tree);

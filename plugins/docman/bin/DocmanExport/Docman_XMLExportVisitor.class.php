@@ -34,6 +34,10 @@ class Docman_XMLExportVisitor implements ItemVisitor
     protected $userCache;
     protected $dataPath;
     protected $logger;
+    /**
+     * @var int
+     */
+    private $fileCounter;
 
     public function __construct(DOMDocument $doc, \Psr\Log\LoggerInterface $logger)
     {

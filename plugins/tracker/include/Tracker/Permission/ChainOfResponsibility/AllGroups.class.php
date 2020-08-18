@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,17 +21,17 @@
 class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tracker_Permission_Command
 {
 
-    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
+    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
     {
-        foreach ($permission_setter->getAllGroupIds() as $ugroup_id) {
+        foreach ($permissions_setter->getAllGroupIds() as $ugroup_id) {
             if ($this->ugroupHasOwnCommand($ugroup_id)) {
                 continue;
             }
 
-            $this->adjustPermissionsForGroup($permission_setter, $ugroup_id, $request->getPermissionType($ugroup_id));
+            $this->adjustPermissionsForGroup($permissions_setter, $ugroup_id, $request->getPermissionType($ugroup_id));
         }
 
-        $this->applyNextCommand($request, $permission_setter);
+        $this->applyNextCommand($request, $permissions_setter);
     }
 
     private function ugroupHasOwnCommand($ugroup_id)

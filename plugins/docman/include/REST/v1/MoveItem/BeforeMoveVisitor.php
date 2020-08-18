@@ -69,8 +69,9 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitFolder(Docman_Folder $folder_to_move, array $params = []): void
+    public function visitFolder(Docman_Folder $item, array $params = []): void
     {
+        $folder_to_move = $item;
         $this->handleItem($folder_to_move);
         $destination_folder = $params['destination'];
         assert($destination_folder instanceof Docman_Folder);

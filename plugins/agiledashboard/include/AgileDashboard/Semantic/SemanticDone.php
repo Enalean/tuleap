@@ -131,16 +131,16 @@ class SemanticDone extends Tracker_Semantic
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $sm The semantic manager
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
      * @param TrackerManager $tracker_manager The tracker manager
      * @param Codendi_Request $request The request
      * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        $sm->displaySemanticHeader($this, $tracker_manager);
+        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
         $semantic_status_field = $this->semantic_status->getField();
         $closed_values         = [];
@@ -163,7 +163,7 @@ class SemanticDone extends Tracker_Semantic
 
         $renderer->renderToPage('done-admin', $presenter);
 
-        $sm->displaySemanticFooter($this, $tracker_manager);
+        $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
     /**
@@ -243,14 +243,14 @@ class SemanticDone extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $sm The semantic manager
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
      * @param TrackerManager $tracker_manager The tracker manager
      * @param Codendi_Request $request The request
      * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->exist('submit')) {
             $csrf = $this->getCSRFSynchronizerToken();
@@ -278,7 +278,7 @@ class SemanticDone extends Tracker_Semantic
             }
         }
 
-        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+        $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
     private function clearValuesForTracker($tracker_id)
@@ -359,11 +359,11 @@ class SemanticDone extends Tracker_Semantic
      * Export semantic to XML
      *
      * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
-     * @param array $xmlMapping correspondance between real ids and xml IDs
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         $status_field = $this->semantic_status->getField();
 
@@ -371,7 +371,7 @@ class SemanticDone extends Tracker_Semantic
             return;
         }
 
-        if (in_array($status_field->getId(), $xmlMapping)) {
+        if (in_array($status_field->getId(), $xml_mapping)) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
             $cdata = new XML_SimpleXMLCDATAFactory();
@@ -380,7 +380,7 @@ class SemanticDone extends Tracker_Semantic
             $cdata->insert($child, 'description', $this->getDescription());
             $node_closed_values = $child->addChild('closed_values');
             foreach ($this->done_values as $value) {
-                if ($ref = array_search($value->getId(), $xmlMapping['values'])) {
+                if ($ref = array_search($value->getId(), $xml_mapping['values'])) {
                     $node_closed_values->addChild('closed_value')->addAttribute('REF', $ref);
                 }
             }

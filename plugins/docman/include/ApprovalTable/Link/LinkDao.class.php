@@ -32,9 +32,9 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao
         return $this->retrieve($sql);
     }
 
-    public function getTableByItemId($itemId, $fields = '*')
+    public function getTableByItemId($item_id, $fields = '*')
     {
-        return $this->getLatestTableByItemId($itemId, $fields);
+        return $this->getLatestTableByItemId($item_id, $fields);
     }
 
     public function getLatestTableByItemId($itemId, $fields = 'app.*')

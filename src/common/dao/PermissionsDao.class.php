@@ -42,24 +42,24 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     /**
      * Searches Ugroups Ids (and names if required) from ObjectId and Permission type
      *
-     * @param String  $objectId       Id of object
-     * @param String  $permissionType Permission type
-     * @param bool $withName Whether to include the group name or not
+     * @param String  $object_id       Id of object
+     * @param String  $permission_type Permission type
+     * @param bool $with_name Whether to include the group name or not
      *
      * @return DataAccessResult
      */
-    public function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName = true)
+    public function searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, $with_name = true)
     {
         $fields = '';
         $joins  = '';
-        if ($withName) {
+        if ($with_name) {
             $fields = ' ug.name, ';
             $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
         }
         $sql = 'SELECT ' . $fields . ' p.ugroup_id, p.permission_type' .
                ' FROM permissions p ' . $joins .
-               ' WHERE p.object_id = ' . $this->da->quoteSmart($objectId, ['force_string' => true]) .
-               ' AND p.permission_type LIKE ' . $this->da->quoteSmart($permissionType) .
+               ' WHERE p.object_id = ' . $this->da->quoteSmart($object_id, ['force_string' => true]) .
+               ' AND p.permission_type LIKE ' . $this->da->quoteSmart($permission_type) .
                ' ORDER BY ugroup_id';
         return $this->retrieve($sql);
     }
@@ -82,22 +82,22 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     /**
      * Return the list of the default ugroup_ids authorized to access the given permission_type
      *
-     * @param String  $permissionType Permission type
-     * @param bool $withName Whether to include the group name or not
+     * @param String  $permission_type Permission type
+     * @param bool $with_name Whether to include the group name or not
      *
      * @return DataAccessResult
      */
-    public function searchDefaults($permissionType, $withName = true)
+    public function searchDefaults($permission_type, $with_name = true)
     {
         $fields = '';
         $joins  = '';
-        if ($withName) {
+        if ($with_name) {
             $fields = ' ug.*, ';
             $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
         }
         $sql = 'SELECT ' . $fields . ' pv.ugroup_id, pv.permission_type' .
                ' FROM permissions_values pv ' . $joins .
-               ' WHERE pv.permission_type=' . $this->da->quoteSmart($permissionType) .
+               ' WHERE pv.permission_type=' . $this->da->quoteSmart($permission_type) .
                ' AND pv.is_default=1' .
                ' ORDER BY pv.ugroup_id';
         return $this->retrieve($sql);
@@ -247,16 +247,16 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     /**
      * Removes a given permission to a given object
      *
-     * @param String $permissionType Permission
-     * @param String $objectId       Affected object's id
+     * @param String $permission_type Permission
+     * @param String $object_id       Affected object's id
      *
      * @return bool
      */
-    public function clearPermission($permissionType, $objectId)
+    public function clearPermission($permission_type, $object_id)
     {
         $sql = ' DELETE FROM permissions ' .
-               ' WHERE object_id = ' . $this->da->quoteSmart($objectId, ['force_string' => true]) .
-               ' AND permission_type = ' . $this->da->quoteSmart($permissionType);
+               ' WHERE object_id = ' . $this->da->quoteSmart($object_id, ['force_string' => true]) .
+               ' AND permission_type = ' . $this->da->quoteSmart($permission_type);
         return $this->update($sql);
     }
 
@@ -335,8 +335,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         return $this->update($sql);
     }
 
-    public function addHistory($group_id, $permission_type, $object_id)
+    public function addHistory($project_id, $permission_type, $object_id)
     {
-        permission_add_history($group_id, $permission_type, $object_id);
+        permission_add_history($project_id, $permission_type, $object_id);
     }
 }

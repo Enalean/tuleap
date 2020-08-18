@@ -607,7 +607,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      * Create an instance of the chart
      * @return GraphOnTrackersV5_Chart
      */
-    abstract public static function create($renderer, $id, $rank, $title, $description, $width, $height);
+    abstract public static function create($graphic_report, $id, $rank, $title, $description, $width, $height);
 
     /**
      * Get the dao of the chart

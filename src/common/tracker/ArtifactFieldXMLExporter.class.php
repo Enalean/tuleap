@@ -38,8 +38,8 @@ abstract class ArtifactFieldXMLExporter
         return $field_value_row;
     }
 
-    public function isValueEqual($value1, $value2)
+    public function isValueEqual($history_field_value, $field_value)
     {
-        return $value1 == $value2;
+        return $history_field_value == $field_value;
     }
 }

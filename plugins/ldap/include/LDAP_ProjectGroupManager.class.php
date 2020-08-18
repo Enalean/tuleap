@@ -66,12 +66,12 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
     /**
      * Add user to a project
      *
-     * @param int $groupId Id of the project
+     * @param int $id Id of the project
      * @param int $userId User Id
      *
      * @return bool
      */
-    protected function addUserToGroup($groupId, $userId)
+    protected function addUserToGroup($id, $userId)
     {
         $user = $this->user_manager->getUserById($userId);
         if ($user === null) {
@@ -83,22 +83,22 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         if (empty($filtered_set_of_user_ids->getUserIDsToAdd())) {
             return false;
         }
-        return $this->getDao()->addUserToGroup($groupId, $user->getUserName());
+        return $this->getDao()->addUserToGroup($id, $user->getUserName());
     }
 
     /**
      * Remove user from a project
      *
-     * @param int $groupId Id of the project
+     * @param int $id Id of the project
      * @param int $userId User ID
      *
      * @return bool
      */
-    protected function removeUserFromGroup($groupId, $userId)
+    protected function removeUserFromGroup($id, $userId)
     {
-        $this->logInProjectHistory($groupId, $userId);
+        $this->logInProjectHistory($id, $userId);
 
-        return $this->getDao()->removeUserFromGroup($groupId, $userId);
+        return $this->getDao()->removeUserFromGroup($id, $userId);
     }
 
     /**

@@ -294,10 +294,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     public function hasChanges(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        Tracker_Artifact_ChangesetValue $old_value,
         $new_value
     ) {
-        $existing_steps = $previous_changesetvalue->getValue();
+        $existing_steps = $old_value->getValue();
         if ($this->doesUserWantToRemoveAllSteps($new_value)) {
             return ! empty($existing_steps);
         }

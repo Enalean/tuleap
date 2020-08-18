@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -79,10 +79,10 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         return self::LABEL_VALUES_INDEX;
     }
 
-    public function isValueEqual($value1, $value2)
+    public function isValueEqual($history_field_value, $field_value)
     {
-        $value1 = explode(',', $value1);
-        $value2 = explode(',', $value2);
+        $value1 = explode(',', $history_field_value);
+        $value2 = explode(',', $field_value);
 
         $value1 = array_map([$this, 'getValueLabel'], $value1);
         $value2 = array_map([$this, 'getValueLabel'], $value2);

@@ -155,6 +155,10 @@ class Codendi_DiffEngine
      * @var array
      */
     private $in_seq;
+    /**
+     * @var int
+     */
+    private $lcs;
 
     public function diff($from_lines, $to_lines)
     {

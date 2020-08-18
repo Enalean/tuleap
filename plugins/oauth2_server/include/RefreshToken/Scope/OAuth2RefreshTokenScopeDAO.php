@@ -36,12 +36,12 @@ final class OAuth2RefreshTokenScopeDAO extends DataAccessObject implements OAuth
         );
     }
 
-    public function saveScopeKeysByID(int $refresh_token_id, string ...$scope_keys): void
+    public function saveScopeKeysByID(int $id, string ...$scope_keys): void
     {
         $data_to_insert = [];
 
         foreach ($scope_keys as $scope_key) {
-            $data_to_insert[] = ['refresh_token_id' => $refresh_token_id, 'scope_key' => $scope_key];
+            $data_to_insert[] = ['refresh_token_id' => $id, 'scope_key' => $scope_key];
         }
 
         $this->getDB()->insertMany('plugin_oauth2_refresh_token_scope', $data_to_insert);

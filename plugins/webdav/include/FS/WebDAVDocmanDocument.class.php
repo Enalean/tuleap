@@ -173,14 +173,14 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      * Downloads the document
      *
      * @param String  $fileType
-     * @param int $fileSize
+     * @param int $filesize
      * @param String  $path
      *
      * @return void
      */
-    public function download($fileType, $fileSize, $path)
+    public function download($fileType, $filesize, $path)
     {
-        $this->document_downloader->downloadDocument($this->getName(), $fileType, $fileSize, $path);
+        $this->document_downloader->downloadDocument($this->getName(), $fileType, $filesize, $path);
     }
 
     /**
