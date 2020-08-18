@@ -21,8 +21,10 @@ declare(strict_types=1);
 
 namespace Tuleap\HelpDropdown;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use UserPreferencesDao;
 
 class ReleaseNoteManagerTest extends TestCase
 {
@@ -36,11 +38,20 @@ class ReleaseNoteManagerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReleaseLinkDao
      */
     private $release_note_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserPreferencesDao
+     */
+    private $user_preferences_dao;
 
     protected function setUp(): void
     {
-        $this->release_note_dao     = \Mockery::mock(ReleaseLinkDao::class);
-        $this->release_note_manager = new ReleaseNoteManager($this->release_note_dao, "11.17.99.666");
+        $this->release_note_dao     = Mockery::mock(ReleaseLinkDao::class);
+        $this->user_preferences_dao = Mockery::mock(UserPreferencesDao::class);
+        $this->release_note_manager = new ReleaseNoteManager(
+            $this->release_note_dao,
+            $this->user_preferences_dao,
+            "11.17.99.666"
+        );
     }
 
     public function testGetReleaseNoteLink(): void
@@ -53,6 +64,7 @@ class ReleaseNoteManagerTest extends TestCase
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
+        $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
     }
@@ -67,6 +79,7 @@ class ReleaseNoteManagerTest extends TestCase
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
+        $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
     }
@@ -81,6 +94,7 @@ class ReleaseNoteManagerTest extends TestCase
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
+        $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
     }
@@ -96,6 +110,7 @@ class ReleaseNoteManagerTest extends TestCase
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_old_links)->once();
         $this->release_note_dao->shouldReceive("updateTuleapVersion");
+        $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
     }
@@ -106,6 +121,7 @@ class ReleaseNoteManagerTest extends TestCase
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn(null)->once();
         $this->release_note_dao->shouldReceive("createReleaseNoteLink");
+        $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
     }

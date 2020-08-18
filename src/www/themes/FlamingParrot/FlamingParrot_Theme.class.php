@@ -188,7 +188,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $sidebar_state;
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
-            new ReleaseNoteManager(new ReleaseLinkDao(), $this->tuleap_version->version_number),
+            new ReleaseNoteManager(new ReleaseLinkDao(), new UserPreferencesDao(), $this->tuleap_version->version_number),
             $this->getEventManager(),
             new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI()),
         );

@@ -39,13 +39,20 @@ class HelpDropdownPresenter
      */
     public $explorer_url;
 
+    /**
+     * @var bool
+     */
+    public $has_release_note_been_seen;
+
     public function __construct(
         array $platform_links,
         ?string $explorer_url,
-        ?HelpLinkPresenter $release_note_link
+        ?HelpLinkPresenter $release_note_link,
+        bool $has_release_note_been_seen
     ) {
-        $this->platform_links    = $platform_links;
-        $this->release_note_link = $release_note_link;
-        $this->explorer_url      = $explorer_url;
+        $this->platform_links             = $platform_links;
+        $this->release_note_link          = $release_note_link;
+        $this->explorer_url               = $explorer_url;
+        $this->has_release_note_been_seen = $has_release_note_been_seen;
     }
 }

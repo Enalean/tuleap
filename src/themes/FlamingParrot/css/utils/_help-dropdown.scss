@@ -123,6 +123,14 @@
                 margin: 0 5px 0 0;
             }
         }
+
+        &.release-note-link {
+            color: $ui-color-warning;
+
+            &:visited {
+                color: #d4d7e1;
+            }
+        }
     }
 
     .dropdown-menu-item-alt {
@@ -155,4 +163,43 @@
     border-radius: 50%;
     border-color: $sidebar-background;
     background: $sidebar-background;
+
+    > .fa {
+        font-size: 20px;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    &.new-release-note-available {
+        animation: pulse 300ms ease-in-out 1s 3 both;
+        border-color: $ui-color-warning;
+        background: $ui-color-warning;
+        color: $white;
+
+        > .fa-star {
+            display: inline-block;
+        }
+
+        > .svg-question-mark {
+            display: none;
+        }
+    }
+
+    > .fa-star {
+        display: none;
+        margin: 0;
+        transition: color 200ms ease-in-out;
+    }
 }

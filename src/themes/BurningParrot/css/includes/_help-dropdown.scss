@@ -35,6 +35,45 @@
         border-radius: 50%;
         border-color: $tlp-theme-sidebar-background-color;
         background: $tlp-theme-sidebar-background-color;
+
+        > .fa {
+            font-size: 20px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        &.new-release-note-available {
+            animation: pulse 300ms ease-in-out 1s 3 both;
+            border-color: $tlp-ui-warning;
+            background: $tlp-ui-warning;
+            color: $tlp-ui-white;
+
+            > .fa-star {
+                display: inline-block;
+            }
+
+            > .svg-question-mark {
+                display: none;
+            }
+        }
+
+        > .fa-star {
+            display: none;
+            position: relative;
+            transition: color 200ms ease-in-out;
+        }
     }
 
     .tlp-dropdown-menu {
@@ -57,6 +96,14 @@
 
                 &:hover {
                     background: darken($tlp-theme-sidebar-background-color, 3%);
+                }
+            }
+
+            &.release-note-link {
+                color: $tlp-ui-warning;
+
+                &:visited {
+                    color: $tlp-ui-border-dark;
                 }
             }
         }
