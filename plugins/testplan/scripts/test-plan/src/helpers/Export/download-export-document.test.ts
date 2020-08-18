@@ -46,7 +46,8 @@ describe("Start download of export document", () => {
         expect(spyCreateSheet).toHaveBeenCalledTimes(1);
         expect(xlsx.writeFile).toHaveBeenCalledWith(
             expect.anything(),
-            "Test Report %{ milestone_title }.xlsx"
+            "Test Report %{ milestone_title }.xlsx",
+            expect.anything()
         );
     });
 });
