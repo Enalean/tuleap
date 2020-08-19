@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal, select2 } from "tlp";
+import { createModal, select2 } from "tlp";
 import { sprintf } from "sprintf-js";
 import { filterInlineTable } from "../../tuleap/tables/filter-inline-table";
 
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            const la_modal = modal(modal_element);
+            const modal = createModal(modal_element);
             const edit_name_input = modal_element.querySelector(".project-label-edit-name");
 
             button.addEventListener("click", () => {
@@ -50,11 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     edit_name_input.value = edit_name_input.dataset.originalValue;
                 }
 
-                la_modal.toggle();
+                modal.show();
             });
 
             if (edit_name_input) {
-                la_modal.addEventListener("tlp-modal-hidden", () => {
+                modal.addEventListener("tlp-modal-hidden", () => {
                     modal_element.reset();
                     // force select2 to display the current color
                     modal_element
