@@ -43,6 +43,7 @@ use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder
 use URLRedirect;
 use UserManager;
 use Valid_HTTPURI;
+use Valid_LocalURI;
 use Widget_Static;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -131,7 +132,7 @@ class BurningParrotTheme extends BaseLayout
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
             new ReleaseNoteManager(new ReleaseLinkDao(), $this->version->version_number),
             $this->event_manager,
-            new URISanitizer(new Valid_HTTPURI())
+            new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
         );
         $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
 

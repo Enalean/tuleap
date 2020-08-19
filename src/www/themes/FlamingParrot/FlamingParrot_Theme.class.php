@@ -190,7 +190,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
             new ReleaseNoteManager(new ReleaseLinkDao(), $this->tuleap_version->version_number),
             $this->getEventManager(),
-            new URISanitizer(new Valid_HTTPURI()),
+            new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI()),
         );
         $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
 
