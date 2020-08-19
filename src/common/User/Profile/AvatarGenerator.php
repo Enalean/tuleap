@@ -33,7 +33,7 @@ class AvatarGenerator
             return;
         }
 
-        $this->getImage($user)->save($path);
+        $this->getImage($user)->save($path, null, 'png');
     }
 
     public function generateAsDataUrl(\PFUser $user): string

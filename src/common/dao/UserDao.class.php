@@ -725,4 +725,12 @@ class UserDao extends DataAccessObject
         $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
         return $this->update($sql);
     }
+
+    /**
+     * @return DataAccessResult|false
+     */
+    public function searchUsersWithDefaultAvatar()
+    {
+        return $this->retrieve('SELECT * FROM user WHERE has_custom_avatar = FALSE');
+    }
 }
