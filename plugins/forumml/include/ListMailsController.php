@@ -183,7 +183,7 @@ class ListMailsController implements DispatchableWithRequest
             if (isset($ret) && $ret) {
                 // wait few seconds before redirecting to archives page
                 echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=" .
-                     $hp->purify(urlencode($group_id), CODENDI_PURIFIER_JS_DQUOTE) . "&list=" . $hp->purify(urlencode($list_id), CODENDI_PURIFIER_JS_DQUOTE) . "&topic=" .
+                     $hp->purify(urlencode((string) $group_id), CODENDI_PURIFIER_JS_DQUOTE) . "&list=" . $hp->purify(urlencode($list_id), CODENDI_PURIFIER_JS_DQUOTE) . "&topic=" .
                      $hp->purify(urlencode((string) $topic), CODENDI_PURIFIER_JS_DQUOTE) . "\"',3000) </script>";
             }
         }
