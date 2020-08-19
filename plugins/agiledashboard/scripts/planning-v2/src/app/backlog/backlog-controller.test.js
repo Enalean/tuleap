@@ -112,7 +112,6 @@ describe("BacklogController -", () => {
                 "getMilestone",
                 "getOpenMilestones",
                 "getOpenSubMilestones",
-                "putSubMilestones",
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",
                 "updateInitialEffort",

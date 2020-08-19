@@ -20,45 +20,55 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
 describe(`UserPreferencesService`, () => {
-    let mockBackend, wrapPromise, UserPreferencesService;
+    let $q, wrapPromise, UserPreferencesService;
 
     beforeEach(() => {
         angular.mock.module(planning_module);
 
         let $rootScope;
-        angular.mock.inject(function (_$rootScope_, _UserPreferencesService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _$q_, _UserPreferencesService_) {
+            $q = _$q_;
             $rootScope = _$rootScope_;
             UserPreferencesService = _UserPreferencesService_;
-            mockBackend = $httpBackend;
         });
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(() => {
-        mockBackend.verifyNoOutstandingExpectation();
-        mockBackend.verifyNoOutstandingRequest();
-    });
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
 
     describe(`setPreference`, () => {
         it(`will call PATCH on user's preferences`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/users/110/preferences", {
-                    key: "agiledashboard_planning_item_view_mode_104",
-                    value: "compact-view",
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = UserPreferencesService.setPreference(
                 110,
                 "agiledashboard_planning_item_view_mode_104",
                 "compact-view"
             );
-            mockBackend.flush();
+
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/users/110/preferences", {
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                    key: "agiledashboard_planning_item_view_mode_104",
+                    value: "compact-view",
+                }),
+            });
         });
     });
 });

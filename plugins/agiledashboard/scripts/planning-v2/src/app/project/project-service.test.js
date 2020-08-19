@@ -20,57 +20,78 @@
 import planning_module from "../app";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper";
 
+jest.mock("tlp");
+
+const expected_headers = { "content-type": "application/json" };
+
 describe(`ProjectService`, () => {
-    let mockBackend, wrapPromise, ProjectService;
+    let $q, wrapPromise, ProjectService;
 
     beforeEach(() => {
         angular.mock.module(planning_module);
 
         let $rootScope;
-        angular.mock.inject(function (_$rootScope_, _ProjectService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _$q_, _ProjectService_) {
+            $q = _$q_;
             $rootScope = _$rootScope_;
             ProjectService = _ProjectService_;
-            mockBackend = $httpBackend;
         });
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(() => {
-        mockBackend.verifyNoOutstandingExpectation();
-        mockBackend.verifyNoOutstandingRequest();
-    });
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
 
     describe(`reorderBacklog`, () => {
         it(`will call PATCH on the project backlog
             and reorder items`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/projects/103/backlog", {
-                    order: {
-                        ids: [99, 187],
-                        direction: "before",
-                        compared_to: 265,
-                    },
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = ProjectService.reorderBacklog(103, [99, 187], {
                 direction: "before",
                 item_id: 265,
             });
-            mockBackend.flush();
 
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: [99, 187],
+                        direction: "before",
+                        compared_to: 265,
+                    },
+                }),
+            });
         });
     });
 
     describe(`removeAddReorderToBacklog`, () => {
         it(`will call PATCH on the project backlog
             and reorder items while moving them from another milestone`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/projects/103/backlog", {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = ProjectService.removeAddReorderToBacklog(77, 103, [99, 187], {
+                direction: "after",
+                item_id: 265,
+            });
+
+            expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
+                headers: expected_headers,
+                body: JSON.stringify({
                     order: {
                         ids: [99, 187],
                         direction: "after",
@@ -80,71 +101,67 @@ describe(`ProjectService`, () => {
                         { id: 99, remove_from: 77 },
                         { id: 187, remove_from: 77 },
                     ],
-                })
-                .respond(200);
-
-            const promise = ProjectService.removeAddReorderToBacklog(77, 103, [99, 187], {
-                direction: "after",
-                item_id: 265,
+                }),
             });
-            mockBackend.flush();
-
-            expect(await wrapPromise(promise)).toBeTruthy();
         });
     });
 
     describe(`removeAddToBacklog`, () => {
         it(`will call PATCH on the project backlog
             and move items from another milestone`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/projects/103/backlog", {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = ProjectService.removeAddToBacklog(77, 103, [99, 187]);
+
+            expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/103/backlog", {
+                headers: expected_headers,
+                body: JSON.stringify({
                     add: [
                         { id: 99, remove_from: 77 },
                         { id: 187, remove_from: 77 },
                     ],
-                })
-                .respond(200);
-
-            const promise = ProjectService.removeAddToBacklog(77, 103, [99, 187]);
-            mockBackend.flush();
-
-            expect(await wrapPromise(promise)).toBeTruthy();
+                }),
+            });
         });
     });
 
     describe(`getProject`, () => {
         it(`will call GET on the project`, async () => {
-            mockBackend.expectGET("/api/v1/projects/103").respond(200, {
-                id: 103,
-                label: "Project",
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: { id: 103, label: "Project" },
             });
 
             const promise = ProjectService.getProject(103);
-            mockBackend.flush();
 
             const response = await wrapPromise(promise);
             expect(response.data.id).toEqual(103);
             expect(response.data.label).toEqual("Project");
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/103");
         });
     });
 
     describe(`getProjectBacklog`, () => {
         it(`will call GET on the project backlog
             and will format as string the accepted trackers`, async () => {
-            mockBackend.expectGET("/api/v2/projects/103/backlog?limit=00&offset=0").respond(200, {
-                accept: {
-                    trackers: [
-                        { id: 36, label: "User Stories" },
-                        { id: 91, label: "Bugs" },
-                    ],
-                    parent_trackers: [{ id: 71, label: "Epics" }],
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: {
+                    accept: {
+                        trackers: [
+                            { id: 36, label: "User Stories" },
+                            { id: 91, label: "Bugs" },
+                        ],
+                        parent_trackers: [{ id: 71, label: "Epics" }],
+                    },
+                    content: [],
+                    has_user_priority_change_permission: true,
                 },
-                content: [],
-                has_user_priority_change_permission: true,
             });
 
             const promise = ProjectService.getProjectBacklog(103);
-            mockBackend.flush();
 
             const response = await wrapPromise(promise);
             expect(response.allowed_backlog_item_types.content).toContainEqual({
@@ -159,6 +176,9 @@ describe(`ProjectService`, () => {
                 "trackerId36|trackerId91"
             );
             expect(response.has_user_priority_change_permission).toBe(true);
+            expect(tlpGet).toHaveBeenCalledWith("/api/v2/projects/103/backlog", {
+                params: { limit: "00", offset: 0 },
+            });
         });
     });
 });
