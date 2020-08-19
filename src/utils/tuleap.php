@@ -40,6 +40,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
@@ -232,6 +233,16 @@ $CLI_command_collector->addCommand(
         return new CorrectFrsRepositoryPermissionsCommand(
             new DirectoryIterator(ForgeConfig::get('ftp_frs_dir_prefix')),
             ProjectManager::instance()
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    ForceRegenerationDefaultAvatarCommand::NAME,
+    static function (): ForceRegenerationDefaultAvatarCommand {
+        return new ForceRegenerationDefaultAvatarCommand(
+            UserManager::instance(),
+            new UserDao()
         );
     }
 );
