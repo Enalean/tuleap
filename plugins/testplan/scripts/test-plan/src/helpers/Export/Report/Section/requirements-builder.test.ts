@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
-import { DateCell, EmptyCell, NumberCell, TextCell } from "./report-cells";
-import { BacklogItem, TestDefinition } from "../../type";
+import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
+import { DateCell, EmptyCell, NumberCell, TextCell } from "../report-cells";
+import { BacklogItem, TestDefinition } from "../../../../type";
 import { buildRequirementsSection } from "./requirements-builder";
-import { Tracker } from "./tracker";
-import * as artifacts_retriever from "./artifacts-retriever";
-import * as trackers_retriever from "./trackers-retriever";
-import { Artifact, TrackerFieldValue } from "./artifact";
+import { Tracker } from "./Tracker/tracker";
+import * as artifacts_retriever from "./Tracker/artifacts-retriever";
+import * as trackers_retriever from "./Tracker/trackers-retriever";
+import { Artifact, TrackerFieldValue } from "./Tracker/artifact";
 
 describe("Build requirements section", () => {
     it("builds section", async () => {

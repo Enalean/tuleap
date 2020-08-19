@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
-import { TextValueField, TrackerFieldValue } from "./artifact";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "../report-cells";
+import { TextValueField, TrackerFieldValue } from "./Tracker/artifact";
 
 export function transformFieldValueIntoACell(
     field_value: Readonly<TrackerFieldValue>

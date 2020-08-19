@@ -184,7 +184,8 @@ describe("ExportButton", () => {
         await download_button.trigger("click");
 
         try {
-            // Needs 3 ticks so the component can be rendered after the error in the async v-on handler
+            // Needs 4 ticks so the component can be rendered after the error in the async v-on handler
+            await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();

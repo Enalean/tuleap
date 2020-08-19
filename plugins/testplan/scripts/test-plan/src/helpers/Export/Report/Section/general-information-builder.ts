@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, TextCell } from "./report-cells";
+import { DateCell, TextCell } from "../report-cells";
 
 export interface GeneralSection {
     readonly rows: readonly [

@@ -18,7 +18,7 @@
  */
 
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "../../../../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 import { retrieveArtifacts } from "./artifacts-retriever";
 import { Artifact } from "./artifact";
 

@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
-import { DateCell, HTMLCell, TextCell } from "./report-cells";
-import { retrieveArtifacts } from "./artifacts-retriever";
+import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
+import { DateCell, HTMLCell, TextCell } from "../report-cells";
+import { retrieveArtifacts } from "./Tracker/artifacts-retriever";
 import { transformTextFieldValueIntoACell } from "./transform-field-value-into-cell";
-import { Artifact } from "./artifact";
+import { Artifact } from "./Tracker/artifact";
 
 const TEST_EXEC_RESULT_FIELD_COMMENT_NAME = "results";
 

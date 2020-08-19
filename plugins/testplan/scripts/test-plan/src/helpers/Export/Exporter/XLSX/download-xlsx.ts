@@ -17,32 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createExportReport, ExportReport } from "./Report/report-creator";
-import { BacklogItem, Campaign } from "../../type";
+import { ExportReport } from "../../Report/report-creator";
+import { utils, writeFile } from "xlsx";
+import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
 
-export async function downloadExportDocument(
+export function downloadXLSX(
     gettext_provider: VueGettextProvider,
-    download_document: (
-        gettext_provider: VueGettextProvider,
-        milestone_title: string,
-        report: ExportReport
-    ) => void,
-    project_name: string,
     milestone_title: string,
-    user_display_name: string,
-    backlog_items: ReadonlyArray<BacklogItem>,
-    campaigns: ReadonlyArray<Campaign>
-): Promise<void> {
-    const current_date = new Date();
-
-    const report = await createExportReport(
-        gettext_provider,
-        project_name,
-        milestone_title,
-        user_display_name,
-        current_date,
-        backlog_items,
-        campaigns
+    report: ExportReport
+): void {
+    const book = utils.book_new();
+    const sheet = transformAReportIntoASheet(report);
+    utils.book_append_sheet(book, sheet);
+    writeFile(
+        book,
+        gettext_provider.$gettextInterpolate(
+            gettext_provider.$gettext("Test Report %{ milestone_title }"),
+            { milestone_title }
+        ) + ".xlsx",
+        { bookSST: true }
     );
-    download_document(gettext_provider, milestone_title, report);
 }

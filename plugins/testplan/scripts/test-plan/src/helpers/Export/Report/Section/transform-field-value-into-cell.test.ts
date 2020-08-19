@@ -18,8 +18,8 @@
  */
 
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
-import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "./report-cells";
-import { TrackerFieldValue } from "./artifact";
+import { DateCell, EmptyCell, HTMLCell, NumberCell, ReportCell, TextCell } from "../report-cells";
+import { TrackerFieldValue } from "./Tracker/artifact";
 
 describe("transform-field-value-into-cell", () => {
     it.each([

@@ -17,37 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const actual_xlsx = jest.requireActual("xlsx");
-jest.mock("xlsx", () => {
-    return { ...actual_xlsx, writeFile: jest.fn() };
-});
-
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { downloadExportDocument } from "./download-export-document";
-import { ExportReport } from "./report-creator";
-import * as xlsx from "xlsx";
-import * as report_creator from "./report-creator";
-import * as report_transformer from "./transform-report-to-xlsx-sheet";
+import { ExportReport } from "./Report/report-creator";
+import * as report_creator from "./Report/report-creator";
 
 describe("Start download of export document", () => {
-    it("generates the report and start the download of the XLSX document", async () => {
+    it("generates the report and start the download of the document", async () => {
         const gettext_provider = createVueGettextProviderPassthrough();
 
         const spyCreateReport = jest
             .spyOn(report_creator, "createExportReport")
             .mockResolvedValue({} as ExportReport);
-        const spyCreateSheet = jest
-            .spyOn(report_transformer, "transformAReportIntoASheet")
-            .mockReturnValue(actual_xlsx.utils.json_to_sheet([]));
 
-        await downloadExportDocument(gettext_provider, "Project", "Milestone", "User Name", [], []);
+        const spyStartDownload = jest.fn();
+
+        await downloadExportDocument(
+            gettext_provider,
+            spyStartDownload,
+            "Project",
+            "Milestone",
+            "User Name",
+            [],
+            []
+        );
 
         expect(spyCreateReport).toHaveBeenCalledTimes(1);
-        expect(spyCreateSheet).toHaveBeenCalledTimes(1);
-        expect(xlsx.writeFile).toHaveBeenCalledWith(
-            expect.anything(),
-            "Test Report %{ milestone_title }.xlsx",
-            expect.anything()
-        );
+        expect(spyStartDownload).toHaveBeenCalledTimes(1);
     });
 });
