@@ -45,7 +45,7 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLink(): void
     {
-        $expected_result = "https://www.tuleap.org/ressources/release-notes/tuleap-11-17";
+        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
 
         $dao_links = [
             "actual_link" => "",
@@ -73,7 +73,7 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLinkWithNullLink(): void
     {
-        $expected_result = "https://www.tuleap.org/ressources/release-notes/tuleap-11-17";
+        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
 
         $dao_links = [
             "actual_link" => null,
@@ -87,7 +87,7 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLinkShouldChangeIfVersionIsUpgraded(): void
     {
-        $expected_result = "https://www.tuleap.org/ressources/release-notes/tuleap-11-17";
+        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
 
         $dao_old_links = [
             "actual_link" => "https://whatever.com",
@@ -102,7 +102,7 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLinkIfNotLinkInDatabase(): void
     {
-        $expected_result = "https://www.tuleap.org/ressources/release-notes/tuleap-11-17";
+        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn(null)->once();
         $this->release_note_dao->shouldReceive("createReleaseNoteLink");
