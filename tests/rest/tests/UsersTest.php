@@ -721,11 +721,28 @@ final class UsersTest extends RestBase // phpcs:ignore
         $preference = json_encode(
             [
                 'key'   => 'my_preference',
-                'value' => 'my_preference_value'
+                'value' => 'my_preference_value_1'
             ]
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testPatchPreferencesWithSelfKeyword(): void
+    {
+        $preference = json_encode(
+            [
+                'key'   => 'my_preference',
+                'value' => 'my_preference_value'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch('users/self/preferences', null, $preference)
+        );
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -761,9 +778,21 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETPreferences(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference'));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference')
+        );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertGETPreferences($response);
+    }
+
+
+    public function testGETPreferencesWithSelfKeyword()
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/self/preferences?key=my_preference')
+        );
 
         $this->assertGETPreferences($response);
     }
@@ -780,6 +809,8 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     private function assertGETPreferences(\Guzzle\Http\Message\Response $response): void
     {
+        $this->assertEquals(200, $response->getStatusCode());
+
         $json = $response->json();
         $this->assertEquals('my_preference', $json['key']);
         $this->assertEquals('my_preference_value', $json['value']);
@@ -802,6 +833,38 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'));
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertEquals('preference_to_be_deleted', $json['key']);
+        $this->assertEquals(false, $json['value']);
+    }
+
+    public function testDeletePreferencesWithSelfKeyword()
+    {
+        $preference = json_encode(
+            [
+                'key'   => 'preference_to_be_deleted',
+                'value' => 'awesome_value'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch('users/self/preferences', null, $preference)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->delete('users/self/preferences?key=preference_to_be_deleted')
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/self/preferences?key=preference_to_be_deleted')
+        );
+        $this->assertEquals(200, $response->getStatusCode());
 
         $json = $response->json();
         $this->assertEquals('preference_to_be_deleted', $json['key']);
