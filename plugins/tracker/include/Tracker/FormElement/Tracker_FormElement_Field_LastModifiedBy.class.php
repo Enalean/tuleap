@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function getQueryOrderby()
     {
-        return '';
+        return $this->name;
     }
 
     public static function getFactoryLabel()
