@@ -369,7 +369,7 @@ class UserResource extends AuthenticatedResource
     /**
      * @url    OPTIONS {id}/preferences
      *
-     * @param int $id Id of the user
+     * @param string $id Id of the user
      *
      * @access public
      */
@@ -381,23 +381,33 @@ class UserResource extends AuthenticatedResource
     /**
      * Get a user preference
      *
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
+     *
      * @url GET {id}/preferences
      *
      * @access hybrid
      *
-     * @param int    $id  Id of the desired user
+     * @param string    $id  Id of the desired user
      * @param string $key Preference key
      *
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
+     * @throws RestException 400
      *
      * @return UserPreferenceRepresentation
      */
     public function getPreferences($id, $key)
     {
         $this->checkAccess();
+
         $this->optionPreferences($id);
+
+        $id = $this->getUserIDFromIDOrSelf($id);
 
         if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
@@ -418,20 +428,30 @@ class UserResource extends AuthenticatedResource
     /**
      * Delete a user preference
      *
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
+     *
      * @url DELETE {id}/preferences
      *
      * @access hybrid
      *
-     * @param int    $id Id of the desired user
+     * @param string $id Id of the desired user
      * @param string $key Preference key
      *
      * @throws RestException 401
      * @throws RestException 500
+     * @throws RestException 400
      */
     public function deletePreferences($id, $key)
     {
         $this->checkAccess();
+
         $this->optionPreferences($id);
+
+        $id = $this->getUserIDFromIDOrSelf($id);
 
         if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only set your own preferences');
@@ -445,22 +465,32 @@ class UserResource extends AuthenticatedResource
     /**
      * Set a user preference
      *
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
+     *
      * @url PATCH {id}/preferences
      *
      * @access hybrid
      *
-     * @param int $id Id of the desired user
+     * @param string $id Id of the desired user
      * @param UserPreferenceRepresentation $preference Preference representation {@from body}
      *
      * @throws RestException 401
      * @throws RestException 500
+     * @throws RestException 400
      *
      * @return UserPreferenceRepresentation
      */
     public function patchPreferences($id, $preference)
     {
         $this->checkAccess();
+
         $this->optionPreferences($id);
+
+        $id = $this->getUserIDFromIDOrSelf($id);
 
         if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only set your own preferences');
