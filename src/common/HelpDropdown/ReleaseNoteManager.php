@@ -31,10 +31,15 @@ class ReleaseNoteManager
      * @var string
      */
     private $tuleap_version;
+    /**
+     * @var \UserPreferencesDao
+     */
+    private $users_preferences_dao;
 
-    public function __construct(ReleaseLinkDao $release_note_dao, string $tuleap_version)
+    public function __construct(ReleaseLinkDao $release_note_dao, \UserPreferencesDao $users_preferences_dao, string $tuleap_version)
     {
         $this->release_note_dao = $release_note_dao;
+        $this->users_preferences_dao = $users_preferences_dao;
         $this->tuleap_version   = str_replace(".", "-", substr($tuleap_version, 0, 5));
     }
 
@@ -42,15 +47,20 @@ class ReleaseNoteManager
     {
         $link = $this->release_note_dao->getReleaseLink();
 
-        $actual_version_link = 'https://www.tuleap.org/resources/release-notes/tuleap-' . urlencode($this->tuleap_version);
+        $actual_version_link = 'https://www.tuleap.org/resources/release-notes/tuleap-' . urlencode(
+            $this->tuleap_version
+        );
+
 
         if ($link === null) {
             $this->release_note_dao->createReleaseNoteLink($this->tuleap_version);
+            $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
             return $actual_version_link;
         }
 
         if ($link["tuleap_version"] !== $this->tuleap_version) {
             $this->release_note_dao->updateTuleapVersion($this->tuleap_version);
+            $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
             return $actual_version_link;
         }
 

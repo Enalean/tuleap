@@ -77,18 +77,26 @@ class HelpDropdownPresenterBuilder
 
         $release_note = $this->getReleaseNoteLink($current_user);
 
+        if ($release_note === null || $current_user->isAnonymous()) {
+            $has_release_note_been_seen = true;
+        } else {
+            $has_release_note_been_seen = (bool) $current_user->getPreference("has_release_note_been_seen");
+        }
+
         $explorer_endpoint_event = $this->event_dispatcher->dispatch(new \Tuleap\REST\ExplorerEndpointAvailableEvent());
 
         return new HelpDropdownPresenter(
             $main_items,
             $explorer_endpoint_event->getEndpointURL(),
-            $release_note
+            $release_note,
+            $has_release_note_been_seen
         );
     }
 
     private function getReleaseNoteLink(PFUser $current_user): ?HelpLinkPresenter
     {
         $release_note_link = $this->release_note_manager->getReleaseNoteLink();
+
         if ($current_user->useLabFeatures()) {
             return HelpLinkPresenter::build(
                 dgettext(
