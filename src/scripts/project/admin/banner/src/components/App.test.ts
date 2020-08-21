@@ -30,6 +30,7 @@ describe("App", () => {
             propsData: {
                 message: "",
                 project_id: 108,
+                location: window.location,
             },
         });
 
@@ -44,6 +45,7 @@ describe("App", () => {
             propsData: {
                 message: banner_message,
                 project_id: 108,
+                location: window.location,
             },
         });
 
@@ -51,16 +53,16 @@ describe("App", () => {
     });
 
     it("Should be able to send the deletion request", async () => {
+        const location = { ...window.location, reload: jest.fn() };
         const wrapper = shallowMount(App, {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
                 project_id: 108,
+                location,
             },
         });
 
-        delete window.location;
-        window.location = ({ reload: jest.fn() } as unknown) as Location;
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForProject")
             .mockImplementation(() => {
@@ -74,7 +76,7 @@ describe("App", () => {
         await wrapper.vm.$nextTick();
 
         expect(delete_banner).toHaveBeenCalledTimes(1);
-        expect(window.location.reload).toHaveBeenCalledTimes(1);
+        expect(location.reload).toHaveBeenCalledTimes(1);
     });
 
     it("Should display an error if banner deletion fails", async () => {
@@ -83,6 +85,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 project_id: 108,
+                location: window.location,
             },
         });
 
@@ -101,16 +104,16 @@ describe("App", () => {
     });
 
     it("Should be able to send the update request and lock form while doing it", async () => {
+        const location: Location = { ...window.location, reload: jest.fn() };
         const wrapper = shallowMount(App, {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
                 project_id: 108,
+                location,
             },
         });
 
-        delete window.location;
-        window.location = ({ reload: jest.fn() } as unknown) as Location;
         const save_banner = jest
             .spyOn(rest_querier, "saveBannerForProject")
             .mockImplementation(() => {
@@ -125,7 +128,7 @@ describe("App", () => {
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
-        expect(window.location.reload).toHaveBeenCalledTimes(1);
+        expect(location.reload).toHaveBeenCalledTimes(1);
     });
 
     it("Should display an error if banner update fails", async () => {
@@ -134,6 +137,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 project_id: 108,
+                location: window.location,
             },
         });
 

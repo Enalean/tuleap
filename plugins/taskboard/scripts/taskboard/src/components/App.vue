@@ -84,8 +84,6 @@ export default class App extends Vue {
         if (this.has_at_least_one_card_in_edit_mode || this.has_at_least_one_cell_in_add_mode) {
             event.preventDefault();
             event.returnValue = false;
-        } else {
-            delete event.returnValue;
         }
     }
 
