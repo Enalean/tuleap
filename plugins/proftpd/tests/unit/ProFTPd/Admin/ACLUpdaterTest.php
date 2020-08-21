@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
-
 class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 {
 
@@ -86,23 +84,23 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
     }
 
-    public function testItSetsACLOnDirectoryWhenNoReaders()
+    public function testItSetsACLOnDirectoryWhenNoReaders(): void
     {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path);
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
     }
 
-    public function testItSetsACLOnDirectoryWhenNoWriters()
+    public function testItSetsACLOnDirectoryWhenNoWriters(): void
     {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path);
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
     }
 
-    public function testItSetsACLOnDirectoryWhenNoReadersNorWriters()
+    public function testItSetsACLOnDirectoryWhenNoReadersNorWriters(): void
     {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,u:httpuser:rwx', $this->path);
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,u:httpuser:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');
     }
