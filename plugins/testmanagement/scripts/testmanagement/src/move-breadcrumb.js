@@ -17,12 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function moveBreadCrumbs() {
+export function moveBreadCrumbs(project_public_name, project_url) {
     window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");
         if (!origin) {
             return;
         }
+
+        const project_item = document.createElement("span");
+        project_item.classList.add("breadcrumb-item");
+        project_item.classList.add("breadcrumb-project");
+
+        const project_link = document.createElement("a");
+        project_link.classList.add("breadcrumb-link");
+        project_link.href = project_url;
+        project_link.textContent = project_public_name;
+
+        project_item.appendChild(project_link);
+        origin.insertBefore(project_item, origin.firstChild);
 
         const main = document.querySelector("main");
         if (!main) {

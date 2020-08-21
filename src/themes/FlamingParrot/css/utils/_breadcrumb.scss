@@ -227,3 +227,17 @@ $switch-menu-item-hover-color: $main;
         border-top: 0;
     }
 }
+
+&:not(.sidebar-collapsed) {
+    .breadcrumb-with-only-one-item {
+        display: none;
+    }
+
+    .breadcrumb-project {
+        display: none;
+
+        + .breadcrumb-item > .breadcrumb-link {
+            padding-left: 16px;
+        }
+    }
+}

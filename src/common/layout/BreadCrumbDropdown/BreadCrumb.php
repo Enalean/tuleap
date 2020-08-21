@@ -30,11 +30,16 @@ class BreadCrumb
      * @var BreadCrumbSubItems
      */
     private $sub_items;
+    /**
+     * @var string
+     */
+    private $classname;
 
     public function __construct(BreadCrumbLink $link)
     {
         $this->link      = $link;
         $this->sub_items = new BreadCrumbSubItems();
+        $this->classname = '';
     }
 
     /**
@@ -56,5 +61,15 @@ class BreadCrumb
     public function setSubItems(BreadCrumbSubItems $sub_items)
     {
         $this->sub_items = $sub_items;
+    }
+
+    public function setAdditionalClassname(string $classname): void
+    {
+        $this->classname = $classname;
+    }
+
+    public function getAdditionalClassname(): string
+    {
+        return $this->classname;
     }
 }

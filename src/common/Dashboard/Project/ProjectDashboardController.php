@@ -188,9 +188,10 @@ class ProjectDashboardController
         $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
         site_project_header(
             [
-                'title'  => $title,
-                'group'  => $project->getID(),
-                'toptab' => 'summary'
+                'title'                          => $title,
+                'group'                          => $project->getID(),
+                'toptab'                         => 'summary',
+                'without-project-in-breadcrumbs' => true,
             ]
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(

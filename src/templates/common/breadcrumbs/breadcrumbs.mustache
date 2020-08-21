@@ -1,7 +1,7 @@
-<nav class="breadcrumb">
+<nav class="breadcrumb {{# has_only_one_breadcrumb }}breadcrumb-with-only-one-item{{/ has_only_one_breadcrumb }}">
     {{# breadcrumbs }}
         {{^ has_sub_items }}
-            <span class="breadcrumb-item">
+            <span class="breadcrumb-item {{ classname }}">
                 {{# link }}
                     <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
                         {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
@@ -11,7 +11,7 @@
         {{/ has_sub_items }}
 
         {{# has_sub_items }}
-            <div class="breadcrumb-switchable breadcrumb-item">
+            <div class="breadcrumb-switchable breadcrumb-item {{ classname }}">
                 {{# link }}
                     <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
                         {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}

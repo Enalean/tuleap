@@ -41,10 +41,13 @@ function TestManagementCtrl(
         const current_milestone = JSON.parse(testmanagement_init_data.currentMilestone);
         SharedPropertiesService.setCurrentMilestone(current_milestone);
 
+        const project_public_name = testmanagement_init_data.projectPublicName;
+        const project_url = testmanagement_init_data.projectUrl;
+
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
 
-        moveBreadCrumbs();
+        moveBreadCrumbs(project_public_name, project_url);
     };
 }

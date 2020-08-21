@@ -19,6 +19,11 @@
 
 <template>
     <nav class="breadcrumb">
+        <div class="breadcrumb-item breadcrumb-project">
+            <a v-bind:href="project_url" class="breadcrumb-link">
+                {{ project_public_name }}
+            </a>
+        </div>
         <div v-bind:class="get_breadcrumb_class">
             <router-link
                 v-bind:to="{ name: 'root_folder' }"
@@ -91,6 +96,8 @@ export default {
     computed: {
         ...mapState([
             "project_id",
+            "project_url",
+            "project_public_name",
             "is_user_administrator",
             "current_folder_ascendant_hierarchy",
             "is_loading_ascendant_hierarchy",

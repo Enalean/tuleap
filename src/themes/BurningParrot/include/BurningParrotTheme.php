@@ -31,6 +31,8 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
@@ -113,6 +115,12 @@ class BurningParrotTheme extends BaseLayout
         $project = null;
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
+
+            if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
+                $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
+                $crumb->setAdditionalClassname("breadcrumb-project");
+                $this->breadcrumbs->addFirst($crumb);
+            }
         }
 
 

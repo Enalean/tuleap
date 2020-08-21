@@ -73,6 +73,14 @@ class IndexPresenter
      * @var false|string
      */
     public $issue_tracker_config;
+    /**
+     * @var mixed
+     */
+    public $project_public_name;
+    /**
+     * @var string
+     */
+    public $project_url;
 
     /**
      * @param int|false $campaign_tracker_id
@@ -82,7 +90,7 @@ class IndexPresenter
      * @param MilestoneRepresentation|\stdClass $milestone_representation
      */
     public function __construct(
-        int $project_id,
+        \Project $project,
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
@@ -91,8 +99,11 @@ class IndexPresenter
         PFUser $current_user,
         object $milestone_representation
     ) {
-        $this->lang       = $this->getLanguageAbbreviation($current_user);
-        $this->project_id = $project_id;
+        $this->lang = $this->getLanguageAbbreviation($current_user);
+
+        $this->project_id          = $project->getID();
+        $this->project_public_name = $project->getPublicName();
+        $this->project_url         = $project->getUrl();
 
         $user_representation = UserRepresentation::build($current_user);
         $this->current_user = json_encode($user_representation);

@@ -122,7 +122,7 @@ class Router
                     $this->tracker_checker,
                     $this->int_validator
                 );
-                $this->renderAction($controller, 'admin', $request);
+                $this->renderAction($controller, 'admin', $request, false);
                 break;
             case 'admin-update':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
@@ -166,6 +166,7 @@ class Router
             $controller,
             'misconfiguration',
             $request,
+            false,
             [$request]
         );
     }
@@ -179,7 +180,7 @@ class Router
             $this->tracker_factory,
             $this->visit_recorder
         );
-        $this->renderAction($controller, 'index', $request);
+        $this->renderAction($controller, 'index', $request, true);
     }
 
     /**
@@ -195,11 +196,12 @@ class Router
         $controller,
         $action_name,
         Codendi_Request $request,
+        bool $without_project_in_breadcrumb,
         array $args = []
     ): void {
         $content = $this->executeAction($controller, $action_name, $args);
 
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $without_project_in_breadcrumb);
         echo $content;
         $this->displayFooter($request);
     }
@@ -271,12 +273,12 @@ class Router
      * @param mixed           $controller The controller instance
      * @param Codendi_Request $request    The request
      * @param string          $title      The page title
-     *
      */
     private function displayHeader(
         $controller,
         Codendi_Request $request,
-        $title
+        $title,
+        bool $without_project_in_breadcrumb
     ): void {
         $service = $this->getService($request);
         if (! $service) {
@@ -303,7 +305,12 @@ class Router
             ];
         }
 
-        $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, ['body_class' => ['testmanagement']]);
+        $service->displayHeader(
+            $title,
+            $breadcrumbs->getCrumbs($project),
+            $toolbar,
+            ['body_class' => ['testmanagement'], 'without-project-in-breadcrumbs' => $without_project_in_breadcrumb]
+        );
     }
 
     private function userIsAdmin(Codendi_Request $request): bool

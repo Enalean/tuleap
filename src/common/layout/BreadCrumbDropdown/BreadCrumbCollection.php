@@ -34,4 +34,9 @@ class BreadCrumbCollection
     {
         return $this->breadcrumbs;
     }
+
+    public function addFirst(BreadCrumb $crumb): void
+    {
+        array_splice($this->breadcrumbs, 0, 0, [$crumb]);
+    }
 }
