@@ -172,16 +172,15 @@ Cypress.Commands.add(
         prevSubject: "element",
     },
     (input: JQuery<HTMLInputElement>, file_name: string, file_type: string): void => {
-        cy.fixture(file_name)
-            .then((content) => Cypress.Blob.base64StringToBlob(content, file_type))
-            .then((blob) => {
-                const test_file = new File([blob], file_name);
-                const data_transfer = new DataTransfer();
+        cy.fixture(file_name).then((content) => {
+            const blob = Cypress.Blob.base64StringToBlob(content, file_type);
+            const test_file = new File([blob], file_name);
+            const data_transfer = new DataTransfer();
 
-                data_transfer.items.add(test_file);
-                input[0].files = data_transfer.files;
-                return input;
-            });
+            data_transfer.items.add(test_file);
+            input[0].files = data_transfer.files;
+            return input;
+        });
     }
 );
 
