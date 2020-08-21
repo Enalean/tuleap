@@ -160,40 +160,4 @@ class TemplateFactoryTest extends TestCase
 
         $this->assertEquals($expected_company_templates, $this->factory->getCompanyTemplateList());
     }
-
-    public function testItReturnsTheDefaultProjectTemplateIfTheProjectIsActive(): void
-    {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isDeleted')->andReturn(false);
-        $project->shouldReceive('isSuspended')->andReturn(false);
-        $project->shouldReceive('getGroupId')->andReturn("100");
-        $project->shouldReceive('getUnixNameLowerCase')->andReturn("none");
-        $project->shouldReceive('getDescription')->andReturn("The default Tuleap template");
-        $project->shouldReceive('getPublicName')->andReturn("Default Site Template");
-
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->project_manager->shouldReceive('getGroupId')->andReturn("100");
-
-        $glyph_finder = new GlyphFinder(\Mockery::mock(\EventManager::class));
-
-        $expected_project_template = new DefaultProjectTemplate($project, $glyph_finder);
-
-        $this->assertEquals($expected_project_template, $this->factory->getDefaultProjectTemplate());
-    }
-
-    public function testItReturnsNullIfTheDefaultProjectIsNotActive(): void
-    {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isDeleted')->andReturn(true);
-        $project->shouldReceive('isSuspended')->andReturn(false);
-        $project->shouldReceive('getGroupId')->andReturn("100")->never();
-        $project->shouldReceive('getUnixNameLowerCase')->andReturn("none")->never();
-        $project->shouldReceive('getDescription')->andReturn("The default Tuleap template")->never();
-        $project->shouldReceive('getPublicName')->andReturn("Default Site Template")->never();
-
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->project_manager->shouldReceive('getGroupId')->andReturn("100");
-
-        $this->assertNull($this->factory->getDefaultProjectTemplate());
-    }
 }

@@ -81,16 +81,6 @@ class ProjectRegistrationPresenter
      */
     public $are_anonymous_allowed;
     /**
-     * @var ?string
-     * @psalm-readonly
-     */
-    public $default_project_template;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $is_default_project_template_available;
-    /**
      * @var bool
      * @psalm-readonly
      */
@@ -101,7 +91,6 @@ class ProjectRegistrationPresenter
         array $trove_categories,
         array $field_list,
         array $company_templates,
-        ?TemplatePresenter $default_project_template,
         TemplatePresenter ...$tuleap_templates
     ) {
         $this->tuleap_templates                      = json_encode($tuleap_templates);
@@ -120,11 +109,5 @@ class ProjectRegistrationPresenter
         $this->can_user_choose_privacy               = (bool) ForgeConfig::get(
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );
-        $this->is_default_project_template_available = $default_project_template !== null;
-        if ($default_project_template) {
-            $this->default_project_template = json_encode($default_project_template);
-        } else {
-            $this->default_project_template = null;
-        }
     }
 }

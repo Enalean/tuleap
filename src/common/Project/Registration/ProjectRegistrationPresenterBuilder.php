@@ -34,13 +34,6 @@ use Tuleap\Project\Registration\Template\TemplatePresenter;
 class ProjectRegistrationPresenterBuilder
 {
     /**
-     * Toggle display of legacy site template (aka project number 100) in project creation page
-     *
-     * @tlp-config-key
-     */
-    public const FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE = "can_use_default_site_template";
-
-    /**
      * @var TemplateFactory
      */
     private $template_factory;
@@ -78,9 +71,6 @@ class ProjectRegistrationPresenterBuilder
             $this->template_factory->getCompanyTemplateList()
         );
 
-        $default_project_template_presenter = $this->getDefaultProjectTemplatePresenterIfApplicable();
-
-
         $formatted_field = [];
         $fields          = $this->fields_factory->getAllDescriptionFields();
         foreach ($fields as $field) {
@@ -98,7 +88,6 @@ class ProjectRegistrationPresenterBuilder
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
             $formatted_field,
             $company_templates,
-            $default_project_template_presenter,
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);
@@ -106,20 +95,5 @@ class ProjectRegistrationPresenterBuilder
                 $this->template_factory->getValidTemplates()
             )
         );
-    }
-
-    private function getDefaultProjectTemplatePresenterIfApplicable(): ?TemplatePresenter
-    {
-        if (! \ForgeConfig::get(self::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE)) {
-            return null;
-        }
-
-        $default_project_template = $this->template_factory->getDefaultProjectTemplate();
-
-        if ($default_project_template) {
-            return new TemplatePresenter($default_project_template);
-        }
-
-        return null;
     }
 }

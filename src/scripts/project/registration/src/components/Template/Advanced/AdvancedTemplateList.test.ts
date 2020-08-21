@@ -27,7 +27,6 @@ import { mockFetchSuccess } from "../../../../../../../themes/tlp/mocks/tlp-fetc
 import { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import { Store } from "vuex-mock-store";
-import TemplateCard from "../TemplateCard.vue";
 
 describe("AdvancedTemplateList", () => {
     let wrapper: Wrapper<AdvancedTemplateList>;
@@ -35,45 +34,10 @@ describe("AdvancedTemplateList", () => {
     let store: Store;
 
     beforeEach(() => {
-        state = {
-            default_project_template: null,
-        } as State;
         const store_options = {
             state,
         };
         store = createStoreMock(store_options);
-    });
-
-    it("does not display the TemplateCard Component if the defaut project template is null", async () => {
-        state = {
-            default_project_template: null,
-        } as State;
-        const store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
-        expect(wrapper.findComponent(TemplateCard).exists()).toBe(false);
-    });
-
-    it("displays the TemplateCard Component if the defaut project template is provided", async () => {
-        state = {
-            default_project_template: {} as TemplateData,
-        } as State;
-        const store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
-        expect(wrapper.findComponent(TemplateCard).exists()).toBe(true);
     });
 
     it("Display the description by default", async () => {

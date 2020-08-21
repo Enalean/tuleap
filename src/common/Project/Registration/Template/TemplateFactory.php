@@ -153,13 +153,4 @@ class TemplateFactory
         }
         return $company_templates;
     }
-
-    public function getDefaultProjectTemplate(): ?DefaultProjectTemplate
-    {
-        $default_project_template = $this->project_manager->getProject(\Project::ADMIN_PROJECT_ID);
-        if (! $default_project_template->isSuspended() && ! $default_project_template->isDeleted()) {
-            return new DefaultProjectTemplate($default_project_template, $this->glyph_finder);
-        }
-        return null;
-    }
 }

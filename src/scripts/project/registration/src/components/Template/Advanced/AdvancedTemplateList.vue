@@ -79,10 +79,6 @@
                     </div>
                 </label>
             </div>
-            <template-card
-                v-if="default_project_template"
-                v-bind:template="default_project_template"
-            />
         </section>
     </div>
 </template>
@@ -95,7 +91,6 @@ import SvgTemplate from "./SvgTemplate.vue";
 import { getProjectUserIsAdminOf } from "../../../api/rest-querier";
 import { TemplateData } from "../../../type";
 import TemplateCard from "../TemplateCard.vue";
-import { State } from "vuex-class";
 
 @Component({
     components: {
@@ -109,9 +104,6 @@ export default class AdvancedTemplateList extends Vue {
     is_loading_project_list = false;
     has_error = false;
     project_list: TemplateData[] = [];
-
-    @State
-    default_project_template!: TemplateData | null;
 
     async loadUserProjects(): Promise<void> {
         if (this.project_list.length > 0) {

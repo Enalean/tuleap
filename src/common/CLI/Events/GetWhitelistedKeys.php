@@ -32,9 +32,8 @@ use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
-use Tuleap\User\UserSuspensionManager;
 use Tuleap\System\ServiceControl;
+use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 
 final class GetWhitelistedKeys implements Dispatchable
@@ -57,7 +56,6 @@ final class GetWhitelistedKeys implements Dispatchable
         ServiceControl::class,
         UserSuspensionManager::class,
         MyProjects::class,
-        ProjectRegistrationPresenterBuilder::class,
         BackendLogger::class,
         LogToGraylog2::class,
     ];
