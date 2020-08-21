@@ -27,6 +27,7 @@ if (! defined('CODENDI_DB_NOT_NULL')) {
 
 /**
  * @deprecated
+ * @psalm-taint-sink sql $sql
  */
 function db_query($sql)
 {
@@ -36,6 +37,9 @@ function db_query($sql)
 
 /**
  * @deprecated
+ *
+ * @psalm-taint-sink sql $sql
+ * @psalm-taint-sink sql $params
  */
 function db_query_params($sql, $params)
 {

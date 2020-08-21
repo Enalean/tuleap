@@ -46,6 +46,9 @@ class Admin_UserListExporter
      * @param String $current_sort_header
      * @param String $sort_order
      * @param array  $status_values
+     *
+     * @psalm-param "user_name"|"realname"|"status" $current_sort_header
+     * @psalm-param "ASC"|"DESC" $sort_order
      */
     public function exportUserList($group_id, $user_name_search, $current_sort_header, $sort_order, $status_values)
     {

@@ -105,7 +105,7 @@ function mail_get_listname_from_list_id($list_id)
         'SELECT list_name' .
                     ' FROM mail_group_list' .
                     ' WHERE group_list_id = %d',
-        $list_id
+        db_ei($list_id)
     );
     $res = db_query($sql);
     return db_result($res, 0, 'list_name');

@@ -68,11 +68,9 @@ function svn_data_get_svn_history($group_id, $period = false)
 function svn_data_get_revision_detail($group_id, $commit_id, $rev_id = 0, $order = '')
 {
     $order_str = "";
-    if ($order) {
-        if ($order != 'filename') {
-            // SQLi Warning: no real possibility to escape $order here.
-            // We rely on a proper filtering of user input by calling methods.
-            $order_str = " ORDER BY " . $order;
+    if ($order !== '') {
+        if ($order !== 'filename') {
+            $order_str = " ORDER BY type";
         } else {
             $order_str = " ORDER BY dir, file";
         }

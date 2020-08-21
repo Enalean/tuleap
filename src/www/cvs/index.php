@@ -46,7 +46,7 @@ switch ($func) {
         } else {
             $mailing_header = $custom_mailing_header;
         }
-        if (trim($mailing_list) == '') {
+        if (trim($mailing_list) === '') {
             $mailing_list = 'NULL';
         } else {
             if (! validate_emails($mailing_list)) {
@@ -69,17 +69,19 @@ switch ($func) {
             }
         }
 
+        $mailing_list_sql = 'NULL';
         if ($mailing_list !== 'NULL') {
-            $mailing_list = '"' . db_es($mailing_list) . '"';
+            $mailing_list_sql = '"' . db_es($mailing_list) . '"';
         }
+        $mailing_header_sql = 'NULL';
         if ($mailing_header !== 'NULL') {
-            $mailing_header = '"' . db_es($mailing_header) . '"';
+            $mailing_header_sql = '"' . db_es($mailing_header) . '"';
         }
         $query = 'update groups 
              set cvs_tracker="' . db_es($tracked) . '",
                  cvs_watch_mode="' . db_es($watches) . '",
-                 cvs_events_mailing_list=' . $mailing_list . ',
-                 cvs_events_mailing_header=' . $mailing_header . ',
+                 cvs_events_mailing_list=' . $mailing_list_sql . ',
+                 cvs_events_mailing_header=' . $mailing_header_sql . ',
                  cvs_preamble="' . db_es(htmlspecialchars($form_preamble)) . '" ' .
                  $is_private . '
              where group_id=' . db_ei($group_id);
