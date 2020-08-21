@@ -608,6 +608,9 @@ msgstr "L'ancien mot de passe est incorrect"
 msgid "Custom groups"
 msgstr "Groupes personnalisés"
 
+msgid "Custom release note link successfully updated."
+msgstr "Le lien vers la release note a été mis à jour avec succès."
+
 msgid "Customisation"
 msgstr "Personnalisation"
 
@@ -1073,6 +1076,9 @@ msgstr "Trafic faible."
 
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
+
+msgid "Manage help links"
+msgstr "Gestion des liens d'aide"
 
 msgid "Massmail to project members is disabled."
 msgstr "L'envoi de mails vers les membres du projet est désactivé."
@@ -1555,6 +1561,9 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Projects visibility"
 msgstr "Visibilité des projets"
 
+msgid "Provided release note URL is not well formed"
+msgstr "Le lien de la release note n'est pas au bon format."
+
 msgid "Public"
 msgstr "Publique"
 
@@ -1636,6 +1645,12 @@ msgstr "Affichage des dates relatives"
 msgid "Release Note"
 msgstr "Information de mise à jour"
 
+msgid "Release note link"
+msgstr "Lien de la release note"
+
+msgid "Release note link configuration"
+msgstr "Configuration du lien de release note"
+
 msgid "Removal from projects"
 msgstr "Retrait de projets"
 
@@ -1716,6 +1731,9 @@ msgstr "Sauvegarder le nouvel avatar"
 
 msgid "Save settings"
 msgstr "Enregister"
+
+msgid "Save the link"
+msgstr "Enregister le lien"
 
 msgid "Scope"
 msgstr "Portée"
@@ -2646,6 +2664,18 @@ msgid ""
 msgstr ""
 "Vous pouvez déléguer à ce groupe des permissions. Tous les membres de ce "
 "groupe  bénéficieront alors de ces permissions."
+
+msgid ""
+"You can edit the release note link. It will change this link on the Help "
+"Drop-down.\n"
+"                            This link is auto updated on each major upgrade. "
+"By default, the official Tuleap release note link is used."
+msgstr ""
+"Vous pouvez mettre à jour le lien de la release note. Il sera utilisé dans "
+"le bouton d'aide. \n"
+"                            Ce lien sera automatiquement mis à jour lors de "
+"chaque montée de version majeur de Tuleap. Par défault, le lien de la "
+"release note officielle de Tuleap est utilisé."
 
 msgid "You can import users into your project by specifying a text file."
 msgstr ""

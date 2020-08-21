@@ -23,6 +23,8 @@ use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
@@ -191,7 +193,14 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $sidebar_state;
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
-            new ReleaseNoteManager(new ReleaseLinkDao(), new UserPreferencesDao(), new VersionNumberExtractor()),
+            new ReleaseNoteManager(
+                new ReleaseLinkDao(),
+                new UserPreferencesDao(),
+                new VersionNumberExtractor(),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                )
+            ),
             $this->getEventManager(),
             new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI()),
         );

@@ -24,6 +24,7 @@ namespace Tuleap\HelpDropdown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use UserPreferencesDao;
 
 class ReleaseNoteManagerTest extends TestCase
@@ -50,7 +51,8 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_manager = new ReleaseNoteManager(
             $this->release_note_dao,
             $this->user_preferences_dao,
-            new VersionNumberExtractor()
+            new VersionNumberExtractor(),
+            new DBTransactionExecutorPassthrough()
         );
     }
 
@@ -109,7 +111,7 @@ class ReleaseNoteManagerTest extends TestCase
         ];
 
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_old_links)->once();
-        $this->release_note_dao->shouldReceive("updateTuleapVersion");
+        $this->release_note_dao->shouldReceive("updateReleaseNoteLink");
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
         $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));

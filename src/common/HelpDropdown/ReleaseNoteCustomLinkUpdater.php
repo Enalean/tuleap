@@ -24,7 +24,7 @@ namespace Tuleap\HelpDropdown;
 use Tuleap\DB\DBTransactionExecutor;
 use UserPreferencesDao;
 
-class ReleaseNoteManager
+class ReleaseNoteCustomLinkUpdater
 {
     /**
      * @var ReleaseLinkDao
@@ -57,42 +57,15 @@ class ReleaseNoteManager
         $this->transaction_executor     = $transaction_executor;
     }
 
-    public function getReleaseNoteLink(string $tuleap_version): string
+    public function updateReleaseNoteLink(string $new_link, string $tuleap_version): void
     {
         $extracted_tuleap_version = $this->version_number_extractor->extractReleaseNoteTuleapVersion($tuleap_version);
 
-        $actual_version_link = 'https://www.tuleap.org/resources/release-notes/tuleap-' . urlencode(
-            $extracted_tuleap_version
+        $this->transaction_executor->execute(
+            function () use ($new_link, $extracted_tuleap_version) {
+                $this->release_note_dao->updateReleaseNoteLink($new_link, $extracted_tuleap_version);
+                $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
+            }
         );
-
-        $release_note_link_row = $this->release_note_dao->getReleaseLink();
-
-        if ($release_note_link_row === null) {
-            $this->transaction_executor->execute(
-                function () use ($actual_version_link, $extracted_tuleap_version) {
-                    $this->release_note_dao->createReleaseNoteLink($extracted_tuleap_version);
-                    $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
-                }
-            );
-
-            return $actual_version_link;
-        }
-
-        if ($release_note_link_row["tuleap_version"] !== $extracted_tuleap_version) {
-            $this->transaction_executor->execute(
-                function () use ($actual_version_link, $extracted_tuleap_version) {
-                    $this->release_note_dao->updateReleaseNoteLink(null, $extracted_tuleap_version);
-                    $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
-                }
-            );
-
-            return $actual_version_link;
-        }
-
-        if ($release_note_link_row["actual_link"] === "" || $release_note_link_row["actual_link"] === null) {
-            return $actual_version_link;
-        }
-
-        return $release_note_link_row["actual_link"];
     }
 }

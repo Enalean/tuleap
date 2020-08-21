@@ -35,6 +35,8 @@ use ThemeVariant;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\HelpDropdown\AdminReleaseNoteLinkController;
+use Tuleap\admin\HelpDropdown\PostAdminReleaseNoteLinkController;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
@@ -590,6 +592,16 @@ class RouteCollector
         return ProjectMembersController::buildSelf();
     }
 
+    public static function getAdminHelpDropdownController(): AdminReleaseNoteLinkController
+    {
+        return AdminReleaseNoteLinkController::buildSelf();
+    }
+
+    public static function postAdminHelpDropdownController(): PostAdminReleaseNoteLinkController
+    {
+        return PostAdminReleaseNoteLinkController::buildSelf();
+    }
+
     public static function getPostUserGroupIdAdd(): DispatchableWithRequest
     {
         return MemberAdditionController::buildSelf();
@@ -713,6 +725,9 @@ class RouteCollector
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
 
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
+            $r->get('/release-note/', [self::class, 'getAdminHelpDropdownController']);
+            $r->post('/release-note/', [self::class, 'postAdminHelpDropdownController']);
+
             $r->get('/password_policy/', [self::class, 'getAdminPasswordPolicy']);
             $r->post('/password_policy/', [self::class, 'postAdminPasswordPolicy']);
 
