@@ -28,7 +28,6 @@ import angular_artifact_modal_module from "../../../../../tracker/scripts/angula
 import "angular-moment";
 import "moment/locale/fr.js";
 import "angular-gettext";
-import "restangular";
 import translations from "../../po/fr.po";
 
 import card_fields from "../../../../scripts/card-fields/index.js";
@@ -67,7 +66,6 @@ export default angular
     .module("planning", [
         "angularMoment",
         "gettext",
-        "restangular",
         angular_artifact_modal_module,
         ngAnimate,
         ngSanitize,

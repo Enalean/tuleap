@@ -90,7 +90,6 @@ describe("PlanningController -", () => {
                 "getMilestone",
                 "getOpenMilestones",
                 "getOpenSubMilestones",
-                "putSubMilestones",
                 "patchSubMilestones",
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",

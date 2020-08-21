@@ -17,56 +17,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { get, patch } from "tlp";
+
 export default MilestoneService;
 
-MilestoneService.$inject = ["Restangular", "BacklogItemFactory"];
+const headers = { "content-type": "application/json" };
 
-function MilestoneService(Restangular, BacklogItemFactory) {
-    var self = this,
-        rest = Restangular.withConfig(function (RestangularConfigurer) {
-            RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl("/api/v1");
-        });
+MilestoneService.$inject = ["$q", "BacklogItemFactory"];
 
+function MilestoneService($q, BacklogItemFactory) {
+    const self = this;
     Object.assign(self, {
         milestone_content_pagination: { limit: 50, offset: 0 },
-        getMilestone: getMilestone,
-        getOpenMilestones: getOpenMilestones,
-        getOpenSubMilestones: getOpenSubMilestones,
-        getClosedMilestones: getClosedMilestones,
-        getClosedSubMilestones: getClosedSubMilestones,
-        putSubMilestones: putSubMilestones,
-        patchSubMilestones: patchSubMilestones,
-        getContent: getContent,
-        reorderBacklog: reorderBacklog,
-        removeAddReorderToBacklog: removeAddReorderToBacklog,
-        removeAddToBacklog: removeAddToBacklog,
-        reorderContent: reorderContent,
-        addReorderToContent: addReorderToContent,
-        addToContent: addToContent,
-        removeAddReorderToContent: removeAddReorderToContent,
-        removeAddToContent: removeAddToContent,
-        updateInitialEffort: updateInitialEffort,
-        defineAllowedBacklogItemTypes: defineAllowedBacklogItemTypes,
-        augmentMilestone: augmentMilestone,
+        getMilestone,
+        getOpenMilestones,
+        getOpenSubMilestones,
+        getClosedMilestones,
+        getClosedSubMilestones,
+        patchSubMilestones,
+        getContent,
+        reorderBacklog,
+        removeAddReorderToBacklog,
+        removeAddToBacklog,
+        reorderContent,
+        addReorderToContent,
+        addToContent,
+        removeAddReorderToContent,
+        removeAddToContent,
+        updateInitialEffort,
+        defineAllowedBacklogItemTypes,
+        augmentMilestone,
     });
 
     function getMilestone(milestone_id, scope_items) {
-        var promise = rest
-            .one("milestones", milestone_id)
-            .get()
-            .then(function (response) {
-                defineAllowedBacklogItemTypes(response.data);
-                augmentMilestone(response.data, scope_items);
+        return $q.when(
+            get(encodeURI(`/api/v1/milestones/${milestone_id}`))
+                .then((response) => response.json())
+                .then((milestone) => {
+                    defineAllowedBacklogItemTypes(milestone);
+                    augmentMilestone(milestone, scope_items);
 
-                var result = {
-                    results: response.data,
-                };
-
-                return result;
-            });
-
-        return promise;
+                    return { results: milestone };
+                })
+        );
     }
 
     function getOpenMilestones(project_id, limit, offset, scope_items) {
@@ -102,69 +95,41 @@ function MilestoneService(Restangular, BacklogItemFactory) {
     }
 
     function getMilestones(parent_type, parent_id, limit, offset, order, status, scope_items) {
-        var promise = rest
-            .one(parent_type, parent_id)
-            .all("milestones")
-            .getList({
-                limit: limit,
-                offset: offset,
-                order: order,
-                query: {
-                    status: status,
-                },
-                fields: "slim",
+        return $q.when(
+            get(encodeURI(`/api/v1/${parent_type}/${parent_id}/milestones`), {
+                params: { limit, offset, order, query: JSON.stringify({ status }), fields: "slim" },
+            }).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((milestones) => {
+                    milestones.forEach((milestone) => augmentMilestone(milestone, scope_items));
+                    return { results: milestones, total };
+                });
             })
-            .then(function (response) {
-                response.data.forEach((milestone) => augmentMilestone(milestone, scope_items));
-
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-
-                return result;
-            });
-
-        return promise;
-    }
-
-    function putSubMilestones(milestone_id, submilestone_ids) {
-        return rest.one("milestones", milestone_id).customPUT(
-            {
-                id: milestone_id,
-                ids: submilestone_ids,
-            },
-            "milestones"
         );
     }
 
     function patchSubMilestones(milestone_id, submilestone_ids) {
-        return rest
-            .one("milestones", milestone_id)
-            .all("milestones")
-            .patch({
-                add: submilestone_ids.map((id) => ({ id })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${milestone_id}/milestones`), {
+                headers,
+                body: JSON.stringify({
+                    add: submilestone_ids.map((id) => ({ id })),
+                }),
+            })
+        );
     }
 
     function getContent(milestone_id, limit, offset) {
-        var promise = rest
-            .one("milestones", milestone_id)
-            .all("content")
-            .getList({
-                limit: limit,
-                offset: offset,
+        return $q.when(
+            get(encodeURI(`/api/v1/milestones/${milestone_id}/content`), {
+                params: { limit, offset },
+            }).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((content_items) => {
+                    return { results: content_items, total };
+                });
             })
-            .then(function (response) {
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-
-                return result;
-            });
-
-        return promise;
+        );
     }
 
     function augmentMilestone(milestone, scope_items) {
@@ -249,16 +214,18 @@ function MilestoneService(Restangular, BacklogItemFactory) {
     }
 
     function reorderBacklog(milestone_id, dropped_item_ids, compared_to) {
-        return rest
-            .one("milestones", milestone_id)
-            .all("backlog")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${milestone_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                }),
+            })
+        );
     }
 
     function removeAddReorderToBacklog(
@@ -267,68 +234,78 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         dropped_item_ids,
         compared_to
     ) {
-        return rest
-            .one("milestones", dest_milestone_id)
-            .all("backlog")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function removeAddToBacklog(source_milestone_id, dest_milestone_id, dropped_item_ids) {
-        return rest
-            .one("milestones", dest_milestone_id)
-            .all("backlog")
-            .patch({
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function reorderContent(milestone_id, dropped_item_ids, compared_to) {
-        return rest
-            .one("milestones", milestone_id)
-            .all("content")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${milestone_id}/content`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                }),
+            })
+        );
     }
 
     function addReorderToContent(milestone_id, dropped_item_ids, compared_to) {
-        return rest
-            .one("milestones", milestone_id)
-            .all("content")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-                add: dropped_item_ids.map((id) => ({ id })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${milestone_id}/content`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                    add: dropped_item_ids.map((id) => ({ id })),
+                }),
+            })
+        );
     }
 
     function addToContent(milestone_id, dropped_item_ids) {
-        return rest
-            .one("milestones", milestone_id)
-            .all("content")
-            .patch({
-                add: dropped_item_ids.map((id) => ({ id })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${milestone_id}/content`), {
+                headers,
+                body: JSON.stringify({
+                    add: dropped_item_ids.map((id) => ({ id })),
+                }),
+            })
+        );
     }
 
     function removeAddReorderToContent(
@@ -337,31 +314,35 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         dropped_item_ids,
         compared_to
     ) {
-        return rest
-            .one("milestones", dest_milestone_id)
-            .all("content")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/content`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function removeAddToContent(source_milestone_id, dest_milestone_id, dropped_item_ids) {
-        return rest
-            .one("milestones", dest_milestone_id)
-            .all("content")
-            .patch({
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/milestones/${dest_milestone_id}/content`), {
+                headers,
+                body: JSON.stringify({
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 }

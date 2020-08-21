@@ -20,10 +20,15 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
+const expected_headers = { "content-type": "application/json" };
+
 describe("BacklogItemService", () => {
-    let mockBackend, wrapPromise, BacklogItemService, BacklogItemFactory;
+    let $q, wrapPromise, BacklogItemService, BacklogItemFactory;
 
     beforeEach(() => {
         BacklogItemFactory = { augment: jest.fn() };
@@ -33,160 +38,148 @@ describe("BacklogItemService", () => {
         });
 
         let $rootScope;
-        angular.mock.inject(function (_$rootScope_, _BacklogItemService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _$q_, _BacklogItemService_) {
+            $q = _$q_;
             $rootScope = _$rootScope_;
             BacklogItemService = _BacklogItemService_;
-            mockBackend = $httpBackend;
         });
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(() => {
-        mockBackend.verifyNoOutstandingExpectation(false); // We already trigger $digest
-        mockBackend.verifyNoOutstandingRequest(false); // We already trigger $digest
-    });
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
 
     describe(`getBacklogItem`, () => {
         it(`will call GET on the backlog_item
             and will return it`, async () => {
-            mockBackend
-                .expectGET("/api/v1/backlog_items/122")
-                .respond({ id: 122, label: "A User Story" });
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: { id: 122, label: "A User Story" },
+            });
 
             const promise = BacklogItemService.getBacklogItem(122);
-            mockBackend.flush();
-
             const response = await wrapPromise(promise);
+
             expect(response.backlog_item).toEqual(expect.objectContaining({ id: 122 }));
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/backlog_items/122");
         });
     });
 
     describe("getProjectBacklogItems()", () => {
-        it(`Given a project id, a limit of 50 items and an offset of 0,
-            when I get the project's backlog items,
-            then a promise will be resolved with an object containing the items
-            and the X-PAGINATION-SIZE header as the total number of items`, async () => {
-            mockBackend
-                .expectGET("/api/v1/projects/32/backlog?limit=50&offset=0")
-                .respond([{ id: 271 }, { id: 242 }], {
-                    "X-PAGINATION-SIZE": 2,
-                });
+        it(`will call GET on the project's backlog,
+            will augment each received backlog item
+            and will return the total number of items`, async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: [{ id: 271 }, { id: 242 }],
+                headers: {
+                    get() {
+                        return "2";
+                    },
+                },
+            });
 
             const promise = BacklogItemService.getProjectBacklogItems(32, 50, 0);
-            mockBackend.flush();
+            const response = await wrapPromise(promise);
 
-            await wrapPromise(promise);
-            var value = promise.$$state.value;
-            expect(value.results[0]).toEqual(expect.objectContaining({ id: 271 }));
-            expect(value.results[1]).toEqual(expect.objectContaining({ id: 242 }));
-            expect(value.total).toEqual("2");
+            expect(response.results[0]).toEqual(expect.objectContaining({ id: 271 }));
+            expect(response.results[1]).toEqual(expect.objectContaining({ id: 242 }));
+            expect(response.total).toEqual("2");
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/32/backlog", {
+                params: { limit: 50, offset: 0 },
+            });
         });
     });
 
     describe("getMilestoneBacklogItems()", () => {
-        it(`Given a milestone id, a limit of 50 items and an offset of 0,
-            when I get the milestone's backlog items,
-            then a promise will be resolved with an object containing the items
-            and the X-PAGINATION-SIZE header as the total number of items`, async () => {
-            mockBackend
-                .expectGET("/api/v1/milestones/65/backlog?limit=50&offset=0")
-                .respond([{ id: 398 }, { id: 848 }], {
-                    "X-PAGINATION-SIZE": 2,
-                });
+        it(`will call GET on the milestone's backlog,
+            will augment each received backlog item
+            and will return the total number of items`, async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: [{ id: 398 }, { id: 848 }],
+                headers: {
+                    get() {
+                        return "2";
+                    },
+                },
+            });
 
             const promise = BacklogItemService.getMilestoneBacklogItems(65, 50, 0);
-            mockBackend.flush();
+            const response = await wrapPromise(promise);
 
-            await wrapPromise(promise);
-            var value = promise.$$state.value;
-            expect(value.results[0]).toEqual(expect.objectContaining({ id: 398 }));
-            expect(value.results[1]).toEqual(expect.objectContaining({ id: 848 }));
-            expect(value.total).toEqual("2");
+            expect(response.results[0]).toEqual(expect.objectContaining({ id: 398 }));
+            expect(response.results[1]).toEqual(expect.objectContaining({ id: 848 }));
+            expect(response.total).toEqual("2");
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/milestones/65/backlog", {
+                params: { limit: 50, offset: 0 },
+            });
         });
     });
 
     describe("getBacklogItemChildren()", () => {
-        it(`Given a backlog item id, a limit of 50 items and an offset of 0,
-            when I get the backlog item's children,
-            then a promise will be resolved with an object containing the children
-            and the X-PAGINATION-SIZE header as the total number of children`, async () => {
-            mockBackend
-                .expectGET("/api/v1/backlog_items/57/children?limit=50&offset=0")
-                .respond([{ id: 722 }, { id: 481 }], {
-                    "X-PAGINATION-SIZE": 2,
-                });
+        it(`will call GET on the backlog item's children,
+            will augment each received backlog item
+            and will return the total number of items`, async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, {
+                return_json: [{ id: 722 }, { id: 481 }],
+                headers: {
+                    get() {
+                        return "2";
+                    },
+                },
+            });
 
             const promise = BacklogItemService.getBacklogItemChildren(57, 50, 0);
-            mockBackend.flush();
+            const response = await wrapPromise(promise);
 
-            await wrapPromise(promise);
-            var value = promise.$$state.value;
-            expect(value.results[0]).toEqual(expect.objectContaining({ id: 722 }));
-            expect(value.results[1]).toEqual(expect.objectContaining({ id: 481 }));
-            expect(value.total).toEqual("2");
-        });
-    });
-
-    describe("removeItemFromExplicitBacklog()", () => {
-        it(`Given a project id and an item id,
-            then the PATCH route is called to remove the item id from explicit backlog`, () => {
-            const project_id = 101;
-            const backlog_item = { id: 5 };
-            mockBackend
-                .expectPATCH(`/api/v1/projects/${project_id}/backlog`, {
-                    remove: [{ id: backlog_item.id }],
-                })
-                .respond(200);
-
-            const promise = BacklogItemService.removeItemFromExplicitBacklog(project_id, [
-                backlog_item,
-            ]);
-            mockBackend.flush();
-
-            return wrapPromise(promise);
+            expect(response.results[0]).toEqual(expect.objectContaining({ id: 722 }));
+            expect(response.results[1]).toEqual(expect.objectContaining({ id: 481 }));
+            expect(response.total).toEqual("2");
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/backlog_items/57/children", {
+                params: { limit: 50, offset: 0 },
+            });
         });
     });
 
     describe(`reorderBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and reorder items`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/backlog_items/307/children", {
-                    order: {
-                        ids: [99, 187],
-                        direction: "before",
-                        compared_to: 265,
-                    },
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = BacklogItemService.reorderBacklogItemChildren(307, [99, 187], {
                 direction: "before",
                 item_id: 265,
             });
-            mockBackend.flush();
 
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: [99, 187],
+                        direction: "before",
+                        compared_to: 265,
+                    },
+                }),
+            });
         });
     });
 
     describe(`removeAddReorderBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and reorder items while moving them from another backlog item`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/backlog_items/307/children", {
-                    order: {
-                        ids: [99, 187],
-                        direction: "after",
-                        compared_to: 265,
-                    },
-                    add: [
-                        { id: 99, remove_from: 122 },
-                        { id: 187, remove_from: 122 },
-                    ],
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = BacklogItemService.removeAddReorderBacklogItemChildren(
                 122,
@@ -197,28 +190,65 @@ describe("BacklogItemService", () => {
                     item_id: 265,
                 }
             );
-            mockBackend.flush();
 
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: [99, 187],
+                        direction: "after",
+                        compared_to: 265,
+                    },
+                    add: [
+                        { id: 99, remove_from: 122 },
+                        { id: 187, remove_from: 122 },
+                    ],
+                }),
+            });
         });
     });
 
     describe(`removeAddBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and move items from another backlog item`, async () => {
-            mockBackend
-                .expectPATCH("/api/v1/backlog_items/307/children", {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = BacklogItemService.removeAddBacklogItemChildren(122, 307, [99, 187]);
+
+            expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/backlog_items/307/children", {
+                headers: expected_headers,
+                body: JSON.stringify({
                     add: [
                         { id: 99, remove_from: 122 },
                         { id: 187, remove_from: 122 },
                     ],
-                })
-                .respond(200);
+                }),
+            });
+        });
+    });
 
-            const promise = BacklogItemService.removeAddBacklogItemChildren(122, 307, [99, 187]);
-            mockBackend.flush();
+    describe("removeItemFromExplicitBacklog()", () => {
+        it(`Given a project id and an item id,
+            then the PATCH route is called to remove the item id from explicit backlog`, async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+            const project_id = 101;
+
+            const promise = BacklogItemService.removeItemFromExplicitBacklog(project_id, [
+                { id: 5 },
+                { id: 54 },
+            ]);
 
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/projects/101/backlog", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    remove: [{ id: 5 }, { id: 54 }],
+                }),
+            });
         });
     });
 });

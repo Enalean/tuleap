@@ -17,63 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { patch } from "tlp";
+import { get } from "../../../../../../../src/themes/tlp/src/js";
+
 export default ProjectService;
 
-ProjectService.$inject = ["Restangular"];
+const headers = { "content-type": "application/json" };
 
-function ProjectService(Restangular) {
+ProjectService.$inject = ["$q"];
+
+function ProjectService($q) {
     return {
-        reorderBacklog: reorderBacklog,
-        getProject: getProject,
-        getProjectBacklog: getProjectBacklog,
-        removeAddReorderToBacklog: removeAddReorderToBacklog,
-        removeAddToBacklog: removeAddToBacklog,
+        reorderBacklog,
+        getProject,
+        getProjectBacklog,
+        removeAddReorderToBacklog,
+        removeAddToBacklog,
     };
 
     function reorderBacklog(project_id, dropped_item_ids, compared_to) {
-        return getRest("v1")
-            .one("projects", project_id)
-            .all("backlog")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/projects/${project_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                }),
+            })
+        );
     }
 
     function removeAddReorderToBacklog(milestone_id, project_id, dropped_item_ids, compared_to) {
-        return getRest("v1")
-            .one("projects", project_id)
-            .all("backlog")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/projects/${project_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function removeAddToBacklog(milestone_id, project_id, dropped_item_ids) {
-        return getRest("v1")
-            .one("projects", project_id)
-            .all("backlog")
-            .patch({
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: milestone_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/projects/${project_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: milestone_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function getProject(project_id) {
-        return getRest("v1").one("projects", project_id).get();
+        return $q.when(
+            get(encodeURI(`/api/v1/projects/${project_id}`))
+                .then((response) => response.json())
+                .then((project) => {
+                    return { data: project };
+                })
+        );
     }
 
     function getProjectBacklog(project_id) {
@@ -81,33 +98,28 @@ function ProjectService(Restangular) {
          * Use a string for the limit so that the server doesn't recognise a false value
          * and replace it with the default value. This means the response time is much faster.
          */
-        var limit = "00";
+        const limit = "00";
 
-        var promise = getRest("v2")
-            .one("projects", project_id)
-            .one("backlog")
-            .get({
-                limit: limit,
-                offset: 0,
+        return $q.when(
+            get(encodeURI(`/api/v2/projects/${project_id}/backlog`), {
+                params: { limit, offset: 0 },
             })
-            .then(function (response) {
-                var result = {
-                    allowed_backlog_item_types: getAllowedBacklogItemTypes(response.data),
-                    has_user_priority_change_permission:
-                        response.data.has_user_priority_change_permission,
-                };
-
-                return result;
-            });
-
-        return promise;
+                .then((response) => response.json())
+                .then((backlog) => {
+                    return {
+                        allowed_backlog_item_types: getAllowedBacklogItemTypes(backlog),
+                        has_user_priority_change_permission:
+                            backlog.has_user_priority_change_permission,
+                    };
+                })
+        );
     }
 
     function getAllowedBacklogItemTypes(data) {
         const allowed_trackers = data.accept.trackers;
         const parent_trackers = data.accept.parent_trackers;
 
-        const accepted_types = {
+        return {
             content: allowed_trackers,
             parent_trackers,
             toString() {
@@ -116,14 +128,5 @@ function ProjectService(Restangular) {
                     .join("|");
             },
         };
-
-        return accepted_types;
-    }
-
-    function getRest(version) {
-        return Restangular.withConfig(function (RestangularConfigurer) {
-            RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl("/api/" + version);
-        });
     }
 }

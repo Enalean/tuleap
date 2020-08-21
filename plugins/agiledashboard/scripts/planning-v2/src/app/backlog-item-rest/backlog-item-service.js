@@ -17,109 +17,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { get, patch } from "tlp";
+
 export default BacklogItemService;
 
-BacklogItemService.$inject = ["Restangular", "BacklogItemFactory"];
+const headers = { "content-type": "application/json" };
 
-function BacklogItemService(Restangular, BacklogItemFactory) {
-    var rest = Restangular.withConfig(function (RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl("/api/v1");
-    });
+BacklogItemService.$inject = ["$q", "BacklogItemFactory"];
 
-    var self = this;
+function BacklogItemService($q, BacklogItemFactory) {
+    const self = this;
     Object.assign(self, {
-        getBacklogItem: getBacklogItem,
-        getProjectBacklogItems: getProjectBacklogItems,
-        getMilestoneBacklogItems: getMilestoneBacklogItems,
-        getBacklogItemChildren: getBacklogItemChildren,
-        reorderBacklogItemChildren: reorderBacklogItemChildren,
-        removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
-        removeAddBacklogItemChildren: removeAddBacklogItemChildren,
-        removeItemFromExplicitBacklog: removeItemFromExplicitBacklog,
+        getBacklogItem,
+        getProjectBacklogItems,
+        getMilestoneBacklogItems,
+        getBacklogItemChildren,
+        reorderBacklogItemChildren,
+        removeAddReorderBacklogItemChildren,
+        removeAddBacklogItemChildren,
+        removeItemFromExplicitBacklog,
     });
 
     function getBacklogItem(backlog_item_id) {
-        var promise = rest
-            .one("backlog_items", backlog_item_id)
-            .get()
-            .then(function (response) {
-                augmentBacklogItem(response.data);
-
-                var result = {
-                    backlog_item: response.data,
-                };
-
-                return result;
-            });
-
-        return promise;
+        return $q.when(
+            get(encodeURI(`/api/v1/backlog_items/${backlog_item_id}`))
+                .then((response) => response.json())
+                .then((backlog_item) => {
+                    augmentBacklogItem(backlog_item);
+                    return { backlog_item };
+                })
+        );
     }
 
     function getProjectBacklogItems(project_id, limit, offset) {
-        var promise = rest
-            .one("projects", project_id)
-            .all("backlog")
-            .getList({
-                limit: limit,
-                offset: offset,
+        return $q.when(
+            get(encodeURI(`/api/v1/projects/${project_id}/backlog`), {
+                params: { limit, offset },
+            }).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((backlog_items) => {
+                    backlog_items.forEach(augmentBacklogItem);
+                    return { results: backlog_items, total };
+                });
             })
-            .then(function (response) {
-                response.data.forEach(augmentBacklogItem);
-
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-
-                return result;
-            });
-
-        return promise;
+        );
     }
 
     function getMilestoneBacklogItems(milestone_id, limit, offset) {
-        var promise = rest
-            .one("milestones", milestone_id)
-            .all("backlog")
-            .getList({
-                limit: limit,
-                offset: offset,
+        return $q.when(
+            get(encodeURI(`/api/v1/milestones/${milestone_id}/backlog`), {
+                params: { limit, offset },
+            }).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((backlog_items) => {
+                    backlog_items.forEach(augmentBacklogItem);
+                    return { results: backlog_items, total };
+                });
             })
-            .then(function (response) {
-                response.data.forEach(augmentBacklogItem);
-
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-
-                return result;
-            });
-
-        return promise;
+        );
     }
 
     function getBacklogItemChildren(backlog_item_id, limit, offset) {
-        var promise = rest
-            .one("backlog_items", backlog_item_id)
-            .all("children")
-            .getList({
-                limit: limit,
-                offset: offset,
+        return $q.when(
+            get(encodeURI(`/api/v1/backlog_items/${backlog_item_id}/children`), {
+                params: { limit, offset },
+            }).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((backlog_items) => {
+                    backlog_items.forEach(augmentBacklogItem);
+                    return { results: backlog_items, total };
+                });
             })
-            .then(function (response) {
-                response.data.forEach(augmentBacklogItem);
-
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-
-                return result;
-            });
-
-        return promise;
+        );
     }
 
     function augmentBacklogItem(data) {
@@ -127,16 +96,18 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
     }
 
     function reorderBacklogItemChildren(backlog_item_id, dropped_item_ids, compared_to) {
-        return rest
-            .one("backlog_items", backlog_item_id)
-            .all("children")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/backlog_items/${backlog_item_id}/children`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                }),
+            })
+        );
     }
 
     function removeAddReorderBacklogItemChildren(
@@ -145,20 +116,22 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
         dropped_item_ids,
         compared_to
     ) {
-        return rest
-            .one("backlog_items", dest_backlog_item_id)
-            .all("children")
-            .patch({
-                order: {
-                    ids: dropped_item_ids,
-                    direction: compared_to.direction,
-                    compared_to: compared_to.item_id,
-                },
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_backlog_item_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/backlog_items/${dest_backlog_item_id}/children`), {
+                headers,
+                body: JSON.stringify({
+                    order: {
+                        ids: dropped_item_ids,
+                        direction: compared_to.direction,
+                        compared_to: compared_to.item_id,
+                    },
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_backlog_item_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function removeAddBacklogItemChildren(
@@ -166,25 +139,29 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
         dest_backlog_item_id,
         dropped_item_ids
     ) {
-        return rest
-            .one("backlog_items", dest_backlog_item_id)
-            .all("children")
-            .patch({
-                add: dropped_item_ids.map((dropped_item_id) => ({
-                    id: dropped_item_id,
-                    remove_from: source_backlog_item_id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/backlog_items/${dest_backlog_item_id}/children`), {
+                headers,
+                body: JSON.stringify({
+                    add: dropped_item_ids.map((dropped_item_id) => ({
+                        id: dropped_item_id,
+                        remove_from: source_backlog_item_id,
+                    })),
+                }),
+            })
+        );
     }
 
     function removeItemFromExplicitBacklog(project_id, backlog_items) {
-        return rest
-            .one("projects", project_id)
-            .all("backlog")
-            .patch({
-                remove: backlog_items.map((backlog_item) => ({
-                    id: backlog_item.id,
-                })),
-            });
+        return $q.when(
+            patch(encodeURI(`/api/v1/projects/${project_id}/backlog`), {
+                headers,
+                body: JSON.stringify({
+                    remove: backlog_items.map((backlog_item) => ({
+                        id: backlog_item.id,
+                    })),
+                }),
+            })
+        );
     }
 }
