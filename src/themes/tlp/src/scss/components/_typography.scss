@@ -110,7 +110,7 @@ hr {
 
 p {
     margin: 0 0 $tlp-medium-spacing;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: $tlp-paragraph-line-height;
 
     &:last-child,
@@ -165,36 +165,27 @@ blockquote {
     margin: 0 0 $tlp-medium-spacing;
     padding: 0 0 0 $tlp-medium-spacing / 2;
     border-left: 5px solid #d7d7d7;
-    font-size: 16px;
-    line-height: 24px;
-}
-
-%tlp-text {
-    line-height: 16px;
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 
 .tlp-text-muted {
-    @extend %tlp-text;
     color: $tlp-ui-dimmed;
 }
 
 .tlp-text-info {
-    @extend %tlp-text;
     color: $tlp-ui-info;
 }
 
 .tlp-text-success {
-    @extend %tlp-text;
     color: $tlp-ui-success;
 }
 
 .tlp-text-warning {
-    @extend %tlp-text;
     color: $tlp-ui-warning;
 }
 
 .tlp-text-danger {
-    @extend %tlp-text;
     color: $tlp-ui-danger;
 }
 
@@ -202,16 +193,16 @@ blockquote {
     background: transparentize($tlp-theme-color, .95);
     color: $tlp-theme-color;
     font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-    font-size: 14px;
+    font-size: .875rem;
     font-weight: 400;
-    line-height: 22px;
+    line-height: 1.375rem;
 }
 
 code {
     @extend %tlp-code;
 
     padding: 3px;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 pre {

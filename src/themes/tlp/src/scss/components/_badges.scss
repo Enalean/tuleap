@@ -19,12 +19,12 @@
 
 $tlp-badge-radius: 15px;
 $tlp-badge-color: #ffffff;
-$tlp-badge-font-size: 12px;
-$tlp-badge-line-height: 12px;
+$tlp-badge-font-size: .75rem;
+$tlp-badge-line-height: .75rem;
 $tlp-badge-font-weight: 600;
-$tlp-badge-padding: 6px 9px;
+$tlp-badge-padding: 5px $tlp-small-spacing;
 @if $tlp-density == $tlp-density-condensed {
-    $tlp-badge-padding: 4px 8px;
+    $tlp-badge-padding: 4px $tlp-small-spacing;
 }
 
 $tlp-badge-secondary-background: $tlp-ui-border-normal;
@@ -50,7 +50,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 }
 
 .tlp-badge-icon {
-    margin: 0 3px 0 2px;
+    margin: 0 5px 0 0;
+    font-size: .625rem;
 }
 
 .tlp-badge-primary {

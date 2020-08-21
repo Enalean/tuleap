@@ -361,7 +361,10 @@ span.flatpickr-weekday { //stylelint-disable-line selector-no-qualifying-type
 }
 
 .flatpickr-day {
+    max-width: 40px;
+    height: 40px;
     color: #050505;
+    line-height: 38px;
 
     &:hover {
         border-color: transparent;

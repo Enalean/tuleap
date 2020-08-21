@@ -29,6 +29,13 @@ blockquote p {
     font-size: 1em;
 }
 
+input,
+button,
+select,
+textarea {
+    font-family: $base-font;
+}
+
 input[type='file'] {
     margin-top: -13px;
 }
@@ -140,7 +147,6 @@ legend {
     border-bottom: 0;
     background-color: $white;
     box-shadow: inset 0 1px 0 #e3e5ed, inset 0 -1px 0 #e3e5ed;
-    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 1px;
@@ -295,7 +301,6 @@ legend {
     border-color: $color;
     outline: none;
     background: $color;
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
     text-shadow: none;
 
     &:not(.btn-link) {
@@ -344,8 +349,6 @@ legend {
 }
 
 @mixin dropdown-menu($color) {
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
-
     &:not(.disabled) > a,
     > input {
         color: $color;
@@ -436,10 +439,6 @@ legend {
 .input-append {
     border-radius: 3px;
 
-    > * {
-        font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
-    }
-
     .btn {
         // @bdauton approved this crappy thing
         box-shadow: none !important;
@@ -454,7 +453,6 @@ legend {
     overflow: hidden;
     border: 1px solid transparent;
     box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
-    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
 
     form {

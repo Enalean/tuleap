@@ -33,6 +33,7 @@ $tlp-font-basepath: '../../tlp/src';
 html,
 body {
     height: 100%;
+    font-family: $base-font;
 }
 
 iframe {

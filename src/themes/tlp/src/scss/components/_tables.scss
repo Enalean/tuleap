@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-table-cell-padding: $tlp-small-spacing;
+$tlp-table-cell-padding: ($tlp-small-spacing / 2) $tlp-small-spacing;
 
 /**
  * Table actions
@@ -61,6 +61,8 @@ $tlp-table-cell-padding: $tlp-small-spacing;
 
 .tlp-table {
     width: 100%;
+    font-size: .875rem;
+    line-height: 1.375rem;
 
     /* stylelint-disable selector-no-qualifying-type */
     > thead > tr > th {
@@ -90,21 +92,22 @@ $tlp-table-cell-padding: $tlp-small-spacing;
 
         > tr:hover > td {
             background: mix($tlp-theme-color, $tlp-ui-white, 7%);
+
+            .tlp-table-cell-actions-button {
+                opacity: 1;
+            }
         }
 
         > tr > td {
             padding: $tlp-table-cell-padding;
-            border-bottom: 1px solid transparent;
-            line-height: normal;
+            line-height: 1.5rem;
             vertical-align: middle;
 
             &.tlp-table-cell-section {
-                padding: 5px $tlp-table-cell-padding;
                 background: $tlp-theme-background-color;
                 color: $tlp-theme-color;
-                font-size: 13px;
+                font-size: .75rem;
                 font-weight: 600;
-                letter-spacing: .3px;
                 text-transform: uppercase;
             }
 
@@ -138,11 +141,6 @@ $tlp-table-cell-padding: $tlp-small-spacing;
             }
         }
 
-        > .tlp-table-last-row > td,
-        > tr:last-child > td {
-            border: 0;
-        }
-
         > .tlp-table-row-hidden {
             display: none;
         }
@@ -163,6 +161,7 @@ $tlp-table-cell-padding: $tlp-small-spacing;
 
 .tlp-table-cell-numeric {
     text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
 .tlp-table-cell-actions {
@@ -170,11 +169,26 @@ $tlp-table-cell-padding: $tlp-small-spacing;
     white-space: nowrap;
 }
 
+.tlp-button-primary,
+.tlp-button-secondary,
+.tlp-button-info,
+.tlp-button-success,
+.tlp-button-warning,
+.tlp-button-danger {
+    &.tlp-table-cell-actions-button {
+        max-height: $tlp-x-large-spacing - 2;
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+}
+
 .tlp-table-cell-actions-button {
-    margin: -10px 0 -5px;
+    margin: -8px 0 -5px;
+    opacity: 0;
 
     + .tlp-table-cell-actions-button {
-        margin: -10px 0 -5px 5px;
+        margin: -8px 0 -5px 5px;
 
         &.tlp-switch {
             margin: -5px 0 -5px 5px;
@@ -183,6 +197,7 @@ $tlp-table-cell-padding: $tlp-small-spacing;
 
     &.tlp-switch {
         margin: -5px 0;
+        opacity: 1;
     }
 }
 

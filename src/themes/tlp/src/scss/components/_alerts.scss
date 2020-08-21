@@ -22,9 +22,9 @@
     margin: 0 0 $tlp-medium-spacing;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing 42px;
     border-left: 5px solid transparent;
-    border-radius: 3px;
-    font-size: 16px;
-    line-height: 24px;
+    border-radius: 4px;
+    font-size: 1rem;
+    line-height: 1.5rem;
 
     &:last-child {
         margin: 0;
@@ -36,7 +36,7 @@
         top: $tlp-medium-spacing + 1px;
         left: $tlp-medium-spacing;
         font-family: FontAwesome;
-        font-size: 18px;
+        font-size: 1.125rem;
     }
 
     code {

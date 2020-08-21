@@ -26,7 +26,6 @@
     height: calc(100vh - #{$navbar-height});
     overflow: hidden;
     background: $sidebar-background;
-    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     @media screen and (max-width: 880px) {
         padding: $navbar-height 0 0;
     }
