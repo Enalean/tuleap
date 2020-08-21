@@ -153,14 +153,10 @@ case "$PHP_FPM" in
     '/opt/remi/php73/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.3"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
-    echo "zend.assertions = 1" >> /etc/opt/remi/php73/php.ini
-    echo "assert.exception = 1" >> /etc/opt/remi/php73/php.ini
     ;;
     '/opt/remi/php74/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.4"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php74/run.php --modules=nginx,fpm
-    echo "zend.assertions = 1" >> /etc/opt/remi/php74/php.ini
-    echo "assert.exception = 1" >> /etc/opt/remi/php74/php.ini
     ;;
 esac
 tuleap_db_config
