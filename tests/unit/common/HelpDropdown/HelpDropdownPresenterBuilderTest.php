@@ -86,8 +86,8 @@ class HelpDropdownPresenterBuilderTest extends TestCase
 
         $this->uri_sanitizer
             ->shouldReceive('sanitizeForHTMLAttribute')
-            ->withArgs(["https://www.tuleap.org/ressources/release-notes/tuleap-11-17"])
-            ->andReturn("https://www.tuleap.org/ressources/release-notes/tuleap-11-17");
+            ->withArgs(["https://www.tuleap.org/resources/release-notes/tuleap-11-17"])
+            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
 
         $expected_result = new HelpDropdownPresenter(
             [
@@ -107,7 +107,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
             null,
             HelpLinkPresenter::build(
                 'Release Note',
-                'https://www.tuleap.org/ressources/release-notes/tuleap-11-17',
+                'https://www.tuleap.org/resources/release-notes/tuleap-11-17',
                 "fa-star",
                 $this->uri_sanitizer
             )
@@ -115,7 +115,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
 
         $this->release_note_manager
             ->shouldReceive('getReleaseNoteLink')
-            ->andReturn("https://www.tuleap.org/ressources/release-notes/tuleap-11-17");
+            ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
 
         $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
     }

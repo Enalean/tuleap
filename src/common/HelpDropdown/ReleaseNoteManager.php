@@ -42,7 +42,7 @@ class ReleaseNoteManager
     {
         $link = $this->release_note_dao->getReleaseLink();
 
-        $actual_version_link = 'https://www.tuleap.org/ressources/release-notes/tuleap-' . urlencode($this->tuleap_version);
+        $actual_version_link = 'https://www.tuleap.org/resources/release-notes/tuleap-' . urlencode($this->tuleap_version);
 
         if ($link === null) {
             $this->release_note_dao->createReleaseNoteLink($this->tuleap_version);
