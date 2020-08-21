@@ -130,58 +130,6 @@ if ($ref) {
 if ($request->isAjax()) {
     $html_purifier = Codendi_HTMLPurifier::instance();
     switch ($ref->getServiceShortName()) {
-        case 'tracker':
-            $user_id = UserManager::instance()->getCurrentUser()->getId();
-            $aid = $request->get('val');
-            $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($aid);
-            $result = db_query($sql);
-            if (db_numrows($result) > 0) {
-                $row = db_fetch_array($result);
-                $atid = $row['group_artifact_id'];
-
-                $at = new ArtifactType($project, $atid);
-                $values = null;
-                if (! $at->isError() && $at->isValid()) {
-                    $art_field_fact = new ArtifactFieldFactory($at);
-                    $ah = new ArtifactHtml($at, $aid);
-                    $uh = new UserHelper();
-
-                    $values = [];
-                    foreach (['summary', 'submitted_by', 'status_id'] as $field_name) {
-                        $field = $art_field_fact->getFieldFromName($field_name);
-                        if ($field->userCanRead($group_id, $atid)) {
-                            if ($field->isMultiSelectBox()) {
-                                $field_value = $field->getValues($ah->getID());
-                            } else {
-                                $field_value = $ah->getValue($field_name);
-                            }
-
-                            $field_html = new ArtifactFieldHtml($field);
-
-                            if ($field->getName() == 'submitted_by') {
-                                $value = $html_purifier->purify($uh->getDisplayNameFromUserId($field_value));
-
-                                $open_date = $art_field_fact->getFieldFromName($field_name);
-                                if ($field->userCanRead($group_id, $atid)) {
-                                    $value .= $html_purifier->purify(', ' . DateHelper::timeAgoInWords($ah->getValue('open_date')));
-                                }
-                            } else {
-                                $value = $field_html->display($at->getID(), $field_value, false, false, true);
-                            }
-
-                            $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
-                            $values[] = '<tr><td>' . $field_html->labelDisplay() . '</td><td>' . $value . '</td></tr>';
-                        }
-                    }
-                }
-
-                if ($values && count($values)) {
-                    echo '<table>';
-                    echo implode('', $values);
-                    echo '</table>';
-                }
-            }
-            break;
         case 'svn':
             require_once __DIR__ . '/../www/svn/svn_data.php';
             $group_id = $request->get('group_id');
