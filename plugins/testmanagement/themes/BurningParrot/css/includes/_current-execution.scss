@@ -23,6 +23,12 @@
         > .current-test-automated-message {
             color: $tlp-ui-success;
         }
+
+        .current-test-latest-result {
+            code {
+                color: $tlp-ui-success;
+            }
+        }
     }
 
     &.failed > .tlp-pane-container {
@@ -36,6 +42,12 @@
 
         > .current-test-automated-message {
             color: $tlp-ui-danger;
+        }
+
+        .current-test-latest-result {
+            code {
+                color: $tlp-ui-danger;
+            }
         }
     }
 
@@ -51,6 +63,12 @@
         > .current-test-automated-message {
             color: $tlp-ui-info;
         }
+
+        .current-test-latest-result {
+            code {
+                color: $tlp-ui-info;
+            }
+        }
     }
 
     &.notrun > .tlp-pane-container {
@@ -64,6 +82,12 @@
 
         > .current-test-automated-message {
             color: $tlp-ui-dimmed;
+        }
+
+        .current-test-latest-result {
+            code {
+                color: $tlp-ui-dimmed;
+            }
         }
     }
 }
@@ -168,6 +192,10 @@
     a {
         color: $tlp-ui-white;
         text-decoration: underline;
+    }
+
+    code {
+        background: transparentize($tlp-ui-white, .2);
     }
 }
 
