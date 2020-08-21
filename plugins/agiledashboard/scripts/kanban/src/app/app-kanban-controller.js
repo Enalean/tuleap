@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import "./error-modal/error.tpl.html";
 import { resetError, setError } from "./feedback-state.js";
 
-import _ from "lodash";
 import angular from "angular";
 import { highlightColumn } from "./kanban-column/kanban-column-highlighter";
 import { under_the_fold_notification_event_source } from "./event/UnderTheFoldNotificationEventDispatcher";
@@ -546,12 +564,15 @@ function KanbanCtrl(
         self.backlog.content.push(item);
         self.backlog.filtered_content.push(item);
 
-        KanbanItemRestService.createItemInBacklog(kanban.id, item.label).then(function (response) {
-            setItemAsCreated(item, response);
-        }, reload);
+        KanbanItemRestService.createItemInBacklog(kanban.id, item.label).then(
+            (item_representation) => {
+                setItemAsCreated(item, item_representation);
+            },
+            reload
+        );
     }
 
-    function setItemAsCreated(item, response) {
+    function setItemAsCreated(item, item_representation) {
         item.updating = false;
         item.created = true;
         setTimeout(() => {
@@ -559,7 +580,7 @@ function KanbanCtrl(
             $scope.$apply();
         }, 1000);
 
-        _.extend(item, response.data);
+        Object.assign(item, item_representation);
 
         reflowKustomScrollBars();
         under_the_fold_notification_event_source.dispatch();
@@ -571,12 +592,12 @@ function KanbanCtrl(
         column.content.push(item);
         column.filtered_content.push(item);
 
-        KanbanItemRestService.createItem(kanban.id, column.id, item.label).then(function (
-            response
-        ) {
-            setItemAsCreated(item, response);
-        },
-        reload);
+        KanbanItemRestService.createItem(kanban.id, column.id, item.label).then(
+            (item_representation) => {
+                setItemAsCreated(item, item_representation);
+            },
+            reload
+        );
     }
 
     function showEditModal($event, item) {

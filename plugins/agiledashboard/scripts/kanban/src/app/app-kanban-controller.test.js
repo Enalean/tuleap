@@ -1,10 +1,29 @@
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./app-kanban-controller.js";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("KanbanCtrl -", function () {
+describe("KanbanCtrl", function () {
     let $rootScope,
         $scope,
         $controller,
@@ -276,12 +295,12 @@ describe("KanbanCtrl -", function () {
         });
 
         describe("Given that the archive column was closed", function () {
-            beforeEach(function () {
+            beforeEach(() => {
                 KanbanCtrl.archive.is_open = false;
+                jest.spyOn(KanbanService, "expandArchive").mockImplementation(() => {});
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
-                jest.spyOn(KanbanService, "expandArchive").mockImplementation(() => {});
                 KanbanCtrl.archive.fully_loaded = true;
                 KanbanCtrl.archive.content = [{ id: 36 }];
 
@@ -316,12 +335,12 @@ describe("KanbanCtrl -", function () {
         });
 
         describe("Given that the backlog column was closed", function () {
-            beforeEach(function () {
+            beforeEach(() => {
                 KanbanCtrl.backlog.is_open = false;
+                jest.spyOn(KanbanService, "expandBacklog").mockImplementation(() => {});
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
-                jest.spyOn(KanbanService, "expandBacklog").mockImplementation(() => {});
                 KanbanCtrl.backlog.fully_loaded = true;
                 KanbanCtrl.backlog.content = [{ id: 80 }];
 
@@ -381,16 +400,18 @@ describe("KanbanCtrl -", function () {
         });
     });
 
-    describe("createItemInPlace() -", function () {
-        it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemRestService and will be appended to the given column", function () {
-            var create_item_request = $q.defer();
+    describe("createItemInPlace", () => {
+        it(`Given a label and a kanban column,
+            when I create a new kanban item,
+            then it will be created using KanbanItemRestService
+            and will be appended to the given column`, () => {
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
                 true
             );
             jest.spyOn(KanbanItemRestService, "createItem").mockReturnValue(
-                create_item_request.promise
+                $q.when({ id: 94, label: "photothermic" })
             );
-            var column = {
+            const column = {
                 id: 5,
                 content: [{ id: 97 }, { id: 69 }],
                 filtered_content: [{ id: 69 }],
@@ -420,11 +441,6 @@ describe("KanbanCtrl -", function () {
                 },
             ]);
             expect(column.filtered_content).not.toBe(column.content);
-
-            create_item_request.resolve({
-                id: 94,
-                label: "photothermic",
-            });
             $scope.$apply();
 
             expect(column.content[2].updating).toBeFalsy();
@@ -436,14 +452,15 @@ describe("KanbanCtrl -", function () {
         });
     });
 
-    describe("createItemInPlaceInBacklog() -", function () {
-        it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemRestService and will be appended to the backlog", function () {
-            var create_item_request = $q.defer();
+    describe("createItemInPlaceInBacklog()", () => {
+        it(`Given a label, when I create a new kanban item in the backlog,
+            then it will be created using KanbanItemRestService
+            and will be appended to the backlog`, () => {
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
                 true
             );
             jest.spyOn(KanbanItemRestService, "createItemInBacklog").mockReturnValue(
-                create_item_request.promise
+                $q.when({ id: 11, label: "unbeautifully" })
             );
             KanbanCtrl.backlog.content = [{ id: 91 }, { id: 85 }];
             KanbanCtrl.backlog.filtered_content = [{ id: 91 }];
@@ -472,11 +489,6 @@ describe("KanbanCtrl -", function () {
                 },
             ]);
             expect(KanbanCtrl.backlog.filtered_content).not.toBe(KanbanCtrl.backlog.content);
-
-            create_item_request.resolve({
-                id: 11,
-                label: "unbeautifully",
-            });
             $scope.$apply();
 
             expect(KanbanCtrl.backlog.content[2].updating).toBeFalsy();

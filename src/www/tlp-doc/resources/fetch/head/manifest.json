@@ -1,0 +1,4 @@
+{
+    "label": "head",
+    "shortcode": "tlp.head(url_to_query, options)"
+}

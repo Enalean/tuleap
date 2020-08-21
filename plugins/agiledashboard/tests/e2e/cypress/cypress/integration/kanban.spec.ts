@@ -46,7 +46,6 @@ describe("Kanban for the Agile Dashboard service", () => {
         beforeEach(function () {
             cy.ProjectAdministratorLogin();
             cy.visit(this.kanban_url);
-            cy.server();
         });
         it(`can rename the kanban`, function () {
             cy.get("[data-test=kanban-header-title]").contains("Activities");
@@ -163,12 +162,9 @@ describe("Kanban for the Agile Dashboard service", () => {
         beforeEach(function () {
             cy.projectMemberLogin();
             cy.visit(this.kanban_url);
-            cy.server();
         });
 
         it(`I can manipulate cards`, function () {
-            cy.route("POST", "/api/v1/kanban_items").as("post_kanban_item");
-
             cy.get("[data-test=kanban-column-to_be_done]")
                 .first()
                 .within(() => {
@@ -179,17 +175,20 @@ describe("Kanban for the Agile Dashboard service", () => {
                         .clear()
                         .type("Think about my revenge");
                     cy.get("[data-test=add-in-place-submit]").first().click();
-                    cy.wait("@post_kanban_item");
 
-                    cy.get("[data-test=add-in-place-label-input]").clear().type("Still speedin'");
-
-                    cy.get("[data-test=add-in-place-submit]").first().click();
-                    cy.wait("@post_kanban_item");
-
-                    cy.get("[data-test=add-in-place-label-input]").clear().type("i30 Namyang");
+                    cy.get("[data-test=add-in-place-label-input]")
+                        .should("not.be.disabled")
+                        .clear()
+                        .type("Still speedin'");
 
                     cy.get("[data-test=add-in-place-submit]").first().click();
-                    cy.wait("@post_kanban_item");
+
+                    cy.get("[data-test=add-in-place-label-input]")
+                        .should("not.be.disabled")
+                        .clear()
+                        .type("i30 Namyang");
+
+                    cy.get("[data-test=add-in-place-submit]").first().click();
                 });
 
             // need to escape for drag and drop only works on body and global body seems erased by angular

@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { get, post } from "tlp";
+
 export default KanbanItemRestService;
 
-KanbanItemRestService.$inject = [
-    "$q",
-    "Restangular",
-    "SharedPropertiesService",
-    "RestErrorService",
-];
+KanbanItemRestService.$inject = ["$q", "SharedPropertiesService", "RestErrorService"];
 
-function KanbanItemRestService($q, Restangular, SharedPropertiesService, RestErrorService) {
-    Object.assign(Restangular.configuration.defaultHeaders, {
+function KanbanItemRestService($q, SharedPropertiesService, RestErrorService) {
+    const headers = {
+        "content-type": "application/json",
         "X-Client-UUID": SharedPropertiesService.getUUID(),
-    });
+    };
 
     return {
         createItem,
@@ -38,31 +36,34 @@ function KanbanItemRestService($q, Restangular, SharedPropertiesService, RestErr
     };
 
     function createItem(kanban_id, column_id, label) {
-        return Restangular.one("kanban_items").post("", {
-            label: label,
-            kanban_id: kanban_id,
-            column_id: column_id,
-        });
+        return $q.when(
+            post(encodeURI("/api/v1/kanban_items"), {
+                headers,
+                body: JSON.stringify({ label, kanban_id, column_id }),
+            }).then((response) => response.json())
+        );
     }
 
     function createItemInBacklog(kanban_id, label) {
-        return Restangular.one("kanban_items").post("", {
-            label: label,
-            kanban_id: kanban_id,
-        });
+        return $q.when(
+            post(encodeURI("/api/v1/kanban_items"), {
+                headers,
+                body: JSON.stringify({ label, kanban_id }),
+            }).then((response) => response.json())
+        );
     }
 
     function getItem(item_id) {
-        return Restangular.one("kanban_items", item_id)
-            .get()
-            .then(function (response) {
-                return response.data;
-            })
-            .catch(catchRestError);
+        return $q.when(
+            get(encodeURI(`/api/v1/kanban_items/${item_id}`)).then(
+                (response) => response.json(),
+                catchRestError
+            )
+        );
     }
 
-    function catchRestError(data) {
-        RestErrorService.reload(data);
+    function catchRestError(error) {
+        RestErrorService.reload(error);
 
         return $q.reject();
     }

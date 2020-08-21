@@ -1,0 +1,14 @@
+<script>
+    import { head } from "tlp";
+
+    // getBacklogSize(20) will query /api/v1/kanban/20/backlog?query%3D%7Bstatus%3A%22open%22%7D
+    async function getBacklogSize(kanban_id) {
+        const response = await head(encodeURI(`/api/v1/kanban/${kanban_id}/backlog`), {
+            params: {
+                // These parameters are URI-encoded
+                query: JSON.stringify({ status: "open" }),
+            },
+        });
+        return Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+    }
+</script>

@@ -2,7 +2,7 @@
 import { put } from 'tlp';
 
 async function updateReport(report_id, trackers_id) {
-    const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
+    const response = await put(encodeURI("/api/v1/cross_tracker_reports/" + report_id), {
         headers: {
             "Content-Type": "application/json"
         },

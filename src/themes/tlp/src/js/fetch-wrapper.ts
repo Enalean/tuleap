@@ -22,7 +22,11 @@ interface AutoEncodedParameters {
     [key: string]: string | number | boolean;
 }
 
-type GetInit = RequestInit & { method?: "GET"; params?: AutoEncodedParameters };
+interface InitWithAutoEncodedParameters {
+    params?: AutoEncodedParameters;
+}
+
+type GetInit = RequestInit & InitWithAutoEncodedParameters & { method?: "GET" };
 
 const encodeParamToURI = ([key, value]: AutoEncodedParameter): string => {
     return encodeURIComponent(key) + "=" + encodeURIComponent(value);
@@ -41,12 +45,15 @@ const encodeAllParamsToURI = (params: AutoEncodedParameters): string => {
     return url_params;
 };
 
+const isEmptyObject = (params: Record<string, unknown>): boolean =>
+    Object.keys(params).length === 0 && params.constructor === Object;
+
 export async function get(url: string, init: GetInit = {}): Promise<Response> {
     const method = "GET";
     const { credentials = "same-origin", params } = init;
 
     let url_with_params = url;
-    if (params) {
+    if (params && !isEmptyObject(params)) {
         url_with_params += encodeAllParamsToURI(params);
     }
 
@@ -170,6 +177,19 @@ export function options(url: string, init: OptionsInit = {}): Promise<Response> 
         { credentials = "same-origin" } = init;
 
     return fetch(url, { method, credentials, ...init }).then(checkResponse);
+}
+
+type HeadInit = RequestInit & InitWithAutoEncodedParameters & { method?: "HEAD" };
+export function head(url: string, init: HeadInit = {}): Promise<Response> {
+    const method = "HEAD";
+    const { credentials = "same-origin", params } = init;
+
+    let url_with_params = url;
+    if (params && !isEmptyObject(params)) {
+        url_with_params += encodeAllParamsToURI(params);
+    }
+
+    return fetch(url_with_params, { method, credentials, ...init }).then(checkResponse);
 }
 
 function checkResponse(response: Response): Response {

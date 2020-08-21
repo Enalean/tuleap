@@ -19,7 +19,7 @@
 
 import "./planner-view.tpl.html";
 import { sortByStartDateDescending } from "../milestone/sort-helper";
-import { extractErrorMessage } from "../rest-error/error-message-helper";
+import { extractErrorMessage } from "../../../../shared/error-message-helper";
 import {
     getClosedSubMilestones,
     getClosedTopMilestones,

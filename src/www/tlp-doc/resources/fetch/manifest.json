@@ -8,6 +8,7 @@
         "post",
         "del",
         "recursive-get",
-        "options"
+        "options",
+        "head"
     ]
 }
