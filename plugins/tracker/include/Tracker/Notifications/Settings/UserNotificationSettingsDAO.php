@@ -58,18 +58,15 @@ class UserNotificationSettingsDAO extends DataAccessObject
 
     public function enableNotifyOnStatusChangeMode($user_id, $tracker_id)
     {
-        $this->getDB()->beginTransaction();
-        try {
-            $this->deleteUserNotificationSettings($user_id, $tracker_id);
-            $this->getDB()->insert(
-                'tracker_only_status_change_notification_subscribers',
-                ['user_id' => $user_id, 'tracker_id' => $tracker_id]
-            );
-            $this->getDB()->commit();
-        } catch (\Exception $ex) {
-            $this->getDB()->rollBack();
-            throw $ex;
-        }
+        $this->getDB()->tryFlatTransaction(
+            function () use ($user_id, $tracker_id): void {
+                $this->enableGlobalNotification($user_id, $tracker_id, true);
+                $this->getDB()->insert(
+                    'tracker_only_status_change_notification_subscribers',
+                    ['user_id' => $user_id, 'tracker_id' => $tracker_id]
+                );
+            }
+        );
     }
 
     public function enableNotifyOnArtifactCreationMode($user_id, $tracker_id)
@@ -84,25 +81,21 @@ class UserNotificationSettingsDAO extends DataAccessObject
 
     private function enableGlobalNotification($user_id, $tracker_id, $all_updates)
     {
-        $this->getDB()->beginTransaction();
-        try {
-            $check_permission = $this->getCurrentGlobalNotificationCheckPermissionSetting($user_id, $tracker_id);
-            $this->deleteUserNotificationSettings($user_id, $tracker_id);
-            $this->getDB()->insert(
-                'tracker_global_notification',
-                ['tracker_id' => $tracker_id, 'all_updates' => $all_updates, 'check_permissions' => $check_permission]
-            );
-            $notification_id = $this->getDB()->lastInsertId();
-            $this->getDB()->insert(
-                'tracker_global_notification_users',
-                ['notification_id' => $notification_id, 'user_id' => $user_id]
-            );
-
-            $this->getDB()->commit();
-        } catch (\Exception $ex) {
-            $this->getDB()->rollBack();
-            throw $ex;
-        }
+        $this->getDB()->tryFlatTransaction(
+            function () use ($user_id, $tracker_id, $all_updates): void {
+                $check_permission = $this->getCurrentGlobalNotificationCheckPermissionSetting($user_id, $tracker_id);
+                $this->deleteUserNotificationSettings($user_id, $tracker_id);
+                $this->getDB()->insert(
+                    'tracker_global_notification',
+                    ['tracker_id' => $tracker_id, 'all_updates' => $all_updates, 'check_permissions' => $check_permission]
+                );
+                $notification_id = $this->getDB()->lastInsertId();
+                $this->getDB()->insert(
+                    'tracker_global_notification_users',
+                    ['notification_id' => $notification_id, 'user_id' => $user_id]
+                );
+            }
+        );
     }
 
     private function deleteUserNotificationSettings($user_id, $tracker_id)
