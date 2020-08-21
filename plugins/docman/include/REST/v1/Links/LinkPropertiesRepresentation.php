@@ -22,6 +22,9 @@ namespace Tuleap\Docman\REST\v1\Links;
 
 use Docman_LinkVersion;
 
+/**
+ * @psalm-immutable
+ */
 class LinkPropertiesRepresentation
 {
     /**
@@ -29,8 +32,13 @@ class LinkPropertiesRepresentation
      */
     public $link_url;
 
-    public function build(?Docman_LinkVersion $link)
+    private function __construct(string $link_url)
     {
-        $this->link_url = ($link) ? $link->getLink() : "";
+        $this->link_url = $link_url;
+    }
+
+    public static function build(?Docman_LinkVersion $link): self
+    {
+        return new self(($link) ? $link->getLink() : "");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,9 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 final class CreatedItemRepresentation
 {
     /**
@@ -37,17 +40,25 @@ final class CreatedItemRepresentation
     public $uri;
 
     /**
-     * @var CreatedItemFilePropertiesRepresentation {@type \Tuleap\Docman\REST\v1\CreatedItemFilePropertiesRepresentation} {@required false}
+     * @var CreatedItemFilePropertiesRepresentation | null {@type \Tuleap\Docman\REST\v1\CreatedItemFilePropertiesRepresentation} {@required false}
      */
     public $file_properties;
+
+    private function __construct(int $item_id, ?CreatedItemFilePropertiesRepresentation $file_properties)
+    {
+        $this->id              = $item_id;
+        $this->uri             = ResourcesInjector::NAME . '/' . $item_id;
+        $this->file_properties = $file_properties;
+    }
 
     /**
      * @param int $item_id The id of the item.
      */
-    public function build($item_id, ?CreatedItemFilePropertiesRepresentation $file_properties = null)
+    public static function build($item_id, ?CreatedItemFilePropertiesRepresentation $file_properties = null): self
     {
-        $this->id              = JsonCast::toInt($item_id);
-        $this->uri             = ResourcesInjector::NAME . '/' . $item_id;
-        $this->file_properties = $file_properties;
+        return new self(
+            JsonCast::toInt($item_id),
+            $file_properties
+        );
     }
 }

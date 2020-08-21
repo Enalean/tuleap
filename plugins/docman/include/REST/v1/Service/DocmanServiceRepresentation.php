@@ -24,6 +24,9 @@ namespace Tuleap\Docman\REST\v1\Service;
 
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 final class DocmanServiceRepresentation
 {
     /**

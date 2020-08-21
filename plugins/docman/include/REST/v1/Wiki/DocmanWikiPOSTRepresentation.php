@@ -27,6 +27,9 @@ use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class DocmanWikiPOSTRepresentation implements CanContainACopyRepresentation
 {
     private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'wiki_properties'];

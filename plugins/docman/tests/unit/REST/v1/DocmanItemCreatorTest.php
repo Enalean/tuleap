@@ -24,6 +24,7 @@ use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_Folder;
 use Docman_Link;
+use Docman_LinkVersion;
 use Docman_MetadataValueDao;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
@@ -465,8 +466,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $post_representation                            = new DocmanLinkPOSTRepresentation();
         $post_representation->title                     = 'Mie faboulouse linke';
-        $post_representation->link_properties           = new LinkPropertiesRepresentation();
-        $post_representation->link_properties->link_url = 'https://my.example.test';
+        $docman_link                                    = \Mockery::mock(Docman_LinkVersion::class);
+        $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
+        $post_representation->link_properties           = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->permissions_for_groups    = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
@@ -976,8 +978,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $post_representation                            = new DocmanLinkPOSTRepresentation();
         $post_representation->title                     = 'Link with status and Obsolescence date';
-        $post_representation->link_properties           = new LinkPropertiesRepresentation();
-        $post_representation->link_properties->link_url = 'https://my.example.test';
+        $docman_link                                    = \Mockery::mock(Docman_LinkVersion::class);
+        $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
+        $post_representation->link_properties           = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->status                    = 'approved';
         $post_representation->obsolescence_date         = '2019-10-11';
 

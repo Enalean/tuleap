@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+/**
+ * @psalm-immutable
+ */
 final class CreatedItemFilePropertiesRepresentation
 {
     /**
@@ -29,8 +32,13 @@ final class CreatedItemFilePropertiesRepresentation
      */
     public $upload_href;
 
-    public function build($upload_href)
+    private function __construct(string $upload_href)
     {
         $this->upload_href = $upload_href;
+    }
+
+    public static function build(string $upload_href): self
+    {
+        return new self($upload_href);
     }
 }

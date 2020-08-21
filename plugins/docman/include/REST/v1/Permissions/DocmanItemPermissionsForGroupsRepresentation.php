@@ -24,6 +24,9 @@ namespace Tuleap\Docman\REST\v1\Permissions;
 
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 final class DocmanItemPermissionsForGroupsRepresentation
 {
     /**

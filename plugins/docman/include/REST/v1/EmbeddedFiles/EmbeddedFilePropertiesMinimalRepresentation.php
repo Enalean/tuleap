@@ -22,6 +22,9 @@
 
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
+/**
+ * @psalm-immutable
+ */
 class EmbeddedFilePropertiesMinimalRepresentation implements IEmbeddedFilePropertiesRepresentation
 {
     /**
@@ -34,7 +37,7 @@ class EmbeddedFilePropertiesMinimalRepresentation implements IEmbeddedFileProper
         $this->file_type = $docman_version->getFiletype();
     }
 
-    public static function build(\Docman_Version $docman_version)
+    public static function build(\Docman_Version $docman_version): self
     {
         return new self($docman_version);
     }

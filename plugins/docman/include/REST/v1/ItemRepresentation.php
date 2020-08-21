@@ -31,6 +31,9 @@ use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ItemRepresentation
 {
     public const TYPE_FOLDER   = 'folder';
@@ -52,7 +55,7 @@ class ItemRepresentation
     public $title;
 
     /**
-     * @var string {@type string}
+     * @var string | null {@type string}
      */
     public $description;
 
@@ -67,12 +70,12 @@ class ItemRepresentation
     public $owner;
 
     /**
-     * @var string {@type string}
+     * @var string | null {@type string}
      */
     public $last_update_date;
 
     /**
-     * @var string {@type string}
+     * @var string | null {@type string}
      */
     public $creation_date;
 
@@ -82,7 +85,7 @@ class ItemRepresentation
     public $user_can_write;
 
     /**
-     * @var string
+     * @var string | null
      */
     public $type;
 
@@ -155,12 +158,68 @@ class ItemRepresentation
      */
     public $folder_properties;
 
-    public function build(
+    /**
+     * @param ItemMetadataRepresentation[] $metadata
+     */
+    private function __construct(
+        int $id,
+        string $title,
+        ?string $description,
+        string $post_processed_description,
+        MinimalUserRepresentation $owner,
+        ?string $last_update_date,
+        ?string $creation_date,
+        bool $user_can_write,
+        bool $can_user_manage,
+        ?string $type,
+        ?FilePropertiesRepresentation $file_properties,
+        ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties,
+        ?LinkPropertiesRepresentation $link_properties,
+        ?WikiPropertiesRepresentation $wiki_properties,
+        ?FolderPropertiesRepresentation $folder_properties,
+        bool $is_expanded,
+        ?ItemApprovalTableRepresentation $approval_table,
+        ?ItemLockInfoRepresentation $lock_info,
+        array $metadata,
+        bool $has_approval_table,
+        bool $is_approval_table_enabled,
+        ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
+        ?int $parent_id
+    ) {
+        $this->id                         = $id;
+        $this->title                      = $title;
+        $this->description                = $description;
+        $this->post_processed_description = $post_processed_description;
+        $this->owner                      = $owner;
+        $this->last_update_date           = $last_update_date;
+        $this->creation_date              = $creation_date;
+        $this->user_can_write             = $user_can_write;
+        $this->can_user_manage            = $can_user_manage;
+        $this->type                       = $type;
+        $this->file_properties            = $file_properties;
+        $this->embedded_file_properties   = $embedded_file_properties;
+        $this->link_properties            = $link_properties;
+        $this->wiki_properties            = $wiki_properties;
+        $this->folder_properties          = $folder_properties;
+        $this->is_expanded                = $is_expanded;
+        $this->approval_table             = $approval_table;
+        $this->lock_info                  = $lock_info;
+        $this->metadata                   = $metadata;
+        $this->has_approval_table         = $has_approval_table;
+        $this->is_approval_table_enabled  = $is_approval_table_enabled;
+        $this->permissions_for_groups     = $permissions_for_groups;
+        $this->parent_id                  = $parent_id ?: 0;
+    }
+
+    /**
+     * @param ItemMetadataRepresentation[] $metadata_representations
+     */
+    public static function build(
         \Docman_Item $item,
         Codendi_HTMLPurifier $purifier,
         MinimalUserRepresentation $owner,
-        $user_can_write,
-        $type,
+        bool $user_can_write,
+        ?string $type,
         bool $is_expanded,
         bool $can_user_manage,
         array $metadata_representations,
@@ -174,32 +233,32 @@ class ItemRepresentation
         ?LinkPropertiesRepresentation $link_properties,
         ?WikiPropertiesRepresentation $wiki_properties,
         ?FolderPropertiesRepresentation $folder_properties
-    ) {
-        $this->id                         = JsonCast::toInt($item->getId());
-        $this->title                      = $item->getTitle();
-        $this->description                = $item->getDescription();
-        $this->post_processed_description = $purifier->purifyTextWithReferences($this->description, $item->getGroupId());
-        $this->owner                      = $owner;
-        $this->last_update_date           = JsonCast::toDate($item->getUpdateDate());
-        $this->creation_date              = JsonCast::toDate($item->getCreateDate());
-        $this->user_can_write             = $user_can_write;
-        $this->can_user_manage            = $can_user_manage;
-        $this->type                       = $type;
-        $this->file_properties            = $file_properties;
-        $this->embedded_file_properties   = $embedded_file_properties;
-        $this->link_properties            = $link_properties;
-        $this->wiki_properties            = $wiki_properties;
-        $this->is_expanded                = $is_expanded;
-        $this->approval_table             = $approval_table;
-        $this->lock_info                  = $lock_info;
-        $this->metadata                   = $metadata_representations;
-        $this->has_approval_table         = $has_approval_table;
-        $this->is_approval_table_enabled  = $is_approval_table_enabled;
-        $this->permissions_for_groups     = $permissions_for_groups;
-        $this->folder_properties          = $folder_properties;
-
-        $parent_id = JsonCast::toInt($item->getParentId());
-
-        $this->parent_id = ($parent_id) ? $parent_id : 0;
+    ): self {
+        $description = $item->getDescription();
+        return new self(
+            JsonCast::toInt($item->getId()),
+            $item->getTitle(),
+            $description,
+            $purifier->purifyTextWithReferences($description, $item->getGroupId()),
+            $owner,
+            JsonCast::toDate($item->getUpdateDate()),
+            JsonCast::toDate($item->getCreateDate()),
+            $user_can_write,
+            $can_user_manage,
+            $type,
+            $file_properties,
+            $embedded_file_properties,
+            $link_properties,
+            $wiki_properties,
+            $folder_properties,
+            $is_expanded,
+            $approval_table,
+            $lock_info,
+            $metadata_representations,
+            $has_approval_table,
+            $is_approval_table_enabled,
+            $permissions_for_groups,
+            JsonCast::toInt($item->getParentId())
+        );
     }
 }

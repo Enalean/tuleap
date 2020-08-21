@@ -24,6 +24,9 @@ namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\REST\v1\MoveItem\DocmanMoveItemRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 final class DocmanPATCHItemRepresentation
 {
     /**

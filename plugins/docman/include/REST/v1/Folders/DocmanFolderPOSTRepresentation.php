@@ -26,6 +26,9 @@ use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class DocmanFolderPOSTRepresentation implements CanContainACopyRepresentation
 {
     private const REQUIRED_NON_COPY_PROPERTIES = ['title'];

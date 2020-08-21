@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
+/**
+ * @psalm-immutable
+ */
 class WikiPropertiesRepresentation
 {
     /**
@@ -32,9 +35,14 @@ class WikiPropertiesRepresentation
      */
     public $page_id;
 
-    public function build(\Docman_Wiki $docman_wiki, ?int $wiki_page_id): void
+    private function __construct(string $page_name, ?int $page_id)
     {
-        $this->page_name = $docman_wiki->getPagename();
-        $this->page_id   = $wiki_page_id;
+        $this->page_name = $page_name;
+        $this->page_id   = $page_id;
+    }
+
+    public static function build(\Docman_Wiki $docman_wiki, ?int $wiki_page_id): self
+    {
+        return new self($docman_wiki->getPagename(), $wiki_page_id);
     }
 }

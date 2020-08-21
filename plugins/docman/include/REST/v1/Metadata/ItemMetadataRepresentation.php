@@ -25,6 +25,9 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class ItemMetadataRepresentation
 {
     /**
@@ -45,6 +48,7 @@ class ItemMetadataRepresentation
     public $post_processed_value;
     /**
      * @var array|null {@type Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation}
+     * @psalm-var \Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation[]|null
      */
     public $list_value;
     /**

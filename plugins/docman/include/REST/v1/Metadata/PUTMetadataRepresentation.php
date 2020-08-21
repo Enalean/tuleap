@@ -25,6 +25,9 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class PUTMetadataRepresentation extends PUTMetadataCommonRepresentation
 {
 

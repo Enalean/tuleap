@@ -151,7 +151,6 @@ class ItemRepresentationBuilder
 
         $user_can_write      = $this->permissions_manager->userCanWrite($current_user, $item->getId());
         $can_user_manage     = $this->permissions_manager->userCanManage($current_user, $item->getId());
-        $item_representation = new ItemRepresentation();
 
         $lock_info                 = $this->getLockInformation($item);
         $approval_table            = $this->getApprovalTable($item);
@@ -160,7 +159,7 @@ class ItemRepresentationBuilder
 
         $metadata_representations = $this->metadata_representation_builder->build($item);
 
-        $item_representation->build(
+        return ItemRepresentation::build(
             $item,
             $this->purifier,
             $owner_representation,
@@ -180,8 +179,6 @@ class ItemRepresentationBuilder
             $wiki_properties,
             $folder_properties
         );
-
-        return $item_representation;
     }
 
     private function getLockInformation(\Docman_Item $item): ?ItemLockInfoRepresentation

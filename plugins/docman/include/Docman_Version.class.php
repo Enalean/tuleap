@@ -154,6 +154,7 @@ class Docman_Version implements Version
 
     /**
      * @return string
+     * @psalm-mutation-free
      */
     public function getFiletype()
     {

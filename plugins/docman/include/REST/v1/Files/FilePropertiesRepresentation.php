@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+/**
+ * @psalm-immutable
+ */
 class FilePropertiesRepresentation
 {
     /**
@@ -37,10 +40,19 @@ class FilePropertiesRepresentation
      */
     public $file_size;
 
-    public function build(\Docman_Version $docman_version, $download_href)
+    private function __construct(string $file_type, string $download_href, int $file_size)
     {
-        $this->file_type     = $docman_version->getFiletype();
+        $this->file_type     = $file_type;
         $this->download_href = $download_href;
-        $this->file_size     = $docman_version->getFilesize();
+        $this->file_size     = $file_size;
+    }
+
+    public static function build(\Docman_Version $docman_version, string $download_href): self
+    {
+        return new self(
+            $docman_version->getFiletype(),
+            $download_href,
+            $docman_version->getFilesize()
+        );
     }
 }

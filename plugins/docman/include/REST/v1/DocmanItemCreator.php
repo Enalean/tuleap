@@ -210,10 +210,7 @@ class DocmanItemCreator
         }
 
         $item->accept($this->creator_visitor, $params);
-        $representation = new CreatedItemRepresentation();
-        $representation->build($item->getId());
-
-        return $representation;
+        return CreatedItemRepresentation::build($item->getId());
     }
 
     /**
@@ -265,10 +262,7 @@ class DocmanItemCreator
             if ($file_properties->file_size === 0) {
                 $this->empty_file_to_upload_finisher->createEmptyFile($document_to_upload, $file_properties->file_name);
 
-                $representation = new CreatedItemRepresentation();
-                $representation->build($document_to_upload->getItemId());
-
-                return $representation;
+                return CreatedItemRepresentation::build($document_to_upload->getItemId());
             }
         } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -278,12 +272,8 @@ class DocmanItemCreator
             throw new RestException(400, $exception->getMessage());
         }
 
-        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
-        $file_properties_representation->build($document_to_upload->getUploadHref());
-        $representation = new CreatedItemRepresentation();
-        $representation->build($document_to_upload->getItemId(), $file_properties_representation);
-
-        return $representation;
+        $file_properties_representation = CreatedItemFilePropertiesRepresentation::build($document_to_upload->getUploadHref());
+        return CreatedItemRepresentation::build($document_to_upload->getItemId(), $file_properties_representation);
     }
 
     /**

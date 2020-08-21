@@ -99,8 +99,7 @@ class ItemRepresentationVisitor implements ItemVisitor
                 $item->getGroupId()
             );
 
-            $wiki_representation = new WikiPropertiesRepresentation();
-            $wiki_representation->build($item, $wiki_page_id);
+            $wiki_representation = WikiPropertiesRepresentation::build($item, $wiki_page_id);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
@@ -150,9 +149,8 @@ class ItemRepresentationVisitor implements ItemVisitor
         $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
         $file_properties = null;
         if ($item_version) {
-            $file_properties = new FilePropertiesRepresentation();
             $download_href    = $this->buildFileDirectAccessURL($item);
-            $file_properties->build($item_version, $download_href);
+            $file_properties = FilePropertiesRepresentation::build($item_version, $download_href);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
@@ -242,15 +240,11 @@ class ItemRepresentationVisitor implements ItemVisitor
     private function buildLinkProperties(Docman_Link $item): LinkPropertiesRepresentation
     {
         $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
-        $link_properties     = new LinkPropertiesRepresentation();
         if (! $latest_link_version) {
-            $link_properties->build(null);
-            return $link_properties;
+            return LinkPropertiesRepresentation::build(null);
         }
 
-        $link_properties->build($latest_link_version);
-
-        return $link_properties;
+        return LinkPropertiesRepresentation::build($latest_link_version);
     }
 
     private function isADirectAccessToDocument(array $params): bool
@@ -270,9 +264,6 @@ class ItemRepresentationVisitor implements ItemVisitor
             false,
             true
         );
-        $folder_size_representation = new FolderPropertiesRepresentation();
-        $folder_size_representation->build($item);
-
-        return $folder_size_representation;
+        return FolderPropertiesRepresentation::build($item);
     }
 }
