@@ -970,11 +970,6 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_
     PRIMARY KEY (postaction_id, fieldset_id)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS plugin_tracker_new_layout_modal_user;
-CREATE TABLE IF NOT EXISTS plugin_tracker_new_layout_modal_user (
-    user_id INT(11) PRIMARY KEY
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
 CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
     id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

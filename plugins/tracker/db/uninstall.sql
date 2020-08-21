@@ -107,7 +107,6 @@ DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields_value;
 DROP TABLE IF EXISTS plugin_tracker_file_upload;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value;
-DROP TABLE IF EXISTS plugin_tracker_new_layout_modal_user;
 DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
 DROP TABLE IF EXISTS plugin_tracker_in_new_dropdown;
 DROP TABLE IF EXISTS tracker_field_list_bind_ugroups_value;
