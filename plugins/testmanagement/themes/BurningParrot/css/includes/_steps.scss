@@ -83,6 +83,11 @@
     margin: $tlp-medium-spacing 0;
 }
 
+.steps-step-description-text,
+.steps-step-expected-text {
+    white-space: pre-wrap;
+}
+
 .steps-step-expected {
     display: flex;
     align-items: baseline;
