@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
+import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
 import { createExportReport } from "./report-creator";
-import * as general_information_builder from "./general-information-builder";
-import * as requirements_builder from "./requirements-builder";
-import * as test_results_builder from "./test-results-builder";
-import * as justifications_builder from "./justifications-builder";
-import { GeneralSection } from "./general-information-builder";
+import * as general_information_builder from "./Section/general-information-builder";
+import * as requirements_builder from "./Section/requirements-builder";
+import * as test_results_builder from "./Section/test-results-builder";
+import * as justifications_builder from "./Section/justifications-builder";
+import { GeneralSection } from "./Section/general-information-builder";
 import { TextCell } from "./report-cells";
-import { RequirementsSection } from "./requirements-builder";
-import { TestResultsSection } from "./test-results-builder";
-import { JustificationsSection } from "./justifications-builder";
+import { RequirementsSection } from "./Section/requirements-builder";
+import { TestResultsSection } from "./Section/test-results-builder";
+import { JustificationsSection } from "./Section/justifications-builder";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {

@@ -110,10 +110,14 @@ export default class ExportButton extends Vue {
 
         try {
             const { downloadExportDocument } = await import(
-                /* webpackChunkName: "download-export-sheet" */ "../../helpers/Export/download-export-document"
+                /* webpackChunkName: "testplan-download-export-sheet" */ "../../helpers/Export/download-export-document"
+            );
+            const { downloadXLSX } = await import(
+                /* webpackChunkName: "testplan-download-xlsx-export-sheet" */ "../../helpers/Export/Exporter/XLSX/download-xlsx"
             );
             await downloadExportDocument(
                 this,
+                downloadXLSX,
                 this.project_name,
                 this.milestone_title,
                 this.user_display_name,

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateCell, TextCell } from "./report-cells";
-import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "./get-planned-test-cases";
+import { DateCell, TextCell } from "../report-cells";
+import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
 
 type TestResultsSectionRow = readonly [
     TextCell,

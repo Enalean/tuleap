@@ -18,8 +18,8 @@
  */
 
 import { CellObject, ColInfo, Comments, Range, RowInfo, utils, WorkSheet } from "xlsx";
-import { ExportReport, ReportSection } from "./report-creator";
-import { ReportCell } from "./report-cells";
+import { ExportReport, ReportSection } from "../../Report/report-creator";
+import { ReportCell } from "../../Report/report-cells";
 
 const CELL_BASE_CHARACTER_WIDTH = 10;
 const CELL_MAX_CHARACTER_WIDTH = 65;

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
+import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
 import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
-import { BacklogItem, Campaign, TestDefinition } from "../../type";
+import { BacklogItem, Campaign, TestDefinition } from "../../../type";
 
 describe("Get planned test cases", () => {
     it("extracts sorted planned test cases", () => {

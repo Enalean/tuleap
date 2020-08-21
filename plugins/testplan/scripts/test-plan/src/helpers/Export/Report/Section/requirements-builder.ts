@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EmptyCell, ReportCell, TextCell } from "./report-cells";
-import { BacklogItem } from "../../type";
-import { computeTestStats, getTestStatusFromStats } from "../BacklogItems/compute-test-stats";
-import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import { retrieveArtifacts } from "./artifacts-retriever";
-import { retrieveTrackers } from "./trackers-retriever";
+import { EmptyCell, ReportCell, TextCell } from "../report-cells";
+import { BacklogItem } from "../../../../type";
+import { computeTestStats, getTestStatusFromStats } from "../../../BacklogItems/compute-test-stats";
+import { getInternationalizedTestStatus } from "../internationalize-test-status";
+import { retrieveArtifacts } from "./Tracker/artifacts-retriever";
+import { retrieveTrackers } from "./Tracker/trackers-retriever";
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
-import { Artifact } from "./artifact";
-import { Tracker } from "./tracker";
+import { Artifact } from "./Tracker/artifact";
+import { Tracker } from "./Tracker/tracker";
 
 const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set([
     "int",

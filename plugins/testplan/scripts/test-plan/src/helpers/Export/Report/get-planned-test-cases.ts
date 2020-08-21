@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItem, Campaign, PlannedTestDefinitionFromREST, TestDefinition } from "../../type";
+import {
+    BacklogItem,
+    Campaign,
+    PlannedTestDefinitionFromREST,
+    TestDefinition,
+} from "../../../type";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 
 export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
