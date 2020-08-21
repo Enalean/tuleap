@@ -97,10 +97,7 @@ class PhpWikiResource extends AuthenticatedResource
         $this->checkUserCanAccessPhpWikiService($current_user, $wiki_page->getGid());
         $this->checkUserCanSeeWikiPage($current_user, $wiki_page);
 
-        $wiki_page_representation = new PhpWikiPageFullRepresentation();
-        $wiki_page_representation->build($wiki_page);
-
-        return $wiki_page_representation;
+        return PhpWikiPageFullRepresentation::buildFull($wiki_page);
     }
 
     /**
@@ -146,8 +143,7 @@ class PhpWikiResource extends AuthenticatedResource
 
         $page_version = $this->getVersion($wiki_page, $version_id);
 
-        $wiki_page_representation = new PhpWikiPageVersionFullRepresentation();
-        $wiki_page_representation->build($page_version, $wiki_page);
+        $wiki_page_representation = PhpWikiPageVersionFullRepresentation::buildFull($page_version, $wiki_page);
 
         return [$wiki_page_representation];
     }

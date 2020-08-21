@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class PaginatedProjectFieldRepresentations
 {
     /**

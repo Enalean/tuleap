@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,9 @@ namespace Tuleap\PhpWiki\REST\v1;
 use Tuleap\PHPWiki\WikiPage;
 use WikiPageVersion;
 
+/**
+ * @psalm-immutable
+ */
 class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation
 {
 
@@ -33,17 +36,24 @@ class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentat
     public $wiki_content;
 
     /**
-     * @var string {@type string}
+     * @var string | null {@type string}
      */
     public $formatted_content;
 
-    public function build(WikiPageVersion $version, ?WikiPage $wiki_page = null)
+    private function __construct(WikiPageVersion $version, ?string $formatted_content)
     {
-        parent::build($version);
+        parent::__construct($version);
 
         $this->wiki_content      = $version->getContent();
+        $this->formatted_content = $formatted_content;
+    }
+
+    public static function buildFull(WikiPageVersion $version, ?WikiPage $wiki_page = null): self
+    {
+        $formatted_content = null;
         if ($wiki_page !== null) {
-            $this->formatted_content = $version->getFormattedContent($wiki_page);
+            $formatted_content = $version->getFormattedContent($wiki_page);
         }
+        return new self($version, $formatted_content);
     }
 }

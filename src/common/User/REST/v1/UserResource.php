@@ -419,10 +419,7 @@ class UserResource extends AuthenticatedResource
             $value = DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
         }
 
-        $preference_representation = new UserPreferenceRepresentation();
-        $preference_representation->build($key, $value);
-
-        return $preference_representation;
+        return UserPreferenceRepresentation::build($key, $value);
     }
 
     /**
@@ -686,8 +683,7 @@ class UserResource extends AuthenticatedResource
         $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
-        $history_representation = new UserHistoryRepresentation();
-        $history                = $this->history_retriever->getHistory($current_user);
+        $history = $this->history_retriever->getHistory($current_user);
 
         $filtered_history = array_filter(
             $history,
@@ -696,9 +692,7 @@ class UserResource extends AuthenticatedResource
             }
         );
 
-        $history_representation->build($filtered_history);
-
-        return $history_representation;
+        return UserHistoryRepresentation::build($filtered_history);
     }
 
     /**

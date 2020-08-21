@@ -24,14 +24,17 @@ use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\History\HistoryEntry;
 
+/**
+ * @psalm-immutable
+ */
 class UserHistoryEntryRepresentation
 {
     /**
-     * @var int UNIX timestamp of the time of the visit of this entry {@type int} {@required true}
+     * @var string Date of the visit of this entry {@type int} {@required true}
      */
     public $visit_time;
     /**
-     * @var string Cross reference representing the entry {@type string} {@required true}
+     * @var string | null Cross reference representing the entry {@type string} {@required true}
      */
     public $xref;
     /**
@@ -39,7 +42,7 @@ class UserHistoryEntryRepresentation
      */
     public $html_url;
     /**
-     * @var string Title of the entry {@type string} {@required true}
+     * @var string | null Title of the entry {@type string} {@required true}
      */
     public $title;
     /**
@@ -48,10 +51,12 @@ class UserHistoryEntryRepresentation
     public $color_name;
     /**
      * @var string SVG icon associated with the entry {@type string} {@required true}
+     * @psalm-var string|null
      */
     public $icon;
     /**
      * @var string SVG icon (small size) associated with the entry {@type string} {@required true}
+     * @psalm-var string|null
      */
     public $small_icon;
     /**
@@ -67,32 +72,63 @@ class UserHistoryEntryRepresentation
      */
     public $icon_name;
 
-    public function build(HistoryEntry $entry)
-    {
-        $this->visit_time  = JsonCast::toDate($entry->getVisitTime());
-        $this->xref        = $entry->getXref();
-        $this->html_url    = $entry->getLink();
-        $this->title       = $entry->getTitle();
-        $this->color_name  = $entry->getColor();
-        $this->icon_name   = $entry->getIconName();
+    /**
+     * @param UserHistoryQuickLinkRepresentation[] $quick_links
+     */
+    private function __construct(
+        string $visit_time,
+        ?string $xref,
+        string $html_url,
+        ?string $title,
+        string $color_name,
+        string $icon_name,
+        ?string $small_icon,
+        ?string $icon,
+        MinimalProjectRepresentation $project,
+        array $quick_links
+    ) {
+        $this->visit_time  = $visit_time;
+        $this->xref        = $xref;
+        $this->html_url    = $html_url;
+        $this->title       = $title;
+        $this->color_name  = $color_name;
+        $this->icon_name   = $icon_name;
+        $this->small_icon  = $small_icon;
+        $this->icon        = $icon;
+        $this->project     = $project;
+        $this->quick_links = $quick_links;
+    }
 
+    public static function build(HistoryEntry $entry): self
+    {
+        $small_icon = null;
         $glyph_small_icon = $entry->getSmallIcon();
         if ($glyph_small_icon !== null) {
-            $this->small_icon = $glyph_small_icon->getInlineString();
+            $small_icon = $glyph_small_icon->getInlineString();
         }
+        $icon = null;
         $glyph_normal_icon = $entry->getNormalIcon();
         if ($glyph_normal_icon !== null) {
-            $this->icon = $glyph_normal_icon->getInlineString();
+            $icon = $glyph_normal_icon->getInlineString();
         }
 
-        $project_representation = new MinimalProjectRepresentation($entry->getProject());
-        $this->project = $project_representation;
-
-        $this->quick_links = [];
+        $quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
-            $quick_link_representation = new UserHistoryQuickLinkRepresentation();
-            $quick_link_representation->build($quick_link);
-            $this->quick_links[] = $quick_link_representation;
+            $quick_link_representation = UserHistoryQuickLinkRepresentation::build($quick_link);
+            $quick_links[] = $quick_link_representation;
         }
+
+        return new self(
+            JsonCast::toDate($entry->getVisitTime()),
+            $entry->getXref(),
+            $entry->getLink(),
+            $entry->getTitle(),
+            $entry->getColor(),
+            $entry->getIconName(),
+            $small_icon,
+            $icon,
+            new MinimalProjectRepresentation($entry->getProject()),
+            $quick_links
+        );
     }
 }

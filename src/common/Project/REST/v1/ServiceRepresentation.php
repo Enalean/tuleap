@@ -25,6 +25,9 @@ namespace Tuleap\Project\REST\v1;
 use Service;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class ServiceRepresentation
 {
     public const ROUTE = 'project_services';
@@ -54,13 +57,24 @@ class ServiceRepresentation
      */
     public $icon = '';
 
-    public function build(Service $service): void
+    private function __construct(int $id, string $name, string $label, bool $is_enabled, string $icon)
     {
-        $this->id         = JsonCast::toInt($service->getId());
-        $this->uri        = self::ROUTE . '/' . urlencode((string) $this->id);
-        $this->name       = $service->getShortName();
-        $this->label      = $service->getInternationalizedName();
-        $this->is_enabled = JsonCast::toBoolean($service->isUsed());
-        $this->icon       = $service->getIconName();
+        $this->id         = $id;
+        $this->uri        = self::ROUTE . '/' . urlencode((string) $id);
+        $this->name       = $name;
+        $this->label      = $label;
+        $this->is_enabled = $is_enabled;
+        $this->icon       = $icon;
+    }
+
+    public static function build(Service $service): self
+    {
+        return new self(
+            JsonCast::toInt($service->getId()),
+            $service->getShortName(),
+            $service->getInternationalizedName(),
+            JsonCast::toBoolean($service->isUsed()),
+            $service->getIconName()
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 
 namespace Tuleap\User\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class UserPreferenceRepresentation
 {
 
@@ -32,10 +35,14 @@ class UserPreferenceRepresentation
      */
     public $value;
 
-
-    public function build($key, $value)
+    private function __construct(string $key, string $value)
     {
         $this->key   = $key;
         $this->value = $value;
+    }
+
+    public static function build(string $key, string $value): self
+    {
+        return new self($key, $value);
     }
 }

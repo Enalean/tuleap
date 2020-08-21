@@ -51,9 +51,7 @@ class ServiceRepresentationCollectionBuilder
                 continue;
             }
 
-            $representation = new ServiceRepresentation();
-            $representation->build($service);
-            $collection[] = $representation;
+            $collection[] = ServiceRepresentation::build($service);
         }
 
         return $collection;
