@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -466,20 +467,29 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $transition->shouldReceive('getFieldValueTo')->andReturns($value_to);
         $is_used     = 1;
         $field_id    = 42;
-        $workflow    = new Workflow(
-            Mockery::mock(Tracker_RulesManager::class),
-            $this->trigger_rules_manager,
-            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-            1,
-            2,
-            $field_id,
-            $is_used,
-            false,
-            false,
-            [$transition]
-        );
+        $workflow    = Mockery::mock(
+            Workflow::class,
+            [
+                Mockery::mock(Tracker_RulesManager::class),
+                $this->trigger_rules_manager,
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+                1,
+                2,
+                $field_id,
+                $is_used,
+                false,
+                false,
+                [$transition]
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+
         $fields_data = [$field_id => 66];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
+
+        $retriever = Mockery::mock(TransitionRetriever::class);
+        $retriever->shouldReceive('retrieveTransition')->andReturn($transition);
+
+        $workflow->shouldReceive('getTransitionRetriever')->andReturn($retriever);
 
         $transition->shouldReceive('validate')->once()->andReturns(false);
         $this->expectExceptionObject(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
@@ -518,18 +528,27 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $transition->shouldReceive('getFieldValueFrom')->andReturns(null);
         $transition->shouldReceive('getFieldValueTo')->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(66)->getMock());
         $transition->shouldReceive('validate')->andReturns(false);
-        $workflow    = new Workflow(
-            Mockery::mock(Tracker_RulesManager::class),
-            $this->trigger_rules_manager,
-            new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
-            1,
-            2,
-            42,
-            true,
-            false,
-            false,
-            [$transition]
-        );
+
+        $workflow = Mockery::mock(
+            Workflow::class,
+            [
+                Mockery::mock(Tracker_RulesManager::class),
+                $this->trigger_rules_manager,
+                new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
+                1,
+                2,
+                42,
+                true,
+                false,
+                false,
+                [$transition]
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $retriever = Mockery::mock(TransitionRetriever::class);
+        $retriever->shouldReceive('retrieveTransition')->andReturn($transition);
+
+        $workflow->shouldReceive('getTransitionRetriever')->andReturn($retriever);
 
         $this->expectExceptionObject(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
         $workflow->validate($fields_data, $this->artifact, '');
