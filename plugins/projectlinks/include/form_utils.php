@@ -276,7 +276,7 @@ function form_End(
         }
         if ($HaveResetButton) {
             print "<td><INPUT TYPE='reset' Value='" .
-                $Language->getText('form_utils', 'Cancel_Changes') . "'></td>\n";
+                dgettext('tuleap-projectlinks', 'Cancel Changes') . "'></td>\n";
         }
     }
     while ($gFormGroupLevel > 0) {
@@ -317,11 +317,11 @@ function form_End(
         $jsItemErrEnd = "');}\n";
         $jsItemPresent = "if ($jsItemRef == '')"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_completed')
+                    . dgettext('tuleap-projectlinks', 'must be completed')
                     . $jsItemErrEnd;
         $jsItemNumeric = "if (!isNumber($jsItemRef))"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_a_number')
+                    . dgettext('tuleap-projectlinks', 'must be a number')
                     . $jsItemErrEnd;
         switch ($valItem->Test) {
             case FORM_VAL_IS_NOT_ZERO_LENGTH:
@@ -332,7 +332,7 @@ function form_End(
                 print $jsItemPresent;
                 print "else if (!isEmailAddr($jsItemRef))"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_a_valid_email_address')
+                    . dgettext('tuleap-projectlinks', 'must be a valid email address')
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_NUMBER:
@@ -343,27 +343,27 @@ function form_End(
                 $EmitNumberCode = true;
                 print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ")"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_less_than', $valItem->Param)
+                    . sprintf(dgettext('tuleap-projectlinks', 'must be less than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_GT:
                 $EmitNumberCode = true;
                 print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ")"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_greater_than', $valItem->Param)
+                    . sprintf(dgettext('tuleap-projectlinks', 'must be greater than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_EQ:
                 $cmp = is_string($valItem->Param) ? "'" . $valItem->Param . "'" : $valItem->Param;
                 print "if ($jsItemRef!=$cmp)"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be', $valItem->Param)
+                    . sprintf(dgettext('tuleap-projectlinks', 'must be %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_CHECKED:
                 print "if (!" . form_JS_ElementRef($valItem->ParamName) . ".checked)"
                     . $jsItemErrStart
-                    . $Language->getText('form_utils_error', 'must_be_checked')
+                    . dgettext('tuleap-projectlinks', 'must be checked')
                     . $jsItemErrEnd;
                 break;
             default:
@@ -642,7 +642,7 @@ function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
         print "//-->\n";
         print "</script>\n";
     }
-    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? " CHECKED" : "") . " Title='" . $Language->getText('form_utils', 'Select_All') . "'>\n";
+    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? " CHECKED" : "") . " Title='" . dgettext('tuleap-projectlinks', 'Select All') . "'>\n";
 }
 
 //=============================================================================

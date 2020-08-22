@@ -1,0 +1,211 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "<a title='needs link type first'>**</a>"
+msgstr "<a title='nécessite un type'>**</a>"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Add a project link type"
+msgstr "Ajouter un type de lien"
+
+msgid "Add new project:"
+msgstr "Ajouter un nouveau projet:"
+
+msgid "Additional &amp; Modified project link types"
+msgstr "Type de lien nouveaux et modifiés"
+
+msgid "Additional links to other projects"
+msgstr "Nouveaux liens vers d'autres projets"
+
+msgid "Cancel Changes"
+msgstr "Annuler les modifications"
+
+msgid "Change Project Link Type Definition"
+msgstr "Mettre à jour les types de lien"
+
+#, php-format
+msgid "Click %1$s to add the links from the template"
+msgstr "Cliquer sur %1$s pour ajouter les liens définis dans le patron"
+
+msgid "Create links between projects."
+msgstr "Permet de lier des projets entre eux"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete project link"
+msgstr "Supprimer un lien"
+
+msgid "Delete project link type (including all links of this type)"
+msgstr "Supprimer un type de lien (avec tous les liens de ce type)"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Link Type"
+msgstr "Type de lien"
+
+msgid "Link URI (template)"
+msgstr "Lien (patron)"
+
+msgid "Links"
+msgstr "Liens"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "No project link found."
+msgstr "Aucun lien inter-projet trouvé."
+
+msgid "Parent Projects"
+msgstr "Projets parent"
+
+msgid "Project Link Types"
+msgstr "Types de lien"
+
+msgid "Project Links"
+msgstr "Liens inter-projet"
+
+msgid "Project Links Configuration"
+msgstr "Configuration des liens inter-projet"
+
+msgid "Project link deleted OK"
+msgstr "Lien supprimé"
+
+msgid "Project name (search as you type)"
+msgstr "Nom d'un projet (autocomplèté)"
+
+msgid "Projects in the programme"
+msgstr "Projets du programme"
+
+msgid "Projects using similar technology or sharing resources"
+msgstr ""
+"Projets utilisant des technologies similiares ou partagant des ressources"
+
+msgid "Re-Synchronise Project Links with Template"
+msgstr "Re-synchroniser les liens avec le patron"
+
+msgid "Related Projects"
+msgstr "Projets connexes"
+
+msgid "Replace all details in this form with the default values"
+msgstr "Remplir le formulaire avec les valeurs par défaut"
+
+msgid "Reverse Links"
+msgstr "Liens inverses"
+
+msgid "Reverse Name"
+msgstr "Nom inverse"
+
+msgid "Select All"
+msgstr "Selectionner tout"
+
+msgid "Set to defaults"
+msgstr "Mettre les valeurs par défaut"
+
+msgid "Sub-Projects"
+msgstr "Sous projets"
+
+msgid ""
+"That change would create a duplicate link name or reverse-name - link type "
+"not updated"
+msgstr ""
+"Cette modification créerai deux liens (ou liens inverse) avec le même nom. "
+"Mise à jour annulée."
+
+#, php-format
+msgid ""
+"To enable project linking, you must first define at least one project link "
+"type - click <i>%1$s</i> to get started."
+msgstr ""
+"Avant de lier des projets, vous devez définir au moins un type de projet via "
+"<i>%1$s</i>."
+
+#, php-format
+msgid "Update cancelled (it would create a duplicate link to \"%1$s\")"
+msgstr "Abandon de la mise à jour (il y a déjà un lien vers \"%1$s\")"
+
+msgid "add"
+msgstr "Ajouter"
+
+#, php-format
+msgid "link added: %1$s"
+msgstr "Lien ajouté: %1$s"
+
+msgid "matched"
+msgstr "trouvé"
+
+#, php-format
+msgid ""
+"means that the link cannot be added because there is no matching link type "
+"defined in the project. Create the link type by clicking on <i>%1$s</i> in "
+"<i>%2$s</i>."
+msgstr ""
+"signifie que le lien ne peut être ajouté car le type correspondant n'existe "
+"pas dans le projet. Pour créer un nouveau type de lien, cliquer sur <i>%1$s</"
+"i> dans <i>%2$s</i>."
+
+#, php-format
+msgid "must be %1$s"
+msgstr "doit être %1$s"
+
+msgid "must be a number"
+msgstr "doit être un nombre"
+
+msgid "must be a valid email address"
+msgstr "doit être une adresse email valide"
+
+msgid "must be checked"
+msgstr "doit être vérifié"
+
+msgid "must be completed"
+msgstr "doit être remplis"
+
+#, php-format
+msgid "must be greater than %1$s"
+msgstr "doit être plus grand que %1$s"
+
+#, php-format
+msgid "must be less than %1$s"
+msgstr "doit être plus petit que %1$s"
+
+msgid "project"
+msgstr "projet"
+
+msgid "template"
+msgstr "patron"
+
+msgid "template project"
+msgstr "projet patron"
+
+msgid "update"
+msgstr "mise à jour"
+
+msgid "update OK"
+msgstr "Mise à jour OK"
+
+#, php-format
+msgid "update OK (%1$s)"
+msgstr "Mise à jour OK (%1$s)"
+
+msgid "update details"
+msgstr "Mettre à jour les détails"
+
+#, fuzzy, php-format
+msgid "update failed (MySQL reason: \"%1$s\")"
+msgstr "La mise à jour a échoué"
+
+#, fuzzy, php-format
+msgid "update failed [%2$s] (MySQL reason: \"%1$s\")"
+msgstr "La mise à jour a échoué [%2$s]"

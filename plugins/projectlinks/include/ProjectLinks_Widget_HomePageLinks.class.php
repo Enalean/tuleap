@@ -61,12 +61,12 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_plinks', 'project_links');
+        return dgettext('tuleap-projectlinks', 'Project Links');
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description');
+        return dgettext('tuleap-projectlinks', 'Create links between projects.');
     }
 
     /**
@@ -99,7 +99,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $forward  = $this->getLinksByLinkType('links', $dao->searchForwardLinks($groupId));
         $backward = $this->getLinksByLinkType('back_links', $dao->searchBackLinks($groupId));
         if ($forward === '' && $backward === '') {
-            $html .= "<div>" . $GLOBALS['Language']->getText('plugin_plinks', 'no_links_found') . "</div>";
+            $html .= "<div>" . dgettext('tuleap-projectlinks', 'No project link found.') . "</div>";
         } else {
             $html .= "<ul class=\"project-link-list project-link-list-content\">\n";
             $html .= $forward;
@@ -122,9 +122,9 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         if ($dar->rowCount() > 0) {
             $linkTypeCmdId   = 'plugin_project_links_type_' . $way;
 
-            $title = $GLOBALS['Language']->getText('plugin_plinks', 'links');
+            $title = dgettext('tuleap-projectlinks', 'Links');
             if ($way === 'back_links') {
-                $title = $GLOBALS['Language']->getText('plugin_plinks', 'back_links');
+                $title = dgettext('tuleap-projectlinks', 'Reverse Links');
             }
 
             $cssClass = Toggler::getClassName($linkTypeCmdId);
@@ -206,7 +206,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $ic = '';
         if ($row['type'] == 2) {
             $path = $this->html_purifier->purify($this->themePath . "/images/template.png");
-            $alt  = $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', 'template_marker'));
+            $alt  = $this->html_purifier->purify(dgettext('tuleap-projectlinks', 'template project'));
             $ic   = '<img src="' . $path . '" alt="' . $alt . '" title="' . $alt . '" /> ';
         }
         return '<a href="' . $this->html_purifier->purify($url) . '">' . $ic . $this->html_purifier->purify($row['group_name']) . '</a>';

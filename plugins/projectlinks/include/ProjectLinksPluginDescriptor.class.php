@@ -27,9 +27,9 @@ class ProjectLinksPluginDescriptor extends PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),
+            dgettext('tuleap-projectlinks', 'Project Links'),
             false,
-            $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description')
+            dgettext('tuleap-projectlinks', 'Create links between projects.')
         );
     }
 }
