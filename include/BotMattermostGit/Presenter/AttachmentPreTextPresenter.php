@@ -56,8 +56,8 @@ class AttachmentPreTextPresenter
         $this->repository_destination_name = $repository_destination->getName();
         $this->repository_destination_link = $this->getRepositoryLink();
 
-        $this->pre_text_message    = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'attachment_pre_text_message', [$user->getName()]);
-        $this->pre_text_project    = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'attachment_pre_text_project');
+        $this->pre_text_message    = sprintf(dgettext('tuleap-botmattermost_git', 'Pull request submitted by %1$s on the repository'), $user->getName());
+        $this->pre_text_project    = dgettext('tuleap-botmattermost_git', 'Project:');
     }
 
     private function getRepositoryLink()

@@ -28,7 +28,7 @@ class CannotCreateBotNotificationException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_error_create_bot_notification')
+            dgettext('tuleap-botmattermost_git', 'Failed to create Git notification')
         );
     }
 }

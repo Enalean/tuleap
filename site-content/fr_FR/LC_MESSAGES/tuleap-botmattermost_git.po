@@ -1,0 +1,125 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Add notification"
+msgstr "Ajouter une notification"
+
+msgid "Avatar URL"
+msgstr "URL de l'avatar"
+
+msgid "Bot Mattermost-Git"
+msgstr "Robot Mattermost-Git Plugin"
+
+msgid "Bot list:"
+msgstr "Liste des robots :"
+
+msgid "Bot name"
+msgstr "Nom du robot"
+
+msgid "Bot to send Git notifications in Mattermost"
+msgstr "Robot pour recevoir des notifications Git sur Mattermost"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Channel handles list"
+msgstr "Liste des canaux"
+
+msgid ""
+"Choose a bot to send message in Mattermost when push occurs in this "
+"repository."
+msgstr ""
+"Choisis un robot afin d'envoyer des notifications dans Mattermost lorsqu'un "
+"push à lieu dans ce dépot."
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete notification"
+msgstr "Suppression de la notification"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit notification"
+msgstr "Edition de la notification"
+
+msgid "Failed to create Git notification"
+msgstr "L'ajout de la notification Git a échoué"
+
+msgid "Failed to delete Git notification"
+msgstr "La suppression de la notification Git a échoué"
+
+msgid "Failed to update Git notification"
+msgstr "La mise à jour de la notification Git a échoué"
+
+msgid ""
+"If you don't see a Bot linked to your Mattermost project/team, please "
+"contact your administrator."
+msgstr ""
+"Si vous ne voyez pas de robot lié à votre projet/équipe Mattermost, veuillez "
+"contacter un administrateur."
+
+msgid "Invalid post argument(s)"
+msgstr ""
+
+msgid ""
+"No bots are defined by the system administrator. The notification "
+"configuration is not available."
+msgstr ""
+"Aucun robot n'a été défini par l'administrateur du système. La configuration "
+"des notifications n'est donc pas disponible."
+
+msgid ""
+"No channel selected, the channel defined at the webhook creation will be "
+"used as default"
+msgstr ""
+"Aucun canal n'a été renseigné, celui défini lors de la création du webhook "
+"sera utilisé par défaut"
+
+msgid "Notifications in Mattermost"
+msgstr "Notifications dans Mattermost"
+
+msgid "Project:"
+msgstr "Projet :"
+
+#, php-format
+msgid "Pull request submitted by %1$s on the repository"
+msgstr "Pull request proposée par %1$s sur le dépôt"
+
+msgid "The Mattermost notification has not yet been configured."
+msgstr ""
+"Aucune configuration des notifications Mattermost n'est encore en place."
+
+msgid ""
+"The channel handle is display in its URL<br>example: https://example.com/"
+"myGroup/channels/mychannel<br>handle: mychannel"
+msgstr ""
+"L'identifiant du canal est visible dans son URL<br>exemple: https://example."
+"com/monGroupe/channels/canal<br>identifiant : canal"
+
+msgid "To begin, click on add notification button below."
+msgstr "Pour commencez, cliquez sur ajouter un notification ci-dessous."
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+"Cette suppression est irréversible. Veuillez confirmer la suppression de la "
+"notification."
+
+msgid "channel1, channel2, channel3"
+msgstr "canal1, canal2, canal3"
+
+msgid "pushed a new commit to"
+msgstr "a publié un nouveau commit sur"

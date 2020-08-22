@@ -50,35 +50,35 @@ class Presenter
         $this->repository_id = $this->repository->getId();
         $this->has_bots      = ! empty($bots);
 
-        $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
-        $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description');
-        $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description_create_bot');
+        $this->title                  = dgettext('tuleap-botmattermost_git', 'Notifications in Mattermost');
+        $this->description            = dgettext('tuleap-botmattermost_git', 'Choose a bot to send message in Mattermost when push occurs in this repository.');
+        $this->description_create_bot = dgettext('tuleap-botmattermost_git', 'If you don\'t see a Bot linked to your Mattermost project/team, please contact your administrator.');
 
-        $this->modal_add_title          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_configure_notification');
-        $this->modal_edit_title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_edit_configure_notification');
-        $this->modal_delete_title       = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_delete_configure_notification');
-        $this->modal_delete_content     = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_delete_content');
+        $this->modal_add_title          = dgettext('tuleap-botmattermost_git', 'Add notification');
+        $this->modal_edit_title         = dgettext('tuleap-botmattermost_git', 'Edit notification');
+        $this->modal_delete_title       = dgettext('tuleap-botmattermost_git', 'Delete notification');
+        $this->modal_delete_content     = dgettext('tuleap-botmattermost_git', 'You are about to remove the notification. Please confirm your action.');
 
-        $this->label_bot_list                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_list');
-        $this->label_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
-        $this->label_avatar_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
-        $this->label_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_label_channels_handles');
-        $this->input_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_input_channels_handles');
+        $this->label_bot_list                  = dgettext('tuleap-botmattermost_git', 'Bot list:');
+        $this->label_bot_name                  = dgettext('tuleap-botmattermost_git', 'Bot name');
+        $this->label_avatar_url                = dgettext('tuleap-botmattermost_git', 'Avatar URL');
+        $this->label_channels_handles          = dgettext('tuleap-botmattermost_git', 'Channel handles list');
+        $this->input_channels_handles          = dgettext('tuleap-botmattermost_git', 'channel1, channel2, channel3');
         $this->purified_info_channels_handles  = Codendi_HTMLPurifier::instance()->purify(
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_info_channels_handles'),
+            dgettext('tuleap-botmattermost_git', 'The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel'),
             CODENDI_PURIFIER_LIGHT
         );
 
-        $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification');
-        $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification_tips');
-        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'empty_bot_list');
-        $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'empty_channel_list');
+        $this->any_configured_notification      = dgettext('tuleap-botmattermost_git', 'The Mattermost notification has not yet been configured.');
+        $this->any_configured_notification_tips = dgettext('tuleap-botmattermost_git', 'To begin, click on add notification button below.');
+        $this->empty_bot_list                   = dgettext('tuleap-botmattermost_git', 'No bots are defined by the system administrator. The notification configuration is not available.');
+        $this->empty_channel_list               = dgettext('tuleap-botmattermost_git', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
 
-        $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_configure_notification');
-        $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_confirm');
-        $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
-        $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
-        $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
+        $this->button_config  = dgettext('tuleap-botmattermost_git', 'Add notification');
+        $this->button_confirm = dgettext('tuleap-botmattermost_git', 'Add');
+        $this->button_close   = dgettext('tuleap-botmattermost_git', 'Cancel');
+        $this->button_delete  = dgettext('tuleap-botmattermost_git', 'Delete');
+        $this->button_edit    = dgettext('tuleap-botmattermost_git', 'Edit');
     }
 }

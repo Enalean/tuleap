@@ -28,7 +28,7 @@ class CannotUpdateBotNotificationException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_error_update_bot_notification')
+            dgettext('tuleap-botmattermost_git', 'Failed to update Git notification')
         );
     }
 }

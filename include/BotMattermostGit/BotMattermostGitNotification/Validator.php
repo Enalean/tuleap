@@ -91,7 +91,7 @@ class Validator
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments')
+            dgettext('tuleap-botmattermost_git', 'Invalid post argument(s)')
         );
 
         return false;
@@ -104,7 +104,7 @@ class Validator
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments')
+            dgettext('tuleap-botmattermost_git', 'Invalid post argument(s)')
         );
 
         return false;

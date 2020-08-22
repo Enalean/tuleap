@@ -51,6 +51,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        bindtextdomain('tuleap-botmattermost_git', __DIR__ . '/../site-content');
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
             require_once PLUGIN_BOT_MATTERMOST_BASE_DIR . '/include/autoload.php';
         }

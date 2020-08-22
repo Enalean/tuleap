@@ -42,7 +42,7 @@ class GitNotificationBuilder
         $link       = $this->makeLinkReview($repository, $newrev);
 
         return $user->getName() . " " .
-        $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text') .
+        dgettext('tuleap-botmattermost_git', 'pushed a new commit to') .
         " : $link " . $refname;
     }
 

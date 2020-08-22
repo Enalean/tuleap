@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'descriptor_name'),
+            dgettext('tuleap-botmattermost_git', 'Bot Mattermost-Git'),
             false,
-            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'descriptor_description')
+            dgettext('tuleap-botmattermost_git', 'Bot to send Git notifications in Mattermost')
         );
 
         $this->setVersionFromFile(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/VERSION');
