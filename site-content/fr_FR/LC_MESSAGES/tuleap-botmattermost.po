@@ -1,0 +1,145 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "A bot with the same name and the same webhook URL already exists"
+msgstr "Un robot avec le même nom et le même URL de webhook existe déjà"
+
+msgid "Add bot"
+msgstr "Ajouter un robot"
+
+msgid "Add one channel name per row"
+msgstr "Ajoutez un nom de canal par ligne"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "Avatar URL"
+msgstr "URL de l'avatar"
+
+msgid "Bot Configuration"
+msgstr "Configuration"
+
+msgid "Bot Mattermost"
+msgstr "Robot Mattermost"
+
+msgid "Bot Mattermost configuration"
+msgstr "Configuration des robots Mattermost"
+
+msgid "Bot added successfully"
+msgstr "Robot ajouté avec succès"
+
+msgid "Bot name"
+msgstr "Nom du robot"
+
+msgid "Bot name..."
+msgstr "Nom..."
+
+msgid "Bot successfully deleted"
+msgstr "Robot supprimé avec succès"
+
+msgid "Bot successfully edited"
+msgstr "Robot édité avec succès"
+
+msgid "Bot to send notifications in Mattermost"
+msgstr "Robot pour recevoir des notifications sur Mattermost"
+
+msgid "Bots list"
+msgstr "Liste des robots"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Channel handles list"
+msgstr "Liste des canaux"
+
+msgid ""
+"Channel1\n"
+"Channel2\n"
+"Channel3"
+msgstr ""
+"Canal1\n"
+"Canal2\n"
+"Canal3"
+
+msgid "Channels handles"
+msgstr "Canaux"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete bot"
+msgstr "Supprimer un robot"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit bot"
+msgstr "Éditer un robot"
+
+msgid "Failed to add the bot"
+msgstr "L'ajout du robot a échoué"
+
+msgid "Failed to delete the bot"
+msgstr "La suppression du robot a échoué"
+
+msgid "Failed to update the bot"
+msgstr "La mise à jour du robot a échoué"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Invalid URL"
+msgstr "URL invalide"
+
+msgid "Invalid bot ID"
+msgstr "L'identifiant du robot est invalide"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "No bot found"
+msgstr "Aucun robot n'a été trouvé"
+
+msgid "No channels found"
+msgstr "Aucun canal n'a été trouvé"
+
+msgid "No message content to send"
+msgstr "Aucun contenu de message à envoyer"
+
+msgid "No results"
+msgstr "Aucun résultat"
+
+msgid ""
+"The channel handle is display in its URL<br>example: https://example.com/"
+"myGroup/channels/mychannel<br>handle: mychannel"
+msgstr ""
+"L'indentifiant du canal est visible dans son URL<br>exemple: https://example."
+"com/monGroupe/channels/monsalondediscussion<br>identifiant : "
+"monsalondediscussion"
+
+msgid "The name and the webhook URL input must be filled"
+msgstr ""
+"les champs \"nom du robot\" et \"URL du webhook\" doivent être renseignés"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Webhook URL"
+msgstr "URL du Webhook"
+
+msgid "You are about to remove a bot. Please confirm your action."
+msgstr ""
+"Cette suppression est irréversible. Veuillez confirmer la suppresion du "
+"robot."
+
+msgid "https://..."
+msgstr "https://..."

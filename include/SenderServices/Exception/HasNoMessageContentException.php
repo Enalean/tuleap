@@ -28,7 +28,7 @@ class HasNoMessageContentException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_has_no_message_content')
+            dgettext('tuleap-botmattermost', 'No message content to send')
         );
     }
 }

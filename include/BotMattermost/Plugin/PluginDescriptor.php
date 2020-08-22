@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name'),
+            dgettext('tuleap-botmattermost', 'Bot Mattermost'),
             false,
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_description')
+            dgettext('tuleap-botmattermost', 'Bot to send notifications in Mattermost')
         );
 
         $this->setVersionFromFile(PLUGIN_BOT_MATTERMOST_BASE_DIR . '/VERSION');

@@ -28,7 +28,7 @@ class ChannelsNotFoundException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_channels_not_found')
+            dgettext('tuleap-botmattermost', 'No channels found')
         );
     }
 }

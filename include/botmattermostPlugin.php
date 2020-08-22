@@ -36,6 +36,9 @@ class BotMattermostPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+
+        bindtextdomain('tuleap-botmattermost', __DIR__ . '/../site-content');
+
         $this->addHook('site_admin_option_hook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -57,7 +60,7 @@ class BotMattermostPlugin extends Plugin
     public function site_admin_option_hook(array $params)
     {
         $params['plugins'][] = [
-            'label' => $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_name'),
+            'label' => dgettext('tuleap-botmattermost', 'Bot Mattermost'),
             'href'  => $this->getPluginPath() . '/admin/'
         ];
     }

@@ -28,7 +28,7 @@ class CannotCreateBotException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_add_bot')
+            dgettext('tuleap-botmattermost', 'Failed to add the bot')
         );
     }
 }

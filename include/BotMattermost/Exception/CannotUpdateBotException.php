@@ -28,7 +28,7 @@ class CannotUpdateBotException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_update_bot')
+            dgettext('tuleap-botmattermost', 'Failed to update the bot')
         );
     }
 }

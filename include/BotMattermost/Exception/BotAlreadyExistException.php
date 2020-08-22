@@ -28,7 +28,7 @@ class BotAlreadyExistException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_bot_already_exist')
+            dgettext('tuleap-botmattermost', 'A bot with the same name and the same webhook URL already exists')
         );
     }
 }

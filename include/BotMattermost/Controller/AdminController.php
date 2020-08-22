@@ -91,7 +91,7 @@ class AdminController
                     $request->get('webhook_url'),
                     $request->get('avatar_url')
                 );
-                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_add_bot'));
+                $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot added successfully'));
             } catch (CannotCreateBotException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             } catch (BotAlreadyExistException $e) {
@@ -111,7 +111,7 @@ class AdminController
                 $event = new BotMattermostDeleted($bot);
                 $this->bot_factory->deleteBotById($bot->getId());
                 $this->event_manager->processEvent($event);
-                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_delete_bot'));
+                $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully deleted'));
             } catch (CannotDeleteBotException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
@@ -131,7 +131,7 @@ class AdminController
                     $request->get('avatar_url'),
                     $id
                 );
-                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_edit_bot'));
+                $response->addFeedback(Feedback::INFO, dgettext('tuleap-botmattermost', 'Bot successfully edited'));
             } catch (CannotUpdateBotException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
@@ -142,7 +142,7 @@ class AdminController
     private function validPostArgument(HTTPRequest $request, BaseLayout $response)
     {
         if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
-            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_empty_input'));
+            $response->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost', 'The name and the webhook URL input must be filled'));
             return false;
         }
 
@@ -167,7 +167,7 @@ class AdminController
         if ($valid_url->validate($url)) {
             return true;
         } else {
-            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_url'));
+            $response->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost', 'Invalid URL'));
             return false;
         }
     }
@@ -177,7 +177,7 @@ class AdminController
         if ($this->bot_factory->getBotById($id)) {
             return true;
         } else {
-            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_id'));
+            $response->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost', 'Invalid bot ID'));
             return false;
         }
     }

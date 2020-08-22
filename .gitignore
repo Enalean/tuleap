@@ -3,3 +3,4 @@ nbproject
 .sass-cache
 node_modules
 .phpunit.result.cache
+*.pot
