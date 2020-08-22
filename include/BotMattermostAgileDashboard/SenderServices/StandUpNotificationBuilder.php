@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
-use BaseLanguage;
 use HTTPRequest;
 use PFUser;
 use PlanningFactory;
@@ -40,20 +39,17 @@ class StandUpNotificationBuilder
     private $milestone_factory;
     private $milestone_status_counter;
     private $planning_factory;
-    private $language;
     private $renderer;
 
     public function __construct(
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_MilestoneStatusCounter $milestone_status_counter,
         PlanningFactory $planning_factory,
-        BaseLanguage $language,
         MarkdownMustacheRenderer $renderer
     ) {
         $this->milestone_factory        = $milestone_factory;
         $this->milestone_status_counter = $milestone_status_counter;
         $this->planning_factory         = $planning_factory;
-        $this->language                 = $language;
         $this->renderer                 = $renderer;
     }
 
@@ -62,28 +58,21 @@ class StandUpNotificationBuilder
         $last_plannings_for_presenter = [];
         $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, $project->getID());
         $project_name                 = $project->getPublicName();
+        $last_planning_name           = '';
 
         foreach ($last_plannings as $last_planning) {
-            $last_plannings_for_presenter['title']      = $this->language->getText(
-                'plugin_botmattermost_agiledashboard',
-                'notification_builder_title_stand_up_summary',
-                [$last_planning->getName(), $project_name]
-            );
+            $last_plannings_for_presenter['title']      = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'Stand-up summary of %1$s in project %2$s'), $last_planning->getName(), $project_name);
             $last_plannings_for_presenter['milestones'] = $this->buildMilestonesForNotification(
                 $http_request,
                 $last_planning,
                 $user
             );
-            $last_plannings_for_presenter['no_current_milestones'] =  $this->language->getText(
-                'plugin_botmattermost_agiledashboard',
-                'notification_builder_no_current_milestones',
-                [$last_planning->getName(), $project_name]
-            );
+            $last_plannings_for_presenter['no_current_milestones'] =  sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'No milestones in %1$s planning in project %2$s'), $last_planning->getName(), $project_name);
         }
 
         return $this->renderer->renderToString(
             'stand-up-summary',
-            new StandUpSummaryPresenter($last_plannings_for_presenter, $project_name)
+            new StandUpSummaryPresenter($last_plannings_for_presenter, $project_name, $last_planning_name)
         );
     }
 

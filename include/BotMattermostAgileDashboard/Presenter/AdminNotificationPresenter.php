@@ -78,50 +78,46 @@ class AdminNotificationPresenter
         $this->project_id   = $project_id;
         $this->bot_assigned = $bot_assigned;
         $this->has_bots     = ! empty($bots);
-        $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
-        $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
-        $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description_create_bot');
+        $this->title                  = dgettext('tuleap-botmattermost_agiledashboard', 'Mattermost notifications');
+        $this->description            = dgettext('tuleap-botmattermost_agiledashboard', 'Choose a bot to send a summary of the stand-up in Mattermost.');
+        $this->description_create_bot = dgettext('tuleap-botmattermost_agiledashboard', 'If you don\'t see a Bot linked to your Mattermost project/team, please contact your administrator.');
 
-        $this->table_col_name     = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-        $this->table_col_channels = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
+        $this->table_col_name     = dgettext('tuleap-botmattermost_agiledashboard', 'Name');
+        $this->table_col_channels = dgettext('tuleap-botmattermost_agiledashboard', 'Channels');
 
-        $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_configure_notification');
-        $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
-        $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
-        $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
-        $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_confirm');
-        $this->button_save = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_save');
+        $this->button_config  = dgettext('tuleap-botmattermost_agiledashboard', 'Add notification');
+        $this->button_close   = dgettext('tuleap-botmattermost_agiledashboard', 'Cancel');
+        $this->button_delete  = dgettext('tuleap-botmattermost_agiledashboard', 'Delete');
+        $this->button_edit    = dgettext('tuleap-botmattermost_agiledashboard', 'Edit');
+        $this->button_confirm = dgettext('tuleap-botmattermost_agiledashboard', 'Add');
+        $this->button_save = dgettext('tuleap-botmattermost_agiledashboard', 'Update');
 
-        $this->modal_add_title      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_configure_notification');
-        $this->modal_edit_title     = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_edit_configure_notification');
-        $this->modal_delete_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_delete_configure_notification');
-        $this->modal_delete_content = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_delete_content');
+        $this->modal_add_title      = dgettext('tuleap-botmattermost_agiledashboard', 'Add notification');
+        $this->modal_edit_title     = dgettext('tuleap-botmattermost_agiledashboard', 'Edit notification');
+        $this->modal_delete_title   = dgettext('tuleap-botmattermost_agiledashboard', 'Delete notification');
+        $this->modal_delete_content = dgettext('tuleap-botmattermost_agiledashboard', 'You are about to remove the notification. Please confirm your action.');
 
-        $this->label_bot_name         = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
-        $this->label_bot_list         = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_list');
-        $this->label_send_time        = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
-        $this->label_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_label_channels_handles');
-        $this->input_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_input_channels_handles');
+        $this->label_bot_name         = dgettext('tuleap-botmattermost_agiledashboard', 'Bot name');
+        $this->label_bot_list         = dgettext('tuleap-botmattermost_agiledashboard', 'Bot list:');
+        $this->label_send_time        = dgettext('tuleap-botmattermost_agiledashboard', 'Stand-up summary report time');
+        $this->label_channels_handles = dgettext('tuleap-botmattermost_agiledashboard', 'Channel handles list');
+        $this->input_channels_handles = dgettext('tuleap-botmattermost_agiledashboard', 'channel1, channel2, channel3');
 
         $this->purified_info_channels_handles = Codendi_HTMLPurifier::instance()->purify(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_info_channels_handles'),
+            dgettext('tuleap-botmattermost_agiledashboard', 'The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel'),
             CODENDI_PURIFIER_LIGHT
         );
-        $this->alert_time_warning             = $GLOBALS['Language']->getText(
-            'plugin_botmattermost_agiledashboard',
-            'admin_notification_time_warning',
-            [date_default_timezone_get()]
-        );
+        $this->alert_time_warning             = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'The specified time must be adapted according to the server\'s time zone %1$s'), date_default_timezone_get());
 
         $this->bot_list_is_empty = count($this->bots) === 0;
-        $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_empty_bot_list');
+        $this->empty_bot_list    = dgettext('tuleap-botmattermost_agiledashboard', 'No bots are defined by the system administrator. The notification configuration is not available.');
 
-        $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification');
-        $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification_tips');
-        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_empty_bot_list');
-        $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'empty_channel_list');
+        $this->any_configured_notification      = dgettext('tuleap-botmattermost_agiledashboard', 'The Mattermost notification has not yet been configured.');
+        $this->any_configured_notification_tips = dgettext('tuleap-botmattermost_agiledashboard', 'To begin, click on add notification button below.');
+        $this->empty_bot_list                   = dgettext('tuleap-botmattermost_agiledashboard', 'No bots are defined by the system administrator. The notification configuration is not available.');
+        $this->empty_channel_list               = dgettext('tuleap-botmattermost_agiledashboard', 'No channel selected, the channel defined at the webhook creation will be used as default');
 
         $this->time_format_regexp = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
-        $this->time_input_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'time_input_title');
+        $this->time_input_title   = dgettext('tuleap-botmattermost_agiledashboard', 'Time format: "hh:mm"');
     }
 }

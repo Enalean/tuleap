@@ -28,7 +28,7 @@ class CannotDeleteBotNotificationException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_error_delete_bot_notification')
+            dgettext('tuleap-botmattermost_agiledashboard', 'Failed to delete the bot notification for stand-up summary')
         );
     }
 }

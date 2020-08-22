@@ -3,3 +3,4 @@
 /www/assets/*
 nbproject
 node_modules/
+*.pot

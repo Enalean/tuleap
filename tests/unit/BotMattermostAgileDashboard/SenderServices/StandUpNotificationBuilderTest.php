@@ -39,24 +39,19 @@ use Tuleap\GlobalLanguageMock;
 final class StandUpNotificationBuilderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     public function testNotificationCanBeBuiltWhenTheParentOfTheMilestoneArtifactCanNotBeFound(): void
     {
         $planning_milestone_factory = Mockery::mock(Planning_MilestoneFactory::class);
         $milestone_status_counter = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
         $planning_factory = Mockery::mock(PlanningFactory::class);
-        $base_language = Mockery::mock(\BaseLanguage::class);
         $markdown_renderer = Mockery::mock(MarkdownMustacheRenderer::class);
         $notification_builder = new StandUpNotificationBuilder(
             $planning_milestone_factory,
             $milestone_status_counter,
             $planning_factory,
-            $base_language,
             $markdown_renderer
         );
-
-        $base_language->shouldReceive('getText')->andReturn('');
 
         $planning = Mockery::mock(Planning::class);
         $planning->shouldReceive('getName')->andReturn('My planning name');

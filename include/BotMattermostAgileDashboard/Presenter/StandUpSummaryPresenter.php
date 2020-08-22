@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,23 +39,23 @@ class StandUpSummaryPresenter
     public $no_current_plannings;
     public $no_current_milestones;
 
-    public function __construct($last_plannings, $project_name)
+    public function __construct($last_plannings, $project_name, string $last_planning_name)
     {
         $this->last_plannings = $last_plannings;
         $this->project_name   = $project_name;
 
-        $this->quick_access_text = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_quick_access');
+        $this->quick_access_text = dgettext('tuleap-botmattermost_agiledashboard', 'Quick access');
 
-        $this->table_header_id             = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_id');
-        $this->table_header_status_open    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_open');
-        $this->table_header_status_closed  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_status_closed');
-        $this->table_header_days_remaining = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_days_remaining');
-        $this->table_header_title          = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_title');
-        $this->table_header_status         = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_status');
-        $this->table_header_last_update    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_artifact_last_modification');
+        $this->table_header_id             = dgettext('tuleap-botmattermost_agiledashboard', 'Artifact ID');
+        $this->table_header_status_open    = dgettext('tuleap-botmattermost_agiledashboard', 'Open');
+        $this->table_header_status_closed  = dgettext('tuleap-botmattermost_agiledashboard', 'Closed');
+        $this->table_header_days_remaining = dgettext('tuleap-botmattermost_agiledashboard', 'Days Until End');
+        $this->table_header_title          = dgettext('tuleap-botmattermost_agiledashboard', 'Title');
+        $this->table_header_status         = dgettext('tuleap-botmattermost_agiledashboard', 'Status');
+        $this->table_header_last_update    = dgettext('tuleap-botmattermost_agiledashboard', 'Last modification');
 
-        $this->no_update             = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_update');
-        $this->no_current_plannings  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_current_plannings');
-        $this->no_current_milestones = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'notification_builder_no_current_milestones');
+        $this->no_update             = dgettext('tuleap-botmattermost_agiledashboard', 'No recent update on');
+        $this->no_current_plannings  = dgettext('tuleap-botmattermost_agiledashboard', 'No plannings in project');
+        $this->no_current_milestones = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'No milestones in %1$s planning in project %2$s'), $last_planning_name, $project_name);
     }
 }

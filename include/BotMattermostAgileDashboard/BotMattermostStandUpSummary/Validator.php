@@ -71,7 +71,7 @@ class Validator
         ) {
             return $this->validBotId($request->get('bot_id'));
         }
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost_agiledashboard', 'Invalid post argument(s)'));
 
         return false;
     }
@@ -84,7 +84,7 @@ class Validator
         ) {
             return true;
         }
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost_agiledashboard', 'Invalid post argument(s)'));
 
         return false;
     }

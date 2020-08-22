@@ -28,7 +28,7 @@ class CannotUpdateBotNotificationException extends Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'alert_error_update_bot_notification')
+            dgettext('tuleap-botmattermost_agiledashboard', 'Failed to update the bot notification for stand-up summary')
         );
     }
 }

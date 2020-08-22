@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'descriptor_name'),
+            dgettext('tuleap-botmattermost_agiledashboard', 'Bot Mattermost-Agile Dashboard'),
             false,
-            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'descriptor_description')
+            dgettext('tuleap-botmattermost_agiledashboard', 'Bot to send stand-up summary in mattermost')
         );
 
         $this->setVersionFromFile(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/VERSION');

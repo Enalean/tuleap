@@ -48,6 +48,8 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+
+        bindtextdomain('tuleap-botmattermost_agiledashboard', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -105,7 +107,6 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             $planning_milestone_factory,
             $milestone_status_counter,
             $planning_factory,
-            new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang')),
             MarkdownTemplateRendererFactory::build()
                 ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/template')
         );

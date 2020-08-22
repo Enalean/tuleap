@@ -1,0 +1,171 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Add notification"
+msgstr "Ajouter une notification"
+
+msgid "Artifact ID"
+msgstr "ID de l'artéfact"
+
+msgid "Bot Mattermost-Agile Dashboard"
+msgstr "Robot Mattermost Agile Dashboard"
+
+msgid "Bot list:"
+msgstr "Liste des robots :"
+
+msgid "Bot name"
+msgstr "Nom du robot"
+
+msgid "Bot to send stand-up summary in mattermost"
+msgstr "Robot pour recevoir un résumé des stand-up sur Mattermost"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Channel handles list"
+msgstr "Liste des canaux"
+
+msgid "Channels"
+msgstr "Canaux"
+
+msgid "Choose a bot to send a summary of the stand-up in Mattermost."
+msgstr ""
+"Choisissez un robot afin d'envoyer le résumé du stand-up dans Mattermost."
+
+msgid "Closed"
+msgstr "Fermé(e)s"
+
+msgid "Days Until End"
+msgstr "Jours restants"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete notification"
+msgstr "Suppression de la notification"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit notification"
+msgstr "Edition de la notification"
+
+msgid "Failed to create the bot notification for stand-up summary"
+msgstr "L'ajout du robot de notification pour le résumé des stand-up a échoué"
+
+msgid "Failed to delete the bot notification for stand-up summary"
+msgstr ""
+"La suppression du robot de notification pour le résumé des stand-up a échoué"
+
+msgid "Failed to update the bot notification for stand-up summary"
+msgstr ""
+"La mise à jour du robot de notification pour le résumé des stand-up a échoué"
+
+msgid ""
+"If you don't see a Bot linked to your Mattermost project/team, please "
+"contact your administrator."
+msgstr ""
+"Si vous ne voyez pas de robot lié à votre projet/équipe Mattermost, veuillez "
+"contacter un administrateur."
+
+msgid "Invalid post argument(s)"
+msgstr "Les arguments soumis lors du formulaire sont invalides"
+
+msgid "Last modification"
+msgstr "Dernière modification"
+
+msgid "Mattermost notifications"
+msgstr "Notifications Mattermost"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid ""
+"No bots are defined by the system administrator. The notification "
+"configuration is not available."
+msgstr ""
+"Aucun robot n'a été défini par l'administrateur du système. La configuration "
+"des notifications n'est donc pas disponible."
+
+msgid ""
+"No channel selected, the channel defined at the webhook creation will be "
+"used as default"
+msgstr ""
+"Aucun canal n'a été renseigné, celui défini lors de la création du webhook "
+"sera utilisé par défaut"
+
+#, php-format
+msgid "No milestones in %1$s planning in project %2$s"
+msgstr "Aucun jalons dans le planning %1$s du projet %2$s"
+
+msgid "No plannings in project"
+msgstr "Aucun plannings dans le projet"
+
+msgid "No recent update on"
+msgstr "Aucune modification récente sur"
+
+msgid "Open"
+msgstr "Ouvert(e)s"
+
+msgid "Quick access"
+msgstr "Accès rapide"
+
+#, php-format
+msgid "Stand-up summary of %1$s in project %2$s"
+msgstr "Résumé du stand-up %1$s du projet %2$s"
+
+msgid "Stand-up summary report time"
+msgstr "Heure d'envoi du rapport"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "The Mattermost notification has not yet been configured."
+msgstr ""
+"Aucune configuration des notifications Mattermost n'est encore en place."
+
+msgid ""
+"The channel handle is display in its URL<br>example: https://example.com/"
+"myGroup/channels/mychannel<br>handle: mychannel"
+msgstr ""
+"L'identifiant du canal est visible dans son URL<br>exemple: https://example."
+"com/monGroupe/channels/canal<br>identifiant : canal"
+
+#, php-format
+msgid ""
+"The specified time must be adapted according to the server's time zone %1$s"
+msgstr ""
+"L'heure renseignée doit être adaptée en fonction du fuseau horaire %1$s du "
+"serveur"
+
+msgid "Time format: \"hh:mm\""
+msgstr "Temps au format : \"hh:mm\""
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "To begin, click on add notification button below."
+msgstr "Pour commencez, cliquez sur ajouter un notification ci-dessous."
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+"Cette suppression est irréversible. Veuillez confirmer la suppression de la "
+"notification."
+
+msgid "channel1, channel2, channel3"
+msgstr "canal1, canal2, canal3"
