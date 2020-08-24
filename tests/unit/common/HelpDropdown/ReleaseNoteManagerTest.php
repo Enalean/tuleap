@@ -50,7 +50,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_manager = new ReleaseNoteManager(
             $this->release_note_dao,
             $this->user_preferences_dao,
-            "11.17.99.666"
+            new VersionNumberExtractor()
         );
     }
 
@@ -66,7 +66,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
+        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkWithCustomLink(): void
@@ -81,7 +81,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
+        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkWithNullLink(): void
@@ -96,7 +96,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
+        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkShouldChangeIfVersionIsUpgraded(): void
@@ -112,7 +112,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("updateTuleapVersion");
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
+        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkIfNotLinkInDatabase(): void
@@ -123,6 +123,6 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("createReleaseNoteLink");
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink());
+        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 }

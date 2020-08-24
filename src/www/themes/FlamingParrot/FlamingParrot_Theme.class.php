@@ -28,6 +28,7 @@ use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\HelpDropdown\VersionNumberExtractor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -190,11 +191,15 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $body_class[] = $sidebar_state;
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
-            new ReleaseNoteManager(new ReleaseLinkDao(), new UserPreferencesDao(), $this->tuleap_version->version_number),
+            new ReleaseNoteManager(new ReleaseLinkDao(), new UserPreferencesDao(), new VersionNumberExtractor()),
             $this->getEventManager(),
             new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI()),
         );
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+
+        $help_dropdown_presenter = $dropdown_presenter_builder->build(
+            $current_user,
+            $this->tuleap_version->version_number
+        );
 
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,

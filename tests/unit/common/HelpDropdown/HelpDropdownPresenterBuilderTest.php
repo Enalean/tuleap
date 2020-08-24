@@ -120,7 +120,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('getReleaseNoteLink')
             ->andReturn("https://www.tuleap.org/resources/release-notes/tuleap-11-17");
 
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
+        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
     }
 
     public function testBuildPresenterWithoutLabMod(): void
@@ -149,7 +149,7 @@ class HelpDropdownPresenterBuilderTest extends TestCase
         );
         $this->release_note_manager->shouldReceive('getReleaseNoteLink');
 
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
+        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
     }
 
     public function testBuildPresenterWithAnonymousUser(): void
@@ -190,6 +190,6 @@ class HelpDropdownPresenterBuilderTest extends TestCase
         $this->release_note_manager->shouldReceive('getReleaseNoteLink')->andReturn(
             "https://www.tuleap.org/resources/release-notes/tuleap-11-17"
         );
-        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user));
+        $this->assertEquals($expected_result, $this->help_dropdown_builder->build($this->user, "11.17"));
     }
 }

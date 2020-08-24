@@ -50,7 +50,7 @@ class HelpDropdownPresenterBuilder
         $this->release_note_manager = $release_note_manager;
     }
 
-    public function build(PFUser $current_user): HelpDropdownPresenter
+    public function build(PFUser $current_user, string $tuleap_version): HelpDropdownPresenter
     {
         $documentation = "/doc/" . urlencode($current_user->getShortLocale()) . "/";
 
@@ -75,7 +75,7 @@ class HelpDropdownPresenterBuilder
             )
         ];
 
-        $release_note = $this->getReleaseNoteLink($current_user);
+        $release_note = $this->getReleaseNoteLink($current_user, $tuleap_version);
 
         if ($release_note === null || $current_user->isAnonymous()) {
             $has_release_note_been_seen = true;
@@ -93,9 +93,9 @@ class HelpDropdownPresenterBuilder
         );
     }
 
-    private function getReleaseNoteLink(PFUser $current_user): ?HelpLinkPresenter
+    private function getReleaseNoteLink(PFUser $current_user, string $tuleap_version): ?HelpLinkPresenter
     {
-        $release_note_link = $this->release_note_manager->getReleaseNoteLink();
+        $release_note_link = $this->release_note_manager->getReleaseNoteLink($tuleap_version);
 
         if ($current_user->useLabFeatures()) {
             return HelpLinkPresenter::build(

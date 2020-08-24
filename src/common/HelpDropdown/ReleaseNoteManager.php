@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\HelpDropdown;
 
+use UserPreferencesDao;
+
 class ReleaseNoteManager
 {
     /**
@@ -28,38 +30,44 @@ class ReleaseNoteManager
      */
     private $release_note_dao;
     /**
-     * @var string
-     */
-    private $tuleap_version;
-    /**
-     * @var \UserPreferencesDao
+     * @var UserPreferencesDao
      */
     private $users_preferences_dao;
 
-    public function __construct(ReleaseLinkDao $release_note_dao, \UserPreferencesDao $users_preferences_dao, string $tuleap_version)
-    {
-        $this->release_note_dao = $release_note_dao;
-        $this->users_preferences_dao = $users_preferences_dao;
-        $this->tuleap_version   = str_replace(".", "-", substr($tuleap_version, 0, 5));
+    /**
+     * @var VersionNumberExtractor
+     */
+    private $version_number_extractor;
+
+    public function __construct(
+        ReleaseLinkDao $release_note_dao,
+        UserPreferencesDao $users_preferences_dao,
+        VersionNumberExtractor $version_number_extractor
+    ) {
+        $this->release_note_dao         = $release_note_dao;
+        $this->users_preferences_dao    = $users_preferences_dao;
+        $this->version_number_extractor = $version_number_extractor;
     }
 
-    public function getReleaseNoteLink(): string
+    public function getReleaseNoteLink(string $tuleap_version): string
     {
         $link = $this->release_note_dao->getReleaseLink();
 
+        $extracted_tuleap_version = $this->version_number_extractor->extractReleaseNoteTuleapVersion($tuleap_version);
+
         $actual_version_link = 'https://www.tuleap.org/resources/release-notes/tuleap-' . urlencode(
-            $this->tuleap_version
+            $extracted_tuleap_version
         );
 
 
         if ($link === null) {
-            $this->release_note_dao->createReleaseNoteLink($this->tuleap_version);
+            $this->release_note_dao->createReleaseNoteLink($extracted_tuleap_version);
             $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
             return $actual_version_link;
         }
 
-        if ($link["tuleap_version"] !== $this->tuleap_version) {
-            $this->release_note_dao->updateTuleapVersion($this->tuleap_version);
+        if ($link["tuleap_version"] !== $extracted_tuleap_version) {
+            $this->release_note_dao->updateTuleapVersion($extracted_tuleap_version);
             $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
             return $actual_version_link;
         }

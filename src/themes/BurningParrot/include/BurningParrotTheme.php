@@ -30,6 +30,7 @@ use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
+use Tuleap\HelpDropdown\VersionNumberExtractor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -138,11 +139,15 @@ class BurningParrotTheme extends BaseLayout
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
-            new ReleaseNoteManager(new ReleaseLinkDao(), new \UserPreferencesDao(), $this->version->version_number),
+            new ReleaseNoteManager(new ReleaseLinkDao(), new \UserPreferencesDao(), new VersionNumberExtractor()),
             $this->event_manager,
             new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
         );
-        $help_dropdown_presenter    = $dropdown_presenter_builder->build($current_user);
+
+        $help_dropdown_presenter = $dropdown_presenter_builder->build(
+            $current_user,
+            $this->version->version_number
+        );
 
         $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
             $this->event_manager,
