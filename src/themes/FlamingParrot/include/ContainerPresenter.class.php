@@ -21,6 +21,7 @@
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_ContainerPresenter
 {
     /** @var array */
@@ -91,6 +92,11 @@ class FlamingParrot_ContainerPresenter
      * @var int
      */
     public $current_user_id;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_only_one_breadcrumb;
 
     public function __construct(
         array $breadcrumbs,
@@ -107,7 +113,9 @@ class FlamingParrot_ContainerPresenter
         PFUser $current_user,
         ?Project $project = null
     ) {
-        $this->breadcrumbs         = $breadcrumbs;
+        $this->breadcrumbs             = $breadcrumbs;
+        $this->has_only_one_breadcrumb = count($breadcrumbs) === 1;
+
         $this->toolbar             = $toolbar;
         $this->project_name        = $project_name;
         $this->project_link        = $project_link;
@@ -166,7 +174,7 @@ class FlamingParrot_ContainerPresenter
         return isset($this->project_tabs);
     }
 
-    public function is_sidebar_collapsable()
+    public function is_sidebar_collapsable() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->sidebar_collapsable;
     }
@@ -176,7 +184,7 @@ class FlamingParrot_ContainerPresenter
         return $this->project_tabs;
     }
 
-    public function has_copyright()
+    public function has_copyright() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->hasText('global', 'copyright');
     }
@@ -196,7 +204,7 @@ class FlamingParrot_ContainerPresenter
         return $this->project_link;
     }
 
-    public function project_privacy()
+    public function project_privacy() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->project_privacy;
     }

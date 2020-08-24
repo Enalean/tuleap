@@ -107,6 +107,11 @@ class HeaderPresenter
      * @var HelpDropdownPresenter
      */
     public $help_dropdown;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_only_one_breadcrumb;
 
     public function __construct(
         PFUser $user,
@@ -153,6 +158,7 @@ class HeaderPresenter
         $this->has_toolbar              = count($toolbar) > 0;
         $this->has_feedbacks            = count($this->feedbacks) > 0;
         $this->has_breadcrumbs          = count($this->breadcrumbs) > 0;
+        $this->has_only_one_breadcrumb  = count($this->breadcrumbs) === 1;
     }
 
     private function buildFeedbacks($feedback_logs)

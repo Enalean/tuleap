@@ -31,6 +31,7 @@ class BreadCrumbPresenterBuilder
         $presenters = [];
         foreach ($collection->getBreadcrumbs() as $breadcrumb) {
             $item_presenter = new BreadCrumbPresenter(
+                $breadcrumb->getAdditionalClassname(),
                 new BreadCrumbLinkPresenter($breadcrumb->getLink()),
                 $this->getSectionsPresenters($breadcrumb->getSubItems())
             );

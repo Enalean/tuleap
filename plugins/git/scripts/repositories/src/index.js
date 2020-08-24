@@ -25,7 +25,7 @@ import time_ago_french from "javascript-time-ago/locale/fr";
 
 import french_translations from "../po/fr.po";
 import App from "./components/App.vue";
-import { setUrls } from "./breadcrumb-presenter.js";
+import { setBreadcrumbSettings } from "./breadcrumb-presenter.js";
 import { build as buildRepositoryListPresenter } from "./repository-list-presenter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -55,9 +55,17 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoriesOwners,
             displayMode,
             externalPlugins,
+            projectPublicName,
+            projectUrl,
         } = vue_mount_point.dataset;
 
-        setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
+        setBreadcrumbSettings(
+            repositoriesAdministrationUrl,
+            repositoryListUrl,
+            repositoriesForkUrl,
+            projectPublicName,
+            projectUrl
+        );
         buildRepositoryListPresenter(
             document.body.dataset.userId,
             projectId,

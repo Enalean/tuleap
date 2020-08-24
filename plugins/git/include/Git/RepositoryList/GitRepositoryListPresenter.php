@@ -34,6 +34,16 @@ class GitRepositoryListPresenter
     public $display_mode;
     /** @var string */
     public $external_plugins;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $project_url;
+    /**
+     * @var mixed
+     * @psalm-readonly
+     */
+    public $project_public_name;
 
     public function __construct(
         \PFUser $current_user,
@@ -64,5 +74,8 @@ class GitRepositoryListPresenter
 
         $this->display_mode = (string) $current_user->getPreference("are_git_repositories_sorted_by_path");
         $this->external_plugins = json_encode($external_plugins);
+
+        $this->project_url         = $project->getUrl();
+        $this->project_public_name = $project->getPublicName();
     }
 }

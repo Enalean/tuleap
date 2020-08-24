@@ -26,6 +26,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -338,6 +340,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $project_link        = $this->getProjectLink($project);
             $project_privacy     = $this->getProjectPrivacy($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
+
+            $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
+            $crumb->setAdditionalClassname("breadcrumb-project");
+            $this->breadcrumbs->addFirst($crumb);
         }
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();

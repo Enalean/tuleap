@@ -95,6 +95,16 @@ class DocumentTreePresenter
      * @var string
      */
     public $relative_dates_display;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $project_url;
+    /**
+     * @var mixed
+     * @psalm-readonly
+     */
+    public $project_public_name;
 
     public function __construct(
         \Project $project,
@@ -109,6 +119,8 @@ class DocumentTreePresenter
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();
+        $this->project_public_name                = $project->getPublicName();
+        $this->project_url                        = $project->getUrl();
         $this->user_is_admin                      = $user->isAdmin($project->getID());
         $this->user_can_create_wiki               = $project->usesWiki();
         $this->user_can_delete_item               = ! $only_siteadmin_can_delete_option || $user->isSuperUser();

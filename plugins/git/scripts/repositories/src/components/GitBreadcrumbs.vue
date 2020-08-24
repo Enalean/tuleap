@@ -19,6 +19,11 @@
 
 <template>
     <nav class="breadcrumb">
+        <div class="breadcrumb-item breadcrumb-project">
+            <a v-bind:href="project_url" class="breadcrumb-link">
+                {{ project_public_name }}
+            </a>
+        </div>
         <div class="breadcrumb-switchable breadcrumb-item">
             <a
                 class="breadcrumb-link"
@@ -58,6 +63,8 @@ import {
     getAdministrationUrl,
     getForkRepositoriesUrl,
     getRepositoryListUrl,
+    getProjectUrl,
+    getProjectPublicName,
 } from "../breadcrumb-presenter.js";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
 
@@ -84,6 +91,12 @@ export default {
         },
         is_admin() {
             return getUserIsAdmin();
+        },
+        project_url() {
+            return getProjectUrl();
+        },
+        project_public_name() {
+            return getProjectPublicName();
         },
     },
 };

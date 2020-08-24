@@ -222,3 +222,17 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         border-top: 0;
     }
 }
+
+body:not(.sidebar-collapsed) {
+    .breadcrumb-with-only-one-item {
+        display: none;
+    }
+
+    .breadcrumb-project {
+        display: none;
+
+        + .breadcrumb-item > .breadcrumb-link {
+            padding-left: $tlp-medium-spacing;
+        }
+    }
+}

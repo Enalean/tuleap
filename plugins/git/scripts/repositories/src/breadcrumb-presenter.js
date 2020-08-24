@@ -17,14 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { setUrls, getAdministrationUrl, getRepositoryListUrl, getForkRepositoriesUrl };
+export {
+    setBreadcrumbSettings,
+    getAdministrationUrl,
+    getRepositoryListUrl,
+    getForkRepositoriesUrl,
+    getProjectPublicName,
+    getProjectUrl,
+};
 
-let administration_url, repository_list_url, fork_repositories_url;
+let administration_url,
+    repository_list_url,
+    fork_repositories_url,
+    project_public_name,
+    project_url;
 
-function setUrls(admin_url, repositories_url, fork_url) {
+function setBreadcrumbSettings(admin_url, repositories_url, fork_url, proj_public_name, proj_url) {
     administration_url = admin_url;
     repository_list_url = repositories_url;
     fork_repositories_url = fork_url;
+    project_public_name = proj_public_name;
+    project_url = proj_url;
 }
 
 function getAdministrationUrl() {
@@ -37,4 +50,12 @@ function getRepositoryListUrl() {
 
 function getForkRepositoriesUrl() {
     return fork_repositories_url;
+}
+
+function getProjectPublicName() {
+    return project_public_name;
+}
+
+function getProjectUrl() {
+    return project_url;
 }

@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
     const project_name = vue_mount_point.dataset.projectName;
+    const project_public_name = vue_mount_point.dataset.projectPublicName;
+    const project_url = vue_mount_point.dataset.projectUrl;
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
     const user_can_create_wiki = Boolean(vue_mount_point.dataset.userCanCreateWiki);
     const user_timezone = document.body.dataset.userTimezone;
@@ -85,6 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
             user_id,
             project_id,
             project_name,
+            project_public_name,
+            project_url,
             user_is_admin,
             user_can_create_wiki,
             date_time_format,

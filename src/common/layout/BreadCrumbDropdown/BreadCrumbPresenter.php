@@ -32,12 +32,17 @@ class BreadCrumbPresenter
     public $link;
 
     /**
-     *
-     *
+     * @var string
+     * @psalm-readonly
+     */
+    public $classname;
+
+    /**
      * @param SubItemsSectionPresenter[] $sections
      */
-    public function __construct(BreadCrumbLinkPresenter $link, array $sections)
+    public function __construct(string $classname, BreadCrumbLinkPresenter $link, array $sections)
     {
+        $this->classname     = $classname;
         $this->link          = $link;
         $this->sections      = $sections;
         $this->has_sub_items = count($this->sections) > 0;

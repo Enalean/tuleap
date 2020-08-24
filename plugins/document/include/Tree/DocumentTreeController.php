@@ -141,10 +141,11 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     {
         $layout->header(
             [
-                'title'        => dgettext('tuleap-document', "Document manager"),
-                'group'        => $project->getID(),
-                'toptab'       => 'docman',
-                'main_classes' => ['document-main']
+                'title'                          => dgettext('tuleap-document', "Document manager"),
+                'group'                          => $project->getID(),
+                'toptab'                         => 'docman',
+                'main_classes'                   => ['document-main'],
+                'without-project-in-breadcrumbs' => true,
             ]
         );
     }
