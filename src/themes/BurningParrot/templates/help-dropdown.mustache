@@ -21,7 +21,7 @@
             {{# release_note_link }}
                 <span class="tlp-dropdown-menu-separator" role="separator"></span>
 
-                <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item release-note-link"
+                <a href="{{ link }}" class="help-dropdown-link dropdown-item tlp-dropdown-menu-item {{^ has_release_note_been_seen }}help-dropdown-link-highlight{{/ has_release_note_been_seen }}"
                    role="menuitem">
                     <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
                 </a>

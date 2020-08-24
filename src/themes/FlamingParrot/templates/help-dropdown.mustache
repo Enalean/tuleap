@@ -17,7 +17,7 @@
             {{/ platform_links }}
             {{# release_note_link }}
                 <span class="dropdown-menu-separator" role="separator"></span>
-                    <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item release-note-link"
+                    <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item {{^ has_release_note_been_seen }}help-dropdown-link-highlight{{/ has_release_note_been_seen }}"
                        role="menuitem">
                         <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
                     </a>
