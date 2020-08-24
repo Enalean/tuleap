@@ -45,9 +45,7 @@
             role="menuitem"
         >
             <i class="fa fa-fw fa-bell-o tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>
-                Notifications
-            </span>
+            <span v-translate>Notifications</span>
         </a>
         <a
             v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
@@ -55,9 +53,7 @@
             role="menuitem"
         >
             <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>
-                History
-            </span>
+            <span v-translate>History</span>
         </a>
         <slot name="update-permissions" />
         <a
@@ -68,9 +64,7 @@
             data-test="document-dropdown-approval-tables"
         >
             <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>
-                Approval tables
-            </span>
+            <span v-translate>Approval tables</span>
         </a>
 
         <drop-down-separator />

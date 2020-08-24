@@ -29,12 +29,8 @@
             href="javascript:;"
         >
             <i class="fa fa-random"></i>
-            <span v-if="isOldPaletteShown" v-translate>
-                Switch to default colors
-            </span>
-            <span v-else v-translate>
-                Switch to old colors
-            </span>
+            <span v-if="isOldPaletteShown" v-translate>Switch to default colors</span>
+            <span v-else v-translate>Switch to old colors</span>
         </a>
     </div>
 </template>

@@ -20,9 +20,7 @@
 <template>
     <div class="timetracking-details-modal-artifact-infos-container">
         <div class="timetracking-details-modal-artifact-infos">
-            <span v-translate>
-                Submission date
-            </span>
+            <span v-translate>Submission date</span>
             <span>
                 {{ submission_date }}
             </span>

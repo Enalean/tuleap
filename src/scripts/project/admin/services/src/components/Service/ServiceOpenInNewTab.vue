@@ -19,9 +19,7 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="props.id" v-translate>
-            Open in a new tab
-        </label>
+        <label class="tlp-label" v-bind:for="props.id" v-translate>Open in a new tab</label>
         <div class="tlp-switch">
             <input
                 type="checkbox"

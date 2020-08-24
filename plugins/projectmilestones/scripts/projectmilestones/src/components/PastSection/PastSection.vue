@@ -19,9 +19,7 @@
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label" v-if="last_release" v-translate>
-            Recently closed
-        </span>
+        <span class="project-release-label" v-if="last_release" v-translate>Recently closed</span>
         <release-displayer
             v-if="last_release"
             v-bind:key="last_release.id"

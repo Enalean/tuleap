@@ -21,9 +21,7 @@
 <template>
     <div id="modal-big-content" class="tlp-modal" role="dialog" aria-labelledby="term-of-services">
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="term-of-services" v-translate>
-                Policy agreement
-            </h1>
+            <h1 class="tlp-modal-title" id="term-of-services" v-translate>Policy agreement</h1>
             <div
                 class="tlp-modal-close"
                 tabindex="0"

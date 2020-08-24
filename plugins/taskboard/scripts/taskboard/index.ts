@@ -60,8 +60,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.trackers)
             : [];
 
-    await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "taskboard-po-" */ "./po/" + getPOFileFromLocale(locale))
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(/* webpackChunkName: "taskboard-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
     Vue.use(Vuex);
     Vue.use(VueDOMPurifyHTML);

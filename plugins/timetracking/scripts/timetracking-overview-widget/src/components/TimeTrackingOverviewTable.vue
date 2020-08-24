@@ -40,12 +40,8 @@
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
             <thead>
                 <tr>
-                    <th v-translate>
-                        Tracker
-                    </th>
-                    <th v-translate>
-                        Project
-                    </th>
+                    <th v-translate>Tracker</th>
+                    <th v-translate>Project</th>
                     <th class="tlp-table-cell-numeric">
                         <translate>Time</translate>
                         <span

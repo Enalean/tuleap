@@ -23,9 +23,7 @@ exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = 
   <p
     class="empty-page-text"
   >
-    
-        This taskboard is empty
-    
+    This taskboard is empty
   </p>
 </div>
 `;

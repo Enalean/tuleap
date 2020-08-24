@@ -27,9 +27,7 @@
             >
                 Capacity: %{capacity}
             </translate>
-            <translate v-else data-test="capacity-empty">
-                Capacity: N/A
-            </translate>
+            <translate v-else data-test="capacity-empty">Capacity: N/A</translate>
         </div>
         <div
             class="project-release-info-badge tlp-badge-outline"
@@ -43,9 +41,7 @@
             >
                 Initial effort: %{initialEffort}
             </translate>
-            <translate v-else data-test="initial-effort-empty">
-                Initial effort: N/A
-            </translate>
+            <translate v-else data-test="initial-effort-empty">Initial effort: N/A</translate>
         </div>
         <release-buttons-description v-bind:release_data="release_data">
             <a

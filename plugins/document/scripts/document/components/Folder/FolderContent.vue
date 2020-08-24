@@ -24,9 +24,7 @@
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th class="document-tree-head-name" v-translate>
-                                Name
-                            </th>
+                            <th class="document-tree-head-name" v-translate>Name</th>
                             <template v-if="!toggle_quick_look">
                                 <th
                                     class="document-tree-head-owner"

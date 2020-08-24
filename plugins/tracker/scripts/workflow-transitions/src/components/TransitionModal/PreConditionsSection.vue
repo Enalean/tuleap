@@ -19,9 +19,7 @@
 
 <template functional>
     <section class="tlp-modal-body-section">
-        <h2 class="tlp-modal-subtitle" v-translate>
-            Conditions of the transition
-        </h2>
+        <h2 class="tlp-modal-subtitle" v-translate>Conditions of the transition</h2>
         <div class="tlp-form-element">
             <slot name="authorized-ugroups"></slot>
         </div>

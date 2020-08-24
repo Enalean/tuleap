@@ -34,8 +34,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
     }
-    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", (locale) =>
-        import(/* webpackChunkName: "oauth2-server-po-" */ "../po/" + getPOFileFromLocale(locale))
+    const gettext_provider = await initGettext(
+        language,
+        "tuleap-oauth2_server",
+        (locale) =>
+            import(
+                /* webpackChunkName: "oauth2-server-po-" */ "../po/" + getPOFileFromLocale(locale)
+            )
     );
 
     openModalAndReplacePlaceholders({

@@ -31,11 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(Vue, (locale: string) =>
-        import(
-            /* webpackChunkName: "project/project-admin-banner-po-" */ "./po/" +
-                getPOFileFromLocale(locale)
-        )
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "project/project-admin-banner-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            )
     );
 
     const AppComponent = Vue.extend(App);

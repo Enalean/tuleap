@@ -25,9 +25,7 @@
         data-test="document-dropdown-update-properties"
     >
         <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
-        <translate>
-            Update properties
-        </translate>
+        <translate>Update properties</translate>
     </a>
 </template>
 

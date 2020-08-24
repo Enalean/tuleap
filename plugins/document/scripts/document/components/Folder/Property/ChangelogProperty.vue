@@ -19,9 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="document-update-changelog" v-translate>
-            Changelog
-        </label>
+        <label class="tlp-label" for="document-update-changelog" v-translate>Changelog</label>
         <textarea
             class="tlp-textarea"
             id="document-update-changelog"

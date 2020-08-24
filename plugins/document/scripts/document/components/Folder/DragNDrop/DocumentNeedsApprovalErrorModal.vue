@@ -23,9 +23,7 @@
         <p v-translate>
             You can't upload a new version of this file until the approval table is closed.
         </p>
-        <p v-translate="{ table_state }">
-            Current approval table state: %{ table_state }.
-        </p>
+        <p v-translate="{ table_state }">Current approval table state: %{ table_state }.</p>
     </error-modal>
 </template>
 

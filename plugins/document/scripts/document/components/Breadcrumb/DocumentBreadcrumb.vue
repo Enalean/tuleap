@@ -53,9 +53,7 @@
             v-if="is_ellipsis_displayed"
             data-test="breadcrumb-ellipsis"
         >
-            <span class="breadcrumb-link" v-bind:title="ellipsis_title">
-                ...
-            </span>
+            <span class="breadcrumb-link" v-bind:title="ellipsis_title">...</span>
         </span>
         <document-breadcrumb-element
             v-for="parent in current_folder_ascendant_hierarchy_to_display"

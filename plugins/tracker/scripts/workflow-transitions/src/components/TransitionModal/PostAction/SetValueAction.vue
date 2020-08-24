@@ -33,9 +33,7 @@
                 required
                 v-bind:disabled="is_modal_save_running"
             >
-                <option v-bind:value="null" v-translate disabled>
-                    Please choose
-                </option>
+                <option v-bind:value="null" v-translate disabled>Please choose</option>
                 <optgroup
                     v-for="group in available_fields_by_groups"
                     v-bind:key="group.label"

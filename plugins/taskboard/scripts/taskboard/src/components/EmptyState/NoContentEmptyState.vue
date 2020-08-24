@@ -28,9 +28,7 @@
                 />
             </svg>
         </div>
-        <translate tag="p" class="empty-page-text">
-            This taskboard is empty
-        </translate>
+        <translate tag="p" class="empty-page-text">This taskboard is empty</translate>
     </div>
 </template>
 

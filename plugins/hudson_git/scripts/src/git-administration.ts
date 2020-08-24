@@ -30,10 +30,14 @@ import {
         throw new Error("Not able to find the user language.");
     }
 
-    const gettext_provider = await initGettext(language, "tuleap-hudson_git", (locale) =>
-        import(
-            /* webpackChunkName: "git-administration-po-" */ "../po/" + getPOFileFromLocale(locale)
-        )
+    const gettext_provider = await initGettext(
+        language,
+        "tuleap-hudson_git",
+        (locale) =>
+            import(
+                /* webpackChunkName: "git-administration-po-" */ "../po/" +
+                    getPOFileFromLocale(locale)
+            )
     );
 
     function confirmDeletionPopover(): void {

@@ -21,15 +21,11 @@
     <section class="tlp-pane-section document-quick-look-properties">
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label for="document-id" class="tlp-label" v-translate>
-                    Id
-                </label>
+                <label for="document-id" class="tlp-label" v-translate>Id</label>
                 <p id="document-id">#{{ item.id }}</p>
             </div>
             <div class="tlp-property">
-                <label for="document-owner" class="tlp-label" v-translate>
-                    Owner
-                </label>
+                <label for="document-owner" class="tlp-label" v-translate>Owner</label>
                 <p id="document-owner">
                     <user-badge v-bind:user="item.owner" />
                 </p>
@@ -45,9 +41,7 @@
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label class="tlp-label" v-translate>
-                    Creation
-                </label>
+                <label class="tlp-label" v-translate>Creation</label>
                 <tlp-relative-date
                     v-bind:date="item.creation_date"
                     v-bind:absolute-date="getFormattedDate(item.creation_date)"
@@ -57,9 +51,7 @@
                 />
             </div>
             <div class="tlp-property">
-                <label class="tlp-label" v-translate>
-                    Last update date
-                </label>
+                <label class="tlp-label" v-translate>Last update date</label>
                 <tlp-relative-date
                     v-bind:date="item.last_update_date"
                     v-bind:absolute-date="getFormattedDate(item.last_update_date)"
@@ -83,9 +75,7 @@
                 />
             </div>
             <div v-if="is_file" class="tlp-property">
-                <label for="document-file-size" class="tlp-label" v-translate>
-                    File size
-                </label>
+                <label for="document-file-size" class="tlp-label" v-translate>File size</label>
                 <p id="document-file-size" data-test="docman-file-size">
                     {{ file_size_in_mega_bytes }}
                 </p>

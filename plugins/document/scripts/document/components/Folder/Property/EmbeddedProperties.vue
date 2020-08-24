@@ -20,9 +20,7 @@
 
 <template>
     <div class="tlp-form-element" v-show="is_displayed">
-        <label class="tlp-label" for="document-new-item-embedded" v-translate>
-            Content
-        </label>
+        <label class="tlp-label" for="document-new-item-embedded" v-translate>Content</label>
         <div class="tlp-form-element">
             <textarea
                 class="tlp-textarea"
