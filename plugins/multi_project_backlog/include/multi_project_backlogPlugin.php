@@ -33,6 +33,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\MilestoneCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\StatusSemanticChecker;
+use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersUpdater;
@@ -42,6 +43,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
 use Tuleap\MultiProjectBacklog\Contributor\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
@@ -63,13 +65,16 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(RootPlanningEditionEvent::NAME);
         $this->addHook(PlanningUpdatedEvent::NAME);
         $this->addHook(DisplayTopPlanningAppEvent::NAME);
+        $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
+        $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
+        $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
 
         return parent::getHooksAndCallbacks();
     }
 
     public function getDependencies(): array
     {
-        return ['agiledashboard'];
+        return ['tracker', 'agiledashboard'];
     }
 
     public function getPluginInfo(): PluginInfo
@@ -221,5 +226,31 @@ final class multi_project_backlogPlugin extends Plugin
         if (! $user_can_create_milestone) {
             $event->setUserCannotCreateMilestone();
         }
+    }
+
+    /**
+     * @see NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES
+     */
+    public function getArtifactLinkNatures(array $params): void
+    {
+        $params['natures'][] = new MirroredMilestoneArtifactLinkType();
+    }
+
+    /**
+     * @see NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER
+     */
+    public function getNaturePresenter(array $params): void
+    {
+        if ($params['shortname'] === MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME) {
+            $params['presenter'] = new MirroredMilestoneArtifactLinkType();
+        }
+    }
+
+    /**
+     * @see Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES
+     */
+    public function trackerAddSystemNatures(array $params): void
+    {
+        $params['natures'][] = MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 }
