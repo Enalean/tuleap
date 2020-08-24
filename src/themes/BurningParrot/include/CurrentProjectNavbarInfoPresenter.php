@@ -28,7 +28,6 @@ use Tuleap\Project\Banner\BannerDisplay;
 class CurrentProjectNavbarInfoPresenter
 {
     public $project_privacy;
-    public $project_link;
     public $project_is_public;
     public $project_name;
     /**
@@ -82,7 +81,6 @@ class CurrentProjectNavbarInfoPresenter
     ) {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $this->project_link      = '/projects/' . $project->getUnixName() . '/';
         $this->project_is_public = $project->isPublic();
         $this->project_name      = $project->getPublicName();
         $this->project_id        = $project->getID();

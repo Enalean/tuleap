@@ -6,9 +6,9 @@
             <ul class="nav header-navbar-container-project-nav">
                 {{# current_project_navbar_info }}
                     <li class="current-project">
-                        <a href="{{ project_link }}"
+                        <span
                            class="project-title"
-                           id="header-navbar-project-title"
+                           id="header-navbar-project-icon"
                            title="{{ project_name }}"
                            data-content="{{ project_privacy }}"
                         >
@@ -34,9 +34,7 @@
                                     <i class="fa fa-lock"></i>
                                 {{/ project_is_public }}
                             {{/ are_restricted_users_allowed }}
-
-                            {{ project_name }}
-                        </a>
+                        </span>
                         {{# has_project_banner }}
                             <span id="current-project-banner-bullhorn"
                                   {{# project_banner_is_visible }}class="bullhorn-to-banner"{{/ project_banner_is_visible }}

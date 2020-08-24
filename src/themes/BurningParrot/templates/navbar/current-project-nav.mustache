@@ -1,31 +1,28 @@
 {{# current_project_navbar_info_presenter }}
 <nav id="current-project-nav">
-    <a href="{{ project_link }}" class="current-project-name">
-        {{# are_restricted_users_allowed }}
-            {{# project_is_public }}
-                <i class="fa fa-unlock current-project-icon"></i>
-            {{/ project_is_public }}
-            {{# project_is_public_incl_restricted }}
-                <i class="fa fa-tlp-unlock-plus-r current-project-icon"></i>
-            {{/ project_is_public_incl_restricted }}
-            {{# project_is_private }}
-                <i class="fa fa-lock current-project-icon"></i>
-            {{/ project_is_private }}
-            {{# project_is_private_incl_restricted }}
-                <i class="fa fa-tlp-lock-plus-r current-project-icon"></i>
-            {{/ project_is_private_incl_restricted }}
-        {{/ are_restricted_users_allowed }}
-        {{^ are_restricted_users_allowed }}
-            {{# project_is_public }}
-                <i class="fa fa-unlock current-project-icon"></i>
-            {{/ project_is_public }}
-            {{^ project_is_public }}
-                <i class="fa fa-lock current-project-icon"></i>
-            {{/ project_is_public }}
-        {{/ are_restricted_users_allowed }}
+    {{# are_restricted_users_allowed }}
+        {{# project_is_public }}
+            <i class="fa fa-unlock current-project-icon"></i>
+        {{/ project_is_public }}
+        {{# project_is_public_incl_restricted }}
+            <i class="fa fa-tlp-unlock-plus-r current-project-icon"></i>
+        {{/ project_is_public_incl_restricted }}
+        {{# project_is_private }}
+            <i class="fa fa-lock current-project-icon"></i>
+        {{/ project_is_private }}
+        {{# project_is_private_incl_restricted }}
+            <i class="fa fa-tlp-lock-plus-r current-project-icon"></i>
+        {{/ project_is_private_incl_restricted }}
+    {{/ are_restricted_users_allowed }}
+    {{^ are_restricted_users_allowed }}
+        {{# project_is_public }}
+            <i class="fa fa-unlock current-project-icon"></i>
+        {{/ project_is_public }}
+        {{^ project_is_public }}
+            <i class="fa fa-lock current-project-icon"></i>
+        {{/ project_is_public }}
+    {{/ are_restricted_users_allowed }}
 
-        {{ project_name }}
-    </a>
     <section class="tlp-popover" id="current-project-nav-title-popover">
         <div class="tlp-popover-arrow"></div>
         <div class="tlp-popover-header">

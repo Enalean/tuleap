@@ -417,6 +417,14 @@ $nav-dropdown-content-border-radius: 3px;
     }
 }
 
+#header-navbar-project-icon {
+    color: #747474;
+}
+
+&:not(.sidebar-collapsed) #header-navbar-project-icon {
+    display: none;
+}
+
 #current-project-banner-bullhorn > a {
     padding: 0 0 0 20px;
     color: $ui-color-warning;

@@ -21,7 +21,7 @@ import $ from "jquery";
 import { render } from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const project_title_element = document.getElementById("header-navbar-project-title");
+    const project_title_element = document.getElementById("header-navbar-project-icon");
     if (!project_title_element) {
         return;
     }
