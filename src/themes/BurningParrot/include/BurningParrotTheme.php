@@ -309,7 +309,8 @@ class BurningParrotTheme extends BaseLayout
             $project,
             $this->getProjectSidebar($params, $project),
             $this->getProjectPrivacy($project),
-            $this->version
+            $this->version,
+            $this->getBanner($project, $this->user)
         );
 
         return new SidebarPresenter(

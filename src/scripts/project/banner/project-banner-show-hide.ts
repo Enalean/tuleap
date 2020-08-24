@@ -21,7 +21,6 @@ export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
 export const PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID = "project-banner-close";
 export const PROJECT_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-project-banner";
 export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
-export const PROJECT_NAVBAR_TO_BANNER_CLASS = "bullhorn-to-banner";
 
 export function allowToHideAndShowProjectBanner(
     mount_point: Document,
@@ -44,7 +43,7 @@ export function allowToHideAndShowProjectBanner(
     }
 
     project_banner_navbar.addEventListener("click", (event: Event): void => {
-        showProjectBannerMessage(
+        toggleProjectBannerMessage(
             event,
             mount_point.body,
             project_banner_navbar,
@@ -71,26 +70,9 @@ export function allowToHideAndShowProjectBanner(
             );
         }
     );
-
-    let last_known_scroll_position = window.scrollY;
-    let ticking = false;
-    updateNavbarToBannerElementVisibility(project_banner_navbar, last_known_scroll_position);
-    window.addEventListener("scroll", (): void => {
-        last_known_scroll_position = window.scrollY;
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                updateNavbarToBannerElementVisibility(
-                    project_banner_navbar,
-                    last_known_scroll_position
-                );
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
 }
 
-function showProjectBannerMessage(
+function toggleProjectBannerMessage(
     event: Event,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
@@ -101,7 +83,6 @@ function showProjectBannerMessage(
     document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
-    updateNavbarToBannerElementVisibility(project_banner_navbar, 0);
 }
 
 async function hideProjectBannerMessage(
@@ -115,25 +96,10 @@ async function hideProjectBannerMessage(
     document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
-    updateNavbarToBannerElementVisibility(project_banner_navbar, 0);
 
     // Not dealing with potential errors here, worst case scenario the user will have to close the banner again on the next page
     await tlpPatch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: `project_banner_${project_id}`, value: "hidden" }),
     });
-}
-
-function updateNavbarToBannerElementVisibility(
-    project_banner_navbar: HTMLElement,
-    current_scrollY_position: number
-): void {
-    if (
-        project_banner_navbar.classList.contains(PROJECT_BANNER_HIDDEN_CLASS) ||
-        current_scrollY_position !== 0
-    ) {
-        project_banner_navbar.classList.remove(PROJECT_NAVBAR_TO_BANNER_CLASS);
-        return;
-    }
-    project_banner_navbar.classList.add(PROJECT_NAVBAR_TO_BANNER_CLASS);
 }

@@ -97,6 +97,11 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $has_only_one_breadcrumb;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_project_banner = false;
 
     public function __construct(
         array $breadcrumbs,
@@ -144,6 +149,7 @@ class FlamingParrot_ContainerPresenter
                 $banner->getMessage(),
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
             );
+            $this->has_project_banner = true;
             $this->project_banner_is_visible = $banner->isVisible();
         }
         $this->current_user_id = $current_user->getId();

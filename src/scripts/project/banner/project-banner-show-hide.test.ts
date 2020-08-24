@@ -23,7 +23,6 @@ import {
     PROJECT_BANNER_HIDDEN_CLASS,
     allowToHideAndShowProjectBanner,
     PROJECT_BANNER_VISIBLE_GLOBAL_CLASS,
-    PROJECT_NAVBAR_TO_BANNER_CLASS,
 } from "./project-banner-show-hide";
 
 const USER_ID = "1200";
@@ -50,7 +49,6 @@ describe("Show and hide project banner", () => {
         const navbar = local_document.createElement("nav");
         const navbar_project_banner_info = local_document.createElement("div");
         navbar_project_banner_info.setAttribute("id", PROJECT_BANNER_NAVBAR_ID);
-        navbar.classList.add(PROJECT_NAVBAR_TO_BANNER_CLASS);
         navbar.appendChild(navbar_project_banner_info);
         local_document.body.appendChild(navbar);
 
@@ -112,9 +110,6 @@ describe("Show and hide project banner", () => {
         expect(local_document.project_banner_navbar_information.classList).toContain(
             PROJECT_BANNER_HIDDEN_CLASS
         );
-        expect(local_document.project_banner_navbar_information.classList).not.toContain(
-            PROJECT_NAVBAR_TO_BANNER_CLASS
-        );
         expect(tlpPatchSpy).toHaveBeenCalledWith(
             `/api/users/${USER_ID}/preferences`,
             expect.objectContaining({
@@ -138,50 +133,10 @@ describe("Show and hide project banner", () => {
         expect(local_document.project_banner_navbar_information.classList).not.toContain(
             PROJECT_BANNER_HIDDEN_CLASS
         );
-        expect(local_document.project_banner_navbar_information.classList).toContain(
-            PROJECT_NAVBAR_TO_BANNER_CLASS
-        );
         expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
         expect(click_event).toBeDefined();
         if (click_event !== undefined) {
             expect(click_event.defaultPrevented).toBe(true);
         }
-    });
-
-    it("hides the navbar to banner element when the user scrolls", () => {
-        jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-            cb(1);
-            return 1;
-        });
-        const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
-
-        allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
-
-        expect(local_document.project_banner_navbar_information.classList).toContain(
-            PROJECT_NAVBAR_TO_BANNER_CLASS
-        );
-
-        Object.defineProperty(window, "scrollY", { get: () => 150 });
-        window.dispatchEvent(new Event("scroll"));
-
-        expect(local_document.project_banner_navbar_information.classList).not.toContain(
-            PROJECT_NAVBAR_TO_BANNER_CLASS
-        );
-    });
-
-    it("should not the navbar to banner element on first load when the user is not at the top of the page", () => {
-        jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-            cb(1);
-            return 1;
-        });
-        const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
-
-        Object.defineProperty(window, "scrollY", { get: () => 150 });
-
-        allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
-
-        expect(local_document.project_banner_navbar_information.classList).not.toContain(
-            PROJECT_NAVBAR_TO_BANNER_CLASS
-        );
     });
 });

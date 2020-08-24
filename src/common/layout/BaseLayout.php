@@ -446,7 +446,7 @@ abstract class BaseLayout extends Response
 
     final protected function getProjectBanner(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay
     {
-        $project_banner = (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
+        $project_banner = $this->getBanner($project, $current_user);
         if ($project_banner === null) {
             return null;
         }
@@ -462,5 +462,10 @@ abstract class BaseLayout extends Response
         include($GLOBALS['Language']->getContent('layout/footer', null, null, '.js'));
 
         return ob_get_clean();
+    }
+
+    final protected function getBanner(Project $project, PFUser $current_user): ?BannerDisplay
+    {
+        return (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
     }
 }
