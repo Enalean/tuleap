@@ -101,7 +101,6 @@ function startUploader(loader, upload_href, download_href) {
     return new Promise((resolve, reject) => {
         const uploader = new Upload(loader.file, {
             uploadUrl: upload_href,
-            retryDelays: [0, 1000, 3000, 5000],
             metadata: {
                 filename: loader.file.name,
                 filetype: loader.file.type,

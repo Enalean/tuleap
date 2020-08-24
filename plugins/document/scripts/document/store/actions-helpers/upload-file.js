@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
-import { FILE_UPLOAD_UNKNOWN_ERROR, RETRY_DELAYS } from "../../constants.js";
+import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants.js";
 
 function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
     if (bytes_total === 0) {
@@ -34,7 +34,6 @@ function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, p
 export function uploadFile(context, dropped_file, fake_item, docman_item, parent) {
     const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties.upload_href,
-        retryDelays: RETRY_DELAYS,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
@@ -81,7 +80,6 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
 
     const uploader = new Upload(dropped_file, {
         uploadUrl: new_version.upload_href,
-        retryDelays: RETRY_DELAYS,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
@@ -114,7 +112,6 @@ export function uploadVersionFromEmpty(context, dropped_file, updated_empty, new
     }
     const uploader = new Upload(dropped_file, {
         uploadUrl: new_version.upload_href,
-        retryDelays: RETRY_DELAYS,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
