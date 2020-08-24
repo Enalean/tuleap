@@ -330,7 +330,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $workflow    = $artifact->getWorkflow();
         $fields_data = $this->field_initializator->process($artifact, $fields_data);
 
-        $workflow->validate($fields_data, $artifact, $comment);
+        $workflow->validate($fields_data, $artifact, $comment, $submitter);
         /*
          * We need to run the post actions to validate the data
          */

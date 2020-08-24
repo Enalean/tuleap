@@ -56,9 +56,8 @@ abstract class Workflow_Transition_Condition
     /**
      * Validate the condition
      *
-     * @return bool
      */
-    abstract public function validate($fields_data, Tracker_Artifact $artifact, $comment_body);
+    abstract public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool;
 
     public function getTransition()
     {

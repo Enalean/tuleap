@@ -177,7 +177,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     ): bool {
         try {
             $workflow = $artifact->getWorkflow();
-            $workflow->validate($fields_data, $artifact, "");
+            $workflow->validate($fields_data, $artifact, "", $submitter);
             $workflow->before($fields_data, $submitter, $artifact);
             $augmented_data = $this->field_initializator->process($artifact, $fields_data);
             $workflow->checkGlobalRules($augmented_data);

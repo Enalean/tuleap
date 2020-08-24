@@ -41,7 +41,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
         $workflow      = $artifact->getWorkflow();
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
-            if ($field->userCanUpdate()) {
+            if ($field->userCanUpdate($submitter)) {
                 return $field->saveNewChangeset(
                     $artifact,
                     $previous_changeset,
