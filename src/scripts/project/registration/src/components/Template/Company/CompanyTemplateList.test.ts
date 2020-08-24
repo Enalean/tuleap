@@ -37,7 +37,6 @@ describe("CompanyTemplateList", () => {
             const company_templates: TemplateData[] = [];
             const state: State = {
                 company_templates: company_templates,
-                default_project_template: null,
                 company_name: "",
             } as State;
 
@@ -81,7 +80,6 @@ describe("CompanyTemplateList", () => {
 
             const state: State = {
                 company_templates: company_templates,
-                default_project_template: null,
                 company_name: "",
             } as State;
 

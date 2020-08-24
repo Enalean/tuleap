@@ -549,7 +549,6 @@ describe("ProjectInformation -", () => {
                     glyph: "string",
                     is_built_in: true,
                 } as TemplateData,
-                default_project_template: null,
                 company_name: "",
             } as State;
 
@@ -673,7 +672,6 @@ describe("ProjectInformation -", () => {
                     glyph: "string",
                     is_built_in: true,
                 } as TemplateData,
-                default_project_template: null,
             } as State;
 
             const getters = {

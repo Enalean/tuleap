@@ -34,7 +34,6 @@ export interface State {
     is_description_required: boolean;
     project_fields: FieldData[];
     company_templates: TemplateData[];
-    default_project_template: TemplateData | null;
     company_name: string;
     can_user_choose_project_visibility: boolean;
 }
