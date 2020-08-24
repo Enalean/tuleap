@@ -23,7 +23,6 @@ use Tuleap\Project\Banner\BannerDisplay;
 class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 {
     public $project_privacy;
-    public $project_link;
     public $project_is_public;
     public $project_name;
     /**
@@ -71,7 +70,6 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $this->project_link      = '/projects/' . $project->getUnixName() . '/';
         $this->project_is_public = $project->isPublic();
         $this->project_name      = $project->getPublicName();
         $this->project_privacy   = $purifier->purify($project_privacy, CODENDI_PURIFIER_STRIP_HTML);

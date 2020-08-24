@@ -274,26 +274,14 @@
     color: $tlp-ui-dimmed;
 }
 
-.current-project-name {
-    max-width: 250px;
-    overflow: hidden;
-    color: $tlp-theme-color;
-    font-size: 16px;
-    letter-spacing: .5px;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-
-    &:hover {
-        text-decoration: none;
-    }
-}
-
 .current-project-icon {
     margin: 0 5px 0 0;
     color: $tlp-theme-color;
     font-size: 16px;
+}
+
+body:not(.sidebar-collapsed) .current-project-icon {
+    display: none;
 }
 
 #current-project-banner-bullhorn > a {
