@@ -154,8 +154,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
             );
         }
 
-        $jenkins_server_representation_collection = new JenkinsServerRepresentationCollection();
-        $jenkins_server_representation_collection->build(
+        $jenkins_server_representation_collection = JenkinsServerRepresentationCollection::build(
             $servers,
             $total
         );

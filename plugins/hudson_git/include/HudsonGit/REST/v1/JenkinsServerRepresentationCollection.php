@@ -24,6 +24,9 @@
 
 namespace Tuleap\HudsonGit\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class JenkinsServerRepresentationCollection
 {
     /**
@@ -36,17 +39,23 @@ class JenkinsServerRepresentationCollection
      */
     public $total;
 
-    public function build(array $servers, int $total)
+    /**
+     * @param JenkinsServerRepresentation[] $git_jenkins_servers_representations
+     */
+    private function __construct(array $git_jenkins_servers_representations, int $total)
+    {
+        $this->git_jenkins_servers_representations = $git_jenkins_servers_representations;
+        $this->total                               = $total;
+    }
+
+    public static function build(array $servers, int $total): self
     {
         $jenkins_server_representations = [];
 
         foreach ($servers as $server) {
-            $jenkins_server_representation = new JenkinsServerRepresentation();
-            $jenkins_server_representation->build($server);
-            $jenkins_server_representations[] = $jenkins_server_representation;
+            $jenkins_server_representations[] = JenkinsServerRepresentation::build($server);
         }
 
-        $this->git_jenkins_servers_representations = $jenkins_server_representations;
-        $this->total = $total;
+        return new self($jenkins_server_representations, $total);
     }
 }
