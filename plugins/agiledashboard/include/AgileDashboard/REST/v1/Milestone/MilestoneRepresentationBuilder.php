@@ -137,33 +137,6 @@ class MilestoneRepresentationBuilder
         return $milestone_representation_reference_holder->milestone_representation;
     }
 
-    public function getPaginatedSubMilestonesRepresentations(
-        \Planning_Milestone $milestone,
-        \PFUser $user,
-        string $representation_type,
-        ISearchOnStatus $criterion,
-        int $limit,
-        int $offset,
-        string $order
-    ): PaginatedMilestonesRepresentations {
-        $sub_milestones = $this->milestone_factory
-            ->getPaginatedSubMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset, $order);
-
-        $submilestones_representations = [];
-        foreach ($sub_milestones->getMilestones() as $submilestone) {
-            $submilestones_representations[] = $this->getMilestoneRepresentation(
-                $submilestone,
-                $user,
-                $representation_type
-            );
-        }
-
-        return new PaginatedMilestonesRepresentations(
-            $submilestones_representations,
-            $sub_milestones->getTotalSize()
-        );
-    }
-
     public function getPaginatedSiblingMilestonesRepresentations(
         \Planning_Milestone $milestone,
         \PFUser $user,

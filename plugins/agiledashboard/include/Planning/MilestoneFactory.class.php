@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
@@ -404,29 +405,26 @@ class Planning_MilestoneFactory
         return $sub_milestones_ids;
     }
 
-    public function getPaginatedSubMilestonesWithStatusCriterion(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
+    public function getPaginatedSubMilestones(SubMilestoneRequest $request): PaginatedMilestones
+    {
+        $sub_milestones = [];
+        $total_size     = 0;
+
+        $milestone          = $request->getParentMilestone();
         $milestone_artifact = $milestone->getArtifact();
-        $sub_milestones     = [];
-        $total_size         = 0;
 
         if ($milestone_artifact) {
             $sub_milestone_artifacts = $this->milestone_dao->searchPaginatedSubMilestones(
                 $milestone_artifact->getId(),
-                $criterion,
-                $limit,
-                $offset,
-                $order
+                $request
             );
 
             $total_size     = $this->milestone_dao->foundRows();
-            $sub_milestones = $this->convertDarToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
+            $sub_milestones = $this->convertDarToArrayOfMilestones(
+                $request->getUser(),
+                $milestone,
+                $sub_milestone_artifacts
+            );
         }
 
         return new PaginatedMilestones($sub_milestones, $total_size);
@@ -557,7 +555,10 @@ class Planning_MilestoneFactory
         return new PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
-    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts)
+    /**
+     * @return Planning_ArtifactMilestone[]
+     */
+    private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts): array
     {
         $sub_milestones          = [];
 

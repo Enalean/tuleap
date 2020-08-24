@@ -80,7 +80,6 @@ class ProjectMilestonesResource
         } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-        $this->sendAllowHeaders();
 
         try {
             $milestones = $this->milestone_factory->getPaginatedTopMilestones($refined_request);
@@ -101,10 +100,5 @@ class ProjectMilestonesResource
     private function sendPaginationHeaders(int $limit, int $offset, int $size): void
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    private function sendAllowHeaders(): void
-    {
-        Header::allowOptionsGet();
     }
 }
