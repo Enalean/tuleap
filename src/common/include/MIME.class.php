@@ -265,7 +265,6 @@ class MIME
             xml_set_character_data_handler(
                 $xml_parser,
                 function ($parser, $data) {
-                    /** @psalm-suppress TypeDoesNotContainType */
                     if ($this->read == true) {
                         $this->description = $data;
                     }
