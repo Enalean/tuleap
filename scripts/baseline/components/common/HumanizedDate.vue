@@ -44,9 +44,8 @@ export default {
         humanized_date() {
             if (this.start_with_capital) {
                 return this.capitalizeFirstLetter(this.interval_from_now);
-            } else {
-                return this.interval_from_now;
             }
+            return this.interval_from_now;
         },
     },
     methods: {

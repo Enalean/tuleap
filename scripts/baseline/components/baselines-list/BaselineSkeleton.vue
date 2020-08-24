@@ -37,14 +37,10 @@
         </td>
         <td class="tlp-table-cell-actions">
             <action-button icon="eye" v-bind:disabled="true">
-                <span v-translate>
-                    Consult
-                </span>
+                <span v-translate>Consult</span>
             </action-button>
             <action-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
-                <span v-translate>
-                    Delete
-                </span>
+                <span v-translate>Delete</span>
             </action-button>
         </td>
     </tr>

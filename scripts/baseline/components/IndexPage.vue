@@ -24,9 +24,7 @@
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
                         <i class="fa fa-tlp-baseline"></i>
-                        <span v-translate>
-                            your baselines
-                        </span>
+                        <span v-translate>your baselines</span>
                         <span
                             v-if="baselines !== null"
                             class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right baselines-count"
@@ -60,9 +58,7 @@
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
                         <i class="fa fa-tlp-baseline-comparison"></i>
-                        <span v-translate>
-                            Comparisons
-                        </span>
+                        <span v-translate>Comparisons</span>
                         <span
                             v-if="comparisons !== null"
                             class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right comparisons-count"

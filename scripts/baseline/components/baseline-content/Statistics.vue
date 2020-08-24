@@ -19,18 +19,12 @@
   -->
 <template>
     <div class="statistics">
-        <statistic v-bind:label="epics_label" class="baseline-statistic-epics">
-            5
-        </statistic>
+        <statistic v-bind:label="epics_label" class="baseline-statistic-epics">5</statistic>
         <statistic v-bind:label="user_stories_label" class="baseline-statistic-user-stories">
             10
         </statistic>
-        <statistic v-bind:label="bugs_label" class="baseline-statistic-bugs">
-            11
-        </statistic>
-        <statistic v-bind:label="tasks_label" class="baseline-statistic-tasks">
-            33
-        </statistic>
+        <statistic v-bind:label="bugs_label" class="baseline-statistic-bugs">11</statistic>
+        <statistic v-bind:label="tasks_label" class="baseline-statistic-tasks">33</statistic>
     </div>
 </template>
 
