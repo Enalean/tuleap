@@ -20,43 +20,42 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Milestone;
+namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-final class PaginatedMilestones
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+
+/**
+ * @psalm-immutable
+ */
+final class PaginatedMilestonesRepresentations
 {
     /**
-     * @var \Planning_Milestone[]
-     * @psalm-readonly
+     * @var MilestoneRepresentation[]
      */
-    private $milestones;
+    private $milestones_representations;
 
     /**
      * @var int
-     * @psalm-readonly
      */
     private $total_size;
 
     /**
-     * @param \Planning_Milestone[] $milestones
+     * @param MilestoneRepresentation[] $milestones_representations
      */
-    public function __construct(array $milestones, int $total_size)
+    public function __construct(array $milestones_representations, int $total_size)
     {
-        $this->milestones = $milestones;
-        $this->total_size = $total_size;
+        $this->milestones_representations = $milestones_representations;
+        $this->total_size                 = $total_size;
     }
 
     /**
-     * @return \Planning_Milestone[]
-     * @psalm-mutation-free
+     * @return MilestoneRepresentation[]
      */
-    public function getMilestones(): array
+    public function getMilestonesRepresentations(): array
     {
-        return $this->milestones;
+        return $this->milestones_representations;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function getTotalSize(): int
     {
         return $this->total_size;

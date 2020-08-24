@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
-class AgileDashboard_Milestone_PaginatedMilestonesRepresentations
+namespace unit\AgileDashboard\Milestone\Request;
+
+use PHPUnit\Framework\TestCase;
+use Tuleap\AgileDashboard\Milestone\Request\PeriodQuery;
+
+final class PeriodQueryTest extends TestCase
 {
-
-    /** @var array */
-    public $milestones_representations;
-
-    /** @var int */
-    public $total_size;
-
-
-    public function __construct(array $milestones_representations, $total_size)
+    public function testItCreatesCurrent(): void
     {
-        $this->milestones_representations = $milestones_representations;
-        $this->total_size                 = $total_size;
+        $query = PeriodQuery::createCurrent();
+        $this->assertTrue($query->isCurrent());
+        $this->assertFalse($query->isFuture());
     }
 
-    public function getMilestonesRepresentations()
+    public function testItCreatesFuture(): void
     {
-        return $this->milestones_representations;
-    }
-
-    public function getTotalSize()
-    {
-        return $this->total_size;
+        $query = PeriodQuery::createFuture();
+        $this->assertTrue($query->isFuture());
+        $this->assertFalse($query->isCurrent());
     }
 }

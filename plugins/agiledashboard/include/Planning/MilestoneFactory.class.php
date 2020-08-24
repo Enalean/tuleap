@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
+use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
@@ -428,7 +429,7 @@ class Planning_MilestoneFactory
             $sub_milestones = $this->convertDarToArrayOfMilestones($user, $milestone, $sub_milestone_artifacts);
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($sub_milestones, $total_size);
+        return new PaginatedMilestones($sub_milestones, $total_size);
     }
 
     public function getPaginatedSiblingMilestonesWithStatusCriterion(
@@ -465,39 +466,46 @@ class Planning_MilestoneFactory
             $siblings   = $this->convertDarToArrayOfMilestones($user, $milestone, $sibling_milestones);
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($siblings, $total_size);
+        return new PaginatedMilestones($siblings, $total_size);
     }
 
-    public function getPaginatedTopMilestonesWithStatusCriterion(
-        PFUser $user,
-        Project $project,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
+    /**
+     * @throws Planning_NoPlanningsException
+     */
+    public function getPaginatedTopMilestones(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    {
+        if ($request->shouldFilterFutureMilestones()) {
+            return $this->getPaginatedTopMilestonesInTheFuture($request);
+        }
+        if ($request->shouldFilterCurrentMilestones()) {
+            return $this->getCurrentPaginatedTopMilestones($request);
+        }
+        return $this->getPaginatedTopMilestonesWithStatusCriterion($request);
+    }
+
+    /**
+     * @throws Planning_NoPlanningsException
+     */
+    private function getPaginatedTopMilestonesWithStatusCriterion(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    {
         $top_milestones = [];
         $total_size     = 0;
 
-        $virtual_milestone = $this->getVirtualTopMilestone($user, $project);
+        $user                          = $request->getUser();
+        $project                       = $request->getProject();
+        $virtual_milestone             = $this->getVirtualTopMilestone($user, $project);
         $milestone_planning_tracker_id = $virtual_milestone->getPlanning()->getPlanningTrackerId();
 
         if ($milestone_planning_tracker_id) {
             if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project->getID()) === true) {
                 $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
                     $milestone_planning_tracker_id,
-                    $criterion,
-                    $limit,
-                    $offset,
-                    $order
+                    $request,
                 );
             } else {
                 $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
                     $milestone_planning_tracker_id,
-                    $criterion,
-                    $limit,
-                    $offset,
-                    $order
+                    $request,
                 );
             }
 
@@ -505,57 +513,39 @@ class Planning_MilestoneFactory
             $top_milestones = $this->convertDarToArrayOfMilestones($user, $virtual_milestone, $top_milestone_artifacts);
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($top_milestones, $total_size);
+        return new PaginatedMilestones($top_milestones, $total_size);
     }
 
-    public function getPaginatedTopMilestonesInTheFuture(
-        PFUser $user,
-        Project $project,
-        int $limit,
-        int $offset,
-        string $order
-    ) {
-        $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion(
-            $user,
-            $project,
-            new StatusOpen(),
-            $limit,
-            $offset,
-            $order
-        );
-
-        $milestones = [];
+    private function getPaginatedTopMilestonesInTheFuture(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    {
+        $user                     = $request->getUser();
+        $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion($request);
+        $milestones               = [];
 
         foreach ($paginated_top_milestones->getMilestones() as $milestone) {
-            if ($this->notFutureMilestoneHasStartDate($milestone->getArtifact(), $user) || $this->isClosedMilestone($milestone->getArtifact())) {
+            if (
+                $this->notFutureMilestoneHasStartDate($milestone->getArtifact(), $user)
+                || $this->isClosedMilestone($milestone->getArtifact())
+            ) {
                 continue;
             }
             $milestones[] = $milestone;
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
+        return new PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
-    public function getCurrentPaginatedTopMilestones(
-        PFUser $user,
-        Project $project,
-        int $limit,
-        int $offset,
-        string $order
-    ) {
-        $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion(
-            $user,
-            $project,
-            new StatusOpen(),
-            $limit,
-            $offset,
-            $order
-        );
-
-        $milestones = [];
+    private function getCurrentPaginatedTopMilestones(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    {
+        $user                     = $request->getUser();
+        $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion($request);
+        $milestones               = [];
 
         foreach ($paginated_top_milestones->getMilestones() as $milestone) {
-            if ($this->notCurrentMilestoneHasStartDate($milestone->getArtifact(), $user) || $this->isClosedMilestone($milestone->getArtifact())) {
+            if (
+                $this->notCurrentMilestoneHasStartDate($milestone->getArtifact(), $user)
+                || $this->isClosedMilestone($milestone->getArtifact())
+            ) {
                 continue;
             }
 
@@ -564,7 +554,7 @@ class Planning_MilestoneFactory
             $milestones[] = $milestone;
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
+        return new PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts)

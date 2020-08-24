@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
+use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
 
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 {
@@ -44,7 +45,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             $order = 'desc';
         }
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'submilestones');
 
         $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
@@ -87,7 +88,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         $limit       = $this->da->escapeInt($limit);
         $offset      = $this->da->escapeInt($offset);
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'art_sibling');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'art_sibling');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
                 FROM tracker_artifact AS art_sibling
@@ -111,7 +112,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         $limit       = $this->da->escapeInt($limit);
         $offset      = $this->da->escapeInt($offset);
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'art_sibling');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'art_sibling');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
                 FROM tracker_artifact parent_art
@@ -143,12 +144,15 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    private function getPaginationAndStatusStatements(
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
+    /**
+     * @psalm-return array{"from_statement":string, "where_status_statement":string, "order":string, "limit_statement": string}
+     */
+    private function getPaginationAndStatusStatements(RefinedTopMilestoneRequest $request): array
+    {
+        $limit           = $request->getLimit();
+        $offset          = $request->getOffset();
+        $order           = $request->getOrder();
+        $criterion       = $request->getStatusFilter();
         $limit_statement = '';
         if ($limit > 0) {
             $limit  = $this->da->escapeInt($limit);
@@ -161,7 +165,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             $order = 'desc';
         }
 
-        list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'submilestones');
 
         return [
             'from_statement'         => $from_status_statement,
@@ -171,14 +175,9 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         ];
     }
 
-    public function searchPaginatedTopMilestones(
-        $milestone_tracker_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
-    ) {
-        $built_sql            = $this->getPaginationAndStatusStatements($criterion, $limit, $offset, $order);
+    public function searchPaginatedTopMilestones($milestone_tracker_id, RefinedTopMilestoneRequest $request)
+    {
+        $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
@@ -195,13 +194,10 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
     }
 
     public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
-        $milestone_tracker_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
+        int $milestone_tracker_id,
+        RefinedTopMilestoneRequest $request
     ) {
-        $built_sql            = $this->getPaginationAndStatusStatements($criterion, $limit, $offset, $order);
+        $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
         $nature               = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
@@ -223,7 +219,10 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    private function getStatusStatements(ISearchOnStatus $criterion, $alias_name)
+    /**
+     * @psalm-return array{0:string, 1:string}
+     */
+    private function getStatusStatements(ISearchOnStatus $criterion, string $alias_name): array
     {
         $from_status_statement  = "";
         $where_status_statement = "1";
