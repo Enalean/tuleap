@@ -104,8 +104,7 @@ class ProjectResource
         $collection = new LabeledItemCollection($project, $user, $label_ids, $limit, $offset);
         $this->event_manager->processEvent($collection);
 
-        $labeled_items = new CollectionOfLabeledItemsRepresentation();
-        $labeled_items->build($collection);
+        $labeled_items = CollectionOfLabeledItemsRepresentation::build($collection);
 
         $this->sendAllowHeadersForLabeledItems();
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);

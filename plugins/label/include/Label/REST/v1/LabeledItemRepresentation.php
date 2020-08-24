@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\Label\REST\v1;
 
 use Tuleap\Label\LabeledItem;
 
+/**
+ * @psalm-immutable
+ */
 class LabeledItemRepresentation
 {
     /**
@@ -44,7 +47,7 @@ class LabeledItemRepresentation
      */
     public $html_url;
 
-    public function build(LabeledItem $item)
+    public function __construct(LabeledItem $item)
     {
         $this->title      = $item->getTitle();
         $this->html_url   = $item->getHtmlUrl();
