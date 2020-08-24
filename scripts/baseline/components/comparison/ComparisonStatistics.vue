@@ -53,9 +53,8 @@ export default {
         with_sign(value) {
             if (value >= 0) {
                 return `+ ${value}`;
-            } else {
-                return `- ${Math.abs(value)}`;
             }
+            return `- ${Math.abs(value)}`;
         },
     },
 

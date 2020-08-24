@@ -20,9 +20,7 @@
 <template>
     <form v-on:submit.prevent="openComparison()">
         <div class="tlp-modal-body">
-            <p v-translate>
-                Please choose two baselines to compare
-            </p>
+            <p v-translate>Please choose two baselines to compare</p>
 
             <div class="new-comparison-modal-body">
                 <div class="tlp-form-element new-comparison-modal-body-form-element">

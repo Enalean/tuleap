@@ -22,18 +22,10 @@
     <table class="tlp-table comparisons-table">
         <thead>
             <tr>
-                <th class="tlp-table-cell-numeric" v-translate>
-                    Id
-                </th>
-                <th class="comparisons-table-column" v-translate>
-                    Milestone
-                </th>
-                <th class="comparisons-table-column" v-translate>
-                    Reference
-                </th>
-                <th class="comparisons-table-column" v-translate>
-                    Compared to
-                </th>
+                <th class="tlp-table-cell-numeric" v-translate>Id</th>
+                <th class="comparisons-table-column" v-translate>Milestone</th>
+                <th class="comparisons-table-column" v-translate>Reference</th>
+                <th class="comparisons-table-column" v-translate>Compared to</th>
                 <th></th>
             </tr>
         </thead>

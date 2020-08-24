@@ -19,9 +19,7 @@
   -->
 
 <template>
-    <p v-translate>
-        Page not found
-    </p>
+    <p v-translate>Page not found</p>
 </template>
 
 <script>

@@ -21,21 +21,11 @@
     <table class="tlp-table baselines-table">
         <thead>
             <tr>
-                <th class="tlp-table-cell-numeric baselines-table-column-header" v-translate>
-                    Id
-                </th>
-                <th class="baselines-table-column-header" v-translate>
-                    Name
-                </th>
-                <th class="baselines-table-column-header" v-translate>
-                    Milestone
-                </th>
-                <th class="baselines-table-column-header" v-translate>
-                    Snapshot Date
-                </th>
-                <th class="baselines-table-column-header" v-translate>
-                    Author
-                </th>
+                <th class="tlp-table-cell-numeric baselines-table-column-header" v-translate>Id</th>
+                <th class="baselines-table-column-header" v-translate>Name</th>
+                <th class="baselines-table-column-header" v-translate>Milestone</th>
+                <th class="baselines-table-column-header" v-translate>Snapshot Date</th>
+                <th class="baselines-table-column-header" v-translate>Author</th>
                 <th></th>
             </tr>
         </thead>

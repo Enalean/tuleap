@@ -31,9 +31,7 @@
             <p>
                 <slot></slot>
                 <br />
-                <span v-translate>
-                    Please confirm your action.
-                </span>
+                <span v-translate>Please confirm your action.</span>
             </p>
         </div>
 

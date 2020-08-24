@@ -20,9 +20,7 @@
 
 <template>
     <action-button icon="trash-o" v-on:click="showConfirmation()" class="tlp-button-danger">
-        <span v-translate>
-            Delete
-        </span>
+        <span v-translate>Delete</span>
     </action-button>
 </template>
 

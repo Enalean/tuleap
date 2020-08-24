@@ -24,9 +24,7 @@
             <div class="breadcrumb-item">
                 <router-link v-bind:to="{ name: 'IndexPage' }" class="breadcrumb-link">
                     <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
-                    <translate>
-                        Baselines
-                    </translate>
+                    <translate>Baselines</translate>
                 </router-link>
             </div>
             <div v-if="!is_current_page_root" class="breadcrumb-item">
