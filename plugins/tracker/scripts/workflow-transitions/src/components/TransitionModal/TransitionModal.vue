@@ -66,9 +66,7 @@
                     data-test="save-button-spinner"
                 ></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
-                <span v-translate>
-                    Save configuration
-                </span>
+                <span v-translate>Save configuration</span>
             </button>
         </div>
     </form>

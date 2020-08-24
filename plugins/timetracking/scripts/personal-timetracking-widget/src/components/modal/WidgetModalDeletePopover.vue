@@ -24,9 +24,7 @@
             <h1 class="tlp-popover-title" v-translate>Wait a minute...</h1>
         </div>
         <div class="tlp-popover-body">
-            <p v-translate>
-                You're about to remove the time. Please confirm your action.
-            </p>
+            <p v-translate>You're about to remove the time. Please confirm your action.</p>
         </div>
         <div class="tlp-popover-footer">
             <button

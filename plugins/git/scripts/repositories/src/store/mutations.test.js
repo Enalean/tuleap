@@ -100,7 +100,7 @@ describe("Store mutations", () => {
 
             const state = {
                 repositories_for_owner: {
-                    "101": [
+                    101: [
                         {
                             label: "vuex",
                             name: "vuex",
@@ -116,7 +116,7 @@ describe("Store mutations", () => {
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
 
             expect(state.repositories_for_owner).toEqual({
-                "101": [
+                101: [
                     {
                         label: "vuex",
                         name: "vuex",

@@ -37,10 +37,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         Vue.config.language = locale;
         setUserLocale(locale.replace("_", "-"));
     }
-    await initVueGettext(Vue, (locale: string) =>
-        import(
-            /* webpackChunkName: "projectmilestones-po-" */ "./po/" + getPOFileFromLocale(locale)
-        )
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "projectmilestones-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            )
     );
 
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");

@@ -40,9 +40,7 @@
             {{ tag.name }}
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_tags">
-            <div class="tlp-alert-danger" v-translate>
-                An error occurred while loading tags
-            </div>
+            <div class="tlp-alert-danger" v-translate>An error occurred while loading tags</div>
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"

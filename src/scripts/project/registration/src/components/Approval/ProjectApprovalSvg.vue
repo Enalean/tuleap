@@ -79,7 +79,7 @@
             fill-rule="evenodd"
             class="tlp-illustration-primary-fill"
         ></path>
-        <g style="mix-blend-mode: overlay;">
+        <g style="mix-blend-mode: overlay">
             <path
                 fill="black"
                 d="M261.635 75.3589L260.365 72.6411C266.75 69.6563 272 71.8947 272 77V84H269V77C269 74.3881 266.234 73.2089 261.635 75.3589Z"

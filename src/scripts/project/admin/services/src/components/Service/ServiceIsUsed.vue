@@ -19,9 +19,7 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="props.id" v-translate>
-            Enabled
-        </label>
+        <label class="tlp-label" v-bind:for="props.id" v-translate>Enabled</label>
         <div class="tlp-switch">
             <input
                 class="tlp-switch-checkbox"

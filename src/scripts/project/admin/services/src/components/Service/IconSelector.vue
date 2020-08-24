@@ -29,7 +29,7 @@
             name="icon_name"
             required
             ref="select"
-            style="width: 100%;"
+            style="width: 100%"
         >
             <option
                 v-for="(label, icon_name) in allowed_icons"

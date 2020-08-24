@@ -60,8 +60,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const testdefinition_tracker_name = vue_mount_point.dataset.testDefinitionTrackerName || "";
 
-    await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
     Vue.use(Vuex);
 

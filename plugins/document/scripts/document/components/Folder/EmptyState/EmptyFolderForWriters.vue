@@ -22,9 +22,7 @@
         <div class="empty-page-illustration">
             <empty-folder-for-writers-svg />
         </div>
-        <p class="empty-page-text" v-translate>
-            It's time to add new documents!
-        </p>
+        <p class="empty-page-text" v-translate>It's time to add new documents!</p>
         <div class="tlp-dropdown">
             <div class="tlp-dropdown-split-button">
                 <new-item-button

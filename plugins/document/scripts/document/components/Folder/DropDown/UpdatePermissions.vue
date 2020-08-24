@@ -25,9 +25,7 @@
         role="menuitem"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
-        <translate>
-            Permissions
-        </translate>
+        <translate>Permissions</translate>
     </a>
 </template>
 

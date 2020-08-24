@@ -40,9 +40,7 @@
             {{ branch.name }}
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_branches">
-            <div class="tlp-alert-danger" v-translate>
-                An error occurred while loading branches
-            </div>
+            <div class="tlp-alert-danger" v-translate>An error occurred while loading branches</div>
         </div>
         <div
             class="git-repository-branch-tag-selector-empty"

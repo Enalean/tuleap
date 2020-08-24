@@ -27,9 +27,7 @@
         >
             You are not allowed to drag 'n drop more than %{ nb } file at once.
         </translate>
-        <translate tag="p">
-            Please start again.
-        </translate>
+        <translate tag="p">Please start again.</translate>
     </error-modal>
 </template>
 

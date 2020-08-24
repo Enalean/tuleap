@@ -41,9 +41,7 @@
         <div class="tlp-modal-body">
             <div class="download-modal-multiple-warnings-section">
                 <h2 class="tlp-modal-subtitle">
-                    <span class="tlp-badge-warning download-modal-warning-number">
-                        1
-                    </span>
+                    <span class="tlp-badge-warning download-modal-warning-number">1</span>
                     <span v-translate>Archive size warning threshold reached</span>
                 </h2>
                 <div class="download-modal-multiple-warnings-content">
@@ -66,9 +64,7 @@
             </div>
             <div class="download-modal-multiple-warnings-section" v-if="shouldWarnOsxUser">
                 <h2 class="tlp-modal-subtitle">
-                    <span class="tlp-badge-warning download-modal-warning-number">
-                        2
-                    </span>
+                    <span class="tlp-badge-warning download-modal-warning-number">2</span>
                     <span v-translate>We detect you are using OSX</span>
                 </h2>
                 <div class="download-modal-multiple-warnings-content">

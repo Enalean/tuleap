@@ -51,7 +51,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "po-gettext-loader": "^0.1.1",
     "pofile": "^1.1.0",
-    "prettier": "^2.0.5",
+    "prettier": "^2.1.0",
     "raw-loader": "^4.0.1",
     "read-pkg": "^5.2.0",
     "sass": "^1.26.10",

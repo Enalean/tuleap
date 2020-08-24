@@ -32,11 +32,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(Vue, (locale: string) =>
-        import(
-            /* webpackChunkName: "project/project-registration-po-" */ "./po/" +
-                getPOFileFromLocale(locale)
-        )
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "project/project-registration-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            )
     );
 
     const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;

@@ -58,9 +58,7 @@
                 </span>
             </div>
             <div class="document-uploads-modal-empty-state" v-if="files_uploads_list.length === 0">
-                <p class="empty-page-text" v-translate>
-                    There is no upload in progress
-                </p>
+                <p class="empty-page-text" v-translate>There is no upload in progress</p>
             </div>
         </div>
         <div class="tlp-modal-footer">

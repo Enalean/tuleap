@@ -53,9 +53,7 @@
             </p>
             <a class="tlp-button-primary" v-bind:href="configure_field_url">
                 <i class="fa fa-cog"></i>
-                <span v-translate>
-                    Configure it
-                </span>
+                <span v-translate>Configure it</span>
             </a>
         </div>
     </section>

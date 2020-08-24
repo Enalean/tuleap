@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <select class="tlp-input" style="width: 100%;">
+    <select class="tlp-input" style="width: 100%">
         <option v-if="!is_multiple"></option>
     </select>
 </template>

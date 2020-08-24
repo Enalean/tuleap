@@ -43,8 +43,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "tracker-creation-po" */ "./po/" + getPOFileFromLocale(locale))
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "tracker-creation-po" */ "./po/" + getPOFileFromLocale(locale)
+            )
     );
 
     const AppComponent = Vue.extend(App);

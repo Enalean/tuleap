@@ -59,22 +59,22 @@ describe("Store mutations", () => {
             mutations.foldFolderContent(state, 35);
             expect(state.folded_items_ids).toEqual([38, 39]);
             expect(state.folded_by_map).toEqual({
-                "35": [38, 39],
+                35: [38, 39],
             });
 
             mutations.foldFolderContent(state, 34);
             expect(state.folded_items_ids).toEqual([38, 39, 36, 37]);
             expect(state.folded_by_map).toEqual({
-                "35": [38, 39],
-                "34": [36, 37],
+                35: [38, 39],
+                34: [36, 37],
             });
 
             mutations.foldFolderContent(state, 32);
             expect(state.folded_items_ids).toEqual([38, 39, 36, 37, 34, 35]);
             expect(state.folded_by_map).toEqual({
-                "35": [38, 39],
-                "34": [36, 37],
-                "32": [34, 35],
+                35: [38, 39],
+                34: [36, 37],
+                32: [34, 35],
             });
         });
     });
@@ -83,9 +83,9 @@ describe("Store mutations", () => {
         it("remove all the ids of the children and grand children of a given from state.folded_items_ids.", () => {
             const state = {
                 folded_by_map: {
-                    "32": [34, 35],
-                    "34": [36, 37],
-                    "35": [38, 39],
+                    32: [34, 35],
+                    34: [36, 37],
+                    35: [38, 39],
                 },
                 folded_items_ids: [34, 36, 37, 35, 38, 39],
                 folder_content: [
@@ -109,14 +109,14 @@ describe("Store mutations", () => {
             mutations.unfoldFolderContent(state, 32);
             expect(state.folded_items_ids).toEqual([36, 37, 38, 39]);
             expect(state.folded_by_map).toEqual({
-                "34": [36, 37],
-                "35": [38, 39],
+                34: [36, 37],
+                35: [38, 39],
             });
 
             mutations.unfoldFolderContent(state, 34);
             expect(state.folded_items_ids).toEqual([38, 39]);
             expect(state.folded_by_map).toEqual({
-                "35": [38, 39],
+                35: [38, 39],
             });
 
             mutations.unfoldFolderContent(state, 35);
@@ -799,9 +799,9 @@ describe("Store mutations", () => {
                 ],
                 folded_items_ids: [45, 47, 49],
                 folded_by_map: {
-                    "44": [45],
-                    "46": [47],
-                    "48": [49],
+                    44: [45],
+                    46: [47],
+                    48: [49],
                 },
             };
 
@@ -813,7 +813,7 @@ describe("Store mutations", () => {
             ]);
 
             expect(state.folded_items_ids).toEqual([45]);
-            expect(state.folded_by_map).toEqual({ "44": [45] });
+            expect(state.folded_by_map).toEqual({ 44: [45] });
         });
     });
 
@@ -888,7 +888,7 @@ describe("Store mutations", () => {
                 ],
                 folded_items_ids: [43, 44, 45, folder.id],
                 folded_by_map: {
-                    "42": [43, 44, 45, folder.id],
+                    42: [43, 44, 45, folder.id],
                 },
             };
 
@@ -919,7 +919,7 @@ describe("Store mutations", () => {
             ]);
 
             expect(state.folded_by_map).toEqual({
-                "42": [43, 44, 45, folder.id, sub_item_1.id, sub_item_2.id, sub_item_3.id],
+                42: [43, 44, 45, folder.id, sub_item_1.id, sub_item_2.id, sub_item_3.id],
             });
         });
     });
