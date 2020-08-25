@@ -28,6 +28,17 @@
             <span translate>Show reports</span>
         </button>
 
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-add-artifact-button"
+                ng-show="kanban.user_can_add_artifact"
+                disabled
+        >
+            <i class="fa fa-plus tlp-button-icon"
+               ng-class="{ 'fa-spinner fa-spin': kanban.is_artifact_modal_loading }"
+            ></i>
+            <span translate>Add new {{ kanban.kanban.tracker.label }}</span>
+        </button>
+
         <add-to-dashboard></add-to-dashboard>
 
         <div class="kanban-header-spacer"></div>

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+
 class AgileDashboard_KanbanActionsChecker
 {
 
@@ -46,16 +48,39 @@ class AgileDashboard_KanbanActionsChecker
         $this->tracker_factory      = $tracker_factory;
     }
 
-    public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban)
+    /**
+     * @throws KanbanUserCantAddArtifactException
+     * @throws Kanban_SemanticStatusNotDefinedException
+     * @throws Kanban_TrackerNotDefinedException
+     */
+    public function checkUserCanAddArtifact(PFUser $user, AgileDashboard_Kanban $kanban): void
     {
         $tracker         = $this->getTrackerForKanban($kanban);
-        $semantic_title  = $this->getSemanticTitle($tracker);
         $semantic_status = $this->getSemanticStatus($tracker);
 
         if (
             ! $tracker->userCanSubmitArtifact($user) ||
-            ! $this->trackerHasOnlyTitleRequired($tracker, $semantic_title) ||
             ! $semantic_status->getField()->userCanSubmit($user)
+        ) {
+            throw new KanbanUserCantAddArtifactException();
+        }
+    }
+
+    /**
+     * @throws KanbanUserCantAddArtifactException
+     * @throws Kanban_SemanticTitleNotDefinedException
+     * @throws Kanban_TrackerNotDefinedException
+     * @throws Kanban_UserCantAddInPlaceException
+     */
+    public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban): void
+    {
+        $tracker        = $this->getTrackerForKanban($kanban);
+        $semantic_title = $this->getSemanticTitle($tracker);
+
+        $this->checkUserCanAddArtifact($user, $kanban);
+
+        if (
+            ! $this->trackerHasOnlyTitleRequired($tracker, $semantic_title)
         ) {
             throw new Kanban_UserCantAddInPlaceException();
         }

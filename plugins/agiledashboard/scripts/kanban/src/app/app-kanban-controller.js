@@ -1,5 +1,5 @@
 import "./error-modal/error.tpl.html";
-import { setError, resetError } from "./feedback-state.js";
+import { resetError, setError } from "./feedback-state.js";
 
 import _ from "lodash";
 import angular from "angular";
@@ -102,6 +102,7 @@ function KanbanCtrl(
         displayWIPNotUpdated: FilterTrackerReportService.isNotWIPUpdated,
         filter: KanbanFilterValue,
         loading_modal: NewTuleapArtifactModalService.loading,
+        user_can_add_artifact: kanban.user_can_add_artifact,
     });
 
     function init() {

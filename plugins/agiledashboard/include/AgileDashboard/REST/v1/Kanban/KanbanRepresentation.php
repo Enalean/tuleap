@@ -19,15 +19,15 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
+use AgileDashboard_Kanban;
+use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanUserPreferences;
+use Exception;
+use PFUser;
+use TrackerFactory;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanColumnFactory;
-use TrackerFactory;
-use PFUser;
-use Exception;
-use AgileDashboard_KanbanUserPreferences;
-use AgileDashboard_KanbanActionsChecker;
 
 /**
  * @psalm-immutable
@@ -94,6 +94,11 @@ class KanbanRepresentation
      */
     public $user_can_reorder_columns;
 
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_add_artifact;
+
     private function __construct(
         int $id,
         int $tracker_id,
@@ -105,7 +110,8 @@ class KanbanRepresentation
         KanbanBacklogInfoRepresentation $backlog,
         KanbanArchiveInfoRepresentation $archive,
         bool $user_can_add_columns,
-        bool $user_can_reorder_columns
+        bool $user_can_reorder_columns,
+        bool $user_can_add_artifact
     ) {
         $this->id                       = $id;
         $this->tracker_id               = $tracker_id;
@@ -118,6 +124,7 @@ class KanbanRepresentation
         $this->archive                  = $archive;
         $this->user_can_add_columns     = $user_can_add_columns;
         $this->user_can_reorder_columns = $user_can_reorder_columns;
+        $this->user_can_add_artifact    = $user_can_add_artifact;
     }
 
     public static function build(
@@ -128,6 +135,7 @@ class KanbanRepresentation
         $user_can_add_columns,
         $user_can_reorder_columns,
         $user_can_add_in_place,
+        bool $user_can_add_artifact,
         PFUser $user
     ): self {
         $kanban_id  = $kanban->getId();
@@ -152,6 +160,7 @@ class KanbanRepresentation
             new KanbanArchiveInfoRepresentation('Archive', $user_preferences->isArchiveOpen($kanban, $user)),
             $user_can_add_columns,
             $user_can_reorder_columns,
+            $user_can_add_artifact
         );
     }
 
