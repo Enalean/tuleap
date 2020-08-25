@@ -190,12 +190,12 @@ class TrackerXmlImportArtifactLinkV2ActivationTest extends TestCase
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }
 
-    public function testItShouldDeactivateIfAttributeIsFalseAndProjectUsesNature(): void
+    public function testItShouldNotForceActivateIfAttributeIsFalseAndProjectUsesNature(): void
     {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="false"/></project>');
 
         $this->artifact_link_usage_updater->shouldReceive('isProjectAllowedToUseArtifactLinkTypes')->once()->andReturns(true);
-        $this->artifact_link_usage_updater->shouldReceive('forceDeactivationOfArtifactLinkTypes')->once();
+        $this->artifact_link_usage_updater->shouldReceive('forceUsageOfArtifactLinkTypes')->never();
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mappings_registry, '', $this->user);
     }

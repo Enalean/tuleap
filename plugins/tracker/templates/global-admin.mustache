@@ -9,6 +9,7 @@
         </a>
     </nav>
     <div class="tlp-framed-horizontally">
+        {{^ are_artifact_link_types_enabled }}
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
@@ -29,7 +30,6 @@
                                        data-form-id="tracker-enable-artifact-link-type-form"
                                        name="enable-artifact-link-types"
                                        value="1"
-                                       {{# are_artifact_link_types_enabled }} checked="checked" {{/ are_artifact_link_types_enabled }}
                                 >
                                 <label for="tracker-enable-artifact-link-type-switch"
                                        class="tlp-switch-button" aria-hidden
@@ -40,6 +40,7 @@
                 </section>
             </div>
         </section>
+        {{/ are_artifact_link_types_enabled }}
 
         {{# are_artifact_link_types_enabled }}
         <section class="tlp-pane">

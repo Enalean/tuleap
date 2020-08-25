@@ -628,9 +628,6 @@ msgid "Artifact is not found or not accessible by user."
 msgstr ""
 "L'artéfact n'a pas été trouvé ou n'est pas disponible pour l'utilisateur."
 
-msgid "Artifact link types has been disabled."
-msgstr "Les liens entre artéfacts typés ont été désactivés."
-
 msgid "Artifact link types has been enabled."
 msgstr "Les liens entre artéfacts typés ont été activés."
 
