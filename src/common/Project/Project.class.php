@@ -423,7 +423,10 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->data_array['truncated_emails'];
     }
 
-    public function isPublic()
+    /**
+     * @psalm-mutation-free
+     */
+    public function isPublic(): bool
     {
         $access = $this->data_array['access'];
         return $access !== Project::ACCESS_PRIVATE && $access !== Project::ACCESS_PRIVATE_WO_RESTRICTED;

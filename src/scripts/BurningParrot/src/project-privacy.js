@@ -20,15 +20,17 @@
 import { createPopover } from "tlp";
 
 export function init() {
-    const project_privacy_element = document.querySelector(".current-project-icon");
+    const project_privacy_element = document.querySelector(".breadcrumb-project-privacy-icon");
     if (!project_privacy_element) {
         return;
     }
 
+    project_privacy_element.parentElement.title = "";
+
     const popover_content = document.getElementById("current-project-nav-title-popover");
 
     createPopover(project_privacy_element, popover_content, {
-        anchor: project_privacy_element.querySelector(".current-project-icon"),
+        anchor: project_privacy_element,
         placement: "bottom-start",
     });
 }

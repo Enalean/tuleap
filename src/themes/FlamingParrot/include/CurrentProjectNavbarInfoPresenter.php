@@ -22,9 +22,6 @@ use Tuleap\Project\Banner\BannerDisplay;
 
 class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 {
-    public $project_privacy;
-    public $project_is_public;
-    public $project_name;
     /**
      * @var string[]
      */
@@ -44,35 +41,14 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
     /**
      * @var bool
      */
-    public $are_restricted_users_allowed;
-    /**
-     * @var bool
-     */
-    public $project_is_public_incl_restricted;
-    /**
-     * @var bool
-     */
-    public $project_is_private;
-    /**
-     * @var bool
-     */
-    public $project_is_private_incl_restricted;
-    /**
-     * @var bool
-     */
     public $has_project_banner = false;
     /**
      * @var bool
      */
     public $project_banner_is_visible = false;
 
-    public function __construct(Project $project, $project_privacy, array $project_flags, ?BannerDisplay $banner)
+    public function __construct(array $project_flags, ?BannerDisplay $banner)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        $this->project_is_public = $project->isPublic();
-        $this->project_name      = $project->getPublicName();
-        $this->project_privacy   = $purifier->purify($project_privacy, CODENDI_PURIFIER_STRIP_HTML);
         $this->project_flags     = $project_flags;
         $nb_project_flags        = count($project_flags);
         $this->has_project_flags = $nb_project_flags > 0;
@@ -80,14 +56,6 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
         $this->json_encoded_project_flags = \json_encode($project_flags);
 
         $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
-
-        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
-        if ($this->are_restricted_users_allowed) {
-            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
-            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
-            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
-        }
 
         if ($banner !== null) {
             $this->has_project_banner        = true;

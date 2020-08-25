@@ -48,6 +48,7 @@ const state = {
     show_post_deletion_notification: false,
     is_embedded_in_large_view: true,
     toggle_quick_look: false,
+    privacy: null,
 };
 
 export default state;

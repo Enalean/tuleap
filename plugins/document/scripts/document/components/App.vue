@@ -81,6 +81,7 @@ export default {
         csrf_token_name: String,
         user_locale: String,
         relative_dates_display: String,
+        privacy: Object,
     },
     computed: {
         ...mapState("error", [
@@ -127,6 +128,7 @@ export default {
             this.is_changelog_proposed_after_dnd,
             this.user_locale,
             this.relative_dates_display,
+            this.privacy,
         ]);
 
         window.addEventListener("beforeunload", (event) => {

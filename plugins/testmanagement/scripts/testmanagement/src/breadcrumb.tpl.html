@@ -1,7 +1,26 @@
-<nav id="testmanagement-breadcrumb" class="breadcrumb">
-    <span class="breadcrumb-item" ng-repeat="step in steps" ng-if="step.ncyBreadcrumbLabel">
-        <a class="breadcrumb-link" href="{{step.ncyBreadcrumbLink}}">
-            {{ step.ncyBreadcrumbLabel }}
-        </a>
+<div class="breadcrumb-container" id="testmanagement-breadcrumb">
+    <span id="breadcrumb-project-privacy-icon">
+        <i
+            class="fa breadcrumb-project-privacy-icon"
+            id="testmanagement-project-privacy-icon"
+        ></i>
     </span>
-</nav>
+
+    <section class="tlp-popover" id="current-project-nav-title-popover">
+        <div class="tlp-popover-arrow"></div>
+        <div class="tlp-popover-header">
+            <h1 class="tlp-popover-title" id="testmanagement-project-privacy-popover-title"></h1>
+        </div>
+        <div class="tlp-popover-body">
+            <p class="current-project-nav-title-popover-description" id="testmanagement-project-privacy-popover-description"></p>
+        </div>
+    </section>
+
+    <nav class="breadcrumb">
+        <span class="breadcrumb-item" ng-repeat="step in steps" ng-if="step.ncyBreadcrumbLabel">
+            <a class="breadcrumb-link" href="{{step.ncyBreadcrumbLink}}">
+                {{ step.ncyBreadcrumbLabel }}
+            </a>
+        </span>
+    </nav>
+</div>

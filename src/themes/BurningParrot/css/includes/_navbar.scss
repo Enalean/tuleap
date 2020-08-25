@@ -273,16 +273,6 @@
     color: $tlp-ui-dimmed;
 }
 
-.current-project-icon {
-    margin: 0 5px 0 0;
-    color: $tlp-theme-color;
-    font-size: 16px;
-}
-
-body:not(.sidebar-collapsed) .current-project-icon {
-    display: none;
-}
-
 .nav-dropdown-new-icon {
     margin: 0 $tlp-small-spacing 0 0;
 }

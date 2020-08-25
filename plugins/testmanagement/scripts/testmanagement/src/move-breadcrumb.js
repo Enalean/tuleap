@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function moveBreadCrumbs(project_public_name, project_url) {
+import { getProjectPrivacyIcon } from "../../../../../src/scripts/project/privacy/project-privacy-helper";
+import { createPopover } from "tlp";
+
+export function moveBreadCrumbs(project_public_name, project_url, privacy) {
     window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");
         if (!origin) {
@@ -34,7 +37,31 @@ export function moveBreadCrumbs(project_public_name, project_url) {
         project_link.textContent = project_public_name;
 
         project_item.appendChild(project_link);
-        origin.insertBefore(project_item, origin.firstChild);
+        const nav = origin.querySelector("nav");
+        nav.insertBefore(project_item, nav.firstChild);
+
+        const icon = document.getElementById("testmanagement-project-privacy-icon");
+        if (icon) {
+            icon.classList.add(getProjectPrivacyIcon(privacy));
+            createPopover(icon, document.getElementById("current-project-nav-title-popover"), {
+                anchor: icon,
+                placement: "bottom-start",
+            });
+        }
+
+        const popover_title = document.getElementById(
+            "testmanagement-project-privacy-popover-title"
+        );
+        if (popover_title) {
+            popover_title.textContent = project_public_name;
+        }
+
+        const popover_description = document.getElementById(
+            "testmanagement-project-privacy-popover-description"
+        );
+        if (popover_description) {
+            popover_description.textContent = privacy.project_privacy;
+        }
 
         const main = document.querySelector("main");
         if (!main) {

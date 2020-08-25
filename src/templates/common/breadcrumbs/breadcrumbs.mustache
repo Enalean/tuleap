@@ -1,40 +1,84 @@
-<nav class="breadcrumb {{# has_only_one_breadcrumb }}breadcrumb-with-only-one-item{{/ has_only_one_breadcrumb }}">
-    {{# breadcrumbs }}
-        {{^ has_sub_items }}
-            <span class="breadcrumb-item {{ classname }}">
-                {{# link }}
-                    <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
-                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                    </a>
-                {{/ link }}
+<div class="breadcrumb-container {{# has_only_one_breadcrumb }}breadcrumb-with-only-one-item{{/ has_only_one_breadcrumb }}">
+    {{# privacy }}
+        <div class="breadcrumb-privacy-icon-container">
+            <span
+               id="breadcrumb-project-privacy-icon"
+               title="{{ project_name }}"
+               data-content="{{ project_privacy }}"
+            >
+                {{# are_restricted_users_allowed }}
+                    {{# project_is_public }}
+                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_public }}
+                    {{# project_is_public_incl_restricted }}
+                        <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_public_incl_restricted }}
+                    {{# project_is_private }}
+                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_private }}
+                    {{# project_is_private_incl_restricted }}
+                        <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_private_incl_restricted }}
+                {{/ are_restricted_users_allowed }}
+                {{^ are_restricted_users_allowed }}
+                    {{# project_is_public }}
+                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_public }}
+                    {{^ project_is_public }}
+                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                    {{/ project_is_public }}
+                {{/ are_restricted_users_allowed }}
             </span>
-        {{/ has_sub_items }}
 
-        {{# has_sub_items }}
-            <div class="breadcrumb-switchable breadcrumb-item {{ classname }}">
-                {{# link }}
-                    <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
-                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                    </a>
-                {{/ link }}
-                <nav class="breadcrumb-switch-menu">
-                    {{# sections }}
-                        {{# has_label }}
-                            <div class="breadcrumb-dropdown-section-title">{{ label }}</div>
-                        {{/ has_label }}
-                        {{^ has_label }}
-                            <div class="breadcrumb-dropdown-separator"></div>
-                        {{/ has_label }}
-                        {{# links }}
-                            <span class="breadcrumb-dropdown-item">
-                                <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}" data-test="breadcrumb-dropdown-link">
-                                    {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                                </a>
-                            </span>
-                        {{/ links }}
-                    {{/ sections }}
-                </nav>
-            </div>
-        {{/ has_sub_items }}
-    {{/ breadcrumbs }}
-</nav>
+            <section class="tlp-popover" id="current-project-nav-title-popover">
+                <div class="tlp-popover-arrow"></div>
+                <div class="tlp-popover-header">
+                    <h1 class="tlp-popover-title">{{ project_name }}</h1>
+                </div>
+                <div class="tlp-popover-body">
+                    <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+                </div>
+            </section>
+        </div>
+    {{/ privacy }}
+    <nav class="breadcrumb">
+        {{# breadcrumbs }}
+            {{^ has_sub_items }}
+                <span class="breadcrumb-item {{ classname }}">
+                    {{# link }}
+                        <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
+                            {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                        </a>
+                    {{/ link }}
+                </span>
+            {{/ has_sub_items }}
+
+            {{# has_sub_items }}
+                <div class="breadcrumb-switchable breadcrumb-item {{ classname }}">
+                    {{# link }}
+                        <a class="breadcrumb-link" href="{{ url }}" title="{{ label }}">
+                            {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                        </a>
+                    {{/ link }}
+                    <nav class="breadcrumb-switch-menu">
+                        {{# sections }}
+                            {{# has_label }}
+                                <div class="breadcrumb-dropdown-section-title">{{ label }}</div>
+                            {{/ has_label }}
+                            {{^ has_label }}
+                                <div class="breadcrumb-dropdown-separator"></div>
+                            {{/ has_label }}
+                            {{# links }}
+                                <span class="breadcrumb-dropdown-item">
+                                    <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}" data-test="breadcrumb-dropdown-link">
+                                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                                    </a>
+                                </span>
+                            {{/ links }}
+                        {{/ sections }}
+                    </nav>
+                </div>
+            {{/ has_sub_items }}
+        {{/ breadcrumbs }}
+    </nav>
+</div>

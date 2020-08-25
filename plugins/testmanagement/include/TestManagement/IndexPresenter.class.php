@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement;
 
 use ForgeConfig as TuleapConfig;
 use PFUser;
+use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -81,6 +82,11 @@ class IndexPresenter
      * @var string
      */
     public $project_url;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $privacy;
 
     /**
      * @param int|false $campaign_tracker_id
@@ -125,6 +131,8 @@ class IndexPresenter
         $this->issue_tracker_config = json_encode($issue_tracker_config);
 
         $this->current_milestone = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
+
+        $this->privacy = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

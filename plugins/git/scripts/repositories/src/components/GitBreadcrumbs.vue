@@ -18,45 +18,68 @@
   -->
 
 <template>
-    <nav class="breadcrumb">
-        <div class="breadcrumb-item breadcrumb-project">
-            <a v-bind:href="project_url" class="breadcrumb-link">
-                {{ project_public_name }}
-            </a>
+    <div class="breadcrumb-container">
+        <div class="breadcrumb-privacy-icon-container">
+            <span id="breadcrumb-project-privacy-icon">
+                <i
+                    class="fa breadcrumb-project-privacy-icon"
+                    v-bind:class="project_privacy_icon"
+                    ref="popover_icon"
+                ></i>
+            </span>
+
+            <section class="tlp-popover" ref="popover_content">
+                <div class="tlp-popover-arrow"></div>
+                <div class="tlp-popover-header">
+                    <h1 class="tlp-popover-title">{{ project_public_name }}</h1>
+                </div>
+                <div class="tlp-popover-body">
+                    <p class="current-project-nav-title-popover-description">
+                        {{ privacy.project_privacy }}
+                    </p>
+                </div>
+            </section>
         </div>
-        <div class="breadcrumb-switchable breadcrumb-item">
-            <a
-                class="breadcrumb-link"
-                v-bind:href="repository_list_url"
-                v-bind:title="repositories_title"
-            >
-                <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
-                <translate>Git repositories</translate>
-            </a>
-            <nav class="breadcrumb-switch-menu">
-                <span class="breadcrumb-dropdown-item" v-if="is_admin">
-                    <a
-                        class="breadcrumb-dropdown-link"
-                        v-bind:href="repository_admin_url"
-                        v-bind:title="administration_title"
-                    >
-                        <i class="fa fa-cog fa-fw"></i>
-                        <translate>Administration</translate>
-                    </a>
-                </span>
-                <span class="breadcrumb-dropdown-item">
-                    <a
-                        class="breadcrumb-dropdown-link"
-                        v-bind:href="repository_fork_url"
-                        v-bind:title="fork_title"
-                    >
-                        <i class="fa fa-code-fork fa-fw"></i>
-                        <translate>Fork repositories</translate>
-                    </a>
-                </span>
-            </nav>
-        </div>
-    </nav>
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item breadcrumb-project">
+                <a v-bind:href="project_url" class="breadcrumb-link">
+                    {{ project_public_name }}
+                </a>
+            </div>
+            <div class="breadcrumb-switchable breadcrumb-item">
+                <a
+                    class="breadcrumb-link"
+                    v-bind:href="repository_list_url"
+                    v-bind:title="repositories_title"
+                >
+                    <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
+                    <translate>Git repositories</translate>
+                </a>
+                <nav class="breadcrumb-switch-menu">
+                    <span class="breadcrumb-dropdown-item" v-if="is_admin">
+                        <a
+                            class="breadcrumb-dropdown-link"
+                            v-bind:href="repository_admin_url"
+                            v-bind:title="administration_title"
+                        >
+                            <i class="fa fa-cog fa-fw"></i>
+                            <translate>Administration</translate>
+                        </a>
+                    </span>
+                    <span class="breadcrumb-dropdown-item">
+                        <a
+                            class="breadcrumb-dropdown-link"
+                            v-bind:href="repository_fork_url"
+                            v-bind:title="fork_title"
+                        >
+                            <i class="fa fa-code-fork fa-fw"></i>
+                            <translate>Fork repositories</translate>
+                        </a>
+                    </span>
+                </nav>
+            </div>
+        </nav>
+    </div>
 </template>
 <script>
 import {
@@ -65,8 +88,11 @@ import {
     getRepositoryListUrl,
     getProjectUrl,
     getProjectPublicName,
+    getPrivacy,
 } from "../breadcrumb-presenter.js";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
+import { getProjectPrivacyIcon } from "../../../../../../src/scripts/project/privacy/project-privacy-helper";
+import { createPopover } from "tlp";
 
 export default {
     name: "GitBreadcrumbs",
@@ -98,6 +124,18 @@ export default {
         project_public_name() {
             return getProjectPublicName();
         },
+        privacy() {
+            return getPrivacy();
+        },
+        project_privacy_icon() {
+            return getProjectPrivacyIcon(this.privacy);
+        },
+    },
+    mounted() {
+        createPopover(this.$refs.popover_icon, this.$refs.popover_content, {
+            anchor: this.$refs.popover_icon,
+            placement: "bottom-start",
+        });
     },
 };
 </script>

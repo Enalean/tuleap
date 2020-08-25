@@ -1,30 +1,32 @@
 <div class="project-sidebar-header">
-    <a href="{{ project_link }}" class="project-sidebar-title" title="{{{ project_privacy }}}">
-        {{# are_restricted_users_allowed }}
-            {{# project_is_public }}
-                <i class="fa fa-unlock project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_public }}
-            {{# project_is_public_incl_restricted }}
-                <i class="fa fa-tlp-unlock-plus-r project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_public_incl_restricted }}
-            {{# project_is_private }}
-                <i class="fa fa-lock project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_private }}
-            {{# project_is_private_incl_restricted }}
-                <i class="fa fa-tlp-lock-plus-r project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_private_incl_restricted }}
-        {{/ are_restricted_users_allowed }}
-        {{^ are_restricted_users_allowed }}
-            {{# project_is_public }}
-                <i class="fa fa-unlock project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_public }}
-            {{^ project_is_public }}
-                <i class="fa fa-lock project-sidebar-title-icon" data-test="project-icon"></i>
-            {{/ project_is_public }}
-        {{/ are_restricted_users_allowed }}
+    {{# privacy }}
+        <a href="{{ project_link }}" class="project-sidebar-title" title="{{{ project_privacy }}}">
+            {{# are_restricted_users_allowed }}
+                {{# project_is_public }}
+                    <i class="fa fa-unlock project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_public }}
+                {{# project_is_public_incl_restricted }}
+                    <i class="fa fa-tlp-unlock-plus-r project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_public_incl_restricted }}
+                {{# project_is_private }}
+                    <i class="fa fa-lock project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_private }}
+                {{# project_is_private_incl_restricted }}
+                    <i class="fa fa-tlp-lock-plus-r project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_private_incl_restricted }}
+            {{/ are_restricted_users_allowed }}
+            {{^ are_restricted_users_allowed }}
+                {{# project_is_public }}
+                    <i class="fa fa-unlock project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_public }}
+                {{^ project_is_public }}
+                    <i class="fa fa-lock project-sidebar-title-icon" data-test="project-icon"></i>
+                {{/ project_is_public }}
+            {{/ are_restricted_users_allowed }}
 
-        {{ project_name }}
-    </a>
+            {{ project_name }}
+        </a>
+    {{/ privacy }}
 
     {{# has_project_banner }}
         <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">

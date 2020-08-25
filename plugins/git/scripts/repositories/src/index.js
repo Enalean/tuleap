@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             externalPlugins,
             projectPublicName,
             projectUrl,
+            privacy,
         } = vue_mount_point.dataset;
 
         setBreadcrumbSettings(
@@ -64,7 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoryListUrl,
             repositoriesForkUrl,
             projectPublicName,
-            projectUrl
+            projectUrl,
+            JSON.parse(privacy)
         );
         buildRepositoryListPresenter(
             document.body.dataset.userId,

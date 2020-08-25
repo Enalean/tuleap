@@ -304,8 +304,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project = $project_manager->getProject($params['group']);
 
         return new FlamingParrot_CurrentProjectNavbarInfoPresenter(
-            $project,
-            $this->getProjectPrivacy($project),
             $this->project_flags_builder->buildProjectFlags($project),
             $banner
         );
@@ -341,7 +339,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project_name        = null;
         $project_link        = null;
         $project             = null;
-        $project_privacy     = null;
+        $privacy             = null;
         $sidebar_collapsable = false;
 
         if (! empty($params['group'])) {
@@ -352,24 +350,25 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $project_tabs        = $this->getProjectSidebar($params, $project);
             $project_name        = $project->getPublicName();
             $project_link        = $this->getProjectLink($project);
-            $project_privacy     = $this->getProjectPrivacy($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
 
             $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
             $crumb->setAdditionalClassname("breadcrumb-project");
             $this->breadcrumbs->addFirst($crumb);
+
+            $privacy = \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project);
         }
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
+
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $breadcrumbs,
             $this->toolbar,
             $project_name,
             $project_link,
-            $project_privacy,
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
@@ -377,6 +376,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $sidebar_collapsable,
             $banner,
             $current_user,
+            $privacy,
             $project
         ));
     }

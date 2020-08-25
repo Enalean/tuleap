@@ -23,7 +23,6 @@ namespace Tuleap\Layout;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
@@ -397,51 +396,6 @@ abstract class BaseLayout extends Response
         );
 
         return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
-    }
-
-    protected function getProjectPrivacy(Project $project)
-    {
-        if (ForgeConfig::areRestrictedUsersAllowed()) {
-            switch ($project->getAccess()) {
-                case Project::ACCESS_PUBLIC:
-                    return _('Project privacy set to public.') . ' ' .
-                        _('By default, its content is available to all authenticated, but not restricted, users.') . ' ' .
-                        _('Please note that more restrictive permissions might exist on some items.');
-                    break;
-                case Project::ACCESS_PUBLIC_UNRESTRICTED:
-                    return _('Project privacy set to public including restricted.') . ' ' .
-                        _('By default, its content is available to all authenticated users.') . ' ' .
-                        _('Please note that more restrictive permissions might exist on some items.');
-                    break;
-                case Project::ACCESS_PRIVATE_WO_RESTRICTED:
-                    return _('Project privacy set to private.') . ' ' .
-                        _('Only project members can access its content.') . ' ' .
-                        _('Restricted users are not allowed in this project.');
-                    break;
-                default:
-                    return _('Project privacy set to private including restricted.') . ' ' .
-                        _('Only project members can access its content.') . ' ' .
-                        _('Restricted users are allowed in this project.');
-            }
-        } elseif (ForgeConfig::areAnonymousAllowed()) {
-            if ($project->isPublic()) {
-                return _('Project privacy set to public.') . ' ' .
-                    _('By default, its content is available to everyone (authenticated or not).') . ' ' .
-                    _('Please note that more restrictive permissions might exist on some items.');
-            }
-
-            return _('Project privacy set to private.') . ' ' .
-                _('Only project members can access its content.');
-        } else {
-            if ($project->isPublic()) {
-                return _('Project privacy set to public.') . ' ' .
-                    _('By default, its content is available to all authenticated, but not restricted, users.') . ' ' .
-                    _('Please note that more restrictive permissions might exist on some items.');
-            }
-
-            return _('Project privacy set to private.') . ' ' .
-                _('Only project members can access its content.');
-        }
     }
 
     final protected function getProjectBanner(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay

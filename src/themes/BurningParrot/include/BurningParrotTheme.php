@@ -42,6 +42,7 @@ use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -116,8 +117,10 @@ class BurningParrotTheme extends BaseLayout
     public function header(array $params)
     {
         $project = null;
+        $privacy = null;
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
+            $privacy = ProjectPrivacyPresenter::fromProject($project);
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
                 $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
@@ -182,7 +185,8 @@ class BurningParrotTheme extends BaseLayout
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
-            $new_dropdown_presenter_builder->getPresenter($current_user, $project)
+            $new_dropdown_presenter_builder->getPresenter($current_user, $project),
+            $privacy,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -317,7 +321,7 @@ class BurningParrotTheme extends BaseLayout
             $this->getUser(),
             $project,
             $this->getProjectSidebar($params, $project),
-            $this->getProjectPrivacy($project),
+            ProjectPrivacyPresenter::fromProject($project),
             $this->version,
             $this->getBanner($project, $this->user)
         );
@@ -337,7 +341,6 @@ class BurningParrotTheme extends BaseLayout
 
         return new CurrentProjectNavbarInfoPresenter(
             $project,
-            $this->getProjectPrivacy($project),
             $this->project_flags_builder->buildProjectFlags($project),
             $this->getProjectBanner($project, $this->user, 'project/project-banner-bp.js')
         );
