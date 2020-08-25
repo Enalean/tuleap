@@ -66,7 +66,6 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
 
     public function offsetGet($offset)
     {
-        /** @psalm-suppress NullableReturnStatement */
         return isset($this->semantics_by_name[$offset]) ? $this->semantics_by_name[$offset] : null;
     }
 
