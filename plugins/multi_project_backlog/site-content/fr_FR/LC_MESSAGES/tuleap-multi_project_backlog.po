@@ -31,6 +31,12 @@ msgstr ""
 "Extension du plugin Tableau de bord Agile qui permet la planification "
 "d'éléments depuis plusieurs projets"
 
+msgid "Mirror of"
+msgstr "Réplique de"
+
+msgid "Mirrored by"
+msgstr "Répliqué par"
+
 msgid ""
 "Modification of the milestone tracker of this planning is prohibited because "
 "this project is part of a multi-project backlog."
