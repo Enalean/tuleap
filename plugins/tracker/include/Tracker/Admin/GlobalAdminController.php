@@ -106,7 +106,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         }
         switch ($request->get('func')) {
             case 'edit-global-admin':
-                $this->updateGlobalAdministration($project);
+                $this->updateGlobalAdministration($layout, $project);
                 $layout->redirect(self::getTrackerGlobalAdministrationURL($project));
                 break;
             case 'use-artifact-link-type':
@@ -160,10 +160,14 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         $this->tracker_manager->displayFooter($project);
     }
 
-    private function updateGlobalAdministration(Project $project): void
+    private function updateGlobalAdministration(BaseLayout $layout, Project $project): void
     {
         $this->getCSRF($project)->check();
-        $this->updater->update($project);
+        $layout->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-tracker', 'Artifact link types has been enabled.')
+        );
+        $this->updater->forceUsageOfArtifactLinkTypes($project);
     }
 
     private function updateArtifactLinkUsage(Project $project, $type_shortname): void

@@ -488,10 +488,7 @@ class TrackerXmlImport
                 $this->logger->info("Artifact links nature feature is now active.");
             }
         } elseif ($use_natures == 'false') {
-            if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
-                $this->artifact_links_usage_updater->forceDeactivationOfArtifactLinkTypes($project);
-                $this->logger->warning("This project used artifact links nature. It is now deactivated!!!");
-            } else {
+            if (! $this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->logger->warning("This project will not be able to use artifact links nature feature.");
             }
         } else {

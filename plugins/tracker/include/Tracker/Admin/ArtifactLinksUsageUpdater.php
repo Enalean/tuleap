@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use Feedback;
 use Project;
 
 class ArtifactLinksUsageUpdater
@@ -35,33 +34,9 @@ class ArtifactLinksUsageUpdater
         $this->dao = $dao;
     }
 
-    public function update(Project $project)
-    {
-        if ($this->dao->isProjectUsingArtifactLinkTypes($project->getID())) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-tracker', 'Artifact link types has been disabled.')
-            );
-
-            return $this->dao->deactivateForProject($project->getID());
-        }
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-tracker', 'Artifact link types has been enabled.')
-        );
-
-        return $this->dao->activateForProject($project->getID());
-    }
-
     public function forceUsageOfArtifactLinkTypes(Project $project)
     {
         return $this->dao->activateForProject($project->getID());
-    }
-
-    public function forceDeactivationOfArtifactLinkTypes(Project $project)
-    {
-        return $this->dao->deactivateForProject($project->getID());
     }
 
     public function isProjectAllowedToUseArtifactLinkTypes(Project $project)
