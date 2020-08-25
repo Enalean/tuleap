@@ -39,6 +39,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         $this->setScope(self::SCOPE_PROJECT);
         $this->pluginInfo = null;
 
+        bindtextdomain('tuleap-projectlinks', __DIR__ . '/../site-content');
+
         // add link - only visible when confirgured by a user from an allowed project
         $this->addHook('project_summary_title', 'projectSummaryTitle', false);
 
@@ -159,7 +161,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 } else {
                     user_del_preference("pl_GroupId_master");
                 }
-                $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_ok');
+                $feedback .= ' ' . dgettext('tuleap-projectlinks', 'update OK');
                 break;
 
             case 'pl_link_delete':
@@ -173,9 +175,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                             AND (link_id=" . db_ei($link_id) . ");"
                     )
                 ) {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_deleted_OK');
+                    $feedback .= ' ' . dgettext('tuleap-projectlinks', 'Project link deleted OK');
                 } else {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
+                    $feedback .= ' ' . sprintf(dgettext('tuleap-projectlinks', 'update failed (MySQL reason: "%1$s")'), db_error());
                 }
                 break;
 
@@ -190,7 +192,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     WHERE (master_group_id=" . db_ei($group_id) . ") AND (link_type_id=" . db_ei($link_type_id) . ");"
                     )
                 ) {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
+                    $feedback .= ' ' . sprintf(dgettext('tuleap-projectlinks', 'update failed (MySQL reason: "%1$s")'), db_error());
                 } else {
                     //delete the relationship type if no error deleting instances
                     if (
@@ -199,9 +201,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                             WHERE (group_id=" . db_ei($group_id) . ")AND (link_type_id=" . db_ei($link_type_id) . ");"
                         )
                     ) {
-                        $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
+                        $feedback .= ' ' . sprintf(dgettext('tuleap-projectlinks', 'update failed (MySQL reason: "%1$s")'), db_error());
                     } else {
-                        $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_deleted_OK');
+                        $feedback .= ' ' . dgettext('tuleap-projectlinks', 'Project link deleted OK');
                     }
                     if (user_get_preference("pl_GroupId_master") == $group_id) {
                         // switch off linking to this project - it would be better
@@ -236,7 +238,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     ")
                 );");
                 if (db_numrows($pfcheck) > 0) {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_type_change_makes_duplicate');
+                    $feedback .= ' ' . dgettext('tuleap-projectlinks', 'That change would create a duplicate link name or reverse-name - link type not updated');
                 } elseif (
                     update_database(
                         "plugin_projectlinks_link_type",
@@ -250,9 +252,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         ($link_type_id === null ? null : "link_type_id=$link_type_id")
                     )
                 ) {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_ok') . ' ';
+                    $feedback .= ' ' . dgettext('tuleap-projectlinks', 'update OK') . ' ';
                 } else {
-                    $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
+                    $feedback .= ' ' . sprintf(dgettext('tuleap-projectlinks', 'update failed (MySQL reason: "%1$s")'), db_error());
                 }
                 break;
 
@@ -310,7 +312,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         '" . db_es($row['uri_plus']) . "'
                     );")
                     ) {
-                        $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_ok');
+                        $feedback .= ' ' . dgettext('tuleap-projectlinks', 'update OK');
                     }
                 }
                 break;
@@ -331,29 +333,25 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $src    = $this->getThemePath() . "/images/project_link.png";
                 $height = 21;
                 $width  = 77;
-                $alt    = $Language->getText('plugin_plinks', 'project_links');
+                $alt    = dgettext('tuleap-projectlinks', 'Project Links');
                 break;
             case 'add':
                 $src    = $this->getThemePath() . "/images/add.png";
                 $height = 10;
                 $width  = 10;
-                $alt    = $Language->getText('plugin_plinks', 'add');
+                $alt    = dgettext('tuleap-projectlinks', 'add');
                 break;
             case 'template':
                 $src    = $this->getThemePath() . "/images/template.png";
                 $height = 15;
                 $width  = 10;
-                $alt    = $Language->getText('plugin_plinks', 'template_marker');
+                $alt    = dgettext('tuleap-projectlinks', 'template project');
                 break;
             case 'new':
                 $src    = $this->getThemePath() . "/images/new.png";
                 $height = 10;
                 $width  = 10;
-                $alt    = $Language->getText(
-                    'plugin_plinks',
-                    'newly_added',
-                    DateHelper::formatForLanguage($GLOBALS['Language'], $params['date'], false)
-                );
+                $alt    = sprintf(dgettext('tuleap-projectlinks', 'link added: %1$s'), DateHelper::formatForLanguage($GLOBALS['Language'], $params['date'], false));
                 break;
             case 'arrow-right':
                 $src    = $this->getThemePath() . "/images/arrow-right.png";
@@ -365,13 +363,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $src    = util_get_image_theme('ic/trash.png');
                 $height = 16;
                 $width  = 16;
-                $alt    = $Language->getText('plugin_plinks', 'delete');
+                $alt    = dgettext('tuleap-projectlinks', 'Delete');
                 break;
             case 'matched':
                 $src    = util_get_image_theme('ic/check.png');
                 $height = 15;
                 $width  = 16;
-                $alt    = $Language->getText('plugin_plinks', 'matched');
+                $alt    = dgettext('tuleap-projectlinks', 'matched');
                 break;
         }
         return "<IMG SRC='$src' HEIGHT='$height' WIDTH='$width' BORDER='0'
@@ -400,28 +398,21 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
         // link types
         $HTML->box1_top(
-            $Language->getText('plugin_plinks', 'link_types') .
+            dgettext('tuleap-projectlinks', 'Project Link Types') .
             " &nbsp; &nbsp; &nbsp; &nbsp; " .
             mkAH(
-                $Language->getText('plugin_plinks', 'create_type'),
+                dgettext('tuleap-projectlinks', 'Add a project link type'),
                 $this->_adminURI() . "?disp=edit_link_type&group_id=$group_id"
             )
         );
         if (db_numrows($db_res) <= 0) {
-            print $Language->getText(
-                'plugin_plinks',
-                'no_link_types_enable_explanation',
-                $Language->getText('plugin_plinks', 'create_type')
-            );
+            print sprintf(dgettext('tuleap-projectlinks', 'To enable project linking, you must first define at least one project link type - click <i>%1$s</i> to get started.'), dgettext('tuleap-projectlinks', 'Add a project link type'));
         } else {
             print html_build_list_table_top(
                 [
-                    $Language->getText('plugin_plinks', 'dbfn_name'),
-                    $Language->getText('plugin_plinks', 'dbfn_reverse_name'),
-                    $Language->getText('plugin_plinks', 'dbfn_description'),
-                    /** **1 commented out for now - until we can decide how to deal with project links functionality
-                     * $Language->getText('plugin_plinks', 'dbfn_uri_plus'),
-                     **/
+                    dgettext('tuleap-projectlinks', 'Name'),
+                    dgettext('tuleap-projectlinks', 'Reverse Name'),
+                    dgettext('tuleap-projectlinks', 'Description'),
                     ""
                 ],
                 false, //links_arr
@@ -438,7 +429,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         $this->_adminURI() . "?disp=edit_link_type" .
                         "&amp;group_id=" . $row["group_id"] .
                         "&amp;link_type_id=" . $row["link_type_id"],
-                        $Language->getText('plugin_plinks', 'update_details')
+                        dgettext('tuleap-projectlinks', 'update details')
                     ) . "</td>
                     <td $cls style='white-space: nowrap; vertical-align: top;'>" .
                     htmlentities($row['reverse_name']) . "</td>
@@ -454,10 +445,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         $this->_adminURI() . "?func=pl_type_delete" .
                         "&amp;group_id=$group_id" .
                         "&amp;link_type_id=" . $row["link_type_id"],
-                        $Language->getText('plugin_plinks', 'delete_type'),
+                        dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)'),
                         [
                             'onclick' => "return confirm('" .
-                                $Language->getText('plugin_plinks', 'delete_type') . "?')"
+                                dgettext('tuleap-projectlinks', 'Delete project link type (including all links of this type)') . "?')"
                         ]
                     ) . "
                     </td>
@@ -477,7 +468,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 "template_id" => $project->getTemplate()
             ]);
             form_End(
-                $Language->getText('plugin_plinks', 'synchronise_with_template'),
+                dgettext('tuleap-projectlinks', 'Re-Synchronise Project Links with Template'),
                 FORM_NO_RESET_BUTTON
             );
         }
@@ -512,9 +503,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 'uri_plus' => '/projects/$projname/'
             ];
         }
-        $HTML->box1_top($Language->getText('plugin_plinks', 'project_links') .
+        $HTML->box1_top(dgettext('tuleap-projectlinks', 'Project Links') .
             " " . $this->_icon('main') .
-            " " . $Language->getText('plugin_plinks', 'link_type_update'));
+            " " . dgettext('tuleap-projectlinks', 'Change Project Link Type Definition'));
         print mkAH(
             "[" . $Language->getText('global', 'btn_cancel') . "]",
             $this->_adminURI() . "?group_id=$group_id"
@@ -532,7 +523,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         }
         form_GenTextBox(
             "name",
-            htmlentities($Language->getText('plugin_plinks', 'dbfn_name')),
+            htmlentities(dgettext('tuleap-projectlinks', 'Name')),
             $def['name'],
             20
         );
@@ -540,40 +531,33 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         form_NewRow();
         form_GenTextBox(
             "reverse_name",
-            htmlentities($Language->getText('plugin_plinks', 'dbfn_reverse_name')),
+            htmlentities(dgettext('tuleap-projectlinks', 'Reverse Name')),
             $def['reverse_name'],
             20
         );
         form_NewRow();
         form_GenTextArea(
             "description",
-            htmlentities($Language->getText('plugin_plinks', 'dbfn_description')),
+            htmlentities(dgettext('tuleap-projectlinks', 'Description')),
             $def['description']
         );
-        /** **1 commented out for now - until we can decide how to deal with project links functionality
-         * form_NewRow();
-         * form_GenTextBox("uri_plus",
-         * htmlentities($Language->getText('plugin_plinks', 'dbfn_uri_plus')),
-         * $def['uri_plus'], 85);
-         * form_Validation("uri_plus", FORM_VAL_IS_NOT_ZERO_LENGTH);
-         **/
         foreach (["uri_plus", "name", "reverse_name", "description"] as $ref) {
             $formRefs[$ref] = form_JS_ElementRef($ref) . ".value";
         }
         form_End();
         $HTML->box1_bottom();
         print "</td><td>\n";
-        $HTML->box1_top($Language->getText('plugin_plinks', 'set_to_defaults'));
+        $HTML->box1_top(dgettext('tuleap-projectlinks', 'Set to defaults'));
         print "<div style='padding: 5px; border: solid thin;
             vertical-align: middle;'>";
-        print $Language->getText('plugin_plinks', 'replace_form_details') .
+        print dgettext('tuleap-projectlinks', 'Replace all details in this form with the default values') .
             ":<p>";
         form_genJSButton(
-            $Language->getText('plugin_plinks', 'def_sp_name'),
-            "if (confirm('" . $Language->getText('plugin_plinks', 'replace_form_details') . "?')){" .
-            $formRefs["name"] . "='" . $Language->getText('plugin_plinks', 'def_sp_name') . "';" .
-            $formRefs["reverse_name"] . "='" . $Language->getText('plugin_plinks', 'def_sp_rname') . "';" .
-            $formRefs["description"] . "='" . $Language->getText('plugin_plinks', 'def_sp_desc') . "';" .
+            dgettext('tuleap-projectlinks', 'Sub-Projects'),
+            "if (confirm('" . dgettext('tuleap-projectlinks', 'Replace all details in this form with the default values') . "?')){" .
+            $formRefs["name"] . "='" . dgettext('tuleap-projectlinks', 'Sub-Projects') . "';" .
+            $formRefs["reverse_name"] . "='" . dgettext('tuleap-projectlinks', 'Parent Projects') . "';" .
+            $formRefs["description"] . "='" . dgettext('tuleap-projectlinks', 'Projects in the programme') . "';" .
             /** **1 commented out for now - until we can decide how to deal with project links functionality
              * $formRefs["uri_plus"]."='/projects/\$projname/';".
              **/
@@ -581,28 +565,17 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         );
         print "<p>";
         form_genJSButton(
-            $Language->getText('plugin_plinks', 'def_rp_name'),
-            "if (confirm('" . $Language->getText('plugin_plinks', 'replace_form_details') . "?')){" .
-            $formRefs["name"] . "='" . $Language->getText('plugin_plinks', 'def_rp_name') . "';" .
-            $formRefs["reverse_name"] . "='" . $Language->getText('plugin_plinks', 'def_rp_rname') . "';" .
-            $formRefs["description"] . "='" . $Language->getText('plugin_plinks', 'def_rp_desc') . "';" .
+            dgettext('tuleap-projectlinks', 'Related Projects'),
+            "if (confirm('" . dgettext('tuleap-projectlinks', 'Replace all details in this form with the default values') . "?')){" .
+            $formRefs["name"] . "='" . dgettext('tuleap-projectlinks', 'Related Projects') . "';" .
+            $formRefs["reverse_name"] . "='" . dgettext('tuleap-projectlinks', 'Related Projects') . "';" .
+            $formRefs["description"] . "='" . dgettext('tuleap-projectlinks', 'Projects using similar technology or sharing resources') . "';" .
             /** **1 commented out for now - until we can decide how to deal with project links functionality
              * $formRefs["uri_plus"]."='/projects/\$projname/';".
              **/
             "}"
         );
         print "</div><p>";
-        /** **1 commented out for now - until we can decide how to deal with project links functionality
-         * print "<div style='padding: 5px; border: solid thin;
-         * vertical-align: middle;'>";
-         * form_genJSButton($Language->getText('plugin_plinks', 'def_link_summary'),
-         * $formRefs["uri_plus"]."='/projects/\$projname/';");
-         * print "<p>";
-         * form_genJSButton($Language->getText('plugin_plinks', 'def_link_doc'),
-         * $formRefs["uri_plus"]."='/plugins/docman/?group_id=\$group_id';"
-         * );
-         * print "</div>";
-         **/
         $HTML->box1_bottom();
         print "</td></tr></table>\n";
 
@@ -616,9 +589,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             print '<input type="hidden" name="link_type_id" value="' . $link_type_id . '" />';
             print '<input type="hidden" name="group_id" value="' . $group_id . '" />';
             print '<input type="hidden" name="disp" value="edit_link_type" />';
-            print '<p><label for="plugin_projectlinks_link_project">' . $GLOBALS['Language']->getText('plugin_plinks', 'add_project') . '</label>';
+            print '<p><label for="plugin_projectlinks_link_project">' . dgettext('tuleap-projectlinks', 'Add new project:') . '</label>';
             print '<input type="text" name="target_group" value="' .
-                $GLOBALS['Language']->getText('plugin_plinks', 'add_project_autocompleter') .
+                dgettext('tuleap-projectlinks', 'Project name (search as you type)') .
                 '" size="60" id="plugin_projectlinks_link_project" /></p>';
             print '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '" />';
             print '</form>';
@@ -637,9 +610,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         global $HTML, $Language;
 
         $HTML->box1_top(
-            $Language->getText('plugin_plinks', 'project_links') .
+            dgettext('tuleap-projectlinks', 'Project Links') .
             " " . $this->_icon('main') . " " .
-            $Language->getText('plugin_plinks', 'synchronise_with_template')
+            dgettext('tuleap-projectlinks', 'Re-Synchronise Project Links with Template')
         );
         print mkAH(
             "[" . $Language->getText('global', 'btn_cancel') . "]",
@@ -647,18 +620,18 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         );
         // ==== compare link types ====
         print "<hr>\n";
-        print "<h2>" . $Language->getText('plugin_plinks', 'sync_type') . "</h2>\n";
+        print "<h2>" . dgettext('tuleap-projectlinks', 'Additional &amp; Modified project link types') . "</h2>\n";
         $lt_tmplt = db_query("SELECT link_type_id, group_id, name,
             reverse_name, description, uri_plus
             FROM plugin_projectlinks_link_type
             WHERE (group_id = " . db_ei($template_id) . ");");
         print html_build_list_table_top(
             [
-                $Language->getText('plugin_plinks', 'action'),
-                $Language->getText('plugin_plinks', 'dbfn_name'),
-                $Language->getText('plugin_plinks', 'dbfn_reverse_name'),
-                $Language->getText('plugin_plinks', 'dbfn_description'),
-                $Language->getText('plugin_plinks', 'dbfn_uri_plus')
+                dgettext('tuleap-projectlinks', 'Action'),
+                dgettext('tuleap-projectlinks', 'Name'),
+                dgettext('tuleap-projectlinks', 'Reverse Name'),
+                dgettext('tuleap-projectlinks', 'Description'),
+                dgettext('tuleap-projectlinks', 'Link URI (template)')
             ],
             false, //links_arr
             false, //mass_change
@@ -703,7 +676,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     print "<table border='0' cellspacing='0' cellpadding='3'>
                         <tr><td>" .
                         mkAH(
-                            $Language->getText('plugin_plinks', 'sync_link_update'),
+                            dgettext('tuleap-projectlinks', 'update'),
                             $basicURI .
                             "&name=" . urlencode($ltr_tmplt['name']) .
                             "&reverse_name=" . urlencode($ltr_tmplt['reverse_name']) .
@@ -731,10 +704,10 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     htmlentities($ltr_tmplt['name']) .
                     "&nbsp; &nbsp; &nbsp; " .
                     "<span style='font-style:italic;'>" .
-                    $Language->getText('plugin_plinks', 'project') .
+                    dgettext('tuleap-projectlinks', 'project') .
                     ":</span></td></tr><tr>
                     <td style='text-align: right;font-style:italic;'>" .
-                    $Language->getText('plugin_plinks', 'sync_link_template') .
+                    dgettext('tuleap-projectlinks', 'template') .
                     ":</td></tr></table>";
             } else {
                 print htmlentities($ltr_tmplt['name']);
@@ -771,7 +744,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
         // ==== compare link instances ====
         print "<hr>\n";
-        print "<h2>" . $Language->getText('plugin_plinks', 'sync_link_new') .
+        print "<h2>" . dgettext('tuleap-projectlinks', 'Additional links to other projects') .
             "</h2>\n";
         $templLinks = db_query("
             SELECT plugin_projectlinks_relationship.link_type_id,
@@ -789,13 +762,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     AND (status = 'A'))
             ORDER BY name, type, group_name;");
         if (db_numrows($templLinks) > 0) {
-            print $Language->getText('plugin_plinks', 'synchronise_clickit', $this->_icon("add"));
+            print sprintf(dgettext('tuleap-projectlinks', 'Click %1$s to add the links from the template'), $this->_icon("add"));
             $type_missing = false;
             print html_build_list_table_top(
                 [
-                    $Language->getText('plugin_plinks', 'action'),
-                    $Language->getText('plugin_plinks', 'dbfn_link_type_id'),
-                    $Language->getText('plugin_plinks', 'project')
+                    dgettext('tuleap-projectlinks', 'Action'),
+                    dgettext('tuleap-projectlinks', 'Link Type'),
+                    dgettext('tuleap-projectlinks', 'project')
                 ],
                 false, //links_arr
                 false, //mass_change
@@ -837,10 +810,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     }
                 } else {
                     $type_missing = true;
-                    print $Language->getText(
-                        'plugin_plinks',
-                        'sync_link_needs_type'
-                    );
+                    print dgettext('tuleap-projectlinks', '<a title=\'needs link type first\'>**</a>');
                 }
                 print "</td>";
                 print "<td $cls>" . $hp->purify($row_templLinks['link_name']) . "</td>";
@@ -850,18 +820,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             print "</TABLE>\n";
             if ($type_missing) {
                 print "<div style='width: 30em'><hr><i>" .
-                    $Language->getText(
-                        'plugin_plinks',
-                        'sync_link_needs_type'
-                    ) . "</i> " .
-                    $Language->getText(
-                        'plugin_plinks',
-                        'sync_link_new_no_type_explain',
-                        [
-                            $this->_icon("add"),
-                            $Language->getText('plugin_plinks', 'sync_type')
-                        ]
-                    ) .
+                    dgettext('tuleap-projectlinks', '<a title=\'needs link type first\'>**</a>') . "</i> " .
+                    sprintf(dgettext('tuleap-projectlinks', 'means that the link cannot be added because there is no matching link type defined in the project. Create the link type by clicking on <i>%1$s</i> in <i>%2$s</i>.'), $this->_icon("add"), dgettext('tuleap-projectlinks', 'Additional &amp; Modified project link types')) .
                     "</div>";
             }
         }
@@ -888,11 +848,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 " . (is_null($link_id) ? "" : " AND (link_id<>" . db_ei($link_id) . ")") . "
             )");
         if (db_numrows($pfcheck) > 0) {
-            $feedback = $Language->getText(
-                'plugin_plinks',
-                'project_link_change_makes_duplicate',
-                $hp->purify($targetProject->getPublicName())
-            );
+            $feedback = sprintf(dgettext('tuleap-projectlinks', 'Update cancelled (it would create a duplicate link to "%1$s")'), $hp->purify($targetProject->getPublicName()));
         } else {
             $updates = [
                 "link_type_id" => $link_type_id,
@@ -911,13 +867,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     is_null($link_id) ? "" : "link_id=$link_id"
                 )
             ) {
-                $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $hp->purify($targetProject->getPublicName())) . ' ';
+                $feedback = sprintf(dgettext('tuleap-projectlinks', 'update OK (%1$s)'), $hp->purify($targetProject->getPublicName())) . ' ';
             } else {
-                $feedback = $Language->getText(
-                    'plugin_plinks',
-                    'update_failed_named',
-                    [db_error(), $hp->purify($targetProject->getPublicName())]
-                );
+                $feedback = sprintf(dgettext('tuleap-projectlinks', 'update failed [%2$s] (MySQL reason: "%1$s")'), db_error(), $hp->purify($targetProject->getPublicName()));
             }
         }
         return $feedback;
@@ -939,7 +891,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         if ($links->rowCount() > 0) {
             $html .= html_build_list_table_top(
                 [
-                    $GLOBALS['Language']->getText('plugin_plinks', 'dbfn_name'), ''],
+                    dgettext('tuleap-projectlinks', 'Name'), ''],
                 false,
                 false,
                 false
@@ -953,8 +905,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 
                 // Delete
                 $url  = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . $link_type_id . "&amp;group_id=" . $row['master_group_id'] . "&amp;link_id=" . $row['link_id'];
-                $warn = $GLOBALS['Language']->getText('plugin_plinks', 'delete_link');
-                $alt  = $GLOBALS['Language']->getText('plugin_plinks', 'delete_link');
+                $warn = dgettext('tuleap-projectlinks', 'Delete project link');
+                $alt  = dgettext('tuleap-projectlinks', 'Delete project link');
                 $html .= '<td>' . html_trash_link($url, $warn, $alt) . '</td>';
 
                 $html .= '</tr>';
@@ -1088,7 +1040,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         if (PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
             $presenter->addItem(
                 new NavigationItemPresenter(
-                    $GLOBALS['Language']->getText('plugin_plinks', 'project_links_admin'),
+                    dgettext('tuleap-projectlinks', 'Project Links Configuration'),
                     $this->_adminURI() . '?' . http_build_query(
                         ['group_id' => $project_id, 'pane' => 'project_links']
                     ),
