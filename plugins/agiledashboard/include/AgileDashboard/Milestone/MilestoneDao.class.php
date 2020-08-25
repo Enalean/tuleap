@@ -20,23 +20,23 @@
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 {
-
     public function searchPaginatedSubMilestones(
-        $milestone_artifact_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset,
-        $order
+        int $milestone_artifact_id,
+        SubMilestoneRequest $request
     ) {
+        $limit                 = $request->getLimit();
+        $order                 = $request->getOrder();
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
 
         $limit_statement = '';
         if ($limit > 0) {
             $limit  = $this->da->escapeInt($limit);
-            $offset = $this->da->escapeInt($offset);
+            $offset = $this->da->escapeInt($request->getOffset());
 
             $limit_statement = "LIMIT $offset, $limit";
         }
@@ -45,7 +45,10 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             $order = 'desc';
         }
 
-        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'submilestones');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements(
+            $request->getStatusQuery(),
+            'submilestones'
+        );
 
         $nature = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
@@ -269,14 +272,35 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return [$from_status_statement, $where_status_statement];
     }
 
-    public function searchSubMilestones($milestone_artifact_id)
+    public function searchSubMilestones(int $milestone_artifact_id)
     {
-        $limit     = null;
-        $offset    = null;
-        $order     = 'asc';
-        $criterion = new Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll();
+        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
+        $nature                = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
-        return $this->searchPaginatedSubMilestones($milestone_artifact_id, $criterion, $limit, $offset, $order);
+        $sql = "SELECT SQL_CALC_FOUND_ROWS submilestones.*
+                FROM tracker_artifact AS parent
+                    INNER JOIN tracker_field AS f ON (
+                        parent.tracker_id = f.tracker_id
+                        AND parent.id = $milestone_artifact_id
+                        AND f.formElement_type = 'art_link'
+                    )
+                    INNER JOIN tracker_changeset_value AS cv ON (
+                        cv.field_id = f.id
+                        AND cv.changeset_id = parent.last_changeset_id
+                    )
+                    INNER JOIN tracker_changeset_value_artifactlink AS cva ON (
+                        cva.changeset_value_id = cv.id
+                        AND cva.nature = $nature
+                    )
+                    INNER JOIN tracker_artifact AS submilestones ON (
+                        submilestones.id = cva.artifact_id
+                    )
+                    INNER JOIN plugin_agiledashboard_planning AS planning ON (
+                        planning.planning_tracker_id = submilestones.tracker_id
+                    )
+                ORDER BY submilestones.id ASC";
+
+        return $this->retrieve($sql);
     }
 
     public function getAllMilestoneByTrackers(array $list_of_trackers_ids)

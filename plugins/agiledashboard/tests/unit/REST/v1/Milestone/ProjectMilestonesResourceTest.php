@@ -106,7 +106,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
                 'asc'
             );
             $headers = HTTPHeaderStack::getStack();
-            $this->assertEquals('X-PAGINATION-SIZE: 2', $headers[4]->getHeader());
+            $this->assertEquals('X-PAGINATION-SIZE: 2', $headers[2]->getHeader());
             $this->assertContains($first_representation, $result);
             $this->assertContains($second_representation, $result);
         }
@@ -141,7 +141,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             );
             $this->assertEmpty($representations);
             $headers = HTTPHeaderStack::getStack();
-            $this->assertEquals('X-PAGINATION-SIZE: 0', $headers[4]->getHeader());
+            $this->assertEquals('X-PAGINATION-SIZE: 0', $headers[2]->getHeader());
         }
     }
 }

@@ -48,6 +48,7 @@ use Tracker_NoChangeException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -555,15 +556,11 @@ class MilestoneResource extends AuthenticatedResource
         $limit = 10,
         $offset = 0,
         $order = 'asc'
-    ) {
+    ): array {
         $this->checkAccess();
+        $this->sendAllowHeaderForSubmilestones();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
-
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
-            $user,
-            $milestone->getProject()
-        );
 
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);
@@ -571,21 +568,16 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $paginated_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedSubMilestonesRepresentations(
-                $milestone,
-                $user,
-                $fields,
-                $criterion,
-                $limit,
-                $offset,
-                $order
-            );
+        $request = new SubMilestoneRequest($user, $milestone, $limit, $offset, $order, $criterion);
+        $milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
+        $this->sendPaginationHeaders($limit, $offset, $milestones->getTotalSize());
 
-        $this->sendAllowHeaderForSubmilestones();
-        $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
-
-        return $paginated_milestones_representations->getMilestonesRepresentations();
+        $milestone_representations = $this->milestone_representation_builder->buildRepresentationsFromCollection(
+            $milestones,
+            $user,
+            $fields
+        );
+        return $milestone_representations->getMilestonesRepresentations();
     }
 
     /**

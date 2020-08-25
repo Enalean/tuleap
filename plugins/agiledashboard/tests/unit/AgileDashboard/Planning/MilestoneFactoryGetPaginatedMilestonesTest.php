@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Request\RawTopMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -141,6 +142,68 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $this->assertSame(24, $first_milestone->getArtifactId());
         $second_milestone = $milestones->getMilestones()[1];
         $this->assertSame(25, $second_milestone->getArtifactId());
+    }
+
+    public function testItReturnsEmptyWhenNoSubMilestones(): void
+    {
+        $user        = UserTestBuilder::aUser()->build();
+        $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
+        $parent_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
+        $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
+        $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
+
+        $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')->andReturn(\TestHelper::emptyDar());
+        $this->milestone_dao->shouldReceive('foundRows')->andReturn(0);
+
+        $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
+
+        $this->assertSame(0, $sub_milestones->getTotalSize());
+        $this->assertEmpty($sub_milestones->getMilestones());
+    }
+
+    public function testItReturnsSubMilestonesFilteredByStatus(): void
+    {
+        $user        = UserTestBuilder::aUser()->build();
+        $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
+        $sub_planning = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
+        $parent_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
+        $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
+        $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
+        $sub_milestone_tracker = $this->buildTestTracker(17);
+
+        $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')
+            ->once()
+            ->with(121, $request)
+            ->andReturn(
+                \TestHelper::arrayToDar(
+                    ['id' => 138],
+                    ['id' => 139]
+                )
+            );
+        $this->milestone_dao->shouldReceive('foundRows')
+            ->once()
+            ->andReturn(2);
+
+        $first_artifact  = $this->mockArtifact(138, $sub_milestone_tracker);
+        $second_artifact = $this->mockArtifact(139, $sub_milestone_tracker);
+
+        $this->artifact_factory->shouldReceive('getInstanceFromRow')
+            ->andReturn($first_artifact, $second_artifact);
+        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
+            ->with($sub_milestone_tracker)
+            ->andReturn($sub_planning);
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
+
+        $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
+
+        $this->assertSame(2, $sub_milestones->getTotalSize());
+        $first_milestone = $sub_milestones->getMilestones()[0];
+        $this->assertSame(138, $first_milestone->getArtifactId());
+        $second_milestone = $sub_milestones->getMilestones()[1];
+        $this->assertSame(139, $second_milestone->getArtifactId());
     }
 
     private function buildTestTracker(int $tracker_id): \Tracker
