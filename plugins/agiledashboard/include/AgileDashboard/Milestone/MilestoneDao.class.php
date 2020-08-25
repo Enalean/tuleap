@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -84,14 +85,14 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedSiblingTopMilestones($milestone_id, $tracker_id, $criterion, $limit, $offset)
+    public function searchPaginatedSiblingTopMilestones(int $milestone_id, int $tracker_id, SiblingMilestoneRequest $request)
     {
         $artifact_id = $this->da->escapeInt($milestone_id);
         $tracker_id  = $this->da->escapeInt($tracker_id);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
+        $limit       = $this->da->escapeInt($request->getLimit());
+        $offset      = $this->da->escapeInt($request->getOffset());
 
-        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'art_sibling');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($request->getStatusQuery(), 'art_sibling');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
                 FROM tracker_artifact AS art_sibling
@@ -109,13 +110,13 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedSiblingMilestones($milestone_id, $criterion, $limit, $offset)
+    public function searchPaginatedSiblingMilestones(int $milestone_id, SiblingMilestoneRequest $request)
     {
         $artifact_id = $this->da->escapeInt($milestone_id);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
+        $limit       = $this->da->escapeInt($request->getLimit());
+        $offset      = $this->da->escapeInt($request->getOffset());
 
-        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($criterion, 'art_sibling');
+        [$from_status_statement, $where_status_statement] = $this->getStatusStatements($request->getStatusQuery(), 'art_sibling');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_sibling.*
                 FROM tracker_artifact parent_art

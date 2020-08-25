@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
@@ -33,7 +34,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 /**
  * Loads planning milestones from the persistence layer.
  */
-class Planning_MilestoneFactory
+class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var PlanningFactory
@@ -430,40 +431,31 @@ class Planning_MilestoneFactory
         return new PaginatedMilestones($sub_milestones, $total_size);
     }
 
-    public function getPaginatedSiblingMilestonesWithStatusCriterion(
-        PFUser $user,
-        Planning_Milestone $milestone,
-        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
-        $limit,
-        $offset
-    ) {
+    public function getPaginatedSiblingMilestones(SiblingMilestoneRequest $request): PaginatedMilestones
+    {
+        $milestone          = $request->getReferenceMilestone();
         $milestone_artifact = $milestone->getArtifact();
-        $siblings           = [];
-        $total_size         = 0;
 
-        if ($milestone_artifact) {
-            $parent = $milestone->getParent();
-            if ($parent) {
-                $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingMilestones(
-                    $milestone_artifact->getId(),
-                    $criterion,
-                    $limit,
-                    $offset
-                );
-            } else {
-                $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingTopMilestones(
-                    $milestone_artifact->getId(),
-                    $milestone_artifact->getTrackerId(),
-                    $criterion,
-                    $limit,
-                    $offset
-                );
-            }
-
-            $total_size = $this->milestone_dao->foundRows();
-            $siblings   = $this->convertDarToArrayOfMilestones($user, $milestone, $sibling_milestones);
+        if (! $milestone_artifact) {
+            return new PaginatedMilestones([], 0);
         }
 
+        $parent = $milestone->getParent();
+        if ($parent) {
+            $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingMilestones(
+                $milestone_artifact->getId(),
+                $request
+            );
+        } else {
+            $sibling_milestones = $this->milestone_dao->searchPaginatedSiblingTopMilestones(
+                $milestone_artifact->getId(),
+                $milestone_artifact->getTrackerId(),
+                $request
+            );
+        }
+
+        $total_size = $this->milestone_dao->foundRows();
+        $siblings   = $this->convertDarToArrayOfMilestones($request->getUser(), $milestone, $sibling_milestones);
         return new PaginatedMilestones($siblings, $total_size);
     }
 
