@@ -1206,8 +1206,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $html .= '</td>';
                         }
                     }
-                    if (isset($matching_ids['nature'])) {
-                        $artifact_id   = $row['id'];
+                    $artifact_id = $row['id'];
+                    if (isset($matching_ids['nature'][$artifact_id])) {
                         $nature        = $matching_ids['nature'][$artifact_id];
                         $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
                         $html         .= '<td class="tracker_formelement_read_and_edit_read_section">' . $forward_label . '</td>';
