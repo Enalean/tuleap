@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,8 @@
 $step-transition-duration: 75ms;
 
 $step-background: $tlp-ui-white;
-$step-color: $tlp-ui-dimmed;
-$step-border: $tlp-ui-border-normal;
-$step-active-color: $tlp-theme-color;
-$step-active-border: transparentize($tlp-theme-color, .5);
-$step-clicked-background: $tlp-theme-color;
-$step-clicked-border: $tlp-theme-color;
-$step-clicked-color: $tlp-ui-white;
+$step-color: $tlp-theme-sidebar-background-color;
+$step-active-color: $tlp-ui-dimmed;
 
 $switch-menu-background: $tlp-ui-white;
 $switch-menu-border: $tlp-ui-border-normal;
@@ -38,101 +33,62 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     display: flex;
     flex-wrap: wrap;
     padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    font-weight: 600;
 }
 
 .breadcrumb-item {
-    display: inline-block;
+    display: inline-flex;
     position: relative;
-    margin: 0 0 0 -1px;
+    align-items: center;
+    margin: 0 6px 0 0;
+    line-height: 1rem;
 
-    &:first-child > .breadcrumb-link {
-        padding-left: $tlp-medium-spacing;
+    &:last-child {
+        margin: 0;
     }
 
-    &:last-child > .breadcrumb-link {
-        border: 1px solid $step-active-border;
-        color: $step-active-color;
-        font-weight: 600;
-
-        &::after {
-            box-shadow: 1.5px 1.5px 0 $step-active-border;
-        }
+    &:not(:last-child)::after {
+        content: '\f054'; // fa-chevron-right
+        position: relative;
+        top: 1px;
+        font-family: 'FontAwesome';
+        font-size: .55rem;
     }
 
     &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
-        border: 1px solid $step-active-border;
         color: $step-active-color;
-
-        &::after {
-            box-shadow: 1.5px 1.5px 0 $step-active-border;
-        }
-
-        &:active {
-            border: 1px solid $step-clicked-border;
-            background: $step-clicked-background;
-            color: $step-clicked-color;
-
-            &::after {
-                background: $step-clicked-background;
-                box-shadow: 1.5px 1.5px 0 $step-clicked-border;
-            }
-        }
     }
 }
 
 .breadcrumb-link {
     position: relative;
-    padding: 0 10px 0 30px;
-    float: left;
-    transition: border $step-transition-duration;
-    border: 1px solid $step-border;
-    background: $step-background;
+    padding: 0 6px 0 0;
     color: $step-color;
-    font-size: 13px;
-    line-height: 33px;
+    font-size: .875rem;
 
     &:hover {
         text-decoration: none;
     }
-
-    &::after {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        right: -16px;
-        width: 33px;
-        height: 33px;
-        transform: rotate(-45deg) scale(.73);
-        transition: box-shadow $step-transition-duration;
-        border-radius: 50px 0 0;
-        background: $step-background;
-        box-shadow: 1.5px 1.5px 0 $step-border;
-    }
 }
 
 .breadcrumb-link-icon {
+    display: none;
     margin: 0 5px 0 0;
 }
 
 .breadcrumb-switchable {
-    display: inline-block;
-    position: relative;
-
     > .breadcrumb-link {
-        padding: 0 $tlp-medium-spacing 0 30px;
-    }
+        padding: 0 ($tlp-medium-spacing + 4px) 0 0;
 
-    &::after {
-        content: '\f0d7'; // fa-caret-down
-        position: absolute;
-        z-index: 1;
-        top: 12px;
-        right: 7px;
-        transition: color $step-transition-duration;
-        color: $tlp-ui-border-dark;
-        font-family: 'FontAwesome';
-        font-size: 10px;
+        &::after {
+            content: '\f0d7'; // fa-caret-down
+            position: absolute;
+            z-index: 1;
+            right: 8px;
+            transition: color $step-transition-duration;
+            font-family: 'FontAwesome';
+            font-size: .625rem;
+        }
     }
 
     &:hover {
@@ -143,7 +99,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
             pointer-events: auto;
         }
 
-        &::after {
+        > .breadcrumb-link::after {
             color: $step-active-color;
         }
     }
@@ -152,7 +108,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-switch-menu {
     position: absolute;
     z-index: 1000;
-    top: 35px;
+    top: 1rem;
     left: 0;
     min-width: 100%;
     padding: 0;
@@ -166,6 +122,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     opacity: 0;
     background: $switch-menu-background;
     box-shadow: none;
+    font-weight: normal;
     pointer-events: none;
 }
 
@@ -210,7 +167,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     border-top: 1px solid $tlp-ui-border-light;
     color: $tlp-ui-dimmed;
-    font-size: 12px;
+    font-size: .75rem;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -224,15 +181,8 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 }
 
 body:not(.sidebar-collapsed) {
-    .breadcrumb-with-only-one-item {
-        display: none;
-    }
-
+    .breadcrumb-with-only-one-item,
     .breadcrumb-project {
         display: none;
-
-        + .breadcrumb-item > .breadcrumb-link {
-            padding-left: $tlp-medium-spacing;
-        }
     }
 }

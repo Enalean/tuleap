@@ -14,7 +14,7 @@
 
     .toolbar.nav-pills {
         margin: 0;
-        padding: 15px 20px 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
         border: 0;
         border-bottom: 1px solid darken($main-background, 5%);
         background: $main-background;
@@ -37,7 +37,7 @@
     }
 
     .breadcrumb + .toolbar.nav-pills {
-        padding: 0 20px;
+        padding: 0 $tlp-medium-spacing;
     }
 
     .content {
