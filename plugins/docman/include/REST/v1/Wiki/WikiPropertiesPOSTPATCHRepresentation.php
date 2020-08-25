@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
+/**
+ * @psalm-immutable
+ */
 class WikiPropertiesPOSTPATCHRepresentation
 {
     /**

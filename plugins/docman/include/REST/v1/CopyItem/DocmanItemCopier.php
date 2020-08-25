@@ -145,9 +145,6 @@ final class DocmanItemCopier
 
         $this->event_manager->processEvent('send_notifications');
 
-        $representation = new CreatedItemRepresentation();
-        $representation->build($copied_item_id);
-
-        return $representation;
+        return CreatedItemRepresentation::build($copied_item_id);
     }
 }

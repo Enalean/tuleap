@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Links;
 
+/**
+ * @psalm-immutable
+ */
 class LinkPropertiesPOSTPATCHRepresentation
 {
     /**

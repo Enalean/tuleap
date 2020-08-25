@@ -68,7 +68,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(true);
 
-        $root_item_representation = new ItemRepresentation();
+        $root_item_representation = Mockery::mock(ItemRepresentation::class);
         $this->item_representation_builder->shouldReceive('buildRootId')->andReturn($root_item_representation);
 
         $this->docman_permissions_manager->shouldReceive('userCanAdmin')->andReturn(true);
@@ -107,7 +107,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(true);
 
-        $root_item_representation = new ItemRepresentation();
+        $root_item_representation = Mockery::mock(ItemRepresentation::class);
         $this->item_representation_builder->shouldReceive('buildRootId')->andReturn($root_item_representation);
 
         $this->docman_permissions_manager->shouldReceive('userCanAdmin')->andReturn(false);

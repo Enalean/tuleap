@@ -28,6 +28,8 @@ class ApprovalTableStateMapper
      * @param int $state_id the ID of the approval table state.
      * @return string The label corresponding to $state_id
      * @throws \Exception
+     *
+     * @psalm-mutation-free
      */
     public function getStatusStringFromStatusId(int $state_id): string
     {

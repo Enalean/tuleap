@@ -24,24 +24,32 @@ namespace Tuleap\Docman\REST\v1\Folders;
 
 use Docman_Folder;
 
+/**
+ * @psalm-immutable
+ */
 class FolderPropertiesRepresentation
 {
     /** @var int */
-    public $total_size = 0;
+    public $total_size;
 
     /**
      * @var int
      */
-    public $nb_files = 0;
+    public $nb_files;
 
-    public function build(Docman_Folder $folder): void
+    private function __construct(int $total_size, int $nb_files)
+    {
+        $this->total_size = $total_size;
+        $this->nb_files   = $nb_files;
+    }
+
+    public static function build(Docman_Folder $folder): self
     {
         $visitor = new ComputeFolderSizeVisitor();
         $size_collector = new FolderSizeCollector();
 
         $folder->accept($visitor, ['size_collector' => $size_collector]);
 
-        $this->total_size = $size_collector->getTotalSize();
-        $this->nb_files = $size_collector->getNbFiles();
+        return new self($size_collector->getTotalSize(), $size_collector->getNbFiles());
     }
 }

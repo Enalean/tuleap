@@ -20,6 +20,9 @@
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+/**
+ * @psalm-immutable
+ */
 final class FilePropertiesPOSTPATCHRepresentation
 {
     /**

@@ -55,6 +55,9 @@ abstract class Docman_ApprovalTable
         $this->id = $v;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId()
     {
         return $this->id;
@@ -65,6 +68,9 @@ abstract class Docman_ApprovalTable
         $this->date = $v;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getDate()
     {
         return $this->date;
@@ -130,6 +136,9 @@ abstract class Docman_ApprovalTable
         return $this->customizable;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getApprovalState()
     {
         return $this->approvalState;

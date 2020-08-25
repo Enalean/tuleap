@@ -25,6 +25,9 @@ namespace Tuleap\Docman\REST\v1\Wiki;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
+/**
+ * @psalm-immutable
+ */
 class DocmanWikiPATCHRepresentation extends DocmanWikiVersionPOSTRepresentation
 {
     /**

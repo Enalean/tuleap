@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
+/**
+ * @psalm-immutable
+ */
 class EmbeddedFilePropertiesFullRepresentation implements IEmbeddedFilePropertiesRepresentation
 {
     /**
@@ -41,7 +44,7 @@ class EmbeddedFilePropertiesFullRepresentation implements IEmbeddedFilePropertie
         $this->content   = $content;
     }
 
-    public static function build(\Docman_Version $docman_version, $content)
+    public static function build(\Docman_Version $docman_version, $content): self
     {
         return new self($docman_version, $content);
     }

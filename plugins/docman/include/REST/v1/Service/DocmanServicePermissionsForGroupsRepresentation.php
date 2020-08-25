@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Service;
 
+/**
+ * @psalm-immutable
+ */
 final class DocmanServicePermissionsForGroupsRepresentation
 {
     /**

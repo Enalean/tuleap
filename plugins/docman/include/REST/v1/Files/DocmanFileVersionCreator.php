@@ -82,10 +82,7 @@ class DocmanFileVersionCreator
             throw new RestException(400, $exception->getMessage());
         }
 
-        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
-        $file_properties_representation->build($document_to_upload->getUploadHref());
-
-        return $file_properties_representation;
+        return CreatedItemFilePropertiesRepresentation::build($document_to_upload->getUploadHref());
     }
 
     /**
@@ -123,8 +120,6 @@ class DocmanFileVersionCreator
         } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
-        $file_properties_representation->build($document_to_upload->getUploadHref());
-        return $file_properties_representation;
+        return CreatedItemFilePropertiesRepresentation::build($document_to_upload->getUploadHref());
     }
 }

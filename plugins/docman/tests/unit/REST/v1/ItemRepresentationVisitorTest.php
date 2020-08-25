@@ -30,7 +30,6 @@ use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 
 class ItemRepresentationVisitorTest extends TestCase
 {
@@ -132,9 +131,6 @@ class ItemRepresentationVisitorTest extends TestCase
 
         $this->item_factory->shouldReceive('getIdInWikiOfWikiPageItem')->withArgs(['A wiki page', 102])->once(
         )->andReturn(10);
-
-        $wiki_representation = new WikiPropertiesRepresentation();
-        $wiki_representation->build($item, 10);
 
         $params = ['current_user' => Mockery::mock(\PFUser::class)];
 
