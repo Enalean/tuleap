@@ -84,7 +84,7 @@ $tlp-tabs-transition: 75ms ease-out;
 
 .tlp-tab-menu-item {
     padding: $tlp-medium-spacing / 2 $tlp-medium-spacing;
-    font-size: 14px;
+    font-size: .875rem;
     font-weight: 400;
     letter-spacing: normal;
     text-decoration: none;
@@ -111,9 +111,9 @@ $tlp-tabs-transition: 75ms ease-out;
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
     color: $tlp-ui-dimmed;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .02rem;
     text-decoration: none;
     text-transform: uppercase;
 

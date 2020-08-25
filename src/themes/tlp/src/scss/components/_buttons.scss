@@ -17,36 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-button-color: #ffffff;
+$tlp-button-color: $tlp-ui-white;
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
 
-$tlp-button-normal-height: 38px;
-$tlp-button-normal-line-height: 34px;
-$tlp-button-normal-font-size: 16px;
+$tlp-button-normal-height: 40px;
+$tlp-button-normal-line-height: 1.5rem;
+$tlp-button-normal-font-size: .875rem;
 $tlp-button-normal-font-weight: 400;
-$tlp-button-normal-padding: 0 15px;
+$tlp-button-normal-padding: 0 $tlp-medium-spacing;
 $tlp-button-normal-radius: 4px;
 
-$tlp-button-large-height: 46px;
-$tlp-button-large-line-height: 42px;
-$tlp-button-large-font-size: 22px;
-$tlp-button-large-font-weight: 400;
-$tlp-button-large-padding: 0 25px;
+$tlp-button-large-height: 48px;
+$tlp-button-large-line-height: 1.5rem;
+$tlp-button-large-font-size: 1.25rem;
+$tlp-button-large-font-weight: 500;
+$tlp-button-large-padding: 0 $tlp-large-spacing;
 $tlp-button-large-radius: 4px;
 
-$tlp-button-small-height: 28px;
-$tlp-button-small-line-height: 24px;
-$tlp-button-small-font-size: 14px;
-$tlp-button-small-font-weight: 400;
-$tlp-button-small-padding: 0 12px;
+$tlp-button-small-height: 32px;
+$tlp-button-small-line-height: 1.5rem;
+$tlp-button-small-font-size: .75rem;
+$tlp-button-small-font-weight: 500;
+$tlp-button-small-padding: 0 $tlp-medium-spacing;
 $tlp-button-small-radius: 3px;
 
-$tlp-button-mini-height: 22px;
-$tlp-button-mini-line-height: 18px;
-$tlp-button-mini-font-size: 12px;
-$tlp-button-mini-font-weight: 400;
-$tlp-button-mini-padding: 0 8px;
+$tlp-button-mini-height: 24px;
+$tlp-button-mini-line-height: 1.15rem;
+$tlp-button-mini-font-size: .75rem;
+$tlp-button-mini-font-weight: 500;
+$tlp-button-mini-padding: 0 $tlp-small-spacing;
 $tlp-button-mini-radius: 3px;
 
 $tlp-button-outline-hover-color: #fcfcfc;
@@ -58,7 +58,9 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
 
 
 %tlp-button {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     height: $tlp-button-normal-height;
     padding: $tlp-button-normal-padding;
     overflow: hidden;
@@ -94,11 +96,13 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     }
 
     > .tlp-button-icon {
-        margin: 0 4px 0 0;
+        margin: 0 8px 0 0;
+        font-size: .75rem;
     }
 
     > .tlp-button-icon-right {
-        margin: 0 0 0 4px;
+        margin: 0 0 0 8px;
+        font-size: .75rem;
     }
 }
 
@@ -223,6 +227,12 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
 
     > .tlp-button-icon {
         margin: 0 8px 0 0;
+        font-size: .875rem;
+    }
+
+    > .tlp-button-icon-right {
+        margin: 0 0 0 8px;
+        font-size: .75rem;
     }
 }
 
@@ -233,6 +243,16 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     font-size: $tlp-button-small-font-size;
     font-weight: $tlp-button-small-font-weight;
     line-height: $tlp-button-small-line-height;
+
+    > .tlp-button-icon {
+        margin: 0 4px 0 0;
+        font-size: .625rem;
+    }
+
+    > .tlp-button-icon-right {
+        margin: 0 0 0 4px;
+        font-size: .625rem;
+    }
 }
 
 .tlp-button-mini {
@@ -243,6 +263,16 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;
+
+    > .tlp-button-icon {
+        margin: 0 4px 0 0;
+        font-size: .625rem;
+    }
+
+    > .tlp-button-icon-right {
+        margin: 0 0 0 4px;
+        font-size: .625rem;
+    }
 }
 
 /**

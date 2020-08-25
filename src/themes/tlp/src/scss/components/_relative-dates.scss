@@ -22,7 +22,7 @@
     display: inline-block;
     margin: 0 0 0 $tlp-small-spacing;
     color: $tlp-ui-dimmed;
-    font-size: 11px;
+    font-size: .6875rem;
     white-space: nowrap;
 }
 
@@ -35,8 +35,8 @@
         position: absolute;
         top: -$tlp-small-spacing + 1px;
         color: $tlp-ui-dimmed;
-        font-size: 11px;
-        line-height: 10px;
+        font-size: .6875rem;
+        line-height: .6rem;
         white-space: nowrap;
     }
 }
