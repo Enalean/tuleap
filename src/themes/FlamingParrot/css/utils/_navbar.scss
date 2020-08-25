@@ -423,51 +423,6 @@ $nav-dropdown-content-border-radius: 3px;
     display: none;
 }
 
-#current-project-banner-bullhorn > a {
-    padding: 0 0 0 20px;
-    color: $ui-color-warning;
-    font-size: 16px;
-
-    > i {
-        padding: 7px;
-    }
-}
-
-#current-project-banner-bullhorn.project-banner-hidden > a {
-    color: $white;
-
-    > i {
-        border-radius: 50%;
-        background-color: $ui-color-warning;
-    }
-}
-
-#current-project-banner-bullhorn.bullhorn-to-banner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    // Both pseudo-elements are needed to workaround a FF rendering issue
-    &::before,
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        width: 0;
-        height: 0;
-        margin-left: 10px;
-        transform: rotate(-45deg);
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent transparent $white $white;
-        box-shadow: -2px 2px 2px 0 rgba(0, 0, 0, .1);
-    }
-
-    &::after {
-        box-shadow: none;
-    }
-}
-
 .current-project-nav-popover {
     width: 276px;
     padding: 0;

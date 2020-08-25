@@ -283,50 +283,6 @@ body:not(.sidebar-collapsed) .current-project-icon {
     display: none;
 }
 
-#current-project-banner-bullhorn > a {
-    padding: 0 0 0 $tlp-medium-spacing;
-    color: $tlp-ui-warning;
-
-    > i {
-        padding: 7px;
-    }
-}
-
-#current-project-banner-bullhorn.project-banner-hidden > a {
-    color: $tlp-ui-white;
-
-    > i {
-        border-radius: 50%;
-        background-color: $tlp-ui-warning;
-    }
-}
-
-#current-project-banner-bullhorn.bullhorn-to-banner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    // Both pseudo-elements are needed to workaround a FF rendering issue
-    &::before,
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        width: 0;
-        height: 0;
-        margin-left: $tlp-small-spacing;
-        transform: rotate(-45deg);
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent transparent $tlp-ui-white $tlp-ui-white;
-        box-shadow: -2px 2px 2px 0 rgba(0, 0, 0, .1);
-    }
-
-    &::after {
-        box-shadow: none;
-    }
-}
-
 .nav-dropdown-new-icon {
     margin: 0 $tlp-small-spacing 0 0;
 }

@@ -46,29 +46,6 @@
         min-height: 100%;
     }
 
-    a.project-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 15px 10px;
-        transition: background 100ms;
-        background: darken($sidebar-background, 2%);
-        color: transparentize(#ffffff, .2);
-        font-size: 22px;
-        line-height: 26px;
-        text-decoration: none;
-
-        &:hover {
-            background: darken($sidebar-background, 4%);
-        }
-
-        i {
-            margin-right: 10px;
-            color: $grey;
-            font-size: 16px;
-        }
-    }
-
     li > a {
         display: flex;
         position: relative;
@@ -237,4 +214,68 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.project-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $tlp-medium-spacing $tlp-small-spacing;
+}
+
+.project-title-container {
+    flex: 1 1 auto;
+}
+
+.project-title {
+    display: flex;
+    align-items: center;
+    padding: $tlp-small-spacing;
+    transition: background 100ms;
+    border-radius: 4px;
+    color: transparentize($white, .2);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3125rem;
+    text-decoration: none;
+
+    &:hover {
+        background: darken($sidebar-background, 5%);
+    }
+
+    i {
+        margin-right: $tlp-small-spacing;
+        color: $grey;
+        font-size: 1rem;
+    }
+}
+
+.project-sidebar-banner-button {
+    flex: 0 0 auto;
+    margin: 0 $tlp-small-spacing;
+    transition: opacity ease-in-out 100ms;
+
+    .fa-bullhorn {
+        padding: 5px;
+        border-radius: 50%;
+        background-color: $ui-color-warning;
+        color: $white;
+        font-size: .875rem;
+        text-shadow: 0 0 1px rgba(0, 0, 0, .5);
+    }
+
+    &:hover {
+        opacity: .8;
+    }
+}
+
+&.sidebar-collapsed {
+    .project-sidebar-header {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .project-sidebar-banner-button {
+        margin: $tlp-medium-spacing 0 0;
+    }
 }

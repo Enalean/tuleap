@@ -20,11 +20,12 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use Codendi_HTMLPurifier;
 use ForgeConfig;
 use PFUser;
 use Project;
-use Codendi_HTMLPurifier;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Project\Banner\BannerDisplay;
 
 class ProjectSidebarPresenter
 {
@@ -58,8 +59,14 @@ class ProjectSidebarPresenter
      */
     public $project_is_private_incl_restricted;
 
-    public function __construct(PFUser $current_user, Project $project, \Generator $sidebar, $project_privacy, VersionPresenter $version)
-    {
+    public function __construct(
+        PFUser $current_user,
+        Project $project,
+        \Generator $sidebar,
+        $project_privacy,
+        VersionPresenter $version,
+        ?BannerDisplay $banner
+    ) {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $this->project_privacy        = $purifier->purify($project_privacy, CODENDI_PURIFIER_STRIP_HTML);
@@ -85,5 +92,7 @@ class ProjectSidebarPresenter
             $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
         }
+
+        $this->has_project_banner = $banner !== null;
     }
 }

@@ -17,28 +17,66 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-sidebar-title {
+.project-sidebar-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 15px 10px;
+    justify-content: space-between;
+    padding: $tlp-medium-spacing $tlp-small-spacing;
+}
+
+.project-sidebar-title {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    padding: $tlp-small-spacing;
     transition: background 100ms;
-    background: darken($tlp-theme-sidebar-background-color, 2%);
-    color: $tlp-ui-border-dark;
-    font-size: 22px;
-    line-height: 26px;
+    border-radius: 4px;
+    color: $tlp-ui-border-normal;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3125rem;
     text-decoration: none;
 
     &:hover {
-        background: darken($tlp-theme-sidebar-background-color, 4%);
+        background: darken($tlp-theme-sidebar-background-color, 5%);
         text-decoration: none;
     }
 }
 
 .project-sidebar-title-icon {
-    margin: 0 10px 0 0;
-    color: transparentize($tlp-ui-border-dark, .3);
-    font-size: 16px;
+    margin: 0 $tlp-small-spacing 0 0;
+    color: transparentize($tlp-ui-border-normal, .3);
+    font-size: 1rem;
+}
+
+.project-sidebar-banner-button {
+    flex: 0 0 auto;
+    margin: 0 $tlp-small-spacing;
+    transition: opacity ease-in-out 100ms;
+
+    .fa-bullhorn {
+        padding: 5px;
+        border-radius: 50%;
+        background-color: $tlp-ui-warning;
+        color: $tlp-ui-white;
+        font-size: .875rem;
+        text-shadow: 0 0 1px rgba(0, 0, 0, .5);
+    }
+
+    &:hover {
+        opacity: .8;
+    }
+}
+
+.sidebar-collapsed {
+    .project-sidebar-header {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .project-sidebar-banner-button {
+        margin: $tlp-medium-spacing 0 0;
+    }
 }
 
 .project-sidebar-nav {
