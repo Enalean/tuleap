@@ -26,6 +26,7 @@ use Planning_MilestoneFactory;
 use Planning_MilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -156,18 +157,12 @@ class MilestoneCrumbBuilder
      */
     private function getFirstTenOpenSiblings(PFUser $user, Planning_Milestone $milestone)
     {
-        $links     = [];
-        $criterion = new StatusOpen();
-        $limit     = 10;
-        $offset    = 0;
+        $links   = [];
+        $limit   = 10;
+        $offset  = 0;
+        $request = new SiblingMilestoneRequest($user, $milestone, $limit, $offset, new StatusOpen());
         do {
-            $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestonesWithStatusCriterion(
-                $user,
-                $milestone,
-                $criterion,
-                $limit,
-                $offset
-            );
+            $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
             foreach ($paginated_milestones->getMilestones() as $sibling) {
                 $links[] = new BreadCrumbLink(
                     $sibling->getArtifactTitle(),

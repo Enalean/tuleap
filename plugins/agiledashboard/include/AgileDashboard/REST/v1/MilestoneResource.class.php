@@ -48,6 +48,7 @@ use Tracker_NoChangeException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -491,6 +492,7 @@ class MilestoneResource extends AuthenticatedResource
     public function getSiblings($id, $query = '', $limit = 10, $offset = 0)
     {
         $this->checkAccess();
+        $this->sendAllowHeaderForSubmilestones();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -505,20 +507,16 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $paginated_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedSiblingMilestonesRepresentations(
-                $milestone,
-                $user,
-                MilestoneRepresentation::SLIM,
-                $criterion,
-                $limit,
-                $offset
-            );
+        $request = new SiblingMilestoneRequest($user, $milestone, $limit, $offset, $criterion);
+        $milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
+        $this->sendPaginationHeaders($limit, $offset, $milestones->getTotalSize());
 
-        $this->sendAllowHeaderForSubmilestones();
-        $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());
-
-        return $paginated_milestones_representations->getMilestonesRepresentations();
+        $milestone_representations = $this->milestone_representation_builder->buildRepresentationsFromCollection(
+            $milestones,
+            $user,
+            MilestoneRepresentation::SLIM
+        );
+        return $milestone_representations->getMilestonesRepresentations();
     }
 
     /**

@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -135,32 +134,6 @@ class MilestoneRepresentationBuilder
         );
 
         return $milestone_representation_reference_holder->milestone_representation;
-    }
-
-    public function getPaginatedSiblingMilestonesRepresentations(
-        \Planning_Milestone $milestone,
-        \PFUser $user,
-        string $representation_type,
-        ISearchOnStatus $criterion,
-        int $limit,
-        int $offset
-    ): PaginatedMilestonesRepresentations {
-        $siblings = $this->milestone_factory
-            ->getPaginatedSiblingMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset);
-
-        $sibling_representations = [];
-        foreach ($siblings->getMilestones() as $sibling) {
-            $sibling_representations[] = $this->getMilestoneRepresentation(
-                $sibling,
-                $user,
-                $representation_type
-            );
-        }
-
-        return new PaginatedMilestonesRepresentations(
-            $sibling_representations,
-            $siblings->getTotalSize()
-        );
     }
 
     public function buildRepresentationsFromCollection(
