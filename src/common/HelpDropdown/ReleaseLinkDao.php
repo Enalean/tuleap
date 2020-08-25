@@ -25,6 +25,9 @@ use Tuleap\DB\DataAccessObject;
 
 class ReleaseLinkDao extends DataAccessObject
 {
+    /**
+     * @psalm-return array{actual_link:string, tuleap_version: string}
+     */
     public function getReleaseLink(): ?array
     {
         $sql = "SELECT * FROM release_note_link LIMIT 1";
@@ -32,11 +35,11 @@ class ReleaseLinkDao extends DataAccessObject
         return $this->getDB()->row($sql);
     }
 
-    public function updateTuleapVersion(string $tuleap_version): void
+    public function updateReleaseNoteLink(?string $actual_link, string $tuleap_version): void
     {
-        $sql = "UPDATE release_note_link SET actual_link = null, tuleap_version = ?";
+        $sql = "UPDATE release_note_link SET actual_link = ?, tuleap_version = ?";
 
-        $this->getDB()->run($sql, $tuleap_version);
+        $this->getDB()->run($sql, $actual_link, $tuleap_version);
     }
 
     public function createReleaseNoteLink(string $tuleap_version): void

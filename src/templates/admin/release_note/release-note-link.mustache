@@ -1,0 +1,43 @@
+<section class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }} tuleap-core | Release note link {{/ dgettext }}</h1>
+    <section class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title"> {{# dgettext }} tuleap-core | Release note link configuration {{/ dgettext }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-property">
+                        <p>
+                            {{# dgettext }} tuleap-core | You can edit the release note link. It will change this link on the Help Drop-down.
+                            This link is auto updated on each major upgrade. By default, the official Tuleap release note link is used.{{/ dgettext }}
+                        </p>
+                    </div>
+                    <form method="POST">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label"> {{# dgettext }} tuleap-core | Release note link {{/ dgettext }}
+                            <i class="fa fa-asterisk"></i>
+                            </label>
+                            <input type="url"
+                                   class="tlp-input"
+                                   name="url"
+                                   required
+                                   pattern="https?://.+"
+                                   value="{{ link }}"
+                            />
+                        </div>
+                        <input type="hidden" name="action" value="update">
+                        <div class="tlp-pane-section-submit">
+                            <button class="tlp-button-primary" type="submit">
+                                <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }} tuleap-core | Save the link {{/ dgettext }}
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </section>
+</section>

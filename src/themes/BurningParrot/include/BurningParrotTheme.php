@@ -27,6 +27,8 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
@@ -139,7 +141,14 @@ class BurningParrotTheme extends BaseLayout
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $dropdown_presenter_builder = new HelpDropdownPresenterBuilder(
-            new ReleaseNoteManager(new ReleaseLinkDao(), new \UserPreferencesDao(), new VersionNumberExtractor()),
+            new ReleaseNoteManager(
+                new ReleaseLinkDao(),
+                new \UserPreferencesDao(),
+                new VersionNumberExtractor(),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                )
+            ),
             $this->event_manager,
             new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
         );
