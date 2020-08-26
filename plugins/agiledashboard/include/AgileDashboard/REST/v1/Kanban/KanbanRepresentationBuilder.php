@@ -20,11 +20,13 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use AgileDashboard_Kanban;
-use AgileDashboard_KanbanColumnFactory;
-use PFUser;
 use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanUserPreferences;
 use Exception;
+use PFUser;
+use Tuleap\AgileDashboard\Kanban\KanbanAddArtifactConfiguration;
+use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 
 class KanbanRepresentationBuilder
 {
@@ -58,6 +60,21 @@ class KanbanRepresentationBuilder
      */
     public function build(AgileDashboard_Kanban $kanban, PFUser $user)
     {
+        $user_can_add_artifact = \ForgeConfig::get(KanbanAddArtifactConfiguration::CONFIG_SETTING_NAME);
+
+        if ($user_can_add_artifact) {
+            try {
+                $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);
+                $user_can_add_artifact = true;
+            } catch (KanbanUserCantAddArtifactException $exception) {
+                $user_can_add_artifact = false;
+            } catch (\Kanban_SemanticStatusNotDefinedException $e) {
+                $user_can_add_artifact = false;
+            } catch (\Kanban_TrackerNotDefinedException $e) {
+                $user_can_add_artifact = false;
+            }
+        }
+
         try {
             $this->kanban_actions_checker->checkUserCanAddInPlace($user, $kanban);
             $user_can_add_in_place = true;
@@ -87,6 +104,7 @@ class KanbanRepresentationBuilder
             $user_can_add_columns,
             $user_can_reorder_columns,
             $user_can_add_in_place,
+            $user_can_add_artifact,
             $user
         );
     }

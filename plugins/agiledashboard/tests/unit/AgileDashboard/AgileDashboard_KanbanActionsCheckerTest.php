@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
+
 final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -177,7 +179,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
-        $this->expectException(\Kanban_UserCantAddInPlaceException::class);
+        $this->expectException(KanbanUserCantAddArtifactException::class);
 
         $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
         $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
@@ -200,7 +202,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnFalse()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
-        $this->expectException(\Kanban_UserCantAddInPlaceException::class);
+        $this->expectException(KanbanUserCantAddArtifactException::class);
 
         $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
         $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);

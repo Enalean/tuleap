@@ -24,6 +24,9 @@ msgstr "Ajouter"
 msgid "Add a column"
 msgstr "Ajouter une colonne"
 
+msgid "Add new {{ kanban.kanban.tracker.label }}"
+msgstr "Ajouter un(e) {{ kanban.kanban.tracker.label }} "
+
 msgid ""
 "An error occured while saving one of your last action. <br>We're afraid that "
 "you will have to reload the page in order to bring you back to a consistent "
