@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -154,8 +154,7 @@ class NaturePresenterFactory
         return $natures;
     }
 
-    /** @return NaturePresenter | null */
-    public function getFromShortname($shortname)
+    public function getFromShortname($shortname): ?NaturePresenter
     {
         if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
             return new NaturePresenter('', '', '', true);
@@ -175,6 +174,15 @@ class NaturePresenterFactory
             return null;
         }
         return $this->instantiateFromRow($row);
+    }
+
+    public function getTypeEnabledInProjectFromShortname(Project $project, string $shortname): ?NaturePresenter
+    {
+        if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project->getID(), $shortname)) {
+            return null;
+        }
+
+        return $this->getFromShortname($shortname);
     }
 
     private function getNaturePresenterByShortname($shortname)

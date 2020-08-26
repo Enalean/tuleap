@@ -1219,12 +1219,26 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             if (isset($prefill_natures[$artifact_id])) {
                                 $selected_nature = $prefill_natures[$artifact_id];
                             }
+                            $is_a_usable_type_selected = false;
                             foreach ($natures as $nature_i) {
+                                $should_select_current_nature = $selected_nature === $nature_i->shortname;
+                                $is_a_usable_type_selected    = $is_a_usable_type_selected || $should_select_current_nature;
                                 $natures_presenter[] = [
                                     'shortname'     => $nature_i->shortname,
                                     'forward_label' => $nature_i->forward_label,
-                                    'is_selected'   => ($selected_nature == $nature_i->shortname)
+                                    'is_selected'   => $should_select_current_nature
                                 ];
+                            }
+
+                            if (! $is_a_usable_type_selected) {
+                                $type = $this->getNaturePresenterFactory()->getTypeEnabledInProjectFromShortname($project, $selected_nature);
+                                if ($type !== null) {
+                                    $natures_presenter[] = [
+                                        'shortname'     => $type->shortname,
+                                        'forward_label' => $type->forward_label,
+                                        'is_selected'   => true
+                                    ];
+                                }
                             }
 
                             $name = "artifact[{$artifactlink_field_id}][natures][{$row['id']}]";
