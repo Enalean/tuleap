@@ -525,8 +525,7 @@ class ProjectResource extends AuthenticatedResource
         $event   = new HeartbeatsEntryCollection($project, $user);
         $this->event_manager->processEvent($event);
 
-        $heartbeats = new HeartbeatsRepresentation();
-        $heartbeats->build($event);
+        $heartbeats = HeartbeatsRepresentation::build($event);
 
         $this->sendAllowHeadersForHeartBeat();
 
@@ -967,8 +966,7 @@ class ProjectResource extends AuthenticatedResource
         );
 
         foreach ($all_pages->getPages() as $page) {
-            $representation = new PhpWikiPageRepresentation();
-            $representation->build($page);
+            $representation = PhpWikiPageRepresentation::build($page);
 
             $wiki_pages['pages'][] = $representation;
         }

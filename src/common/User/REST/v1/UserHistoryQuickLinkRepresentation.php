@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\User\REST\v1;
 
 use Tuleap\User\History\HistoryQuickLink;
 
+/**
+ * @psalm-immutable
+ */
 class UserHistoryQuickLinkRepresentation
 {
     /**
@@ -37,10 +40,19 @@ class UserHistoryQuickLinkRepresentation
      */
     public $icon_name;
 
-    public function build(HistoryQuickLink $quick_link)
+    private function __construct(string $name, string $html_url, string $icon_name)
     {
-        $this->name      = $quick_link->getName();
-        $this->html_url  = $quick_link->getUrl();
-        $this->icon_name = $quick_link->getIconName();
+        $this->name      = $name;
+        $this->html_url  = $html_url;
+        $this->icon_name = $icon_name;
+    }
+
+    public static function build(HistoryQuickLink $quick_link): self
+    {
+        return new self(
+            $quick_link->getName(),
+            $quick_link->getUrl(),
+            $quick_link->getIconName()
+        );
     }
 }

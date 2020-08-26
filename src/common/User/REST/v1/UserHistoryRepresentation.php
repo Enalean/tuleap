@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\User\REST\v1;
 
 use Tuleap\User\History\HistoryEntry;
 
+/**
+ * @psalm-immutable
+ */
 class UserHistoryRepresentation
 {
     /**
@@ -30,16 +33,25 @@ class UserHistoryRepresentation
     public $entries;
 
     /**
+     * @param UserHistoryEntryRepresentation[] $entries
+     */
+    private function __construct(array $entries)
+    {
+        $this->entries = $entries;
+    }
+
+    /**
      * @param HistoryEntry[] $history
      */
-    public function build(array $history)
+    public static function build(array $history): self
     {
-        $this->entries = [];
+        $entries = [];
         foreach ($history as $history_entry) {
-            $history_entry_representation = new UserHistoryEntryRepresentation();
-            $history_entry_representation->build($history_entry);
+            $history_entry_representation = UserHistoryEntryRepresentation::build($history_entry);
 
-            $this->entries[] = $history_entry_representation;
+            $entries[] = $history_entry_representation;
         }
+
+        return new self($entries);
     }
 }

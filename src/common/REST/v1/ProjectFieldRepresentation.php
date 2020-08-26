@@ -24,6 +24,9 @@ namespace Tuleap\REST\v1;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class ProjectFieldRepresentation
 {
     public const ROUTE = "project_fields";

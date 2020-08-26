@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,10 +23,13 @@ namespace Tuleap\Project\REST;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class HeartbeatsEntryRepresentation
 {
     /**
-     * @var int UNIX timestamp of the time of the last update of this entry {@type int} {@required true}
+     * @var string Date of the last update of this entry {@type int} {@required true}
      */
     public $updated_at;
     /**
@@ -42,11 +45,21 @@ class HeartbeatsEntryRepresentation
      */
     public $small_icon;
 
-    public function build(HeartbeatsEntry $entry)
+    private function __construct(string $updated_at, string $html_message, string $icon, string $small_icon)
     {
-        $this->updated_at   = JsonCast::toDate($entry->getUpdatedAt());
-        $this->html_message = $entry->getHTMLMessage();
-        $this->icon         = $entry->getNormalIcon()->getInlineString();
-        $this->small_icon   = $entry->getSmallIcon()->getInlineString();
+        $this->updated_at   = $updated_at;
+        $this->html_message = $html_message;
+        $this->icon         = $icon;
+        $this->small_icon   = $small_icon;
+    }
+
+    public static function build(HeartbeatsEntry $entry): self
+    {
+        return new self(
+            JsonCast::toDate($entry->getUpdatedAt()),
+            $entry->getHTMLMessage(),
+            $entry->getNormalIcon()->getInlineString(),
+            $entry->getSmallIcon()->getInlineString()
+        );
     }
 }

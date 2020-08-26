@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class ProjectPostRepresentation
 {
     /**
