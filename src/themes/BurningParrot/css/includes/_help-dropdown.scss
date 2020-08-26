@@ -99,12 +99,8 @@
                 }
             }
 
-            &.release-note-link {
+            &.help-dropdown-link-highlight {
                 color: $tlp-ui-warning;
-
-                &:visited {
-                    color: $tlp-ui-border-dark;
-                }
             }
         }
 

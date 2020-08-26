@@ -123,12 +123,8 @@
             }
         }
 
-        &.release-note-link {
+        &.help-dropdown-link-highlight {
             color: $ui-color-warning;
-
-            &:visited {
-                color: #d4d7e1;
-            }
         }
     }
 
