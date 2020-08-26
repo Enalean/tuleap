@@ -2729,6 +2729,13 @@ msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
 
 #, php-format
 msgid ""
+"The artifact link type \"%s\" cannot be used to link artifact #%s manually"
+msgstr ""
+"Le lien entre artéfacts typé \"%s\" ne peut pas être utilisé pour manuellement "
+"lier l'artéfact #%s."
+
+#, php-format
+msgid ""
 "The artifact link type \"%s\" is disabled and cannot be used to link "
 "artifact #%s"
 msgstr ""

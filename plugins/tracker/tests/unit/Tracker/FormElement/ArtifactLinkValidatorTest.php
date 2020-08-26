@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 class ArtifactLinkValidatorTest extends TestCase
 {
@@ -201,24 +202,31 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 
-    public function testItReturnsFalseWhenProjectCanUseNatureAndNatureDoesNotExist()
+    public function testItReturnsFalseWhenProjectCanUseNatureAndNatureDoesNotExist(): void
     {
         $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->andReturn(null);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
         $this->assertFalse($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 
-    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureExist()
+    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureExist(): void
     {
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn($this->nature_is_child);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn($this->nature_fixed_in);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([
+            new NaturePresenter('_is_child', 'label', 'reverse_label', true),
+            new NaturePresenter('fixed_in', 'label', 'reverse_label', true),
+        ]);
         $this->project->shouldReceive('isActive')->andReturn(true);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
         $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
@@ -251,18 +259,20 @@ class ArtifactLinkValidatorTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureEmpty()
+    public function testItReturnsTrueWhenProjectCanUseNatureAndNatureEmpty(): void
     {
         $value = ['new_values' => '1000', 'natures' => ['']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn($this->nature_no_nature);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->project->shouldReceive('isActive')->andReturn(true);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 
-    public function testItReturnsFalseWhenProjectCanUseTypesAndAtLeastOneTypeIsDisabled()
+    public function testItReturnsFalseWhenProjectCanUseTypesAndAtLeastOneTypeIsDisabled(): void
     {
         $value = [
             'new_values' => '1000',
@@ -273,9 +283,57 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('_is_child')->andReturn($this->nature_is_child);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn($this->nature_fixed_in);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
         $this->dao->shouldReceive('isTypeDisabledInProject')->with(101, 'fixed_in')->andReturn(true);
         $this->project->shouldReceive('isActive')->andReturn(true);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn(null);
 
         $this->assertFalse($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
+    }
+
+    public function testDoesNotAllowUsageOfANonEditableArtLinkTypeOnALinkNotAlreadyUsingIt(): void
+    {
+        $value = [
+            'new_values' => '',
+            'natures' => ['123' => 'fixed_in_not_editable']
+        ];
+
+        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->nature_fixed_in);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->project->shouldReceive('isActive')->andReturn(true);
+        $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
+        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
+        $artifact_link_info->shouldReceive('getNature')->andReturn('an_editable_link');
+        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+
+        $this->assertFalse($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
+    }
+
+    public function testAllowsUsageOfANonEditableArtLinkTypeWhenTheLinkIsAlreadyUsingIt(): void
+    {
+        $value = [
+            'new_values' => '',
+            'natures' => ['123' => 'fixed_in_not_editable']
+        ];
+
+        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
+        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in_not_editable')->andReturn($this->nature_fixed_in);
+        $this->nature_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+        $this->project->shouldReceive('isActive')->andReturn(true);
+        $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
+        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
+        $artifact_link_info->shouldReceive('getNature')->andReturn('fixed_in_not_editable');
+        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+
+        $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 }
