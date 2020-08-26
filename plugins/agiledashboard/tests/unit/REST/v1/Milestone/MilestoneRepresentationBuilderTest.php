@@ -98,13 +98,18 @@ final class MilestoneRepresentationBuilderTest extends TestCase
         $this->event_manager->shouldReceive('processEvent');
         $this->parent_tracker_retriever->shouldReceive('getCreatableParentTrackers')->andReturn([]);
         $this->milestone_factory->shouldReceive('userCanChangePrioritiesInMilestone')->andReturnTrue();
-        $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
-        $this->planning_factory->shouldReceive('getPlanning')->andReturnNull();
 
-        $first_milestone  = $this->buildMilestone(22);
-        $second_milestone = $this->buildMilestone(23);
-        $collection       = new PaginatedMilestones([$first_milestone, $second_milestone], 4);
-        $user             = UserTestBuilder::aUser()->build();
+        $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
+        $this->planning_factory->shouldReceive('getChildrenPlanning')->andReturnNull();
+
+        $project           = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
+        $milestone_tracker = $this->buildMilestoneTracker($project);
+        $backlog_tracker   = $this->buildBacklogTracker($project);
+        $planning          = $this->buildPlanning($milestone_tracker, $backlog_tracker);
+        $first_milestone   = $this->buildMilestone(22, $project, $planning, $milestone_tracker);
+        $second_milestone  = $this->buildMilestone(23, $project, $planning, $milestone_tracker);
+        $collection        = new PaginatedMilestones([$first_milestone, $second_milestone], 4);
+        $user              = UserTestBuilder::aUser()->build();
 
         $representations = $this->builder->buildRepresentationsFromCollection(
             $collection,
@@ -119,16 +124,72 @@ final class MilestoneRepresentationBuilderTest extends TestCase
         $this->assertSame(23, $second_representation->id);
     }
 
-    private function buildMilestone(int $artifact_id): \Planning_ArtifactMilestone
+    public function testItBuildsRepresentationsWithScrumMonoMilestone(): void
     {
-        $project         = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
-        $backlog_tracker = $this->buildTestTracker(9, 'User Stories');
-        $backlog_tracker->setProject($project);
-        $planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $planning->setBacklogTrackers([$backlog_tracker]);
+        $this->mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnTrue();
+        $backlog = M::mock(\AgileDashboard_Milestone_Backlog_Backlog::class);
+        $backlog->shouldReceive('getDescendantTrackers')->andReturn([]);
+        $this->backlog_factory->shouldReceive('getBacklog')->andReturn($backlog);
+        $this->event_manager->shouldReceive('processEvent');
+        $this->parent_tracker_retriever->shouldReceive('getCreatableParentTrackers')->andReturn([]);
+        $this->milestone_factory->shouldReceive('userCanChangePrioritiesInMilestone')->andReturnTrue();
+
+        $project           = new \Project(['group_id' => 101, 'group_name' => 'Test Project']);
+        $milestone_tracker = $this->buildMilestoneTracker($project);
+        $backlog_tracker   = $this->buildBacklogTracker($project);
+        $planning          = $this->buildPlanning($milestone_tracker, $backlog_tracker);
+
+        $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturn($milestone_tracker);
+        $this->planning_factory->shouldReceive('getPlanning')->andReturn($planning);
+
+        $first_milestone  = $this->buildMilestone(24, $project, $planning, $milestone_tracker);
+        $second_milestone = $this->buildMilestone(25, $project, $planning, $milestone_tracker);
+        $collection       = new PaginatedMilestones([$first_milestone, $second_milestone], 4);
+        $user             = UserTestBuilder::aUser()->build();
+
+        $representations = $this->builder->buildRepresentationsFromCollection(
+            $collection,
+            $user,
+            MilestoneRepresentation::SLIM
+        );
+
+        $this->assertSame(4, $representations->getTotalSize());
+        $first_representation = $representations->getMilestonesRepresentations()[0];
+        $this->assertSame(24, $first_representation->id);
+        $this->assertSame('Releases', $first_representation->sub_milestone_type->label);
+        $second_representation = $representations->getMilestonesRepresentations()[1];
+        $this->assertSame(25, $second_representation->id);
+        $this->assertSame('Releases', $first_representation->sub_milestone_type->label);
+    }
+
+    private function buildMilestoneTracker(\Project $project): \Tracker
+    {
         $milestone_tracker = $this->buildTestTracker(8, 'Releases');
         $milestone_tracker->setProject($project);
+        return $milestone_tracker;
+    }
 
+    private function buildBacklogTracker(\Project $project): \Tracker
+    {
+        $backlog_tracker = $this->buildTestTracker(9, 'User Stories');
+        $backlog_tracker->setProject($project);
+        return $backlog_tracker;
+    }
+
+    private function buildPlanning(\Tracker $milestone_tracker, \Tracker $backlog_tracker): \Planning
+    {
+        $planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
+        $planning->setPlanningTracker($milestone_tracker);
+        $planning->setBacklogTrackers([$backlog_tracker]);
+        return $planning;
+    }
+
+    private function buildMilestone(
+        int $artifact_id,
+        \Project $project,
+        \Planning $planning,
+        \Tracker $milestone_tracker
+    ): \Planning_ArtifactMilestone {
         $artifact = M::mock(\Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $artifact->shouldReceive('getTitle')->andReturn('Test Milestone');

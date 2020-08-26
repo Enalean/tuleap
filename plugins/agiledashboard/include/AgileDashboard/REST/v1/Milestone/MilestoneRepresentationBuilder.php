@@ -159,9 +159,10 @@ class MilestoneRepresentationBuilder
 
     private function getSubPlanning(\Planning_Milestone $milestone, bool $is_mono_milestone_enabled): ?\Planning
     {
+        $planning = $milestone->getPlanning();
         if ($is_mono_milestone_enabled) {
-            return $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
+            return $this->planning_factory->getPlanning($planning->getId());
         }
-        return $this->planning_factory->getPlanning($milestone->getPlanning()->getId());
+        return $this->planning_factory->getChildrenPlanning($planning);
     }
 }
