@@ -393,8 +393,6 @@ function Graph(
                         })
                 );
 
-                select("svg").remove();
-
                 graphd3.width(element.width());
                 graphd3.height(element.height());
 
