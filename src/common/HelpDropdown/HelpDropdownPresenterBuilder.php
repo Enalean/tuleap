@@ -75,9 +75,9 @@ class HelpDropdownPresenterBuilder
             )
         ];
 
-        $release_note = $this->getReleaseNoteLink($current_user, $tuleap_version);
+        $release_note = $this->getReleaseNoteLink($tuleap_version);
 
-        if ($release_note === null || $current_user->isAnonymous()) {
+        if ($current_user->isAnonymous()) {
             $has_release_note_been_seen = true;
         } else {
             $has_release_note_been_seen = (bool) $current_user->getPreference("has_release_note_been_seen");
@@ -93,21 +93,18 @@ class HelpDropdownPresenterBuilder
         );
     }
 
-    private function getReleaseNoteLink(PFUser $current_user, string $tuleap_version): ?HelpLinkPresenter
+    private function getReleaseNoteLink(string $tuleap_version): HelpLinkPresenter
     {
         $release_note_link = $this->release_note_manager->getReleaseNoteLink($tuleap_version);
 
-        if ($current_user->useLabFeatures()) {
-            return HelpLinkPresenter::build(
-                dgettext(
-                    'tuleap-core',
-                    'Release Note'
-                ),
-                $release_note_link,
-                "fa-star",
-                $this->uri_sanitizer
-            );
-        }
-        return null;
+        return HelpLinkPresenter::build(
+            dgettext(
+                'tuleap-core',
+                'Release Note'
+            ),
+            $release_note_link,
+            "fa-star",
+            $this->uri_sanitizer
+        );
     }
 }
