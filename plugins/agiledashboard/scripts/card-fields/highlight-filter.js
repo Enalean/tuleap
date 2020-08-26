@@ -25,7 +25,7 @@ function TuleapHighlightFilter() {
 
     return function (text, search) {
         if (!isTextSearchable(text, search)) {
-            return text !== null ? encode(text.toString()) : text;
+            return text ? encode(text.toString()) : text;
         }
 
         const regexp_escaped_search = escapeStringRegexp(search.toString());
