@@ -21,12 +21,12 @@ $step-transition-duration: 75ms;
 
 $step-background: $white;
 $step-color: $sidebar-background;
-$step-active-color: #747474;
+$step-active-color: $main;
+$step-active-background: transparentize($main, .9);
 
 $switch-menu-background: $white;
-$switch-menu-border: #e3e3e3;
 $switch-menu-item-color: $main;
-$switch-menu-item-hover-background: $light-grey;
+$switch-menu-item-hover-background: transparentize($main, .93);
 $switch-menu-item-hover-color: $main;
 
 .breadcrumb-container {
@@ -42,6 +42,7 @@ $switch-menu-item-hover-color: $main;
     margin: 0;
     padding: 0;
     border-radius: 0;
+    background: none;
     font-weight: 600;
 }
 
@@ -49,7 +50,7 @@ $switch-menu-item-hover-color: $main;
     display: inline-flex;
     position: relative;
     align-items: center;
-    margin: 0 6px 0 0;
+    margin: 0 8px 0 0;
     line-height: 1rem;
 
     &:last-child {
@@ -60,18 +61,21 @@ $switch-menu-item-hover-color: $main;
         content: '\f054'; // fa-chevron-right
         position: relative;
         top: 1px;
+        right: -4px;
         font-family: 'FontAwesome';
         font-size: .55rem;
     }
 
-    &:hover > .breadcrumb-link {
+    &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
+        background: $step-active-background;
         color: $step-active-color;
     }
 }
 
 .breadcrumb-link {
     position: relative;
-    padding: 0 6px 0 0;
+    padding: 4px 6px;
+    border-radius: 4px;
     color: $step-color;
     font-size: .875rem;
 
@@ -87,7 +91,7 @@ $switch-menu-item-hover-color: $main;
 
 .breadcrumb-switchable {
     > .breadcrumb-link {
-        padding: 0 (16px + 4px) 0 0;
+        padding: 4px 20px 4px 6px;
 
         &::after {
             content: '\f0d7'; // fa-caret-down
@@ -95,16 +99,16 @@ $switch-menu-item-hover-color: $main;
             z-index: 1;
             right: 8px;
             transition: color $step-transition-duration;
+            opacity: .5;
             font-family: 'FontAwesome';
             font-size: .625rem;
         }
     }
 
     &:hover {
-        > .breadcrumb-switch-menu {
+        > .breadcrumb-switch-menu-container {
             transform: translateY(0);
             opacity: 1;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
             pointer-events: auto;
         }
 
@@ -114,25 +118,25 @@ $switch-menu-item-hover-color: $main;
     }
 }
 
-.breadcrumb-switch-menu {
+.breadcrumb-switch-menu-container {
     position: absolute;
     z-index: 1000;
-    top: 1rem;
+    top: 24px;
     left: 0;
     min-width: 100%;
-    padding: 0;
+    max-width: 350px;
+    padding: 6px 0 0;
     transform: translateY(-10px);
     transition: opacity $step-transition-duration,
-        transform $step-transition-duration,
-        box-shadow $step-transition-duration;
-    border: 1px solid $switch-menu-border;
-    border-top: 0;
-    border-radius: 0 0 3px 3px;
+        transform $step-transition-duration;
     opacity: 0;
-    background: $switch-menu-background;
-    box-shadow: none;
-    font-weight: normal;
     pointer-events: none;
+}
+
+.breadcrumb-switch-menu {
+    border-radius: 4px;
+    background: $switch-menu-background;
+    box-shadow: 0 8px 15px -5px transparentize($sidebar-background, .8);
 }
 
 .breadcrumb-dropdown-item {
@@ -142,7 +146,7 @@ $switch-menu-item-hover-color: $main;
     }
 
     &:last-child > .breadcrumb-dropdown-link {
-        border-radius: 0 0 3px 3px;
+        border-radius: 0 0 4px 4px;
     }
 }
 
@@ -151,8 +155,9 @@ $switch-menu-item-hover-color: $main;
     padding: $tlp-small-spacing $tlp-medium-spacing;
     overflow: hidden;
     color: $switch-menu-item-color;
-    font-size: 14px;
-    line-height: 14px;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 
