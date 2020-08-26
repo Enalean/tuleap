@@ -20,12 +20,12 @@
 import { createPopover } from "tlp";
 
 export function init() {
-    const project_privacy_element = document.querySelector(".breadcrumb-project-privacy-icon");
+    const project_privacy_element = document.getElementById("breadcrumb-project-privacy-icon");
     if (!project_privacy_element) {
         return;
     }
 
-    project_privacy_element.parentElement.title = "";
+    project_privacy_element.title = "";
 
     const popover_content = document.getElementById("current-project-nav-title-popover");
 

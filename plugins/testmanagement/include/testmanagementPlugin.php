@@ -24,6 +24,8 @@ use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -400,7 +402,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $step_field_usage_detector,
             $this->getTrackerChecker(),
             new VisitRecorder(new RecentlyVisitedDao()),
-            new Valid_UInt()
+            new Valid_UInt(),
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
         );
 
         return new LegacyRoutingController(

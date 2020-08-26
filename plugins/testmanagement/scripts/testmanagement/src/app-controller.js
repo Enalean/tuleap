@@ -43,12 +43,11 @@ function TestManagementCtrl(
 
         const project_public_name = testmanagement_init_data.projectPublicName;
         const project_url = testmanagement_init_data.projectUrl;
-        const privacy = JSON.parse(testmanagement_init_data.privacy);
 
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
 
-        moveBreadCrumbs(project_public_name, project_url, privacy);
+        moveBreadCrumbs(project_public_name, project_url);
     };
 }

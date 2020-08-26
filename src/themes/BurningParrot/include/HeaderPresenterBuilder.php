@@ -84,7 +84,8 @@ class HeaderPresenterBuilder
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
         NewDropdownPresenter $new_dropdown_presenter,
-        ?ProjectPrivacyPresenter $privacy
+        ?ProjectPrivacyPresenter $privacy,
+        array $project_flags
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -122,6 +123,7 @@ class HeaderPresenterBuilder
             $open_graph,
             $help_dropdown_presenter,
             $privacy,
+            $project_flags
         );
     }
 

@@ -19,27 +19,11 @@
 
 <template>
     <div class="breadcrumb-container">
-        <div class="breadcrumb-privacy-icon-container">
-            <span id="breadcrumb-project-privacy-icon">
-                <i
-                    class="fa breadcrumb-project-privacy-icon"
-                    v-bind:class="project_privacy_icon"
-                    ref="popover_icon"
-                ></i>
-            </span>
-
-            <section class="tlp-popover" ref="popover_content">
-                <div class="tlp-popover-arrow"></div>
-                <div class="tlp-popover-header">
-                    <h1 class="tlp-popover-title">{{ project_public_name }}</h1>
-                </div>
-                <div class="tlp-popover-body">
-                    <p class="current-project-nav-title-popover-description">
-                        {{ privacy.project_privacy }}
-                    </p>
-                </div>
-            </section>
-        </div>
+        <breadcrumb-privacy
+            v-bind:project_flags="project_flags"
+            v-bind:privacy="privacy"
+            v-bind:project_public_name="project_public_name"
+        />
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="project_url" class="breadcrumb-link">
@@ -105,12 +89,11 @@
 import { mapState } from "vuex";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
-import { getProjectPrivacyIcon } from "../../../../../../src/scripts/project/privacy/project-privacy-helper";
-import { createPopover } from "tlp";
+import BreadcrumbPrivacy from "../../../../../../src/scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue";
 
 export default {
     name: "DocumentBreadcrumb",
-    components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument },
+    components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument, BreadcrumbPrivacy },
     data() {
         return {
             max_nb_to_display: 5,
@@ -127,6 +110,7 @@ export default {
             "currently_previewed_item",
             "current_folder",
             "privacy",
+            "project_flags",
         ]),
         document_tree_title() {
             return this.$gettext("Project documentation");
@@ -165,15 +149,6 @@ export default {
         is_current_document_displayed() {
             return this.currently_previewed_item !== null && this.current_folder !== null;
         },
-        project_privacy_icon() {
-            return getProjectPrivacyIcon(this.privacy);
-        },
-    },
-    mounted() {
-        createPopover(this.$refs.popover_icon, this.$refs.popover_content, {
-            anchor: this.$refs.popover_icon,
-            placement: "bottom-start",
-        });
     },
 };
 </script>

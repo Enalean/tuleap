@@ -62,6 +62,7 @@ function initApp(
         user_locale,
         relative_dates_display,
         privacy,
+        project_flags,
     ]
 ) {
     state.user_id = user_id;
@@ -85,6 +86,7 @@ function initApp(
     state.user_locale = user_locale;
     state.relative_dates_display = relative_dates_display;
     state.privacy = privacy;
+    state.project_flags = project_flags;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {

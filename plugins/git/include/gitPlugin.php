@@ -150,6 +150,8 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentat
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\ProjectAccessChecker;
@@ -2541,10 +2543,11 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getGitPermissionsManager(),
                 $this->getGitDao(),
                 UserManager::instance(),
-                EventManager::instance()
+                EventManager::instance(),
+                new ProjectFlagsBuilder(new ProjectFlagsDao()),
             ),
             $this->getIncludeAssets(),
-            EventManager::instance()
+            EventManager::instance(),
         );
     }
 

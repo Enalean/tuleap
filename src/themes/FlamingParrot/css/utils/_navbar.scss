@@ -424,10 +424,21 @@ $nav-dropdown-content-border-radius: 3px;
 }
 
 .current-project-nav-popover-privacy {
-    top: 26px !important; // Override bootstrap inline position
+    top: 48px !important; // Override bootstrap inline position
+    left: 0 !important; // Override bootstrap inline position
+    min-width: 400px;
 
     > .arrow {
-        left: 70px;
+        left: 62px;
+    }
+}
+
+:not(.breadcrumb-project-privacy-icon-with-flags) + .current-project-nav-popover-privacy {
+    top: 26px !important; // Override bootstrap inline position
+    left: -22px !important; // Override bootstrap inline position
+
+    > .arrow {
+        left: 30px;
     }
 }
 
@@ -438,27 +449,27 @@ $nav-dropdown-content-border-radius: 3px;
     border-radius: 0;
     background: transparent;
     color: #333333;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: normal;
     letter-spacing: normal;
     text-transform: none;
 
     > h3 {
         margin: 0;
-        padding: 10px;
+        padding: $tlp-small-spacing;
         border-top-left-radius: $nav-dropdown-content-border-radius;
         border-top-right-radius: $nav-dropdown-content-border-radius;
         background-color: $main;
         color: #ffffff;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: normal;
         letter-spacing: normal;
-        line-height: 20px;
+        line-height: 1.25rem;
         cursor: initial;
     }
 
     > .popover-content {
-        padding: 20px;
+        padding: $tlp-medium-spacing;
         border-bottom-right-radius: $nav-dropdown-content-border-radius;
         border-bottom-left-radius: $nav-dropdown-content-border-radius;
         background: #ffffff;
@@ -471,8 +482,8 @@ $nav-dropdown-content-border-radius: 3px;
 
 .current-project-nav-flag-popover-flag {
     position: relative;
-    margin: 0 0 20px;
-    padding: 0 0 0 20px;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 $tlp-medium-spacing;
     color: $main;
 
     &:last-child {
@@ -493,6 +504,7 @@ $nav-dropdown-content-border-radius: 3px;
 
 .current-project-nav-flag-popover-content-title {
     margin: 0 0 10px;
+    border: 0;
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
@@ -507,16 +519,21 @@ $nav-dropdown-content-border-radius: 3px;
     color: #747474;
 }
 
+.current-project-nav-flag-popover-content-description {
+    margin: 0;
+    line-height: 1.5rem;
+}
+
+.current-project-nav-flag-popover-separator {
+    margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+}
+
 .current-project-nav-flag-labels {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin: 0 0 0 7px;
-
-    @media screen and (max-width: 900px) {
-        display: none;
-    }
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .current-project-nav-flag-label {

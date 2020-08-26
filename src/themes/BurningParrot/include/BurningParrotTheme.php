@@ -116,11 +116,14 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(array $params)
     {
-        $project = null;
-        $privacy = null;
+        $project       = null;
+        $privacy       = null;
+        $project_flags = [];
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
-            $privacy = ProjectPrivacyPresenter::fromProject($project);
+
+            $privacy       = ProjectPrivacyPresenter::fromProject($project);
+            $project_flags = $this->project_flags_builder->buildProjectFlags($project);
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
                 $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
@@ -187,6 +190,7 @@ class BurningParrotTheme extends BaseLayout
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($current_user, $project),
             $privacy,
+            $project_flags
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

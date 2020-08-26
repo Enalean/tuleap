@@ -118,6 +118,21 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $privacy;
+    /**
+     * @var array
+     * @psalm-readonly
+     */
+    public $project_flags;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_project_flags;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $json_encoded_project_flags;
 
     public function __construct(
         PFUser $user,
@@ -136,7 +151,8 @@ class HeaderPresenter
         $motd,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
-        ?ProjectPrivacyPresenter $privacy
+        ?ProjectPrivacyPresenter $privacy,
+        array $project_flags
     ) {
         $this->date_time_format                      = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone                         = TimezoneRetriever::getUserTimezone($user);
@@ -160,6 +176,9 @@ class HeaderPresenter
         $this->help_dropdown                         = $help_dropdown_presenter;
         $this->user_has_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->privacy                               = $privacy ?: false;
+        $this->project_flags                         = $project_flags;
+        $this->has_project_flags                     = count($project_flags) > 0;
+        $this->json_encoded_project_flags            = json_encode($project_flags, JSON_THROW_ON_ERROR);
 
         $this->buildFeedbacks($feedback_logs);
 

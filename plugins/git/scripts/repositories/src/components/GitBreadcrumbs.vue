@@ -19,27 +19,11 @@
 
 <template>
     <div class="breadcrumb-container">
-        <div class="breadcrumb-privacy-icon-container">
-            <span id="breadcrumb-project-privacy-icon">
-                <i
-                    class="fa breadcrumb-project-privacy-icon"
-                    v-bind:class="project_privacy_icon"
-                    ref="popover_icon"
-                ></i>
-            </span>
-
-            <section class="tlp-popover" ref="popover_content">
-                <div class="tlp-popover-arrow"></div>
-                <div class="tlp-popover-header">
-                    <h1 class="tlp-popover-title">{{ project_public_name }}</h1>
-                </div>
-                <div class="tlp-popover-body">
-                    <p class="current-project-nav-title-popover-description">
-                        {{ privacy.project_privacy }}
-                    </p>
-                </div>
-            </section>
-        </div>
+        <breadcrumb-privacy
+            v-bind:project_flags="project_flags"
+            v-bind:privacy="privacy"
+            v-bind:project_public_name="project_public_name"
+        />
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="project_url" class="breadcrumb-link">
@@ -89,13 +73,14 @@ import {
     getProjectUrl,
     getProjectPublicName,
     getPrivacy,
+    getProjectFlags,
 } from "../breadcrumb-presenter.js";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
-import { getProjectPrivacyIcon } from "../../../../../../src/scripts/project/privacy/project-privacy-helper";
-import { createPopover } from "tlp";
+import BreadcrumbPrivacy from "../../../../../../src/scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue";
 
 export default {
     name: "GitBreadcrumbs",
+    components: { BreadcrumbPrivacy },
     computed: {
         repositories_title() {
             return this.$gettext("Repository list");
@@ -127,15 +112,9 @@ export default {
         privacy() {
             return getPrivacy();
         },
-        project_privacy_icon() {
-            return getProjectPrivacyIcon(this.privacy);
+        project_flags() {
+            return getProjectFlags();
         },
-    },
-    mounted() {
-        createPopover(this.$refs.popover_icon, this.$refs.popover_content, {
-            anchor: this.$refs.popover_icon,
-            placement: "bottom-start",
-        });
     },
 };
 </script>

@@ -32,6 +32,7 @@ use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -56,17 +57,23 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      * @var HistoryEnforcementSettingsBuilder
      */
     private $history_enforcement_settings_builder;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     public function __construct(
         DocumentTreeProjectExtractor $project_extractor,
         \DocmanPluginInfo $docman_plugin_info,
         FileDownloadLimitsBuilder $file_download_limits_builder,
-        HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder
+        HistoryEnforcementSettingsBuilder $history_enforcement_settings_builder,
+        ProjectFlagsBuilder $project_flags_builder
     ) {
         $this->project_extractor                    = $project_extractor;
         $this->docman_plugin_info                   = $docman_plugin_info;
         $this->file_download_limits_builder         = $file_download_limits_builder;
         $this->history_enforcement_settings_builder = $history_enforcement_settings_builder;
+        $this->project_flags_builder                = $project_flags_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -97,7 +104,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
                 new CSRFSynchronizerToken('plugin-document'),
                 $this->file_download_limits_builder->build(),
-                $this->history_enforcement_settings_builder->build()
+                $this->history_enforcement_settings_builder->build(),
+                $this->project_flags_builder->buildProjectFlags($project),
             )
         );
 

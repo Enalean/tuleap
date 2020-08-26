@@ -85,6 +85,21 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $privacy;
+    /**
+     * @var array
+     * @psalm-readonly
+     */
+    public $project_flags;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_project_flags;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $json_encoded_project_flags;
 
     public function __construct(
         array $breadcrumbs,
@@ -99,6 +114,7 @@ class FlamingParrot_ContainerPresenter
         ?BannerDisplay $banner,
         PFUser $current_user,
         ?\Tuleap\Project\ProjectPrivacyPresenter $privacy,
+        array $project_flags,
         ?Project $project = null
     ) {
         $this->breadcrumbs             = $breadcrumbs;
@@ -116,6 +132,10 @@ class FlamingParrot_ContainerPresenter
         $this->version             = $version;
         $this->sidebar_collapsable = $sidebar_collapsable;
         $this->privacy             = $privacy;
+        $this->project_flags       = $project_flags;
+        $this->has_project_flags   = count($project_flags) > 0;
+
+        $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
 
         if ($banner !== null) {
             $purifier                      = Codendi_HTMLPurifier::instance();

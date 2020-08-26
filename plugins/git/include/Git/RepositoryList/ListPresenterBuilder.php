@@ -26,6 +26,7 @@ use GitPermissionsManager;
 use PFUser;
 use Project;
 use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -47,13 +48,23 @@ class ListPresenterBuilder
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
-    public function __construct(GitPermissionsManager $git_permissions_manager, GitDao $dao, UserManager $user_manager, EventManager $event_manager)
-    {
+    public function __construct(
+        GitPermissionsManager $git_permissions_manager,
+        GitDao $dao,
+        UserManager $user_manager,
+        EventManager $event_manager,
+        ProjectFlagsBuilder $project_flags_builder
+    ) {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->dao                     = $dao;
         $this->user_manager            = $user_manager;
-        $this->event_manager            = $event_manager;
+        $this->event_manager           = $event_manager;
+        $this->project_flags_builder   = $project_flags_builder;
     }
 
     public function build(Project $project, PFUser $current_user)
@@ -66,7 +77,8 @@ class ListPresenterBuilder
             $project,
             $this->git_permissions_manager->userIsGitAdmin($current_user, $project),
             $this->getRepositoriesOwnersRepresentations($project),
-            $event->getExternalPluginsInfos()
+            $event->getExternalPluginsInfos(),
+            $this->project_flags_builder->buildProjectFlags($project),
         );
     }
 

@@ -212,11 +212,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin: 0 0 0 7px;
-
-    @media screen and (max-width: 900px) {
-        display: none;
-    }
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .current-project-nav-flag-label {
@@ -255,6 +251,11 @@
             fill: $tlp-theme-color;
         }
     }
+}
+
+.current-project-nav-flag-popover-separator {
+    margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+    border-top-width: 1px;
 }
 
 .current-project-nav-flag-popover-content-title {

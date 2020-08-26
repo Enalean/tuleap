@@ -111,6 +111,11 @@ class DocumentTreePresenter
      * @psalm-readonly
      */
     public $privacy;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $project_flags;
 
     public function __construct(
         \Project $project,
@@ -121,7 +126,8 @@ class DocumentTreePresenter
         bool $only_siteadmin_can_delete_option,
         CSRFSynchronizerToken $csrf,
         FileDownloadLimits $file_download_limits,
-        HistoryEnforcementSettings $history_settings
+        HistoryEnforcementSettings $history_settings,
+        array $project_flags
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();
@@ -143,9 +149,8 @@ class DocumentTreePresenter
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
         $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
         $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
-        $this->privacy                            = json_encode(
-            ProjectPrivacyPresenter::fromProject($project),
-            JSON_THROW_ON_ERROR
-        );
+
+        $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
     }
 }

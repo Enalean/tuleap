@@ -1,46 +1,5 @@
 <div class="breadcrumb-container {{# has_only_one_breadcrumb }}breadcrumb-with-only-one-item{{/ has_only_one_breadcrumb }}">
-    {{# privacy }}
-        <div class="breadcrumb-privacy-icon-container">
-            <span
-               id="breadcrumb-project-privacy-icon"
-               title="{{ project_name }}"
-               data-content="{{ project_privacy }}"
-            >
-                {{# are_restricted_users_allowed }}
-                    {{# project_is_public }}
-                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_public }}
-                    {{# project_is_public_incl_restricted }}
-                        <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_public_incl_restricted }}
-                    {{# project_is_private }}
-                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_private }}
-                    {{# project_is_private_incl_restricted }}
-                        <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_private_incl_restricted }}
-                {{/ are_restricted_users_allowed }}
-                {{^ are_restricted_users_allowed }}
-                    {{# project_is_public }}
-                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_public }}
-                    {{^ project_is_public }}
-                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
-                    {{/ project_is_public }}
-                {{/ are_restricted_users_allowed }}
-            </span>
-
-            <section class="tlp-popover" id="current-project-nav-title-popover">
-                <div class="tlp-popover-arrow"></div>
-                <div class="tlp-popover-header">
-                    <h1 class="tlp-popover-title">{{ project_name }}</h1>
-                </div>
-                <div class="tlp-popover-body">
-                    <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
-                </div>
-            </section>
-        </div>
-    {{/ privacy }}
+    {{> breadcrumbs/breadcrumbs-privacy }}
     <nav class="breadcrumb">
         {{# breadcrumbs }}
             {{^ has_sub_items }}

@@ -51,13 +51,19 @@ class GitRepositoryListPresenter
      * @psalm-readonly
      */
     public $privacy;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $project_flags;
 
     public function __construct(
         \PFUser $current_user,
         \Project $project,
         $is_git_administrator,
         array $repositories_owners,
-        array $external_plugins
+        array $external_plugins,
+        array $project_flags
     ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
@@ -85,6 +91,7 @@ class GitRepositoryListPresenter
         $this->project_url         = $project->getUrl();
         $this->project_public_name = $project->getPublicName();
 
-        $this->privacy = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->privacy       = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
     }
 }

@@ -35,10 +35,34 @@ document.addEventListener("DOMContentLoaded", () => {
         { title: project_privacy_element.title }
     );
 
+    const svg = project_privacy_element.querySelector(".tuleap-svg-project-shield");
+    const shield_icon_html = svg ? new XMLSerializer().serializeToString(svg) : "";
+
+    const project_flags = JSON.parse(project_privacy_element.dataset.projectFlags);
+
     const content = render(
-        '<p class="current-project-nav-flag-popover-content-description">{{ content }}</p>',
+        `<p class="current-project-nav-flag-popover-content-description">{{ content }}</p>
+            {{# has_project_flags }}
+                <hr class="current-project-nav-flag-popover-separator">
+                {{# project_flags }}
+                    <div class="current-project-nav-flag-popover-flag">
+                        ${shield_icon_html}
+                        <h2 class="current-project-nav-flag-popover-content-title">
+                            {{ label }}
+                        </h2>
+                        {{# description }}
+                            <p class="current-project-nav-flag-popover-content-description">
+                                {{ description }}
+                            </p>
+                        {{/ description }}
+                    </div>
+                {{/ project_flags }}
+            {{/ has_project_flags }}
+            `,
         {
             content: project_privacy_element.dataset.content,
+            project_flags,
+            has_project_flags: project_flags.length > 0,
         }
     );
 
