@@ -479,12 +479,8 @@ function KanbanCtrl(
         return SharedPropertiesService.getUserIsAdmin();
     }
 
-    function createItemInPlaceInBacklog(label) {
-        var item = {
-            label: label,
-            updating: true,
-            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
-        };
+    function createItemInPlaceInBacklog(item) {
+        item.is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
 
         self.backlog.content.push(item);
         self.backlog.filtered_content.push(item);
@@ -497,12 +493,8 @@ function KanbanCtrl(
         }, reload);
     }
 
-    function createItemInPlace(label, column) {
-        var item = {
-            label: label,
-            updating: true,
-            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
-        };
+    function createItemInPlace(item, column) {
+        item.is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
 
         column.content.push(item);
         column.filtered_content.push(item);

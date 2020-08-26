@@ -396,7 +396,12 @@ describe("KanbanCtrl -", function () {
                 filtered_content: [{ id: 69 }],
             };
 
-            KanbanCtrl.createItemInPlace("photothermic", column);
+            let item = {
+                label: "photothermic",
+                updating: true,
+            };
+
+            KanbanCtrl.createItemInPlace(item, column);
             expect(column.content).toEqual([
                 { id: 97 },
                 { id: 69 },
@@ -443,7 +448,12 @@ describe("KanbanCtrl -", function () {
             KanbanCtrl.backlog.content = [{ id: 91 }, { id: 85 }];
             KanbanCtrl.backlog.filtered_content = [{ id: 91 }];
 
-            KanbanCtrl.createItemInPlaceInBacklog("unbeautifully");
+            const item = {
+                label: "unbeautifully",
+                updating: true,
+            };
+
+            KanbanCtrl.createItemInPlaceInBacklog(item);
             expect(KanbanCtrl.backlog.content).toEqual([
                 { id: 91 },
                 { id: 85 },
