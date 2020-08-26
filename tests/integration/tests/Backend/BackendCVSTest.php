@@ -313,12 +313,20 @@ final class BackendCVSTest extends TestCase
 
         // Test loginfo file
         $file = file_get_contents($repoPath . "/CVSROOT/loginfo");
-        $this->assertSame(preg_match('#^ALL \(' . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), 1, "CVS loginfo log_accum should use new project name");
+        $this->assertSame(
+            1,
+            preg_match('#^ALL sudo -u codendiadm -E ' . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T foobar -C foobar -s %{sVv} >/dev/null 2>&1$#m", $file),
+            "CVS loginfo log_accum should use new project name"
+        );
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/loginfo');
 
-        // Test loginfo file
+        // Test commitinfo file
         $file = file_get_contents($repoPath . "/CVSROOT/commitinfo");
-        $this->assertSame(preg_match('#^ALL ' . ForgeConfig::get('codendi_bin_prefix') . "/commit_prep -T foobar -r$#m", $file), 1, "CVS commitinfo should use new project name");
+        $this->assertSame(
+            1,
+            preg_match('#^ALL ' . ForgeConfig::get('codendi_bin_prefix') . "/commit_prep -T foobar -r$#m", $file),
+            "CVS commitinfo should use new project name"
+        );
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/commitinfo');
     }
 
@@ -352,7 +360,11 @@ final class BackendCVSTest extends TestCase
         // Test loginfo file
         $file = file_get_contents($cvsdir . "/CVSROOT/loginfo");
         $this->assertSame(preg_match('#^DEFAULT chgrp -f -R\s*foobar ' . $cvsdir . '$#m', $file), 1, "CVS loginfo should use new project name");
-        $this->assertSame(preg_match('#^ALL ' . ForgeConfig::get('codendi_bin_prefix') . '/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), 1, "CVS loginfo should use new project name");
+        $this->assertSame(
+            1,
+            preg_match('#^ALL sudo -u codendiadm -E ' . ForgeConfig::get('codendi_bin_prefix') . '/log_accum -T foobar -C foobar -s %{sVv}$#m', $file),
+            "CVS loginfo should use new project name"
+        );
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/loginfo');
     }
 

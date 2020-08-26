@@ -1,7 +1,7 @@
 #!/usr/bin/perl -U
 # -*-Perl-*-
 #
-# 
+#
 # Perl filter to handle the log messages from the checkin of files in
 # a directory.  This script will group the lists of files by log
 # message, and mail a single consolidated log message at the end of
@@ -313,7 +313,7 @@ sub db_checkins_add {
 
   my ($dir, $i, $who, $repo);
   local $when = localtime(time);
-  
+
   for ($i = 0; $i <= $#checkins; $i ++) {
      if ($checkins[$i] =~ /\/$/)
 	    {
@@ -605,7 +605,7 @@ sub extract_xrefs {
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
     my $req = POST "$codendi_http_srv/api/reference/extractCross.php",
       [ group_id => "$group_id", text => "$text", rev_id=>"$commit_id", login=>"$login", type=>"$cvstype" ];
-   
+
     my $response = $ua->request($req);
     if ($response->is_success) {
       my $desc="";
@@ -639,7 +639,7 @@ $debug = 0;
 $id = getpgrp();		# note, you *must* use a shell which does setpgrp()
 $state = $STATE_NONE;
 local ($login, $gecos);
-$login = $ENV{'USER'};
+$login = $ENV{'SUDO_USER'};
 if (! $login)
 {
     ($login, $gecos) = (getpwuid ($<))[0,6];
@@ -720,7 +720,7 @@ while (@ARGV) {
 	$do_viewvc = 1;
 	$viewvc_name = shift @ARGV
 	    if ($#ARGV >= 0 && $ARGV[0] !~ /^-/);
-    } elsif ($arg eq '-U') { 
+    } elsif ($arg eq '-U') {
 	my $OLD_VIEWVC_URL = shift @ARGV; #DEPRACATED: URL is now computed
     } elsif ($arg eq '-D') {
 	$do_diffs = 2;
@@ -885,12 +885,12 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
     if ($db_track) {
       $commit_id = db_get_commit($debug);
       if ($debug) {
-	
+
 	print STDERR "desc: ", join ('\n', @text), "\n";
       }
       @descs = split("\n", "\tDirectory\n\n".$files[0]."\n\n\tadded to repository.");
-      
-      &db_add_record($commit_id, $ENV{'USER'}, $cvsroot, '', $files[0], '.', 'a', '', '', 'NULL', 'NULL', @descs);
+
+      &db_add_record($commit_id, $ENV{'SUDO_USER'}, $cvsroot, '', $files[0], '.', 'a', '', '', 'NULL', 'NULL', @descs);
     }
 
     if ($mailto) {
@@ -940,7 +940,7 @@ while (<STDIN>) {
       }
     }
 
-    
+
     if ($state == $STATE_ADDED)   {
       push(@added_files,   split);
       if ($branches{'a,'.$branch}) {
@@ -951,7 +951,7 @@ while (<STDIN>) {
       }
     }
 
-    if ($state == $STATE_REMOVED) { 
+    if ($state == $STATE_REMOVED) {
       push(@removed_files, split);
       if ($branches{'r,'.$branch}) {
 	$branched = $branches{'c,'.$branch}.' '.$_;
@@ -1009,7 +1009,7 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
     if ($commitlog) {
 	&write_commitlog($commitlog, @text);
     }
-    
+
     $db_track = 0;
     $db_events_list = 'NULL';
     if ($codendidb) {
@@ -1024,10 +1024,10 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
     if ($db_track) {
       $commit_id = db_get_commit($debug);
       if ($debug) {
-	
+
 	print STDERR "desc: ", join ('\n', @text), "\n";
       }
-      &db_add_record($commit_id, $ENV{'USER'}, $cvsroot, '', $modulename, '.', 'a', '', '', 'NULL', 'NULL', @text);
+      &db_add_record($commit_id, $ENV{'SUDO_USER'}, $cvsroot, '', $modulename, '.', 'a', '', '', 'NULL', 'NULL', @text);
     }
 
     exit 0;
@@ -1049,7 +1049,7 @@ if ($codendidb) {
   }
   $codendidb = $codendidb && (($db_events_list != 'NULL') || $db_track);
 }
-if ($codendidb) {  
+if ($codendidb) {
   if ($debug) {
     local @keys = keys %branches;
     print STDERR $#keys , " found branches\n";
@@ -1282,7 +1282,7 @@ if ($debug) {
   print STDERR "mailto: ", $mailto, "\n";
 }
 if ($mailto) {
-  
+
   $subject_txt = &compile_subject(@subject_files);
 
   # Write to the commitlog file

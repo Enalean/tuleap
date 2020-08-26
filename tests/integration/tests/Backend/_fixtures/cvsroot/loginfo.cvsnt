@@ -26,5 +26,5 @@
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 DEFAULT chgrp -f -R  %unix_group_name% %cvs_dir%
 # !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)
-ALL %codendi_bin_prefix%/log_accum -T %unix_group_name% -C %unix_group_name% -s %{sVv}
+ALL sudo -u codendiadm -E %codendi_bin_prefix%/log_accum -T %unix_group_name% -C %unix_group_name% -s %{sVv}
 # END OF NEEDED CODENDI BLOCK

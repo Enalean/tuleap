@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # -*-Perl-*-
 #
-# 
+#
 #
 # Perl filter to handle pre-commit checking of files.  This program
 # records the last directory where commits will be taking place for
@@ -79,7 +79,7 @@ $BadVersion = "
 #
 
 sub cleanup_old_files {
-  $username=`/usr/bin/whoami`;
+  $username=$ENV{'SUDO_USER'};
   chomp $username;
   # get list of files older than one hour that belong to me and that contain ".lastdir."
   @old_files=`find $TMPDIR -name "*.lastdir.*" -amin +60 -user $username`;
@@ -163,7 +163,7 @@ sub check_version {
 }
 
 #
-#	Main Body	
+#	Main Body
 #
 
 cleanup_old_files();

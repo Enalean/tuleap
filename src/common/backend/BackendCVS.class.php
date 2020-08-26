@@ -245,9 +245,9 @@ class BackendCVS extends Backend
             $file_array = file($filename);
             if (! in_array($this->block_marker_start, $file_array)) {
                 if ($this->useCVSNT()) {
-                    $command = "ALL " . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv}";
+                    $command = "ALL sudo -u codendiadm -E " . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv}";
                 } else {
-                    $command = "ALL (" . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv})>/dev/null 2>&1";
+                    $command = "ALL sudo -u codendiadm -E " . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv} >/dev/null 2>&1";
                 }
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, $command);
