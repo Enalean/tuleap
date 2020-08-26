@@ -25,7 +25,11 @@ import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
 describe("DocumentBreadcrumb", () => {
     let store_options, state, component_options, store;
     beforeEach(() => {
-        state = {};
+        state = {
+            privacy: {
+                are_restricted_users_allowed: false,
+            },
+        };
         store_options = {
             state,
         };

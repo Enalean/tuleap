@@ -29,10 +29,15 @@ $switch-menu-item-color: $tlp-theme-color;
 $switch-menu-item-hover-background: $tlp-ui-border-light;
 $switch-menu-item-hover-color: $tlp-theme-color;
 
+.breadcrumb-container {
+    display: flex;
+    align-items: baseline;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+}
+
 .breadcrumb {
     display: flex;
     flex-wrap: wrap;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
     font-weight: 600;
 }
 
@@ -180,7 +185,14 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     }
 }
 
+.breadcrumb-project-privacy-icon {
+    margin: 0 ($tlp-small-spacing / 2) 0 0;
+    color: $step-color;
+    font-size: 16px;
+}
+
 body:not(.sidebar-collapsed) {
+    .breadcrumb-project-privacy-icon,
     .breadcrumb-with-only-one-item,
     .breadcrumb-project {
         display: none;

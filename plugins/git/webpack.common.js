@@ -44,12 +44,22 @@ const webpack_config_for_vue = {
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(true),
+        webpack_configurator.getVueLoaderPlugin(),
+    ],
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
     },

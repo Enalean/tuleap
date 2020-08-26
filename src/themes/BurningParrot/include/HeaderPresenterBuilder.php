@@ -33,6 +33,7 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
+use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 
@@ -82,7 +83,8 @@ class HeaderPresenterBuilder
         CssAssetCollection $css_assets,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
-        NewDropdownPresenter $new_dropdown_presenter
+        NewDropdownPresenter $new_dropdown_presenter,
+        ?ProjectPrivacyPresenter $privacy
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -118,7 +120,8 @@ class HeaderPresenterBuilder
             $breadcrumbs,
             $motd,
             $open_graph,
-            $help_dropdown_presenter
+            $help_dropdown_presenter,
+            $privacy,
         );
     }
 

@@ -21,28 +21,28 @@ import $ from "jquery";
 import { render } from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const project_title_element = document.getElementById("header-navbar-project-icon");
-    if (!project_title_element) {
+    const project_privacy_element = document.getElementById("breadcrumb-project-privacy-icon");
+    if (!project_privacy_element) {
         return;
     }
 
     const template = render(
-        `<div class="popover current-project-nav-popover">
+        `<div class="popover current-project-nav-popover current-project-nav-popover-privacy">
                 <div class="arrow"></div>
                 <h3>{{ title }}</h3>
                 <div class="popover-content"></div>
         </div>`,
-        { title: project_title_element.title }
+        { title: project_privacy_element.title }
     );
 
     const content = render(
         '<p class="current-project-nav-flag-popover-content-description">{{ content }}</p>',
         {
-            content: project_title_element.dataset.content,
+            content: project_privacy_element.dataset.content,
         }
     );
 
-    $(project_title_element).popover({
+    $(project_privacy_element).popover({
         placement: "bottom",
         trigger: "hover",
         html: true,

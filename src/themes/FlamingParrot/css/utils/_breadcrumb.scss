@@ -29,13 +29,19 @@ $switch-menu-item-color: $main;
 $switch-menu-item-hover-background: $light-grey;
 $switch-menu-item-hover-color: $main;
 
+.breadcrumb-container {
+    display: flex;
+    align-items: baseline;
+    padding: $tlp-medium-spacing;
+    background: $main-background;
+}
+
 .breadcrumb {
     display: flex;
     flex-wrap: wrap;
     margin: 0;
-    padding: 16px;
+    padding: 0;
     border-radius: 0;
-    background: $main-background;
     font-weight: 600;
 }
 
@@ -183,7 +189,22 @@ $switch-menu-item-hover-color: $main;
     }
 }
 
+.breadcrumb-privacy-icon-container {
+    position: relative;
+}
+
+.breadcrumb-project-privacy-icon {
+    margin: 0 ($tlp-small-spacing / 2) 0 0;
+    color: $step-color;
+    font-size: 16px;
+}
+
+#current-project-nav-title-popover {
+    display: none;
+}
+
 &:not(.sidebar-collapsed) {
+    .breadcrumb-project-privacy-icon,
     .breadcrumb-with-only-one-item,
     .breadcrumb-project {
         display: none;

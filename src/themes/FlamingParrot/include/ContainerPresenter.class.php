@@ -31,21 +31,15 @@ class FlamingParrot_ContainerPresenter
     private $toolbar;
 
     /** @var string */
-    private $project_name;
+    public $project_name;
 
     /** @var string */
-    private $project_link;
+    public $project_link;
 
     /**
      * @var ?int
      */
     public $project_id;
-
-    /** @var bool */
-    public $project_is_public;
-
-    /** @var string */
-    private $project_privacy;
 
     /** @var string */
     private $project_tabs;
@@ -63,22 +57,6 @@ class FlamingParrot_ContainerPresenter
 
     /** @var bool */
     private $sidebar_collapsable;
-    /**
-     * @var bool
-     */
-    public $are_restricted_users_allowed;
-    /**
-     * @var bool
-     */
-    public $project_is_public_incl_restricted;
-    /**
-     * @var bool
-     */
-    public $project_is_private;
-    /**
-     * @var bool
-     */
-    public $project_is_private_incl_restricted;
     /**
      * @var string
      */
@@ -102,13 +80,17 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $has_project_banner = false;
+    /**
+     * @var \Tuleap\Project\ProjectPrivacyPresenter|null
+     * @psalm-readonly
+     */
+    public $privacy;
 
     public function __construct(
         array $breadcrumbs,
         $toolbar,
         $project_name,
         $project_link,
-        $project_privacy,
         $project_tabs,
         $feedback,
         $feedback_content,
@@ -116,6 +98,7 @@ class FlamingParrot_ContainerPresenter
         $sidebar_collapsable,
         ?BannerDisplay $banner,
         PFUser $current_user,
+        ?\Tuleap\Project\ProjectPrivacyPresenter $privacy,
         ?Project $project = null
     ) {
         $this->breadcrumbs             = $breadcrumbs;
@@ -125,23 +108,14 @@ class FlamingParrot_ContainerPresenter
         $this->project_name        = $project_name;
         $this->project_link        = $project_link;
         if ($project !== null) {
-            $this->project_is_public = $project->isPublic();
-            $this->project_id        = $project->getID();
+            $this->project_id = $project->getID();
         }
-        $this->project_privacy     = $project_privacy;
         $this->project_tabs        = $project_tabs;
         $this->feedback            = $feedback;
         $this->feedback_content    = $feedback_content;
         $this->version             = $version;
         $this->sidebar_collapsable = $sidebar_collapsable;
-
-        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
-        if ($this->are_restricted_users_allowed && $project !== null) {
-            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
-            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
-            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
-        }
+        $this->privacy             = $privacy;
 
         if ($banner !== null) {
             $purifier                      = Codendi_HTMLPurifier::instance();
@@ -198,21 +172,6 @@ class FlamingParrot_ContainerPresenter
     public function copyright()
     {
         return $GLOBALS['Language']->getOverridableText('global', 'copyright');
-    }
-
-    public function projectName()
-    {
-        return $this->project_name;
-    }
-
-    public function projectLink()
-    {
-        return $this->project_link;
-    }
-
-    public function project_privacy() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return $this->project_privacy;
     }
 
     public function feedback()

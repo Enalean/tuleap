@@ -20,6 +20,8 @@
 
 namespace Tuleap\Git\RepositoryList;
 
+use Tuleap\Project\ProjectPrivacyPresenter;
+
 class GitRepositoryListPresenter
 {
     public $repositories_administration_url;
@@ -44,6 +46,11 @@ class GitRepositoryListPresenter
      * @psalm-readonly
      */
     public $project_public_name;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $privacy;
 
     public function __construct(
         \PFUser $current_user,
@@ -77,5 +84,7 @@ class GitRepositoryListPresenter
 
         $this->project_url         = $project->getUrl();
         $this->project_public_name = $project->getPublicName();
+
+        $this->privacy = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
     }
 }

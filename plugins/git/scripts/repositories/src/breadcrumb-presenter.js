@@ -24,20 +24,30 @@ export {
     getForkRepositoriesUrl,
     getProjectPublicName,
     getProjectUrl,
+    getPrivacy,
 };
 
 let administration_url,
     repository_list_url,
     fork_repositories_url,
     project_public_name,
-    project_url;
+    project_url,
+    privacy;
 
-function setBreadcrumbSettings(admin_url, repositories_url, fork_url, proj_public_name, proj_url) {
+function setBreadcrumbSettings(
+    admin_url,
+    repositories_url,
+    fork_url,
+    proj_public_name,
+    proj_url,
+    proj_privacy
+) {
     administration_url = admin_url;
     repository_list_url = repositories_url;
     fork_repositories_url = fork_url;
     project_public_name = proj_public_name;
     project_url = proj_url;
+    privacy = proj_privacy;
 }
 
 function getAdministrationUrl() {
@@ -58,4 +68,8 @@ function getProjectPublicName() {
 
 function getProjectUrl() {
     return project_url;
+}
+
+function getPrivacy() {
+    return privacy;
 }

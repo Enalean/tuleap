@@ -27,6 +27,7 @@ use DocmanPlugin;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
+use Tuleap\Project\ProjectPrivacyPresenter;
 
 class DocumentTreePresenter
 {
@@ -105,6 +106,11 @@ class DocumentTreePresenter
      * @psalm-readonly
      */
     public $project_public_name;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $privacy;
 
     public function __construct(
         \Project $project,
@@ -137,5 +143,9 @@ class DocumentTreePresenter
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
         $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
         $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        $this->privacy                            = json_encode(
+            ProjectPrivacyPresenter::fromProject($project),
+            JSON_THROW_ON_ERROR
+        );
     }
 }
