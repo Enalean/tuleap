@@ -32,6 +32,7 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectP
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
 use URLRedirect;
 use User_ForgeUserGroupPermissionsDao;
@@ -143,13 +144,8 @@ class PresenterBuilder
 
     private function displayNewAccountMenuItem()
     {
-        $display_new_user_menu_item = true;
-
-        EventManager::instance()->processEvent(
-            'display_newaccount',
-            ['allow' => &$display_new_user_menu_item]
-        );
-
-        return $display_new_user_menu_item;
+        $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
+        return $registration_guard->isRegistrationPossible();
     }
 }

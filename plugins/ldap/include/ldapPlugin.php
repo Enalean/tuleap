@@ -49,6 +49,7 @@ use Tuleap\SystemEvent\RootDailyStartEvent;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\AccountInformationPresenter;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
+use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
@@ -80,8 +81,7 @@ class LdapPlugin extends Plugin
     public function getHooksAndCallbacks()
     {
         // Layout
-        $this->addHook('display_newaccount', 'forbidIfLdapAuth', false);
-        $this->addHook('before_register', 'before_register', false);
+        $this->addHook(RegistrationGuardEvent::NAME);
 
         // Search
         $this->addHook(Event::SEARCH_TYPE);
@@ -570,10 +570,10 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function before_register($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registrationGuardEvent(RegistrationGuardEvent $event): void
     {
         if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
-            util_return_to('/account/login.php');
+            $event->disableRegistration();
         }
     }
 

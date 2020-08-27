@@ -37,6 +37,7 @@ use Tuleap\News\NewsDao;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Theme\BurningParrot\HomePagePresenter;
+use Tuleap\User\Account\RegistrationGuardEvent;
 use User_LoginPresenterBuilder;
 use UserManager;
 
@@ -80,8 +81,9 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
         $event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, []);
 
-        $display_new_account_button  = true;
-        $event_manager->processEvent('display_newaccount', ['allow' => &$display_new_account_button]);
+        $registration_guard = $event_manager->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
+
         $login_url = '';
         $event_manager->processEvent(\Event::GET_LOGIN_URL, ['return_to' => '', 'login_url' => &$login_url]);
 
@@ -93,7 +95,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
         $layout->header($header_params);
         $this->displayStandardHomepage(
-            $display_new_account_button,
+            $registration_guard->isRegistrationPossible(),
             $login_url,
             $request->isSecure()
         );

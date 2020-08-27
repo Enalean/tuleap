@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\Account\RegistrationGuardEvent;
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
@@ -38,11 +39,12 @@ if ($page == "admin_creation") {
     $request->checkUserIsSuperUser();
 }
 
-$is_register_page_accessible = true;
 $event_manager = EventManager::instance();
-$event_manager->processEvent('display_newaccount', ['allow' => &$is_register_page_accessible]);
 
-if (! $request->getCurrentUser()->isSuperUser() && ! $is_register_page_accessible) {
+$registration_guard = $event_manager->dispatch(new RegistrationGuardEvent());
+assert($registration_guard instanceof RegistrationGuardEvent);
+
+if (! $request->getCurrentUser()->isSuperUser() && ! $registration_guard->isRegistrationPossible()) {
     exit_error(
         $GLOBALS['Language']->getText('include_session', 'insufficient_access'),
         $GLOBALS['Language']->getText('include_session', 'no_access')
@@ -255,8 +257,7 @@ function display_account_form(bool $is_password_needed, $register_error, array $
 
 $is_password_needed = true;
 if ($page !== 'admin_creation') {
-    $em = EventManager::instance();
-    $em->processEvent(
+    $event_manager->processEvent(
         'before_register',
         [
             'request'                      => $request,
