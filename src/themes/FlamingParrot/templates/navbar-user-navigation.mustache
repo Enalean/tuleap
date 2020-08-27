@@ -29,15 +29,6 @@
     {{/ new_dropdown }}
 
     {{# user_is_logged_in }}
-        {{# user_actions }}
-            <li>
-                <a {{# id }}id="user-action-{{ id }}"{{/ id }} href="{{ href }}">
-                    {{# icon }}<i class="{{ icon }}"></i>{{/ icon }}
-                    {{ label }}
-                </a>
-                {{{ purified_content }}}
-            </li>
-        {{/ user_actions }}
         {{> navbar-user-logged-in }}
     {{/ user_is_logged_in }}
     {{^ user_is_logged_in }}

@@ -283,7 +283,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->displayNewAccount(),
             $this->getMOTD(),
             $navbar_items_builder->buildNavBarItemPresentersCollection(),
-            $this->getUserActions($current_user),
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
@@ -410,20 +409,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->displayFooterJavascriptElements();
 
         $this->render('end-of-page', null);
-    }
-
-    private function getUserActions(PFUser $current_user)
-    {
-        $user_actions = [];
-        EventManager::instance()->processEvent(
-            Event::USER_ACTIONS,
-            [
-                'user'    => $current_user,
-                'actions' => &$user_actions
-            ]
-        );
-
-        return $user_actions;
     }
 
     protected function includeJavascriptPolyfills()
