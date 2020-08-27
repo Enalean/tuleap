@@ -31,7 +31,6 @@ import {
     buildRegenerationReplaceBallback,
     hiddenInputReplaceCallback,
 } from "./replacers";
-import "../../../../src/scripts/tuleap/custom-elements/custom-elements-polyfill-ie11";
 import "../../../../src/scripts/tuleap/custom-elements/copy-to-clipboard";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";

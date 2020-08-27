@@ -13,9 +13,3 @@ import "<...>/components/copy-to-clipboard";
     Copy the value to the clipboard
 </copy-to-clipboard>
 ```
-
-If you need to support IE11 you will need to import the polyfill before the element itself:
-```typescript
-import "<...>/componenents/custom-elements-polyfill-ie11";
-import "<...>/components/copy-to-clipboard";
-```
