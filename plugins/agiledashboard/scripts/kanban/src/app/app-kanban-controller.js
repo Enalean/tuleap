@@ -103,6 +103,7 @@ function KanbanCtrl(
         filter: KanbanFilterValue,
         loading_modal: NewTuleapArtifactModalService.loading,
         user_can_add_artifact: kanban.user_can_add_artifact,
+        openAddArtifactModal,
     });
 
     function init() {
@@ -364,6 +365,36 @@ function KanbanCtrl(
             .finally(() => {
                 self.is_report_loading = false;
             });
+    }
+
+    function openAddArtifactModal($event) {
+        $event.preventDefault();
+
+        const callback = (artifact_id) => {
+            KanbanItemRestService.getItem(artifact_id).then((artifact) => {
+                if (!artifact) {
+                    return;
+                }
+
+                Object.assign(artifact, {
+                    updating: false,
+                    is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
+                });
+
+                const column = ColumnCollectionService.getColumn(artifact.in_column),
+                    compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
+
+                if (!SharedPropertiesService.isNodeServerConnected()) {
+                    KanbanColumnService.addItem(artifact, column, compared_to);
+                    KanbanColumnService.filterItems(column);
+                }
+
+                if (!column.is_open) {
+                    column.filtered_content = [];
+                }
+            });
+        };
+        NewTuleapArtifactModalService.showCreation(self.kanban.tracker_id, null, callback);
     }
 
     function loadColumns() {

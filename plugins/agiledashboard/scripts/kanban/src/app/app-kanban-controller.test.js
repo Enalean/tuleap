@@ -672,6 +672,164 @@ describe("KanbanCtrl -", function () {
         });
     });
 
+    describe("openAddArtifactModal() -", () => {
+        var fake_event;
+        beforeEach(function () {
+            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
+            fake_event = {
+                which: 1,
+                preventDefault: jest.fn(),
+            };
+        });
+
+        it("Should open the artifact creation modal", () => {
+            KanbanCtrl.openAddArtifactModal(fake_event);
+
+            expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                56,
+                null,
+                expect.any(Function)
+            );
+        });
+        describe("callback -", function () {
+            let created_artifact;
+            let get_request;
+            let archive;
+            let collapsed_column;
+            let compared_to;
+
+            beforeEach(function () {
+                NewTuleapArtifactModalService.showCreation.mockImplementation(function (
+                    a,
+                    b,
+                    callback
+                ) {
+                    callback();
+                });
+                get_request = $q.defer();
+                jest.spyOn(KanbanItemRestService, "getItem").mockReturnValue(get_request.promise);
+                jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
+                    true
+                );
+                jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(true);
+                jest.spyOn(KanbanColumnService, "addItem").mockImplementation(() => {});
+                jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
+
+                archive = {
+                    id: "archive",
+                    is_open: true,
+                    filtered_content: [{ id: 3 }, { id: 4 }],
+                };
+                collapsed_column = {
+                    id: 252,
+                    is_open: false,
+                    filtered_content: [{ id: 1 }, { id: 2 }, { id: 10 }],
+                };
+                compared_to = {
+                    direction: "before",
+                    item_id: 44,
+                };
+                ColumnCollectionService.getColumn.mockImplementation(function (column_id) {
+                    if (column_id === "archive") {
+                        return archive;
+                    }
+
+                    return collapsed_column;
+                });
+
+                DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(compared_to);
+
+                created_artifact = {
+                    id: 108,
+                    color: "relapse",
+                    card_fields: [
+                        {
+                            field_id: 27,
+                            type: "string",
+                            label: "title",
+                            value: "omnigenous",
+                        },
+                    ],
+                    in_column: "archive",
+                    label: "omnigenous",
+                };
+            });
+            it("does not nothing in the kanban if there is no artifact", () => {
+                KanbanCtrl.openAddArtifactModal(fake_event);
+                get_request.resolve(null);
+                $scope.$apply();
+                expect(SharedPropertiesService.doesUserPrefersCompactCards).not.toHaveBeenCalled();
+                expect(ColumnCollectionService.getColumn).not.toHaveBeenCalled();
+                expect(DroppedService.getComparedToBeLastItemOfColumn).not.toHaveBeenCalled();
+                expect(SharedPropertiesService.isNodeServerConnected).not.toHaveBeenCalled();
+                expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
+                expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
+            });
+
+            it("does not use the KanbanColumnService when the node server (realtime) is up", () => {
+                jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(true);
+
+                KanbanCtrl.openAddArtifactModal(fake_event);
+                get_request.resolve(created_artifact);
+
+                $scope.$apply();
+                expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
+                expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
+                expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
+                    archive
+                );
+                expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
+                expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
+            });
+
+            it("uses the KanbanColumnService to add the created item when the node server (realtime) is down", () => {
+                jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
+
+                KanbanCtrl.openAddArtifactModal(fake_event);
+                get_request.resolve(created_artifact);
+
+                $scope.$apply();
+                expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
+                expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith("archive");
+                expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
+                    archive
+                );
+                expect(KanbanColumnService.addItem).toHaveBeenCalledWith(
+                    created_artifact,
+                    archive,
+                    compared_to
+                );
+
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(archive);
+                expect(archive.filtered_content.length).toBe(2);
+            });
+
+            it("empty the filtered column when the column is closed", () => {
+                created_artifact.in_column = 252;
+                jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
+
+                expect(collapsed_column.filtered_content.length).toBe(3);
+                KanbanCtrl.openAddArtifactModal(fake_event);
+                get_request.resolve(created_artifact);
+
+                $scope.$apply();
+                expect(SharedPropertiesService.doesUserPrefersCompactCards).toHaveBeenCalled();
+                expect(ColumnCollectionService.getColumn).toHaveBeenCalledWith(252);
+                expect(DroppedService.getComparedToBeLastItemOfColumn).toHaveBeenCalledWith(
+                    collapsed_column
+                );
+                expect(KanbanColumnService.addItem).toHaveBeenCalledWith(
+                    created_artifact,
+                    collapsed_column,
+                    compared_to
+                );
+
+                expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(collapsed_column);
+                expect(collapsed_column.filtered_content.length).toBe(0);
+            });
+        });
+    });
+
     describe("moveItemAtTheEnd() -", function () {
         it(`Given a kanban item in a column and another kanban column,
             when I move the item to the column,

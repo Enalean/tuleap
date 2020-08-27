@@ -79,6 +79,7 @@ function SocketService(
     function subscribe() {
         var kanban = SharedPropertiesService.getKanban();
         if (kanban) {
+            SharedPropertiesService.setIsNodeServerConnected(true);
             SocketFactory.emit("subscription", {
                 nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
                 token: locker.get("token"),
@@ -101,6 +102,7 @@ function SocketService(
                     "You are disconnected from real time. Please reload your page."
                 )
             );
+            SharedPropertiesService.setIsNodeServerConnected(false);
         });
     }
 
