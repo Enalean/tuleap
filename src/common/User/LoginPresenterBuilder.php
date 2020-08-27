@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\Account\RegistrationGuardEvent;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginPresenterBuilder
 {
@@ -35,13 +37,8 @@ class User_LoginPresenterBuilder
             ]
         );
 
-        $display_new_account_button = true;
-        EventManager::instance()->processEvent(
-            'display_newaccount',
-            [
-                'allow' => &$display_new_account_button
-            ]
-        );
+        $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
 
         $presenter = new User_LoginPresenter(
             $return_to,
@@ -50,7 +47,7 @@ class User_LoginPresenterBuilder
             $additional_connectors,
             $login_csrf,
             $prompt_param,
-            $display_new_account_button
+            $registration_guard->isRegistrationPossible(),
         );
 
         $authoritative = false;

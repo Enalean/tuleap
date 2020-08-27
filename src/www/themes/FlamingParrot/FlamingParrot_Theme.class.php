@@ -40,6 +40,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
@@ -309,11 +310,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return $additional_tabs;
     }
 
-    private function displayNewAccount()
+    private function displayNewAccount(): bool
     {
-        $display_new_user = true;
-        EventManager::instance()->processEvent('display_newaccount', ['allow' => &$display_new_user]);
-        return $display_new_user;
+        $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
+        return $registration_guard->isRegistrationPossible();
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user, ?BannerDisplay $banner)
