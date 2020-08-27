@@ -1,5 +1,7 @@
 <div class="breadcrumb-container {{# has_only_one_breadcrumb }}breadcrumb-with-only-one-item{{/ has_only_one_breadcrumb }}">
-    {{> breadcrumbs/breadcrumbs-privacy }}
+    {{# project_context }}
+        {{> breadcrumbs/breadcrumbs-privacy }}
+    {{/ project_context }}
     <nav class="breadcrumb">
         {{# breadcrumbs }}
             {{^ has_sub_items }}

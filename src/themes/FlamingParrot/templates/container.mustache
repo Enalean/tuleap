@@ -1,24 +1,28 @@
 {{#hasSidebar}}
-    {{> project-sidebar}}
+    {{# project_context }}
+        {{> project-sidebar}}
+    {{/ project_context }}
     <div class="main container-fluid">
 {{/hasSidebar}}
 {{^hasSidebar}}
     <div class="main full container-fluid">
 {{/hasSidebar}}
-{{# purified_banner_message }}
-    <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
-        <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner_message }}}</p>
-        {{# current_user_id }}
-            <i
-                    id="project-banner-close"
-                    class="fa fa-close"
-                    aria-label="{{# gettext }}Close{{/ gettext }}"
-                    data-project-id="{{ project_id }}"
-                    data-user-id="{{ current_user_id }}"
-            ></i>
-        {{/ current_user_id }}
-    </div>
-{{/ purified_banner_message }}
+{{# project_context }}
+    {{# has_project_banner }}
+        <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
+            <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner }}}</p>
+            {{# current_user_id }}
+                <i
+                        id="project-banner-close"
+                        class="fa fa-close"
+                        aria-label="{{# gettext }}Close{{/ gettext }}"
+                        data-project-id="{{ project_id }}"
+                        data-user-id="{{ current_user_id }}"
+                ></i>
+            {{/ current_user_id }}
+        </div>
+    {{/ has_project_banner }}
+{{/ project_context }}
     <div class="row-fluid">
         <div class="span12">
             {{#hasBreadcrumbs}}

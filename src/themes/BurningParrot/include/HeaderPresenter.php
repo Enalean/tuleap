@@ -27,6 +27,7 @@ use ThemeVariantColor;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\OpenGraphPresenter;
+use Tuleap\Project\ProjectContextPresenter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Tuleap\TimezoneRetriever;
@@ -135,6 +136,24 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $nb_project_flags;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_banner;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $project_banner_is_visible;
+    /**
+     * @var false|int
+     */
+    public $project_id;
+    /**
+     * @var ProjectContextPresenter|null
+     */
+    public $project_context;
 
     public function __construct(
         PFUser $user,
@@ -152,34 +171,29 @@ class HeaderPresenter
         $motd,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
-        ?ProjectPrivacyPresenter $privacy,
-        array $project_flags
+        ?ProjectContextPresenter $project_context
     ) {
-        $this->date_time_format                      = $GLOBALS['Language']->getText('system', 'datefmt');
-        $this->user_timezone                         = TimezoneRetriever::getUserTimezone($user);
-        $this->user_locale                           = $user->getLocale();
-        $this->user_id                               = $user->getId();
-        $this->title                                 = html_entity_decode($title);
-        $this->imgroot                               = $imgroot;
-        $this->navbar_presenter                      = $navbar_presenter;
-        $this->stylesheets                           = $stylesheets;
-        $this->color_name                            = $color->getName();
-        $this->color_code                            = $color->getHexaCode();
-        $this->body_classes                          = $body_classes;
-        $this->main_classes                          = $main_classes;
-        $this->sidebar                               = $sidebar;
-        $this->toolbar                               = $toolbar;
-        $this->motd                                  = $motd;
-        $this->has_motd                              = ! empty($motd);
-        $this->breadcrumbs                           = $breadcrumbs;
-        $this->open_graph                            = $open_graph;
-        $this->help_dropdown                         = $help_dropdown_presenter;
-        $this->user_has_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
-        $this->privacy                               = $privacy ?: false;
-        $this->project_flags                         = $project_flags;
-        $this->nb_project_flags                      = count($project_flags);
-        $this->has_project_flags                     = $this->nb_project_flags > 0;
-        $this->json_encoded_project_flags            = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
+        $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
+        $this->user_locale                 = $user->getLocale();
+        $this->user_id                     = $user->getId();
+        $this->title                       = html_entity_decode($title);
+        $this->imgroot                     = $imgroot;
+        $this->navbar_presenter            = $navbar_presenter;
+        $this->stylesheets                 = $stylesheets;
+        $this->color_name                  = $color->getName();
+        $this->color_code                  = $color->getHexaCode();
+        $this->body_classes                = $body_classes;
+        $this->main_classes                = $main_classes;
+        $this->sidebar                     = $sidebar;
+        $this->toolbar                     = $toolbar;
+        $this->motd                        = $motd;
+        $this->has_motd                    = ! empty($motd);
+        $this->breadcrumbs                 = $breadcrumbs;
+        $this->open_graph                  = $open_graph;
+        $this->help_dropdown               = $help_dropdown_presenter;
+        $this->user_has_accessibility_mode = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->project_context             = $project_context;
 
         $this->buildFeedbacks($feedback_logs);
 

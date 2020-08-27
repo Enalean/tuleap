@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Flags;
 
+/**
+ * @psalm-immutable
+ */
 class ProjectFlagPresenter
 {
     /**

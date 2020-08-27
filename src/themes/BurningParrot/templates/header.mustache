@@ -62,34 +62,36 @@
                         <span class="sidebar-copyright">{{{ copyright }}}</span>
                     {{/ has_copyright }}
                 </aside>
-                {{# has_project_flags }}
-                    <section class="tlp-popover" id="project-sidebar-project-flags-popover">
-                        <div class="tlp-popover-arrow"></div>
-                        <div class="tlp-popover-header">
-                            <h1 class="tlp-popover-title">{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}</h1>
-                        </div>
-                        <div class="tlp-popover-body">
-                            {{# project_flags }}
-                                <div class="current-project-nav-flag-popover-flag">
-                                    {{# glyph }}project-shield{{/ glyph }}
-                                    <h2 class="current-project-nav-flag-popover-content-title">
-                                        {{ label }}
-                                    </h2>
-                                    {{# description }}
-                                        <p class="current-project-nav-flag-popover-content-description">
-                                            {{ description }}
-                                        </p>
-                                    {{/ description }}
-                                </div>
-                            {{/ project_flags }}
-                        </div>
-                    </section>
-                {{/ has_project_flags }}
+                {{# project_context }}
+                    {{# has_project_flags }}
+                        <section class="tlp-popover" id="project-sidebar-project-flags-popover">
+                            <div class="tlp-popover-arrow"></div>
+                            <div class="tlp-popover-header">
+                                <h1 class="tlp-popover-title">{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}</h1>
+                            </div>
+                            <div class="tlp-popover-body">
+                                {{# project_flags }}
+                                    <div class="current-project-nav-flag-popover-flag">
+                                        {{# glyph }}project-shield{{/ glyph }}
+                                        <h2 class="current-project-nav-flag-popover-content-title">
+                                            {{ label }}
+                                        </h2>
+                                        {{# description }}
+                                            <p class="current-project-nav-flag-popover-content-description">
+                                                {{ description }}
+                                            </p>
+                                        {{/ description }}
+                                    </div>
+                                {{/ project_flags }}
+                            </div>
+                        </section>
+                    {{/ has_project_flags }}
+                {{/ project_context }}
             {{/ sidebar }}
 
             <main role="main" class="{{ main_classes }}">
-                {{# current_project_navbar_info_presenter }}
-                    {{# purified_banner }}
+                {{# project_context }}
+                    {{# has_project_banner }}
                         <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
                             <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner }}}</p>
                             {{# user_id }}
@@ -102,8 +104,8 @@
                                 ></i>
                             {{/ user_id }}
                         </div>
-                    {{/ purified_banner }}
-                {{/ current_project_navbar_info_presenter }}
+                    {{/ has_project_banner }}
+                {{/ project_context }}
 
                 {{# has_breadcrumbs }}
                     {{> breadcrumbs/breadcrumbs }}
