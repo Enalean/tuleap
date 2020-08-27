@@ -4,10 +4,12 @@ AddInPlaceCtrl.$inject = ["$scope", "$element", "$timeout"];
 
 function AddInPlaceCtrl($scope, $element, $timeout) {
     var self = this,
-        is_open = false;
+        is_open = false,
+        item = null;
 
     self.summary = "";
     self.isOpen = isOpen;
+    self.isUpdating = isUpdating;
     self.close = close;
     self.open = open;
     self.submit = submit;
@@ -23,6 +25,10 @@ function AddInPlaceCtrl($scope, $element, $timeout) {
 
     function isOpen() {
         return is_open;
+    }
+
+    function isUpdating() {
+        return item && item.updating;
     }
 
     function close() {
@@ -42,7 +48,12 @@ function AddInPlaceCtrl($scope, $element, $timeout) {
             return;
         }
 
-        self.createItem(label, self.column);
+        item = {
+            updating: true,
+            label: label,
+        };
+
+        self.createItem(item, self.column);
 
         self.summary = "";
         autoFocusInput();
