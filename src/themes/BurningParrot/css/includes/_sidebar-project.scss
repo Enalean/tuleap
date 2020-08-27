@@ -17,11 +17,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-sidebar-header {
+.project-sidebar-header-name {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: $tlp-medium-spacing $tlp-small-spacing;
+}
+
+.project-sidebar-project-flags {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-small-spacing $tlp-medium-spacing;
+    color: $tlp-ui-border-normal;
+
+    > .tuleap-svg {
+        flex: 0 0 auto;
+
+        > path {
+            fill: transparentize($tlp-ui-border-normal, .3);
+        }
+    }
+}
+
+.project-sidebar-project-flags-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 0 0 0 $tlp-small-spacing;
+}
+
+.project-sidebar-project-flags-label {
+    max-width: 200px;
+    overflow: hidden;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 11px;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .project-sidebar-title {
@@ -76,6 +111,10 @@
 
     .project-sidebar-banner-button {
         margin: $tlp-medium-spacing 0 0;
+    }
+
+    .project-sidebar-project-flags {
+        display: none;
     }
 }
 

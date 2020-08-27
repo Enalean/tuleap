@@ -62,6 +62,29 @@
                         <span class="sidebar-copyright">{{{ copyright }}}</span>
                     {{/ has_copyright }}
                 </aside>
+                {{# has_project_flags }}
+                    <section class="tlp-popover" id="project-sidebar-project-flags-popover">
+                        <div class="tlp-popover-arrow"></div>
+                        <div class="tlp-popover-header">
+                            <h1 class="tlp-popover-title">{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}</h1>
+                        </div>
+                        <div class="tlp-popover-body">
+                            {{# project_flags }}
+                                <div class="current-project-nav-flag-popover-flag">
+                                    {{# glyph }}project-shield{{/ glyph }}
+                                    <h2 class="current-project-nav-flag-popover-content-title">
+                                        {{ label }}
+                                    </h2>
+                                    {{# description }}
+                                        <p class="current-project-nav-flag-popover-content-description">
+                                            {{ description }}
+                                        </p>
+                                    {{/ description }}
+                                </div>
+                            {{/ project_flags }}
+                        </div>
+                    </section>
+                {{/ has_project_flags }}
             {{/ sidebar }}
 
             <main role="main" class="{{ main_classes }}">

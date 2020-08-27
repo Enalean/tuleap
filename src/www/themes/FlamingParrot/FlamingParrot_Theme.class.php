@@ -258,8 +258,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
         }
 
-        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
-
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
@@ -278,7 +276,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
-            $current_project_navbar_info,
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
             $this->getSearchFormPresenter(),
@@ -293,20 +290,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ));
 
         $this->container($params, $project_manager, $current_user, $banner);
-    }
-
-    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params, ?BannerDisplay $banner)
-    {
-        if (empty($params['group'])) {
-            return false;
-        }
-
-        $project = $project_manager->getProject($params['group']);
-
-        return new FlamingParrot_CurrentProjectNavbarInfoPresenter(
-            $this->project_flags_builder->buildProjectFlags($project),
-            $banner
-        );
     }
 
     private function getPresentersForProjects($list_of_projects)

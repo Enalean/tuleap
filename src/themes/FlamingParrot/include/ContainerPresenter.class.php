@@ -100,6 +100,11 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $json_encoded_project_flags;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $nb_project_flags;
 
     public function __construct(
         array $breadcrumbs,
@@ -133,7 +138,8 @@ class FlamingParrot_ContainerPresenter
         $this->sidebar_collapsable = $sidebar_collapsable;
         $this->privacy             = $privacy;
         $this->project_flags       = $project_flags;
-        $this->has_project_flags   = count($project_flags) > 0;
+        $this->nb_project_flags    = \count($project_flags);
+        $this->has_project_flags   = $this->nb_project_flags > 0;
 
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
 

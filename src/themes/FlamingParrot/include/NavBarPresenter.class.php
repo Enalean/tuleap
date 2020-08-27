@@ -34,8 +34,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     /** @var PFUser */
     private $user;
 
-    public $current_project_navbar_info;
-
     private $request_uri;
 
     /** @var FlamingParrot_SearchFormPresenter */
@@ -99,7 +97,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function __construct(
         $imgroot,
         PFUser $user,
-        $current_project_navbar_info,
         $request_uri,
         $selected_top_tab,
         $search_form_presenter,
@@ -114,7 +111,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     ) {
         $this->imgroot                     = $imgroot;
         $this->user                        = $user;
-        $this->current_project_navbar_info = $current_project_navbar_info;
         $this->request_uri                 = $request_uri;
         $this->selected_top_tab            = $selected_top_tab;
         $this->search_form_presenter       = $search_form_presenter;

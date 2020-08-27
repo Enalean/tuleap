@@ -49,6 +49,21 @@ class ProjectSidebarPresenter
      * @psalm-readonly
      */
     public $has_project_banner;
+    /**
+     * @var array
+     * @psalm-readonly
+     */
+    public $project_flags;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $nb_project_flags;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_project_flags;
 
     public function __construct(
         PFUser $current_user,
@@ -56,7 +71,8 @@ class ProjectSidebarPresenter
         \Generator $sidebar,
         ProjectPrivacyPresenter $privacy,
         VersionPresenter $version,
-        ?BannerDisplay $banner
+        ?BannerDisplay $banner,
+        array $project_flags
     ) {
         $this->sidebar                = $sidebar;
         $this->is_sidebar_collapsable = $current_user->isLoggedIn();
@@ -74,5 +90,8 @@ class ProjectSidebarPresenter
 
         $this->has_project_banner = $banner !== null;
         $this->privacy            = $privacy;
+        $this->project_flags      = $project_flags;
+        $this->nb_project_flags   = \count($project_flags);
+        $this->has_project_flags  = $this->nb_project_flags > 0;
     }
 }

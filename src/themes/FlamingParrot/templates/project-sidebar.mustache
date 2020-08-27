@@ -1,41 +1,57 @@
 <div class="sidebar-nav" data-test="current-project-id" data-project-id="{{ project_id }}">
     <div class="project-sidebar-header">
-        {{# privacy }}
-            <div class="project-title-container" data-content="{{{ project_privacy }}}" data-placement="right">
-                <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
-                    {{# are_restricted_users_allowed }}
-                        {{# project_is_public }}
-                            <i class="fa fa-unlock"></i>
-                        {{/ project_is_public }}
-                        {{# project_is_public_incl_restricted }}
-                            <i class="fa fa-tlp-unlock-plus-r"></i>
-                        {{/ project_is_public_incl_restricted }}
-                        {{# project_is_private }}
-                            <i class="fa fa-lock"></i>
-                        {{/ project_is_private }}
-                        {{# project_is_private_incl_restricted }}
-                            <i class="fa fa-tlp-lock-plus-r"></i>
-                        {{/ project_is_private_incl_restricted }}
-                    {{/ are_restricted_users_allowed }}
-                    {{^ are_restricted_users_allowed }}
-                        {{# project_is_public }}
-                            <i class="fa fa-unlock"></i>
-                        {{/ project_is_public }}
-                        {{^ project_is_public }}
-                            <i class="fa fa-lock"></i>
-                        {{/ project_is_public }}
-                    {{/ are_restricted_users_allowed }}
+        <div class="project-sidebar-header-name">
+            {{# privacy }}
+                <div class="project-title-container" data-content="{{{ project_privacy }}}" data-placement="right">
+                    <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
+                        {{# are_restricted_users_allowed }}
+                            {{# project_is_public }}
+                                <i class="fa fa-unlock"></i>
+                            {{/ project_is_public }}
+                            {{# project_is_public_incl_restricted }}
+                                <i class="fa fa-tlp-unlock-plus-r"></i>
+                            {{/ project_is_public_incl_restricted }}
+                            {{# project_is_private }}
+                                <i class="fa fa-lock"></i>
+                            {{/ project_is_private }}
+                            {{# project_is_private_incl_restricted }}
+                                <i class="fa fa-tlp-lock-plus-r"></i>
+                            {{/ project_is_private_incl_restricted }}
+                        {{/ are_restricted_users_allowed }}
+                        {{^ are_restricted_users_allowed }}
+                            {{# project_is_public }}
+                                <i class="fa fa-unlock"></i>
+                            {{/ project_is_public }}
+                            {{^ project_is_public }}
+                                <i class="fa fa-lock"></i>
+                            {{/ project_is_public }}
+                        {{/ are_restricted_users_allowed }}
 
-                    {{ project_name }}
-                </a>
+                        {{ project_name }}
+                    </a>
+                </div>
+            {{/ privacy }}
+
+            {{# has_project_banner }}
+                <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
+                    <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
+                </span>
+            {{/ has_project_banner }}
+        </div>
+        {{# has_project_flags }}
+            <div class="project-sidebar-project-flags"
+                  title="{{# project_flags }}{{ label }}{{/ project_flags }}"
+                  data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
+                  data-project-flags="{{ json_encoded_project_flags }}"
+            >
+                {{# glyph }}project-shield{{/ glyph }}
+                <span class="project-sidebar-project-flags-labels">
+                    {{# project_flags }}
+                        <span class="project-sidebar-project-flags-label">{{ label }}</span>
+                    {{/ project_flags }}
+                </span>
             </div>
-        {{/ privacy }}
-
-        {{# has_project_banner }}
-            <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
-                <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
-            </span>
-        {{/ has_project_banner }}
+        {{/ has_project_flags }}
     </div>
 
     <ul class="nav nav-list">

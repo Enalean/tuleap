@@ -21,13 +21,13 @@ import $ from "jquery";
 import { render } from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const project_flags_element = document.querySelector(".current-project-nav-flag");
+    const project_flags_element = document.querySelector(".project-sidebar-project-flags");
     if (!project_flags_element) {
         return;
     }
 
     const template = render(
-        `<div class="popover current-project-nav-popover">
+        `<div class="popover current-project-nav-popover project-sidebar-project-flags-popover">
                 <div class="arrow"></div>
                 <h3>{{ title }}</h3>
                 <div class="popover-content"></div>
@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $(project_flags_element).popover({
         title: project_flags_element.dataset.title,
         placement: "bottom",
+        container: "body",
         html: true,
         trigger: "hover",
         template,

@@ -399,22 +399,6 @@ $nav-dropdown-content-border-radius: 3px;
     display: flex;
 }
 
-
-.current-project-nav-flag {
-    display: flex;
-    align-items: center;
-    margin: 0 0 0 20px;
-    color: #747474;
-
-    > .tuleap-svg {
-        flex: 0 0 auto;
-
-        > path {
-            fill: #747474;
-        }
-    }
-}
-
 #breadcrumb-project-privacy-icon {
     color: #747474;
 }

@@ -20,15 +20,15 @@
 import { createPopover } from "tlp";
 
 export function init() {
-    const project_flags_element = document.getElementById("current-project-nav-flag");
+    const project_flags_element = document.getElementById("project-sidebar-project-flags");
     if (!project_flags_element) {
         return;
     }
 
-    const popover_content = document.getElementById("current-project-nav-flag-popover");
+    const popover_content = document.getElementById("project-sidebar-project-flags-popover");
 
     createPopover(project_flags_element, popover_content, {
-        anchor: project_flags_element.querySelector("svg"),
+        anchor: project_flags_element.querySelector(".project-sidebar-project-flags-labels"),
         placement: "bottom-start",
     });
 }
