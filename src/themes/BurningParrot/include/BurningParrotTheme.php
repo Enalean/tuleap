@@ -42,6 +42,7 @@ use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\ProjectContextPresenter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
@@ -116,14 +117,17 @@ class BurningParrotTheme extends BaseLayout
 
     public function header(array $params)
     {
-        $project       = null;
-        $privacy       = null;
-        $project_flags = [];
+        $project         = null;
+        $project_context = null;
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
-            $privacy       = ProjectPrivacyPresenter::fromProject($project);
-            $project_flags = $this->project_flags_builder->buildProjectFlags($project);
+            $project_context = ProjectContextPresenter::build(
+                $project,
+                ProjectPrivacyPresenter::fromProject($project),
+                $this->project_flags_builder->buildProjectFlags($project),
+                $this->getProjectBanner($project, $this->user, 'project/project-banner-bp.js'),
+            );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
                 $crumb = new BreadCrumb(new BreadCrumbLink($project->getPublicName(), $project->getUrl()));
@@ -187,8 +191,7 @@ class BurningParrotTheme extends BaseLayout
             $open_graph,
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($current_user, $project),
-            $privacy,
-            $project_flags
+            $project_context
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

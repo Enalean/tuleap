@@ -323,7 +323,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project_link        = null;
         $project             = null;
         $privacy             = null;
-        $project_flags       = [];
+        $project_context     = null;
         $sidebar_collapsable = false;
 
         if (! empty($params['group'])) {
@@ -340,8 +340,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $crumb->setAdditionalClassname("breadcrumb-project");
             $this->breadcrumbs->addFirst($crumb);
 
-            $privacy = \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project);
-            $project_flags = $this->project_flags_builder->buildProjectFlags($project);
+            $project_context = \Tuleap\Project\ProjectContextPresenter::build(
+                $project,
+                \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project),
+                $this->project_flags_builder->buildProjectFlags($project),
+                $banner
+            );
         }
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
@@ -359,11 +363,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->_getFeedback(),
             $this->tuleap_version,
             $sidebar_collapsable,
-            $banner,
             $current_user,
-            $privacy,
-            $project_flags,
-            $project
+            $project_context
         ));
     }
 

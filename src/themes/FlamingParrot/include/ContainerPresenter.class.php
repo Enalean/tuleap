@@ -19,7 +19,7 @@
  */
 
 use Tuleap\BuildVersion\VersionPresenter;
-use Tuleap\Project\Banner\BannerDisplay;
+use Tuleap\Project\ProjectContextPresenter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_ContainerPresenter
@@ -58,15 +58,6 @@ class FlamingParrot_ContainerPresenter
     /** @var bool */
     private $sidebar_collapsable;
     /**
-     * @var string
-     */
-    public $purified_banner_message = '';
-
-    /**
-     * @var bool
-     */
-    public $project_banner_is_visible = false;
-    /**
      * @var int
      */
     public $current_user_id;
@@ -76,35 +67,10 @@ class FlamingParrot_ContainerPresenter
      */
     public $has_only_one_breadcrumb;
     /**
-     * @var bool
+     * @var ProjectContextPresenter|null
      * @psalm-readonly
      */
-    public $has_project_banner = false;
-    /**
-     * @var \Tuleap\Project\ProjectPrivacyPresenter|null
-     * @psalm-readonly
-     */
-    public $privacy;
-    /**
-     * @var array
-     * @psalm-readonly
-     */
-    public $project_flags;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $has_project_flags;
-    /**
-     * @var false|string
-     * @psalm-readonly
-     */
-    public $json_encoded_project_flags;
-    /**
-     * @var int
-     * @psalm-readonly
-     */
-    public $nb_project_flags;
+    public $project_context;
 
     public function __construct(
         array $breadcrumbs,
@@ -116,43 +82,21 @@ class FlamingParrot_ContainerPresenter
         $feedback_content,
         VersionPresenter $version,
         $sidebar_collapsable,
-        ?BannerDisplay $banner,
         PFUser $current_user,
-        ?\Tuleap\Project\ProjectPrivacyPresenter $privacy,
-        array $project_flags,
-        ?Project $project = null
+        ?ProjectContextPresenter $project_context
     ) {
         $this->breadcrumbs             = $breadcrumbs;
         $this->has_only_one_breadcrumb = count($breadcrumbs) === 1;
-
-        $this->toolbar             = $toolbar;
-        $this->project_name        = $project_name;
-        $this->project_link        = $project_link;
-        if ($project !== null) {
-            $this->project_id = $project->getID();
-        }
-        $this->project_tabs        = $project_tabs;
-        $this->feedback            = $feedback;
-        $this->feedback_content    = $feedback_content;
-        $this->version             = $version;
-        $this->sidebar_collapsable = $sidebar_collapsable;
-        $this->privacy             = $privacy;
-        $this->project_flags       = $project_flags;
-        $this->nb_project_flags    = \count($project_flags);
-        $this->has_project_flags   = $this->nb_project_flags > 0;
-
-        $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
-
-        if ($banner !== null) {
-            $purifier                      = Codendi_HTMLPurifier::instance();
-            $this->purified_banner_message = $purifier->purify(
-                $banner->getMessage(),
-                Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
-            );
-            $this->has_project_banner = true;
-            $this->project_banner_is_visible = $banner->isVisible();
-        }
-        $this->current_user_id = $current_user->getId();
+        $this->toolbar                 = $toolbar;
+        $this->project_name            = $project_name;
+        $this->project_link            = $project_link;
+        $this->project_tabs            = $project_tabs;
+        $this->feedback                = $feedback;
+        $this->feedback_content        = $feedback_content;
+        $this->version                 = $version;
+        $this->sidebar_collapsable     = $sidebar_collapsable;
+        $this->current_user_id         = $current_user->getId();
+        $this->project_context         = $project_context;
     }
 
     public function hasBreadcrumbs()
