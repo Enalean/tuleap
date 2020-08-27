@@ -1057,7 +1057,6 @@ class LdapPlugin extends Plugin
     public function login_presenter($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType()) {
-            include_once dirname(__FILE__) . '/LoginPresenter.class.php';
             $params['authoritative'] = true;
             $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
         }

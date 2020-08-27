@@ -72,7 +72,6 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\DispatchTemporaryRedirect;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
@@ -170,8 +169,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
      */
     private function isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint(ProviderManager $provider_manager)
     {
-        return $this->canPluginAuthenticateUser() &&
-        $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
+        return $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
     }
 
     public function get_login_url($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -242,19 +240,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         );
     }
 
-    /**
-     * @return bool
-     */
-    private function canPluginAuthenticateUser()
-    {
-        return ForgeConfig::get('sys_auth_type') !== 'ldap';
-    }
-
     public function login_additional_connector(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (! $this->canPluginAuthenticateUser()) {
-            return;
-        }
         if (! $params['is_secure']) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
@@ -308,7 +295,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
      */
     private function isUserRegistrationWithOpenIDConnectPossible($is_registration_confirmation, $link_id)
     {
-        return ! $is_registration_confirmation && $link_id && $this->canPluginAuthenticateUser();
+        return ! $is_registration_confirmation && $link_id;
     }
 
     public function after_user_registration(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -333,6 +320,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $user_mapping_manager,
                 $unlinked_account_manager,
                 new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+                EventManager::instance(),
                 $storage,
             );
 
@@ -362,17 +350,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
-        if ($this->canPluginAuthenticateUser()) {
-            (new AccountTabsBuilder())->addTabs($collection);
-        }
+        (new AccountTabsBuilder())->addTabs($collection);
     }
 
     public function routeGetUserAccount(): DispatchableWithRequest
     {
-        if (! $this->canPluginAuthenticateUser()) {
-            return new DispatchTemporaryRedirect('/account');
-        }
-
         $can_remove_user_mapping_checker = new CanRemoveUserMappingChecker();
 
         return new OIDCProvidersController(
@@ -395,10 +377,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function routePostUserAccount(): DispatchableWithRequest
     {
-        if (! $this->canPluginAuthenticateUser()) {
-            return new DispatchTemporaryRedirect('/account');
-        }
-
         return new UnlinkController(
             OIDCProvidersController::getCSRFToken(),
             $this->getProviderManager(),
@@ -451,10 +429,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function routeIndex(): DispatchableWithRequest
     {
-        if (! $this->canPluginAuthenticateUser()) {
-            return new DispatchTemporaryRedirect('/');
-        }
-
         $user_manager                = UserManager::instance();
         $provider_manager            = $this->getProviderManager();
         $user_mapping_manager        = new UserMappingManager(
@@ -491,6 +465,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $user_mapping_manager,
             $unlinked_account_manager,
             new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+            EventManager::instance(),
             $storage,
         );
         return new Router(
@@ -535,10 +510,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function routeLogin(): DispatchableWithRequest
     {
-        if (! $this->canPluginAuthenticateUser()) {
-            return new DispatchTemporaryRedirect('/');
-        }
-
         return new LoginController(
             new ConnectorPresenterBuilder(
                 $this->getProviderManager(),
