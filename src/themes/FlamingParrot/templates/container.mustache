@@ -21,7 +21,10 @@
 {{/ purified_banner_message }}
     <div class="row-fluid">
         <div class="span12">
-            {{> breadcrumbs}}
+            {{#hasBreadcrumbs}}
+                {{> breadcrumbs/breadcrumbs }}
+            {{/hasBreadcrumbs}}
+
             {{> toolbar}}
 
             {{{feedback}}}

@@ -1,0 +1,69 @@
+<div class="breadcrumb-privacy-icon-container">
+    {{# privacy }}
+        <span
+            id="breadcrumb-project-privacy-icon"
+            {{# has_project_flags }}class="breadcrumb-project-privacy-icon-with-flags"{{/ has_project_flags }}
+            title="{{ project_name }}"
+            data-content="{{ project_privacy }}"
+            data-project-flags="{{ json_encoded_project_flags }}"
+        >
+            {{# are_restricted_users_allowed }}
+                {{# project_is_public }}
+                    <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_public }}
+                {{# project_is_public_incl_restricted }}
+                    <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_public_incl_restricted }}
+                {{# project_is_private }}
+                    <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_private }}
+                {{# project_is_private_incl_restricted }}
+                    <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_private_incl_restricted }}
+            {{/ are_restricted_users_allowed }}
+            {{^ are_restricted_users_allowed }}
+                {{# project_is_public }}
+                    <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_public }}
+                {{^ project_is_public }}
+                    <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                {{/ project_is_public }}
+            {{/ are_restricted_users_allowed }}
+
+            {{# has_project_flags }}
+                {{# glyph }}project-shield{{/ glyph }}
+                <span class="current-project-nav-flag-labels">
+                    {{# project_flags }}
+                        <span class="current-project-nav-flag-label">{{ label }}</span>
+                    {{/ project_flags }}
+                </span>
+            {{/ has_project_flags }}
+        </span>
+
+        <section class="tlp-popover" id="current-project-nav-title-popover">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title">{{ project_name }}</h1>
+            </div>
+            <div class="tlp-popover-body">
+                <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+                {{# has_project_flags }}
+                    <hr class="current-project-nav-flag-popover-separator">
+                    {{# project_flags }}
+                        <div class="current-project-nav-flag-popover-flag">
+                            {{# glyph }}project-shield{{/ glyph }}
+                            <h2 class="current-project-nav-flag-popover-content-title">
+                                {{ label }}
+                            </h2>
+                            {{# description }}
+                                <p class="current-project-nav-flag-popover-content-description">
+                                    {{ description }}
+                                </p>
+                            {{/ description }}
+                        </div>
+                    {{/ project_flags }}
+                {{/ has_project_flags }}
+            </div>
+        </section>
+    {{/ privacy }}
+</div>

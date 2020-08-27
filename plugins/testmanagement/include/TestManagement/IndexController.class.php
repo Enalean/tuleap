@@ -25,6 +25,7 @@ use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -38,18 +39,24 @@ class IndexController extends TestManagementController
      * @var VisitRecorder
      */
     private $visit_recorder;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     public function __construct(
         Codendi_Request $request,
         Config $config,
         EventManager $event_manager,
         TrackerFactory $tracker_factory,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        ProjectFlagsBuilder $project_flags_builder
     ) {
         parent::__construct($request, $config, $event_manager);
 
-        $this->tracker_factory = $tracker_factory;
-        $this->visit_recorder  = $visit_recorder;
+        $this->tracker_factory       = $tracker_factory;
+        $this->visit_recorder        = $visit_recorder;
+        $this->project_flags_builder = $project_flags_builder;
     }
 
     public function index(): string
@@ -76,7 +83,8 @@ class IndexController extends TestManagementController
                 $this->config->getIssueTrackerId($this->project),
                 $this->getIssueTrackerConfig($current_user),
                 $current_user,
-                $milestone_representation
+                $milestone_representation,
+                $this->project_flags_builder->buildProjectFlags($this->project),
             )
         );
     }

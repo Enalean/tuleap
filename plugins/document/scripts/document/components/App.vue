@@ -82,6 +82,7 @@ export default {
         user_locale: String,
         relative_dates_display: String,
         privacy: Object,
+        project_flags: Array,
     },
     computed: {
         ...mapState("error", [
@@ -129,6 +130,7 @@ export default {
             this.user_locale,
             this.relative_dates_display,
             this.privacy,
+            this.project_flags,
         ]);
 
         window.addEventListener("beforeunload", (event) => {

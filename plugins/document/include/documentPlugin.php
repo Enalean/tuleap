@@ -43,6 +43,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -106,7 +108,8 @@ class documentPlugin extends Plugin // phpcs:ignore
             $this->getProjectExtractor(),
             $this->getOldPluginInfo(),
             new FileDownloadLimitsBuilder(),
-            new HistoryEnforcementSettingsBuilder()
+            new HistoryEnforcementSettingsBuilder(),
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
         );
     }
 

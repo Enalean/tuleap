@@ -195,7 +195,30 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     font-size: 16px;
 }
 
+.breadcrumb-project-privacy-icon-with-flags {
+    display: flex;
+    align-items: center;
+    margin: 0 $tlp-small-spacing 0 0;
+    padding: $tlp-small-spacing;
+    border-radius: 4px;
+    background: $tlp-swatch-chrome-silver-secondary;
+
+    > .breadcrumb-project-privacy-icon {
+        margin: 0;
+        color: $tlp-swatch-chrome-silver-text;
+    }
+
+    > .current-project-nav-flag-labels {
+        color: $tlp-swatch-chrome-silver-text;
+    }
+
+    > .tuleap-svg-project-shield {
+        display: none;
+    }
+}
+
 body:not(.sidebar-collapsed) {
+    .breadcrumb-project-privacy-icon-with-flags,
     .breadcrumb-project-privacy-icon,
     .breadcrumb-with-only-one-item,
     .breadcrumb-project {

@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const csrf_token = vue_mount_point.dataset.csrfToken;
     const relative_dates_display = vue_mount_point.dataset.relativeDatesDisplay;
     const privacy = JSON.parse(vue_mount_point.dataset.privacy);
+    const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -107,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
             user_locale,
             relative_dates_display,
             privacy,
+            project_flags,
         },
     }).$mount(vue_mount_point);
 });

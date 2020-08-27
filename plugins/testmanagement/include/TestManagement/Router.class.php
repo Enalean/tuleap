@@ -28,6 +28,7 @@ use PFUser;
 use Project;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -82,6 +83,10 @@ class Router
      * @var Valid_UInt
      */
     private $int_validator;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     public function __construct(
         Config $config,
@@ -92,7 +97,8 @@ class Router
         StepFieldUsageDetector $step_field_usage_detector,
         TrackerChecker $tracker_checker,
         VisitRecorder $visit_recorder,
-        Valid_UInt $int_validator
+        Valid_UInt $int_validator,
+        ProjectFlagsBuilder $project_flags_builder
     ) {
         $this->config                       = $config;
         $this->tracker_factory              = $tracker_factory;
@@ -103,6 +109,7 @@ class Router
         $this->tracker_checker              = $tracker_checker;
         $this->visit_recorder               = $visit_recorder;
         $this->int_validator               = $int_validator;
+        $this->project_flags_builder = $project_flags_builder;
     }
 
     public function route(Codendi_Request $request): void
@@ -178,7 +185,8 @@ class Router
             $this->config,
             $this->event_manager,
             $this->tracker_factory,
-            $this->visit_recorder
+            $this->visit_recorder,
+            $this->project_flags_builder
         );
         $this->renderAction($controller, 'index', $request, true);
     }

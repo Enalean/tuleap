@@ -77,16 +77,31 @@ class IndexPresenter
     /**
      * @var mixed
      */
-    public $project_public_name;
+    public $project_name;
     /**
      * @var string
      */
     public $project_url;
     /**
-     * @var false|string
+     * @var ProjectPrivacyPresenter
      * @psalm-readonly
      */
     public $privacy;
+    /**
+     * @var array
+     * @psalm-readonly
+     */
+    public $project_flags;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $json_encoded_project_flags;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_project_flags;
 
     /**
      * @param int|false $campaign_tracker_id
@@ -103,13 +118,14 @@ class IndexPresenter
         $issue_tracker_id,
         array $issue_tracker_config,
         PFUser $current_user,
-        object $milestone_representation
+        object $milestone_representation,
+        array $project_flags
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
-        $this->project_id          = $project->getID();
-        $this->project_public_name = $project->getPublicName();
-        $this->project_url         = $project->getUrl();
+        $this->project_id   = $project->getID();
+        $this->project_name = $project->getPublicName();
+        $this->project_url  = $project->getUrl();
 
         $user_representation = UserRepresentation::build($current_user);
         $this->current_user = json_encode($user_representation);
@@ -132,7 +148,10 @@ class IndexPresenter
 
         $this->current_milestone = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
 
-        $this->privacy = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->privacy                    = ProjectPrivacyPresenter::fromProject($project);
+        $this->project_flags              = $project_flags;
+        $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->has_project_flags          = count($project_flags) > 0;
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

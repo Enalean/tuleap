@@ -49,6 +49,7 @@ const state = {
     is_embedded_in_large_view: true,
     toggle_quick_look: false,
     privacy: null,
+    project_flags: [],
 };
 
 export default state;
