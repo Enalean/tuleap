@@ -19,11 +19,19 @@
 
 import _ from "lodash";
 import angular from "angular";
+import {
+    getClosedSubMilestones,
+    getClosedTopMilestones,
+    getOpenSubMilestones,
+    getOpenTopMilestones,
+} from "./api/rest-querier";
 
 export default PlanningController;
 
 PlanningController.$inject = [
     "$filter",
+    "$q",
+    "$scope",
     "SharedPropertiesService",
     "BacklogService",
     "BacklogItemService",
@@ -40,6 +48,8 @@ PlanningController.$inject = [
 
 function PlanningController(
     $filter,
+    $q,
+    $scope,
     SharedPropertiesService,
     BacklogService,
     BacklogItemService,
@@ -76,7 +86,6 @@ function PlanningController(
         generateMilestoneLinkUrl,
         getClosedMilestones,
         getOpenMilestones,
-        init,
         isMilestoneContext,
         loadInitialMilestones,
         refreshSubmilestone,
@@ -126,112 +135,41 @@ function PlanningController(
         return !isNaN(self.milestone_id);
     }
 
+    function sortByIdDescending(milestone_a, milestone_b) {
+        return Math.sign(milestone_b.id - milestone_a.id);
+    }
+
+    function milestoneProgressCallback(milestones) {
+        milestones.forEach((milestone) => {
+            MilestoneService.augmentMilestone(milestone, self.items);
+        });
+        self.milestones.content = self.milestones.content.concat(milestones);
+        $scope.$apply();
+        self.milestones.content.sort(sortByIdDescending);
+        return milestones;
+    }
+
     function loadInitialMilestones() {
-        if (!self.isMilestoneContext()) {
-            fetchOpenMilestones(
-                self.project_id,
-                MilestoneCollectionService.milestones.open_milestones_pagination.limit,
-                MilestoneCollectionService.milestones.open_milestones_pagination.offset
-            );
-        } else {
-            fetchOpenSubMilestones(
-                self.milestone_id,
-                MilestoneCollectionService.milestones.open_milestones_pagination.limit,
-                MilestoneCollectionService.milestones.open_milestones_pagination.offset
-            );
-        }
+        const promise = !self.isMilestoneContext()
+            ? getOpenTopMilestones(self.project_id, milestoneProgressCallback)
+            : getOpenSubMilestones(self.milestone_id, milestoneProgressCallback);
+
+        self.milestones.loading = true;
+        $q.when(promise).then(() => {
+            self.milestones.loading = false;
+            self.milestones.open_milestones_fully_loaded = true;
+        });
     }
 
     function displayClosedMilestones() {
+        const promise = !self.isMilestoneContext()
+            ? getClosedTopMilestones(self.project_id, milestoneProgressCallback)
+            : getClosedSubMilestones(self.milestone_id, milestoneProgressCallback);
+
         self.milestones.loading = true;
-
-        if (!self.isMilestoneContext()) {
-            fetchClosedMilestones(
-                self.project_id,
-                MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
-                MilestoneCollectionService.milestones.closed_milestones_pagination.offset
-            );
-        } else {
-            fetchClosedSubMilestones(
-                self.milestone_id,
-                MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
-                MilestoneCollectionService.milestones.closed_milestones_pagination.offset
-            );
-        }
-    }
-
-    function fetchOpenMilestones(project_id, limit, offset) {
-        self.milestones.loading = true;
-
-        return MilestoneService.getOpenMilestones(project_id, limit, offset, self.items).then(
-            function (data) {
-                var milestones = [].concat(self.milestones.content).concat(data.results);
-                self.milestones.content = _.sortBy(milestones, "id").reverse();
-
-                if (offset + limit < data.total) {
-                    fetchOpenMilestones(project_id, limit, offset + limit);
-                } else {
-                    self.milestones.loading = false;
-                    self.milestones.open_milestones_fully_loaded = true;
-                }
-            }
-        );
-    }
-
-    function fetchOpenSubMilestones(milestone_id, limit, offset) {
-        self.milestones.loading = true;
-
-        return MilestoneService.getOpenSubMilestones(milestone_id, limit, offset, self.items).then(
-            function (data) {
-                var milestones = [].concat(self.milestones.content).concat(data.results);
-                self.milestones.content = _.sortBy(milestones, "id").reverse();
-
-                if (offset + limit < data.total) {
-                    fetchOpenSubMilestones(milestone_id, limit, offset + limit);
-                } else {
-                    self.milestones.loading = false;
-                    self.milestones.open_milestones_fully_loaded = true;
-                }
-            }
-        );
-    }
-
-    function fetchClosedMilestones(project_id, limit, offset) {
-        self.milestones.loading = true;
-
-        return MilestoneService.getClosedMilestones(project_id, limit, offset, self.items).then(
-            function (data) {
-                var milestones = [].concat(self.milestones.content).concat(data.results);
-                self.milestones.content = _.sortBy(milestones, "id").reverse();
-
-                if (offset + limit < data.total) {
-                    fetchClosedMilestones(project_id, limit, offset + limit);
-                } else {
-                    self.milestones.loading = false;
-                    self.milestones.closed_milestones_fully_loaded = true;
-                }
-            }
-        );
-    }
-
-    function fetchClosedSubMilestones(milestone_id, limit, offset) {
-        self.milestones.loading = true;
-
-        return MilestoneService.getClosedSubMilestones(
-            milestone_id,
-            limit,
-            offset,
-            self.items
-        ).then(function (data) {
-            var milestones = [].concat(self.milestones.content).concat(data.results);
-            self.milestones.content = _.sortBy(milestones, "id").reverse();
-
-            if (offset + limit < data.total) {
-                fetchClosedSubMilestones(milestone_id, limit, offset + limit);
-            } else {
-                self.milestones.loading = false;
-                self.milestones.closed_milestones_fully_loaded = true;
-            }
+        $q.when(promise).then(() => {
+            self.milestones.loading = false;
+            self.milestones.closed_milestones_fully_loaded = true;
         });
     }
 

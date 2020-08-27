@@ -30,10 +30,6 @@ function MilestoneService($q, BacklogItemFactory) {
     Object.assign(self, {
         milestone_content_pagination: { limit: 50, offset: 0 },
         getMilestone,
-        getOpenMilestones,
-        getOpenSubMilestones,
-        getClosedMilestones,
-        getClosedSubMilestones,
         patchSubMilestones,
         getContent,
         reorderBacklog,
@@ -59,52 +55,6 @@ function MilestoneService($q, BacklogItemFactory) {
 
                     return { results: milestone };
                 })
-        );
-    }
-
-    function getOpenMilestones(project_id, limit, offset, scope_items) {
-        return getMilestones("projects", project_id, limit, offset, "desc", "open", scope_items);
-    }
-
-    function getOpenSubMilestones(milestone_id, limit, offset, scope_items) {
-        return getMilestones(
-            "milestones",
-            milestone_id,
-            limit,
-            offset,
-            "desc",
-            "open",
-            scope_items
-        );
-    }
-
-    function getClosedMilestones(project_id, limit, offset, scope_items) {
-        return getMilestones("projects", project_id, limit, offset, "desc", "closed", scope_items);
-    }
-
-    function getClosedSubMilestones(milestone_id, limit, offset, scope_items) {
-        return getMilestones(
-            "milestones",
-            milestone_id,
-            limit,
-            offset,
-            "desc",
-            "closed",
-            scope_items
-        );
-    }
-
-    function getMilestones(parent_type, parent_id, limit, offset, order, status, scope_items) {
-        return $q.when(
-            get(encodeURI(`/api/v1/${parent_type}/${parent_id}/milestones`), {
-                params: { limit, offset, order, query: JSON.stringify({ status }), fields: "slim" },
-            }).then((response) => {
-                const total = response.headers.get("X-PAGINATION-SIZE");
-                return response.json().then((milestones) => {
-                    milestones.forEach((milestone) => augmentMilestone(milestone, scope_items));
-                    return { results: milestones, total };
-                });
-            })
         );
     }
 

@@ -22,6 +22,7 @@ import "angular-mocks";
 
 import planning_module from "./app.js";
 import BaseController from "./planning-controller.js";
+import * as rest_querier from "./api/rest-querier";
 
 describe("PlanningController -", () => {
     let $scope,
@@ -85,11 +86,7 @@ describe("PlanningController -", () => {
                 "addToContent",
                 "augmentMilestone",
                 "defineAllowedBacklogItemTypes",
-                "getClosedMilestones",
-                "getClosedSubMilestones",
                 "getMilestone",
-                "getOpenMilestones",
-                "getOpenSubMilestones",
                 "patchSubMilestones",
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",
@@ -120,10 +117,13 @@ describe("PlanningController -", () => {
         });
 
         jest.spyOn(ItemAnimatorService, "animateCreated").mockImplementation(() => {});
+        jest.spyOn(rest_querier, "getOpenTopMilestones").mockImplementation(() => {});
+        jest.spyOn(rest_querier, "getOpenSubMilestones").mockImplementation(() => {});
 
         PlanningController = $controller(BaseController, {
             $filter,
             $q,
+            $scope,
             BacklogService,
             BacklogItemService,
             MilestoneService,
@@ -136,33 +136,30 @@ describe("PlanningController -", () => {
         PlanningController.$onInit();
     });
 
-    describe("$onInit() -", () => {
+    describe("$onInit", () => {
         describe("Given we were in a Project context (Top backlog)", () => {
             beforeEach(() => {
                 SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
             });
 
-            it("when I load the controller, then the milestones will be retrieved", function () {
-                MilestoneService.getOpenMilestones.mockReturnValue(
-                    $q.when({ results: [{ id: 184, label: "Release v1.0" }], total: 1 })
-                );
+            it("when I load the controller, then the top milestones will be retrieved", () => {
+                const getTopMilestones = jest
+                    .spyOn(rest_querier, "getOpenTopMilestones")
+                    .mockImplementation((id, callback) => {
+                        callback([{ id: 184 }, { id: 307 }, { id: 295 }]);
+                        return $q.when();
+                    });
 
                 PlanningController.$onInit();
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
 
-                expect(MilestoneService.getOpenMilestones).toHaveBeenCalledWith(
-                    736,
-                    50,
-                    0,
-                    expect.any(Object)
-                );
+                expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    {
-                        id: 184,
-                        label: "Release v1.0",
-                    },
+                    { id: 307 },
+                    { id: 295 },
+                    { id: 184 },
                 ]);
             });
         });
@@ -182,26 +179,23 @@ describe("PlanningController -", () => {
                     sub_milestone_type: { id: 66, label: "sprints" },
                 };
                 MilestoneService.getMilestone.mockReturnValue($q.when({ results: milestone }));
-                MilestoneService.getOpenSubMilestones.mockReturnValue(
-                    $q.when({ results: [{ id: 249, label: "Sprint 2015-38" }], total: 1 })
-                );
+                const getSubMilestones = jest
+                    .spyOn(rest_querier, "getOpenSubMilestones")
+                    .mockImplementation((id, callback) => {
+                        callback([{ id: 184 }, { id: 307 }, { id: 295 }]);
+                        return $q.when();
+                    });
 
                 PlanningController.$onInit();
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
 
-                expect(MilestoneService.getOpenSubMilestones).toHaveBeenCalledWith(
-                    592,
-                    50,
-                    0,
-                    expect.any(Object)
-                );
+                expect(getSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    {
-                        id: 249,
-                        label: "Sprint 2015-38",
-                    },
+                    { id: 307 },
+                    { id: 295 },
+                    { id: 184 },
                 ]);
             });
         });
@@ -238,26 +232,28 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("displayClosedMilestones() -", function () {
-        var milestone_request;
-        beforeEach(function () {
-            milestone_request = $q.defer();
+    describe("displayClosedMilestones", () => {
+        beforeEach(() => {
             jest.spyOn(PlanningController, "isMilestoneContext").mockImplementation(() => {});
             PlanningController.milestones.content = [{ id: 747 }];
         });
 
-        it("Given that we were in a project's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function () {
+        it(`Given that we were in a project's context,
+            when I display closed milestones,
+            then the closed milestones will be retrieved and the milestones collection will be updated`, () => {
             PlanningController.isMilestoneContext.mockReturnValue(false);
-            MilestoneService.getClosedMilestones.mockReturnValue(milestone_request.promise);
+            const getClosedTopMilestones = jest
+                .spyOn(rest_querier, "getClosedTopMilestones")
+                .mockImplementation((id, callback) => {
+                    callback([{ id: 108 }, { id: 982 }]);
+                    return $q.when();
+                });
 
             PlanningController.displayClosedMilestones();
             expect(PlanningController.milestones.loading).toBeTruthy();
-            milestone_request.resolve({
-                results: [{ id: 108 }, { id: 982 }],
-                total: 2,
-            });
             $scope.$apply();
 
+            expect(getClosedTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
                 { id: 982 },
@@ -266,18 +262,22 @@ describe("PlanningController -", () => {
             ]);
         });
 
-        it("Given that we were in a milestone's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function () {
+        it(`Given that we were in a milestone's context,
+            when I display closed milestones,
+            then the closed milestones will be retrieved and the milestones collection will be updated`, () => {
             PlanningController.isMilestoneContext.mockReturnValue(true);
-            MilestoneService.getClosedSubMilestones.mockReturnValue(milestone_request.promise);
+            const getClosedSubMilestones = jest
+                .spyOn(rest_querier, "getClosedSubMilestones")
+                .mockImplementation((id, callback) => {
+                    callback([{ id: 316 }, { id: 960 }]);
+                    return $q.when();
+                });
 
             PlanningController.displayClosedMilestones();
             expect(PlanningController.milestones.loading).toBeTruthy();
-            milestone_request.resolve({
-                results: [{ id: 316 }, { id: 960 }],
-                total: 2,
-            });
             $scope.$apply();
 
+            expect(getClosedSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
                 { id: 960 },
