@@ -31,7 +31,9 @@ export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
         return;
     }
 
-    const polyfill_promises = [];
+    const polyfill_promises: Promise<unknown>[] = [];
+
+    const locale = findLocaleFromDocumentContext();
 
     // Expressions are used when importing the locale data to TypeScript to bail out of the verification so it does not
     // complain about missing types.
@@ -46,15 +48,17 @@ export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
         )
     );
     polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/locale-data/en" +
-                ""
-        )
-    );
-    polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/locale-data/fr" +
-                ""
+        attemptPromiseResolutionWithFallback(
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/" +
+                        locale
+                ),
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/en" +
+                        ""
+                )
         )
     );
     polyfill_promises.push(
@@ -63,15 +67,17 @@ export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
         )
     );
     polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/locale-data/en" +
-                ""
-        )
-    );
-    polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/locale-data/fr" +
-                ""
+        attemptPromiseResolutionWithFallback(
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-numberformat-locale" */ "@formatjs/intl-numberformat/locale-data/" +
+                        locale
+                ),
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-numberformat-locale" */ "@formatjs/intl-numberformat/locale-data/en" +
+                        ""
+                )
         )
     );
     polyfill_promises.push(
@@ -80,17 +86,44 @@ export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
         )
     );
     polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/locale-data/en" +
-                ""
-        )
-    );
-    polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/locale-data/fr" +
-                ""
+        attemptPromiseResolutionWithFallback(
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/" +
+                        locale
+                ),
+            () =>
+                import(
+                    /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/en" +
+                        ""
+                )
         )
     );
 
     await Promise.all(polyfill_promises);
+}
+
+async function attemptPromiseResolutionWithFallback(
+    initial: () => Promise<void>,
+    fallback: () => Promise<void>
+): Promise<void> {
+    try {
+        await initial();
+    } catch (e) {
+        await fallback();
+    }
+}
+
+function findLocaleFromDocumentContext(): string {
+    const locale = document.body.dataset.userLocale;
+    if (!locale) {
+        return "en";
+    }
+
+    const matches = locale.match(/([a-z]{2,3})_[A-Z]{2,3}/);
+    if (matches === null) {
+        return "en";
+    }
+
+    return matches[1];
 }
