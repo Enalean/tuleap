@@ -60,23 +60,25 @@
                             {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw  {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
                         </a>
                     {{/ link }}
-                    <nav class="breadcrumb-switch-menu">
-                        {{# sections }}
-                            {{# has_label }}
-                                <div class="breadcrumb-dropdown-section-title">{{ label }}</div>
-                            {{/ has_label }}
-                            {{^ has_label }}
-                                <div class="breadcrumb-dropdown-separator"></div>
-                            {{/ has_label }}
-                            {{# links }}
-                                <span class="breadcrumb-dropdown-item">
-                                    <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}" data-test="breadcrumb-dropdown-link">
-                                        {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
-                                    </a>
-                                </span>
-                            {{/ links }}
-                        {{/ sections }}
-                    </nav>
+                    <div class="breadcrumb-switch-menu-container">
+                        <nav class="breadcrumb-switch-menu">
+                            {{# sections }}
+                                {{# has_label }}
+                                    <div class="breadcrumb-dropdown-section-title">{{ label }}</div>
+                                {{/ has_label }}
+                                {{^ has_label }}
+                                    <div class="breadcrumb-dropdown-separator"></div>
+                                {{/ has_label }}
+                                {{# links }}
+                                    <span class="breadcrumb-dropdown-item">
+                                        <a class="breadcrumb-dropdown-link" href="{{ url }}" title="{{ label }}" data-test="breadcrumb-dropdown-link">
+                                            {{# has_icon }}<i class="breadcrumb-link-icon fa fa-fw {{ icon_name }}"></i>{{/ has_icon }}{{ label }}
+                                        </a>
+                                    </span>
+                                {{/ links }}
+                            {{/ sections }}
+                        </nav>
+                    </div>
                 </div>
             {{/ has_sub_items }}
         {{/ breadcrumbs }}

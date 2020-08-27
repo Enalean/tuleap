@@ -55,19 +55,21 @@
                     <i class="breadcrumb-link-icon fa fa-folder-open"></i>
                     <translate>Documents</translate>
                 </router-link>
-                <nav class="breadcrumb-switch-menu" v-if="is_admin">
-                    <span class="breadcrumb-dropdown-item">
-                        <a
-                            class="breadcrumb-dropdown-link"
-                            v-bind:href="document_administration_url"
-                            v-bind:title="document_administration_title"
-                            data-test="breadcrumb-administrator-link"
-                        >
-                            <i class="fa fa-cog fa-fw"></i>
-                            <translate>Administration</translate>
-                        </a>
-                    </span>
-                </nav>
+                <div class="breadcrumb-switch-menu-container">
+                    <nav class="breadcrumb-switch-menu" v-if="is_admin">
+                        <span class="breadcrumb-dropdown-item">
+                            <a
+                                class="breadcrumb-dropdown-link"
+                                v-bind:href="document_administration_url"
+                                v-bind:title="document_administration_title"
+                                data-test="breadcrumb-administrator-link"
+                            >
+                                <i class="fa fa-cog fa-fw"></i>
+                                <translate>Administration</translate>
+                            </a>
+                        </span>
+                    </nav>
+                </div>
             </div>
 
             <span
