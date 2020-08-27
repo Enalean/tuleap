@@ -22,38 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\date;
 
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 
 final class RelativeDatesAssetsRetriever
 {
+    private const SCRIPT_NAME = 'tlp-relative-date.js';
+
     public static function retrieveAssetsUrl(): string
     {
-        return self::getCoreAssets()->getFileURL(self::getScriptVersionDependingOfBrowser());
+        return self::getCoreAssets()->getFileURL(self::SCRIPT_NAME);
     }
 
     public static function includeAssetsInSnippet(): void
     {
-        echo self::getCoreAssets()->getHTMLSnippet(self::getScriptVersionDependingOfBrowser());
+        echo self::getCoreAssets()->getHTMLSnippet(self::SCRIPT_NAME);
     }
 
     public static function getAsJavascriptAssets(): JavascriptAsset
     {
         return new JavascriptAsset(
             self::getCoreAssets(),
-            self::getScriptVersionDependingOfBrowser()
+            self::SCRIPT_NAME
         );
-    }
-
-    private static function getScriptVersionDependingOfBrowser(): string
-    {
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\HTTPRequest::instance());
-        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
-            return 'tlp-relative-date-polyfills.js';
-        }
-
-        return 'tlp-relative-date.js';
     }
 
     private static function getCoreAssets(): IncludeAssets

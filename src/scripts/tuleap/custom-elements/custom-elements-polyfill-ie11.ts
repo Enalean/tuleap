@@ -18,6 +18,22 @@
  */
 
 // IE11 is the only browser supported by Tuleap that does not support custom elements
-// Import this file before the instantiation of a custom elements if, sadly, you need IE11 support
 
-import "@webcomponents/custom-elements";
+export async function loadCustomElementsPolyfillWhenNeeded(): Promise<void> {
+    const existing_custom_elements = window.customElements;
+
+    // See https://github.com/webcomponents/polyfills/blob/%40webcomponents/custom-elements%401.4.2/packages/custom-elements/ts_src/custom-elements.ts#L48-L50
+    if (
+        !existing_custom_elements ||
+        typeof existing_custom_elements.define !== "function" ||
+        typeof existing_custom_elements.get !== "function"
+    ) {
+        // TypeScript complains when processing the dynamic import because the polyfill does not expose its typings
+        // (it's not really important in this context) so we transform the import into an expression to force TypeScript
+        // to bail out. Webpack is capable to resolve it (and to optimize it).
+        await import(
+            // eslint-disable-next-line no-useless-concat
+            /* webpackChunkName: "polyfill-custom-elements" */ "@webcomponents/custom-elements" + ""
+        );
+    }
+}

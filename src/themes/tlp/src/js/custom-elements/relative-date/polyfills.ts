@@ -17,16 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "@formatjs/intl-getcanonicallocales/polyfill";
-import "@formatjs/intl-pluralrules/polyfill";
-import "@formatjs/intl-pluralrules/locale-data/en";
-import "@formatjs/intl-pluralrules/locale-data/fr";
-import "@formatjs/intl-numberformat/polyfill";
-import "@formatjs/intl-numberformat/locale-data/en";
-import "@formatjs/intl-numberformat/locale-data/fr";
-import "@formatjs/intl-relativetimeformat/polyfill";
-import "@formatjs/intl-relativetimeformat/locale-data/en";
-import "@formatjs/intl-relativetimeformat/locale-data/fr";
+import { loadCustomElementsPolyfillWhenNeeded } from "../../../../../../scripts/tuleap/custom-elements/custom-elements-polyfill-ie11";
 
-// IE11 is the only browser supported by Tuleap that does not support custom elements
-import "@webcomponents/custom-elements";
+export async function loadPolyfillsWhenNeeded(): Promise<void> {
+    await Promise.all([
+        loadCustomElementsPolyfillWhenNeeded(),
+        loadIntlRelativeTimePolyfillWhenNeeded(),
+    ]);
+}
+
+export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
+    if (typeof Intl !== "undefined" && "RelativeTimeFormat" in Intl) {
+        return;
+    }
+
+    const polyfill_promises = [];
+
+    // Expressions are used when importing the locale data to TypeScript to bail out of the verification so it does not
+    // complain about missing types.
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-getcanonicallocales/polyfill"
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/polyfill"
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/locale-data/en" +
+                ""
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/locale-data/fr" +
+                ""
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/polyfill"
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/locale-data/en" +
+                ""
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/locale-data/fr" +
+                ""
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/polyfill"
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/locale-data/en" +
+                ""
+        )
+    );
+    polyfill_promises.push(
+        import(
+            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/locale-data/fr" +
+                ""
+        )
+    );
+
+    await Promise.all(polyfill_promises);
+}

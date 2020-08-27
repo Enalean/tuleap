@@ -17,8 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CopyToClipboardElement } from "./copy-to-clipboard-element";
+import { loadCustomElementsPolyfillWhenNeeded } from "../custom-elements-polyfill-ie11";
 
-if (!window.customElements.get("copy-to-clipboard")) {
-    window.customElements.define("copy-to-clipboard", CopyToClipboardElement);
-}
+loadCustomElementsPolyfillWhenNeeded().then(async () => {
+    const { CopyToClipboardElement } = await import(
+        /* webpackMode: "eager" */ "./copy-to-clipboard-element"
+    );
+
+    if (!window.customElements.get("copy-to-clipboard")) {
+        window.customElements.define("copy-to-clipboard", CopyToClipboardElement);
+    }
+});

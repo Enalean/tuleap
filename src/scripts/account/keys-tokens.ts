@@ -19,7 +19,6 @@
 
 import { datePicker } from "tlp";
 import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
-import "../tuleap/custom-elements/custom-elements-polyfill-ie11";
 import "../tuleap/custom-elements/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {
