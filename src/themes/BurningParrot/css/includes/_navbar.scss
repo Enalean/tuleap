@@ -185,28 +185,6 @@
     margin: $tlp-small-spacing 0 0;
 }
 
-#current-project-nav {
-    display: flex;
-    align-items: center;
-    padding: 0 $tlp-medium-spacing;
-    border-right: 1px solid $tlp-ui-border-normal;
-}
-
-.current-project-nav-flag {
-    display: flex;
-    align-items: center;
-    margin: 0 0 0 $tlp-medium-spacing;
-    color: $tlp-ui-dimmed;
-
-    > .tuleap-svg {
-        flex: 0 0 auto;
-
-        > path {
-            fill: $tlp-ui-dimmed;
-        }
-    }
-}
-
 .current-project-nav-flag-labels {
     display: flex;
     flex-direction: column;

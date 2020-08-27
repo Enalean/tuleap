@@ -137,8 +137,7 @@ class BurningParrotTheme extends BaseLayout
         $header_presenter_builder    = new HeaderPresenterBuilder();
         $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : [];
         $sidebar                     = $this->getSidebarFromParams($params);
-        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project);
-        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $current_project_navbar_info);
+        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
         $current_user                = UserManager::instance()->getCurrentUser();
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
@@ -180,7 +179,6 @@ class BurningParrotTheme extends BaseLayout
             $body_classes,
             $main_classes,
             $sidebar,
-            $current_project_navbar_info,
             $url_redirect,
             $this->toolbar,
             $breadcrumbs,
@@ -217,7 +215,7 @@ class BurningParrotTheme extends BaseLayout
     private function getArrayOfClassnamesForBodyTag(
         $params,
         $sidebar,
-        ?CurrentProjectNavbarInfoPresenter $current_project_navbar_info_presenter
+        ?Project $project
     ): array {
         $body_classes = [];
 
@@ -232,8 +230,11 @@ class BurningParrotTheme extends BaseLayout
             $body_classes[] = 'theme-condensed';
         }
 
-        if ($current_project_navbar_info_presenter !== null && $current_project_navbar_info_presenter->project_banner_is_visible) {
-            $body_classes[] = 'has-visible-project-banner';
+        if ($project) {
+            $banner = $this->getBanner($project, $this->user);
+            if ($banner && $banner->isVisible()) {
+                $body_classes[] = 'has-visible-project-banner';
+            }
         }
 
         if (! $sidebar) {
@@ -327,26 +328,14 @@ class BurningParrotTheme extends BaseLayout
             $this->getProjectSidebar($params, $project),
             ProjectPrivacyPresenter::fromProject($project),
             $this->version,
-            $this->getBanner($project, $this->user)
+            $this->getBanner($project, $this->user),
+            $this->project_flags_builder->buildProjectFlags($project),
         );
 
         return new SidebarPresenter(
             'project-sidebar',
             $this->renderer->renderToString('project-sidebar', $project_sidebar_presenter),
             $this->version
-        );
-    }
-
-    private function getCurrentProjectNavbarInfo(?Project $project): ?CurrentProjectNavbarInfoPresenter
-    {
-        if (! $project) {
-            return null;
-        }
-
-        return new CurrentProjectNavbarInfoPresenter(
-            $project,
-            $this->project_flags_builder->buildProjectFlags($project),
-            $this->getProjectBanner($project, $this->user, 'project/project-banner-bp.js')
         );
     }
 

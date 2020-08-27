@@ -60,9 +60,6 @@ class HeaderPresenterBuilder
     /** @var SidebarPresenter */
     private $sidebar;
 
-    /** @var CurrentProjectNavbarInfoPresenter */
-    private $current_project_navbar_info_presenter;
-
     /** @var CssAssetCollection */
     private $css_assets;
 
@@ -75,7 +72,6 @@ class HeaderPresenterBuilder
         $body_classes,
         $main_classes,
         $sidebar,
-        $current_project_navbar_info_presenter,
         URLRedirect $url_redirect,
         array $toolbar,
         array $breadcrumbs,
@@ -94,7 +90,6 @@ class HeaderPresenterBuilder
         $this->body_classes                          = $body_classes;
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
-        $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
         $this->css_assets                            = $css_assets;
 
         $color = $this->getMainColor();
@@ -116,7 +111,6 @@ class HeaderPresenterBuilder
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
             $this->sidebar,
-            $this->current_project_navbar_info_presenter,
             $toolbar,
             $breadcrumbs,
             $motd,

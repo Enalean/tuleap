@@ -66,9 +66,6 @@ class HeaderPresenter
     /** @var SidebarPresenter */
     public $sidebar;
 
-    /** @var CurrentProjectNavbarInfoPresenter */
-    public $current_project_navbar_info_presenter;
-
     /** @var string[] HTML */
     public $toolbar;
 
@@ -133,6 +130,11 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $json_encoded_project_flags;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $nb_project_flags;
 
     public function __construct(
         PFUser $user,
@@ -145,7 +147,6 @@ class HeaderPresenter
         $body_classes,
         $main_classes,
         $sidebar,
-        $current_project_navbar_info_presenter,
         array $toolbar,
         array $breadcrumbs,
         $motd,
@@ -167,7 +168,6 @@ class HeaderPresenter
         $this->body_classes                          = $body_classes;
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
-        $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
         $this->toolbar                               = $toolbar;
         $this->motd                                  = $motd;
         $this->has_motd                              = ! empty($motd);
@@ -177,7 +177,8 @@ class HeaderPresenter
         $this->user_has_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->privacy                               = $privacy ?: false;
         $this->project_flags                         = $project_flags;
-        $this->has_project_flags                     = count($project_flags) > 0;
+        $this->nb_project_flags                      = count($project_flags);
+        $this->has_project_flags                     = $this->nb_project_flags > 0;
         $this->json_encoded_project_flags            = json_encode($project_flags, JSON_THROW_ON_ERROR);
 
         $this->buildFeedbacks($feedback_logs);
