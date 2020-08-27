@@ -1,7 +1,7 @@
 .kanban-item-content-moves {
     position: absolute;
     z-index: 1000;
-    right: 13px;
+    right: 14px;
     height: 100%;
     transition: opacity $transition-duration $transition-delay;
     opacity: 0;
@@ -12,14 +12,14 @@
     position: absolute;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     padding: 0;
     border-radius: 50%;
     font-size: 10px;
 
     &:first-child {
-        top: -4px;
+        top: -5px;
 
         > .kanban-item-content-move-icon {
             position: relative;
@@ -29,7 +29,7 @@
     }
 
     &:last-child {
-        bottom: -4px;
+        bottom: -5px;
 
         > .kanban-item-content-move-icon {
             position: relative;

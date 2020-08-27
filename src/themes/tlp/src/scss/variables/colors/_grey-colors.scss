@@ -33,6 +33,8 @@ $tlp-theme-color                   : $tlp-theme-grey;
 $tlp-theme-background-color        : $tlp-theme-background-grey;
 $tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-grey;
 
+$tlp-typo-default-text-color: $tlp-theme-sidebar-background-color;
+
 $tlp-table-header-background : #ffffff;
 $tlp-table-row-background-even : mix($tlp-theme-background-color, $tlp-table-header-background, 50%);
 $tlp-table-row-background-odd : #ffffff;

@@ -61,7 +61,7 @@ $kanban-column-footer-height: 50px;
     display: flex;
     flex: 0 0 auto;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
 }
 
@@ -72,7 +72,6 @@ $kanban-column-footer-height: 50px;
 .kanban-header-config {
     display: flex;
     flex: 1 1 auto;
-    margin: $tlp-small-spacing 0 0;
 }
 
 .kanban-header-add-artifact-button,
@@ -255,11 +254,12 @@ $kanban-column-footer-height: 50px;
 
 .kanban-column-header-toggle {
     color: $tlp-theme-color;
+    font-size: .8125rem;
     cursor: pointer;
 }
 
 .kanban-column-header-wip-warning {
-    margin: 0 0 0 10px;
+    margin: 0 0 0 $tlp-small-spacing;
     cursor: help;
 }
 
@@ -268,7 +268,7 @@ $kanban-column-footer-height: 50px;
     margin: 0 10px;
     overflow: hidden;
     color: $tlp-theme-color;
-    font-size: 16px;
+    font-size: .875rem;
     font-weight: 600;
     text-align: center;
     text-overflow: ellipsis;
@@ -308,7 +308,7 @@ $kanban-column-footer-height: 50px;
     animation: none;
     opacity: .4;
     color: $tlp-theme-color;
-    font-size: 28px;
+    font-size: 1.75rem;
     font-weight: 300;
 
     &.loading {
@@ -358,17 +358,20 @@ kanban-column {
             opacity: 0;
         }
     }
+
+    &.is-bar-shown > .ngsb-wrap > .ngsb-container {
+        width: calc(100% - 12px);
+    }
 }
 
 .ngsb-wrap {
     > .ngsb-container {
-        left: 10px;
-        width: calc(100% - #{$tlp-medium-spacing});
+        width: 100%;
         transition: none;
     }
 
     > .ngsb-scrollbar {
-        top: 10px;
+        top: 8px;
         height: calc(100% - 50px);
 
         > .ngsb-thumb-container {
@@ -382,7 +385,7 @@ kanban-column {
                 &:hover > .ngsb-thumb,
                 > .ngsb-thumb {
                     width: 6px;
-                    border-radius: 0;
+                    border-radius: 3px;
                     background: $tlp-ui-border-dark;
                 }
 
@@ -464,11 +467,9 @@ add-in-place {
     z-index: 2;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
-    opacity: .3;
     color: $tlp-theme-color;
-    font-size: 18px;
+    font-size: .875rem;
     font-weight: 600;
-    letter-spacing: .5px;
     line-height: $kanban-column-closed-width;
     text-transform: uppercase;
     white-space: nowrap;
@@ -483,7 +484,8 @@ add-in-place {
 .kanban-column-label-count {
     display: inline-block;
     margin: 10px 0;
-    font-size: 50px;
+    opacity: .4;
+    font-size: 1.75rem;
     font-weight: 300;
 
     &.loading {
