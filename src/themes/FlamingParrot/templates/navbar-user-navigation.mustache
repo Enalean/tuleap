@@ -28,6 +28,15 @@
         {{/ has_sections }}
     {{/ new_dropdown }}
 
+    {{# switch_to }}
+        <li>
+            <button type="button" data-toggle="modal" id="switch-to-button" data-target="#switch-to-modal">
+                <i class="fa fa-search nav-switch-to-icon" aria-hidden="true"></i>
+                {{# gettext }}Switch to...{{/ gettext }}
+            </button>
+        </li>
+    {{/ switch_to }}
+
     {{# user_is_logged_in }}
         {{> navbar-user-logged-in }}
     {{/ user_is_logged_in }}

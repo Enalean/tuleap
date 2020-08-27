@@ -7,6 +7,11 @@
 {{^hasSidebar}}
     <div class="main full container-fluid">
 {{/hasSidebar}}
+
+{{# switch_to }}
+    <div id="switch-to-mount-point"></div>
+{{/ switch_to }}
+
 {{# project_context }}
     {{# has_project_banner }}
         <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">

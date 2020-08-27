@@ -30,6 +30,14 @@ hotkeys("c", function (): void {
     }
 });
 
+hotkeys("/,s", function (event): void {
+    event.preventDefault();
+    const switch_to_trigger = document.getElementById("switch-to-button");
+    if (switch_to_trigger instanceof HTMLElement) {
+        switch_to_trigger.click();
+    }
+});
+
 hotkeys("d", function (): void {
     const options = document.querySelectorAll("[data-shortcut-mydashboard-option]");
     if (options.length === 0) {

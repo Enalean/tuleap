@@ -38,6 +38,13 @@
                 {{/ has_sections }}
             {{/ new_dropdown }}
 
+            {{# switch_to }}
+                <button type="button" id="switch-to-button" data-target-modal-id="switch-to-modal">
+                    <i class="fa fa-search nav-switch-to-icon" aria-hidden="true"></i>
+                    {{# gettext }}Switch to...{{/ gettext }}
+                </button>
+            {{/ switch_to }}
+
             {{> navbar/user-nav }}
         </div>
     </div>

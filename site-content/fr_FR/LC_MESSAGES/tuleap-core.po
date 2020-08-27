@@ -208,6 +208,9 @@ msgstr "Le compte doit être actif pour changer le mot de passe"
 msgid "Account status"
 msgstr "Statut du compte utilisateur"
 
+msgid "Action"
+msgstr "Action"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -1792,6 +1795,9 @@ msgstr "Description courte"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
 
+msgid "Shortcut"
+msgstr "Raccourci"
+
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
@@ -1871,6 +1877,9 @@ msgstr "Mis à jour avec succès."
 
 msgid "Switch to new tracker creation flow"
 msgstr "Basculer sur la nouvelle interface de création de projet"
+
+msgid "Switch to..."
+msgstr "Basculer vers..."
 
 msgid "Switching the project status back to \"pending\" is not possible."
 msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."

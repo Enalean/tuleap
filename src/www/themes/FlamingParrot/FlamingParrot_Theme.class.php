@@ -28,9 +28,9 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
+use Tuleap\HelpDropdown\VersionNumberExtractor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\HelpDropdown\VersionNumberExtractor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -41,6 +41,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\Account\RegistrationGuardEvent;
+use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
@@ -274,6 +275,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $registration_user_permission_checker
         );
 
+        $switch_to = (new SwitchToPresenterBuilder())->build($current_user);
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -287,9 +289,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
             $new_dropdown_presenter_builder->getPresenter($current_user, $project),
+            $switch_to,
         ));
 
-        $this->container($params, $project_manager, $current_user, $banner);
+        $this->container($params, $current_user, $banner, $switch_to);
     }
 
     private function getPresentersForProjects($list_of_projects)
@@ -316,8 +319,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return $registration_guard->isRegistrationPossible();
     }
 
-    private function container(array $params, ProjectManager $project_manager, PFUser $current_user, ?BannerDisplay $banner)
-    {
+    private function container(
+        array $params,
+        PFUser $current_user,
+        ?BannerDisplay $banner,
+        ?\Tuleap\User\SwitchToPresenter $switch_to
+    ): void {
         $project_tabs        = null;
         $project_name        = null;
         $project_link        = null;
@@ -364,7 +371,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->tuleap_version,
             $sidebar_collapsable,
             $current_user,
-            $project_context
+            $project_context,
+            $switch_to
         ));
     }
 

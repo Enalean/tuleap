@@ -31,6 +31,7 @@ use Tuleap\Project\ProjectContextPresenter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Tuleap\TimezoneRetriever;
+use Tuleap\User\SwitchToPresenter;
 
 class HeaderPresenter
 {
@@ -154,6 +155,10 @@ class HeaderPresenter
      * @var ProjectContextPresenter|null
      */
     public $project_context;
+    /**
+     * @var SwitchToPresenter|null
+     */
+    public $switch_to;
 
     public function __construct(
         PFUser $user,
@@ -171,7 +176,8 @@ class HeaderPresenter
         $motd,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
-        ?ProjectContextPresenter $project_context
+        ?ProjectContextPresenter $project_context,
+        ?SwitchToPresenter $switch_to
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -194,6 +200,7 @@ class HeaderPresenter
         $this->help_dropdown               = $help_dropdown_presenter;
         $this->user_has_accessibility_mode = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $this->project_context             = $project_context;
+        $this->switch_to                   = $switch_to;
 
         $this->buildFeedbacks($feedback_logs);
 

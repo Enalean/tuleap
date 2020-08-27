@@ -35,6 +35,7 @@ use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use Tuleap\User\SwitchToPresenter;
 use URLRedirect;
 
 class HeaderPresenterBuilder
@@ -80,7 +81,8 @@ class HeaderPresenterBuilder
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
         NewDropdownPresenter $new_dropdown_presenter,
-        ?ProjectContextPresenter $project_context
+        ?ProjectContextPresenter $project_context,
+        ?SwitchToPresenter $switch_to
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -115,7 +117,8 @@ class HeaderPresenterBuilder
             $motd,
             $open_graph,
             $help_dropdown_presenter,
-            $project_context
+            $project_context,
+            $switch_to
         );
     }
 
