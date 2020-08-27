@@ -29,6 +29,8 @@ use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -51,12 +53,21 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      * @var \baselinePlugin
      */
     private $plugin;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
-    public function __construct(\ProjectManager $project_manager, TemplateRenderer $template_renderer, \baselinePlugin $plugin)
-    {
-        $this->project_manager   = $project_manager;
-        $this->template_renderer = $template_renderer;
-        $this->plugin            = $plugin;
+    public function __construct(
+        \ProjectManager $project_manager,
+        TemplateRenderer $template_renderer,
+        \baselinePlugin $plugin,
+        ProjectFlagsBuilder $project_flags_builder
+    ) {
+        $this->project_manager       = $project_manager;
+        $this->template_renderer     = $template_renderer;
+        $this->plugin                = $plugin;
+        $this->project_flags_builder = $project_flags_builder;
     }
 
 
@@ -112,12 +123,22 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 
         $layout->header(
             [
-                'title'        => dgettext('tuleap-baseline', "Baselines"),
-                'group'        => $project->getID(),
-                'toptab'       => \baselinePlugin::SERVICE_SHORTNAME,
+                'title'                          => dgettext('tuleap-baseline', "Baselines"),
+                'group'                          => $project->getID(),
+                'toptab'                         => \baselinePlugin::SERVICE_SHORTNAME,
+                'without-project-in-breadcrumbs' => true,
             ]
         );
-        $this->template_renderer->renderToPage('project-service-index', ['project_id' => $project_id]);
+        $this->template_renderer->renderToPage(
+            'project-service-index',
+            [
+                'project_id'          => $project_id,
+                'project_public_name' => $project->getPublicName(),
+                'project_url'         => $project->getUrl(),
+                'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
+                'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),
+            ]
+        );
         $layout->footer(["without_content" => true]);
     }
 

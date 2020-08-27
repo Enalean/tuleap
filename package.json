@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/core": "file:../../src",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "node-htmldiff": "^0.9.3",
@@ -27,6 +28,7 @@
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
     "eslint": "$npm_package_config_bin/eslint --config ../../.eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "$npm_package_config_bin/stylelint --config ../../.stylelintrc.js --syntax scss --ignore-path ../../.stylelintignore"
   }

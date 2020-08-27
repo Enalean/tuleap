@@ -39,6 +39,12 @@ describe("App", () => {
             mocks: {
                 $store,
             },
+            propsData: {
+                project_public_name: "Project Public Name",
+                project_url: "/project_url",
+                privacy: {},
+                project_flags: [],
+            }
         });
     });
 

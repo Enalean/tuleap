@@ -24,6 +24,8 @@ declare(strict_types=1);
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -91,7 +93,8 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         return new ServiceController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            $this
+            $this,
+            new ProjectFlagsBuilder(new ProjectFlagsDao())
         );
     }
 
