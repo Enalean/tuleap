@@ -1,6 +1,6 @@
 <div
     class="kustom-scroll"
-    ng-class="{ 'column-empty': $ctrl.isColumnLoadedAndEmpty(), 'has-content': $ctrl.column.filtered_content.length > 0 }"
+    ng-class="{ 'column-empty': $ctrl.isColumnLoadedAndEmpty(), 'has-content': $ctrl.column.filtered_content.length > 0, 'is-bar-shown': $ctrl.column.is_scrollbar_shown }"
     ng-scrollbar
     rebuild-on="rebuild:kustom-scroll"
     is-bar-shown="$ctrl.column.is_scrollbar_shown"

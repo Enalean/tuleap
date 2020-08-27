@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$transition-duration: 50ms;
+$transition-duration: 100ms;
 $transition-delay: 500ms;
 $expand-collapse-bar-height: 8px;
-$margin-between-kanban-item-on-hover: 4px;
+$margin-between-kanban-item-on-hover: 1px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 
 @import '../card-fields';
 @import 'kanban-item-moves';
 @import 'kanban-item-transit';
 
-$kanban-item-padding-height: 5px;
+$kanban-item-padding-height: 8px;
 
 .kanban-item {
     margin: $margin-between-kanban-item $tlp-small-spacing;
@@ -35,8 +35,13 @@ $kanban-item-padding-height: 5px;
     transition: margin $transition-duration $transition-delay;
 
     &.compact-view {
+        .kanban-item-content.kanban-item-card-with-accessibility .kanban-item-content-info-label {
+            margin: 0 20px 0 0;
+            padding: 0;
+        }
+
         .kanban-item-content-collapsed {
-            padding: 5px 10px;
+            padding: $tlp-small-spacing;
         }
 
         .kanban-item-content-info {
@@ -49,13 +54,13 @@ $kanban-item-padding-height: 5px;
         }
 
         .kanban-item-content-info-label {
-            flex: unset;
-            width: 65%;
-            margin: 0;
-            font-size: 14px;
+            flex: 1 1 auto;
+            margin: 0 16px 0 0;
+            padding: 0;
+            font-size: .875rem;
+            line-height: 1.125rem;
             text-align: left;
         }
-
 
         .extra-card-fields {
             display: none;
@@ -117,17 +122,15 @@ $kanban-item-padding-height: 5px;
 kanban-item {
     display: flex;
     position: relative;
-    border: 1px solid $tlp-ui-border-normal;
-    border-radius: 3px;
-    background: #ffffff;
+    border-radius: 4px;
+    background: $tlp-ui-white;
+    box-shadow: 0 4px 4px -3px transparentize($tlp-theme-sidebar-background-color, .9);
     cursor: move;
 
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
-            border-top-color: map-get($colors, 'border');
-            border-right-color: map-get($colors, 'border');
-            border-bottom-color: map-get($colors, 'border');
             background: map-get($colors, 'secondary');
+            box-shadow: inset 0 0 0 1px map-get($colors, 'border'), 0 4px 4px -3px transparentize($tlp-theme-sidebar-background-color, .85);
 
             .kanban-item-content-info-link,
             .kanban-item-content-clock,
@@ -155,13 +158,18 @@ kanban-item {
     width: calc(100% - #{$tlp-medium-spacing});
     overflow-y: hidden;
     transition: padding-bottom $transition-duration;
+
+
+    &.kanban-item-card-with-accessibility .kanban-item-content-info-label {
+        padding: 0 16px;
+    }
 }
 
 .kanban-item-content-collapsed {
     display: flex;
     flex: 1 1 auto;
     height: 100%;
-    padding: $kanban-item-padding-height 10px 0;
+    padding: $kanban-item-padding-height $tlp-small-spacing 0;
 }
 
 .kanban-item-content-info {
@@ -175,9 +183,9 @@ kanban-item {
 }
 
 .kanban-item-content-info-link {
-    margin: 0 7px 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     color: $tlp-ui-dimmed;
-    font-size: 12px;
+    font-size: .65rem;
     text-decoration: none;
 
     &:hover {
@@ -188,9 +196,11 @@ kanban-item {
 
 .kanban-item-content-info-label {
     flex: 1 1 auto;
-    width: 90%;
-    margin: 10px 0;
+    width: 100%;
+    margin: $tlp-small-spacing 0;
     overflow: hidden;
+    font-size: .9375rem;
+    line-height: 1.25rem;
     text-align: center;
     text-overflow: ellipsis;
 }
@@ -201,7 +211,7 @@ kanban-item {
     top: 32px;
     right: 5px;
     flex: 0 0 auto;
-    width: $tlp-medium-spacing;
+    width: 16px;
     height: 100%;
 
     @each $color-name, $colors in $tlp-swatch-color-map {
@@ -225,7 +235,7 @@ kanban-item {
 .kanban-item-content-clock {
     position: absolute;
     z-index: 3;
-    right: 10px;
+    right: $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 12px;
     cursor: help;
