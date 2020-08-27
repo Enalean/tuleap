@@ -52,7 +52,7 @@ foreach $project (@projects) {
   `mv $projectdir/CVSROOT/loginfo $projectdir/CVSROOT/loginfo.cvs.old`;
   system("echo \"DEFAULT chgrp -f -R  $project $projectdir\" > $projectdir/CVSROOT/loginfo");
   system("echo \"$MARKER_BEGIN\" >> $projectdir/CVSROOT/loginfo");
-  system("echo \"ALL $codendi_bin_prefix/log_accum -T $project -C $project -U http://$server_url/cvs/viewvc.php/ -s %{sVv}\" >> $projectdir/CVSROOT/loginfo");
+  system("echo \"ALL sudo -u codendiadm - E $codendi_bin_prefix/log_accum -T $project -C $project -U http://$server_url/cvs/viewvc.php/ -s %{sVv}\" >> $projectdir/CVSROOT/loginfo");
   system("echo \"$MARKER_END\" >> $projectdir/CVSROOT/loginfo");
   system("cd $projectdir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CVSNT migration\" loginfo; co -q loginfo");
   # set group ownership

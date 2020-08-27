@@ -26,7 +26,7 @@ require $utils_path."/session.pl";
 
 sub cvs_db_connect {
 	my ($foo, $bar);
-	
+
 	# open up database include file and get the database variables
 	open(FILE, $db_include) || die "Can't open $db_include: $!\n";
 	while (<FILE>) {
@@ -88,7 +88,7 @@ sub db_get_index {
 
 sub db_add_record {
   local ($commit_id, $who, $repo, $when, $dir, $file, $type, $version, $branch, ,$added, $removed, @desc) = @_;
- 
+
   $fulldesc = join('\n', @desc);
   $fulldesc = join("&amp;",split("&", $fulldesc));
   $fulldesc = join("&quot;",split("\"", $fulldesc));
@@ -107,7 +107,7 @@ sub db_add_record {
   }
   if ($type eq 'c'){
     $type = "Change";
-  } 
+  }
   if ($type eq 'r'){
     $type = "Remove";
   }
@@ -118,7 +118,7 @@ sub db_add_record {
   }
   $sth = $dbh->prepare($query);
   $res = $sth->execute();
- 
+
   return $res;
 }
 
@@ -127,7 +127,7 @@ sub db_get_commit {
 
   local ($debug) = @_;
   my ($query, $uid, $c, $res);
-  my ($who) = $ENV{'USER'};
+  my ($who) = $ENV{'SUDO_USER'};
   $uid = db_get_field('user','user_name', $who, 'user_id');
 
   $query = "INSERT INTO cvs_commits (whoid) VALUES ('$uid')";

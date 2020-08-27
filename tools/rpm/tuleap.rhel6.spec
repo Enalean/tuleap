@@ -711,6 +711,7 @@ done
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
+%{__install} src/utils/sudoers.d/tuleap_cvs_log_accum $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -1166,7 +1167,7 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
 %attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
-%attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
+%attr(0755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
@@ -1189,6 +1190,7 @@ fi
 
 # Sudoers
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_fileforge
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
