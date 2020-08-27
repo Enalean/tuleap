@@ -99,8 +99,8 @@ class MilestoneCreatorChecker
             $this->logger->error("Semantics are not well configured.");
             return false;
         }
-        if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllTrackers($user)) {
-            $this->logger->error("User cannot submit an artifact in all trackers.");
+        if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllContributorTrackers($user)) {
+            $this->logger->error("User cannot submit an artifact in all contributor trackers.");
             return false;
         }
 

@@ -218,10 +218,12 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(new ContributorProjectsCollection([$first_contributor_project, $second_contributor_project]));
         $first_milestone_tracker = Mockery::mock(\Tracker::class);
         $first_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
+        $first_milestone_tracker->shouldReceive('getGroupId')->andReturn($first_contributor_project->getID());
         $second_milestone_tracker = Mockery::mock(\Tracker::class);
         $second_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
+        $second_milestone_tracker->shouldReceive('getGroupId')->andReturn($second_contributor_project->getID());
         $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
-            ->andReturn(new MilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
+            ->andReturn(new MilestoneTrackerCollection(Project::buildForTest(), [$first_milestone_tracker, $second_milestone_tracker]));
     }
 }

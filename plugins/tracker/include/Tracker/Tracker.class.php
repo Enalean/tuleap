@@ -36,6 +36,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -2152,7 +2153,11 @@ class Tracker implements Tracker_Dispatchable_Interface
             }
         }
 
-        return $can_submit;
+        if ($can_submit) {
+            return EventManager::instance()->dispatch(new CanSubmitNewArtifact($user, $this))->canSubmitNewArtifact();
+        }
+
+        return false;
     }
 
     /**

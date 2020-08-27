@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -59,6 +59,6 @@ class MilestoneTrackerCollectionBuilder
             }
             $trackers[] = $milestone_tracker;
         }
-        return new MilestoneTrackerCollection($trackers);
+        return new MilestoneTrackerCollection($aggregator_project, $trackers);
     }
 }

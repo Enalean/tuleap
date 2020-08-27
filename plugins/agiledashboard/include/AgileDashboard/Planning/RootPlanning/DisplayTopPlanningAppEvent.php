@@ -46,7 +46,7 @@ class DisplayTopPlanningAppEvent implements Dispatchable
     /**
      * @var bool
      */
-    private $user_can_create_milestone = true;
+    private $user_can_create_milestone;
 
     /**
      * @var bool
@@ -55,8 +55,9 @@ class DisplayTopPlanningAppEvent implements Dispatchable
 
     public function __construct(Planning_VirtualTopMilestone $top_milestone, PFUser $user)
     {
-        $this->top_milestone = $top_milestone;
-        $this->user          = $user;
+        $this->top_milestone             = $top_milestone;
+        $this->user_can_create_milestone = $this->top_milestone->getPlanning()->getPlanningTracker()->userCanSubmitArtifact($user);
+        $this->user                      = $user;
     }
 
     /**
