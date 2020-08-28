@@ -25,6 +25,7 @@ import {
     getOpenSubMilestones,
     getOpenTopMilestones,
 } from "./api/rest-querier";
+import { sortByStartDateDescending } from "./milestone/sort-helper";
 
 export default PlanningController;
 
@@ -135,17 +136,13 @@ function PlanningController(
         return !isNaN(self.milestone_id);
     }
 
-    function sortByIdDescending(milestone_a, milestone_b) {
-        return Math.sign(milestone_b.id - milestone_a.id);
-    }
-
     function milestoneProgressCallback(milestones) {
         milestones.forEach((milestone) => {
             MilestoneService.augmentMilestone(milestone, self.items);
         });
         self.milestones.content = self.milestones.content.concat(milestones);
         $scope.$apply();
-        self.milestones.content.sort(sortByIdDescending);
+        self.milestones.content.sort(sortByStartDateDescending);
         return milestones;
     }
 
@@ -246,7 +243,7 @@ function PlanningController(
 
     function prependSubmilestoneToSubmilestoneList(submilestone_id) {
         return MilestoneService.getMilestone(submilestone_id, self.items).then(function (data) {
-            var milestone = data.results;
+            const milestone = data.results;
 
             if (
                 milestone.semantic_status === "closed" &&
@@ -256,9 +253,14 @@ function PlanningController(
             ) {
                 self.displayClosedMilestones();
             } else {
-                self.milestones.content.unshift(data.results);
+                addMilestone(milestone);
             }
         });
+    }
+
+    function addMilestone(milestone) {
+        self.milestones.content.unshift(milestone);
+        self.milestones.content.sort(sortByStartDateDescending);
     }
 
     function showAddItemToSubMilestoneModal(item_type, parent_item) {

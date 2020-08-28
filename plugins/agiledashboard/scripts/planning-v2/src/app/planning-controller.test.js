@@ -146,7 +146,11 @@ describe("PlanningController -", () => {
                 const getTopMilestones = jest
                     .spyOn(rest_querier, "getOpenTopMilestones")
                     .mockImplementation((id, callback) => {
-                        callback([{ id: 184 }, { id: 307 }, { id: 295 }]);
+                        callback([
+                            { id: 184, start_date: null },
+                            { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                            { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                        ]);
                         return $q.when();
                     });
 
@@ -157,9 +161,9 @@ describe("PlanningController -", () => {
                 expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    { id: 307 },
-                    { id: 295 },
-                    { id: 184 },
+                    { id: 184, start_date: null },
+                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 ]);
             });
         });
@@ -182,7 +186,11 @@ describe("PlanningController -", () => {
                 const getSubMilestones = jest
                     .spyOn(rest_querier, "getOpenSubMilestones")
                     .mockImplementation((id, callback) => {
-                        callback([{ id: 184 }, { id: 307 }, { id: 295 }]);
+                        callback([
+                            { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                            { id: 184, start_date: null },
+                            { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                        ]);
                         return $q.when();
                     });
 
@@ -193,9 +201,9 @@ describe("PlanningController -", () => {
                 expect(getSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    { id: 307 },
-                    { id: 295 },
-                    { id: 184 },
+                    { id: 184, start_date: null },
+                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 ]);
             });
         });
@@ -235,7 +243,9 @@ describe("PlanningController -", () => {
     describe("displayClosedMilestones", () => {
         beforeEach(() => {
             jest.spyOn(PlanningController, "isMilestoneContext").mockImplementation(() => {});
-            PlanningController.milestones.content = [{ id: 747 }];
+            PlanningController.milestones.content = [
+                { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
+            ];
         });
 
         it(`Given that we were in a project's context,
@@ -245,7 +255,11 @@ describe("PlanningController -", () => {
             const getClosedTopMilestones = jest
                 .spyOn(rest_querier, "getClosedTopMilestones")
                 .mockImplementation((id, callback) => {
-                    callback([{ id: 108 }, { id: 982 }]);
+                    callback([
+                        { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                        { id: 184, start_date: null },
+                        { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                    ]);
                     return $q.when();
                 });
 
@@ -256,9 +270,10 @@ describe("PlanningController -", () => {
             expect(getClosedTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
-                { id: 982 },
-                { id: 747 },
-                { id: 108 },
+                { id: 184, start_date: null },
+                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
             ]);
         });
 
@@ -269,7 +284,11 @@ describe("PlanningController -", () => {
             const getClosedSubMilestones = jest
                 .spyOn(rest_querier, "getClosedSubMilestones")
                 .mockImplementation((id, callback) => {
-                    callback([{ id: 316 }, { id: 960 }]);
+                    callback([
+                        { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                        { id: 184, start_date: null },
+                        { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                    ]);
                     return $q.when();
                 });
 
@@ -280,9 +299,10 @@ describe("PlanningController -", () => {
             expect(getClosedSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
-                { id: 960 },
-                { id: 747 },
-                { id: 316 },
+                { id: 184, start_date: null },
+                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
             ]);
         });
     });
