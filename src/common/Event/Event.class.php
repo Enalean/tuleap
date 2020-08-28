@@ -919,15 +919,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SERVICE_IS_USED = 'service_is_used';
 
     /**
-     * Allow plugins to add user actions in the navbar
-     *
-     * Parameters:
-     *  - user    => (input)  PFUser
-     *  - actions => (output) Tuleap\User\UserActionPresenter[]
-     */
-    public const USER_ACTIONS = "user_actions";
-
-    /**
      * When an SVN repository is created
      *
      * Parameters:
