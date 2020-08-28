@@ -22,6 +22,8 @@ import { manageUserPreferences } from "../user/user-patch-release-note-preferenc
 import { patch } from "../../themes/tlp/src/js/fetch-wrapper";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // We need CustomEvent to work properly to use the tlp dropdown
+    polyfillCustomEventIE11();
     const help_button = document.getElementById("help");
     if (help_button) {
         const help_dropdown: Dropdown = dropdown(document, help_button);
@@ -37,3 +39,33 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+function polyfillCustomEventIE11(): void {
+    // IE11 does not have a correct implementation of CustomEvent, window.CustomEvent is defined but it is a function...
+    if (typeof window.CustomEvent === "function") {
+        return;
+    }
+
+    function CustomEvent<T>(event: string, params?: CustomEventInit<T>): CustomEvent<T> {
+        const params_with_default = params || {
+            bubbles: false,
+            cancelable: false,
+            detail: undefined,
+        };
+        const evt = document.createEvent("CustomEvent");
+        evt.initCustomEvent(
+            event,
+            params_with_default.bubbles ?? false,
+            params_with_default.cancelable ?? false,
+            params_with_default.detail
+        );
+        return evt;
+    }
+
+    CustomEvent.prototype = window.Event.prototype;
+
+    // We need to force the TypeScript compiler to ignore this as IE11 does not come with a proper CustomEvent class
+    // we fallback to the closer thing which Event however the type cannot match
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions,@typescript-eslint/no-explicit-any
+    window.CustomEvent = CustomEvent as any;
+}
