@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-20 15:26+0100\n"
+"PO-Revision-Date: 2020-08-31 14:23+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 msgid "%s succesfully created."
 msgstr "%s a été créé avec succès."
@@ -82,6 +82,10 @@ msgstr "Effort estimé : N/A"
 msgid "Initial effort: {{ milestoneController.milestone.initialEffort }}"
 msgstr "Effort estimé : {{ milestoneController.milestone.initialEffort }}"
 
+msgid "It seems an action you tried to perform can't be done"
+msgstr ""
+"Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
+
 msgid "Load closed milestones"
 msgstr "Charger les jalons fermés"
 
@@ -113,17 +117,26 @@ msgstr ""
 "Appuyez sur <span class=\\\"tlp-badge-primary\\\">Échap</span> pour annuler "
 "la sélection, seuls les éléments frères peuvent être multi-sélectionnés."
 
+msgid "Reload the page"
+msgstr "Recharger la page"
+
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale "
 
 msgid "Show closed backlog items"
 msgstr "Afficher les éléments du backlog fermés"
 
+msgid "Show error details"
+msgstr "Voir les détails de l'erreur"
+
 msgid "There are no closed milestones"
 msgstr "Aucun jalon fermé"
 
 msgid "There are no open milestones"
 msgstr "Aucun jalon ouvert"
+
+msgid "There's been an issue"
+msgstr "Il y a eu un problème"
 
 msgid "To be planned"
 msgstr "A planifier"

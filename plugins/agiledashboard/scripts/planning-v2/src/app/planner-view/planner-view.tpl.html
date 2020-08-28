@@ -21,9 +21,9 @@
             <h2 class="planning-header-title" translate>Milestones</h2>
 
             <button ng-if="planning.canUserCreateMilestone()"
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-button-small planned-header-add-button"
-                ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline tlp-button-small planned-header-add-button"
+                    ng-click="planning.showAddSubmilestoneModal($event, planning.backlog.submilestone_type)"
             >
                 <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add {{ planning.backlog.submilestone_type.label }}</span>
             </button>
@@ -33,30 +33,30 @@
             <div class="tlp-button-bar planning-header-view-toggler {">
                 <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
                     <input type="radio"
-                        id="planning-header-compact-toggler"
-                        class="tlp-button-bar-checkbox"
-                        ng-change="planning.switchViewMode(planning.compact_view_key)"
-                        ng-model="planning.current_view_class"
-                        ng-value="planning.compact_view_key"
+                           id="planning-header-compact-toggler"
+                           class="tlp-button-bar-checkbox"
+                           ng-change="planning.switchViewMode(planning.compact_view_key)"
+                           ng-model="planning.current_view_class"
+                           ng-value="planning.compact_view_key"
                     >
                     <label for="planning-header-compact-toggler"
-                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                        title="{{::'Compact view' | translate }}"
+                           class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                           title="{{::'Compact view' | translate }}"
                     >
                         <i class="fa fa-list"></i>
                     </label>
                 </div>
                 <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
                     <input type="radio"
-                        id="planning-header-detailed-toggler"
-                        class="tlp-button-bar-checkbox"
-                        ng-change="planning.switchViewMode(planning.detailed_view_key)"
-                        ng-model="planning.current_view_class"
-                        ng-value="planning.detailed_view_key"
+                           id="planning-header-detailed-toggler"
+                           class="tlp-button-bar-checkbox"
+                           ng-change="planning.switchViewMode(planning.detailed_view_key)"
+                           ng-model="planning.current_view_class"
+                           ng-value="planning.detailed_view_key"
                     >
                     <label for="planning-header-detailed-toggler"
-                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                        title="{{::'Detailed view' | translate }}"
+                           class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                           title="{{::'Detailed view' | translate }}"
                     >
                         <i class="fa fa-th-list"></i>
                     </label>
@@ -64,34 +64,34 @@
             </div>
 
             <div class="tlp-button-bar"
-                ng-if="planning.milestones.content.length > 0"
+                 ng-if="planning.milestones.content.length > 0"
             >
                 <div class="tlp-button-bar-item" title="{{::'Show closed backlog items' | translate }}">
                     <input type="radio"
-                        id="planning-header-closed-toggler"
-                        class="tlp-button-bar-checkbox"
-                        ng-change="planning.switchClosedMilestoneItemsViewMode(planning.show_closed_view_key)"
-                        ng-model="planning.current_closed_view_class"
-                        ng-value="planning.show_closed_view_key"
+                           id="planning-header-closed-toggler"
+                           class="tlp-button-bar-checkbox"
+                           ng-change="planning.switchClosedMilestoneItemsViewMode(planning.show_closed_view_key)"
+                           ng-model="planning.current_closed_view_class"
+                           ng-value="planning.show_closed_view_key"
                     >
                     <label for="planning-header-closed-toggler"
-                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                        title="{{::'Show closed backlog items' | translate }}"
+                           class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                           title="{{::'Show closed backlog items' | translate }}"
                     >
                         <i class="fa fa-eye"></i>
                     </label>
                 </div>
                 <div class="tlp-button-bar-item" title="{{::'Hide closed backlog items' | translate }}">
                     <input type="radio"
-                        id="planning-header-opened-toggler"
-                        class="tlp-button-bar-checkbox"
-                        ng-change="planning.switchClosedMilestoneItemsViewMode(planning.hide_closed_view_key)"
-                        ng-model="planning.current_closed_view_class"
-                        ng-value="planning.hide_closed_view_key"
+                           id="planning-header-opened-toggler"
+                           class="tlp-button-bar-checkbox"
+                           ng-change="planning.switchClosedMilestoneItemsViewMode(planning.hide_closed_view_key)"
+                           ng-model="planning.current_closed_view_class"
+                           ng-value="planning.hide_closed_view_key"
                     >
                     <label for="planning-header-opened-toggler"
-                        class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                        title="{{::'Hide closed backlog items' | translate }}"
+                           class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                           title="{{::'Hide closed backlog items' | translate }}"
                     >
                         <i class="fa fa-eye-slash"></i>
                     </label>
@@ -111,9 +111,9 @@
             <span translate>There are no open milestones</span>
         </div>
         <section class="tlp-pane milestone"
-            ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
-            ng-class="{ collapsed: milestone.collapsed }"
-            milestone
+                 ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
+                 ng-class="{ collapsed: milestone.collapsed }"
+                 milestone
         ></section>
 
         <div ng-if="planning.thereAreClosedMilestonesLoaded() || (! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded)" class="milestones-separator">
@@ -122,10 +122,10 @@
 
         <div class="milestones-load-closed">
             <a href=""
-                ng-if="! planning.thereAreClosedMilestonesLoaded() && ! planning.milestones.loading && ! planning.milestones.closed_milestones_fully_loaded"
-                ng-click="planning.displayClosedMilestones()"
-                class="milestones-load-closed-link"
-                translate
+               ng-if="! planning.thereAreClosedMilestonesLoaded() && ! planning.milestones.loading && ! planning.milestones.closed_milestones_fully_loaded"
+               ng-click="planning.displayClosedMilestones()"
+               class="milestones-load-closed-link"
+               translate
             >Load closed milestones</a>
         </div>
 
@@ -137,10 +137,10 @@
             <span translate>There are no closed milestones</span>
         </div>
         <section class="tlp-pane milestone"
-            ng-if="planning.thereAreClosedMilestonesLoaded()"
-            ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
-            ng-class="{ collapsed: milestone.collapsed }"
-            milestone
+                 ng-if="planning.thereAreClosedMilestonesLoaded()"
+                 ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
+                 ng-class="{ collapsed: milestone.collapsed }"
+                 milestone
         ></section>
 
         <div class="milestones-loading" ng-if="planning.milestones.loading"></div>

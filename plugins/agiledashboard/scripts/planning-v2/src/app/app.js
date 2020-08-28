@@ -34,10 +34,12 @@ import card_fields from "../../../../scripts/card-fields/index.js";
 
 import MainController from "./main-controller.js";
 import PlanningConfig from "./app-config.js";
-import PlanningDirective from "./planning-directive.js";
 import OpenTlpDropdownDirective from "./open-tlp-dropdown-directive.js";
 import SuccessMessageComponent from "./success-message-component.js";
 import ItemProgressComponent from "./item-progress/item-progress-component.js";
+import GlobalErrorComponent from "./rest-error/global-error-component";
+import PlannerAppComponent from "./planner-app-component";
+import PlannerViewComponent from "./planner-view/planner-view-component";
 import BacklogItemService from "./backlog-item-rest/backlog-item-service.js";
 import BacklogItemCollectionService from "./backlog-item-collection/backlog-item-collection-service.js";
 import MilestoneCollectionService from "./milestone-collection/milestone-collection-service.js";
@@ -58,9 +60,9 @@ import EditItemService from "./edit-item/edit-item-service.js";
 import ItemAnimatorService from "./animator/item-animator-service.js";
 import BacklogDirective from "./backlog/backlog-directive.js";
 import BacklogItemDirective from "./backlog-item/backlog-item-directive.js";
-
 import BacklogService from "./backlog-rest/backlog-service.js";
 import BacklogItemFactory from "./backlog-item-rest/backlog-item-factory.js";
+import { ErrorState } from "./rest-error/ErrorState";
 
 export default angular
     .module("planning", [
@@ -82,7 +84,6 @@ export default angular
         },
     ])
     .controller("MainController", MainController)
-    .directive("planning", PlanningDirective)
     .directive("backlog", BacklogDirective)
     .directive("backlogItem", BacklogItemDirective)
     .directive("openTlpDropdown", OpenTlpDropdownDirective)
@@ -109,4 +110,8 @@ export default angular
     .factory("BacklogItemFactory", BacklogItemFactory)
     .component("successMessage", SuccessMessageComponent)
     .component("itemProgress", ItemProgressComponent)
-    .filter("InPropertiesFilter", InPropertiesFilter).name;
+    .component("globalError", GlobalErrorComponent)
+    .component("plannerApp", PlannerAppComponent)
+    .component("plannerView", PlannerViewComponent)
+    .filter("InPropertiesFilter", InPropertiesFilter)
+    .value("ErrorState", new ErrorState()).name;

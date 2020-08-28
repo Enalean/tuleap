@@ -26,6 +26,7 @@
 @import './planning/milestones';
 @import './planning/backlog-item';
 @import './planning/backlog-items-selected-bar';
+@import './planning/errors';
 
 %loader {
     height: 30px;
@@ -37,7 +38,7 @@
     }
 }
 
-planning {
+.planning {
     display: flex;
     flex-direction: column;
 }
