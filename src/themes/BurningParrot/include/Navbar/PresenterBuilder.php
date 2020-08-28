@@ -26,8 +26,6 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
@@ -44,17 +42,12 @@ class PresenterBuilder
     /** @var PFUser */
     private $current_user;
 
-    /** @var array */
-    private $extra_tabs;
-
     public function build(
         PFUser $current_user,
-        array $extra_tabs,
         URLRedirect $url_redirect,
         NewDropdownPresenter $new_dropdown_presenter
     ) {
         $this->current_user    = $current_user;
-        $this->extra_tabs      = $extra_tabs;
 
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
@@ -102,23 +95,6 @@ class PresenterBuilder
                     $dropdown_menu_item_content_project_presenters,
                 ),
                 'nav-dropdown-left'
-            );
-        }
-
-        $dropdown_menu_item_content_link_presenters_builder = new LinkPresentersBuilder();
-
-        $dropdown_menu_item_content_extra_links_presenter    = $dropdown_menu_item_content_link_presenters_builder->build(
-            $this->extra_tabs
-        );
-        if ($dropdown_menu_item_content_extra_links_presenter) {
-            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'extras'),
-                'fa fa-ellipsis-h',
-                new LinksPresenter(
-                    'extra-tabs-dropdown',
-                    $dropdown_menu_item_content_extra_links_presenter
-                ),
-                ''
             );
         }
 

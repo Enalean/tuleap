@@ -102,7 +102,6 @@ class HeaderPresenterBuilder
             $this->imgroot,
             $this->navbar_presenter_builder->build(
                 $this->current_user,
-                $this->getExtraTabs(),
                 $url_redirect,
                 $new_dropdown_presenter
             ),
@@ -120,15 +119,6 @@ class HeaderPresenterBuilder
             $project_context,
             $switch_to
         );
-    }
-
-    private function getExtraTabs()
-    {
-        $additional_tabs = [];
-
-        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
-
-        return $additional_tabs;
     }
 
     private function getPageTitle()

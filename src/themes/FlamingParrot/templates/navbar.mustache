@@ -4,25 +4,6 @@
     <div class="navbar-inner">
         <div class="container-fluid header-navbar-container">
             <ul class="nav header-navbar-container-project-nav">
-                {{# current_project_navbar_info }}
-                    {{# has_project_flags }}
-                        <li class="current-project">
-                            <span class="current-project-nav-flag"
-                                  title="{{# project_flags }}{{ label }} {{/ project_flags }}"
-                                  data-title="{{ project_flags_title }}"
-                                  data-project-flags="{{ json_encoded_project_flags }}"
-                            >
-                                {{# glyph }}project-shield{{/ glyph }}
-                                <span class="current-project-nav-flag-labels">
-                                    {{# project_flags }}
-                                        <span class="current-project-nav-flag-label">{{ label }}</span>
-                                    {{/ project_flags }}
-                                </span>
-                            </span>
-                        </li>
-                    {{/ has_project_flags }}
-                {{/ current_project_navbar_info }}
-
                 {{# navbar_items }}
                     {{# is_projects }}
                         {{> navbar-projects }}

@@ -89,7 +89,8 @@ class HelpDropdownPresenterBuilder
             $main_items,
             $explorer_endpoint_event->getEndpointURL(),
             $release_note,
-            $has_release_note_been_seen
+            $has_release_note_been_seen,
+            $this->getSiteContentLinks(),
         );
     }
 
@@ -106,5 +107,38 @@ class HelpDropdownPresenterBuilder
             "fa-star",
             $this->uri_sanitizer
         );
+    }
+
+    /**
+     * @return HelpLinkPresenter[]
+     */
+    private function getSiteContentLinks(): array
+    {
+        /**
+         * We don't know if the site admin is doing nasty stuff in the extra_tabs.php,
+         * so we have to check that our variable is still an array.
+         * Psalm does not like that so we have to declare the variable as mixed
+         * @psalm-var mixed
+         */
+        $additional_tabs = [];
+        $filename = $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+        if (! $filename || ! is_file($filename)) {
+            return [];
+        }
+
+        include $filename;
+
+        if (! is_array($additional_tabs)) {
+            return [];
+        }
+
+        $links = [];
+        foreach ($additional_tabs as $link) {
+            if (isset($link['link'], $link['title']) && is_string($link['link']) && is_string($link['title'])) {
+                $links[] = HelpLinkPresenter::build($link['title'], $link['link'], '', $this->uri_sanitizer);
+            }
+        }
+
+        return $links;
     }
 }

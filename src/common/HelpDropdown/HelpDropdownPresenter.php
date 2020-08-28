@@ -38,21 +38,31 @@ class HelpDropdownPresenter
      * @var string|null
      */
     public $explorer_url;
-
     /**
      * @var bool
      */
     public $has_release_note_been_seen;
+    /**
+     * @var HelpLinkPresenter[]
+     */
+    public $site_content_links;
+    /**
+     * @var bool
+     */
+    public $has_site_content_links;
 
     public function __construct(
         array $platform_links,
         ?string $explorer_url,
         ?HelpLinkPresenter $release_note_link,
-        bool $has_release_note_been_seen
+        bool $has_release_note_been_seen,
+        array $site_content_links
     ) {
         $this->platform_links             = $platform_links;
         $this->release_note_link          = $release_note_link;
         $this->explorer_url               = $explorer_url;
         $this->has_release_note_been_seen = $has_release_note_been_seen;
+        $this->site_content_links         = $site_content_links;
+        $this->has_site_content_links     = count($site_content_links) > 0;
     }
 }

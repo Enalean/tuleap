@@ -246,7 +246,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_user,
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
-            $this->getExtraTabs(),
             $projects_presenters
         );
         $csrf_logout_token    = new CSRFSynchronizerToken('logout_action');
@@ -303,13 +302,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
 
         return $presenters;
-    }
-
-    private function getExtraTabs()
-    {
-        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
-
-        return $additional_tabs;
     }
 
     private function displayNewAccount(): bool

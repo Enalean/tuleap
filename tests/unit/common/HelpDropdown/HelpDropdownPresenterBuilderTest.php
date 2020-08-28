@@ -25,12 +25,14 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Sanitizer\URISanitizer;
 
 class HelpDropdownPresenterBuilderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var HelpDropdownPresenterBuilder
@@ -112,7 +114,8 @@ class HelpDropdownPresenterBuilderTest extends TestCase
                 "fa-star",
                 $this->uri_sanitizer
             ),
-            true
+            true,
+            []
         );
 
         $this->release_note_manager
@@ -153,7 +156,8 @@ class HelpDropdownPresenterBuilderTest extends TestCase
                 "fa-star",
                 $this->uri_sanitizer
             ),
-            true
+            true,
+            []
         );
 
         $this->release_note_manager->shouldReceive('getReleaseNoteLink')->andReturn(
