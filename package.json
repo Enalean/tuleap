@@ -10,10 +10,10 @@
     "node-htmldiff": "^0.9.3",
     "phptomoment": "0.0.2",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.6.11",
-    "vue-dompurify-html": "^2.2.1",
+    "vue": "^2.6.12",
+    "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.10",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.4.3",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
