@@ -10,6 +10,7 @@ function SharedPropertiesService() {
         user_is_admin: false,
         project_id: undefined,
         nodejs_server: undefined,
+        is_node_server_connected: false,
         nodejs_server_version: undefined,
         uuid: undefined,
         dashboard_dropdown: undefined,
@@ -64,6 +65,12 @@ function SharedPropertiesService() {
         },
         thereIsNodeServerAddress() {
             return Boolean(property.nodejs_server);
+        },
+        setIsNodeServerConnected(is_node_server_connected) {
+            property.is_node_server_connected = is_node_server_connected;
+        },
+        isNodeServerConnected() {
+            return this.thereIsNodeServerAddress() && property.is_node_server_connected;
         },
         getUUID() {
             return property.uuid;
