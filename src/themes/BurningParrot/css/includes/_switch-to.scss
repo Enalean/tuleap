@@ -19,6 +19,9 @@
 
 $dark-modal-background: $tlp-theme-sidebar-background-color;
 $dark-modal-default-text-color: $tlp-ui-border-normal;
+$dark-modal-dimmed-text-color: $tlp-ui-border-dark;
+$white-space-above-and-after-a-project-link: $tlp-small-spacing - 2px;
+$approximate-width-of-project-icon: 15.5px;
 
 #switch-to-modal {
     width: 800px;
@@ -57,9 +60,88 @@ $dark-modal-default-text-color: $tlp-ui-border-normal;
 }
 
 .switch-to-modal-body {
-    padding: $tlp-large-spacing;
+    padding: $tlp-large-spacing $tlp-large-spacing $tlp-large-spacing ($tlp-large-spacing - $tlp-small-spacing);
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
     background: $dark-modal-background;
     color: $dark-modal-default-text-color;
+}
+
+.switch-to-modal-body-title {
+    margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    color: $tlp-ui-dimmed;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+    text-transform: uppercase;
+}
+
+.switch-to-projects {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 ($tlp-large-spacing - $white-space-above-and-after-a-project-link);
+}
+
+.switch-to-projects-project {
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    border-radius: 4px;
+    color: $dark-modal-default-text-color;
+
+    &:hover,
+    &:focus {
+        background: rgba(0, 0, 0, .2);
+        text-decoration: none;
+
+        > .switch-to-projects-project-label {
+            color: $tlp-ui-white;
+        }
+    }
+}
+
+.switch-to-projects-project-icon {
+    margin: 0 $tlp-small-spacing 0 0;
+    font-size: .75rem;
+    line-height: .875rem;
+
+    &.fa-lock,
+    &.fa-tlp-lock-plus-r {
+        color: $tlp-ui-danger;
+    }
+}
+
+.switch-to-projects-softwaremap {
+    padding: 0 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+}
+
+.switch-to-projects-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 200px;
+    padding: 38px 0 46px;
+}
+
+.switch-to-projects-softwaremap-empty-state {
+    border: 0;
+    background: $tlp-theme-background-color;
+    color: $dark-modal-background;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: .875rem;
+}
+
+.switch-to-projects-empty-text {
+    margin: $tlp-medium-spacing 0 $tlp-large-spacing;
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
 }

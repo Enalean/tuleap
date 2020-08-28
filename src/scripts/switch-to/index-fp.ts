@@ -17,22 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "../tuleap/gettext/vue-gettext-init";
 import AppFlamingParrot from "./src/components/AppFlamingParrot.vue";
+import { init } from "./src/initiate-app";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("switch-to-mount-point");
     if (!vue_mount_point) {
         return;
     }
 
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(/* webpackChunkName: "switch-to-po-" */ "./po/" + getPOFileFromLocale(locale))
-    );
-
-    const AppComponent = Vue.extend(AppFlamingParrot);
-    new AppComponent({}).$mount(vue_mount_point);
+    init(vue_mount_point, AppFlamingParrot);
 });

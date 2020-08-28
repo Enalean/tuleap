@@ -9,7 +9,11 @@
 {{/hasSidebar}}
 
 {{# switch_to }}
-    <div id="switch-to-mount-point"></div>
+    <div id="switch-to-mount-point"
+         data-projects="{{ projects }}"
+         data-is-trove-cat-enabled="{{ is_trove_cat_enabled }}"
+         data-are-restricted-users-allowed="{{ is_trove_cat_enabled }}"
+    ></div>
 {{/ switch_to }}
 
 {{# project_context }}

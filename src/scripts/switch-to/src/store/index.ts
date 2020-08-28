@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppBurningParrot from "./src/components/AppBurningParrot.vue";
-import { init } from "./src/initiate-app";
+import { State } from "./type";
+import Vuex, { Store } from "vuex";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const vue_mount_point = document.getElementById("switch-to-mount-point");
-    if (!vue_mount_point) {
-        return;
-    }
-
-    init(vue_mount_point, AppBurningParrot);
-});
+export function createStore(root_state: State): Store<State> {
+    return new Vuex.Store({
+        state: root_state,
+    });
+}

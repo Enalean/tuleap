@@ -26,7 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
@@ -76,8 +76,8 @@ class PresenterBuilder
     {
         $global_dropdown_menu_items = [];
 
-        $dropdown_menu_item_content_project_presenters_builder = new ProjectPresentersBuilder();
-        $dropdown_menu_item_content_project_presenters         = $dropdown_menu_item_content_project_presenters_builder->build(
+        $project_presenters_builder = new ProjectPresentersBuilder();
+        $dropdown_menu_item_content_project_presenters = $project_presenters_builder->build(
             $this->current_user
         );
 

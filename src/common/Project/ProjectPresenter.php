@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
+namespace Tuleap\Project;
 
 use ForgeConfig;
 use Project;
@@ -34,10 +34,10 @@ class ProjectPresenter
     /** @var string */
     public $project_config_uri;
 
-    /** @var string */
+    /** @var bool */
     public $user_administers;
 
-    /** @var string */
+    /** @var bool */
     public $user_belongs;
 
     /** @var bool */
@@ -49,24 +49,25 @@ class ProjectPresenter
     /**
      * @var bool
      */
-    public $is_public_incl_restricted;
+    public $is_public_incl_restricted = false;
     /**
      * @var bool
      */
-    public $is_private_incl_restricted;
+    public $is_private_incl_restricted = false;
 
     public function __construct(
-        $project_name,
-        $project_uri,
-        $project_config_uri,
-        $user_administers,
-        $user_belongs,
+        string $project_name,
+        string $project_uri,
+        string $project_config_uri,
+        bool $user_administers,
+        bool $user_belongs,
         Project $project
     ) {
         $this->project_name       = $project_name;
         $this->project_uri        = $project_uri;
         $this->project_config_uri = $project_config_uri;
         $this->is_private         = ! $project->isPublic();
+        $this->is_public          = $project->isPublic();
         $this->user_administers   = $user_administers;
         $this->user_belongs       = $user_belongs;
 

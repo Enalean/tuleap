@@ -32,7 +32,11 @@
     {{> navbar/navbar }}
         <div id="main-container">
             {{# switch_to }}
-                <div id="switch-to-mount-point"></div>
+                <div id="switch-to-mount-point"
+                     data-projects="{{ projects }}"
+                     data-is-trove-cat-enabled="{{ is_trove_cat_enabled }}"
+                     data-are-restricted-users-allowed="{{ are_restricted_users_allowed }}"
+                ></div>
             {{/ switch_to }}
 
             {{# sidebar }}

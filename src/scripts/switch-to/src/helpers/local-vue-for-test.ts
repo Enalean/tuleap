@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,16 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import AppBurningParrot from "./src/components/AppBurningParrot.vue";
-import { init } from "./src/initiate-app";
+import { Vue } from "vue/types/vue";
+import Vuex from "vuex";
+import { createLocalVue } from "@vue/test-utils";
+import { initVueGettext } from "../../../tuleap/gettext/vue-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const vue_mount_point = document.getElementById("switch-to-mount-point");
-    if (!vue_mount_point) {
-        return;
-    }
+export async function createSwitchToLocalVue(): Promise<typeof Vue> {
+    const local_vue = createLocalVue();
+    await initVueGettext(local_vue, () => {
+        throw new Error("Fallback to default");
+    });
+    local_vue.use(Vuex);
 
-    init(vue_mount_point, AppBurningParrot);
-});
+    return local_vue;
+}

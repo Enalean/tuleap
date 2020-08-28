@@ -22,18 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
+use Tuleap\Project\ProjectPresentersBuilder;
+
 class SwitchToPresenterBuilder
 {
+    /**
+     * @var ProjectPresentersBuilder
+     */
+    private $project_presenters_builder;
+
+    public function __construct(ProjectPresentersBuilder $project_presenters_builder)
+    {
+        $this->project_presenters_builder = $project_presenters_builder;
+    }
+
     public function build(\PFUser $user): ?SwitchToPresenter
     {
         if (! $user->isLoggedIn()) {
             return null;
         }
 
-        if (! $user->useLabFeatures()) {
-            return null;
-        }
-
-        return new SwitchToPresenter();
+        return new SwitchToPresenter(
+            $this->project_presenters_builder->build($user),
+            (bool) \ForgeConfig::areRestrictedUsersAllowed(),
+            (bool) \ForgeConfig::get('sys_use_trove'),
+        );
     }
 }

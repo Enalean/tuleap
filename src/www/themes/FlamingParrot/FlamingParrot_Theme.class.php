@@ -38,6 +38,7 @@ use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\Account\RegistrationGuardEvent;
@@ -274,7 +275,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $registration_user_permission_checker
         );
 
-        $switch_to = (new SwitchToPresenterBuilder())->build($current_user);
+        $switch_to = (new SwitchToPresenterBuilder(new ProjectPresentersBuilder()))->build($current_user);
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,

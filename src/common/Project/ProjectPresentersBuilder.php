@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
+namespace Tuleap\Project;
 
 use PFUser;
 use Project;
@@ -35,9 +35,12 @@ class ProjectPresentersBuilder
     /** @var Project[] */
     private $projects;
 
+    /**
+     * @return ProjectPresenter[]
+     */
     public function build(
         PFUser $current_user
-    ) {
+    ): array {
         $this->current_user    = $current_user;
         $this->project_manager = ProjectManager::instance();
         $this->projects        = $this->project_manager->getActiveProjectsForUser($this->current_user);
@@ -45,7 +48,10 @@ class ProjectPresentersBuilder
         return $this->getProjectPresenters();
     }
 
-    private function getProjectPresenters()
+    /**
+     * @return ProjectPresenter[]
+     */
+    private function getProjectPresenters(): array
     {
         $project_presenters = [];
 
@@ -56,7 +62,7 @@ class ProjectPresentersBuilder
         return $project_presenters;
     }
 
-    private function getProjectPresenter(Project $project)
+    private function getProjectPresenter(Project $project): ProjectPresenter
     {
         $project_id         = $project->getID();
         $project_name       = $project->getPublicName();

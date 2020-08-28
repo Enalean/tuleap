@@ -43,13 +43,13 @@ use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectContextPresenter;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\User\SwitchToPresenterBuilder;
 use URLRedirect;
-use UserManager;
 use Valid_HTTPURI;
 use Valid_LocalURI;
 use Widget_Static;
@@ -144,7 +144,6 @@ class BurningParrotTheme extends BaseLayout
         $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : [];
         $sidebar                     = $this->getSidebarFromParams($params);
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
-        $current_user                = UserManager::instance()->getCurrentUser();
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
@@ -165,7 +164,7 @@ class BurningParrotTheme extends BaseLayout
         );
 
         $help_dropdown_presenter = $dropdown_presenter_builder->build(
-            $current_user,
+            $this->user,
             $this->version->version_number
         );
 
@@ -192,9 +191,9 @@ class BurningParrotTheme extends BaseLayout
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
-            $new_dropdown_presenter_builder->getPresenter($current_user, $project),
+            $new_dropdown_presenter_builder->getPresenter($this->user, $project),
             $project_context,
-            (new SwitchToPresenterBuilder())->build($this->user),
+            (new SwitchToPresenterBuilder(new ProjectPresentersBuilder()))->build($this->user),
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
