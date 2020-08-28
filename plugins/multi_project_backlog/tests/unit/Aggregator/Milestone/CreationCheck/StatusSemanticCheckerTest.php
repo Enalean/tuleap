@@ -90,10 +90,13 @@ class StatusSemanticCheckerTest extends TestCase
 
         $this->tracker_contributor_01 = new Tracker(123, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $this->tracker_contributor_02 = new Tracker(124, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $this->collection             = new MilestoneTrackerCollection([
-            $this->tracker_contributor_01,
-            $this->tracker_contributor_02
-        ]);
+        $this->collection             = new MilestoneTrackerCollection(
+            \Project::buildForTest(),
+            [
+                $this->tracker_contributor_01,
+                $this->tracker_contributor_02
+            ]
+        );
     }
 
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void

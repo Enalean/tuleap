@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -77,7 +77,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockArtifactLinkField($second_tracker, $user);
@@ -96,7 +96,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     public function testBuildFromMilestoneTrackersAcceptsEndDateFields(): void
     {
         $tracker    = $this->buildTestTracker(103);
-        $milestones = new MilestoneTrackerCollection([$tracker]);
+        $milestones = new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]);
         $user       = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($tracker, $user);
         $this->mockTitleField($tracker);
@@ -117,7 +117,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
             ->once()
@@ -132,7 +132,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
@@ -150,7 +150,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockTitleField($first_tracker);
@@ -169,7 +169,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockTitleField($first_tracker);
@@ -189,7 +189,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockTitleField($first_tracker);
@@ -209,7 +209,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $first_tracker  = $this->buildTestTracker(103);
         $second_tracker = $this->buildTestTracker(104);
-        $milestones     = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $user           = UserTestBuilder::aUser()->build();
         $this->mockArtifactLinkField($first_tracker, $user);
         $this->mockTitleField($first_tracker);

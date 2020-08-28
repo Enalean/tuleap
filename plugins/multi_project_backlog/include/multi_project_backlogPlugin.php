@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\DB\DBFactory;
@@ -31,6 +34,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\MilestoneCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\StatusSemanticChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
@@ -43,7 +47,11 @@ use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
 use Tuleap\MultiProjectBacklog\Contributor\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
@@ -68,6 +76,7 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
         $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
+        $this->addHook(CanSubmitNewArtifact::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -193,31 +202,11 @@ final class multi_project_backlogPlugin extends Plugin
 
         $event->setBacklogItemsCannotBeAdded();
 
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
-        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+        $milestone_creator_checker = $this->getMilestoneCreatorChecker();
 
-        $milestone_creator_checker = new MilestoneCreatorChecker(
-            $contributor_projects_collection_builder,
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
-                \PlanningFactory::build()
-            ),
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
-                $form_element_factory,
-                new Tracker_Semantic_TitleFactory(),
-                new Tracker_Semantic_DescriptionFactory(),
-                $semantic_status_factory,
-                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
-            ),
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
-                new \Tracker_Semantic_TitleDao(),
-                new \Tracker_Semantic_DescriptionDao(),
-                $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
-            ),
-            BackendLogger::getDefaultLogger("multi_project_backlog_syslog")
-        );
-
+        if (! $event->canUserCreateMilestone()) {
+            return;
+        }
         $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(
             $event->getTopMilestone(),
             $event->getUser()
@@ -252,5 +241,72 @@ final class multi_project_backlogPlugin extends Plugin
     public function trackerAddSystemNatures(array $params): void
     {
         $params['natures'][] = MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME;
+    }
+
+    public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
+    {
+        $form_element_factory     = \Tracker_FormElementFactory::instance();
+        $artifact_creator_checker = new ArtifactCreatorChecker(
+            new Planning_MilestoneFactory(
+                PlanningFactory::build(),
+                Tracker_ArtifactFactory::instance(),
+                $form_element_factory,
+                new AgileDashboard_Milestone_MilestoneStatusCounter(
+                    new AgileDashboard_BacklogItemDao(),
+                    new Tracker_ArtifactDao(),
+                    Tracker_ArtifactFactory::instance()
+                ),
+                new PlanningPermissionsManager(),
+                new AgileDashboard_Milestone_MilestoneDao(),
+                new ScrumForMonoMilestoneChecker(
+                    new ScrumForMonoMilestoneDao(),
+                    PlanningFactory::build()
+                ),
+                new TimeframeBuilder(
+                    new SemanticTimeframeBuilder(
+                        new SemanticTimeframeDao(),
+                        $form_element_factory
+                    ),
+                    \BackendLogger::getDefaultLogger()
+                ),
+                new MilestoneBurndownFieldChecker($form_element_factory)
+            ),
+            $this->getMilestoneCreatorChecker()
+        );
+
+        if (! $artifact_creator_checker->canCreateAnArtifact($can_submit_new_artifact->getUser(), $can_submit_new_artifact->getTracker())) {
+            $can_submit_new_artifact->disableArtifactSubmission();
+        }
+    }
+
+    private function getMilestoneCreatorChecker(): MilestoneCreatorChecker
+    {
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+
+        return new MilestoneCreatorChecker(
+            new ContributorProjectsCollectionBuilder(
+                new AggregatorDao(),
+                ProjectManager::instance()
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
+                \PlanningFactory::build()
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
+                $form_element_factory,
+                new Tracker_Semantic_TitleFactory(),
+                new Tracker_Semantic_DescriptionFactory(),
+                $semantic_status_factory,
+                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
+                new \Tracker_Semantic_TitleDao(),
+                new \Tracker_Semantic_DescriptionDao(),
+                $timeframe_dao,
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+            ),
+            BackendLogger::getDefaultLogger("multi_project_backlog_syslog")
+        );
     }
 }

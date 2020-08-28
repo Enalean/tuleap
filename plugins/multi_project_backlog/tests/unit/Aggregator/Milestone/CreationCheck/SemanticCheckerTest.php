@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -73,7 +73,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->once()
@@ -105,7 +105,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(1);
@@ -120,7 +120,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -137,7 +137,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -158,7 +158,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -181,7 +181,7 @@ final class SemanticCheckerTest extends TestCase
         $aggregator_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);

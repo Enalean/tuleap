@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -36,7 +36,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
         $second_tracker = M::mock(\Tracker::class);
         $second_tracker->shouldReceive('getId')->andReturn(57);
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $ids        = $collection->getTrackerIds();
         $this->assertContains(78, $ids);
         $this->assertContains(57, $ids);
@@ -44,7 +44,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
 
     public function testGetTrackerIdsReturnsEmpty(): void
     {
-        $collection = new MilestoneTrackerCollection([]);
+        $collection = new MilestoneTrackerCollection(\Project::buildForTest(), []);
         $this->assertEmpty($collection->getTrackerIds());
     }
 
@@ -53,7 +53,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
         $first_tracker = M::mock(\Tracker::class);
         $second_tracker = M::mock(\Tracker::class);
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $trackers = $collection->getMilestoneTrackers();
         $this->assertContains($first_tracker, $trackers);
         $this->assertContains($second_tracker, $trackers);
@@ -61,31 +61,43 @@ final class MilestoneTrackerCollectionTest extends TestCase
 
     public function testGetMilestoneTrackersReturnsEmpty(): void
     {
-        $collection = new MilestoneTrackerCollection([]);
+        $collection = new MilestoneTrackerCollection(\Project::buildForTest(), []);
         $this->assertEmpty($collection->getMilestoneTrackers());
     }
 
-    public function testCanUserSubmitAnArtifactInAllTrackersReturnsTrue(): void
+    public function testCanUserSubmitAnArtifactInAllContributorTrackersReturnsTrue(): void
     {
-        $first_tracker = M::mock(\Tracker::class);
-        $first_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
-        $second_tracker = M::mock(\Tracker::class);
-        $second_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $first_contributor_tracker = M::mock(\Tracker::class);
+        $first_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $first_contributor_tracker->shouldReceive('getGroupId')->andReturn('963');
+        $second_contributor_tracker = M::mock(\Tracker::class);
+        $second_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $second_contributor_tracker->shouldReceive('getGroupId')->andReturn('789');
+        $aggregator_project = \Project::buildForTest();
+        $aggregator_tracker = M::mock(\Tracker::class);
+        $aggregator_tracker->shouldReceive('getGroupId')->andReturn($aggregator_project->getID());
+
         $user = UserTestBuilder::aUser()->build();
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
-        $this->assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        $collection = new MilestoneTrackerCollection($aggregator_project, [$first_contributor_tracker, $aggregator_tracker, $second_contributor_tracker]);
+        $this->assertTrue($collection->canUserSubmitAnArtifactInAllContributorTrackers($user));
     }
 
     public function testCanUserSubmitAnArtifactInAllTrackersReturnsFalse(): void
     {
-        $first_tracker = M::mock(\Tracker::class);
-        $first_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
-        $second_tracker = M::mock(\Tracker::class);
-        $second_tracker->shouldReceive('userCanSubmitArtifact')->andReturnFalse();
+        $first_contributor_tracker = M::mock(\Tracker::class);
+        $first_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $first_contributor_tracker->shouldReceive('getGroupId')->andReturn('963');
+        $second_contributor_tracker = M::mock(\Tracker::class);
+        $second_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnFalse();
+        $second_contributor_tracker->shouldReceive('getGroupId')->andReturn('789');
+        $aggregator_project = \Project::buildForTest();
+        $aggregator_tracker = M::mock(\Tracker::class);
+        $aggregator_tracker->shouldReceive('getGroupId')->andReturn($aggregator_project->getID());
+
         $user = UserTestBuilder::aUser()->build();
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
-        $this->assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        $collection = new MilestoneTrackerCollection($aggregator_project, [$first_contributor_tracker, $aggregator_tracker, $second_contributor_tracker]);
+        $this->assertFalse($collection->canUserSubmitAnArtifactInAllContributorTrackers($user));
     }
 }
