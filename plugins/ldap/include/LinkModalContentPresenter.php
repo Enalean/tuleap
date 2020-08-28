@@ -43,6 +43,10 @@ class LinkModalContentPresenter
     public $action_label;
     public $locale;
     public $ldap_display_name;
+    /**
+     * @var string
+     */
+    public $ldap_server_common_name;
 
     public function __construct(
         $ldap_group_name,
@@ -53,7 +57,8 @@ class LinkModalContentPresenter
         $action_label,
         $locale,
         CSRFSynchronizerToken $csrf_token,
-        $ldap_display_name
+        $ldap_display_name,
+        string $ldap_server_common_name
     ) {
         $this->ldap_group_name              = $ldap_group_name;
         $this->project_id                   = $project->getID();
@@ -65,5 +70,6 @@ class LinkModalContentPresenter
         $this->action_label                 = $action_label;
         $this->locale                       = $locale;
         $this->ldap_display_name            = $ldap_display_name;
+        $this->ldap_server_common_name      = $ldap_server_common_name;
     }
 }

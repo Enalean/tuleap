@@ -46,8 +46,12 @@ class AdditionalModalPresenterBuilder
      * @var HTTPRequest
      */
     private $request;
+    /**
+     * @var string
+     */
+    private $ldap_server_common_name;
 
-    public function __construct(LDAP_UserGroupManager $user_group_manager, HTTPRequest $request)
+    public function __construct(LDAP_UserGroupManager $user_group_manager, HTTPRequest $request, string $ldap_server_common_name)
     {
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             LDAP_TEMPLATE_DIR . '/project/ugroup/binding'
@@ -55,6 +59,7 @@ class AdditionalModalPresenterBuilder
 
         $this->user_group_manager = $user_group_manager;
         $this->request            = $request;
+        $this->ldap_server_common_name = $ldap_server_common_name;
     }
 
     public function build(ProjectUGroup $ugroup, $bind_option, $synchro, CSRFSynchronizerToken $csrf)
@@ -98,21 +103,23 @@ class AdditionalModalPresenterBuilder
                 'is_synchronized'         => $this->isSynchronized($ugroup, $synchro),
                 'locale'                  => $this->request->getCurrentUser()->getLocale(),
                 'csrf_token'              => $csrf,
+                'ldap_server_common_name' => $this->ldap_server_common_name,
             ]
         );
     }
 
     private function getTitle(?LDAPResult $ldap_group = null)
     {
-        $title = dgettext('tuleap-ldap', "Set directory group binding");
+        $title = sprintf(dgettext('tuleap-ldap', 'Set %1$s group binding'), $this->ldap_server_common_name);
 
         if ($ldap_group !== null) {
             $name  = $ldap_group->getGroupDisplayName();
             $title = sprintf(
                 dgettext(
                     'tuleap-ldap',
-                    "Update directory group binding (%s)"
+                    'Update %1$s group binding (%2$s)'
                 ),
+                $this->ldap_server_common_name,
                 $name
             );
         }

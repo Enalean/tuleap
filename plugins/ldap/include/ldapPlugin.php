@@ -48,6 +48,7 @@ use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\AccountInformationPresenter;
+use Tuleap\User\Account\AuthenticationMeanName;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
@@ -82,6 +83,7 @@ class LdapPlugin extends Plugin
     {
         // Layout
         $this->addHook(RegistrationGuardEvent::NAME);
+        $this->addHook(AuthenticationMeanName::NAME);
 
         // Search
         $this->addHook(Event::SEARCH_TYPE);
@@ -411,7 +413,7 @@ class LdapPlugin extends Plugin
             $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if ($lr) {
                 $params['allow_codendi_login'] = false;
-                $GLOBALS['feedback'] .= ' ' . sprintf(dgettext('tuleap-ldap', 'Please use your Enterprise Directory login (not the %1$s one).'), ForgeConfig::get('sys_name'));
+                $GLOBALS['feedback'] .= ' ' . sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get('sys_name'));
             } else {
                 $params['allow_codendi_login'] = true;
             }
@@ -497,11 +499,11 @@ class LdapPlugin extends Plugin
     public function personalInformationEntry($params)
     {
         if ($this->isLdapAuthType()) {
-            $params['entry_label'][$this->getId()] = dgettext('tuleap-ldap', 'Enterprise Directory Login');
+            $params['entry_label'][$this->getId()] = sprintf(dgettext('tuleap-ldap', '%1$s login'), $this->getLDAPServerCommonName());
 
             $login_info = $this->getLdapLoginInfo($params['user_id']);
             if (! $login_info) {
-                $login_info = dgettext('tuleap-ldap', 'No Enterprise Directory login found');
+                $login_info = sprintf(dgettext('tuleap-ldap', 'No %1$s login found'), $this->getLDAPServerCommonName());
             }
             $params['entry_value'][$this->getId()] = $login_info;
         }
@@ -516,12 +518,12 @@ class LdapPlugin extends Plugin
             $ldap_id_label = $GLOBALS['Language']->getText('admin_usergroup', 'ldap_id');
             $ldap_id       = $user->getLdapId();
 
-            $login_label    = dgettext('tuleap-ldap', 'Enterprise Directory Login');
+            $login_label    = sprintf(dgettext('tuleap-ldap', '%1$s login'), $this->getLDAPServerCommonName());
             $login_info     = $this->getLdapLoginInfo($user->getId());
             $has_login_info = true;
             if (! $login_info) {
                 $has_login_info = false;
-                $login_info     = dgettext('tuleap-ldap', 'No Enterprise Directory login found');
+                $login_info     = sprintf(dgettext('tuleap-ldap', 'No %1$s login found'), $this->getLDAPServerCommonName());
             }
 
             $params['additional_details'][] = [
@@ -677,15 +679,15 @@ class LdapPlugin extends Plugin
             if ($ldap_result) {
                 $account_information->addInformation(
                     new AccountInformationPresenter(
-                        dgettext('tuleap-ldap', 'Enterprise Directory Login'),
+                        sprintf(dgettext('tuleap-ldap', '%1$s login'), $this->getLDAPServerCommonName()),
                         $ldap_result->getLogin(),
                     )
                 );
             } else {
                 $account_information->addInformation(
                     new AccountInformationPresenter(
-                        dgettext('tuleap-ldap', 'Enterprise Directory Login'),
-                        dgettext('tuleap-ldap', 'No Enterprise Directory login found'),
+                        sprintf(dgettext('tuleap-ldap', '%1$s login'), $this->getLDAPServerCommonName()),
+                        sprintf(dgettext('tuleap-ldap', 'No %1$s login found'), $this->getLDAPServerCommonName()),
                     )
                 );
             }
@@ -795,7 +797,8 @@ class LdapPlugin extends Plugin
                     $action_label,
                     $collector->getCurrentLocale(),
                     $collector->getCSRF(),
-                    $display_name
+                    $display_name,
+                    $this->getLDAPServerCommonName(),
                 )
             );
 
@@ -1058,7 +1061,7 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             $params['authoritative'] = true;
-            $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
+            $params['presenter']     = new LDAP_LoginPresenter($params['presenter'], $this->getLDAPServerCommonName());
         }
     }
 
@@ -1278,7 +1281,7 @@ class LdapPlugin extends Plugin
     public function bindingAdditionalModalPresenterCollection(BindingAdditionalModalPresenterCollection $collection)
     {
         $request = HTTPRequest::instance();
-        $builder = new AdditionalModalPresenterBuilder($this->getLdapUserGroupManager(), $request);
+        $builder = new AdditionalModalPresenterBuilder($this->getLdapUserGroupManager(), $request, $this->getLDAPServerCommonName());
         $collection->addModal(
             $builder->build(
                 $collection->getUgroup(),
@@ -1416,5 +1419,19 @@ class LdapPlugin extends Plugin
             $r->get('/bind-ugroup-confirm', $this->getRouteHandler('routeGetBindUgroupConfirm'));
             $r->get('/bind-members-confirm', $this->getRouteHandler('routeGetBindMembersConfirm'));
         });
+    }
+
+    public function authenticationMeanName(AuthenticationMeanName $event): void
+    {
+        $event->setName($this->getLDAPServerCommonName());
+    }
+
+    private function getLDAPServerCommonName(): string
+    {
+        $params = $this->getLDAPParams();
+        if (! isset($params['server_common_name'])) {
+            return 'LDAP';
+        }
+        return (string) $params['server_common_name'];
     }
 }

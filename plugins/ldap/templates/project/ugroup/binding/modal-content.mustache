@@ -21,13 +21,14 @@
         {{# is_linked }}
             <p class="project-admin-ugroup-ldap-binding-modal-linked-with">{{# dgettext }}
                 tuleap-ldap
-                | <strong>%s</strong> is already linked with directory group <strong>%s</strong>.
+                | <strong>%s</strong> is already linked with %s group <strong>%s</strong>.
                 | {{ ugroup_name }}
+                | {{ ldap_server_common_name }}
                 | {{ ldap_group_display_name }}
             {{/ dgettext }}
         {{/ is_linked }}
 
-        <p>{{# dgettext }}tuleap-ldap | If you choose to synchronize with a group from the directory, it will:{{/ dgettext }}</p>
+        <p>{{# dgettext }}tuleap-ldap | If you choose to synchronize with a group from %s, it will:| {{ ldap_server_common_name }} {{/ dgettext }}</p>
         <ul>
             <li>
                 {{# dgettext }}
@@ -39,9 +40,10 @@
             <li>
                 {{# dgettext }}
                     tuleap-ldap
-                    | Remove all users who belong to this %s group but not to the directory group if you don't enable
+                    | Remove all users who belong to this %s group but not to the %s group if you don't enable
                       the 'Preserve members' option.
                     | {{ sys_name }}
+                    | {{ ldap_server_common_name }}
                 {{/ dgettext }}
             </li>
         </ul>
@@ -50,12 +52,12 @@
         <input type="hidden" name="previous_bind_with_group" value="{{ ldap_group_name }}" />
         <div class="tlp-form-element">
             <label class="tlp-label" for="project-admin-ugroup-binding-ldap-group">
-                {{# dgettext }}tuleap-ldap | Bind with group from directory{{/ dgettext }}
+                {{# dgettext }}tuleap-ldap | Bind with group from %s| {{ ldap_server_common_name }} {{/ dgettext }}
             </label>
             <select
                 name="bind_with_group"
                 id="project-admin-ugroup-binding-ldap-group"
-                data-placeholder="{{# dgettext }} tuleap-ldap | Enterprise directory group name{{/ dgettext }}"
+                data-placeholder="{{# dgettext }} tuleap-ldap | %s group name| {{ ldap_server_common_name }} {{/ dgettext }}"
                 class="tlp-input"
                 style="width: 100%"
                 data-ugroup-id="{{ ugroup_id }}"
@@ -80,7 +82,7 @@
                 {{# dgettext }}tuleap-ldap | Preserve members{{/ dgettext }}
             </label>
             <p class="tlp-text-info">
-                {{# dgettext }}tuleap-ldap | Preserve users that are not part of the directory group.{{/ dgettext }}
+                {{# dgettext }}tuleap-ldap | Preserve users that are not part of the %s group.| {{ ldap_server_common_name }} {{/ dgettext }}
             </p>
         </div>
 
@@ -95,7 +97,7 @@
                 {{# dgettext }}tuleap-ldap | Synchronize daily{{/ dgettext }}
             </label>
             <p class="tlp-text-info">
-                {{# dgettext }}tuleap-ldap | Every night the group will be synchronized with the directory one.{{/ dgettext }}
+                {{# dgettext }}tuleap-ldap | Every night the group will be synchronized with the %s one.| {{ ldap_server_common_name }} {{/ dgettext }}
             </p>
         </div>
 
@@ -114,7 +116,7 @@
                     value="ldap_remove_binding"
             >
                 <i class="fa fa-unlink tlp-button-icon"></i>
-                {{# dgettext }}tuleap-ldap | Unlink group and directory{{/ dgettext }}
+                {{# dgettext }}tuleap-ldap | Unlink group and %s| {{ ldap_server_common_name }} {{/ dgettext }}
             </button>
         {{/ is_linked }}
         <button type="submit"

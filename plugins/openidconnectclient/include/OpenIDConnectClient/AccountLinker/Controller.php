@@ -31,6 +31,7 @@ use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\User\Account\AuthenticationMeanName;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use UserManager;
 
@@ -100,14 +101,17 @@ class Controller
         $link_to_register_page   = $this->generateLinkToRegisterPage($request);
         $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
         assert($registration_guard instanceof RegistrationGuardEvent);
-        $presenter               = new Presenter(
+        $authentication_mean_name = $this->event_dispatcher->dispatch(new AuthenticationMeanName());
+        assert($authentication_mean_name instanceof AuthenticationMeanName);
+        $presenter = new Presenter(
             $return_to,
             $provider->getName(),
             $link_to_register_page,
             $registration_guard->isRegistrationPossible(),
             $this->connector_presenter_builder->getLoginConnectorPresenter(
-                OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(['action' => 'link-existing', 'return_to' => $return_to])
-            )
+                OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(['action' => 'link-existing', 'return_to' => $return_to]),
+            ),
+            $authentication_mean_name,
         );
         $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 

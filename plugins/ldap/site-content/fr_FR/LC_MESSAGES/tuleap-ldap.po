@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -17,15 +17,19 @@ msgstr ""
 msgid "%1$s internal login:"
 msgstr "Login interne %1$s&nbsp;:"
 
+#, php-format
+msgid "%1$s login"
+msgstr "compte %1$s"
+
+msgid "%s group name"
+msgstr "nom du groupe %s"
+
 msgid "<em>Required for CVS, FTP and Subversion accesses</em>."
 msgstr "<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>."
 
 msgid ""
-"<strong>%s</strong> is already linked with directory group <strong>%s</"
-"strong>."
-msgstr ""
-"<strong>%s</strong> est déjà lié avec le groupe <strong>%s</strong> de "
-"l'annuaire."
+"<strong>%s</strong> is already linked with %s group <strong>%s</strong>."
+msgstr "<strong>%s</strong> est déjà lié avec le groupe%s <strong>%s</strong>."
 
 msgid "Account details"
 msgstr "Détails du compte"
@@ -41,8 +45,8 @@ msgstr ""
 msgid "An error occured during account update: %1$s."
 msgstr "Une erreur s'est produite pendant la mise à jour du compte: %1$s."
 
-msgid "Bind with group from directory"
-msgstr "Lier avec un groupe de l'annuaire"
+msgid "Bind with group from %s"
+msgstr "Lier avec un groupe %s"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -50,17 +54,8 @@ msgstr "Annuler"
 msgid "Email Address:"
 msgstr "Adresse email&nbsp;:"
 
-msgid "Enterprise Directory"
-msgstr "Annuaire d'entreprise"
-
-msgid "Enterprise Directory Login"
-msgstr "Identifiant sur l'annuaire d'entreprise"
-
-msgid "Enterprise directory group name"
-msgstr "Nom du groupe"
-
-msgid "Every night the group will be synchronized with the directory one."
-msgstr "Chaque nuit, le groupe sera synchronisé avec le groupe de l'annuaire."
+msgid "Every night the group will be synchronized with the %s one."
+msgstr "Chaque nuit, le groupe sera synchronisé avec le groupe %s."
 
 #, php-format
 msgid "Fields marked with %1$s are mandatory."
@@ -74,8 +69,8 @@ msgstr "Premier login sur %1$s"
 msgid "Group %1$s not found in directory"
 msgstr "Le groupe %1$s n'existe pas dans l'annuaire"
 
-msgid "If you choose to synchronize with a group from the directory, it will:"
-msgstr "Lors de la synchronisation avec l'annuaire :"
+msgid "If you choose to synchronize with a group from %s, it will:"
+msgstr "Lors de la synchronisation avec %s :"
 
 msgid "LDAP Plugin. Provides LDAP information as well as LDAP authentication."
 msgstr ""
@@ -88,11 +83,12 @@ msgstr "Résultats LDAP Sync"
 msgid "LDAP Sync Results for %projectName%"
 msgstr "Résultats de synchronisation LDAP pour %projectName%"
 
-msgid "Link with Enterprise Directory Group"
-msgstr "Lier avec un groupe de l'annuaire"
+msgid "Link with %s group"
+msgstr "Liéer avec un groupe %s"
 
-msgid "No Enterprise Directory login found"
-msgstr "Identifiant sur l'annuaire d'entreprise introuvable"
+#, php-format
+msgid "No %1$s login found"
+msgstr "Aucun compte %1$s trouvé"
 
 msgid "No users were added"
 msgstr "Aucun utilisateur n'a été ajouté"
@@ -100,21 +96,20 @@ msgstr "Aucun utilisateur n'a été ajouté"
 msgid "No users were removed"
 msgstr "Aucun utilisateur n'a été supprimé"
 
-msgid "Please select a LDAP group."
-msgstr "Veuillez sélectionner un groupe LDAP."
+msgid "Please select a %s group."
+msgstr "Veuillez sélectionner un groupe %s."
 
 #, php-format
-msgid "Please use your Enterprise Directory login (not the %1$s one)."
-msgstr ""
-"Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de %1$s)."
+msgid "Please use your %1$s login (not the %2$s one)."
+msgstr "Merci d'utiliser le login %2$s (pas celui de %1$s)."
 
 msgid "Preserve members"
 msgstr "Préserver les membres"
 
-msgid "Preserve users that are not part of the directory group."
+msgid "Preserve users that are not part of the %s group."
 msgstr ""
-"Les membres de ce groupe qui n'appartiennent pas au groupe de l'annuaire ne "
-"seront pas supprimés."
+"Les membres de ce groupe qui n'appartiennent pas au groupe %s ne seront pas "
+"supprimés."
 
 msgid ""
 "Receive Email about Site Updates <em>(Very low traffic and includes security "
@@ -130,12 +125,16 @@ msgstr ""
 "<I>(Faible trafic)</I>"
 
 msgid ""
-"Remove all users who belong to this %s group but not to the directory group "
-"if you don't enable\n"
+"Remove all users who belong to this %s group but not to the %s group if you "
+"don't enable\n"
 "                      the 'Preserve members' option."
 msgstr ""
-"Les utilisateurs membres de ce groupe mais pas dans l'annuaire sont "
-"supprimés si vous ne choisissez pas l'option 'Préserver les membres'."
+"Les utilisateurs membres de ce groupe %s mais pas dans %s sont supprimés si "
+"vous ne choisissez pas l'option 'Préserver les membres'."
+
+#, php-format
+msgid "Set %1$s group binding"
+msgstr "Lier avec un groupe %1$s"
 
 msgid "Set directory group binding"
 msgstr "Lier avec un groupe de l'annuaire"
@@ -156,10 +155,14 @@ msgid ""
 "Unable to retrieve LDAP info for your user account, skipping Welcome page"
 msgstr ""
 "Impossible de récupérer les informations vous concernant depuis l'annuaire "
-"LDAP."
+"LDAP"
 
-msgid "Unlink group and directory"
-msgstr "Supprimer le lien avec l'annuaire"
+msgid "Unlink group and %s"
+msgstr "Supprimer le lien avec %s"
+
+#, php-format
+msgid "Update %1$s group binding (%2$s)"
+msgstr "Mettre à jour le lien avec %1$s (%2$s)"
 
 #, php-format
 msgid "Update directory group binding (%s)"
