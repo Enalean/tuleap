@@ -31,7 +31,7 @@ $switch-menu-item-hover-color: $main;
 
 .breadcrumb-container {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     padding: $tlp-medium-spacing;
     background: $main-background;
 }
@@ -208,27 +208,38 @@ $switch-menu-item-hover-color: $main;
 }
 
 .breadcrumb-project-privacy-icon {
-    margin: 0 ($tlp-small-spacing / 2) 0 0;
-    color: $step-color;
-    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: transparentize(#d4d7e1, .5);
+    color: #747474;
+    font-size: .7rem;
+    cursor: help;
 }
 
 .breadcrumb-project-privacy-icon-with-flags {
     display: flex;
     align-items: center;
     margin: 0 $tlp-small-spacing 0 0;
-    padding: $tlp-small-spacing;
+    padding: 4px;
     border-radius: 4px;
-    background: #dcdcdc;
-    color: #5f5f5f;
+    background: transparentize(#d4d7e1, .5);
+    cursor: help;
 
     > .breadcrumb-project-privacy-icon {
-        margin: 0;
-        color: #5f5f5f;
+        width: auto;
+        height: auto;
+        margin: 0 8px 0 6px;
+        background: none;
+        color: #747474;
+        font-size: .875rem;
     }
 
     > .current-project-nav-flag-labels {
-        color: #5f5f5f;
+        color: #747474;
     }
 
     > .tuleap-svg-project-shield {
@@ -236,15 +247,103 @@ $switch-menu-item-hover-color: $main;
     }
 }
 
-#current-project-nav-title-popover {
-    display: none;
-}
-
 &:not(.sidebar-collapsed) {
+    #breadcrumb-project-privacy-icon,
     .breadcrumb-project-privacy-icon-with-flags,
     .breadcrumb-project-privacy-icon,
     .breadcrumb-with-only-one-item,
     .breadcrumb-project {
         display: none;
     }
+}
+
+.current-project-nav-flag-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.current-project-nav-flag-label {
+    max-width: 150px;
+    overflow: hidden;
+    font-size: .6rem;
+    font-weight: 600;
+    letter-spacing: .2px;
+    line-height: .625rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.current-project-nav-popover-privacy {
+    top: 28px !important; // Override bootstrap inline position
+    left: 0 !important; // Override bootstrap inline position
+    min-width: 400px;
+
+    > .arrow {
+        left: 62px;
+    }
+}
+
+:not(.breadcrumb-project-privacy-icon-with-flags) + .current-project-nav-popover-privacy {
+    top: 28px !important; // Override bootstrap inline position
+    left: -18px !important; // Override bootstrap inline position
+
+    > .arrow {
+        left: 30px;
+    }
+}
+
+.current-project-nav-flag-popover-flag {
+    position: relative;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 $tlp-medium-spacing;
+    color: $main;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tuleap-svg-project-shield {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 12px;
+
+        > path {
+            fill: $main;
+        }
+    }
+}
+
+.current-project-nav-flag-popover-separator {
+    margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+}
+
+.current-project-nav-flag-popover-content-title {
+    margin: 0 0 10px;
+    border: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.current-project-nav-title-popover-content-description,
+.current-project-nav-flag-popover-content-description {
+    color: #747474;
+}
+
+.current-project-nav-flag-popover-content-description {
+    margin: 0;
+    line-height: 1.5rem;
+}
+
+
+#current-project-nav-title-popover {
+    display: none;
 }

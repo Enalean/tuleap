@@ -31,7 +31,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
 .breadcrumb-container {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
@@ -199,30 +199,46 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 }
 
 .breadcrumb-project-privacy-icon {
-    margin: 0 ($tlp-small-spacing / 2) 0 0;
-    color: $step-color;
-    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: transparentize($tlp-ui-border-dark, .5);
+    color: $tlp-ui-dimmed;
+    font-size: .7rem;
+    cursor: help;
 }
 
 .breadcrumb-project-privacy-icon-with-flags {
     display: flex;
     align-items: center;
     margin: 0 $tlp-small-spacing 0 0;
-    padding: $tlp-small-spacing;
+    padding: 4px;
     border-radius: 4px;
-    background: $tlp-swatch-chrome-silver-secondary;
+    background: transparentize($tlp-ui-border-dark, .5);
+    cursor: help;
 
-    > .breadcrumb-project-privacy-icon {
-        margin: 0;
-        color: $tlp-swatch-chrome-silver-text;
+    .breadcrumb-project-privacy-icon {
+        width: auto;
+        height: auto;
+        margin: 0 8px 0 6px;
+        background: none;
+        color: $tlp-ui-dimmed;
+        font-size: .875rem;
     }
 
     > .current-project-nav-flag-labels {
-        color: $tlp-swatch-chrome-silver-text;
+        color: $tlp-ui-dimmed;
     }
 
     > .tuleap-svg-project-shield {
         display: none;
+    }
+
+    + #current-project-nav-title-popover {
+        margin-top: 0;
     }
 }
 
@@ -233,4 +249,66 @@ body:not(.sidebar-collapsed) {
     .breadcrumb-project {
         display: none;
     }
+}
+
+.current-project-nav-flag-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.current-project-nav-flag-label {
+    max-width: 150px;
+    overflow: hidden;
+    font-size: .6rem;
+    font-weight: 600;
+    letter-spacing: .2px;
+    line-height: .625rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.current-project-nav-flag-popover-flag {
+    position: relative;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 $tlp-medium-spacing;
+    color: $tlp-theme-color;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tuleap-svg-project-shield {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 12px;
+
+        > path {
+            fill: $tlp-theme-color;
+        }
+    }
+}
+
+.current-project-nav-flag-popover-separator {
+    margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+    border-top-width: 1px;
+}
+
+.current-project-nav-flag-popover-content-title {
+    margin: 0 0 $tlp-small-spacing;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.current-project-nav-title-popover-description,
+.current-project-nav-flag-popover-content-description {
+    color: $tlp-ui-dimmed;
 }
