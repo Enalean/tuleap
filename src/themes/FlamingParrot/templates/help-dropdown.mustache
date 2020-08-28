@@ -12,16 +12,27 @@
         <div class="tlp-dropdown-menu dropdown-menu-top dropdown-menu-right" role="menu">
             {{# platform_links }}
                 <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item" role="menuitem">
-                    <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
+                    <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}" aria-hidden="true"></i>{{ title }}
                 </a>
             {{/ platform_links }}
             {{# release_note_link }}
                 <span class="dropdown-menu-separator" role="separator"></span>
-                    <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item {{^ has_release_note_been_seen }}help-dropdown-link-highlight{{/ has_release_note_been_seen }}"
-                       role="menuitem">
-                        <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
-                    </a>
+                <a href="{{ link }}" class="help-dropdown-link dropdown-item dropdown-menu-item {{^ has_release_note_been_seen }}help-dropdown-link-highlight{{/ has_release_note_been_seen }}"
+                   role="menuitem">
+                    <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}" aria-hidden="true"></i>{{ title }}
+                </a>
             {{/ release_note_link }}
+            {{# has_site_content_links }}
+                <span class="dropdown-menu-separator" role="separator"></span>
+                {{# site_content_links }}
+                    <a href="{{ link }}"
+                       class="help-dropdown-link dropdown-item dropdown-menu-item"
+                       role="menuitem"
+                    >
+                        {{ title }}
+                    </a>
+                {{/ site_content_links }}
+            {{/ has_site_content_links }}
             <span class="dropdown-menu-separator" role="separator"></span>
             <span class="dropdown-menu-item-alt text-muted">
                 {{# explorer_url }}

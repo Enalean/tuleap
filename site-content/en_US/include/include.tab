@@ -141,7 +141,6 @@ include_menu	auth_last_failure	Last log-on failure:
 include_menu	auth_nb_failure	Number of bad attempts:
 include_menu	help	Help
 include_menu	api	API
-include_menu	extras	More
 include_menu	get_help	Get Help
 include_menu	projects	Projects
 include_menu	browse_projects	Browse all projects

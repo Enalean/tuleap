@@ -26,6 +26,17 @@
                     <i class="tlp-dropdown-menu-item-icon fa fa-fw {{ icon }}"></i>{{ title }}
                 </a>
             {{/ release_note_link }}
+            {{# has_site_content_links }}
+                <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                {{# site_content_links }}
+                    <a href="{{ link }}"
+                       class="help-dropdown-link dropdown-item tlp-dropdown-menu-item"
+                       role="menuitem"
+                    >
+                        {{ title }}
+                    </a>
+                {{/ site_content_links }}
+            {{/ has_site_content_links }}
             <span class="tlp-dropdown-menu-separator" role="separator"></span>
             <span class="tlp-dropdown-menu-item-alt tlp-text-muted">
                 {{# explorer_url }}
