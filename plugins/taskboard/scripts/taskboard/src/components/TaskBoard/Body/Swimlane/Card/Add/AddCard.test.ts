@@ -135,6 +135,22 @@ describe("AddCard", () => {
         expect(wrapper.findComponent(AddButton).exists()).toBe(false);
     });
 
+    it(`Given the editor is displayed,
+        And user didn't fill anything
+        When the user clicks on the save button,
+        Then save action is not performed`, async () => {
+        const wrapper = getWrapper();
+
+        wrapper.findComponent(AddButton).vm.$emit("click");
+        wrapper.setData({ label: "" });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.label).toBe("");
+        wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
+
+        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+    });
+
     it("Blocks the creation of a new card if one is ongoing", async () => {
         const wrapper = getWrapper({
             is_card_creation_blocked_due_to_ongoing_creation: true,
