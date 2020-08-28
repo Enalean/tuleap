@@ -33,7 +33,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use PHPUnit\Framework\TestCase;
     use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
-    use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequestRefiner;
+    use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
     use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
     use Tuleap\Test\Builders\UserTestBuilder;
     use Tuleap\Test\Network\HTTPHeaderStack;
@@ -60,7 +60,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $this->milestone_factory                = M::mock(\Planning_MilestoneFactory::class);
             $this->milestone_representation_builder = M::mock(MilestoneRepresentationBuilder::class);
             $this->controller                       = new ProjectMilestonesResource(
-                new TopMilestoneRequestRefiner(),
+                new FilteringQueryParser(),
                 $this->milestone_factory,
                 $this->milestone_representation_builder
             );

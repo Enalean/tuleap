@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
-final class RawTopMilestoneRequest
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
+
+final class TopMilestoneRequest
 {
     /**
      * @var \PFUser
@@ -49,19 +51,50 @@ final class RawTopMilestoneRequest
      * @psalm-readonly
      */
     private $order;
+    /**
+     * @var FilteringQuery
+     * @psalm-readonly
+     */
+    private $filtering_query;
 
     public function __construct(
         \PFUser $user,
         \Project $project,
         int $limit,
         int $offset,
-        string $order
+        string $order,
+        FilteringQuery $filtering_query
     ) {
-        $this->user    = $user;
-        $this->project = $project;
-        $this->limit   = $limit;
-        $this->offset  = $offset;
-        $this->order   = $order;
+        $this->user            = $user;
+        $this->project         = $project;
+        $this->limit           = $limit;
+        $this->offset          = $offset;
+        $this->order           = $order;
+        $this->filtering_query = $filtering_query;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getStatusFilter(): ISearchOnStatus
+    {
+        return $this->filtering_query->getStatusFilter();
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function shouldFilterFutureMilestones(): bool
+    {
+        return $this->filtering_query->isFuturePeriod();
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function shouldFilterCurrentMilestones(): bool
+    {
+        return $this->filtering_query->isCurrentPeriod();
     }
 
     /**

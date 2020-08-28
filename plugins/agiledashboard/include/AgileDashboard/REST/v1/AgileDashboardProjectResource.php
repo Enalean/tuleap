@@ -23,7 +23,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
-use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequestRefiner;
+use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -383,7 +383,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
             $sub_milestone_finder,
             $planning_factory
         );
-        $request_refiner = new TopMilestoneRequestRefiner();
+        $request_refiner = new FilteringQueryParser();
         return new ProjectMilestonesResource($request_refiner, $milestone_factory, $milestone_representation_builder);
     }
 }

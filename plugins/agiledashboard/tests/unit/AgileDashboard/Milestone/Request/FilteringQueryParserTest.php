@@ -26,69 +26,55 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
+use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
-use Tuleap\AgileDashboard\Milestone\Request\RawTopMilestoneRequest;
-use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequestRefiner;
-use Tuleap\Test\Builders\UserTestBuilder;
 
-final class TopMilestoneRequestRefinerTest extends TestCase
+final class FilteringQueryParserTest extends TestCase
 {
     /**
-     * @var TopMilestoneRequestRefiner
+     * @var FilteringQueryParser
      */
-    private $refiner;
+    private $parser;
 
     protected function setUp(): void
     {
-        $this->refiner = new TopMilestoneRequestRefiner();
+        $this->parser = new FilteringQueryParser();
     }
 
     public function testItReturnsARequestWithAllStatusWhenQueryIsEmpty(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '');
-
-        $this->assertInstanceOf(StatusAll::class, $request->getStatusFilter());
+        $filter = $this->parser->parse('');
+        $this->assertInstanceOf(StatusAll::class, $filter->getStatusFilter());
     }
 
     public function testItReturnsARequestWithAllStatusWhenQueryIsEmptyObject(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '{}');
-
-        $this->assertInstanceOf(StatusAll::class, $request->getStatusFilter());
+        $filter = $this->parser->parse('{}');
+        $this->assertInstanceOf(StatusAll::class, $filter->getStatusFilter());
     }
 
     public function testItReturnsARequestWithFutureFilter(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '{\"period\":\"future\"}');
-
-        $this->assertTrue($request->shouldFilterFutureMilestones());
+        $filter = $this->parser->parse('{\"period\":\"future\"}');
+        $this->assertTrue($filter->isFuturePeriod());
     }
 
     public function testItReturnsARequestWithCurrentFilter(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '{\"period\":\"current\"}');
-
-        $this->assertTrue($request->shouldFilterCurrentMilestones());
+        $filter = $this->parser->parse('{\"period\":\"current\"}');
+        $this->assertTrue($filter->isCurrentPeriod());
     }
 
     public function testItReturnsARequestWithOpenStatusFilter(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '{\"status\":\"open\"}');
-
-        $this->assertInstanceOf(StatusOpen::class, $request->getStatusFilter());
+        $filter = $this->parser->parse('{\"status\":\"open\"}');
+        $this->assertInstanceOf(StatusOpen::class, $filter->getStatusFilter());
     }
 
     public function testItReturnsARequestWithClosedStatusFilter(): void
     {
-        $raw_request = $this->buildRawRequest();
-        $request     = $this->refiner->refineRawRequest($raw_request, '{\"status\":\"closed\"}');
-
-        $this->assertInstanceOf(StatusClosed::class, $request->getStatusFilter());
+        $filter = $this->parser->parse('{\"status\":\"closed\"}');
+        $this->assertInstanceOf(StatusClosed::class, $filter->getStatusFilter());
     }
 
     /**
@@ -96,10 +82,8 @@ final class TopMilestoneRequestRefinerTest extends TestCase
      */
     public function testItThrowsIfQueryIsInvalid(string $query): void
     {
-        $raw_request = $this->buildRawRequest();
-
         $this->expectException(MalformedQueryParameterException::class);
-        $this->refiner->refineRawRequest($raw_request, $query);
+        $this->parser->parse($query);
     }
 
     public function invalidQueryDataProvider(): array
@@ -113,16 +97,5 @@ final class TopMilestoneRequestRefinerTest extends TestCase
             'Unknown status value'                => ['{\"status\":\"cloSed\"}'],
             'Both status and period are provided' => ['{\"status\":\"closed\", \"period\":\"future\"}']
         ];
-    }
-
-    private function buildRawRequest(): RawTopMilestoneRequest
-    {
-        return new RawTopMilestoneRequest(
-            UserTestBuilder::aUser()->build(),
-            \Project::buildForTest(),
-            50,
-            0,
-            'asc'
-        );
     }
 }

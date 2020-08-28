@@ -19,7 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
-use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -462,7 +462,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @throws Planning_NoPlanningsException
      */
-    public function getPaginatedTopMilestones(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    public function getPaginatedTopMilestones(TopMilestoneRequest $request): PaginatedMilestones
     {
         if ($request->shouldFilterFutureMilestones()) {
             return $this->getPaginatedTopMilestonesInTheFuture($request);
@@ -476,7 +476,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @throws Planning_NoPlanningsException
      */
-    private function getPaginatedTopMilestonesWithStatusCriterion(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    private function getPaginatedTopMilestonesWithStatusCriterion(TopMilestoneRequest $request): PaginatedMilestones
     {
         $top_milestones = [];
         $total_size     = 0;
@@ -506,7 +506,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return new PaginatedMilestones($top_milestones, $total_size);
     }
 
-    private function getPaginatedTopMilestonesInTheFuture(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    private function getPaginatedTopMilestonesInTheFuture(TopMilestoneRequest $request): PaginatedMilestones
     {
         $user                     = $request->getUser();
         $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion($request);
@@ -525,7 +525,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return new PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
-    private function getCurrentPaginatedTopMilestones(RefinedTopMilestoneRequest $request): PaginatedMilestones
+    private function getCurrentPaginatedTopMilestones(TopMilestoneRequest $request): PaginatedMilestones
     {
         $user                     = $request->getUser();
         $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion($request);
