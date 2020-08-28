@@ -19,7 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
-use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 
@@ -151,7 +151,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
     /**
      * @psalm-return array{"from_statement":string, "where_status_statement":string, "order":string, "limit_statement": string}
      */
-    private function getPaginationAndStatusStatements(RefinedTopMilestoneRequest $request): array
+    private function getPaginationAndStatusStatements(TopMilestoneRequest $request): array
     {
         $limit           = $request->getLimit();
         $offset          = $request->getOffset();
@@ -179,7 +179,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
         ];
     }
 
-    public function searchPaginatedTopMilestones($milestone_tracker_id, RefinedTopMilestoneRequest $request)
+    public function searchPaginatedTopMilestones($milestone_tracker_id, TopMilestoneRequest $request)
     {
         $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
@@ -199,7 +199,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
     public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
         int $milestone_tracker_id,
-        RefinedTopMilestoneRequest $request
+        TopMilestoneRequest $request
     ) {
         $built_sql            = $this->getPaginationAndStatusStatements($request);
         $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);

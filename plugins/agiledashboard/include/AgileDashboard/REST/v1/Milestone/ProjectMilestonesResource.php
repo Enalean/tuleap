@@ -24,9 +24,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
-use Tuleap\AgileDashboard\Milestone\Request\RawTopMilestoneRequest;
-use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequestRefiner;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\REST\Header;
 
@@ -38,9 +38,9 @@ class ProjectMilestonesResource
     public const MAX_LIMIT = 50;
 
     /**
-     * @var TopMilestoneRequestRefiner
+     * @var FilteringQueryParser
      */
-    private $request_refiner;
+    private $query_parser;
     /**
      * @var \Planning_MilestoneFactory
      */
@@ -51,11 +51,11 @@ class ProjectMilestonesResource
     private $representation_builder;
 
     public function __construct(
-        TopMilestoneRequestRefiner $request_refiner,
+        FilteringQueryParser $query_parser,
         \Planning_MilestoneFactory $milestone_factory,
         MilestoneRepresentationBuilder $representation_builder
     ) {
-        $this->request_refiner        = $request_refiner;
+        $this->query_parser           = $query_parser;
         $this->milestone_factory      = $milestone_factory;
         $this->representation_builder = $representation_builder;
     }
@@ -74,15 +74,15 @@ class ProjectMilestonesResource
         int $offset,
         string $order
     ): array {
-        $raw_request = new RawTopMilestoneRequest($user, $project, $limit, $offset, $order);
         try {
-            $refined_request = $this->request_refiner->refineRawRequest($raw_request, $query);
+            $filtering_query = $this->query_parser->parse($query);
         } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
+        $request = new TopMilestoneRequest($user, $project, $limit, $offset, $order, $filtering_query);
 
         try {
-            $milestones = $this->milestone_factory->getPaginatedTopMilestones($refined_request);
+            $milestones = $this->milestone_factory->getPaginatedTopMilestones($request);
             $this->sendPaginationHeaders($limit, $offset, $milestones->getTotalSize());
         } catch (\Planning_NoPlanningsException $e) {
             $this->sendPaginationHeaders($limit, $offset, 0);

@@ -27,7 +27,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 
-class TopMilestoneRequestRefiner
+class FilteringQueryParser
 {
     private const STATUS_OPEN   = 'open';
     private const STATUS_CLOSED = 'closed';
@@ -35,10 +35,10 @@ class TopMilestoneRequestRefiner
     /**
      * @throws MalformedQueryParameterException
      */
-    public function refineRawRequest(RawTopMilestoneRequest $raw_request, string $query): RefinedTopMilestoneRequest
+    public function parse(string $query): FilteringQuery
     {
         if ($query === '') {
-            return RefinedTopMilestoneRequest::withStatusQuery($raw_request, new StatusAll());
+            return FilteringQuery::fromStatusQuery(new StatusAll());
         }
 
         $query_object = json_decode(stripslashes($query));
@@ -48,7 +48,7 @@ class TopMilestoneRequestRefiner
         }
 
         if ($query_object == new \stdClass()) {
-            return RefinedTopMilestoneRequest::withStatusQuery($raw_request, new StatusAll());
+            return FilteringQuery::fromStatusQuery(new StatusAll());
         }
 
         if (! isset($query_object->period) && ! isset($query_object->status)) {
@@ -60,12 +60,10 @@ class TopMilestoneRequestRefiner
         }
 
         if (isset($query_object->period)) {
-            $period_query = $this->parsePeriodQuery($query_object);
-            return RefinedTopMilestoneRequest::withPeriodQuery($raw_request, $period_query);
+            return FilteringQuery::fromPeriodQuery($this->parsePeriodQuery($query_object));
         }
 
-        $status_query = $this->parseStatusQuery($query_object);
-        return RefinedTopMilestoneRequest::withStatusQuery($raw_request, $status_query);
+        return FilteringQuery::fromStatusQuery($this->parseStatusQuery($query_object));
     }
 
     /**

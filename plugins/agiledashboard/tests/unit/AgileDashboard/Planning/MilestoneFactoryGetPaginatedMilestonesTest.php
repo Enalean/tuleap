@@ -27,10 +27,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
-use Tuleap\AgileDashboard\Milestone\Request\RawTopMilestoneRequest;
-use Tuleap\AgileDashboard\Milestone\Request\RefinedTopMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -88,10 +88,16 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsEmptyWhenNoMilestones(): void
     {
-        $user        = UserTestBuilder::aUser()->build();
-        $project     = \Project::buildForTest();
-        $raw_request = new RawTopMilestoneRequest($user, $project, 50, 0, 'asc');
-        $request     = RefinedTopMilestoneRequest::withStatusQuery($raw_request, new StatusAll());
+        $user    = UserTestBuilder::aUser()->build();
+        $project = \Project::buildForTest();
+        $request = new TopMilestoneRequest(
+            $user,
+            $project,
+            50,
+            0,
+            'asc',
+            FilteringQuery::fromStatusQuery(new StatusAll())
+        );
 
         $planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($planning);
@@ -104,10 +110,16 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsMilestonesFilteredByStatus(): void
     {
-        $user        = UserTestBuilder::aUser()->build();
-        $project     = \Project::buildForTest();
-        $raw_request = new RawTopMilestoneRequest($user, $project, 50, 0, 'asc');
-        $request     = RefinedTopMilestoneRequest::withStatusQuery($raw_request, new StatusAll());
+        $user    = UserTestBuilder::aUser()->build();
+        $project = \Project::buildForTest();
+        $request = new TopMilestoneRequest(
+            $user,
+            $project,
+            50,
+            0,
+            'asc',
+            FilteringQuery::fromStatusQuery(new StatusAll())
+        );
 
         $planning          = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $milestone_tracker = $this->buildTestTracker(15);
