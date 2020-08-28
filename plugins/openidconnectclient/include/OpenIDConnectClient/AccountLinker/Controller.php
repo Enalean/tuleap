@@ -24,12 +24,14 @@ use Exception;
 use Feedback;
 use HTTPRequest;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
+use Tuleap\User\Account\RegistrationGuardEvent;
 use UserManager;
 
 class Controller
@@ -61,6 +63,10 @@ class Controller
      * @var array
      */
     private $session_storage;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         UserManager $user_manager,
@@ -68,6 +74,7 @@ class Controller
         UserMappingManager $user_mapping_manager,
         UnlinkedAccountManager $unlinked_account_manager,
         ConnectorPresenterBuilder $connector_presenter_builder,
+        EventDispatcherInterface $event_dispatcher,
         array &$session_storage
     ) {
         $this->user_manager                = $user_manager;
@@ -76,6 +83,7 @@ class Controller
         $this->unlinked_account_manager    = $unlinked_account_manager;
         $this->connector_presenter_builder = $connector_presenter_builder;
         $this->session_storage             =& $session_storage;
+        $this->event_dispatcher            = $event_dispatcher;
     }
 
     public function showIndex(HTTPRequest $request): void
@@ -90,12 +98,13 @@ class Controller
         }
         $return_to               = $request->get('return_to');
         $link_to_register_page   = $this->generateLinkToRegisterPage($request);
-        $is_registering_possible = ! $provider->isUniqueAuthenticationEndpoint();
+        $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
         $presenter               = new Presenter(
             $return_to,
             $provider->getName(),
             $link_to_register_page,
-            $is_registering_possible,
+            $registration_guard->isRegistrationPossible(),
             $this->connector_presenter_builder->getLoginConnectorPresenter(
                 OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(['action' => 'link-existing', 'return_to' => $return_to])
             )
