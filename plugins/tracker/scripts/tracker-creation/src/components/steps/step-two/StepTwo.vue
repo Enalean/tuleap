@@ -160,9 +160,7 @@ export default class StepTwo extends Vue {
     }
 
     beforeUnload(event: Event): void {
-        if (this.has_form_been_submitted) {
-            delete event.returnValue;
-        } else {
+        if (!this.has_form_been_submitted) {
             event.preventDefault();
             event.returnValue = false;
         }

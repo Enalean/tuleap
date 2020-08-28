@@ -20,6 +20,7 @@
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import { initVueGettext, POFile } from "./vue-gettext-init";
+import { VueConfiguration } from "vue/types/vue";
 
 jest.mock("vue", () => {
     return {
@@ -35,8 +36,8 @@ jest.mock("vue-gettext");
 describe(`vue-gettext-init`, () => {
     beforeEach(() => {
         jest.resetModules();
-        delete document.body.dataset.userLocale;
-        delete Vue.config.language;
+        document.body.dataset.userLocale = "";
+        Vue.config = {} as VueConfiguration;
     });
 
     describe(`when a locale is defined on the document's body`, () => {

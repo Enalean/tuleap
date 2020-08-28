@@ -57,6 +57,9 @@ export default class App extends Vue {
     @Prop({ required: true, type: Number })
     readonly project_id!: number;
 
+    @Prop({ required: true })
+    readonly location!: Location;
+
     error_message: string | null = null;
     banner_presenter_is_loading = false;
 
@@ -74,7 +77,7 @@ export default class App extends Vue {
     private saveBannerMessage(message: string): void {
         saveBannerForProject(this.project_id, message)
             .then(() => {
-                location.reload();
+                this.location.reload();
             })
             .catch((error) => {
                 this.error_message = error.message;
@@ -85,7 +88,7 @@ export default class App extends Vue {
     private deleteBanner(): void {
         deleteBannerForProject(this.project_id)
             .then(() => {
-                location.reload();
+                this.location.reload();
             })
             .catch((error) => {
                 this.error_message = error.message;

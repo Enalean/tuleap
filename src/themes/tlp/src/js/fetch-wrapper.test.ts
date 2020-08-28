@@ -27,7 +27,9 @@ describe(`fetch-wrapper`, () => {
     });
 
     afterEach(() => {
-        delete window.fetch;
+        window.fetch = (): Promise<Response> => {
+            throw new Error("Not supposed to happen");
+        };
     });
 
     describe(`get()`, () => {

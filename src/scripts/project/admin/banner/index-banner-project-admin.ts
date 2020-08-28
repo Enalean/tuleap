@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         propsData: {
             message: vue_mount_point.dataset.bannerMessage || "",
             project_id: parseInt(vue_mount_point.dataset.projectId, 10),
+            location: window.location,
         },
     }).$mount(vue_mount_point);
 });
