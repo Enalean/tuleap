@@ -1,6 +1,10 @@
 <?php
 //COPY THIS FILE TO /etc/tuleap/plugins/ldap/etc/ldap.inc IF YOU USE Active Directory
 
+// How people refer to the Active Directory server, most of the time it's "Active Directory" but it can
+// be "LDAP" or "Enterprise Directory", ...
+// This value is used in Tuleap screens to refer to the server like "Enter your $sys_ldap_server_common_name credentials"
+$sys_ldap_server_common_name = 'Active Directory';
 
 // LDAP server(s) to query for more information on Tuleap users and
 // for authentication.

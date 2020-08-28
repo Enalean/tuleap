@@ -22,11 +22,11 @@
                 <label class="tlp-label"
                        for="project-admin-members-ldap-group-select"
                 >
-                    {{# dgettext }} tuleap-ldap | Link with Enterprise Directory Group{{/ dgettext }}
+                    {{# dgettext }} tuleap-ldap | Link with %s group| {{ ldap_server_common_name }} {{/ dgettext }}
                 </label>
                 <select name="ldap_group"
                         id="project-admin-members-ldap-group-select"
-                        data-placeholder="{{# dgettext }} tuleap-ldap | Enterprise directory group name{{/ dgettext }}"
+                        data-placeholder="{{# dgettext }} tuleap-ldap | %s group name| {{ ldap_server_common_name }} {{/ dgettext }}"
                         data-project-id="{{ project_id }}"
                         data-display-name="{{ display_name }}"
                         data-locale="{{ locale }}"
@@ -38,7 +38,7 @@
                     {{/ ldap_group_name }}
                 </select>
 
-              <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Please select a LDAP group.{{/ dgettext }}</p>
+              <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Please select a %s group.| {{ ldap_server_common_name }} {{/ dgettext }}</p>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
@@ -49,7 +49,7 @@
                 >
                     {{# dgettext }} tuleap-ldap | Preserve members{{/ dgettext }}
                 </label>
-                <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Preserve users that are not part of the directory group.{{/ dgettext }}</p>
+                <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Preserve users that are not part of the %s group.| {{ ldap_server_common_name }} {{/ dgettext }}</p>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
@@ -60,7 +60,7 @@
                 >
                     {{# dgettext }} tuleap-ldap | Synchronize daily{{/ dgettext }}
                 </label>
-            <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Every night the group will be synchronized with the directory one.{{/ dgettext }}</p>
+            <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Every night the group will be synchronized with the %s one.| {{ ldap_server_common_name }}{{/ dgettext }}</p>
             </div>
       <div id="project-admin-members-ldap-group-link-preview"></div>
     </div>
@@ -74,7 +74,7 @@
                     value="ldap_remove_binding"
             >
                 <i class="fa fa-unlink tlp-button-icon"></i>
-                {{# dgettext }}tuleap-ldap | Unlink group and directory{{/ dgettext }}
+                {{# dgettext }}tuleap-ldap | Unlink group and %s| {{ ldap_server_common_name }} {{/ dgettext }}
             </button>
         {{/ is_linked }}
         <button type="submit"

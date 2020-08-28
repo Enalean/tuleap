@@ -21,7 +21,12 @@
 
 class LDAP_LoginPresenter extends User_LoginPresenter
 {
-    public function __construct(User_LoginPresenter $login_presenter)
+    /**
+     * @var string
+     */
+    private $ldap_server_common_name;
+
+    public function __construct(User_LoginPresenter $login_presenter, string $ldap_server_common_name)
     {
         parent::__construct(
             $login_presenter->getReturnTo(),
@@ -33,11 +38,11 @@ class LDAP_LoginPresenter extends User_LoginPresenter
             $login_presenter->getDisplayNewAccountButton(),
             false
         );
+        $this->ldap_server_common_name = $ldap_server_common_name;
     }
 
     public function account_login_login_with_tuleap()
     {
-        $ldap_name = dgettext('tuleap-ldap', 'Enterprise Directory');
-        return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [$ldap_name]);
+        return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [$this->ldap_server_common_name]);
     }
 }
