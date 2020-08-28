@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'density';
-@import 'colors/common-colors';
-@import 'colors/red-colors';
-@import 'colors/computed-colors';
-@import 'margins';
-@import 'typography';
-@import 'names';
-@import 'shadows';
+$tlp-dropdown-shadow: 0 0 0 1px transparentize($tlp-theme-sidebar-background-color, .97),
+    0 6px 12px -5px transparentize($tlp-theme-sidebar-background-color, .85);
