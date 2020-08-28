@@ -94,6 +94,10 @@ export default class AddCard extends Vue {
     }
 
     save(): void {
+        if (this.label === "") {
+            return;
+        }
+
         const payload: NewCardPayload = {
             swimlane: this.swimlane,
             column: this.column,
