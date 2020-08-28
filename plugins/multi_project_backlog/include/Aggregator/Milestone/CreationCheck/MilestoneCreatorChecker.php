@@ -71,7 +71,7 @@ class MilestoneCreatorChecker
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
     {
-        $this->logger->info(
+        $this->logger->debug(
             "Checking if milestone can be created in top plannning of project " . $top_milestone->getProject()->getUnixName() .
             " by user " . $user->getName() . ' (#' . $user->getId() . ')'
         );
@@ -92,7 +92,7 @@ class MilestoneCreatorChecker
                 $user
             );
         } catch (MilestoneTrackerRetrievalException $exception) {
-            $this->logger->error($exception->getMessage());
+            $this->logger->error("Cannot retrieve all the milestones", ["exception" => $exception->getMessage()]);
             return false;
         }
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($top_milestone, $milestone_tracker_collection)) {
@@ -100,22 +100,22 @@ class MilestoneCreatorChecker
             return false;
         }
         if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllContributorTrackers($user)) {
-            $this->logger->error("User cannot submit an artifact in all contributor trackers.");
+            $this->logger->debug("User cannot submit an artifact in all contributor trackers.");
             return false;
         }
 
         try {
             $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
         } catch (SynchronizedFieldRetrievalException $exception) {
-            $this->logger->error($exception->getMessage());
+            $this->logger->error("Cannot retrieve all the synchronized fields", ["exception" => $exception->getMessage()]);
             return false;
         }
         if (! $fields->canUserSubmitAndUpdateAllFields($user)) {
-            $this->logger->error("User cannot submit and update all needed fields in all trackers.");
+            $this->logger->debug("User cannot submit and update all needed fields in all trackers.");
             return false;
         }
 
-        $this->logger->info("User can create a milestone in the project.");
+        $this->logger->debug("User can create a milestone in the project.");
         return true;
     }
 }
