@@ -71,6 +71,9 @@ const webpack_config_for_ckeditor = {
             },
         ]),
     ],
+    stats: {
+        excludeAssets: [/\/plugins\//, /\/lang\//, /\/skins\//],
+    },
 };
 
 let entry_points = {
