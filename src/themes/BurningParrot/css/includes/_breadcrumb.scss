@@ -131,7 +131,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-switch-menu {
     border-radius: 4px;
     background: $switch-menu-background;
-    box-shadow: 0 8px 15px -5px transparentize($tlp-theme-sidebar-background-color, .8);
+    box-shadow: $tlp-dropdown-shadow;
 }
 
 .breadcrumb-dropdown-item {
@@ -140,8 +140,16 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         color: $switch-menu-item-hover-color;
     }
 
+    &:nth-child(2) > .breadcrumb-dropdown-link {
+        border-radius: 4px 4px 0 0;
+    }
+
     &:last-child > .breadcrumb-dropdown-link {
         border-radius: 0 0 4px 4px;
+    }
+
+    &:nth-child(2):last-child > .breadcrumb-dropdown-link {
+        border-radius: 4px;
     }
 }
 
@@ -150,8 +158,9 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     padding: $tlp-small-spacing $tlp-medium-spacing;
     overflow: hidden;
     color: $switch-menu-item-color;
-    font-size: .875rem;
+    font-size: .8125rem;
     font-weight: 400;
+    letter-spacing: normal;
     line-height: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -176,9 +185,9 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     border-top: 1px solid $tlp-ui-border-light;
     color: $tlp-ui-dimmed;
-    font-size: .75rem;
+    font-size: .65rem;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: .5px;
     text-transform: uppercase;
     white-space: nowrap;
 

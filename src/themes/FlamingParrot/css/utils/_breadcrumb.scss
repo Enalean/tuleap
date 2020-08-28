@@ -136,7 +136,7 @@ $switch-menu-item-hover-color: $main;
 .breadcrumb-switch-menu {
     border-radius: 4px;
     background: $switch-menu-background;
-    box-shadow: 0 8px 15px -5px transparentize($sidebar-background, .8);
+    box-shadow: 0 0 0 1px transparentize($sidebar-background, .97), 0 6px 12px -5px transparentize($sidebar-background, .85);
 }
 
 .breadcrumb-dropdown-item {
@@ -145,8 +145,16 @@ $switch-menu-item-hover-color: $main;
         color: $switch-menu-item-hover-color;
     }
 
+    &:nth-child(2) > .breadcrumb-dropdown-link {
+        border-radius: 4px 4px 0 0;
+    }
+
     &:last-child > .breadcrumb-dropdown-link {
         border-radius: 0 0 4px 4px;
+    }
+
+    &:nth-child(2):last-child > .breadcrumb-dropdown-link {
+        border-radius: 4px;
     }
 }
 
@@ -155,8 +163,9 @@ $switch-menu-item-hover-color: $main;
     padding: $tlp-small-spacing $tlp-medium-spacing;
     overflow: hidden;
     color: $switch-menu-item-color;
-    font-size: .875rem;
+    font-size: .8125rem;
     font-weight: 400;
+    letter-spacing: normal;
     line-height: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -181,9 +190,9 @@ $switch-menu-item-hover-color: $main;
     padding: 20px 20px 10px;
     border-top: 1px solid $light-grey;
     color: #747474;
-    font-size: .75rem;
+    font-size: .65rem;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: .5px;
     text-transform: uppercase;
     white-space: nowrap;
 
