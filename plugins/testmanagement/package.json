@@ -35,8 +35,8 @@
     "unist-util-map": "^2.0.1",
     "unist-util-remove": "^2.0.0",
     "uuid": "^3.2.1",
-    "vue": "^2.6.11",
-    "vue-dompurify-html": "^2.2.1",
+    "vue": "^2.6.12",
+    "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1"
   },

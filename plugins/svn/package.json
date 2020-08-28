@@ -5,7 +5,7 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
-        "vue": "^2.6.11",
+        "vue": "^2.6.12",
         "vue-gettext": "^2.1.10"
     },
     "devDependencies": {},

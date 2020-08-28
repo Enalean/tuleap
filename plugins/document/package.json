@@ -12,10 +12,10 @@
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2",
     "tus-js-client": "^2.1.1",
-    "vue": "^2.6.11",
-    "vue-dompurify-html": "^2.2.1",
+    "vue": "^2.6.12",
+    "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.10",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.4.3",
     "vuex": "^3.5.1",
     "vuex-persistedstate": "^3.1.0",
     "vuex-shared-mutations": "^1.0.2"

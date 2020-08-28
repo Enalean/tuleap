@@ -9,7 +9,7 @@
     "node-gettext": "^3.0.0",
     "prismjs": "^1.21.0",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1"
   },
