@@ -5,6 +5,8 @@ After=nginx.target httpd.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+TimeoutStartSec=60s
+ExecStartPre=/bin/sh -c 'until /usr/bin/tuleap --version 2> /dev/null; do echo "Waiting on services to be ready to start"; /bin/sleep 5; done'
 ExecStart=/usr/bin/tuleap --clear-caches --restore-caches
 
 [Install]
