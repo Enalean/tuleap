@@ -117,6 +117,13 @@ $kanban-item-padding-height: 8px;
             height: $expand-collapse-bar-height;
         }
     }
+
+    &.card-created {
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: pulse 500ms ease-in-out;
+        border-color: $tlp-ui-success;
+        background: transparentize($tlp-ui-success, .9);
+    }
 }
 
 kanban-item {
