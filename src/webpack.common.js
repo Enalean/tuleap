@@ -292,6 +292,8 @@ const webpack_config_for_vue = {
         "project-admin-services": "./scripts/project/admin/services/src/index-project-admin.js",
         "project/project-registration": "./scripts/project/registration/index.ts",
         "site-admin-services": "./scripts/project/admin/services/src/index-site-admin.js",
+        "switch-to-bp": "./scripts/switch-to/index-bp.ts",
+        "switch-to-fp": "./scripts/switch-to/index-fp.ts",
     },
     context,
     output,

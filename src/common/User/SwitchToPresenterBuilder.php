@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,29 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'navbar';
-@import 'sidebar';
-@import 'breadcrumb';
-@import 'switch-to';
-@import 'content';
-@import 'feedback';
-@import 'register';
-@import 'login';
-@import 'widget';
-@import 'avatar';
-@import 'search';
-@import 'tracker-v3';
-@import 'phpwiki';
-@import 'account-confirmation';
-@import 'admin';
-@import 'project-confirmation';
-@import 'trovecat';
-@import 'svn';
-@import 'project-admin';
-@import 'project-banner';
-@import 'project';
-@import 'typography';
-@import 'help-dropdown';
-@import 'cross-ref-tooltip';
-@import 'bootstrap-overrides';
-@import 'jscrollpane-overrides';
+declare(strict_types=1);
+
+namespace Tuleap\User;
+
+class SwitchToPresenterBuilder
+{
+    public function build(\PFUser $user): ?SwitchToPresenter
+    {
+        if (! $user->isLoggedIn()) {
+            return null;
+        }
+
+        if (! $user->useLabFeatures()) {
+            return null;
+        }
+
+        return new SwitchToPresenter();
+    }
+}

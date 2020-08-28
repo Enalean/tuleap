@@ -71,6 +71,11 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $project_context;
+    /**
+     * @var \Tuleap\User\SwitchToPresenter|null
+     * @psalm-readonly
+     */
+    public $switch_to;
 
     public function __construct(
         array $breadcrumbs,
@@ -83,7 +88,8 @@ class FlamingParrot_ContainerPresenter
         VersionPresenter $version,
         $sidebar_collapsable,
         PFUser $current_user,
-        ?ProjectContextPresenter $project_context
+        ?ProjectContextPresenter $project_context,
+        ?\Tuleap\User\SwitchToPresenter $switch_to
     ) {
         $this->breadcrumbs             = $breadcrumbs;
         $this->has_only_one_breadcrumb = count($breadcrumbs) === 1;
@@ -97,6 +103,7 @@ class FlamingParrot_ContainerPresenter
         $this->sidebar_collapsable     = $sidebar_collapsable;
         $this->current_user_id         = $current_user->getId();
         $this->project_context         = $project_context;
+        $this->switch_to               = $switch_to;
     }
 
     public function hasBreadcrumbs()

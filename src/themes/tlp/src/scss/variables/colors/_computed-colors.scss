@@ -20,3 +20,5 @@ $tlp-theme-color-hover-background: mix($tlp-theme-color, $tlp-ui-white, 7);
 $tlp-theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 50);
 $tlp-theme-color-dimmed-hover-background: mix($tlp-theme-background-color, $tlp-ui-white, 90);
 $tlp-theme-color-dimmed-hover-border: mix($tlp-ui-dimmed, $tlp-ui-white, 50);
+
+$tlp-form-element-placeholder-color: darken($tlp-ui-border-dark, 10%);

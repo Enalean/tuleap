@@ -47,6 +47,7 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use Tuleap\User\SwitchToPresenterBuilder;
 use URLRedirect;
 use UserManager;
 use Valid_HTTPURI;
@@ -100,6 +101,7 @@ class BurningParrotTheme extends BaseLayout
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('keyboard-navigation.js'));
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('switch-to-bp.js'));
     }
 
     protected function getUser()
@@ -191,7 +193,8 @@ class BurningParrotTheme extends BaseLayout
             $open_graph,
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($current_user, $project),
-            $project_context
+            $project_context,
+            (new SwitchToPresenterBuilder())->build($this->user),
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

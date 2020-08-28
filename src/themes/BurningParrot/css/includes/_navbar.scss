@@ -252,6 +252,27 @@
     color: $tlp-ui-dimmed;
 }
 
+#switch-to-button {
+    display: flex;
+    align-items: center;
+    transition: color 100ms linear;
+    border: 0;
+    background: none;
+    color: $tlp-ui-dimmed;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+        color: $tlp-theme-color;
+    }
+}
+
+.nav-switch-to-icon,
 .nav-dropdown-new-icon {
     margin: 0 $tlp-small-spacing 0 0;
 }

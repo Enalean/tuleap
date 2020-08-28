@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$dark-modal-background: $sidebar-background;
+$dark-modal-default-text-color: $light-grey;
+
+#switch-to-modal {
+    top: 5vh;
+    box-sizing: border-box;
+    width: 800px;
+    background: none;
+    font-size: 1rem;
+}
+
+.switch-to-modal-header.modal-header {
+    box-sizing: border-box;
+    padding: $tlp-medium-spacing + 1px $tlp-large-spacing;
+    border-bottom: 1px solid rgba(104, 122, 124, .2);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), $dark-modal-background;
+    background-blend-mode: overlay;
+}
+
+.modal-header .switch-to-modal-header-icon {
+    margin: 0 6px 0 0;
+    padding: 0;
+    opacity: .7;
+    color: $grey;
+    font-size: .875rem;
+    line-height: 1rem;
+}
+
+#switch-to-filter {
+    width: 100%;
+    margin: 0;
+    padding: 1px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: $white;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.1875rem;
+
+    &::placeholder {
+        color: $grey;
+    }
+}
+
+.switch-to-modal-body {
+    padding: $tlp-large-spacing;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background: $dark-modal-background;
+    color: $dark-modal-default-text-color;
+}

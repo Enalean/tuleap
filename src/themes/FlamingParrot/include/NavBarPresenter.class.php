@@ -90,6 +90,11 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      * @var NewDropdownPresenter
      */
     public $new_dropdown;
+    /**
+     * @var \Tuleap\User\SwitchToPresenter|null
+     * @psalm-readonly
+     */
+    public $switch_to;
 
     public function __construct(
         $imgroot,
@@ -103,24 +108,26 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
         array $dashboards,
-        NewDropdownPresenter $new_dropdown
+        NewDropdownPresenter $new_dropdown,
+        ?\Tuleap\User\SwitchToPresenter $switch_to
     ) {
-        $this->imgroot                     = $imgroot;
-        $this->user                        = $user;
-        $this->request_uri                 = $request_uri;
-        $this->selected_top_tab            = $selected_top_tab;
-        $this->search_form_presenter       = $search_form_presenter;
-        $this->display_new_account         = $display_new_account;
-        $this->motd                        = $motd;
-        $this->has_motd                    = ! empty($motd);
-        $this->number_of_page_results      = Search_SearchPlugin::RESULTS_PER_QUERY;
-        $this->navbar_items                = $navbar_items_collection->getItems();
-        $this->logout_csrf                 = $logout_csrf;
-        $this->url_redirect                = $url_redirect;
-        $this->dashboards                  = $dashboards;
-        $this->has_no_dashboards           = count($dashboards) === 0;
-        $this->has_one_dashboard           = count($dashboards) === 1;
-        $this->new_dropdown                = $new_dropdown;
+        $this->imgroot                = $imgroot;
+        $this->user                   = $user;
+        $this->request_uri            = $request_uri;
+        $this->selected_top_tab       = $selected_top_tab;
+        $this->search_form_presenter  = $search_form_presenter;
+        $this->display_new_account    = $display_new_account;
+        $this->motd                   = $motd;
+        $this->has_motd               = ! empty($motd);
+        $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
+        $this->navbar_items           = $navbar_items_collection->getItems();
+        $this->logout_csrf            = $logout_csrf;
+        $this->url_redirect           = $url_redirect;
+        $this->dashboards             = $dashboards;
+        $this->has_no_dashboards      = count($dashboards) === 0;
+        $this->has_one_dashboard      = count($dashboards) === 1;
+        $this->new_dropdown           = $new_dropdown;
+        $this->switch_to              = $switch_to;
 
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');

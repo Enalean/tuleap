@@ -38,6 +38,10 @@
         "project-registration": {
             "src": "src/scripts/project/registration/src",
             "po": "src/scripts/project/registration/po"
+        },
+        "switch-to": {
+            "src": "src/scripts/switch-to/src",
+            "po": "src/scripts/switch-to/po"
         }
     }
 }
