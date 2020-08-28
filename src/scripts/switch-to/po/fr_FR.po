@@ -12,8 +12,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "Browse all projects"
+msgstr "Parcourir tous les projets"
+
+msgid "Browse all…"
+msgstr "Tout parcourir…"
+
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"
 
 msgid "Switch to…"
 msgstr "Basculer vers…"
+
+msgid "Working projects"
+msgstr "Projets de travail"
+
+msgid "You don't belong to any projects"
+msgstr "Vous n'appartenez à aucun projet"

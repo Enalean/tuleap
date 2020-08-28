@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppBurningParrot from "./src/components/AppBurningParrot.vue";
-import { init } from "./src/initiate-app";
-
-document.addEventListener("DOMContentLoaded", () => {
-    const vue_mount_point = document.getElementById("switch-to-mount-point");
-    if (!vue_mount_point) {
-        return;
-    }
-
-    init(vue_mount_point, AppBurningParrot);
-});
+export interface Project {
+    readonly project_uri: string;
+    readonly project_name: string;
+    readonly is_private: boolean;
+    readonly is_public: boolean;
+    readonly is_public_incl_restricted: boolean;
+    readonly is_private_incl_restricted: boolean;
+}

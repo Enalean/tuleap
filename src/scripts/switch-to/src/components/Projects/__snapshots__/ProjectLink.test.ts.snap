@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectLink Displays the link to a project 1`] = `
+<a
+  class="switch-to-projects-project"
+  href="/pojects/gpig"
+>
+  <i
+    class="fa fa-fw switch-to-projects-project-icon fa-unlock"
+  />
+   
+  <span
+    class="switch-to-projects-project-label"
+  >
+    Guinea Pig
+  </span>
+</a>
+`;

@@ -21,6 +21,7 @@
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
 use ForgeConfig;
+use Tuleap\Project\ProjectPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class ProjectsPresenter extends Presenter

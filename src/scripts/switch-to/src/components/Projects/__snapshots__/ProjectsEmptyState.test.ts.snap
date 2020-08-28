@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectsEmptyState Display an empty state 1`] = `
+<div
+  class="switch-to-projects-empty"
+>
+  <projects-empty-state-svg-stub />
+   
+  <span
+    class="switch-to-projects-empty-text"
+    data-current-language="en_US"
+    data-msgid="
+        You don't belong to any projects
+    "
+  >
+    
+        You don't belong to any projects
+    
+  </span>
+   
+  <a
+    class="tlp-button-secondary switch-to-projects-softwaremap-empty-state"
+    data-test="trove-cat-link"
+    href="/softwaremap/trove_list.php"
+  >
+    
+        Browse all projects
+    
+  </a>
+</div>
+`;

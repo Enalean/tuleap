@@ -22,10 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
+use Tuleap\Project\ProjectPresenter;
+
 /**
  * @psalm-immutable
  */
 class SwitchToPresenter
 {
+    /**
+     * @var bool
+     */
+    public $is_trove_cat_enabled;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var false|string
+     */
+    public $projects;
 
+    /**
+     * @param ProjectPresenter[] $projects
+     */
+    public function __construct(array $projects, bool $are_restricted_users_allowed, bool $is_trove_cat_enabled)
+    {
+        $this->projects                     = json_encode($projects, JSON_THROW_ON_ERROR);
+        $this->are_restricted_users_allowed = $are_restricted_users_allowed;
+        $this->is_trove_cat_enabled         = $is_trove_cat_enabled;
+    }
 }

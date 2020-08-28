@@ -19,17 +19,38 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body">
-        <list-of-projects />
+    <div class="switch-to-projects-empty">
+        <projects-empty-state-svg />
+
+        <span class="switch-to-projects-empty-text" v-translate>
+            You don't belong to any projects
+        </span>
+
+        <a
+            v-if="is_trove_cat_enabled"
+            href="/softwaremap/trove_list.php"
+            class="tlp-button-secondary switch-to-projects-softwaremap-empty-state"
+            data-test="trove-cat-link"
+        >
+            {{ trove_cat_label }}
+        </a>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import ListOfProjects from "./Projects/ListOfProjects.vue";
+import ProjectsEmptyStateSvg from "./ProjectsEmptyStateSvg.vue";
+import { State } from "vuex-class";
 @Component({
-    components: { ListOfProjects },
+    components: { ProjectsEmptyStateSvg },
 })
-export default class SwitchToBody extends Vue {}
+export default class ProjectsEmptyState extends Vue {
+    @State
+    private readonly is_trove_cat_enabled!: boolean;
+
+    get trove_cat_label(): string {
+        return this.$gettext("Browse all projects");
+    }
+}
 </script>
