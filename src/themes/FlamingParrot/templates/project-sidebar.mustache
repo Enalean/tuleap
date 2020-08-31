@@ -44,7 +44,9 @@
                   data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
                   data-project-flags="{{ json_encoded_project_flags }}"
             >
-                {{# glyph }}project-shield{{/ glyph }}
+                <div class="project-sidebar-project-flags-icon">
+                    {{# glyph }}project-shield{{/ glyph }}
+                </div>
                 <span class="project-sidebar-project-flags-labels">
                     {{# project_flags }}
                         <span class="project-sidebar-project-flags-label">{{ label }}</span>
