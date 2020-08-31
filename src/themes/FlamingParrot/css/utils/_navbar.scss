@@ -399,33 +399,6 @@ $nav-dropdown-content-border-radius: 3px;
     display: flex;
 }
 
-#breadcrumb-project-privacy-icon {
-    color: #747474;
-}
-
-&:not(.sidebar-collapsed) #breadcrumb-project-privacy-icon {
-    display: none;
-}
-
-.current-project-nav-popover-privacy {
-    top: 48px !important; // Override bootstrap inline position
-    left: 0 !important; // Override bootstrap inline position
-    min-width: 400px;
-
-    > .arrow {
-        left: 62px;
-    }
-}
-
-:not(.breadcrumb-project-privacy-icon-with-flags) + .current-project-nav-popover-privacy {
-    top: 26px !important; // Override bootstrap inline position
-    left: -22px !important; // Override bootstrap inline position
-
-    > .arrow {
-        left: 30px;
-    }
-}
-
 .current-project-nav-popover {
     width: 276px;
     padding: 0;
@@ -461,78 +434,6 @@ $nav-dropdown-content-border-radius: 3px;
 
     > .arrow::after {
         border-bottom-color: $main;
-    }
-}
-
-.current-project-nav-flag-popover-flag {
-    position: relative;
-    margin: 0 0 $tlp-medium-spacing;
-    padding: 0 0 0 $tlp-medium-spacing;
-    color: $main;
-
-    &:last-child {
-        margin: 0;
-    }
-
-    > .tuleap-svg-project-shield {
-        position: absolute;
-        top: 3px;
-        left: 0;
-        width: 12px;
-
-        > path {
-            fill: $main;
-        }
-    }
-}
-
-.current-project-nav-flag-popover-content-title {
-    margin: 0 0 10px;
-    border: 0;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
-
-    &:last-child {
-        margin: 0;
-    }
-}
-
-.current-project-nav-title-popover-content-description,
-.current-project-nav-flag-popover-content-description {
-    color: #747474;
-}
-
-.current-project-nav-flag-popover-content-description {
-    margin: 0;
-    line-height: 1.5rem;
-}
-
-.current-project-nav-flag-popover-separator {
-    margin: $tlp-medium-spacing (-$tlp-medium-spacing);
-}
-
-.current-project-nav-flag-labels {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin: 0 0 0 $tlp-small-spacing;
-}
-
-.current-project-nav-flag-label {
-    max-width: 150px;
-    overflow: hidden;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 11px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-
-    @media screen and (max-width: 1250px) {
-        max-width: 100px;
     }
 }
 
