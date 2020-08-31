@@ -31,17 +31,23 @@ class UserPreferenceRepresentation
     public $key;
 
     /**
-     * @var string {@type string}
+     * @var string | false
      */
     public $value;
 
-    private function __construct(string $key, string $value)
+    /**
+     * @param string|false $value
+     */
+    private function __construct(string $key, $value)
     {
         $this->key   = $key;
         $this->value = $value;
     }
 
-    public static function build(string $key, string $value): self
+    /**
+     * @param string|false $value
+     */
+    public static function build(string $key, $value): self
     {
         return new self($key, $value);
     }
