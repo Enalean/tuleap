@@ -26,6 +26,8 @@ use UserPreferencesDao;
 
 class ReleaseNoteManager
 {
+    public const USER_PREFERENCE_NAME_RELEASE_NOTE_SEEN = 'has_release_note_been_seen';
+
     /**
      * @var ReleaseLinkDao
      */
@@ -71,7 +73,7 @@ class ReleaseNoteManager
             $this->transaction_executor->execute(
                 function () use ($actual_version_link, $extracted_tuleap_version) {
                     $this->release_note_dao->createReleaseNoteLink($extracted_tuleap_version);
-                    $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
+                    $this->users_preferences_dao->deletePreferenceForAllUsers(self::USER_PREFERENCE_NAME_RELEASE_NOTE_SEEN);
                 }
             );
 
@@ -82,7 +84,7 @@ class ReleaseNoteManager
             $this->transaction_executor->execute(
                 function () use ($actual_version_link, $extracted_tuleap_version) {
                     $this->release_note_dao->updateReleaseNoteLink(null, $extracted_tuleap_version);
-                    $this->users_preferences_dao->deletePreferenceForAllUsers('has_release_note_been_seen');
+                    $this->users_preferences_dao->deletePreferenceForAllUsers(self::USER_PREFERENCE_NAME_RELEASE_NOTE_SEEN);
                 }
             );
 
