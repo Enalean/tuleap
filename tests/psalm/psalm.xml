@@ -36,6 +36,7 @@
 
     <plugins>
         <plugin filename="tests/lib/Psalm/Plugin/ConcealedString/PreventConcealedStringMisuses.php" />
+        <plugin filename="tests/lib/Psalm/Plugin/NoWritableRESTRepresentation/DoNotAllowWritableRESTRepresentation.php" />
     </plugins>
 
     <issueHandlers>
