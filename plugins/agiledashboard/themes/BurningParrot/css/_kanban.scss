@@ -75,7 +75,10 @@ $kanban-column-footer-height: 50px;
     flex: 1 1 auto;
 }
 
-.kanban-header-add-artifact-button,
+.kanban-header-add-artifact-button {
+    margin: 0 $tlp-small-spacing 0 0;
+}
+
 .kanban-header-report-button {
     margin: 0 0 0 $tlp-small-spacing;
 }

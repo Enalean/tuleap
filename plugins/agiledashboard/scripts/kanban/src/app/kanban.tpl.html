@@ -8,6 +8,17 @@
         <go-to-kanban></go-to-kanban>
 
         <button type="button"
+                class="tlp-button-primary tlp-button-small kanban-header-add-artifact-button"
+                ng-show="kanban.user_can_add_artifact"
+                ng-click="kanban.openAddArtifactModal($event)"
+        >
+            <i class="fa fa-plus tlp-button-icon"
+               ng-class="{ 'fa-spinner fa-spin': kanban.is_artifact_modal_loading }"
+            ></i>
+            <span translate>Add new {{ kanban.kanban.tracker.label }}</span>
+        </button>
+
+        <button type="button"
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
                 ng-click="kanban.editKanban()"
                 ng-show="kanban.showEditbutton()"
@@ -26,17 +37,6 @@
                 ng-class="{ 'fa-spinner fa-spin': kanban.is_report_loading }"
             ></i>
             <span translate>Show reports</span>
-        </button>
-
-        <button type="button"
-                class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-add-artifact-button"
-                ng-show="kanban.user_can_add_artifact"
-                ng-click="kanban.openAddArtifactModal($event)"
-        >
-            <i class="fa fa-plus tlp-button-icon"
-               ng-class="{ 'fa-spinner fa-spin': kanban.is_artifact_modal_loading }"
-            ></i>
-            <span translate>Add new {{ kanban.kanban.tracker.label }}</span>
         </button>
 
         <add-to-dashboard></add-to-dashboard>
