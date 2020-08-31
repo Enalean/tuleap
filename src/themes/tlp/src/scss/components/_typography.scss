@@ -110,7 +110,6 @@ hr {
 
 p {
     margin: 0 0 $tlp-medium-spacing;
-    font-size: 1rem;
     line-height: $tlp-paragraph-line-height;
 
     &:last-child,
@@ -165,8 +164,7 @@ blockquote {
     margin: 0 0 $tlp-medium-spacing;
     padding: 0 0 0 $tlp-medium-spacing / 2;
     border-left: 5px solid #d7d7d7;
-    font-size: 1rem;
-    line-height: 1.5rem;
+    line-height: $tlp-paragraph-line-height;
 }
 
 .tlp-text-muted {
