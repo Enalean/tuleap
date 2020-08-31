@@ -75,7 +75,6 @@ describe(`rest-querier`, () => {
                     params: {
                         limit: expected_limit,
                         order: "desc",
-                        order_by: "start_date",
                         fields: "slim",
                         query: JSON.stringify(query),
                     },
