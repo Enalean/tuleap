@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     $(project_flags_element).popover({
         title: project_flags_element.dataset.title,
-        placement: "bottom",
+        placement: "right",
         container: "body",
         html: true,
         trigger: "hover",

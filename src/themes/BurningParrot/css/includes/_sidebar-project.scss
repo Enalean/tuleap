@@ -24,41 +24,6 @@
     padding: $tlp-medium-spacing $tlp-small-spacing;
 }
 
-.project-sidebar-project-flags {
-    display: flex;
-    align-items: center;
-    margin: 0 0 $tlp-small-spacing $tlp-medium-spacing;
-    color: $tlp-ui-border-normal;
-
-    > .tuleap-svg {
-        flex: 0 0 auto;
-
-        > path {
-            fill: transparentize($tlp-ui-border-normal, .3);
-        }
-    }
-}
-
-.project-sidebar-project-flags-labels {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin: 0 0 0 $tlp-small-spacing;
-}
-
-.project-sidebar-project-flags-label {
-    max-width: 200px;
-    overflow: hidden;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 11px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
 .project-sidebar-title {
     display: flex;
     flex: 1 1 auto;
@@ -79,9 +44,16 @@
 }
 
 .project-sidebar-title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
     margin: 0 $tlp-small-spacing 0 0;
-    color: transparentize($tlp-ui-border-normal, .3);
-    font-size: 1rem;
+    border-radius: 50%;
+    background: darken($tlp-theme-sidebar-background-color, 5%);
+    color: $tlp-ui-border-normal;
+    font-size: .7rem;
 }
 
 .project-sidebar-banner-button {
@@ -90,17 +62,65 @@
     transition: opacity ease-in-out 100ms;
 
     .fa-bullhorn {
-        padding: 5px;
+        padding: 6.5px;
         border-radius: 50%;
         background-color: $tlp-ui-warning;
         color: $tlp-ui-white;
-        font-size: .875rem;
+        font-size: .7rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, .5);
     }
 
     &:hover {
         opacity: .8;
     }
+}
+
+.project-sidebar-project-flags {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-small-spacing $tlp-medium-spacing;
+    color: $tlp-ui-border-dark;
+    cursor: help;
+
+    > .project-sidebar-project-flags-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: $tlp-ui-dimmed;
+
+        > .tuleap-svg {
+            height: 12px;
+
+            > path {
+                fill: $tlp-ui-border-normal;
+                filter: drop-shadow(0 0 1px rgba(0, 0, 0, .5));
+            }
+        }
+    }
+}
+
+.project-sidebar-project-flags-labels {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 0 0 0 $tlp-small-spacing;
+}
+
+.project-sidebar-project-flags-label {
+    max-width: 185px;
+    overflow: hidden;
+    font-size: .6rem;
+    font-weight: 600;
+    letter-spacing: .2px;
+    line-height: .7rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .sidebar-collapsed {

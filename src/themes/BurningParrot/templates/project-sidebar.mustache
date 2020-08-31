@@ -37,7 +37,9 @@
     </div>
     {{# has_project_flags }}
         <div class="project-sidebar-project-flags" id="project-sidebar-project-flags">
-            {{# glyph }}project-shield{{/ glyph }}
+            <div class="project-sidebar-project-flags-icon">
+                {{# glyph }}project-shield{{/ glyph }}
+            </div>
             <span class="project-sidebar-project-flags-labels">
                 {{# project_flags }}
                     <span class="project-sidebar-project-flags-label">{{ label }}</span>

@@ -29,6 +29,6 @@ export function init() {
 
     createPopover(project_flags_element, popover_content, {
         anchor: project_flags_element.querySelector(".project-sidebar-project-flags-labels"),
-        placement: "bottom-start",
+        placement: "right-start",
     });
 }
