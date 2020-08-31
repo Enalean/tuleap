@@ -66,7 +66,7 @@ final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionIfUserCannotBeCreated(): void
     {
-        $this->user_manager->shouldReceive('createAccount')->andReturns(false);
+        $this->user_manager->shouldReceive('createAccount')->andReturnNull();
 
         $this->expectException(\User\XML\Import\UserCannotBeCreatedException::class);
 

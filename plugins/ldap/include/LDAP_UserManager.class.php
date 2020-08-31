@@ -40,12 +40,12 @@ class LDAP_UserManager
     private $ldap;
 
     /**
-     * @var Array of LDAPResult
+     * @var array<string, LDAPResult|false>
      */
     private $ldapResultCache = [];
 
     /**
-     * @var Array of User
+     * @var PFUser[]
      */
     private $usersLoginChanged = [];
 
@@ -54,11 +54,6 @@ class LDAP_UserManager
      */
     private $user_sync;
 
-    /**
-     * Constructor
-     *
-     * @param LDAP $ldap Ldap access object
-     */
     public function __construct(LDAP $ldap, LDAP_UserSync $user_sync)
     {
         $this->ldap      = $ldap;
@@ -68,11 +63,8 @@ class LDAP_UserManager
     /**
      * Create an LDAP_User object out of a regular user if this user comes as
      * a corresponding LDAP entry
-     *
-     *
-     * @return LDAP_User|null
      */
-    public function getLDAPUserFromUser(PFUser $user)
+    public function getLDAPUserFromUser(PFUser $user): ?LDAP_User
     {
         $ldap_result = $this->getLdapFromUser($user);
         if ($ldap_result) {
@@ -310,15 +302,19 @@ class LDAP_UserManager
         $user->setLanguageID($GLOBALS['Language']->getText('conf', 'language_id'));
 
         $um = $this->getUserManager();
-        $u  = $um->createAccount($user);
-        if ($u) {
-            $u = $um->getUserById($user->getId());
-            // Create an entry in the ldap user db
-            $ldapUserDao = $this->getDao();
-            $ldapUserDao->createLdapUser($u->getId(), 0, $uid);
-            return $u;
+        $user  = $um->createAccount($user);
+        if (! $user) {
+            return false;
         }
-        return false;
+
+        return $user;
+    }
+
+    public function createLdapUser(LDAP_User $ldap_user): void
+    {
+        if (! $this->getDao()->hasLoginConfirmationDate($ldap_user)) {
+            $this->getDao()->createLdapUser($ldap_user->getId(), 0, $ldap_user->getUid());
+        }
     }
 
     /**

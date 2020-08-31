@@ -101,7 +101,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
                 return;
             }
         }
-        account_redirect_after_login($request->get('return_to'));
+        account_redirect_after_login($current_user, $request->get('return_to'));
     }
 
 

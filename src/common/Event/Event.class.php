@@ -832,14 +832,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * When a user account is created
      *
      * Parameter:
-     *     'user' => PFUser
-     */
-    public const USER_MANAGER_CREATE_ACCOUNT = 'user_manager_create_account';
-
-    /**
-     * When a user account is created
-     *
-     * Parameter:
      *     'can_access' => bool,
      *     'user'       => PFUser
      *     'project'    => Project
