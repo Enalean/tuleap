@@ -18,14 +18,14 @@
  */
 
 import { State } from "./type";
-import Vuex, { Store } from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
+import { Project } from "../type";
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
-    });
-}
+export const filtered_projects = (state: State): Project[] => {
+    return state.projects.reduce((matching_projects: Project[], project: Project): Project[] => {
+        if (project.project_name.toLowerCase().indexOf(state.filter_value.toLowerCase()) !== -1) {
+            matching_projects.push(project);
+        }
+
+        return matching_projects;
+    }, []);
+};

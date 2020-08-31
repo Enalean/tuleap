@@ -18,14 +18,18 @@
  */
 
 import { State } from "./type";
-import Vuex, { Store } from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
+import { updateFilterValue } from "./mutations";
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
+describe("SwitchTo mutations", () => {
+    describe("updateFilterValue", () => {
+        it("updates the filter value in the store", () => {
+            const state: State = {
+                filter_value: "",
+            } as State;
+
+            updateFilterValue(state, "abc");
+
+            expect(state.filter_value).toBe("abc");
+        });
     });
-}
+});

@@ -82,6 +82,12 @@ export class Modal {
 
         this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
         this.is_shown = true;
+
+        const input = this.element.querySelector("input");
+        if (input) {
+            input.focus();
+        }
+
         this.addBackdrop();
 
         this.dispatchEvent(this.shown_event);

@@ -19,27 +19,35 @@
   -->
 
 <template>
-    <div class="switch-to-modal-header">
-        <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
-        <input
-            id="switch-to-filter"
-            type="search"
-            v-bind:placeholder="placeholder"
-            value=""
-            autocomplete="off"
-            disabled
-        />
-    </div>
+    <input
+        id="switch-to-filter"
+        type="search"
+        v-bind:placeholder="placeholder"
+        v-bind:value="filter_value"
+        v-on:keyup="update"
+        autocomplete="off"
+    />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { Mutation, State } from "vuex-class";
 
-@Component({
-    components: { SwitchToHeader },
-})
-export default class SwitchToHeader extends Vue {
+@Component
+export default class SwitchToFilter extends Vue {
+    @State
+    private readonly filter_value!: string;
+
+    @Mutation
+    private readonly updateFilterValue!: (value: string) => void;
+
+    update(event: KeyboardEvent): void {
+        if (event.target instanceof HTMLInputElement) {
+            this.updateFilterValue(event.target.value);
+        }
+    }
+
     get placeholder(): string {
         return this.$gettext("Project, recent item, …");
     }

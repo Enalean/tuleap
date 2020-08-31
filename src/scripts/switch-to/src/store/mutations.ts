@@ -18,14 +18,7 @@
  */
 
 import { State } from "./type";
-import Vuex, { Store } from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
-    });
+export function updateFilterValue(state: State, value: string): void {
+    state.filter_value = value;
 }

@@ -29,3 +29,6 @@ msgstr "Projets de travail"
 
 msgid "You don't belong to any projects"
 msgstr "Vous n'appartenez à aucun projet"
+
+msgid "You don't belong to any projects matching your query."
+msgstr "Vous n'appartenez à aucun projet qui corresponde à votre recherche."

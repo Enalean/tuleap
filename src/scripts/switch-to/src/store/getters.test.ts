@@ -17,15 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
-import Vuex, { Store } from "vuex";
 import * as getters from "./getters";
-import * as mutations from "./mutations";
+import { State } from "./type";
+import { Project } from "../type";
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
+describe("SwitchTo getters", () => {
+    describe("Filtered projects", () => {
+        it("Filter projects", () => {
+            const state: State = {
+                projects: [
+                    { project_name: "Acme" } as Project,
+                    { project_name: "ACME Corp" } as Project,
+                    { project_name: "Another project" } as Project,
+                ],
+                filter_value: "acme",
+            } as State;
+
+            expect(getters.filtered_projects(state)).toStrictEqual([
+                { project_name: "Acme" } as Project,
+                { project_name: "ACME Corp" } as Project,
+            ]);
+        });
     });
-}
+});
