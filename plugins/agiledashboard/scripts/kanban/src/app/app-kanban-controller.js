@@ -379,7 +379,13 @@ function KanbanCtrl(
                 Object.assign(artifact, {
                     updating: false,
                     is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
+                    created: true,
                 });
+
+                setTimeout(() => {
+                    artifact.created = false;
+                    $scope.$apply();
+                }, 1000);
 
                 const column = ColumnCollectionService.getColumn(artifact.in_column),
                     compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
@@ -517,11 +523,21 @@ function KanbanCtrl(
         self.backlog.filtered_content.push(item);
 
         KanbanItemRestService.createItemInBacklog(kanban.id, item.label).then(function (response) {
-            item.updating = false;
-            _.extend(item, response.data);
-
-            reflowKustomScrollBars();
+            setItemAsCreated(item, response);
         }, reload);
+    }
+
+    function setItemAsCreated(item, response) {
+        item.updating = false;
+        item.created = true;
+        setTimeout(() => {
+            item.created = false;
+            $scope.$apply();
+        }, 1000);
+
+        _.extend(item, response.data);
+
+        reflowKustomScrollBars();
     }
 
     function createItemInPlace(item, column) {
@@ -533,10 +549,7 @@ function KanbanCtrl(
         KanbanItemRestService.createItem(kanban.id, column.id, item.label).then(function (
             response
         ) {
-            item.updating = false;
-            _.extend(item, response.data);
-
-            reflowKustomScrollBars();
+            setItemAsCreated(item, response);
         },
         reload);
     }

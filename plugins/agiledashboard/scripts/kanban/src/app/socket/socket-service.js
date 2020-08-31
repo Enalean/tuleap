@@ -156,7 +156,12 @@ function SocketService(
                 Object.assign(new_item, {
                     updating: false,
                     is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
+                    created: true,
                 });
+
+                setTimeout(() => {
+                    new_item.created = false;
+                }, 1000);
 
                 const column = ColumnCollectionService.getColumn(new_item.in_column),
                     compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
