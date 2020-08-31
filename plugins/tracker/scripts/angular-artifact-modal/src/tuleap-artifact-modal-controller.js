@@ -164,7 +164,7 @@ function ArtifactModalController(
     }
 
     function submit() {
-        if (isUploadingInCKEditor()) {
+        if (isUploadingInCKEditor() || TuleapArtifactModalLoading.loading) {
             return;
         }
         TuleapArtifactModalLoading.loading = true;

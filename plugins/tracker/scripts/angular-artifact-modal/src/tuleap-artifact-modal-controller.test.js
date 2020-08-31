@@ -320,6 +320,7 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
+            TuleapArtifactModalLoading.loading = false;
             isInCreationMode.mockReturnValue(false);
             editArtifact.mockReturnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
