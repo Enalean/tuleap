@@ -20,8 +20,10 @@
 export interface Project {
     readonly project_uri: string;
     readonly project_name: string;
+    readonly project_config_uri: string;
     readonly is_private: boolean;
     readonly is_public: boolean;
     readonly is_public_incl_restricted: boolean;
     readonly is_private_incl_restricted: boolean;
+    readonly user_administers: boolean;
 }

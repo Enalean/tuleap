@@ -14,5 +14,7 @@ exports[`ProjectLink Displays the link to a project 1`] = `
   >
     Guinea Pig
   </span>
+   
+  <!---->
 </a>
 `;
