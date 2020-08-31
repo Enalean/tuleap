@@ -786,6 +786,19 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertGETPreferences($response);
     }
 
+    public function testGETPreferencesReturnsFalseIfPreferenceDoesNotExistInDB(): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference_not_in_db')
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json = $response->json();
+        $this->assertEquals('my_preference_not_in_db', $json['key']);
+        $this->assertFalse($json['value']);
+    }
 
     public function testGETPreferencesWithSelfKeyword()
     {
