@@ -27,7 +27,6 @@ type StatusQuery = "open" | "closed";
 export interface MilestoneRepresentation {
     readonly id: number;
     readonly label: string;
-    readonly parent: null;
 }
 
 export function getOpenTopMilestones<T>(
@@ -71,7 +70,6 @@ function getMilestones<T>(
             query: JSON.stringify({ status }),
             fields: "slim",
             order: "desc",
-            order_by: "start_date",
         },
         getCollectionCallback: callback,
     });
