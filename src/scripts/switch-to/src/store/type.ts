@@ -23,5 +23,6 @@ export interface State {
     readonly projects: Project[];
     readonly is_trove_cat_enabled: boolean;
     readonly are_restricted_users_allowed: boolean;
+    readonly is_search_available: boolean;
     filter_value: string;
 }

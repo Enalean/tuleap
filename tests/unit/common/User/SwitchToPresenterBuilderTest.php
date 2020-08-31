@@ -47,7 +47,9 @@ class SwitchToPresenterBuilderTest extends TestCase
         \ForgeConfig::set("access_mode", "restricted");
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => true])->getMock();
+        $user = Mockery::mock(\PFUser::class)->shouldReceive(
+            ['isLoggedIn' => true, 'isRestricted' => false, 'isAlive' => true]
+        )->getMock();
 
         $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
         $project_presenters_builder
@@ -63,5 +65,52 @@ class SwitchToPresenterBuilderTest extends TestCase
         self::assertEquals("[]", $presenter->projects);
         self::assertEquals(true, $presenter->are_restricted_users_allowed);
         self::assertEquals(false, $presenter->is_trove_cat_enabled);
+        self::assertEquals(true, $presenter->is_search_available);
+    }
+
+    public function testSearchNotAvailableIfUserIsNotAlive(): void
+    {
+        \ForgeConfig::set("access_mode", "restricted");
+        \ForgeConfig::set("is_trove_cat_enabled", false);
+
+        $user = Mockery::mock(\PFUser::class)->shouldReceive(
+            ['isLoggedIn' => true, 'isRestricted' => false, 'isAlive' => false]
+        )->getMock();
+
+        $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
+        $project_presenters_builder
+            ->shouldReceive('build')
+            ->with($user)
+            ->once()
+            ->andReturn([]);
+
+        $builder = new SwitchToPresenterBuilder($project_presenters_builder);
+
+        $presenter = $builder->build($user);
+
+        self::assertEquals(false, $presenter->is_search_available);
+    }
+
+    public function testSearchNotAvailableIfUserIsRestricted(): void
+    {
+        \ForgeConfig::set("access_mode", "restricted");
+        \ForgeConfig::set("is_trove_cat_enabled", false);
+
+        $user = Mockery::mock(\PFUser::class)->shouldReceive(
+            ['isLoggedIn' => true, 'isRestricted' => true, 'isAlive' => true]
+        )->getMock();
+
+        $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
+        $project_presenters_builder
+            ->shouldReceive('build')
+            ->with($user)
+            ->once()
+            ->andReturn([]);
+
+        $builder = new SwitchToPresenterBuilder($project_presenters_builder);
+
+        $presenter = $builder->build($user);
+
+        self::assertEquals(false, $presenter->is_search_available);
     }
 }

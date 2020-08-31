@@ -22,6 +22,7 @@
     <input
         id="switch-to-filter"
         type="search"
+        name="words"
         v-bind:placeholder="placeholder"
         v-bind:value="filter_value"
         v-on:keyup="update"

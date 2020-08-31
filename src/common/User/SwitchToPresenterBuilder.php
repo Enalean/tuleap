@@ -46,6 +46,7 @@ class SwitchToPresenterBuilder
             $this->project_presenters_builder->build($user),
             (bool) \ForgeConfig::areRestrictedUsersAllowed(),
             (bool) \ForgeConfig::get('sys_use_trove'),
+            $user->isAlive() && ! $user->isRestricted()
         );
     }
 }

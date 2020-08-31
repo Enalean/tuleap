@@ -39,7 +39,7 @@ describe("SwitchToFilter", () => {
         if (wrapper.element instanceof HTMLInputElement) {
             wrapper.element.value = "abc";
         }
-        wrapper.trigger("keyup");
+        await wrapper.trigger("keyup");
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "abc");
     });
