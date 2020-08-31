@@ -20,14 +20,12 @@
 import angular from "angular";
 import "angular-mocks";
 
-import planning_module from "./app.js";
-import BaseController from "./planning-controller.js";
-import * as rest_querier from "./api/rest-querier";
+import planning_module from "../app.js";
+import * as rest_querier from "../api/rest-querier";
 
-describe("PlanningController -", () => {
+describe("PlannerView", () => {
     let $scope,
         $filter,
-        $controller,
         $q,
         PlanningController,
         BacklogItemService,
@@ -44,7 +42,7 @@ describe("PlanningController -", () => {
         angular.mock.module(planning_module);
 
         angular.mock.inject(function (
-            _$controller_,
+            $componentController,
             $rootScope,
             _$q_,
             _BacklogService_,
@@ -113,26 +111,25 @@ describe("PlanningController -", () => {
 
             ItemAnimatorService = _ItemAnimatorService_;
             BacklogItemSelectedService = _BacklogItemSelectedService_;
-            $controller = _$controller_;
+            PlanningController = $componentController("plannerView", {
+                $filter,
+                $q,
+                $scope,
+                BacklogService,
+                BacklogItemService,
+                MilestoneService,
+                NewTuleapArtifactModalService,
+                SharedPropertiesService,
+                UserPreferencesService,
+                BacklogItemCollectionService,
+                BacklogItemSelectedService,
+            });
         });
 
         jest.spyOn(ItemAnimatorService, "animateCreated").mockImplementation(() => {});
         jest.spyOn(rest_querier, "getOpenTopMilestones").mockImplementation(() => {});
         jest.spyOn(rest_querier, "getOpenSubMilestones").mockImplementation(() => {});
 
-        PlanningController = $controller(BaseController, {
-            $filter,
-            $q,
-            $scope,
-            BacklogService,
-            BacklogItemService,
-            MilestoneService,
-            NewTuleapArtifactModalService,
-            SharedPropertiesService,
-            UserPreferencesService,
-            BacklogItemCollectionService,
-            BacklogItemSelectedService,
-        });
         PlanningController.$onInit();
     });
 

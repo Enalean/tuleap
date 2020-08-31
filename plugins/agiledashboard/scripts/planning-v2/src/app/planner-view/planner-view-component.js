@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
-import angular from "angular";
+import "./planner-view.tpl.html";
+import { sortByStartDateDescending } from "../milestone/sort-helper";
+import { extractErrorMessage } from "../rest-error/error-message-helper";
 import {
     getClosedSubMilestones,
     getClosedTopMilestones,
     getOpenSubMilestones,
     getOpenTopMilestones,
-} from "./api/rest-querier";
-import { sortByStartDateDescending } from "./milestone/sort-helper";
+} from "../api/rest-querier";
+import _ from "lodash";
+import { isFunction } from "angular";
 
-export default PlanningController;
+export default {
+    templateUrl: "planner-view.tpl.html",
+    controller,
+    controllerAs: "planning",
+};
 
-PlanningController.$inject = [
+controller.$inject = [
     "$filter",
     "$q",
     "$scope",
@@ -45,9 +51,10 @@ PlanningController.$inject = [
     "BacklogItemSelectedService",
     "EditItemService",
     "ItemAnimatorService",
+    "ErrorState",
 ];
 
-function PlanningController(
+function controller(
     $filter,
     $q,
     $scope,
@@ -62,7 +69,8 @@ function PlanningController(
     MilestoneCollectionService,
     BacklogItemSelectedService,
     EditItemService,
-    ItemAnimatorService
+    ItemAnimatorService,
+    ErrorState
 ) {
     const self = this;
 
@@ -152,10 +160,16 @@ function PlanningController(
             : getOpenSubMilestones(self.milestone_id, milestoneProgressCallback);
 
         self.milestones.loading = true;
-        $q.when(promise).then(() => {
-            self.milestones.loading = false;
-            self.milestones.open_milestones_fully_loaded = true;
-        });
+        $q.when(promise).then(
+            () => {
+                self.milestones.loading = false;
+                self.milestones.open_milestones_fully_loaded = true;
+            },
+            async (error) => {
+                const message = await extractErrorMessage(error);
+                ErrorState.setError(message);
+            }
+        );
     }
 
     function displayClosedMilestones() {
@@ -319,7 +333,7 @@ function PlanningController(
     }
 
     function canShowBacklogItem(backlog_item) {
-        if (angular.isFunction(backlog_item.isOpen)) {
+        if (isFunction(backlog_item.isOpen)) {
             return (
                 backlog_item.isOpen() ||
                 self.current_closed_view_class === self.show_closed_view_key
