@@ -22,7 +22,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ValidHelperTest extends TestCase
+class ValidHelpersTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -41,21 +41,6 @@ class ValidHelperTest extends TestCase
         $this->assertFalse($v->validate('-2147483649'));
         $this->assertFalse($v->validate('0.5'));
         $this->assertFalse($v->validate('toto'));
-    }
-
-    public function testValidFactory(): void
-    {
-        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $this->assertInstanceOf('Valid', ValidFactory::getInstance($v));
-
-        $this->assertInstanceOf('Valid_String', ValidFactory::getInstance('string'));
-        $this->assertInstanceOf('Valid_UInt', ValidFactory::getInstance('uint'));
-        $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
-
-        $key = bin2hex(random_bytes(16));
-        $w = ValidFactory::getInstance('string', $key);
-        $this->assertEquals($key, $w->getKey());
     }
 
     public function testItValidatesHTTPURI(): void

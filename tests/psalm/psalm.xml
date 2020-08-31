@@ -5,7 +5,7 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config file:///../../../src/vendor/vimeo/psalm/config.xsd"
     autoloader="tests/lib/bootstrap.php"
-    errorBaseline="tests/psalm/tuleap-baseline.xml"
+    errorBaseline="./tests/psalm/tuleap-baseline.xml"
 >
     <projectFiles>
         <directory name="src/common/" />

@@ -24,7 +24,7 @@ use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\FRS\FRSPermissionManager;
 
-class FRSFileFactory
+class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const COMPUTE_MD5 = 0x0001;
 
@@ -62,7 +62,6 @@ class FRSFileFactory
      */
     public function &getFRSFileFromArray(&$array)
     {
-        $frs_file = null;
         $frs_file = new FRSFile($array);
         return $frs_file;
     }
