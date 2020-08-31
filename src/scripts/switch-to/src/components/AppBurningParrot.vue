@@ -29,24 +29,38 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { createModal, Modal } from "tlp";
-import SwitchToHeader from "./SwitchToHeader.vue";
+import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./SwitchToBody.vue";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
-export default class App extends Vue {
+export default class AppBurningParrot extends Vue {
+    modal: Modal | null = null;
+    trigger: HTMLElement | null = null;
+
     mounted(): void {
-        const trigger = document.getElementById("switch-to-button");
-        if (!(trigger instanceof HTMLElement)) {
+        this.trigger = document.getElementById("switch-to-button");
+        if (!(this.trigger instanceof HTMLElement)) {
             return;
         }
 
-        const modal: Modal = createModal(this.$el);
+        this.modal = createModal(this.$el);
+        this.trigger.addEventListener("click", this.toggleModal);
+    }
 
-        trigger.addEventListener("click", () => {
-            modal.toggle();
-        });
+    beforeDestroy(): void {
+        if (!(this.trigger instanceof HTMLElement)) {
+            return;
+        }
+
+        this.trigger.removeEventListener("click", this.toggleModal);
+    }
+
+    toggleModal(): void {
+        if (this.modal) {
+            this.modal.toggle();
+        }
     }
 
     get aria_label(): string {

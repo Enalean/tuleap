@@ -19,39 +19,19 @@
   -->
 
 <template>
-    <div class="modal hide fade" id="switch-to-modal" role="dialog" v-bind:aria-label="aria_label">
-        <switch-to-header class="modal-header" />
-        <switch-to-body class="modal-body" />
+    <div class="switch-to-modal-header">
+        <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
+        <switch-to-filter />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import $ from "jquery";
 import { Component } from "vue-property-decorator";
-import SwitchToHeader from "./Header/SwitchToHeader.vue";
-import SwitchToBody from "./SwitchToBody.vue";
+import SwitchToFilter from "./SwitchToFilter.vue";
 
 @Component({
-    components: { SwitchToHeader, SwitchToBody },
+    components: { SwitchToFilter },
 })
-export default class AppFlamingParrot extends Vue {
-    mounted(): void {
-        const modal = this.$el;
-        if (!(modal instanceof HTMLElement)) {
-            return;
-        }
-
-        // Force autofocus for bootstrap modal
-        $(modal).on("shown", () => {
-            const input = modal.querySelector("input");
-            if (input) {
-                input.focus();
-            }
-        });
-    }
-    get aria_label(): string {
-        return this.$gettext("Switch to…");
-    }
-}
+export default class SwitchToHeader extends Vue {}
 </script>

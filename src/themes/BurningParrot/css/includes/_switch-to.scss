@@ -145,3 +145,9 @@ $approximate-width-of-project-icon: 15.5px;
     font-weight: 600;
     line-height: 1rem;
 }
+
+.switch-to-modal-no-matching-projects {
+    margin: $tlp-large-spacing 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
+}

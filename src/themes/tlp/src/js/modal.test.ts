@@ -73,6 +73,18 @@ describe(`Modal`, () => {
             }
             expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(true);
         });
+
+        it(`will autofocus the first input in the modal`, () => {
+            const input = doc.createElement("input");
+            input.type = "text";
+            modal_element.appendChild(input);
+
+            const focus = jest.spyOn(input, "focus");
+
+            modal.show();
+
+            expect(focus).toHaveBeenCalled();
+        });
     });
 
     describe(`hide()`, () => {

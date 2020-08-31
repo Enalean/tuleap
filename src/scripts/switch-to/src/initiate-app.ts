@@ -40,6 +40,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
                 : [],
         is_trove_cat_enabled: Boolean(vue_mount_point.dataset.isTroveCatEnabled),
         are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
+        filter_value: "",
     };
 
     const store = createStore(root_state);
