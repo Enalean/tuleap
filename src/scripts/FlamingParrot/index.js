@@ -21,7 +21,6 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "../navbar-history/index-flamingparrot.js";
-import "./navbar.js";
 import "./sidebar.js";
 import "./motd.js";
 import "./project-flags.js";

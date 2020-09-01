@@ -4,11 +4,6 @@
     <div class="navbar-inner">
         <div class="container-fluid header-navbar-container">
             <ul class="nav header-navbar-container-project-nav">
-                {{# navbar_items }}
-                    {{# is_projects }}
-                        {{> navbar-projects }}
-                    {{/ is_projects }}
-                {{/ navbar_items }}
                 {{# is_super_user }}
                     <li class="admin ">
                         <a class="admin-link" href="/admin/">

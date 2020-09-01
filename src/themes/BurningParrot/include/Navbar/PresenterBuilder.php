@@ -26,9 +26,6 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
-use Tuleap\Project\ProjectPresentersBuilder;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
 use URLRedirect;
@@ -56,9 +53,6 @@ class PresenterBuilder
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
         return new Presenter(
-            new GlobalNavPresenter(
-                $this->getGlobalDropdownMenuItems()
-            ),
             new SearchPresenter($current_user),
             new UserNavPresenter(
                 $this->current_user,
@@ -69,35 +63,6 @@ class PresenterBuilder
             $new_dropdown_presenter,
             $current_user->isSuperUser()
         );
-    }
-
-    private function getGlobalDropdownMenuItems()
-    {
-        $global_dropdown_menu_items = [];
-
-        $project_presenters_builder = new ProjectPresentersBuilder();
-        $dropdown_menu_item_content_project_presenters = $project_presenters_builder->build(
-            $this->current_user
-        );
-
-        $is_project_dropdown_visible = $this->current_user->isLoggedIn() && (
-                count($dropdown_menu_item_content_project_presenters) > 0 ||
-                \ForgeConfig::get('sys_use_trove')
-            );
-
-        if ($is_project_dropdown_visible) {
-            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'projects'),
-                'fa fa-archive',
-                new ProjectsPresenter(
-                    'projects',
-                    $dropdown_menu_item_content_project_presenters,
-                ),
-                'nav-dropdown-left'
-            );
-        }
-
-        return $global_dropdown_menu_items;
     }
 
     private function displayNewAccountMenuItem()

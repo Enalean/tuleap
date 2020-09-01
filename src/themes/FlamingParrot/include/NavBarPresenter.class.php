@@ -109,7 +109,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $search_form_presenter,
         $display_new_account,
         $motd,
-        FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
         array $dashboards,
@@ -125,7 +124,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->motd                   = $motd;
         $this->has_motd               = ! empty($motd);
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
-        $this->navbar_items           = $navbar_items_collection->getItems();
         $this->logout_csrf            = $logout_csrf;
         $this->url_redirect           = $url_redirect;
         $this->dashboards             = $dashboards;
