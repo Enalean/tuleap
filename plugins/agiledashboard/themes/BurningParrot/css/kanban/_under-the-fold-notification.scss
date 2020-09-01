@@ -1,0 +1,40 @@
+/**
+ * Copyright (c) Enalean, 20020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.kanban-new-item-under-the-fold-notification-icon {
+    margin: 0 0 0 5px;
+}
+
+.kanban-notification {
+    visibility: hidden;
+    position: fixed;
+    z-index: 11000;
+    right: $tlp-small-spacing;
+    bottom: $tlp-small-spacing;
+    margin: 0;
+    transition: all 1s 2s ease-in-out;
+    opacity: 0;
+    background: mix($tlp-ui-success, $tlp-ui-white, 7);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+}
+
+.kanban-notification-shown {
+    visibility: visible;
+    opacity: 1;
+}
