@@ -187,7 +187,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector)
     {
         $dao    = new ProjectOwnerDAO();
-        $finder = new UserWithStarBadgeFinder($dao, $GLOBALS['Language']);
+        $finder = new UserWithStarBadgeFinder($dao);
         $finder->findBadgedUser($collector);
     }
 
@@ -197,7 +197,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
             case ProjectOwnerStatusNotificationSystemEvent::NAME:
                 $params['class'] = ProjectOwnerStatusNotificationSystemEvent::class;
                 $params['dependencies'] = [
-                    new \Tuleap\ProjectOwnership\Notification\Sender(\ProjectManager::instance())
+                    new \Tuleap\ProjectOwnership\Notification\Sender(\ProjectManager::instance(), new \Tuleap\Language\LocaleSwitcher())
                 ];
                 break;
         }

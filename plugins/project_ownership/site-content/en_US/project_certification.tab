@@ -1,7 +1,0 @@
-plugin_project_ownership	project_owner_description	Project owner is accountable for project visibility, permissions & groups membership.
-
-plugin_project_ownership	email_status_change_title	Project status updated
-plugin_project_ownership	email_status_change_body_status_H	The project $1 is now suspended.
-plugin_project_ownership	email_status_change_body_status_P	The project $1 is now pending.
-plugin_project_ownership	email_status_change_body_status_A	The project $1 is now active.
-plugin_project_ownership	email_status_change_body_status_D	The project $1 is now deleted.

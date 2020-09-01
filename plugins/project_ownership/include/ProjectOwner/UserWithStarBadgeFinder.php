@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,13 +27,10 @@ class UserWithStarBadgeFinder
 {
     /** @var ProjectOwnerDAO */
     private $project_owner_dao;
-    /** @var \BaseLanguage */
-    private $language;
 
-    public function __construct(ProjectOwnerDAO $project_owner_dao, \BaseLanguage $language)
+    public function __construct(ProjectOwnerDAO $project_owner_dao)
     {
         $this->project_owner_dao = $project_owner_dao;
-        $this->language          = $language;
     }
 
     public function findBadgedUser(UserWithStarBadgeCollector $collector)
@@ -47,7 +44,7 @@ class UserWithStarBadgeFinder
                     new UserWithStarBadge(
                         $user,
                         dgettext('tuleap-project_ownership', 'Owner'),
-                        $this->language->getText('plugin_project_ownership', 'project_owner_description')
+                        dgettext('tuleap-project_ownership', 'Project owner is accountable for project visibility, permissions & groups membership.')
                     )
                 );
                 return;
