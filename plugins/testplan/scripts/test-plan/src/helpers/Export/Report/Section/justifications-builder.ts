@@ -22,6 +22,7 @@ import { DateCell, HTMLCell, TextCell } from "../report-cells";
 import { retrieveArtifacts } from "./Tracker/artifacts-retriever";
 import { transformTextFieldValueIntoACell } from "./transform-field-value-into-cell";
 import { Artifact } from "./Tracker/artifact";
+import { VueGettextProvider } from "../../../vue-gettext-provider";
 
 const TEST_EXEC_RESULT_FIELD_COMMENT_NAME = "results";
 

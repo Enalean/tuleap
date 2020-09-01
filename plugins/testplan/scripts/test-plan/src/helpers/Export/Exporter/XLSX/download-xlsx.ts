@@ -20,6 +20,7 @@
 import { ExportReport } from "../../Report/report-creator";
 import { utils, writeFile } from "xlsx";
 import { transformAReportIntoASheet } from "./transform-report-to-xlsx-sheet";
+import { VueGettextProvider } from "../../../vue-gettext-provider";
 
 export function downloadXLSX(
     gettext_provider: VueGettextProvider,

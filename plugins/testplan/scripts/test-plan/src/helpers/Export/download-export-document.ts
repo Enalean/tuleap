@@ -19,6 +19,7 @@
 
 import { createExportReport, ExportReport } from "./Report/report-creator";
 import { BacklogItem, Campaign } from "../../type";
+import { VueGettextProvider } from "../vue-gettext-provider";
 
 export async function downloadExportDocument(
     gettext_provider: VueGettextProvider,

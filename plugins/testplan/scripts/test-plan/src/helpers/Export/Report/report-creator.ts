@@ -24,6 +24,7 @@ import { BacklogItem, Campaign } from "../../../type";
 import { buildTestResultsSection } from "./Section/test-results-builder";
 import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
 import { buildJustificationsSection } from "./Section/justifications-builder";
+import { VueGettextProvider } from "../../vue-gettext-provider";
 
 export interface ReportSection {
     readonly title?: TextCell;

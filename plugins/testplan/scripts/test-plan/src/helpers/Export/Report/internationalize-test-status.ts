@@ -18,6 +18,7 @@
  */
 
 import { TestStats } from "../../BacklogItems/compute-test-stats";
+import { VueGettextProvider } from "../../vue-gettext-provider";
 
 export function getInternationalizedTestStatus(
     gettext_provider: VueGettextProvider,

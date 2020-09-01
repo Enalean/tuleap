@@ -112,14 +112,7 @@ export default class PeoplePicker extends Vue {
         );
     }
 
-    isForPeoplePicker(
-        user: IdTextPair | DataFormat | GroupedDataFormat | LoadingData
-    ): user is UserForPeoplePicker {
-        // This is a trick to fool TypeScript so that we can have avatar on users.
-        // Default types definition of select2 forces us to have only "DataFormat" (basically: id, text) whereas
-        // we can deal with values with more attribute (for example: avatar_url).
-        //
-        // The chosen solution is to rely on user-defined type guards of TypeScript.
+    isForPeoplePicker(user: IdTextPair | DataFormat | GroupedDataFormat | LoadingData): boolean {
         return "avatar_url" in user;
     }
 

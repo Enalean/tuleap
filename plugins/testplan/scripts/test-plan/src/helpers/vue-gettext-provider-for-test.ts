@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { VueGettextProvider } from "./vue-gettext-provider";
+
 export function createVueGettextProviderPassthrough(): VueGettextProvider {
     return {
         $gettext: (msgid: string): string => msgid,

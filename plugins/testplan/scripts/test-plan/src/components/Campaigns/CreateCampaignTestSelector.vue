@@ -57,6 +57,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitialTests): string {
     if (initial_tests.test_selector === "report") {
