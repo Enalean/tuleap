@@ -3,6 +3,7 @@ import { resetError, setError } from "./feedback-state.js";
 
 import _ from "lodash";
 import angular from "angular";
+import { highlightColumn } from "./kanban-column/kanban-column-highlighter";
 
 export default KanbanCtrl;
 
@@ -104,6 +105,7 @@ function KanbanCtrl(
         loading_modal: NewTuleapArtifactModalService.loading,
         user_can_add_artifact: kanban.user_can_add_artifact,
         openAddArtifactModal,
+        highlightColumn,
     });
 
     function init() {
@@ -375,6 +377,8 @@ function KanbanCtrl(
                 if (!artifact) {
                     return;
                 }
+
+                highlightColumn($scope, artifact, SharedPropertiesService.getKanban());
 
                 Object.assign(artifact, {
                     updating: false,

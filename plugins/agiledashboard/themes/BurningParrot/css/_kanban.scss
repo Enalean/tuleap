@@ -341,6 +341,25 @@ kanban-column {
     height: 100%;
 }
 
+
+.created-in-closed-column {
+    @keyframes blink {
+        0% {
+            background: $tlp-ui-white;
+        }
+
+        50% {
+            background: transparentize($tlp-theme-color, .9);
+        }
+
+        100% {
+            background: $tlp-ui-white;
+        }
+    }
+
+    animation: blink 1s ease-in-out alternate infinite;
+}
+
 .kustom-scroll,
 .ngsb-wrap {
     height: 100%;
@@ -412,7 +431,7 @@ kanban-column {
 
 .kanban-column-label {
     display: flex;
-    z-index: 2;
+    z-index: 3;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
     color: $tlp-theme-color;
