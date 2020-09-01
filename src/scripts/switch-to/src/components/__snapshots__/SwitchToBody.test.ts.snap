@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwitchToBody Displays projects and recent items 1`] = `
+<div
+  class="switch-to-modal-body"
+>
+  <list-of-projects-stub />
+   
+  <list-of-recent-items-stub />
+</div>
+`;

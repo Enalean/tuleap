@@ -19,20 +19,20 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body">
-        <list-of-projects />
-        <list-of-recent-items />
+    <div class="switch-to-recent-items-empty">
+        <recent-items-empty-state-svg />
+        <div class="switch-to-recent-items-empty-text" v-translate>
+            Your Tuleap history will appear here
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import ListOfProjects from "./Projects/ListOfProjects.vue";
-import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
-
+import RecentItemsEmptyStateSvg from "./RecentItemsEmptyStateSvg.vue";
 @Component({
-    components: { ListOfProjects, ListOfRecentItems },
+    components: { RecentItemsEmptyStateSvg },
 })
-export default class SwitchToBody extends Vue {}
+export default class RecentItemsEmptyState extends Vue {}
 </script>
