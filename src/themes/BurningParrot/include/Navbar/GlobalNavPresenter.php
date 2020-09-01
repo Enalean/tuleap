@@ -31,9 +31,8 @@ class GlobalNavPresenter
     /** @var DropdownMenuItemPresenter[] */
     public $dropdown_menu_item_presenters;
 
-    public function __construct(array $menu_item_presenters, $dropdown_menu_item_presenters)
+    public function __construct($dropdown_menu_item_presenters)
     {
-        $this->menu_item_presenters          = $menu_item_presenters;
         $this->dropdown_menu_item_presenters = $dropdown_menu_item_presenters;
     }
 }

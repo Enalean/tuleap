@@ -18,13 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class FlamingParrot_NavBarItemPresenter
 {
-
-    public $is_link     = false;
-    public $is_dropdown = false;
     public $is_projects = false;
-    public $is_admin    = false;
 
     public $id;
     public $is_active;

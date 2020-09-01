@@ -22,9 +22,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_NavBarItemPresentersCollectionBuilder
 {
-
-    private static $NO_ID = false;
-
     /** @var PFUser */
     private $user;
 
@@ -54,21 +51,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
         $collection = new FlamingParrot_NavBarItemPresentersCollection();
 
         $this->addProjectsItem($collection);
-        $this->addAdminItem($collection);
 
         return $collection;
-    }
-
-    private function addAdminItem(FlamingParrot_NavBarItemPresentersCollection $collection)
-    {
-        if ($this->user->isSuperUser()) {
-            $collection->addItem(new FlamingParrot_NavBarItemAdminPresenter(
-                self::$NO_ID,
-                $this->isNavBarItemActive('/admin/', 'admin'),
-                '/admin/',
-                $GLOBALS['Language']->getText('menu', 'administration')
-            ));
-        }
     }
 
     private function addProjectsItem(FlamingParrot_NavBarItemPresentersCollection $collection)

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_NavBarItemPresentersCollection
 {
 
@@ -26,19 +27,6 @@ class FlamingParrot_NavBarItemPresentersCollection
     public function addItem(FlamingParrot_NavBarItemPresenter $item)
     {
         $this->items[] = $item;
-    }
-
-    public function addItemAfterAnotherOne($sibling_id, FlamingParrot_NavBarItemPresenter $item)
-    {
-        $index = 0;
-        foreach ($this->items as $previous) {
-            $index++;
-            if ($previous->id == $sibling_id) {
-                break;
-            }
-        }
-
-        array_splice($this->items, $index, 0, [$item]);
     }
 
     public function getItems()

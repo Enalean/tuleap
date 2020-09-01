@@ -95,6 +95,11 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      * @psalm-readonly
      */
     public $switch_to;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_super_user;
 
     public function __construct(
         $imgroot,
@@ -128,6 +133,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->has_one_dashboard      = count($dashboards) === 1;
         $this->new_dropdown           = $new_dropdown;
         $this->switch_to              = $switch_to;
+        $this->is_super_user          = $user->isSuperUser();
 
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');

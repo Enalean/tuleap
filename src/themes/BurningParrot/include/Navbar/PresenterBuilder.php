@@ -29,7 +29,6 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
 use URLRedirect;
@@ -58,7 +57,6 @@ class PresenterBuilder
 
         return new Presenter(
             new GlobalNavPresenter(
-                $this->getGlobalMenuItems($current_user),
                 $this->getGlobalDropdownMenuItems()
             ),
             new SearchPresenter($current_user),
@@ -68,7 +66,8 @@ class PresenterBuilder
                 $url_redirect,
                 $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
-            $new_dropdown_presenter
+            $new_dropdown_presenter,
+            $current_user->isSuperUser()
         );
     }
 
@@ -99,23 +98,6 @@ class PresenterBuilder
         }
 
         return $global_dropdown_menu_items;
-    }
-
-    private function getGlobalMenuItems(PFUser $current_user)
-    {
-        if (! $current_user->isSuperUser()) {
-            return [];
-        }
-
-        return [
-            new MenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'site_admin'),
-                '/admin/',
-                'fa fa-cog',
-                'go-to-admin',
-                ['data-test=platform-administration-link']
-            )
-        ];
     }
 
     private function displayNewAccountMenuItem()

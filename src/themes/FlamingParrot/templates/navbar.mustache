@@ -8,16 +8,14 @@
                     {{# is_projects }}
                         {{> navbar-projects }}
                     {{/ is_projects }}
-                    {{# is_admin }}
-                        {{> navbar-item-admin }}
-                    {{/ is_admin }}
-                    {{# is_link }}
-                        {{> navbar-item-link }}
-                    {{/ is_link }}
-                    {{# is_dropdown }}
-                        {{> navbar-item-dropdown }}
-                    {{/ is_dropdown }}
                 {{/ navbar_items }}
+                {{# is_super_user }}
+                    <li class="admin ">
+                        <a class="admin-link" href="/admin/">
+                            {{# gettext }}Administration{{/ gettext }}
+                        </a>
+                    </li>
+                {{/ is_super_user }}
             </ul>
             {{> navbar-user-navigation }}
         </div>
