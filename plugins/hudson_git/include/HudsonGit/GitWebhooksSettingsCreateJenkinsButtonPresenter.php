@@ -27,9 +27,9 @@ class GitWebhooksSettingsCreateJenkinsButtonPresenter extends CreateWebhookButto
     public function __construct($has_already_a_jenkins)
     {
         parent::__construct();
-        $this->label                 = $GLOBALS['Language']->getText('plugin_hudson_git', 'add_jenkins_hook');
+        $this->label                 = dgettext('tuleap-hudson_git', 'Add Jenkins hook');
         $this->has_reached_the_limit = $has_already_a_jenkins;
-        $this->only_one              = $GLOBALS['Language']->getText('plugin_hudson_git', 'only_one');
+        $this->only_one              = dgettext('tuleap-hudson_git', 'Only one Jenkins hook can be configured');
         $this->target_modal          = 'modal-create-jenkins';
     }
 }

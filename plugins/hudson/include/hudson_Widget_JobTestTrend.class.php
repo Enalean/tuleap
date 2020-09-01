@@ -65,16 +65,16 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
     {
         $title = '';
         if ($this->job) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()]);
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Test Result Trend'), $this->job->getName());
         } else {
-             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend');
+             $title .= sprintf(dgettext('tuleap-hudson', '%1$s Test Result Trend'), '');
         }
         return $title;
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testtrend');
+        return dgettext('tuleap-hudson', 'Show the test result trend for the selected job. To display something, your job needs to have tests. The graph will show the number of tests (failed and successful) along  time. The number of tests is increasing while the number of build and commits are increasing too.');
     }
 
     public function loadContent($id)
@@ -120,14 +120,14 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
 
             $html .= '<div style="padding: 20px;">';
             $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id=' . urlencode($this->group_id) . '&job_id=' . urlencode($this->job_id) . '">';
-            $html .= '<img src="' . $purifier->purify($job->getUrl()) . '/test/trend?width=320&height=240" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()])) . '" />';
+            $html .= '<img src="' . $purifier->purify($job->getUrl()) . '/test/trend?width=320&height=240" alt="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', '%1$s Test Result Trend'), $this->job->getName())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', '%1$s Test Result Trend'), $this->job->getName())) . '" />';
             $html .= '</a>';
             $html .= '</div>';
         } else {
             if ($this->job != null) {
-                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found'));
+                $html .= $purifier->purify(dgettext('tuleap-hudson', 'No test found for this job.'));
             } else {
-                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
+                $html .= $purifier->purify(dgettext('tuleap-hudson', 'Job not found.'));
             }
         }
 

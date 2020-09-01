@@ -65,12 +65,12 @@ class hudsonActions extends Actions
             );
 
             if (! $jobId) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'add_job_error'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to add Jenkins job.'));
             } else {
                 $em       = EventManager::instance();
                 $params   = ['job_id' => $jobId, 'request' => $request];
                 $em->processEvent('save_ci_triggers', $params);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_added'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job added.'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . intval($group_id));
             }
         } catch (Exception $e) {
@@ -87,7 +87,7 @@ class hudsonActions extends Actions
 
         if (strpos($new_job_name, " ") !== false) {
             $new_job_name = str_replace(" ", "_", $new_job_name);
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_hudson', 'edit_jobname_spacesreplaced'));
+            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-hudson', 'Spaces are not allowed in job name. They were replaced by "_".'));
         }
 
         $new_use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
@@ -107,9 +107,9 @@ class hudsonActions extends Actions
                 $svn_paths
             )
         ) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'edit_job_error'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to update Jenkins job'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_updated'));
+            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job updated.'));
             $em       = EventManager::instance();
             $params   = ['request' => $request];
             $em->processEvent('update_ci_triggers', $params);
@@ -122,9 +122,9 @@ class hudsonActions extends Actions
         $job_id = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if (! $job_dao->deleteHudsonJob($job_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'delete_job_error'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to delete Jenkins job'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_deleted'));
+            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job deleted.'));
             $em       = EventManager::instance();
             $params   = ['job_id' => $job_id];
             $em->processEvent('delete_ci_triggers', $params);

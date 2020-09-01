@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_hudson_git', 'descriptor_name'),
+            dgettext('tuleap-hudson_git', 'Continuous Integration for Git plugin'),
             false,
-            $GLOBALS['Language']->getText('plugin_hudson_git', 'descriptor_description')
+            dgettext('tuleap-hudson_git', 'Continuous Integration with Hudson/Jenkins for Git plugin')
         );
     }
 }

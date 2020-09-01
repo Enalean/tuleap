@@ -80,7 +80,7 @@ class ContinuousIntegrationCollector
 
             return [
                 'service'   => "",
-                'title'     => $GLOBALS['Language']->getText('plugin_hudson_svn', 'ci_trigger'),
+                'title'     => dgettext('tuleap-hudson_svn', 'Subversion multi repositories trigger'),
                 'used'      => $job_ids,
                 'add_form'  => $html_form,
                 'edit_form' => $html_form

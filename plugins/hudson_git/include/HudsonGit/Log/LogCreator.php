@@ -66,7 +66,7 @@ class LogCreator
         $this->transaction_executor->execute(function () use ($log) {
             $id = $this->job_dao->create($log);
             if (! $id) {
-                throw new CannotCreateLogException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
+                throw new CannotCreateLogException(dgettext('tuleap-hudson_git', 'Error while saving Job data'));
             }
             if (count($log->getJobUrlList()) > 0) {
                 $this->job_dao->logTriggeredJobs(

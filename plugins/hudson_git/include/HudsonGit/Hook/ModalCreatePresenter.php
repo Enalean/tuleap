@@ -27,7 +27,7 @@ class ModalCreatePresenter
 
     public function __construct()
     {
-        $this->title = $GLOBALS['Language']->getText('plugin_hudson_git', 'add_a_jenkins_hook');
-        $this->save  = $GLOBALS['Language']->getText('plugin_hudson_git', 'btn_add_jenkins');
+        $this->title = dgettext('tuleap-hudson_git', 'Add a Jenkins webhook');
+        $this->save  = dgettext('tuleap-hudson_git', 'Add Jenkins webhook');
     }
 }

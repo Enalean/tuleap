@@ -103,7 +103,7 @@ class HudsonJobBuilder
     {
         if ($http_response->getStatusCode() === 404) {
             throw new HudsonJobURLFileNotFoundException(
-                $GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', [$minimal_hudson_job->getJobUrl()])
+                sprintf(dgettext('tuleap-hudson', 'File not found at URL: %1$s'), $minimal_hudson_job->getJobUrl())
             );
         }
 
@@ -114,7 +114,7 @@ class HudsonJobBuilder
             return $xmlobj;
         }
         throw new HudsonJobURLFileException(
-            $GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', [$minimal_hudson_job->getJobUrl()])
+            sprintf(dgettext('tuleap-hudson', 'Unable to read file at URL: %1$s'), $minimal_hudson_job->getJobUrl())
         );
     }
 }

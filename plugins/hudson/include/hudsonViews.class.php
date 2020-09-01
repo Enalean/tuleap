@@ -43,7 +43,7 @@ class hudsonViews extends Views
     }
     public function _getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'title');
+        return dgettext('tuleap-hudson', 'Continuous Integration');
     }
     public function _getHelp($section = '', $questionmark = false)
     {
@@ -126,7 +126,7 @@ class hudsonViews extends Views
             }
             echo Codendi_HTMLPurifier::instance()->purify($row['job_url'], CODENDI_PURIFIER_BASIC_NOBR, $group_id);
         } else {
-            echo '<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>';
+            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
         }
     }
 
@@ -170,7 +170,7 @@ class hudsonViews extends Views
                 $group_id
             );
         } else {
-            echo '<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>';
+            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
         }
     }
 
@@ -191,7 +191,7 @@ class hudsonViews extends Views
                 $group_id
             );
         } else {
-            echo '<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>';
+            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
         }
     }
 
@@ -212,7 +212,7 @@ class hudsonViews extends Views
                 $group_id
             );
         } else {
-            echo '<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>';
+            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
         }
     }
 
@@ -232,15 +232,15 @@ class hudsonViews extends Views
             if ($dar->valid()) {
                 $row = $dar->current();
 
-                echo '<a href="/plugins/hudson/?group_id=' . Codendi_HTMLPurifier::instance()->purify(urlencode($group_id)) . '">' . $GLOBALS['Language']->getText('plugin_hudson', 'back_to_jobs') . '</a>';
+                echo '<a href="/plugins/hudson/?group_id=' . Codendi_HTMLPurifier::instance()->purify(urlencode($group_id)) . '">' . dgettext('tuleap-hudson', 'Back to jobs list') . '</a>';
 
-                echo '<h3>' . $GLOBALS['Language']->getText('plugin_hudson', 'editjob_title') . '</h3>';
+                echo '<h3>' . dgettext('tuleap-hudson', 'Edit job') . '</h3>';
 
                 $services = [];
                 $params   = ['group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services];
                 $em->processEvent('collect_ci_triggers', $params);
 
-                $button = $GLOBALS['Language']->getText('plugin_hudson', 'form_editjob_button');
+                $button = dgettext('tuleap-hudson', 'Update job');
                 $this->displayForm(
                     $project,
                     $services,
@@ -275,15 +275,15 @@ class hudsonViews extends Views
 
             echo '<table id="jobs_table" class="table">';
             echo ' <thead><tr>';
-            echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_job')) . '</th>';
-            echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_lastsuccess')) . '</th>';
-            echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_lastfailure')) . '</th>';
-            echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_rss')) . '</th>';
+            echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Job')) . '</th>';
+            echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Last Success')) . '</th>';
+            echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Last Failure')) . '</th>';
+            echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'RSS')) . '</th>';
             if ($project->usesSVN()) {
-                echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_svn_trigger')) . '</th>';
+                echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'SVN trigger')) . '</th>';
             }
             if ($project->usesCVS()) {
-                echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_cvs_trigger')) . '</th>';
+                echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'CVS trigger')) . '</th>';
             }
             if (! empty($services)) {
                 foreach ($services as $service) {
@@ -291,7 +291,7 @@ class hudsonViews extends Views
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_actions')) . '</th>';
+                echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Actions')) . '</th>';
             }
             echo ' </tr></thead>';
             echo '<tbody>';
@@ -330,30 +330,30 @@ class hudsonViews extends Views
 
                     echo '<td>';
                     echo '<img src="' . $purifier->purify($job->getStatusIcon()) . '" alt="' . $purifier->purify($job->getStatus()) . '" title="' . $purifier->purify($job->getStatus()) . '" /> ';
-                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', [$job->getName()])) . '">' . $purifier->purify($job->getName()) . '</a>';
+                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show job %1$s'), $job->getName())) . '">' . $purifier->purify($job->getName()) . '</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastSuccessfulBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', [$job->getLastSuccessfulBuildNumber(), $job->getName()])) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastSuccessfulBuildUrl())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show build #%1$s of job %2$s'), $job->getLastSuccessfulBuildNumber(), $job->getName())) . '">' . $purifier->purify(dgettext('tuleap-hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastFailedBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', [$job->getLastFailedBuildNumber(), $job->getName()])) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastFailedBuildUrl())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show build #%1$s of job %2$s'), $job->getLastFailedBuildNumber(), $job->getName())) . '">' . $purifier->purify(dgettext('tuleap-hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', [$job->getName()])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', [$job->getName()])) . '"></a></td>';
+                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'RSS feed of all builds for %1$s job'), $job->getName())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'RSS feed of all builds for %1$s job'), $job->getName())) . '"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($hudson_jobs_complementary_information[$job_id]['use_svn_trigger'] == 1) {
-                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $GLOBALS['Language']->getText('plugin_hudson', 'alt_svn_trigger') . '" title="' . $GLOBALS['Language']->getText('plugin_hudson', 'alt_svn_trigger') . '"></td>';
+                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . dgettext('tuleap-hudson', 'SVN commit will trigger a build') . '" title="' . dgettext('tuleap-hudson', 'SVN commit will trigger a build') . '"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
                     }
                     if ($project->usesCVS()) {
                         if ($hudson_jobs_complementary_information[$job_id]['use_cvs_trigger'] == 1) {
-                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'alt_cvs_trigger')) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'alt_cvs_trigger')) . '"></td>';
+                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $purifier->purify(dgettext('tuleap-hudson', 'CVS commit will trigger a build')) . '" title="' . $purifier->purify(dgettext('tuleap-hudson', 'CVS commit will trigger a build')) . '"></td>';
                         } else {
                             echo '  <td>&nbsp;</td>';
                         }
@@ -370,7 +370,7 @@ class hudsonViews extends Views
                 } catch (Exception $e) {
                     echo '  <td>';
                     echo '<img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'link_error.png" alt="' . $purifier->purify($e->getMessage()) . '" title="' . $purifier->purify($e->getMessage()) . '" /> ';
-                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($hudson_jobs_complementary_information[$job_id]['url'])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', $hudson_jobs_complementary_information[$job_id]['name'])) . '">';
+                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($hudson_jobs_complementary_information[$job_id]['url'])) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Show job %1$s'), $hudson_jobs_complementary_information[$job_id]['name'])) . '">';
                     echo $purifier->purify($hudson_jobs_complementary_information[$job_id]['name']);
                     echo '</a>';
                     echo '</td>';
@@ -394,24 +394,18 @@ class hudsonViews extends Views
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=edit_job&group_id=' . $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '">' . $GLOBALS['HTML']->getimage(
                         'ic/edit.png',
-                        ['alt' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'edit_job')),
-                        'title' => $purifier->purify($GLOBALS['Language']->getText(
-                            'plugin_hudson',
-                            'edit_job'
-                        ))]
+                        ['alt' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job')),
+                        'title' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job'))]
                     ) . '</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=delete_job&group_id=' .  $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '" onclick="return confirm(';
-                    echo "'" . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'delete_job_confirmation', [$hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName()])) . "'";
+                    echo "'" . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Are you sure you want to delete Job %1$s from project %2$s?'), $hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName())) . "'";
                     echo ');">' . $GLOBALS['HTML']->getimage(
                         'ic/cross.png',
-                        ['alt' => $GLOBALS['Language']->getText('plugin_hudson', 'delete_job'),
-                        'title' => $GLOBALS['Language']->getText(
-                            'plugin_hudson',
-                            'delete_job'
-                        )]
+                        ['alt' => dgettext('tuleap-hudson', 'Delete this job from this project'),
+                        'title' => dgettext('tuleap-hudson', 'Delete this job from this project')]
                     ) . '</a>';
                     echo '   </span>';
                     echo '  </td>';
@@ -423,7 +417,7 @@ class hudsonViews extends Views
             }
             echo '</table>';
         } else {
-            echo '<p>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'no_jobs_linked')) . '</p>';
+            echo '<p>' . $purifier->purify(dgettext('tuleap-hudson', 'No Jenkins jobs associated with this project. To add a job, select the link just below.')) . '</p>';
         }
     }
 
@@ -433,10 +427,10 @@ class hudsonViews extends Views
         $project = $project_manager->getProject($group_id);
 
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
-        echo '<input class="btn btn-primary" value="' . $GLOBALS['Language']->getText('plugin_hudson', 'addjob_title') . '" type="submit" onclick="toggle_addurlform(); return false;">';
+        echo '<input class="btn btn-primary" value="' . dgettext('tuleap-hudson', 'Add job') . '" type="submit" onclick="toggle_addurlform(); return false;">';
         echo ' ' . $this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
-        $this->displayForm($project, $services, 'add', 'add', $GLOBALS['Language']->getText('plugin_hudson', 'addjob'), null, null, null, null, null, null, '');
+        $this->displayForm($project, $services, 'add', 'add', dgettext('tuleap-hudson', 'Submit'), null, null, null, null, null, null, '');
         echo '</div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
@@ -462,24 +456,24 @@ class hudsonViews extends Views
                     <input type="hidden" name="job_id" value="' . $purifier->purify($job_id) . '" />
                     <input type="hidden" name="action" value="' . $purifier->purify($action) . '_job" />
                     <div class="control-group">
-                        <label class="control-label" for="hudson_job_url">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_job_url')) . '</label>
+                        <label class="control-label" for="hudson_job_url">' . $purifier->purify(dgettext('tuleap-hudson', 'Job URL:')) . '</label>
                         <div class="controls">
                             <input id="hudson_job_url" required name="hudson_job_url" type="text" size="64" value="' . $purifier->purify($job_url) . '" />
-                            <span class="help help-inline">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_joburl_example')) . '</span>
+                            <span class="help help-inline">' . $purifier->purify(dgettext('tuleap-hudson', 'eg: http://myCIserver/jenkins/job/myJob or http://myCIserver/jenkins/job/myJob/buildWithParameters?param1=value1 for parameterized jobs')) . '</span>
                         </div>
                     </div>';
         if ($name !== null) {
             echo '  <div class="control-group">
-                        <label class="control-label" for="hudson_job_name">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_job_name')) . '</label>
+                        <label class="control-label" for="hudson_job_name">' . $purifier->purify(dgettext('tuleap-hudson', 'Job name:')) . '</label>
                         <div class="controls">
                             <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="' . $purifier->purify($name) . '" />
-                            <span class="help help-inline">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name)) . '</span>
+                            <span class="help help-inline">' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Name (with no space) used to make a reference to this job. Eg: job #%1$s'), $name)) . '</span>
                         </div>
                     </div>';
         }
         if ($project->usesSVN() || $project->usesCVS() || ! empty($services)) {
             echo '  <div class="control-group">
-                        <label class="control-label" for="hudson_job_url">' . $GLOBALS['Language']->getText('plugin_hudson', 'form_job_use_trigger') . '</label>
+                        <label class="control-label" for="hudson_job_url">' . dgettext('tuleap-hudson', 'Trigger a build after commits:') . '</label>
                             <div class="controls">';
             if ($project->usesSVN()) {
                 $checked = '';
@@ -488,16 +482,16 @@ class hudsonViews extends Views
                 }
                 echo '<label class="checkbox">
                         <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" ' . $checked . '/>
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_job_scm_svn')) . '
+                        ' . $purifier->purify(dgettext('tuleap-hudson', 'SVN')) . '
                       </label>
                       <div id="hudson_svn_paths">
-                        <label for="hudson_svn_paths_textarea">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_label')) . '</label>
+                        <label for="hudson_svn_paths_textarea">' . $purifier->purify(dgettext('tuleap-hudson', 'Only when commit occurs on following paths:')) . '</label>
                         <textarea
                           id="hudson_svn_paths_textarea"
                           name="hudson_svn_paths"
-                          placeholder="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_placeholder')) . '"
+                          placeholder="' . $purifier->purify(dgettext('tuleap-hudson', 'One path per line...')) . '"
                         >' . $purifier->purify($svn_paths) . '</textarea>
-                        <p class="help">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'svn_paths_helper')) . '</p>
+                        <p class="help">' . $purifier->purify(dgettext('tuleap-hudson', 'If empty, every commits will trigger a build.')) . '</p>
                       </div>
                     ';
             }
@@ -508,14 +502,14 @@ class hudsonViews extends Views
                 }
                 echo '<label class="checkbox">
                         <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" ' . $checked . '/>
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'form_job_scm_cvs')) . '
+                        ' . $purifier->purify(dgettext('tuleap-hudson', 'CVS')) . '
                         </label>';
             }
             foreach ($services as $service) {
                 echo $service[$add_or_edit . '_form'];
             }
             echo '          <label class="hudson_token_label">
-                                ' . $GLOBALS['Language']->getText('plugin_hudson', 'form_job_with_token') . '
+                                ' . dgettext('tuleap-hudson', 'with (optional) token:') . '
                                 <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="' . $purifier->purify($token) . '" />
                             </label>
                         </div>

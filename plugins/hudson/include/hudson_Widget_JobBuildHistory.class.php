@@ -62,16 +62,16 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
     {
         $title = '';
         if ($this->job) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory', [$this->job->getName()]);
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Builds History'), $this->job->getName());
         } else {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory');
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Builds History'), '');
         }
         return $title;
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_buildshistory');
+        return dgettext('tuleap-hudson', 'Show the build history of the selected job, under the form of RSS feed. For each build of the list, you can see the build number, the status and the date the build has been scheduled.');
     }
 
     public function loadContent($id)
@@ -112,7 +112,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
             $buildHistoryRSSWidget->rss_url = $job->getUrl() . '/rssAll';
             $html .= $buildHistoryRSSWidget->getContent();
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+            $html .= dgettext('tuleap-hudson', 'Job not found.');
         }
         return $html;
     }

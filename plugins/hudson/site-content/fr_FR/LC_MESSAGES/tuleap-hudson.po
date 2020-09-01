@@ -13,6 +13,36 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#, php-format
+msgid "%1$s Builds History"
+msgstr "Historique des builds %1$s"
+
+#, php-format
+msgid "%1$s Last Artifacts"
+msgstr "Derniers artefacts %1$s"
+
+#, php-format
+msgid "%1$s Last Builds"
+msgstr "Derniers builds %1$s"
+
+#, php-format
+msgid "%1$s Test Result Trend"
+msgstr "Tendance des résultats des tests %1$s"
+
+#, php-format
+msgid "%1$s Test Results"
+msgstr "Resultats des tests %1$s"
+
+#, php-format
+msgid "%1$s Test Results (%2$s / %3$s)"
+msgstr "Résultats des tests %1$s (%2$s / %3$s)"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Add job"
+msgstr "Soumettre"
+
 msgid ""
 "An issue have been encountered while retrieving information, a job can not "
 "be displayed"
@@ -26,23 +56,343 @@ msgstr[1] ""
 "Des problèmes ont été rencontrés lors de la récupération d'informations, "
 "certains jobs ne peuvent pas être affichés"
 
+#, php-format
+msgid "Are you sure you want to delete Job %1$s from project %2$s?"
+msgstr "Etes-vous sûr de vouloir supprimer le job %1$s du projet %2$s ?"
+
+msgid "Back to jobs list"
+msgstr "Revenir à la liste des jobs"
+
+msgid "Build performed on:"
+msgstr "Build exécuté le :"
+
+msgid "CVS"
+msgstr "CVS"
+
+msgid "CVS commit will trigger a build"
+msgstr "Un commit CVS déclenchera un build"
+
+msgid "CVS trigger"
+msgstr "Evénement CVS"
+
+msgid "Continuous Integration"
+msgstr "Intégration Continue"
+
+msgid "Continuous Integration with Hudson/Jenkins"
+msgstr "Intégration continue avec Hudson/Jenkins"
+
 msgid "Continuous integration"
 msgstr "Intégration continue"
+
+msgid "Continuous integration service is not enabled"
+msgstr "Le service d'intégration continue n'est pas actif"
+
+msgid "Delete this job from this project"
+msgstr "Supprimer ce job de ce projet"
+
+msgid "Edit job"
+msgstr "Modifier le job"
+
+msgid "Edit this job"
+msgstr "Editer ce job"
+
+msgid "Error: Jenkins object not found."
+msgstr "Erreur : Objet Jenkins non trouvé."
 
 #, php-format
 msgid "Failed (%s)"
 msgstr "Echoués (%s)"
 
+msgid "Failure"
+msgstr "En échec"
+
+#, php-format
+msgid "File not found at URL: %1$s"
+msgstr "Fichier non trouvé à l'Url : %1$s"
+
+msgid "If empty, every commits will trigger a build."
+msgstr "Si vide, tous les commits déclencheront un build."
+
+msgid "In progress"
+msgstr "En cours"
+
+msgid "Jenkins Build"
+msgstr "Build Jenkins"
+
+msgid "Jenkins Job"
+msgstr "Job Jenkins"
+
+msgid "Jenkins Jobs"
+msgstr "Jobs Jenkins"
+
+msgid "Jenkins job added."
+msgstr "Le job Jenkins a été ajouté."
+
+msgid "Jenkins job deleted."
+msgstr "Le job Jenkins a été supprimé."
+
+msgid "Jenkins job updated."
+msgstr "Le job Jenkins a été modifié."
+
+msgid "Job"
+msgstr "Job"
+
+msgid "Job URL:"
+msgstr "URL du job :"
+
+msgid "Job name:"
+msgstr "Nom du job :"
+
+msgid "Job not found."
+msgstr "Job non trouvé."
+
+msgid "Last Build:"
+msgstr "Dernier Build :"
+
+msgid "Last Failure"
+msgstr "Dernier échec"
+
+msgid "Last Failure:"
+msgstr "Dernier échec :"
+
+msgid "Last Success"
+msgstr "Dernier succès"
+
+msgid "Last Success:"
+msgstr "Dernier succès :"
+
+msgid "Missing Jenkins job ID"
+msgstr "Identifiant du job Jenkins manquant."
+
+msgid "Missing Jenkins job URL (eg: http://myCIserver:8080/jenkins/job/MyJob)"
+msgstr ""
+"URL du job Jenkins manquante (ex: http://monserveurIC:8080/jenkins/job/"
+"MonJob)"
+
+msgid "Missing group_id parameter."
+msgstr "Paramètre group_id manquant."
+
+msgid "Monitored job"
+msgstr "Job suivi"
+
+msgid "Monitored jobs"
+msgstr "Jobs suivis"
+
+msgid "My Jenkins Jobs"
+msgstr "Mes jobs Jenkins"
+
+#, php-format
+msgid ""
+"Name (with no space) used to make a reference to this job. Eg: job #%1$s"
+msgstr "Nom (sans espace) utilisé pour référencer ce job. Ex : job #%1$s"
+
+msgid ""
+"No Jenkins jobs associated with this project. To add a job, select the link "
+"just below."
+msgstr ""
+"Aucun job Jenkins associé à ce projet. Pour ajouter un job, cliquez sur le "
+"lien ci-dessous."
+
+msgid "No artifact found."
+msgstr "Aucun artéfact trouvé."
+
+msgid "No build found for this job."
+msgstr "Build non trouvé pour ce job."
+
 msgid "No data to display"
 msgstr "Il n'y a pas de données à afficher"
+
+#, php-format
+msgid ""
+"No job found. Please <a href=\"/plugins/hudson/?group_id=%1$s\">add a job</"
+"a> before adding any Jenkins widget."
+msgstr ""
+"Aucun job trouvé. Veuillez <a href=\"/plugins/hudson/?group_id=%1$s"
+"\">ajouter un job</a> d'abord."
+
+msgid "No job found. Please add a job to any of your project before."
+msgstr ""
+"Aucun job trouvé. Veuillez ajouter un job</a> à l'un de vos projets d'abord."
+
+msgid "No test found for this job."
+msgstr "Tests non trouvés pour ce job."
+
+#, php-format
+msgid "Number of jobs until %1$s"
+msgstr "Nombre de jobs jusqu'au %1$s"
+
+msgid "One path per line..."
+msgstr "Un chemin par ligne..."
+
+msgid "Only when commit occurs on following paths:"
+msgstr "Uniquement lors de commit sur les répertoires suivants :"
 
 #, php-format
 msgid "Passed (%s)"
 msgstr "Passés (%s)"
 
+msgid "Pending"
+msgstr "En attente"
+
+msgid "RSS"
+msgstr "RSS"
+
+#, php-format
+msgid "RSS feed of all builds for %1$s job"
+msgstr "Flux RSS de tous les builds du job %1$s"
+
+msgid "SVN"
+msgstr "SVN"
+
+msgid "SVN commit will trigger a build"
+msgstr "Un commit SVN déclenchera un build"
+
+msgid "SVN trigger"
+msgstr "Evénement SVN"
+
+msgid ""
+"Show an overview of all the jobs of all the projects you're member of. You "
+"can of course select the jobs you wish to display by selecting the "
+"preferences link of the widget."
+msgstr ""
+"Affiche un aperçu des jobs de tous les projets dont vous êtes membre. Vous "
+"pouvez bien entendu choisir les jobs que vous souhaitez voir affichés en "
+"cliquant sur le lien \"préférences\" du widget."
+
+#, php-format
+msgid "Show build #%1$s of job %2$s"
+msgstr "Voir le build #%1$s du job %2$s"
+
+#, php-format
+msgid "Show job %1$s"
+msgstr "Voir le job %1$s"
+
+msgid ""
+"Show the build history of the selected job, under the form of RSS feed. For "
+"each build of the list, you can see the build number, the status and the "
+"date the build has been scheduled."
+msgstr ""
+"Affiche l'historique des builds du job sélectionné, sous la forme d'un flux "
+"RSS. Pour chaque build de la liste, vous avez son numéro, son état et sa "
+"date."
+
+msgid ""
+"Show the last builds for this job (last one, last successful, last failed) "
+"and the weather report. The trend is represented by a weather report (sun, "
+"thunder, etc.) meaning that the trend is good or not."
+msgstr ""
+"Affiche les derniers builds du job sélectionné (le dernier, le dernier "
+"succès, le dernier échec) ainsi que la tendance du job. Cette tendance est "
+"représentée par une image empruntée à la météo (soleil, orage, etc) pour "
+"signifier que la tendance est au beau fixe ou pas."
+
+msgid ""
+"Show the last successfully published artifacts of one job. To display "
+"something, your job needs to publish artifacts."
+msgstr ""
+"Affiche les derniers artefacts publiés du job sélectionné. Il faut que votre "
+"job dispose d'artefacts et qu'il les publie pour que ce widget affiche "
+"quelque chose."
+
+msgid ""
+"Show the test result trend for the selected job. To display something, your "
+"job needs to have tests. The graph will show the number of tests (failed and "
+"successful) along  time. The number of tests is increasing while the number "
+"of build and commits are increasing too."
+msgstr ""
+"Affiche la tendance des tests pour le job sélectionné. Il faut que votre job "
+"dispose de tests pour que ce widget affiche quelque chose. Ce graphique "
+"représente le nombre de tests (en échec et en succès) dans le temps. Cela "
+"permet par exemple de vérifier que le nombre de tests est en constante "
+"augmentation avec le nombre de builds/commits."
+
+msgid ""
+"Show the test results of the latest build for the selected job.To display "
+"something, your job needs to execute tests and publish them. The result is "
+"shown on a pie chart."
+msgstr ""
+"Affiche les résultats des tests du dernier build du job sélectionné. Pour "
+"fonctionner, votre job doit disposer de tests qui soient publiés afin que ce "
+"widget affiche quelque chose. Les résultats sont présentés sous forme de "
+"camembert."
+
+msgid ""
+"Shows an overview of all the jobs associated with this project. You can "
+"always choose the ones you want to display in the widget (preferences link)."
+msgstr ""
+"Affiche un aperçu de tous les jobs associés à ce projet. Si vous avez "
+"plusieurs jobs associés à votre projet, vous pouvez choisir ceux que vous "
+"souhaitez voir dans le widget (lien préférences)."
+
 #, php-format
 msgid "Skipped (%s)"
 msgstr "Ignorés (%s)"
 
+msgid "Spaces are not allowed in job name. They were replaced by \"_\"."
+msgstr ""
+"Les espaces sont interdits dans le nom du job. Ils ont été remplacés par un "
+"\"_\"."
+
+msgid "Status:"
+msgstr "Statut :"
+
+msgid "Submit"
+msgstr "Ajouter un job"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Test Results"
+msgstr "Resultats des tests"
+
+msgid "Trigger a build after commits:"
+msgstr "Déclencher un build après un commit :"
+
+msgid "Unable to add Jenkins job."
+msgstr "Impossible d'ajouter le job Jenkins"
+
+msgid "Unable to delete Jenkins job"
+msgstr "Impossible de supprimer le job Jenkins"
+
+#, php-format
+msgid "Unable to read file at URL: %1$s"
+msgstr "Impossible de lire le fichier à l'Url : %1$s"
+
+msgid "Unable to update Jenkins job"
+msgstr "Impossible de modifier le job Jenkins"
+
+msgid "Unknown status"
+msgstr "Status inconnu"
+
+msgid "Unstable"
+msgstr "Instable"
+
+msgid "Update job"
+msgstr "Modifier"
+
+msgid "Weather Report:"
+msgstr "Tendance :"
+
+#, php-format
+msgid "Wrong Job URL: %1$s"
+msgstr "URL du job incorrecte : %1$s"
+
+msgid ""
+"You are not monitoring any job. Select preferences link to monitor a job."
+msgstr "Aucun job surveillé. Cliquez sur préférences pour ajouter un job."
+
 msgid "[See the latest tests results]"
 msgstr "[Voir les derniers résultats de test]"
+
+msgid "build"
+msgstr "build"
+
+msgid ""
+"eg: http://myCIserver/jenkins/job/myJob or http://myCIserver/jenkins/job/"
+"myJob/buildWithParameters?param1=value1 for parameterized jobs"
+msgstr ""
+"ex : http://monICserveur/jenkins/job/monJob ou http://monICserveur/jenkins/"
+"job/myJob/buildWithParameters?param1=value1 pour les jobs avec parametres"
+
+msgid "with (optional) token:"
+msgstr "avec le token (optionnel) :"

@@ -50,9 +50,9 @@ class ModalsPresenter
         $this->modal_create_jenkins = new ModalCreatePresenter();
         $this->modal_edit_jenkins   = new ModalEditPresenter();
 
-        $this->jenkins_notification_label       = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_label');
-        $this->jenkins_notification_desc        = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_notification_desc');
-        $this->jenkins_documentation_link_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'settings_hooks_jenkins_link_label');
+        $this->jenkins_notification_label       = dgettext('tuleap-hudson_git', 'Jenkins server');
+        $this->jenkins_notification_desc        = dgettext('tuleap-hudson_git', 'Jenkins server will be notified about git activity on this repository and will trigger git polling. More details on');
+        $this->jenkins_documentation_link_label = dgettext('tuleap-hudson_git', 'Jenkins documentation');
 
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }

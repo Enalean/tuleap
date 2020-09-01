@@ -51,7 +51,7 @@ class HudsonBuild
         $parsed_url = parse_url($hudson_build_url);
 
         if (! $parsed_url || ! array_key_exists('scheme', $parsed_url)) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson', 'wrong_job_url', [$hudson_build_url]));
+            throw new HudsonJobURLMalformedException(sprintf(dgettext('tuleap-hudson', 'Wrong Job URL: %1$s'), $hudson_build_url));
         }
 
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
@@ -67,14 +67,14 @@ class HudsonBuild
             $this->request_factory->createRequest('GET', $hudson_build_url)
         );
         if ($response->getStatusCode() !== 200) {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', [$hudson_build_url]));
+            throw new HudsonJobURLFileNotFoundException(sprintf(dgettext('tuleap-hudson', 'File not found at URL: %1$s'), $hudson_build_url));
         }
 
         $xmlobj = simplexml_load_string($response->getBody()->getContents());
         if ($xmlobj !== false) {
             return $xmlobj;
         }
-        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', [$hudson_build_url]));
+        throw new HudsonJobURLFileException(sprintf(dgettext('tuleap-hudson', 'Unable to read file at URL: %1$s'), $hudson_build_url));
     }
 
     public function getDom()

@@ -74,7 +74,7 @@ class GitWebhooksSettingsEnhancer
         $repository = $params['repository'];
         assert($repository instanceof GitRepository);
 
-        $params['description'] = $GLOBALS['Language']->getText('plugin_hudson_git', 'hooks_desc');
+        $params['description'] = dgettext('tuleap-hudson_git', 'You can define one Jenkins webhook and several generic webhooks.');
 
         $project = $repository->getProject();
         $jenkins_servers = $this->jenkins_server_factory->getJenkinsServerOfProject($project);
@@ -111,7 +111,7 @@ class GitWebhooksSettingsEnhancer
             $triggered_jobs = $this->log_factory->getJobByRepository($repository);
 
             $params['sections'][] = new SectionOfWebhooksPresenter(
-                $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook'),
+                dgettext('tuleap-hudson_git', 'Jenkins hook'),
                 [
                     new JenkinsWebhookPresenter(
                         $repository,

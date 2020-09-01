@@ -36,16 +36,12 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
 
         $this->remove_form_action   = '/plugins/hudson_git/?group_id=' . (int) $repository->getProjectId();
 
-        $this->remove_webhook_desc   = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
-        $this->modal_logs_time_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
+        $this->remove_webhook_desc   = dgettext('tuleap-hudson_git', 'You are about to remove the Jenkins server. Please confirm your action.');
+        $this->modal_logs_time_label = dgettext('tuleap-hudson_git', 'Push date');
         $this->modal_logs_info_label = dgettext('tuleap-hudson_git', 'Logs');
-        $this->empty_logs            = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
+        $this->empty_logs            = dgettext('tuleap-hudson_git', 'No triggered jobs');
 
-        $this->purified_last_push_info = '<span class="text-info">' . $GLOBALS['Language']->getText(
-            'plugin_hudson_git',
-            'n_jobs_triggered',
-            $this->countNumberOfPollingJobsTriggeredOnLastPush($hooklogs)
-        ) . '</span>';
+        $this->purified_last_push_info = '<span class="text-info">' . sprintf(dgettext('tuleap-hudson_git', '%1$s jobs triggered'), $this->countNumberOfPollingJobsTriggeredOnLastPush($hooklogs)) . '</span>';
 
         $this->generateHooklogs($hooklogs);
     }
