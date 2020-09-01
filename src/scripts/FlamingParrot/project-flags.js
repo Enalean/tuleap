@@ -29,10 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const template = render(
         `<div class="popover current-project-nav-popover project-sidebar-project-flags-popover">
                 <div class="arrow"></div>
-                <h3>{{ title }}</h3>
                 <div class="popover-content"></div>
-        </div>`,
-        { title: project_flags_element.dataset.title }
+        </div>`
     );
 
     const shield_icon_html = new XMLSerializer().serializeToString(

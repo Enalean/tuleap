@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$nav-dropdown-content-border-radius: 3px;
+$nav-dropdown-content-border-radius: 4px;
 
 .logo {
     width: $sidebar-width;
@@ -372,44 +372,6 @@ $nav-dropdown-content-border-radius: 3px;
 .header-navbar-container-project-nav,
 .header-navbar-container-user-nav {
     display: flex;
-}
-
-.current-project-nav-popover {
-    width: 276px;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: #333333;
-    font-size: 1rem;
-    font-weight: normal;
-    letter-spacing: normal;
-    text-transform: none;
-
-    > h3 {
-        margin: 0;
-        padding: $tlp-small-spacing;
-        border-top-left-radius: $nav-dropdown-content-border-radius;
-        border-top-right-radius: $nav-dropdown-content-border-radius;
-        background-color: $main;
-        color: #ffffff;
-        font-size: 1rem;
-        font-weight: normal;
-        letter-spacing: normal;
-        line-height: 1.25rem;
-        cursor: initial;
-    }
-
-    > .popover-content {
-        padding: $tlp-medium-spacing;
-        border-bottom-right-radius: $nav-dropdown-content-border-radius;
-        border-bottom-left-radius: $nav-dropdown-content-border-radius;
-        background: #ffffff;
-    }
-
-    > .arrow::after {
-        border-bottom-color: $main;
-    }
 }
 
 .navbar-user-dropdown {
