@@ -24,13 +24,7 @@
             id="item_{{ item.id }}"
             data-test="kanban-item"
         >
-            <kanban-item
-                class="kanban-item"
-                ng-class="[
-                     item.background_color_name, {
-                    'card-created': item.created
-                }]"
-            ></kanban-item>
+            <kanban-item class="{{ item.background_color_name }}" ng-class="{'card-created': item.created}"></kanban-item>
         </li>
     </ul>
 </div>
