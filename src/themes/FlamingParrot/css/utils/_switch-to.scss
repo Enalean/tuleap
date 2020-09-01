@@ -95,6 +95,8 @@ $approximate-width-of-project-icon: 15.5px;
 }
 
 .switch-to-projects-project {
+    display: flex;
+    align-items: center;
     padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
     border-radius: 4px;
     color: $dark-modal-default-text-color;
@@ -106,6 +108,14 @@ $approximate-width-of-project-icon: 15.5px;
 
         > .switch-to-projects-project-label {
             color: $white;
+        }
+
+        > .switch-to-projects-project-admin-icon {
+            opacity: .5;
+
+            &:hover {
+                opacity: 1;
+            }
         }
     }
 }
@@ -119,6 +129,16 @@ $approximate-width-of-project-icon: 15.5px;
     &.fa-tlp-lock-plus-r {
         color: $ui-color-danger;
     }
+}
+
+.switch-to-projects-project-admin-icon {
+    margin: 0 0 0 $tlp-small-spacing;
+    transition: opacity 150ms ease-in-out;
+    opacity: 0;
+    color: $dark-modal-dimmed-text-color;
+    font-size: .75rem;
+    line-height: .875rem;
+    cursor: pointer;
 }
 
 .switch-to-projects-softwaremap {

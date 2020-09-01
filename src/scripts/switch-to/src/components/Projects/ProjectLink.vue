@@ -22,6 +22,12 @@
     <a v-bind:href="project.project_uri" class="switch-to-projects-project">
         <i class="fa fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
         <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
+        <i
+            class="fa fa-fw fa-cog switch-to-projects-project-admin-icon"
+            v-if="project.user_administers"
+            aria-hidden="true"
+            v-on:click="goToAdmin"
+        ></i>
     </a>
 </template>
 
@@ -42,6 +48,12 @@ export default class ProjectLink extends Vue {
 
     @State
     readonly are_restricted_users_allowed!: boolean;
+
+    goToAdmin(event: Event): void {
+        event.preventDefault();
+
+        window.location.href = this.project.project_config_uri;
+    }
 
     get project_icon(): string {
         const privacy: ProjectPrivacy = {
