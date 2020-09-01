@@ -18,7 +18,6 @@
  */
 
 import { init as initNavbarDropdown } from "./navbar-dropdown.js";
-import { init as initProjectNavbarDropdown } from "./navbar-dropdown-projects.js";
 import { init as initMotd } from "./motd.js";
 import { init as initSidebar } from "./sidebar.js";
 import { init as initScrollbar } from "./scrollbar.js";
@@ -30,7 +29,6 @@ import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown();
-    initProjectNavbarDropdown();
     initSidebar();
     initHelpDropdown();
     initMotd();

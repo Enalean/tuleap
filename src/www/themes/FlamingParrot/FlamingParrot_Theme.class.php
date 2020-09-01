@@ -240,18 +240,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function navbar($params, PFUser $current_user, $selected_top_tab)
     {
-        $project_manager      = ProjectManager::instance();
-        $projects             = $project_manager->getActiveProjectsForUser($current_user);
-        $projects_presenters  = $this->getPresentersForProjects($projects);
-        $navbar_items_builder = new FlamingParrot_NavBarItemPresentersCollectionBuilder(
-            $current_user,
-            $_SERVER['REQUEST_URI'],
-            $selected_top_tab,
-            $projects_presenters
-        );
-        $csrf_logout_token    = new CSRFSynchronizerToken('logout_action');
-        $event_manager        = EventManager::instance();
-        $url_redirect         = new URLRedirect($event_manager);
+        $project_manager   = ProjectManager::instance();
+        $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
+        $event_manager     = EventManager::instance();
+        $url_redirect      = new URLRedirect($event_manager);
 
         $banner = null;
         $project = null;
@@ -284,7 +276,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->getSearchFormPresenter(),
             $this->displayNewAccount(),
             $this->getMOTD(),
-            $navbar_items_builder->buildNavBarItemPresentersCollection(),
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
@@ -293,16 +284,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ));
 
         $this->container($params, $current_user, $banner, $switch_to);
-    }
-
-    private function getPresentersForProjects($list_of_projects)
-    {
-        $presenters = [];
-        foreach ($list_of_projects as $project) {
-            $presenters[] = new FlamingParrot_NavBarProjectPresenter($project);
-        }
-
-        return $presenters;
     }
 
     private function displayNewAccount(): bool

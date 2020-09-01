@@ -129,7 +129,6 @@ include_menu	proj_admin	Project Admin
 include_menu	summary_page	Summary Page
 include_menu	logged_in	Logged In
 include_menu	logout	Logout
-include_menu	filter_project	Project...
 include_menu	account_maintenance	Account Maintenance
 include_menu	my_perso_page	My Personal Page
 include_menu	bookmark_this_page	Bookmark This Page
@@ -141,8 +140,6 @@ include_menu	auth_nb_failure	Number of bad attempts:
 include_menu	help	Help
 include_menu	api	API
 include_menu	get_help	Get Help
-include_menu	projects	Projects
-include_menu	browse_projects	Browse all projects
 include_menu	browse_all	Browse all
 include_menu	filter_projects	Filter...
 include_menu	add_project	New project

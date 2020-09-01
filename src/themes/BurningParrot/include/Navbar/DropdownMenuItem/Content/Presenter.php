@@ -22,8 +22,6 @@ namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content;
 
 abstract class Presenter
 {
-    public $is_projects = false;
-    public $is_links    = false;
     public $is_history  = false;
 
     /** @var string */
