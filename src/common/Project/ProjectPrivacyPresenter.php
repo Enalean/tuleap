@@ -55,16 +55,22 @@ class ProjectPrivacyPresenter
     /**
      * @var string
      */
+    public $privacy_title;
+    /**
+     * @var string
+     */
     public $project_name;
 
     public function __construct(
         Project $project,
-        string $project_privacy
+        string $project_privacy,
+        string $privacy_title
     ) {
         $this->project_is_public  = $project->isPublic();
         $this->project_is_private = ! $this->project_is_public;
         $this->project_name       = (string) $project->getPublicName();
         $this->project_privacy    = $project_privacy;
+        $this->privacy_title      = $privacy_title;
 
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed) {
@@ -77,7 +83,7 @@ class ProjectPrivacyPresenter
 
     public static function fromProject(Project $project): self
     {
-        return new self($project, self::getProjectPrivacyText($project));
+        return new self($project, self::getProjectPrivacyText($project), self::getPrivacyTitle($project));
     }
 
     private static function getProjectPrivacyText(Project $project): string
@@ -122,6 +128,31 @@ class ProjectPrivacyPresenter
 
             return _('Project privacy set to private.') . ' ' .
                 _('Only project members can access its content.');
+        }
+    }
+
+    private static function getPrivacyTitle(Project $project): string
+    {
+        if (ForgeConfig::areRestrictedUsersAllowed()) {
+            switch ($project->getAccess()) {
+                case Project::ACCESS_PUBLIC:
+                    return _('Public');
+                    break;
+                case Project::ACCESS_PUBLIC_UNRESTRICTED:
+                    return _('Public including restricted');
+                    break;
+                case Project::ACCESS_PRIVATE_WO_RESTRICTED:
+                    return _('Private');
+                    break;
+                default:
+                    return _('Private including restricted');
+            }
+        } else {
+            if ($project->isPublic()) {
+                return _('Public');
+            }
+
+            return _('Private');
         }
     }
 }

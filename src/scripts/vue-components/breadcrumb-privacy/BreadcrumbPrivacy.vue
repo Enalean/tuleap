@@ -43,10 +43,16 @@
                 <h1 class="tlp-popover-title">{{ project_public_name }}</h1>
             </div>
             <div class="tlp-popover-body">
-                <p class="current-project-nav-title-popover-description">
-                    {{ privacy.project_privacy }}
-                </p>
                 <template v-if="has_project_flags">
+                    <div class="current-project-nav-flag-popover-flag">
+                        <i class="fa" v-bind:class="project_privacy_icon"></i>
+                        <h2 class="current-project-nav-flag-popover-content-title">
+                            {{ privacy.privacy_title }}
+                        </h2>
+                        <p class="current-project-nav-title-popover-description">
+                            {{ privacy.project_privacy }}
+                        </p>
+                    </div>
                     <hr class="current-project-nav-flag-popover-separator" />
                     <div
                         class="current-project-nav-flag-popover-flag"
@@ -77,6 +83,9 @@
                         </p>
                     </div>
                 </template>
+                <p v-else class="current-project-nav-title-popover-description">
+                    {{ privacy.project_privacy }}
+                </p>
             </div>
         </section>
     </div>
