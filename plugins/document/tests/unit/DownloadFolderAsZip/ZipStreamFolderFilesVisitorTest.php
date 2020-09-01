@@ -67,7 +67,7 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/a file.pdf', '/path/to/file');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file');
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
@@ -118,7 +118,7 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
         $root_folder = $this->getRootFolderWithItems(true);
 
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/a file.pdf', '/path/to/file');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file');
         $this->error_logging_helper->shouldReceive('logCorruptedFile');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
@@ -148,8 +148,8 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
 
         $subfolder = new Docman_Folder(['item_id' => 4, 'title' => 'my files']);
 
-        $file = new Docman_File(['item_id' => 5, 'title' => 'a file.pdf']);
-        $file->setCurrentVersion(new Docman_Version(['path' => '/path/to/file']));
+        $file = new Docman_File(['item_id' => 5, 'title' => 'a file in pdf']);
+        $file->setCurrentVersion(new Docman_Version(['path' => '/path/to/file', 'filename' => 'file.pdf']));
 
         $embedded = new Docman_EmbeddedFile(['item_id' => 6, 'title' => 'an embedded file']);
         $embedded->setCurrentVersion(new Docman_Version(['path' => '/path/to/embedded']));

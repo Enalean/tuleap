@@ -28,6 +28,7 @@ use Docman_File;
 use Docman_Folder;
 use Docman_Item;
 use Docman_Link;
+use Docman_Version;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Document\Exceptions\DocmanFileCorruptedException;
@@ -86,10 +87,16 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
 
     public function visitFile(Docman_File $item, array $params = []): void
     {
-        $name          = $item->getTitle();
-        $document_path = $params['path'];
+        try {
+            $current_version = $this->getFileCurrentVersion($item);
+            $name            = $current_version->getFilename();
+            $document_path   = $params['path'];
 
-        $this->addFileToArchive($item, $document_path . '/' . $name);
+            $this->addFileToArchive($item, $document_path . '/' . $name);
+        } catch (DocmanFileCorruptedException $exception) {
+            $this->error_logging_helper->logCorruptedFile($item);
+            $this->errors_listing_builder->addBadFilePath((string) $item->getTitle());
+        }
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
@@ -150,12 +157,22 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
      */
     private function getPathOnFileSystem(Docman_File $item): string
     {
+        $current_version = $this->getFileCurrentVersion($item);
+
+        return $current_version->getPath();
+    }
+
+    /**
+     * @throws DocmanFileCorruptedException
+     */
+    private function getFileCurrentVersion(Docman_File $item): Docman_Version
+    {
         $current_version = $item->getCurrentVersion();
 
         if ($current_version === null) {
             throw new DocmanFileCorruptedException();
         }
 
-        return $current_version->getPath();
+        return $current_version;
     }
 }
