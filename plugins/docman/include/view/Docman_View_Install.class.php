@@ -7,8 +7,6 @@
 * Docman_View_Install
 */
 
-require_once('Docman_View_ProjectHeader.class.php');
-
 class Docman_View_Install extends Docman_View_ProjectHeader
 {
     /* protected */ public function _content($params)

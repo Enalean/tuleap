@@ -20,10 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_ReportColumn.class.php');
-
-require_once('Docman_MetadataFactory.class.php');
-
 class Docman_ReportColumnFactory
 {
     public $groupId;

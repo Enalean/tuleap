@@ -21,8 +21,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Document.class.php');
-
 class Docman_Empty extends Docman_Document
 {
 

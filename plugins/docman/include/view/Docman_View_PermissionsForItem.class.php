@@ -7,8 +7,6 @@
 * Docman_View_PermissionsForItem
 */
 
-require_once('Docman_View_View.class.php');
-
 class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Visitor*/
 {
 

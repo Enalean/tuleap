@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-require_once('Docman_View_GetFieldsVisitor.class.php');
-
 class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSection
 {
     public $inheritableMetadataArray;

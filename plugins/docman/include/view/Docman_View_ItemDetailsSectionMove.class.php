@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_ItemDetailsSectionActions.class.php');
-require_once('Docman_View_ParentsTree.class.php');
-
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions
 {
 

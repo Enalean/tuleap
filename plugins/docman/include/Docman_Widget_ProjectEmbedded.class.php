@@ -23,7 +23,6 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
-require_once('Docman_Widget_Embedded.class.php');
 class Docman_Widget_ProjectEmbedded extends Docman_Widget_Embedded
 {
 

@@ -107,8 +107,6 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $enctype = ' enctype="multipart/form-data"';
         $content .= $this->_updateHeader($enctype);
 
-        require_once('Docman_View_NewDocument.class.php');
-
         // Fetch type selector
         $newView = new Docman_View_NewDocument($this->_controller);
         $vparam = [];

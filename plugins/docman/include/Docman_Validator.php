@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_Validator
 {
     public $_errors = [];
@@ -33,25 +33,6 @@ class Docman_Validator
     }
     public function isValid()
     {
-        return count($this->_errors) ? false : true;
-    }
-}
-class Docman_ValidatePresenceOf extends Docman_Validator
-{
-    public function __construct($data, $field, $msg)
-    {
-        if (! $data || ! isset($data[$field]) || trim($data[$field]) == '') {
-            $this->addError($msg);
-        }
-    }
-}
-
-class Docman_ValidateValueNotEmpty extends Docman_Validator
-{
-    public function __construct($value, $msg)
-    {
-        if (! $value || $value === null || $value == '') {
-            $this->addError($msg);
-        }
+        return \count($this->_errors) ? \false : \true;
     }
 }

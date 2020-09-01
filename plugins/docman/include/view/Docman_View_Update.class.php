@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_Details.class.php');
-require_once('Docman_View_ItemDetailsSectionUpdate.class.php');
-
 class Docman_View_Update extends Docman_View_Details
 {
 

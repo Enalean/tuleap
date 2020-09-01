@@ -7,8 +7,6 @@
 * Docman_View_PositionWithinFolder
 */
 
-require_once('Docman_View_View.class.php');
-
 class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/
 {
 

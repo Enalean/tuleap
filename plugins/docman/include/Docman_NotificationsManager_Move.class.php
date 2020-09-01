@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_NotificationsManager.class.php');
-require_once('Docman_Path.class.php');
-
 class Docman_NotificationsManager_Move extends Docman_NotificationsManager
 {
 

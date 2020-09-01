@@ -20,8 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_FilterFactory.class.php');
-
 class Docman_Report
 {
     public $id;

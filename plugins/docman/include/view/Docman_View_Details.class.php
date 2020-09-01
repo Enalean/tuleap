@@ -21,21 +21,6 @@
 
 use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 
-require_once('Docman_View_Display.class.php');
-
-require_once('Docman_View_ItemDetails.class.php');
-require_once('Docman_View_ItemDetailsSectionProperties.class.php');
-require_once('Docman_View_ItemDetailsSectionStatistics.class.php');
-require_once('Docman_View_ItemDetailsSectionEditProperties.class.php');
-require_once('Docman_View_ItemDetailsSectionPermissions.class.php');
-require_once('Docman_View_ItemDetailsSectionNotifications.class.php');
-require_once('Docman_View_ItemDetailsSectionHistory.class.php');
-require_once('Docman_View_ItemDetailsSectionReferences.class.php');
-require_once('Docman_View_ItemDetailsSectionActions.class.php');
-require_once('Docman_View_ItemDetailsSectionApproval.class.php');
-
-require_once(dirname(__FILE__) . '/../Docman_LockFactory.class.php');
-
 class Docman_View_Details extends Docman_View_Display
 {
 

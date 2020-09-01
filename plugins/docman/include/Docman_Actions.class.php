@@ -1205,7 +1205,6 @@ class Docman_Actions extends Actions
         $group_id = (int) $request->get('group_id');
 
         if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
-            require_once('Docman_SettingsBo.class.php');
             $sBo = Docman_SettingsBo::instance($group_id);
             if ($sBo->updateView($request->get('selected_view'))) {
                 $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Settings have been updated.'));

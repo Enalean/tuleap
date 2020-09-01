@@ -20,48 +20,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_MetadataSqlQueryChunk.class.php');
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SqlReportColumnFactory
 {
-
     public function &getFromColumn($c)
     {
-        $obj = null;
-        switch (strtolower(get_class($c))) {
+        $obj = \null;
+        switch (\strtolower(\get_class($c))) {
             case 'docman_reportcolumnlocation':
                 // No sort on this column
                 break;
             default:
-                $obj = new Docman_SqlReportColumn($c);
+                $obj = new \Docman_SqlReportColumn($c);
         }
         return $obj;
-    }
-}
-
-class Docman_SqlReportColumn extends Docman_MetadataSqlQueryChunk
-{
-    public $column;
-
-    public function __construct($column)
-    {
-        $this->column = $column;
-        parent::__construct($column->md);
-    }
-
-    public function getOrderBy()
-    {
-        $sql = '';
-
-        $sort = $this->column->getSort();
-        if ($sort !== null) {
-            if ($sort == PLUGIN_DOCMAN_SORT_ASC) {
-                $sql = $this->field . ' ASC';
-            } else {
-                $sql = $this->field . ' DESC';
-            }
-        }
-
-        return $sql;
     }
 }

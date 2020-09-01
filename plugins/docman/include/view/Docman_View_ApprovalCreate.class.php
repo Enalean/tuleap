@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_Details.class.php');
-require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
-
 class Docman_View_ApprovalCreate extends Docman_View_Details
 {
 
