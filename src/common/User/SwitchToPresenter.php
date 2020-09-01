@@ -41,14 +41,23 @@ class SwitchToPresenter
      * @var false|string
      */
     public $projects;
+    /**
+     * @var bool
+     */
+    public $is_search_available;
 
     /**
      * @param ProjectPresenter[] $projects
      */
-    public function __construct(array $projects, bool $are_restricted_users_allowed, bool $is_trove_cat_enabled)
-    {
+    public function __construct(
+        array $projects,
+        bool $are_restricted_users_allowed,
+        bool $is_trove_cat_enabled,
+        bool $is_search_available
+    ) {
         $this->projects                     = json_encode($projects, JSON_THROW_ON_ERROR);
         $this->are_restricted_users_allowed = $are_restricted_users_allowed;
         $this->is_trove_cat_enabled         = $is_trove_cat_enabled;
+        $this->is_search_available          = $is_search_available;
     }
 }

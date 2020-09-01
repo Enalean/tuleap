@@ -19,19 +19,47 @@
   -->
 
 <template>
-    <div class="switch-to-modal-header">
-        <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
-        <switch-to-filter />
-    </div>
+    <form class="switch-to-modal-header" action="/search/" method="GET" v-on:submit="submit">
+        <div class="switch-to-modal-header-filter-container">
+            <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
+            <switch-to-filter />
+        </div>
+        <button
+            type="submit"
+            class="switch-to-modal-header-legacy-search-button"
+            v-if="should_button_be_displayed"
+            v-translate
+            data-test="legacy-search-button"
+        >
+            Legacy search →
+        </button>
+    </form>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import SwitchToFilter from "./SwitchToFilter.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: { SwitchToFilter },
 })
-export default class SwitchToHeader extends Vue {}
+export default class SwitchToHeader extends Vue {
+    @State
+    private readonly filter_value!: string;
+
+    @State
+    private readonly is_search_available!: boolean;
+
+    submit(event: Event): void {
+        if (!this.should_button_be_displayed) {
+            event.preventDefault();
+        }
+    }
+
+    get should_button_be_displayed(): boolean {
+        return this.filter_value.length > 0 && this.is_search_available;
+    }
+}
 </script>

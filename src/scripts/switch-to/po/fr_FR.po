@@ -18,6 +18,9 @@ msgstr "Parcourir tous les projets"
 msgid "Browse all…"
 msgstr "Tout parcourir…"
 
+msgid "Legacy search →"
+msgstr "Recherche →"
+
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"
 

@@ -34,7 +34,7 @@ $approximate-width-of-project-icon: 15.5px;
 
 .switch-to-modal-header.modal-header {
     box-sizing: border-box;
-    padding: $tlp-medium-spacing + 1px $tlp-large-spacing;
+    padding: ($tlp-medium-spacing + 1px) $tlp-medium-spacing ($tlp-medium-spacing + 1px) $tlp-large-spacing;
     border-bottom: 1px solid rgba(104, 122, 124, .2);
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -49,6 +49,12 @@ $approximate-width-of-project-icon: 15.5px;
     color: $grey;
     font-size: .875rem;
     line-height: 1rem;
+}
+
+.switch-to-modal-header-filter-container {
+    display: flex;
+    flex: 1 0 auto;
+    align-items: center;
 }
 
 #switch-to-filter {
@@ -66,6 +72,25 @@ $approximate-width-of-project-icon: 15.5px;
 
     &::placeholder {
         color: $grey;
+    }
+}
+
+.switch-to-modal-header-legacy-search-button {
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    transition: opacity 150ms ease-in-out, background 150ms ease-in-out;
+    border: 0;
+    border-radius: 4px;
+    opacity: .75;
+    background: none;
+    color: $dark-modal-dimmed-text-color;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+
+    &:focus,
+    &:hover {
+        opacity: 1;
+        background: rgba(0, 0, 0, .2);
     }
 }
 
@@ -175,4 +200,10 @@ $approximate-width-of-project-icon: 15.5px;
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
+}
+
+.switch-to-modal-no-matching-projects {
+    margin: $tlp-large-spacing 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
 }
