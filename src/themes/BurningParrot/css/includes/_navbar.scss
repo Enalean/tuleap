@@ -124,17 +124,6 @@
     display: flex;
 }
 
-#global-search {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-}
-
-#global-search-input {
-    width: 100%;
-    min-width: 75px;
-}
-
 #user-nav {
     display: flex;
     margin: 0 0 0 $tlp-small-spacing;

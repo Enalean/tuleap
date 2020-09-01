@@ -115,7 +115,6 @@ include_menu	tasks	Tasks
 include_menu	supp_requ	Support Requests
 include_menu	all_trackers	All trackers
 include_menu	wiki	Wiki
-include_menu	search	Search
 include_menu	new_releases	New Releases
 include_menu	other_site_mirrors	Other Site Mirrors
 include_menu	help_index	Help Index

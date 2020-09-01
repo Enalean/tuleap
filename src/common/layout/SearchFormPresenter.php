@@ -18,24 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Layout;
+
 /**
  * @psalm-immutable
  */
-class FlamingParrot_SearchFormPresenter
+class SearchFormPresenter
 {
     /**
      * @var string
      */
-    public $selected_entry_value;
+    public $type_of_search;
 
     /**
      * @var array
      */
     public $hidden_fields;
 
-    public function __construct(string $selected_entry_value, array $hidden_fields)
+    public function __construct(string $type_of_search, array $hidden_fields)
     {
-        $this->selected_entry_value = $selected_entry_value;
-        $this->hidden_fields        = $hidden_fields;
+        $this->type_of_search = $type_of_search;
+        $this->hidden_fields  = $hidden_fields;
     }
 }

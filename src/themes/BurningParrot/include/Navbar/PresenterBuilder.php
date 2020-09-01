@@ -53,7 +53,6 @@ class PresenterBuilder
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
         return new Presenter(
-            new SearchPresenter($current_user),
             new UserNavPresenter(
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),

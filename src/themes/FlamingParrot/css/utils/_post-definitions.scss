@@ -114,13 +114,6 @@
         }
     }
 
-    &.search-page {
-        .navbar-search,
-        .header_searchbox { //stylelint-disable-line selector-class-pattern
-            display: none;
-        }
-    }
-
     &.search-page .main .content {
         padding: 0;
     }

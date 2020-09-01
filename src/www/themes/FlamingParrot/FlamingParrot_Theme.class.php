@@ -267,13 +267,16 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $registration_user_permission_checker
         );
 
-        $switch_to = (new SwitchToPresenterBuilder(new ProjectPresentersBuilder()))->build($current_user);
+        $switch_to_presenter_builder = new SwitchToPresenterBuilder(
+            new ProjectPresentersBuilder(),
+            new \Tuleap\Layout\SearchFormPresenterBuilder($event_manager, HTTPRequest::instance())
+        );
+
+        $switch_to = $switch_to_presenter_builder->build($current_user);
+
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
-            $_SERVER['REQUEST_URI'],
-            $selected_top_tab,
-            $this->getSearchFormPresenter(),
             $this->displayNewAccount(),
             $this->getMOTD(),
             $csrf_logout_token,

@@ -26,6 +26,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Layout\SearchFormPresenter;
+use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ProjectPresentersBuilder;
 
 class SwitchToPresenterBuilderTest extends TestCase
@@ -37,7 +39,10 @@ class SwitchToPresenterBuilderTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => false])->getMock();
 
-        $builder = new SwitchToPresenterBuilder(Mockery::mock(ProjectPresentersBuilder::class));
+        $builder = new SwitchToPresenterBuilder(
+            Mockery::mock(ProjectPresentersBuilder::class),
+            Mockery::mock(SearchFormPresenterBuilder::class)
+        );
 
         self::assertNull($builder->build($user));
     }
@@ -58,7 +63,13 @@ class SwitchToPresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $builder = new SwitchToPresenterBuilder($project_presenters_builder);
+        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder
+            ->shouldReceive('build')
+            ->once()
+            ->andReturn(new SearchFormPresenter("soft", []));
+
+        $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
         $presenter = $builder->build($user);
 
@@ -66,6 +77,7 @@ class SwitchToPresenterBuilderTest extends TestCase
         self::assertEquals(true, $presenter->are_restricted_users_allowed);
         self::assertEquals(false, $presenter->is_trove_cat_enabled);
         self::assertEquals(true, $presenter->is_search_available);
+        self::assertEquals('{"type_of_search":"soft","hidden_fields":[]}', $presenter->search_form);
     }
 
     public function testSearchNotAvailableIfUserIsNotAlive(): void
@@ -84,7 +96,13 @@ class SwitchToPresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $builder = new SwitchToPresenterBuilder($project_presenters_builder);
+        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder
+            ->shouldReceive('build')
+            ->once()
+            ->andReturn(new SearchFormPresenter("soft", []));
+
+        $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
         $presenter = $builder->build($user);
 
@@ -107,7 +125,13 @@ class SwitchToPresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $builder = new SwitchToPresenterBuilder($project_presenters_builder);
+        $search_form_presenter_builder = Mockery::mock(SearchFormPresenterBuilder::class);
+        $search_form_presenter_builder
+            ->shouldReceive('build')
+            ->once()
+            ->andReturn(new SearchFormPresenter("soft", []));
+
+        $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
         $presenter = $builder->build($user);
 

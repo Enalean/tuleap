@@ -22,6 +22,7 @@ import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
 import { State } from "../../store/type";
 import SwitchToHeader from "./SwitchToHeader.vue";
+import { SearchForm } from "../../type";
 
 describe("SwitchToHeader", () => {
     it("Does not display the button if search is not available (user is restricted)", async () => {
@@ -64,6 +65,10 @@ describe("SwitchToHeader", () => {
                     state: {
                         filter_value: "abc",
                         is_search_available: true,
+                        search_form: {
+                            type_of_search: "soft",
+                            hidden_fields: [],
+                        } as SearchForm,
                     } as State,
                 }),
             },

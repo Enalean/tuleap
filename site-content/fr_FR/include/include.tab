@@ -109,7 +109,6 @@ include_menu	tasks	Tâches
 include_menu	supp_requ	Demande de support
 include_menu	wiki	Wiki
 include_menu	all_trackers	Tous les outils de suivi
-include_menu	search	Rechercher
 include_menu	new_releases	Nouvelles versions
 include_menu	other_site_mirrors	Autres sites miroirs
 include_menu	help_index	Index de l'aide

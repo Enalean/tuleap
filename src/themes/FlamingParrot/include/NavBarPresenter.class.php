@@ -22,7 +22,6 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public $search_label;
     public $history;
     public $empty_history;
     public $error_fetch;
@@ -34,13 +33,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     /** @var PFUser */
     private $user;
 
-    private $request_uri;
-
-    /** @var FlamingParrot_SearchFormPresenter */
-    private $search_form_presenter;
-
-    private $selected_top_tab;
-
     private $display_new_account;
 
     /** @var string */
@@ -48,11 +40,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     /** @var bool */
     public $has_motd;
-
-    public $number_of_page_results;
-
-    /** @var FlamingParrot_NavBarItemPresenter[] */
-    public $navbar_items;
 
     /**
      * @var CSRFSynchronizerToken
@@ -104,9 +91,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function __construct(
         $imgroot,
         PFUser $user,
-        $request_uri,
-        $selected_top_tab,
-        $search_form_presenter,
         $display_new_account,
         $motd,
         CSRFSynchronizerToken $logout_csrf,
@@ -117,13 +101,9 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     ) {
         $this->imgroot                = $imgroot;
         $this->user                   = $user;
-        $this->request_uri            = $request_uri;
-        $this->selected_top_tab       = $selected_top_tab;
-        $this->search_form_presenter  = $search_form_presenter;
         $this->display_new_account    = $display_new_account;
         $this->motd                   = $motd;
         $this->has_motd               = ! empty($motd);
-        $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
         $this->logout_csrf            = $logout_csrf;
         $this->url_redirect           = $url_redirect;
         $this->dashboards             = $dashboards;
@@ -133,10 +113,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->switch_to              = $switch_to;
         $this->is_super_user          = $user->isSuperUser();
 
-
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
-        $this->search_label         = $GLOBALS['Language']->getText('include_menu', 'search');
 
         $this->current_user_id = $user->getId();
         $this->history         = _('History');
@@ -157,11 +135,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $this->user->isLoggedIn();
     }
 
-    public function user_can_search() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return $this->user->isActive();
-    }
-
     public function user_real_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->getRealName();
@@ -180,19 +153,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->user->getAvatarUrl();
-    }
-
-    public function search_form_presenter() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($this->userIsOnPageWithItsOwnSearchForm()) {
-            return null;
-        }
-        return $this->search_form_presenter;
-    }
-
-    private function userIsOnPageWithItsOwnSearchForm()
-    {
-        return $this->getClassnameNavItemActive('/search/');
     }
 
     public function display_new_user() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -218,28 +178,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function include_menu_new_user_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('include_menu', 'new_user');
-    }
-
-    public function search_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'search');
-    }
-
-    private function getClassnameNavItemActive($pathsToDetect, $toptab = null)
-    {
-        if ($toptab === $this->selected_top_tab) {
-            return 'active';
-        } else {
-            if (! is_array($pathsToDetect)) {
-                $pathsToDetect = [$pathsToDetect];
-            }
-            foreach ($pathsToDetect as $path) {
-                if (strpos($this->request_uri, $path) === 0) {
-                    return 'active';
-                }
-            }
-        }
-        return '';
     }
 
     public function login_url() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

@@ -42,6 +42,10 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
         is_search_available: Boolean(vue_mount_point.dataset.isSearchAvailable),
         filter_value: "",
+        search_form:
+            typeof vue_mount_point.dataset.searchForm !== "undefined"
+                ? JSON.parse(vue_mount_point.dataset.searchForm)
+                : { type_of_search: "soft", hidden_fields: [] },
     };
 
     const store = createStore(root_state);
