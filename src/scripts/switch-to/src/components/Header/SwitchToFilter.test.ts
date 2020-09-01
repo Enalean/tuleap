@@ -22,11 +22,23 @@ import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
 import { State } from "../../store/type";
 import SwitchToFilter from "./SwitchToFilter.vue";
+import { createModal, Modal } from "tlp";
+
+jest.useFakeTimers();
 
 describe("SwitchToFilter", () => {
+    let modal: Modal;
+    beforeEach(() => {
+        const doc = document.implementation.createHTMLDocument();
+        modal = createModal(doc.createElement("div"));
+    });
+
     it("Saves the entered value in the store", async () => {
         const wrapper = shallowMount(SwitchToFilter, {
             localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal,
+            },
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -42,5 +54,51 @@ describe("SwitchToFilter", () => {
         await wrapper.trigger("keyup");
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "abc");
+    });
+
+    it("Reset the value if the modal is closed", async () => {
+        const wrapper = shallowMount(SwitchToFilter, {
+            localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "abc",
+                    } as State,
+                }),
+            },
+        });
+
+        modal.hide();
+
+        // There is a TRANSITION_DURATION before listeners are awakened
+        jest.advanceTimersByTime(300);
+
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+    });
+
+    it("Closes the modal if the user hit [esc]", async () => {
+        const hide = jest.spyOn(modal, "hide");
+
+        const wrapper = shallowMount(SwitchToFilter, {
+            localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "abc",
+                    } as State,
+                }),
+            },
+        });
+
+        await wrapper.trigger("keyup", { key: "Escape" });
+
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+        expect(hide).toHaveBeenCalled();
     });
 });

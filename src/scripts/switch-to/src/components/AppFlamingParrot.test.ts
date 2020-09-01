@@ -21,6 +21,8 @@ import { shallowMount } from "@vue/test-utils";
 import AppFlamingParrot from "./AppFlamingParrot.vue";
 import $ from "jquery";
 import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../vue-components/store-wrapper-jest";
+import { State } from "../store/type";
 
 describe("AppFlamingParrot", () => {
     it("Autofocus the first input in the modal", async () => {
@@ -42,5 +44,22 @@ describe("AppFlamingParrot", () => {
         $(wrapper.element).trigger("shown");
 
         expect(focus).toHaveBeenCalled();
+    });
+
+    it("Clears the filter value when modal is closed", async () => {
+        const wrapper = shallowMount(AppFlamingParrot, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "",
+                    } as State,
+                }),
+            },
+        });
+
+        $(wrapper.element).trigger("hidden");
+
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
     });
 });

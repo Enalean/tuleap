@@ -22,7 +22,7 @@
     <form class="switch-to-modal-header" action="/search/" method="GET" v-on:submit="submit">
         <div class="switch-to-modal-header-filter-container">
             <i class="fa fa-search tlp-modal-title-icon switch-to-modal-header-icon"></i>
-            <switch-to-filter />
+            <switch-to-filter v-bind:modal="modal" />
         </div>
         <template v-if="should_button_be_displayed">
             <input
@@ -52,15 +52,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import { State } from "vuex-class";
 import { SearchForm } from "../../type";
+import { Modal } from "tlp";
 
 @Component({
     components: { SwitchToFilter },
 })
 export default class SwitchToHeader extends Vue {
+    @Prop({ required: true })
+    private readonly modal!: Modal | null;
+
     @State
     private readonly filter_value!: string;
 
