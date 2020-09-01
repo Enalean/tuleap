@@ -259,6 +259,9 @@ msgstr "Ajouter un utilisateur non membre du projet"
 msgid "Admin service cannot be disabled."
 msgstr "Le service admin ne peut pas être désactivé."
 
+msgid "Administration"
+msgstr "Administration"
+
 msgid "Administrator"
 msgstr "Administrateur"
 

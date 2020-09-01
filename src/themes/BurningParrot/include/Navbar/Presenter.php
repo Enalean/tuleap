@@ -38,17 +38,24 @@ class Presenter
      * @var NewDropdownPresenter
      */
     public $new_dropdown;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_super_user;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
-        NewDropdownPresenter $new_dropdown
+        NewDropdownPresenter $new_dropdown,
+        bool $is_super_user
     ) {
         $this->global_nav_presenter = $global_nav_presenter;
         $this->search_presenter     = $search_presenter;
         $this->user_nav_presenter   = $user_nav_presenter;
         $this->homepage_label       = _('Homepage');
         $this->new_dropdown         = $new_dropdown;
+        $this->is_super_user        = $is_super_user;
     }
 }

@@ -865,16 +865,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
 
     /**
-     * Allow plugins to insert links in the builded navbar
-     *
-     * Parameters:
-     *   'items'            => FlamingParrot_NavBarItemPresentersCollection
-     *   'selected_top_tab' => (string) current tab, to know if added item can be flaged as active
-     *   'request_uri'      => (string)
-     */
-    public const NAVBAR_ITEMS = 'navbar_items';
-
-    /**
      * Retrieve sql fragments in ordoer to retrieve all repositories of all projects.
      *
      * Sql fragments should be in the form of:

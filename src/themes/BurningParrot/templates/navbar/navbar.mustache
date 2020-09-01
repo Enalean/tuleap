@@ -7,7 +7,15 @@
         <div class="header-nav">
             <a href="/" id="logo" aria-label="{{ homepage_label }}"></a>
 
-            {{> navbar/global-nav }}
+            <nav id="global-nav">
+                {{> navbar/global-nav }}
+
+                {{# is_super_user }}
+                    <a href="/admin/" class="nav-link go-to-admin" data-test="platform-administration-link">
+                        <span class="nav-link-test">{{# gettext }}Administration{{/ gettext }}</span>
+                    </a>
+                {{/ is_super_user }}
+            </nav>
         </div>
 
         <div class="header-nav">

@@ -95,7 +95,6 @@ include_layout	template_warning	Attention ce projet est un modèle de projet
 #-----------------------------------------------
 # Script: SF/www/include/menu.php
 #
-include_menu	site_admin	Administration
 include_menu	main_page	Page principale
 include_menu	user_admin	Admin. utilisateur
 include_menu	group_admin	Admin. groupe
