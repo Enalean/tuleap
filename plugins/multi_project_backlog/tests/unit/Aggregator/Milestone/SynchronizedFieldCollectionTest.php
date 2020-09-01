@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -32,9 +32,11 @@ final class SynchronizedFieldCollectionTest extends TestCase
     public function testCanUserSubmitAndUpdateAllFieldsReturnsTrue(): void
     {
         $first_field = M::mock(\Tracker_FormElement_Field::class);
+        $first_field->shouldReceive('getId')->andReturn('1023');
         $first_field->shouldReceive('userCanSubmit')->andReturnTrue();
         $first_field->shouldReceive('userCanUpdate')->andReturnTrue();
         $second_field = M::mock(\Tracker_FormElement_Field::class);
+        $second_field->shouldReceive('getId')->andReturn('1024');
         $second_field->shouldReceive('userCanSubmit')->andReturnTrue();
         $second_field->shouldReceive('userCanUpdate')->andReturnTrue();
         $user = UserTestBuilder::aUser()->build();
@@ -46,9 +48,11 @@ final class SynchronizedFieldCollectionTest extends TestCase
     public function testItReturnsFalseWhenUserCantSubmitOneField(): void
     {
         $first_field = M::mock(\Tracker_FormElement_Field::class);
+        $first_field->shouldReceive('getId')->andReturn('1023');
         $first_field->shouldReceive('userCanSubmit')->andReturnTrue();
         $first_field->shouldReceive('userCanUpdate')->andReturnTrue();
         $second_field = M::mock(\Tracker_FormElement_Field::class);
+        $second_field->shouldReceive('getId')->andReturn('1024');
         $second_field->shouldReceive('userCanSubmit')->andReturnFalse();
         $user = UserTestBuilder::aUser()->build();
 
@@ -59,14 +63,29 @@ final class SynchronizedFieldCollectionTest extends TestCase
     public function testItReturnsFalseWhenUserCantUpdateOneField(): void
     {
         $first_field = M::mock(\Tracker_FormElement_Field::class);
+        $first_field->shouldReceive('getId')->andReturn('1023');
         $first_field->shouldReceive('userCanSubmit')->andReturnTrue();
         $first_field->shouldReceive('userCanUpdate')->andReturnTrue();
         $second_field = M::mock(\Tracker_FormElement_Field::class);
+        $second_field->shouldReceive('getId')->andReturn('1024');
         $second_field->shouldReceive('userCanSubmit')->andReturnTrue();
         $second_field->shouldReceive('userCanUpdate')->andReturnFalse();
         $user = UserTestBuilder::aUser()->build();
 
         $collection = new SynchronizedFieldCollection([$first_field, $second_field]);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
+    }
+
+    public function testCanDetermineIfAFieldIsSynchronized(): void
+    {
+        $field = M::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('getId')->andReturn('1023');
+
+        $collection = new SynchronizedFieldCollection([$field]);
+        $this->assertTrue($collection->isFieldSynchronized($field));
+
+        $not_synchronized_field = M::mock(\Tracker_FormElement_Field::class);
+        $not_synchronized_field->shouldReceive('getId')->andReturn('1024');
+        $this->assertFalse($collection->isFieldSynchronized($not_synchronized_field));
     }
 }

@@ -33,8 +33,10 @@ final class MilestoneTrackerCollectionTest extends TestCase
     {
         $first_tracker = M::mock(\Tracker::class);
         $first_tracker->shouldReceive('getId')->andReturn(78);
+        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
         $second_tracker = M::mock(\Tracker::class);
         $second_tracker->shouldReceive('getId')->andReturn(57);
+        $second_tracker->shouldReceive('getGroupId')->andReturn('104');
 
         $collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $ids        = $collection->getTrackerIds();
@@ -51,12 +53,28 @@ final class MilestoneTrackerCollectionTest extends TestCase
     public function testGetMilestoneTrackersReturnTrackers(): void
     {
         $first_tracker = M::mock(\Tracker::class);
+        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
         $second_tracker = M::mock(\Tracker::class);
+        $second_tracker->shouldReceive('getGroupId')->andReturn('104');
 
         $collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $second_tracker]);
         $trackers = $collection->getMilestoneTrackers();
         $this->assertContains($first_tracker, $trackers);
         $this->assertContains($second_tracker, $trackers);
+    }
+
+    public function testGetContributorMilestoneTrackersReturnTrackers(): void
+    {
+        $first_tracker = M::mock(\Tracker::class);
+        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
+        $aggregator_tracker = M::mock(\Tracker::class);
+        $aggregator_project = \Project::buildForTest();
+        $aggregator_tracker->shouldReceive('getGroupId')->andReturn($aggregator_project->getID());
+
+        $collection = new MilestoneTrackerCollection(\Project::buildForTest(), [$first_tracker, $aggregator_tracker]);
+        $trackers = $collection->getContributorMilestoneTrackers();
+        $this->assertContains($first_tracker, $trackers);
+        $this->assertNotContains($aggregator_tracker, $trackers);
     }
 
     public function testGetMilestoneTrackersReturnsEmpty(): void

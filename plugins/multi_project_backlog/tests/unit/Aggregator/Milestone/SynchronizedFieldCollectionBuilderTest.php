@@ -103,7 +103,9 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         $this->mockDescriptionField($tracker);
         $this->mockStatusField($tracker);
         $start_date_field    = M::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn('801');
         $end_date_field      = M::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('getId')->andReturn('802');
         $time_frame_semantic = new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field);
         $this->time_frame_builder->shouldReceive('getSemantic')
             ->once()
@@ -250,6 +252,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private function mockArtifactLinkField(\Tracker $tracker, \PFUser $user): void
     {
         $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->shouldReceive('getId')->andReturn('741');
         $this->form_element_factory->shouldReceive('getAnArtifactLinkField')
             ->once()
             ->with($user, $tracker)
@@ -259,6 +262,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private function mockTitleField(\Tracker $tracker): void
     {
         $title_field    = M::mock(\Tracker_FormElement_Field::class);
+        $title_field->shouldReceive('getId')->andReturn('742');
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
         $title_semantic->shouldReceive('getField')->andReturn($title_field);
         $this->title_factory->shouldReceive('getByTracker')
@@ -270,6 +274,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private function mockDescriptionField(\Tracker $tracker): void
     {
         $description_field    = M::mock(\Tracker_FormElement_Field::class);
+        $description_field->shouldReceive('getId')->andReturn('743');
         $description_semantic = M::mock(\Tracker_Semantic_Description::class);
         $description_semantic->shouldReceive('getField')->andReturn($description_field);
         $this->description_factory->shouldReceive('getByTracker')
@@ -281,6 +286,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private function mockStatusField(\Tracker $tracker): void
     {
         $status_field    = M::mock(\Tracker_FormElement_Field::class);
+        $status_field->shouldReceive('getId')->andReturn('744');
         $status_semantic = M::mock(\Tracker_Semantic_Status::class);
         $status_semantic->shouldReceive('getField')->andReturn($status_field);
         $this->status_factory->shouldReceive('getByTracker')
@@ -292,7 +298,9 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private function mockTimeFrameFields(\Tracker $tracker): void
     {
         $start_date_field    = M::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn('745');
         $duration_field      = M::mock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field->shouldReceive('getId')->andReturn('746');
         $time_frame_semantic = new SemanticTimeframe($tracker, $start_date_field, $duration_field, null);
         $this->time_frame_builder->shouldReceive('getSemantic')
             ->once()
