@@ -63,7 +63,6 @@ const webpack_config_for_ckeditor = {
                         "**/*.!(js|css|png)",
                         "**/assets/ckeditor4.png",
                         "**/adapters/**",
-                        "**/vendor/**",
                     ],
                 },
             },
