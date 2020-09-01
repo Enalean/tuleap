@@ -229,10 +229,8 @@ class FRSFile
     public function getFileSize()
     {
         if ($this->file_size == null) {
-            require_once __DIR__ . '/../../www/file/file_utils.php';
             $file_location = $this->getFileLocation();
-            // Use file_utils to provide a workaround for the 2 GB limitation
-            $this->file_size = file_utils_get_size($file_location);
+            $this->file_size = \filesize($file_location);
         }
         return $this->file_size;
     }
