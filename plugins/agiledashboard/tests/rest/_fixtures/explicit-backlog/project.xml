@@ -1167,13 +1167,57 @@
               <value><![CDATA[Release 01]]></value>
             </field_change>
             <field_change field_name="start_date" type="date">
-              <value format="ISO8601">1970-01-01T01:00:00+01:00</value>
+              <value format="ISO8601">2019-10-20T01:00:00+01:00</value>
             </field_change>
             <field_change field_name="duration" type="int">
-              <value/>
+              <value>20</value>
             </field_change>
             <field_change field_name="status" type="list" bind="static">
               <value format="id">2200</value>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child">128</value>
+              <value nature="_is_child">131</value>
+              <value nature="_is_child">132</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="129">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2019-10-21T15:23:32+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="release_number" type="string">
+              <value><![CDATA[Release 02]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2019-10-21T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>20</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2200</value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="130">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2019-10-21T15:23:02+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="release_number" type="string">
+              <value><![CDATA[Closed Release 03]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2019-09-01T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>20</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2202</value>
             </field_change>
             <field_change field_name="links" type="art_link"/>
           </changeset>
@@ -1421,7 +1465,68 @@
         <permission scope="field" REF="F3660" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F3661" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
-      <artifacts/>
+      <artifacts>
+        <artifact id="128">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2019-10-21T14:28:02+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="sprint_name" type="string">
+              <value><![CDATA[Closed Week 35]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2019-10-20T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2206</value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="131">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2019-10-21T14:28:32+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="sprint_name" type="string">
+              <value><![CDATA[Week 36]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2019-10-25T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2205</value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="132">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2019-10-26T14:29:00+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="sprint_name" type="string">
+              <value><![CDATA[Week 37]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601">2019-10-25T01:00:00+01:00</value>
+            </field_change>
+            <field_change field_name="duration" type="int">
+              <value>5</value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">2205</value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
     </tracker>
     <tracker id="T158" parent_id="T159" instantiate_for_new_projects="1" notifications_level="1">
       <name><![CDATA[Tasks]]></name>
