@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,106 +20,88 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Workflow_Dao extends DataAccessObject
+class Workflow_Dao extends \Tuleap\DB\DataAccessObject
 {
-    public function __construct($da = null)
+    public function create(int $tracker_id, int $field_id): int
     {
-        parent::__construct($da);
-        $this->table_name = 'tracker_workflow';
+        return (int) $this->getDB()->insertReturnId(
+            'tracker_workflow',
+            [
+                'tracker_id' => $tracker_id,
+                'field_id' => $field_id,
+                'is_advanced' => false,
+            ]
+        );
     }
 
-    public function create($tracker_id, $field_id)
+    public function searchById(int $workflow_id): ?array
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $field_id   = $this->da->escapeInt($field_id);
-
-        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_advanced)
-                VALUES ($tracker_id, $field_id, 0)";
-
-        return $this->updateAndGetLastId($sql);
+        return $this->getDB()->row('SELECT * FROM tracker_workflow WHERE workflow_id = ?', $workflow_id);
     }
 
-    public function searchById($workflow_id)
+    public function searchByTrackerId(int $tracker_id): ?array
     {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-        $sql = "SELECT * 
-                FROM $this->table_name
-                WHERE workflow_id = $workflow_id";
-        return $this->retrieve($sql);
+        return $this->getDB()->row('SELECT * FROM tracker_workflow WHERE tracker_id = ?', $tracker_id);
     }
 
-    public function searchByTrackerId($tracker_id)
+    public function updateActivation(int $workflow_id, bool $is_used): int
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT * 
-                FROM $this->table_name
-                WHERE tracker_id = $tracker_id";
-        return $this->retrieve($sql);
+        $this->getDB()->run('UPDATE tracker_workflow SET is_used=?, is_legacy=0 WHERE workflow_id = ?', $is_used, $workflow_id);
+        return $workflow_id;
     }
 
-    public function updateActivation($workflow_id, $is_used)
+    public function delete(int $workflow_id): int
     {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-        $is_used = $this->da->escapeInt($is_used);
-        $sql = " UPDATE $this->table_name SET is_used=$is_used, is_legacy=0 WHERE workflow_id=$workflow_id";
-        return $this->update($sql);
+        return $this->getDB()->delete('tracker_workflow', ['workflow_id' => $workflow_id]);
     }
 
-    public function delete($workflow_id)
+    public function duplicate(int $to_tracker_id, int $to_id, bool $is_used, bool $is_advanced): int
     {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-        $sql = " DELETE FROM $this->table_name WHERE workflow_id=$workflow_id";
-        return $this->update($sql);
+        return (int) $this->getDB()->insertReturnId(
+            'tracker_workflow',
+            [
+                'tracker_id'  => $to_tracker_id,
+                'field_id'    => $to_id,
+                'is_used'     => $is_used,
+                'is_advanced' => $is_advanced,
+            ]
+        );
     }
 
-    public function duplicate($to_tracker_id, $to_id, $is_used, $is_advanced)
+    public function save(int $tracker_id, int $field_id, bool $is_used, bool $is_advanced): int
     {
-        $to_tracker_id = $this->da->escapeInt($to_tracker_id);
-        $to_id         = $this->da->escapeInt($to_id);
-        $is_used       = $this->da->escapeInt($is_used);
-        $is_advanced   = $this->da->escapeInt($is_advanced);
-
-        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_used, is_advanced)
-                VALUES ($to_tracker_id, $to_id, $is_used, $is_advanced)";
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId(
+            'tracker_workflow',
+            [
+                'tracker_id'  => $tracker_id,
+                'field_id'    => $field_id,
+                'is_used'     => $is_used,
+                'is_advanced' => $is_advanced,
+            ]
+        );
     }
 
-    public function save($tracker_id, $field_id, $is_used, $is_advanced)
+    public function removeWorkflowLegacyState(int $workflow_id): void
     {
-        $tracker_id  = $this->da->escapeInt($tracker_id);
-        $field_id    = $this->da->escapeInt($field_id);
-        $is_used     = $this->da->escapeInt($is_used);
-        $is_advanced = $this->da->escapeInt($is_advanced);
-
-        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_used, is_advanced)
-                VALUES ($tracker_id, $field_id, $is_used, $is_advanced)";
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run(
+            'UPDATE tracker_workflow SET is_legacy=0 WHERE workflow_id=?',
+            $workflow_id
+        );
     }
 
-    public function removeWorkflowLegacyState($workflow_id)
+    public function switchWorkflowToAdvancedMode(int $workflow_id): void
     {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-
-        $sql = "UPDATE tracker_workflow SET is_legacy=0 WHERE workflow_id=$workflow_id";
-
-        return $this->update($sql);
+        $this->getDB()->run(
+            'UPDATE tracker_workflow SET is_advanced=1 WHERE workflow_id=?',
+            $workflow_id
+        );
     }
 
-    public function switchWorkflowToAdvancedMode($workflow_id)
+    public function switchWorkflowToSimpleMode(int $workflow_id): void
     {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-
-        $sql = "UPDATE tracker_workflow SET is_advanced=1 WHERE workflow_id=$workflow_id";
-
-        return $this->update($sql);
-    }
-
-    public function switchWorkflowToSimpleMode($workflow_id)
-    {
-        $workflow_id = $this->da->escapeInt($workflow_id);
-
-        $sql = "UPDATE tracker_workflow SET is_advanced=0 WHERE workflow_id=$workflow_id";
-
-        return $this->update($sql);
+        $this->getDB()->run(
+            'UPDATE tracker_workflow SET is_advanced=0 WHERE workflow_id=?',
+            $workflow_id
+        );
     }
 }

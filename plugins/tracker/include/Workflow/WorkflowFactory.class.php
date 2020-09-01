@@ -170,7 +170,8 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function getWorkflow($workflow_id)
     {
-        if ($row = $this->getDao()->searchById($workflow_id)->getRow()) {
+        $row = $this->getDao()->searchById($workflow_id);
+        if ($row !== null) {
             return $this->getInstanceFromRow($row);
         }
         return null;
@@ -200,7 +201,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function create($tracker_id, $field_id)
     {
-        return $this->getDao()->create($tracker_id, $field_id);
+        return $this->getDao()->create($tracker_id, (int) $field_id);
     }
 
     /**
@@ -213,7 +214,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function updateActivation($workflow_id, $is_used)
     {
-        return $this->getDao()->updateActivation($workflow_id, $is_used);
+        return $this->getDao()->updateActivation($workflow_id, (bool) $is_used);
     }
 
     /**
@@ -266,8 +267,8 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if (! isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = [null];
-            // only one field per workflow
-            if ($row = $this->getDao()->searchByTrackerId($tracker_id)->getRow()) {
+            $row = $this->getDao()->searchByTrackerId($tracker_id);
+            if ($row !== null) {
                 $this->cache_workflowfield[$tracker_id] = [$this->getInstanceFromRow($row)];
             }
         }

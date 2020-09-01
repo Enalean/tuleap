@@ -777,7 +777,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $workflow = $this->getWorkflow();
         if (! empty($workflow) && $workflow->is_used) {
-            return $workflow->field_id === $this->id;
+            return $workflow->field_id === (int) $this->id;
         }
         return false;
     }
@@ -791,7 +791,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $workflow = $this->getWorkflow();
         if (! empty($workflow)) {
-            return $workflow->field_id === $this->id;
+            return $workflow->field_id === (int) $this->id;
         }
         return false;
     }
