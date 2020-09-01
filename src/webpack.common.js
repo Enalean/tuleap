@@ -23,35 +23,33 @@ const path = require("path");
 const polyfills_for_fetch = require("../tools/utils/scripts/ie11-polyfill-names.js")
     .polyfills_for_fetch;
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
+const {
+    SuppressNullNamedEntryPlugin,
+} = require("../tools/utils/scripts/webpack-custom-plugins.js");
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/");
+
+const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
+const ckeditor_version = pkg.dependencies.ckeditor4.version;
 
 const manifest_plugin = new WebpackAssetsManifest({
     output: "manifest.json",
     merge: true,
     writeToDisk: true,
-    customize(entry) {
-        if (entry.key !== "ckeditor.js") {
-            return entry;
-        }
-
-        return {
-            key: entry.key,
-            value: `ckeditor-${ckeditor_version}/ckeditor.js`,
-        };
+    apply(manifest) {
+        manifest.set("ckeditor.js", `ckeditor-${ckeditor_version}/ckeditor.js`);
     },
 });
 
-const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
-const ckeditor_version = pkg.dependencies.ckeditor4.version;
 const webpack_config_for_ckeditor = {
     entry: {
-        ckeditor: "./node_modules/ckeditor4/ckeditor.js",
+        null: "null_entry",
     },
     context,
     output,
     plugins: [
+        new SuppressNullNamedEntryPlugin(),
         manifest_plugin,
         webpack_configurator.getCopyPlugin([
             {
