@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -155,6 +155,7 @@ final class MilestoneTrackerCollectionBuilderTest extends TestCase
         $root_planning     = new \Planning(7, 'Root Planning', $project_id, 'Irrelevant', 'Irrelevant');
         $milestone_tracker = M::mock(\Tracker::class);
         $milestone_tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $milestone_tracker->shouldReceive('getGroupId')->andReturn($project_id);
         $root_planning->setPlanningTracker($milestone_tracker);
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()

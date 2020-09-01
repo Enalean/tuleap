@@ -284,6 +284,7 @@ final class multi_project_backlogPlugin extends Plugin
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+        $logger                  = BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
 
         return new MilestoneCreatorChecker(
             new ContributorProjectsCollectionBuilder(
@@ -306,7 +307,8 @@ final class multi_project_backlogPlugin extends Plugin
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
             ),
-            BackendLogger::getDefaultLogger("multi_project_backlog_syslog")
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\RequiredFieldChecker($logger),
+            $logger
         );
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -29,13 +29,32 @@ final class SynchronizedFieldCollection
      * @psalm-readonly
      */
     private $synchronized_fields;
+    /**
+     * @var array<int,true>
+     * @psalm-readonly
+     */
+    private $synchronized_field_ids;
 
     /**
      * @param \Tracker_FormElement_Field[] $synchronized_fields
      */
     public function __construct(array $synchronized_fields)
     {
-        $this->synchronized_fields = $synchronized_fields;
+        $this->synchronized_fields    = $synchronized_fields;
+        $this->synchronized_field_ids = self::getSynchronizedFieldIDs($synchronized_fields);
+    }
+
+    /**
+     * @param \Tracker_FormElement_Field[] $synchronized_fields
+     * @return array<int,true>
+     */
+    private static function getSynchronizedFieldIDs(array $synchronized_fields): array
+    {
+        $ids = [];
+        foreach ($synchronized_fields as $synchronized_field) {
+            $ids[(int) $synchronized_field->getId()] = true;
+        }
+        return $ids;
     }
 
     public function canUserSubmitAndUpdateAllFields(\PFUser $user): bool
@@ -49,5 +68,10 @@ final class SynchronizedFieldCollection
             }
         }
         return true;
+    }
+
+    public function isFieldSynchronized(\Tracker_FormElement_Field $field): bool
+    {
+        return isset($this->synchronized_field_ids[(int) $field->getId()]);
     }
 }

@@ -25,22 +25,41 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 final class MilestoneTrackerCollection
 {
     /**
-     * @var \Project
-     */
-    private $aggregator_project;
-    /**
      * @var \Tracker[]
      * @psalm-readonly
      */
     private $milestone_trackers;
+    /**
+     * @var \Tracker[]
+     * @psalm-readonly
+     */
+    private $contributor_milestone_trackers;
 
     /**
      * @param \Tracker[] $milestone_trackers
      */
     public function __construct(\Project $aggregator_project, array $milestone_trackers)
     {
-        $this->aggregator_project = $aggregator_project;
-        $this->milestone_trackers = $milestone_trackers;
+        $this->milestone_trackers             = $milestone_trackers;
+        $this->contributor_milestone_trackers = self::extractContributorMilestoneTrackers(
+            $aggregator_project,
+            $milestone_trackers
+        );
+    }
+
+    /**
+     * @param \Tracker[] $milestone_trackers
+     * @return \Tracker[]
+     */
+    private static function extractContributorMilestoneTrackers(\Project $aggregator_project, array $milestone_trackers): array
+    {
+        $contributor_trackers = [];
+        foreach ($milestone_trackers as $milestone_tracker) {
+            if ((int) $milestone_tracker->getGroupId() !== (int) $aggregator_project->getID()) {
+                $contributor_trackers[] = $milestone_tracker;
+            }
+        }
+        return $contributor_trackers;
     }
 
     /**
@@ -66,12 +85,17 @@ final class MilestoneTrackerCollection
         return $this->milestone_trackers;
     }
 
+    /**
+     * @return \Tracker[]
+     */
+    public function getContributorMilestoneTrackers(): array
+    {
+        return $this->contributor_milestone_trackers;
+    }
+
     public function canUserSubmitAnArtifactInAllContributorTrackers(\PFUser $user): bool
     {
-        foreach ($this->milestone_trackers as $milestone_tracker) {
-            if ((int) $milestone_tracker->getGroupId() === (int) $this->aggregator_project->getID()) {
-                continue;
-            }
+        foreach ($this->contributor_milestone_trackers as $milestone_tracker) {
             if (! $milestone_tracker->userCanSubmitArtifact($user)) {
                 return false;
             }
