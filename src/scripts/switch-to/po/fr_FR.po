@@ -24,6 +24,9 @@ msgstr "Recherche →"
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"
 
+msgid "Recent items"
+msgstr "Éléments récents"
+
 msgid "Switch to…"
 msgstr "Basculer vers…"
 
@@ -35,3 +38,6 @@ msgstr "Vous n'appartenez à aucun projet"
 
 msgid "You don't belong to any projects matching your query."
 msgstr "Vous n'appartenez à aucun projet qui corresponde à votre recherche."
+
+msgid "Your Tuleap history will appear here"
+msgstr "Votre historique Tuleap apparaîtra ici"

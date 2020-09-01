@@ -19,20 +19,19 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body">
-        <list-of-projects />
-        <list-of-recent-items />
+    <div class="switch-to-recent-items">
+        <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
+        <recent-items-empty-state />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import ListOfProjects from "./Projects/ListOfProjects.vue";
-import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
+import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 
 @Component({
-    components: { ListOfProjects, ListOfRecentItems },
+    components: { RecentItemsEmptyState },
 })
-export default class SwitchToBody extends Vue {}
+export default class ListOfRecentItems extends Vue {}
 </script>

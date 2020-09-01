@@ -85,6 +85,7 @@ $approximate-width-of-project-icon: 15.5px;
 }
 
 .switch-to-modal-body {
+    display: flex;
     padding: $tlp-large-spacing $tlp-large-spacing $tlp-large-spacing ($tlp-large-spacing - $tlp-small-spacing);
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
@@ -182,6 +183,7 @@ $approximate-width-of-project-icon: 15.5px;
     line-height: .875rem;
 }
 
+.switch-to-recent-items-empty-text,
 .switch-to-projects-empty-text {
     margin: $tlp-medium-spacing 0 $tlp-large-spacing;
     opacity: .75;
@@ -195,4 +197,22 @@ $approximate-width-of-project-icon: 15.5px;
     margin: $tlp-large-spacing 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
+}
+
+.switch-to-recent-items {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    margin: 0 0 0 $tlp-large-spacing;
+
+    > .switch-to-modal-body-title {
+        margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) 0;
+    }
+}
+
+.switch-to-recent-items-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: $tlp-medium-spacing 0 0;
 }
