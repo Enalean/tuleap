@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Docman_Document.class.php');
 
 /**
  * URL is a transport object (aka container) used to share data between

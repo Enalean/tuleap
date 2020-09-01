@@ -8486,8 +8486,8 @@
       <code>_getGroupName</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_Filter.class.php">
-    <MissingParamType occurrences="40">
+  <file src="plugins/docman/include/Docman_Filter.php">
+    <MissingParamType occurrences="8">
       <code>$md</code>
       <code>$v</code>
       <code>$row</code>
@@ -8495,53 +8495,13 @@
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
-      <code>$request</code>
-      <code>$md</code>
-      <code>$row</code>
-      <code>$v</code>
-      <code>$value</code>
-      <code>$op</code>
-      <code>$request</code>
-      <code>$md</code>
-      <code>$v</code>
-      <code>$v</code>
-      <code>$row</code>
-      <code>$request</code>
-      <code>$md</code>
-      <code>$row</code>
-      <code>$val</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$md</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$val</code>
-      <code>$row</code>
-      <code>$md</code>
-      <code>$md</code>
-      <code>$md</code>
-      <code>$row</code>
-      <code>$md</code>
-      <code>$dynTextFields</code>
-      <code>$row</code>
-      <code>$md</code>
-      <code>$row</code>
       <code>$request</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="10">
+    <MissingPropertyType occurrences="2">
       <code>$value</code>
       <code>$md</code>
-      <code>$operator</code>
-      <code>$field_operator_name</code>
-      <code>$field_value_name</code>
-      <code>$fieldNameStart</code>
-      <code>$fieldNameEnd</code>
-      <code>$valueStart</code>
-      <code>$valueEnd</code>
-      <code>$dynTextFields</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="41">
+    <MissingReturnType occurrences="9">
       <code>setValue</code>
       <code>getValue</code>
       <code>initFromRow</code>
@@ -8551,38 +8511,6 @@
       <code>_urlMatchUpdate</code>
       <code>_urlMatchAdd</code>
       <code>initOnUrlMatch</code>
-      <code>initFromRow</code>
-      <code>getFieldOperatorName</code>
-      <code>getFieldValueName</code>
-      <code>setOperator</code>
-      <code>getOperator</code>
-      <code>isValidDateFormat</code>
-      <code>isValidOperator</code>
-      <code>getUrlParameters</code>
-      <code>_urlMatchUpdate</code>
-      <code>setValueStart</code>
-      <code>getValueStart</code>
-      <code>setValueEnd</code>
-      <code>getValueEnd</code>
-      <code>initFromRow</code>
-      <code>getFieldStartValueName</code>
-      <code>getFieldEndValueName</code>
-      <code>getUrlParameters</code>
-      <code>_urlMatchUpdate</code>
-      <code>initFromRow</code>
-      <code>isValidListValue</code>
-      <code>_urlValueIsValid</code>
-      <code>_urlMatchUpdate</code>
-      <code>_urlValueIsValid</code>
-      <code>_urlMatchUpdate</code>
-      <code>_urlMatchAdd</code>
-      <code>addValue</code>
-      <code>initFromRow</code>
-      <code>initFromRow</code>
-      <code>getUrlParameters</code>
-      <code>initFromRow</code>
-      <code>initFromRow</code>
-      <code>_urlMatchUpdate</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterDao.class.php">
@@ -8611,6 +8539,58 @@
       <code>createFilterDate</code>
       <code>createFilterDateAdvanced</code>
       <code>truncateFilters</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterDate.php">
+    <MissingParamType occurrences="6">
+      <code>$md</code>
+      <code>$row</code>
+      <code>$v</code>
+      <code>$value</code>
+      <code>$op</code>
+      <code>$request</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$operator</code>
+      <code>$field_operator_name</code>
+      <code>$field_value_name</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="9">
+      <code>initFromRow</code>
+      <code>getFieldOperatorName</code>
+      <code>getFieldValueName</code>
+      <code>setOperator</code>
+      <code>getOperator</code>
+      <code>isValidDateFormat</code>
+      <code>isValidOperator</code>
+      <code>getUrlParameters</code>
+      <code>_urlMatchUpdate</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterDateAdvanced.php">
+    <MissingParamType occurrences="5">
+      <code>$md</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$row</code>
+      <code>$request</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$fieldNameStart</code>
+      <code>$fieldNameEnd</code>
+      <code>$valueStart</code>
+      <code>$valueEnd</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="9">
+      <code>setValueStart</code>
+      <code>getValueStart</code>
+      <code>setValueEnd</code>
+      <code>getValueEnd</code>
+      <code>initFromRow</code>
+      <code>getFieldStartValueName</code>
+      <code>getFieldEndValueName</code>
+      <code>getUrlParameters</code>
+      <code>_urlMatchUpdate</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_FilterFactory.class.php">
@@ -8680,6 +8660,82 @@
       <code>getDao</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/docman/include/Docman_FilterGlobalText.php">
+    <MissingParamType occurrences="3">
+      <code>$md</code>
+      <code>$dynTextFields</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$dynTextFields</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>initFromRow</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterItemType.php">
+    <MissingParamType occurrences="1">
+      <code>$md</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterItemTypeAdvanced.php">
+    <MissingParamType occurrences="1">
+      <code>$md</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterList.php">
+    <MissingParamType occurrences="5">
+      <code>$md</code>
+      <code>$row</code>
+      <code>$val</code>
+      <code>$request</code>
+      <code>$request</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
+      <code>initFromRow</code>
+      <code>isValidListValue</code>
+      <code>_urlValueIsValid</code>
+      <code>_urlMatchUpdate</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterListAdvanced.php">
+    <MissingParamType occurrences="6">
+      <code>$md</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$val</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="5">
+      <code>_urlValueIsValid</code>
+      <code>_urlMatchUpdate</code>
+      <code>_urlMatchAdd</code>
+      <code>addValue</code>
+      <code>initFromRow</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterOwner.php">
+    <MissingParamType occurrences="3">
+      <code>$md</code>
+      <code>$row</code>
+      <code>$request</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>initFromRow</code>
+      <code>_urlMatchUpdate</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_FilterText.php">
+    <MissingParamType occurrences="2">
+      <code>$md</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>initFromRow</code>
+      <code>getUrlParameters</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/docman/include/Docman_Folder.class.php">
     <MissingParamType occurrences="4">
       <code>$data</code>
@@ -8744,47 +8800,63 @@
       <code>getEmail</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/docman/include/Docman_HtmlFilter.class.php">
-    <DeprecatedFunction occurrences="2">
-      <code>html_build_select_box_from_arrays($vals, $txts, $this-&gt;filter-&gt;md-&gt;getLabel(), $this-&gt;filter-&gt;getValue(), false, '', true, $GLOBALS['Language']-&gt;getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED)</code>
-      <code>html_build_select_box_from_arrays($vals, $txts, $this-&gt;filter-&gt;md-&gt;getLabel(), $this-&gt;filter-&gt;getValue(), false, '', true, $GLOBALS['Language']-&gt;getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED)</code>
-    </DeprecatedFunction>
-    <InvalidStaticInvocation occurrences="1">
-      <code>Docman_MetadataHtmlList::_getElementName($e)</code>
-    </InvalidStaticInvocation>
-    <MissingParamType occurrences="18">
-      <code>$filter</code>
+  <file src="plugins/docman/include/Docman_HtmlFilter.php">
+    <MissingParamType occurrences="4">
       <code>$filter</code>
       <code>$formName</code>
       <code>$formName</code>
       <code>$trashLinkBase</code>
-      <code>$filter</code>
-      <code>$formName</code>
-      <code>$filter</code>
-      <code>$formName</code>
-      <code>$filter</code>
-      <code>$vals</code>
-      <code>$txts</code>
-      <code>$formName</code>
-      <code>$filter</code>
-      <code>$vals</code>
-      <code>$txts</code>
-      <code>$filter</code>
-      <code>$formName</code>
     </MissingParamType>
     <MissingPropertyType occurrences="2">
       <code>$filter</code>
       <code>$hp</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="10">
-      <code>getFromFilter</code>
+    <MissingReturnType occurrences="3">
       <code>_fieldName</code>
       <code>_valueSelectorHtml</code>
       <code>toHtml</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterDate.php">
+    <MissingParamType occurrences="2">
+      <code>$filter</code>
+      <code>$formName</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
       <code>_valueSelectorHtml</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterDateAdvanced.php">
+    <MissingParamType occurrences="2">
+      <code>$filter</code>
+      <code>$formName</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
       <code>_valueSelectorHtml</code>
-      <code>buildSelectBox</code>
-      <code>_valueSelectorHtml</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterFactory.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getFromFilter</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterList.php">
+    <DeprecatedFunction occurrences="1">
+      <code>\html_build_select_box_from_arrays($vals, $txts, $this-&gt;filter-&gt;md-&gt;getLabel(), $this-&gt;filter-&gt;getValue(), \false, '', \true, $GLOBALS['Language']-&gt;getText('global', 'any'), \false, '', \CODENDI_PURIFIER_DISABLED)</code>
+    </DeprecatedFunction>
+    <InvalidStaticInvocation occurrences="1">
+      <code>\Docman_MetadataHtmlList::_getElementName($e)</code>
+    </InvalidStaticInvocation>
+    <MissingParamType occurrences="4">
+      <code>$filter</code>
+      <code>$vals</code>
+      <code>$txts</code>
+      <code>$formName</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
       <code>buildSelectBox</code>
       <code>_valueSelectorHtml</code>
     </MissingReturnType>
@@ -8793,6 +8865,28 @@
       <code>$txts</code>
       <code>$vals</code>
     </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterListAdvanced.php">
+    <DeprecatedFunction occurrences="1">
+      <code>\html_build_select_box_from_arrays($vals, $txts, $this-&gt;filter-&gt;md-&gt;getLabel(), $this-&gt;filter-&gt;getValue(), \false, '', \true, $GLOBALS['Language']-&gt;getText('global', 'any'), \false, '', \CODENDI_PURIFIER_DISABLED)</code>
+    </DeprecatedFunction>
+    <MissingParamType occurrences="3">
+      <code>$filter</code>
+      <code>$vals</code>
+      <code>$txts</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>buildSelectBox</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_HtmlFilterText.php">
+    <MissingParamType occurrences="2">
+      <code>$filter</code>
+      <code>$formName</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>_valueSelectorHtml</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Icons.class.php">
     <MissingParamType occurrences="7">
@@ -8911,28 +9005,11 @@
       <code>getEventManager</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_ItemAction.class.php">
-    <MissingParamType occurrences="20">
+  <file src="plugins/docman/include/Docman_ItemAction.php">
+    <MissingParamType occurrences="3">
       <code>$item</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$params</code>
-      <code>$item</code>
-      <code>$params</code>
-      <code>$item</code>
-      <code>$params</code>
-      <code>$item</code>
     </MissingParamType>
     <MissingPropertyType occurrences="6">
       <code>$item</code>
@@ -8946,26 +9023,127 @@
       <code>fetchAction</code>
       <code>fetch</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="15">
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
-      <code>$this-&gt;classes</code>
+    <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;classes</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;classes</code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionApproval.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionCopy.php">
+    <MissingParamType occurrences="2">
+      <code>$item</code>
+      <code>$params</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionCut.php">
+    <MissingParamType occurrences="2">
+      <code>$item</code>
+      <code>$params</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionDelete.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionDetails.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionHistory.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionMove.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionNewDocument.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionNewFolder.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionNewVersion.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionNotifications.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionPaste.php">
+    <MissingParamType occurrences="2">
+      <code>$item</code>
+      <code>$params</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionPermissions.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/docman/include/Docman_ItemActionUpdate.php">
+    <MissingParamType occurrences="1">
+      <code>$item</code>
+    </MissingParamType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;classes</code>
+    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/Docman_ItemDao.class.php">
     <DeprecatedFunction occurrences="6">
@@ -9370,6 +9548,19 @@
       <code>createLinkWithSpecificVersion</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/docman/include/Docman_ListMetadata.php">
+    <MissingParamType occurrences="2">
+      <code>$l</code>
+      <code>$v</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$listOfValue</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="2">
+      <code>setListOfValueElements</code>
+      <code>setDefaultValue</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/docman/include/Docman_LockDao.class.php">
     <FalsableReturnStatement occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
@@ -9501,8 +9692,8 @@
       <code>getType</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_Metadata.class.php">
-    <MissingParamType occurrences="30">
+  <file src="plugins/docman/include/Docman_Metadata.php">
+    <MissingParamType occurrences="28">
       <code>$v</code>
       <code>$v</code>
       <code>$v</code>
@@ -9531,10 +9722,8 @@
       <code>$md</code>
       <code>$md</code>
       <code>$md</code>
-      <code>$l</code>
-      <code>$v</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="21">
+    <MissingPropertyType occurrences="20">
       <code>$id</code>
       <code>$groupId</code>
       <code>$name</code>
@@ -9555,9 +9744,8 @@
       <code>$canChangeIsEmptyAllowed</code>
       <code>$canChangeIsMultipleValuesAllowed</code>
       <code>$canChangeValue</code>
-      <code>$listOfValue</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="55">
+    <MissingReturnType occurrences="53">
       <code>setId</code>
       <code>getId</code>
       <code>setGroupId</code>
@@ -9611,8 +9799,6 @@
       <code>sameIsMultipleValuesAllowed</code>
       <code>sameUseIt</code>
       <code>update</code>
-      <code>setListOfValueElements</code>
-      <code>setDefaultValue</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_MetadataComparator.class.php">
@@ -9792,8 +9978,28 @@
       <code>$this-&gt;scalarMetadata</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/docman/include/Docman_MetadataHtml.class.php">
-    <MissingParamType occurrences="16">
+  <file src="plugins/docman/include/Docman_MetadataHtml.php">
+    <MissingParamType occurrences="3">
+      <code>$md</code>
+      <code>$formParams</code>
+      <code>$show_mandatory_information</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$md</code>
+      <code>$formParams</code>
+      <code>$hp</code>
+    </MissingPropertyType>
+    <UndefinedMethod occurrences="1">
+      <code>_getField</code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlDate.php">
+    <MissingReturnType occurrences="1">
+      <code>_getField</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlFactory.php">
+    <MissingParamType occurrences="7">
       <code>$md</code>
       <code>$formParams</code>
       <code>$mdIter</code>
@@ -9801,37 +10007,44 @@
       <code>$whitelist</code>
       <code>$formName</code>
       <code>$themePath</code>
-      <code>$md</code>
-      <code>$metadata</code>
-      <code>$md</code>
-      <code>$formParams</code>
-      <code>$show_mandatory_information</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getFromMetadata</code>
+      <code>buildFieldArray</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlList.php">
+    <MissingParamType occurrences="4">
       <code>$e</code>
       <code>$hideNone</code>
       <code>$e</code>
       <code>$hideNone</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$md</code>
-      <code>$formParams</code>
-      <code>$hp</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="11">
-      <code>getFromMetadata</code>
-      <code>buildFieldArray</code>
-      <code>metadataIsRequieredAndAtLeastOneValueIsSelected</code>
-      <code>_getField</code>
-      <code>_getField</code>
-      <code>_getField</code>
+    <MissingReturnType occurrences="3">
       <code>_getElementName</code>
       <code>_getElementDescription</code>
       <code>_getField</code>
-      <code>_getField</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlObsolescence.php">
+    <MissingReturnType occurrences="1">
       <code>_getField</code>
     </MissingReturnType>
-    <UndefinedMethod occurrences="1">
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlOwner.php">
+    <MissingReturnType occurrences="1">
       <code>_getField</code>
-    </UndefinedMethod>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlString.php">
+    <MissingReturnType occurrences="1">
+      <code>_getField</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataHtmlText.php">
+    <MissingReturnType occurrences="1">
+      <code>_getField</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_MetadataListOfValuesElement.class.php">
     <MissingParamType occurrences="6">
@@ -9987,31 +10200,20 @@
       <code>_getMdvJoin</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_MetadataValue.class.php">
-    <MissingParamType occurrences="12">
-      <code>$v</code>
-      <code>$v</code>
-      <code>$v</code>
-      <code>$v</code>
-      <code>$row</code>
-      <code>$v</code>
-      <code>$v</code>
+  <file src="plugins/docman/include/Docman_MetadataValue.php">
+    <MissingParamType occurrences="5">
       <code>$v</code>
       <code>$v</code>
       <code>$v</code>
       <code>$v</code>
       <code>$row</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="7">
+    <MissingPropertyType occurrences="3">
       <code>$fieldId</code>
       <code>$itemId</code>
       <code>$type</code>
-      <code>$listOfValues</code>
-      <code>$valueText</code>
-      <code>$valueDate</code>
-      <code>$valueString</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="22">
+    <MissingReturnType occurrences="9">
       <code>setFieldId</code>
       <code>getFieldId</code>
       <code>setItemId</code>
@@ -10021,23 +10223,7 @@
       <code>setType</code>
       <code>getType</code>
       <code>initFromRow</code>
-      <code>setType</code>
-      <code>getType</code>
-      <code>setValue</code>
-      <code>getValue</code>
-      <code>setValueText</code>
-      <code>getValueText</code>
-      <code>setValueDate</code>
-      <code>getValueDate</code>
-      <code>setValueString</code>
-      <code>getValueString</code>
-      <code>getValue</code>
-      <code>setValue</code>
-      <code>initFromRow</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;valueFloat</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/Docman_MetadataValueDao.class.php">
     <MissingParamType occurrences="35">
@@ -10140,6 +10326,49 @@
       <code>validateInput</code>
       <code>setError</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataValueList.php">
+    <MissingParamType occurrences="2">
+      <code>$v</code>
+      <code>$v</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$listOfValues</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>setType</code>
+      <code>getType</code>
+      <code>setValue</code>
+      <code>getValue</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_MetadataValueScalar.php">
+    <MissingParamType occurrences="5">
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$v</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$valueText</code>
+      <code>$valueDate</code>
+      <code>$valueString</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="9">
+      <code>setValueText</code>
+      <code>getValueText</code>
+      <code>setValueDate</code>
+      <code>getValueDate</code>
+      <code>setValueString</code>
+      <code>getValueString</code>
+      <code>getValue</code>
+      <code>setValue</code>
+      <code>initFromRow</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;valueFloat</code>
+    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager.class.php">
     <MissingParamType occurrences="48">
@@ -10549,8 +10778,8 @@
       <code>getItemTypeSearchMetadata</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_ReportColumn.class.php">
-    <MissingParamType occurrences="28">
+  <file src="plugins/docman/include/Docman_ReportColumn.php">
+    <MissingParamType occurrences="11">
       <code>$md</code>
       <code>$s</code>
       <code>$view</code>
@@ -10562,29 +10791,12 @@
       <code>$params</code>
       <code>$item</code>
       <code>$view</code>
-      <code>$s</code>
-      <code>$defaultUrl</code>
-      <code>$viewParams</code>
-      <code>$request</code>
-      <code>$item</code>
-      <code>$view</code>
-      <code>$params</code>
-      <code>$md</code>
-      <code>$item</code>
-      <code>$view</code>
-      <code>$params</code>
-      <code>$item</code>
-      <code>$view</code>
-      <code>$md</code>
-      <code>$item</code>
-      <code>$view</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingPropertyType occurrences="2">
       <code>$md</code>
       <code>$sort</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="17">
+    <MissingReturnType occurrences="9">
       <code>setSort</code>
       <code>getSort</code>
       <code>getSortParameter</code>
@@ -10594,18 +10806,7 @@
       <code>_getMdHtml</code>
       <code>getTableBox</code>
       <code>getJavascript</code>
-      <code>setSort</code>
-      <code>getSortSelectorHtml</code>
-      <code>getTitle</code>
-      <code>initFromRequest</code>
-      <code>getTableBox</code>
-      <code>getTableBox</code>
-      <code>getJavascript</code>
-      <code>getTableBox</code>
     </MissingReturnType>
-    <ParamNameMismatch occurrences="1">
-      <code>$defaultUrl</code>
-    </ParamNameMismatch>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumnFactory.class.php">
     <MissingParamType occurrences="2">
@@ -10618,6 +10819,52 @@
     <MissingReturnType occurrences="2">
       <code>getColumnFromLabel</code>
       <code>_getMetadataFactory</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_ReportColumnList.php">
+    <MissingParamType occurrences="4">
+      <code>$md</code>
+      <code>$item</code>
+      <code>$view</code>
+      <code>$params</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getTableBox</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_ReportColumnLocation.php">
+    <MissingParamType occurrences="7">
+      <code>$s</code>
+      <code>$defaultUrl</code>
+      <code>$viewParams</code>
+      <code>$request</code>
+      <code>$item</code>
+      <code>$view</code>
+      <code>$params</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="5">
+      <code>setSort</code>
+      <code>getSortSelectorHtml</code>
+      <code>getTitle</code>
+      <code>initFromRequest</code>
+      <code>getTableBox</code>
+    </MissingReturnType>
+    <ParamNameMismatch occurrences="1">
+      <code>$defaultUrl</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="plugins/docman/include/Docman_ReportColumnTitle.php">
+    <MissingParamType occurrences="6">
+      <code>$md</code>
+      <code>$item</code>
+      <code>$view</code>
+      <code>$params</code>
+      <code>$item</code>
+      <code>$view</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getTableBox</code>
+      <code>getJavascript</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ReportDao.class.php">
@@ -10908,47 +11155,64 @@
       <code>updateMetadataUsageForGroupId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_SqlFilter.class.php">
-    <DeprecatedFunction occurrences="4">
-      <code>db_es($qv)</code>
-      <code>db_es($qv)</code>
-      <code>db_es($qv)</code>
-      <code>db_es($qv)</code>
-    </DeprecatedFunction>
-    <MissingParamType occurrences="12">
-      <code>$filter</code>
+  <file src="plugins/docman/include/Docman_SqlFilter.php">
+    <MissingParamType occurrences="2">
       <code>$filter</code>
       <code>$qv</code>
-      <code>$filter</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$filter</code>
-      <code>$filter</code>
-      <code>$filter</code>
-      <code>$filter</code>
-      <code>$filter</code>
     </MissingParamType>
     <MissingPropertyType occurrences="3">
       <code>$filter</code>
       <code>$isRealMetadata</code>
       <code>$db</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
-      <code>getFromFilter</code>
+    <MissingReturnType occurrences="4">
       <code>getFrom</code>
       <code>_getSpecificSearchChunk</code>
       <code>getWhere</code>
       <code>getSearchType</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterDate.php">
+    <MissingParamType occurrences="4">
+      <code>$filter</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
       <code>_getEndStatement</code>
       <code>_getEqualStatement</code>
       <code>_getStartStatement</code>
       <code>_getSpecificSearchChunk</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterDateAdvanced.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
       <code>_getSpecificSearchChunk</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterFactory.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getFromFilter</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterGlobalText.php">
+    <DeprecatedFunction occurrences="3">
+      <code>\db_es($qv)</code>
+      <code>\db_es($qv)</code>
+      <code>\db_es($qv)</code>
+    </DeprecatedFunction>
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
       <code>getFrom</code>
-      <code>_getSpecificSearchChunk</code>
-      <code>getFrom</code>
-      <code>_getSpecificSearchChunk</code>
       <code>_getSpecificSearchChunk</code>
     </MissingReturnType>
     <PossiblyUndefinedVariable occurrences="2">
@@ -10956,17 +11220,50 @@
       <code>$matches</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/docman/include/Docman_SqlReportColumn.class.php">
-    <MissingParamType occurrences="2">
-      <code>$c</code>
+  <file src="plugins/docman/include/Docman_SqlFilterListAdvanced.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>_getSpecificSearchChunk</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterOwner.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getFrom</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlFilterText.php">
+    <DeprecatedFunction occurrences="1">
+      <code>\db_es($qv)</code>
+    </DeprecatedFunction>
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>_getSpecificSearchChunk</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlReportColumn.php">
+    <MissingParamType occurrences="1">
       <code>$column</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$column</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getFromColumn</code>
+    <MissingReturnType occurrences="1">
       <code>getOrderBy</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_SqlReportColumnFactory.php">
+    <MissingParamType occurrences="1">
+      <code>$c</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getFromColumn</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_SubItemsRemovalVisitor.class.php">
@@ -11070,10 +11367,8 @@
       <code>delete</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_ValidateFilter.class.php">
-    <MissingParamType occurrences="3">
-      <code>$filter</code>
-      <code>$filter</code>
+  <file src="plugins/docman/include/Docman_ValidateFilter.php">
+    <MissingParamType occurrences="1">
       <code>$filter</code>
     </MissingParamType>
     <MissingPropertyType occurrences="3">
@@ -11081,21 +11376,56 @@
       <code>$message</code>
       <code>$isValid</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>getFromFilter</code>
+    <MissingReturnType occurrences="2">
       <code>validate</code>
       <code>getMessage</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_ValidateFilterDate.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
       <code>validate</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_Validator.class.php">
-    <MissingParamType occurrences="6">
-      <code>$error</code>
+  <file src="plugins/docman/include/Docman_ValidateFilterFactory.php">
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getFromFilter</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_ValidateMetadataIsNotEmpty.php">
+    <MissingParamType occurrences="1">
+      <code>$md</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/Docman_ValidateMetadataListIsNotEmpty.php">
+    <MissingParamType occurrences="1">
+      <code>$metadata</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>metadataIsRequieredAndAtLeastOneValueIsSelected</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/include/Docman_ValidatePresenceOf.php">
+    <MissingParamType occurrences="3">
       <code>$data</code>
       <code>$field</code>
       <code>$msg</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/Docman_ValidateValueNotEmpty.php">
+    <MissingParamType occurrences="2">
       <code>$value</code>
       <code>$msg</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/Docman_Validator.php">
+    <MissingParamType occurrences="1">
+      <code>$error</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$_errors</code>
@@ -12505,6 +12835,44 @@
       <code>INVALID_SESSION_FAULT</code>
     </UndefinedConstant>
   </file>
+  <file src="plugins/docman/include/view/Docman_MetadataHtmlEmbeddedFile.php">
+    <MissingParamType occurrences="2">
+      <code>$content</code>
+      <code>$show_mandatory_information</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$content</code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/docman/include/view/Docman_MetadataHtmlEmpty.php">
+    <MissingParamType occurrences="1">
+      <code>$show_mandatory_information</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/view/Docman_MetadataHtmlFile.php">
+    <MissingParamType occurrences="2">
+      <code>$show_mandatory_information</code>
+      <code>$request</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/include/view/Docman_MetadataHtmlLink.php">
+    <MissingParamType occurrences="2">
+      <code>$link_url</code>
+      <code>$show_mandatory_information</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$link_url</code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/docman/include/view/Docman_MetadataHtmlWiki.php">
+    <MissingParamType occurrences="2">
+      <code>$pagename</code>
+      <code>$show_mandatory_information</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$pagename</code>
+    </MissingPropertyType>
+  </file>
   <file src="plugins/docman/include/view/Docman_View_Admin.class.php">
     <MissingParamType occurrences="2">
       <code>$params</code>
@@ -12919,20 +13287,11 @@
       <code>$params</code>
     </MissingParamType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_GetSpecificFieldsVisitor.class.php">
+  <file src="plugins/docman/include/view/Docman_View_GetSpecificFieldsVisitor.php">
     <InvalidStaticInvocation occurrences="1">
-      <code>Docman_ItemFactory::getItemTypeForItem($params['force_item'])</code>
+      <code>\Docman_ItemFactory::getItemTypeForItem($params['force_item'])</code>
     </InvalidStaticInvocation>
-    <MissingParamType occurrences="15">
-      <code>$pagename</code>
-      <code>$show_mandatory_information</code>
-      <code>$link_url</code>
-      <code>$show_mandatory_information</code>
-      <code>$show_mandatory_information</code>
-      <code>$request</code>
-      <code>$content</code>
-      <code>$show_mandatory_information</code>
-      <code>$show_mandatory_information</code>
+    <MissingParamType occurrences="6">
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -12940,13 +13299,8 @@
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$pagename</code>
-      <code>$link_url</code>
-      <code>$content</code>
-    </MissingPropertyType>
     <TooManyArguments occurrences="1">
-      <code>new Docman_MetadataHtmlFile($params['request'])</code>
+      <code>new \Docman_MetadataHtmlFile($params['request'])</code>
     </TooManyArguments>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Header.class.php">
@@ -16530,9 +16884,9 @@
   </file>
   <file src="plugins/git/include/Git/HTTP/Command.class.php">
     <MissingParamType occurrences="3">
-      <code>$variable_name</code>
       <code>$path_info</code>
       <code>$query_string</code>
+      <code>$variable_name</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$env</code>
@@ -19726,6 +20080,7 @@
       <code>$date</code>
     </MissingParamType>
     <MissingPropertyType occurrences="30">
+      <code>$this-&gt;notifiedMails</code>
       <code>$mirror-&gt;url</code>
       <code>$id</code>
       <code>$parentId</code>
@@ -19755,7 +20110,6 @@
       <code>$last_push_date</code>
       <code>$is_mirrored</code>
       <code>$backendType</code>
-      <code>$this-&gt;notifiedMails</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="65">
       <code>load</code>
@@ -78433,7 +78787,7 @@
     </UndefinedVariable>
   </file>
   <file src="src/www/themes/FlamingParrot/FlamingParrot_Theme.class.php">
-    <MissingParamType occurrences="9">
+    <MissingParamType occurrences="8">
       <code>$root</code>
       <code>$template_name</code>
       <code>$presenter</code>
@@ -78442,12 +78796,11 @@
       <code>$params</code>
       <code>$params</code>
       <code>$selected_top_tab</code>
-      <code>$list_of_projects</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$show_sidebar</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="17">
+    <MissingReturnType occurrences="16">
       <code>render</code>
       <code>getTemplateDir</code>
       <code>getVariants</code>
@@ -78460,7 +78813,6 @@
       <code>addBodyClassDependingThemeVariant</code>
       <code>addBodyClassDependingUserPreference</code>
       <code>navbar</code>
-      <code>getPresentersForProjects</code>
       <code>getProjectLink</code>
       <code>footer</code>
       <code>endOfPage</code>

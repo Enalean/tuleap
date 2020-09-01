@@ -22,9 +22,6 @@
  *
  */
 
-require_once('Docman_View_Extra.class.php');
-require_once(dirname(__FILE__) . '/../Docman_MetadataComparator.class.php');
-
 class Docman_View_Admin_MetadataImport extends Docman_View_Extra
 {
     public $srcGo;

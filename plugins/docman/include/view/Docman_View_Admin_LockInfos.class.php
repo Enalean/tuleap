@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Docman_View_Extra.class.php';
-
 class Docman_View_Admin_LockInfos extends Docman_View_Extra
 {
     public $defaultUrl;
@@ -64,7 +62,6 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         $uH = UserHelper::instance();
         $hp = Codendi_HTMLPurifier::instance();
 
-        require_once(dirname(__FILE__) . '/../Docman_ItemFactory.class.php');
         $dIF = new Docman_ItemFactory($params['group_id']);
 
         $altRowClass = 0;

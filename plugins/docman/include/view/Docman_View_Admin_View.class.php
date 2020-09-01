@@ -7,10 +7,6 @@
 * Docman_View_Admin_View
 */
 
-require_once('Docman_View_Extra.class.php');
-require_once('Docman_View_Browse.class.php');
-
-require_once(dirname(__FILE__) . '/../Docman_SettingsDao.class.php');
 class Docman_View_Admin_View extends Docman_View_Extra
 {
 

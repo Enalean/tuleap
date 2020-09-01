@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Controller.class.php');
-require_once('Docman_SOAPActions.class.php');
 class Docman_SOAPController extends Docman_Controller
 {
 

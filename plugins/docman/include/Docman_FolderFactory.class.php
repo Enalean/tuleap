@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Folder.class.php');
-require_once('Docman_ItemFactory.class.php');
-
 class Docman_FolderFactory extends Docman_ItemFactory
 {
 

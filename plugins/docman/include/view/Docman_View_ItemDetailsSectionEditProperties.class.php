@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_ItemDetailsSectionProperties.class.php');
-require_once(dirname(__FILE__) . '/../Docman_PermissionsManager.class.php');
-
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties
 {
     public $token;

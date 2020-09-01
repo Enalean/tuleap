@@ -287,7 +287,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if (! $params['object_type']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
-                require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
@@ -300,7 +299,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if (! $params['object_name']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
-                require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
@@ -418,19 +416,15 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         switch ($get_widget_event->getName()) {
             case 'plugin_docman_mydocman':
-                require_once('Docman_Widget_MyDocman.class.php');
                 $get_widget_event->setWidget(new Docman_Widget_MyDocman($this->getPluginPath()));
                 break;
             case 'plugin_docman_my_embedded':
-                require_once('Docman_Widget_MyEmbedded.class.php');
                 $get_widget_event->setWidget(new Docman_Widget_MyEmbedded($this->getPluginPath()));
                 break;
             case 'plugin_docman_project_embedded':
-                require_once('Docman_Widget_ProjectEmbedded.class.php');
                 $get_widget_event->setWidget(new Docman_Widget_ProjectEmbedded($this->getPluginPath()));
                 break;
             case 'plugin_docman_mydocman_search':
-                require_once('Docman_Widget_MyDocmanSearch.class.php');
                 $get_widget_event->setWidget(new Docman_Widget_MyDocmanSearch($this->getPluginPath()));
                 break;
             default:
@@ -495,7 +489,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function wiki_page_updated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest(['action' => 'wiki_page_updated',
                                                 'wiki_page' => $params['wiki_page'],
                                                 'diff_link' => $params['diff_link'],
@@ -507,7 +500,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function wiki_before_content($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
@@ -515,7 +507,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function wiki_display_remove_button($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_display_remove_button';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
@@ -523,7 +514,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function isWikiPageReferenced($params)
     {
-        require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
@@ -531,14 +521,12 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function isWikiPageEditable($params)
     {
-        require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
     public function userCanAccessWikiDocument($params)
     {
-        require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
@@ -546,7 +534,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function getPermsLabelForWiki($params)
     {
-        require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
@@ -758,7 +745,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $offsetVers = 0;
         }
 
-        require_once('Docman_VersionFactory.class.php');
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($event->getProject()->getID(), $offsetVers, $limit);
         $html = '';
@@ -802,7 +788,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (! $offsetItem || $offsetItem < 0) {
             $offsetItem = 0;
         }
-        require_once('Docman_ItemFactory.class.php');
         $item = new Docman_ItemFactory($event->getProject()->getID());
         $res = $item->listPendingItems($event->getProject()->getID(), $offsetItem, $limit);
         $html = '';
@@ -925,7 +910,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function showPendingItems(CSRFSynchronizerToken $csrf_token, $res, $groupId, $nbItems, $offset, $limit)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
@@ -1016,11 +1000,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      */
     public function purgeFiles(array $params)
     {
-        require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory();
         $itemFactory->purgeDeletedItems($params['time']);
 
-        require_once('Docman_VersionFactory.class.php');
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->purgeDeletedVersions($params['time']);
 
@@ -1039,7 +1021,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $groupId = $params['group_id'];
         if ($groupId) {
-            require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
             $docmanItemFactory->deleteProjectTree($groupId);
         }

@@ -25,8 +25,6 @@
 use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 use Tuleap\Docman\Notifications\NotificationListPresenter;
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection
 {

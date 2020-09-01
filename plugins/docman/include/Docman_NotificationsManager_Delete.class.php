@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_NotificationsManager.class.php');
-require_once('Docman_Path.class.php');
-
 class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
 {
     public const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F

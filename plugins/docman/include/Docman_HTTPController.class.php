@@ -24,8 +24,6 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-require_once('Docman_Controller.class.php');
-require_once('Docman_Actions.class.php');
 class Docman_HTTPController extends Docman_Controller
 {
 

@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_File.class.php');
-
 /**
  * URL is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application

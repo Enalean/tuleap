@@ -7,11 +7,6 @@
 * Docman_View_RawTreeView
 */
 
-require_once('Docman_View_View.class.php');
-require_once('Docman_View_ItemTreeUlVisitor.class.php');
-
-require_once(dirname(__FILE__) . '/../Docman_ItemFactory.class.php');
-
 class Docman_View_RawTree extends Docman_View_View
 {
 

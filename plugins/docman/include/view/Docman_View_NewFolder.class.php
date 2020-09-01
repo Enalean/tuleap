@@ -7,10 +7,6 @@
 * Docman_View_NewFolder
 */
 
-require_once('Docman_View_New.class.php');
-require_once('Docman_View_GetFieldsVisitor.class.php');
-require_once(dirname(__FILE__) . '/../Docman_MetadataFactory.class.php');
-
 class Docman_View_NewFolder extends Docman_View_New
 {
 

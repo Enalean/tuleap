@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_LogDao.class.php');
-require_once('Docman_ItemFactory.class.php');
 /**
  * Log is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application

@@ -19,9 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Docman_PermissionsManager.class.php');
-require_once('Docman_ItemFactory.class.php');
-
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied
 {

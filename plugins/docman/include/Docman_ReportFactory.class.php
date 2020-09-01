@@ -20,13 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Report.class.php');
-require_once('Docman_FilterFactory.class.php');
-require_once('Docman_ReportColumnFactory.class.php');
-require_once('Docman_SettingsBo.class.php');
-require_once('Docman_ReportDao.class.php');
-require_once('Docman_PermissionsManager.class.php');
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_ReportFactory
 {
     public $groupId;

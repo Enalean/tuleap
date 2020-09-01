@@ -35,6 +35,7 @@
  *   real metadata all parameters may change. But for HardCoded metadata, only
  *   some parmaeters of some metadata may change (eg. 'use_it' for 'status').
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_Metadata
 {
     public $id;
@@ -49,29 +50,25 @@ class Docman_Metadata
     public $keepHistory;
     public $special;
     public $useIt;
-
     public $value;
     public $defaultValue;
-
     public function __construct()
     {
-        $this->id = null;
-        $this->groupId = null;
-        $this->name = null;
-        $this->type = null;
-        $this->label = null;
-        $this->description = null;
-        $this->isRequired = null;
-        $this->isEmptyAllowed = null;
-        $this->isMultipleValuesAllowed = null;
-        $this->keepHistory = null;
-        $this->special = null;
-        $this->useIt = null;
-
-        $this->value = null;
-        $this->defaultValue = null;
+        $this->id = \null;
+        $this->groupId = \null;
+        $this->name = \null;
+        $this->type = \null;
+        $this->label = \null;
+        $this->description = \null;
+        $this->isRequired = \null;
+        $this->isEmptyAllowed = \null;
+        $this->isMultipleValuesAllowed = \null;
+        $this->keepHistory = \null;
+        $this->special = \null;
+        $this->useIt = \null;
+        $this->value = \null;
+        $this->defaultValue = \null;
     }
-
     //{{{ Accessors
     public function setId($v)
     {
@@ -81,7 +78,6 @@ class Docman_Metadata
     {
         return $this->id;
     }
-
     public function setGroupId($v)
     {
         $this->groupId = $v;
@@ -90,7 +86,6 @@ class Docman_Metadata
     {
         return $this->groupId;
     }
-
     public function setName($v)
     {
         $this->name = $v;
@@ -99,7 +94,6 @@ class Docman_Metadata
     {
         return $this->name;
     }
-
     public function setType($v)
     {
         $this->type = $v;
@@ -108,7 +102,6 @@ class Docman_Metadata
     {
         return $this->type;
     }
-
     public function setLabel($v)
     {
         $this->label = $v;
@@ -117,7 +110,6 @@ class Docman_Metadata
     {
         return $this->label;
     }
-
     public function setDescription($v)
     {
         $this->description = $v;
@@ -126,7 +118,6 @@ class Docman_Metadata
     {
         return $this->description;
     }
-
     public function setIsRequired($v)
     {
         $this->isRequired = $v;
@@ -135,7 +126,6 @@ class Docman_Metadata
     {
         return $this->isRequired;
     }
-
     public function setIsEmptyAllowed($v)
     {
         $this->isEmptyAllowed = $v;
@@ -144,7 +134,6 @@ class Docman_Metadata
     {
         return $this->isEmptyAllowed;
     }
-
     public function setIsMultipleValuesAllowed($v)
     {
         $this->isMultipleValuesAllowed = $v;
@@ -153,7 +142,6 @@ class Docman_Metadata
     {
         return $this->isMultipleValuesAllowed;
     }
-
     public function setKeepHistory($v)
     {
         $this->keepHistory = $v;
@@ -162,7 +150,6 @@ class Docman_Metadata
     {
         return $this->keepHistory;
     }
-
     public function setSpecial($v)
     {
         $this->special = $v;
@@ -171,7 +158,6 @@ class Docman_Metadata
     {
         return $this->special;
     }
-
     public function setDefaultValue($v)
     {
         $this->defaultValue = $v;
@@ -180,7 +166,6 @@ class Docman_Metadata
     {
         return $this->defaultValue;
     }
-
     public function setUseIt($v)
     {
         $this->useIt = $v;
@@ -190,53 +175,48 @@ class Docman_Metadata
         return $this->useIt;
     }
     ///}}} Accessors
-
     //{{{ Convenient accessors
     public function isEmptyAllowed()
     {
-        if ($this->isEmptyAllowed == PLUGIN_DOCMAN_DB_TRUE) {
-            return true;
+        if ($this->isEmptyAllowed == \PLUGIN_DOCMAN_DB_TRUE) {
+            return \true;
         } else {
-            return false;
+            return \false;
         }
     }
-
     public function isMultipleValuesAllowed()
     {
-        if ($this->isMultipleValuesAllowed == PLUGIN_DOCMAN_DB_TRUE) {
-            return true;
+        if ($this->isMultipleValuesAllowed == \PLUGIN_DOCMAN_DB_TRUE) {
+            return \true;
         } else {
-            return false;
+            return \false;
         }
     }
-
     public function isRequired()
     {
-        if ($this->isRequired == PLUGIN_DOCMAN_DB_TRUE) {
-            return true;
+        if ($this->isRequired == \PLUGIN_DOCMAN_DB_TRUE) {
+            return \true;
         } else {
-            return false;
+            return \false;
         }
     }
     public function isUsed()
     {
-        if ($this->useIt == PLUGIN_DOCMAN_METADATA_USED) {
-            return true;
+        if ($this->useIt == \PLUGIN_DOCMAN_METADATA_USED) {
+            return \true;
         } else {
-            return false;
+            return \false;
         }
     }
-
     public function isSpecial()
     {
         if ($this->special > 0) {
-            return true;
+            return \true;
         } else {
-            return false;
+            return \false;
         }
     }
     //}}} Convenient accessors
-
     //{{{ Changable parameters
     public $canChangeName;
     public function setCanChangeName($v)
@@ -247,7 +227,6 @@ class Docman_Metadata
     {
         return $this->canChangeName;
     }
-
     public $canChangeType;
     public function setCanChangeType($v)
     {
@@ -257,7 +236,6 @@ class Docman_Metadata
     {
         return $this->canChangeType;
     }
-
     public $canChangeDescription;
     public function setCanChangeDescription($v)
     {
@@ -267,7 +245,6 @@ class Docman_Metadata
     {
         return $this->canChangeDescription;
     }
-
     public $canChangeIsEmptyAllowed;
     public function setCanChangeIsEmptyAllowed($v)
     {
@@ -277,7 +254,6 @@ class Docman_Metadata
     {
         return $this->canChangeIsEmptyAllowed;
     }
-
     public $canChangeIsMultipleValuesAllowed;
     public function setCanChangeIsMultipleValuesAllowed($v)
     {
@@ -287,7 +263,6 @@ class Docman_Metadata
     {
         return $this->canChangeIsMultipleValuesAllowed;
     }
-
     public $canChangeValue;
     public function setCanChangeValue($v)
     {
@@ -297,9 +272,7 @@ class Docman_Metadata
     {
         return $this->canChangeValue;
     }
-
     //}}}  Changable parameters
-
     public function setValue($v)
     {
         $this->value = $v;
@@ -308,7 +281,6 @@ class Docman_Metadata
     {
         return $this->value;
     }
-
     public function initFromRow($row)
     {
         if (isset($row['field_id'])) {
@@ -344,52 +316,39 @@ class Docman_Metadata
         if (isset($row['use_it'])) {
             $this->useIt = $row['use_it'];
         }
-
-        $this->setCanChangeValue(true);
+        $this->setCanChangeValue(\true);
     }
-
     /**
      * Check if the metadata in argument can be the same.
      */
     public function equivalent($md)
     {
-        return ($md->getName() == $this->getName() &&
-                $md->getType() == $this->getType());
+        return $md->getName() == $this->getName() && $md->getType() == $this->getType();
     }
-
     /**
      * Check if 2 metadata are the same.
      * This check neither the 'label' nor the 'group_id'
      */
     public function equals($md)
     {
-        return ($this->equivalent($md) &&
-                $this->sameDescription($md) &&
-                $this->sameIsEmptyAllowed($md) &&
-                $this->sameIsMultipleValuesAllowed($md) &&
-                $this->sameUseIt($md));
+        return $this->equivalent($md) && $this->sameDescription($md) && $this->sameIsEmptyAllowed($md) && $this->sameIsMultipleValuesAllowed($md) && $this->sameUseIt($md);
     }
-
     public function sameDescription($md)
     {
-        return ($md->getDescription() == $this->getDescription());
+        return $md->getDescription() == $this->getDescription();
     }
-
     public function sameIsEmptyAllowed($md)
     {
-        return ($md->getIsEmptyAllowed() == $this->getIsEmptyAllowed());
+        return $md->getIsEmptyAllowed() == $this->getIsEmptyAllowed();
     }
-
     public function sameIsMultipleValuesAllowed($md)
     {
-        return ($md->getIsMultipleValuesAllowed() == $this->getIsMultipleValuesAllowed());
+        return $md->getIsMultipleValuesAllowed() == $this->getIsMultipleValuesAllowed();
     }
-
     public function sameUseIt($md)
     {
-        return ($md->getUseIt() == $this->getUseIt());
+        return $md->getUseIt() == $this->getUseIt();
     }
-
     /**
      * Update current metadata based on the one passed in param
      */
@@ -404,59 +363,5 @@ class Docman_Metadata
         $this->setKeepHistory($md->getKeepHistory());
         $this->setSpecial($md->getSpecial());
         $this->setUseIt($md->getUseIt());
-    }
-}
-
-/**
- * For metadata that aims to provide a list of values to use we add two special
- * methods that store and restore all the values provided by the metadata
- * (ie. the select box).
- *
- * Actually, Docman_ListMetadata objects are quite complex because they provide
- * - a list of values the user can select (this is the purpose of the two
- *   function bellow)
- * - a list of values the user selected, accessible by regular setValue() and
- *   getValue().
- */
-class Docman_ListMetadata extends Docman_Metadata
-{
-    public $listOfValue;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->defaultValue = [];
-    }
-
-    /**
-     * @param array of Docman_MetadataListOfValuesElements
-     */
-    public function setListOfValueElements(&$l)
-    {
-        $this->listOfValue = $l;
-    }
-
-    /**
-     * @return iterator of Docman_MetadataListOfValuesElements
-     */
-    public function &getListOfValueIterator()
-    {
-        $i = new ArrayIterator($this->listOfValue);
-        return $i;
-    }
-
-    public function setDefaultValue($v)
-    {
-        if (is_a($v, 'Iterator')) {
-            $v->rewind();
-            //if(is_a($love, 'Docman_MetadataListOfValuesElement')) {
-            while ($v->valid()) {
-                $love = $v->current();
-                $this->defaultValue[] = $love->getId();
-                $v->next();
-            }
-        } else {
-            $this->defaultValue[] = $v;
-        }
     }
 }
