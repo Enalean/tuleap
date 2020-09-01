@@ -23,6 +23,7 @@ use Tuleap\CookieManager;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
@@ -567,6 +568,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
+            $this->markReleaseNoteAsSeenOnFirstAuthentication($user);
 
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
@@ -675,6 +677,14 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     $permission->getName()
                 )
             );
+        }
+    }
+
+    private function markReleaseNoteAsSeenOnFirstAuthentication(PFUser $user): void
+    {
+        $access_info = $this->getUserAccessInfo($user);
+        if ($access_info['last_auth_success'] === '0') {
+            $user->setPreference(ReleaseNoteManager::USER_PREFERENCE_NAME_RELEASE_NOTE_SEEN, '1');
         }
     }
 
