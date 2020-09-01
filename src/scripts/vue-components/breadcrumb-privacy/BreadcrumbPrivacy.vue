@@ -37,7 +37,7 @@
             </span>
         </span>
 
-        <section class="tlp-popover" ref="popover_content">
+        <section class="tlp-popover" id="current-project-nav-title-popover" ref="popover_content">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
                 <h1 class="tlp-popover-title">{{ project_public_name }}</h1>

@@ -1,0 +1,89 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#project-sidebar-project-flags-popover,
+#current-project-nav-title-popover {
+    &[x-placement='right-start'] > .tlp-popover-arrow {
+        border-right-color: $tlp-theme-sidebar-background-color;
+        border-bottom-color: transparent;
+    }
+
+    > .tlp-popover-arrow {
+        border-bottom-color: darken($tlp-theme-sidebar-background-color, 5%);
+
+        + .tlp-popover-body {
+            border-radius: 4px;
+        }
+    }
+
+    > .tlp-popover-header {
+        padding: $tlp-medium-spacing;
+        background: darken($tlp-theme-sidebar-background-color, 5%);
+
+        > .tlp-popover-title {
+            color: $tlp-ui-border-light;
+            font-size: 1.125rem;
+            line-height: 1.65rem;
+        }
+    }
+
+    > .tlp-popover-body {
+        background: $tlp-theme-sidebar-background-color;
+        color: $tlp-ui-border-dark;
+        font-size: .875rem;
+
+        > .current-project-nav-flag-popover-separator {
+            margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+            border-top: 1px solid darken($tlp-theme-sidebar-background-color, 5%);
+        }
+
+        .current-project-nav-flag-popover-content-title {
+            margin: 0 0 $tlp-small-spacing;
+            color: $tlp-ui-border-light;
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.625rem;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        > .current-project-nav-flag-popover-flag {
+            position: relative;
+            margin: 0 0 $tlp-medium-spacing;
+            padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
+
+            &:last-child {
+                margin: 0;
+            }
+
+            > .tuleap-svg-project-shield {
+                position: absolute;
+                top: 3px;
+                left: 0;
+                width: 12px;
+
+                > path {
+                    fill: $tlp-ui-border-light;
+                }
+            }
+        }
+    }
+}

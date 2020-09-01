@@ -6,7 +6,7 @@ exports[`BreadcrumbPrivacy displays project flags 1`] = `
             </span><span class="current-project-nav-flag-label">
                 Top secret
             </span></span></span>
-  <section class="tlp-popover" x-placement="bottom-start" style="position: absolute;">
+  <section id="current-project-nav-title-popover" class="tlp-popover" x-placement="bottom-start" style="position: absolute;">
     <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">
       <h1 class="tlp-popover-title">ACME</h1>
@@ -43,7 +43,7 @@ exports[`BreadcrumbPrivacy displays project flags 1`] = `
 
 exports[`BreadcrumbPrivacy displays the project name, the privacy icon and a basic popover 1`] = `
 <div class="breadcrumb-privacy-icon-container"><span class=""><i class="fa breadcrumb-project-privacy-icon fa-unlock"></i> <!----></span>
-  <section class="tlp-popover" x-placement="bottom-start" style="position: absolute;">
+  <section id="current-project-nav-title-popover" class="tlp-popover" x-placement="bottom-start" style="position: absolute;">
     <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">
       <h1 class="tlp-popover-title">ACME</h1>
