@@ -24,9 +24,6 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 
 class Presenter
 {
-    /** @var SearchPresenter */
-    public $search_presenter;
-
     /** @var UserNavPresenter */
     public $user_nav_presenter;
 
@@ -42,12 +39,10 @@ class Presenter
     public $is_super_user;
 
     public function __construct(
-        SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
         NewDropdownPresenter $new_dropdown,
         bool $is_super_user
     ) {
-        $this->search_presenter     = $search_presenter;
         $this->user_nav_presenter   = $user_nav_presenter;
         $this->homepage_label       = _('Homepage');
         $this->new_dropdown         = $new_dropdown;

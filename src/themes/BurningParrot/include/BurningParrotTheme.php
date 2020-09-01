@@ -38,6 +38,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
+use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -175,6 +176,11 @@ class BurningParrotTheme extends BaseLayout
             )
         );
 
+        $switch_to_presenter_builder = new SwitchToPresenterBuilder(
+            new ProjectPresentersBuilder(),
+            new SearchFormPresenterBuilder($this->event_manager, $this->request)
+        );
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->user,
@@ -193,7 +199,7 @@ class BurningParrotTheme extends BaseLayout
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($this->user, $project),
             $project_context,
-            (new SwitchToPresenterBuilder(new ProjectPresentersBuilder()))->build($this->user),
+            $switch_to_presenter_builder->build($this->user),
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

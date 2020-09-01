@@ -27,3 +27,12 @@ export interface Project {
     readonly is_private_incl_restricted: boolean;
     readonly user_administers: boolean;
 }
+
+export interface HiddenField {
+    readonly name: string;
+    readonly value: string;
+}
+export interface SearchForm {
+    readonly type_of_search: string;
+    readonly hidden_fields: HiddenField[];
+}

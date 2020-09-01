@@ -316,47 +316,6 @@ $nav-dropdown-content-border-radius: 3px;
         height: 36px;
         border-radius: 50%;
     }
-
-    .navbar-search {
-        margin: 9px 10px 0 0;
-
-        input[type='text'] {
-            width: 144px;
-            height: 26px;
-            padding: 0 10px;
-            border-radius: 14px;
-            box-shadow: none;
-
-            &:focus {
-                z-index: 0;
-                border: 1px solid $navbar-color-hover;
-            }
-        }
-
-        .btn {
-            padding: 3px 18px 5px;
-            border: 1px solid $dark-main;
-            border-color: $dark-main;
-            border-bottom-color: darken($dark-main, 5%);
-            background-color: $dark-main;
-            /* stylelint-disable declaration-block-no-duplicate-properties, value-no-vendor-prefix  */
-            background-image: -moz-linear-gradient(top, lighten($dark-main, 10%), $dark-main);
-            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(lighten($dark-main, 10%)), to($dark-main));
-            background-image: -webkit-linear-gradient(top, lighten($dark-main, 10%), $dark-main);
-            background-image: -o-linear-gradient(top, lighten($dark-main, 10%), $dark-main);
-            background-image: linear-gradient(to bottom, lighten($dark-main, 10%), $dark-main);
-            /* stylelint-enable */
-
-            i {
-                color: #ffffff;
-                text-shadow: 0 1px 2px lighten($dark-grey, 25%);
-            }
-        }
-
-        .input-append {
-            margin-bottom: 0;
-        }
-    }
 }
 
 .header-navbar-container {

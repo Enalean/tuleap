@@ -24,5 +24,6 @@ export interface State {
     readonly is_trove_cat_enabled: boolean;
     readonly are_restricted_users_allowed: boolean;
     readonly is_search_available: boolean;
+    readonly search_form: SearchForm;
     filter_value: string;
 }
