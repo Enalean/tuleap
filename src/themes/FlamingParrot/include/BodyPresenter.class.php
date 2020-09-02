@@ -35,6 +35,11 @@ class FlamingParrot_BodyPresenter
      * @var HelpDropdownPresenter
      */
     public $help_dropdown;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $user_id;
 
     public function __construct(
         PFUser $user,
@@ -43,6 +48,7 @@ class FlamingParrot_BodyPresenter
         $body_class
     ) {
         $this->user_locale               = $user->getLocale();
+        $this->user_id                   = $user->getId();
         $this->notifications_placeholder = $notifications_placeholder;
         $this->body_class                = $body_class;
         $this->help_dropdown             = $help_dropdown_presenter;

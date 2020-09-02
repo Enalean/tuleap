@@ -199,20 +199,4 @@ $approximate-width-of-project-icon: 15.5px;
     color: $dark-modal-dimmed-text-color;
 }
 
-.switch-to-recent-items {
-    display: flex;
-    flex: 1 0 auto;
-    flex-direction: column;
-    margin: 0 0 0 $tlp-large-spacing;
-
-    > .switch-to-modal-body-title {
-        margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) 0;
-    }
-}
-
-.switch-to-recent-items-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: $tlp-medium-spacing 0 0;
-}
+@import '../../../common/css/utils/switch-to';

@@ -31,15 +31,23 @@ import { Component } from "vue-property-decorator";
 import { createModal, Modal } from "tlp";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./SwitchToBody.vue";
+import { Action } from "vuex-class";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppBurningParrot extends Vue {
+    @Action
+    private readonly loadHistory!: () => void;
+
     private modal: Modal | null = null;
     private trigger: HTMLElement | null = null;
 
     mounted(): void {
+        this.listenToTrigger();
+    }
+
+    listenToTrigger(): void {
         this.trigger = document.getElementById("switch-to-button");
         if (!(this.trigger instanceof HTMLElement)) {
             return;
@@ -58,6 +66,7 @@ export default class AppBurningParrot extends Vue {
     }
 
     toggleModal(): void {
+        this.loadHistory();
         if (this.modal) {
             this.modal.toggle();
         }

@@ -32,7 +32,27 @@ export interface HiddenField {
     readonly name: string;
     readonly value: string;
 }
+
 export interface SearchForm {
     readonly type_of_search: string;
     readonly hidden_fields: HiddenField[];
+}
+
+export interface QuickLink {
+    readonly name: string;
+    readonly html_url: string;
+    readonly icon_name: string;
+}
+
+export interface UserHistoryEntry {
+    readonly xref: string | null;
+    readonly html_url: string;
+    readonly title: string | null;
+    readonly color_name: string;
+    readonly icon_name: string | null;
+    readonly quick_links: QuickLink[];
+}
+
+export interface UserHistory {
+    readonly entries: UserHistoryEntry[];
 }
