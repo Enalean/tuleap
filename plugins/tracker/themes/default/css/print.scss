@@ -86,4 +86,10 @@ table#tracker_report_table th {
 #tracker_artifact_followup_comments {
     position: relative !important;
 }
+
+@media print {
+    a[href]::after {
+        content: none !important;
+    }
+}
 /* stylelint-enable */
