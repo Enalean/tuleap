@@ -568,7 +568,6 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
-            $this->markReleaseNoteAsSeenOnFirstAuthentication($user);
 
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
@@ -602,7 +601,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->_getUserInstanceFromRow(['user_id' => 0]);
     }
 
-    private function openWebSession(PFUser $user)
+    private function openWebSession(PFUser $user): void
     {
         $session_manager    = $this->getSessionManager();
         $request            = HTTPRequest::instance();
@@ -613,6 +612,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $session_identifier,
             $this->getExpireTimestamp($user)
         );
+
+        $this->markReleaseNoteAsSeenTheFirstTimeTheWebSessionIsOpened($user);
     }
 
     private function getExpireTimestamp(PFUser $user)
@@ -680,7 +681,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
     }
 
-    private function markReleaseNoteAsSeenOnFirstAuthentication(PFUser $user): void
+    private function markReleaseNoteAsSeenTheFirstTimeTheWebSessionIsOpened(PFUser $user): void
     {
         $access_info = $this->getUserAccessInfo($user);
         if ($access_info['last_auth_success'] === '0') {
