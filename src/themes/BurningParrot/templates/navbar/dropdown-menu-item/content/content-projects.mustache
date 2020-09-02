@@ -27,9 +27,9 @@
                         nav-dropdown-content-projects-list-project-name-access"
                      ></i>{{ project_name }}
                 </a>
-                {{# user_administers }}
+                {{# is_current_user_admin }}
                     <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
-                {{/ user_administers }}
+                {{/ is_current_user_admin }}
             </div>
         {{/ projects }}
     </div>

@@ -35,10 +35,7 @@ class ProjectPresenter
     public $project_config_uri;
 
     /** @var bool */
-    public $user_administers;
-
-    /** @var bool */
-    public $user_belongs;
+    public $is_current_user_admin;
 
     /** @var bool */
     public $is_private;
@@ -59,17 +56,15 @@ class ProjectPresenter
         string $project_name,
         string $project_uri,
         string $project_config_uri,
-        bool $user_administers,
-        bool $user_belongs,
+        bool $is_current_user_admin,
         Project $project
     ) {
-        $this->project_name       = $project_name;
-        $this->project_uri        = $project_uri;
-        $this->project_config_uri = $project_config_uri;
-        $this->is_private         = ! $project->isPublic();
-        $this->is_public          = $project->isPublic();
-        $this->user_administers   = $user_administers;
-        $this->user_belongs       = $user_belongs;
+        $this->project_name          = $project_name;
+        $this->project_uri           = $project_uri;
+        $this->project_config_uri    = $project_config_uri;
+        $this->is_private            = ! $project->isPublic();
+        $this->is_public             = $project->isPublic();
+        $this->is_current_user_admin = $is_current_user_admin;
 
         $are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($are_restricted_users_allowed) {
