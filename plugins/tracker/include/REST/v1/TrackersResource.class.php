@@ -813,7 +813,7 @@ class TrackersResource extends AuthenticatedResource
     {
         $workflow_id = $tracker->getWorkflow()->getId();
 
-        (new \Workflow_Dao())->removeWorkflowLegacyState($workflow_id);
+        (new \Workflow_Dao())->removeWorkflowLegacyState((int) $workflow_id);
     }
 
     /**

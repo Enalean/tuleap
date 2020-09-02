@@ -111,7 +111,7 @@ class ModeUpdater
             $this->replicatePerState($state);
         }
 
-        $this->workflow_dao->switchWorkflowToSimpleMode($workflow_id);
+        $this->workflow_dao->switchWorkflowToSimpleMode((int) $workflow_id);
     }
 
     /**
