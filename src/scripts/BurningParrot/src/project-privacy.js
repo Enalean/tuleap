@@ -20,6 +20,11 @@
 import { createPopover } from "tlp";
 
 export function init() {
+    handleBreadcrumbPrivacyPopover();
+    handleSidebarPrivacyPopover();
+}
+
+function handleBreadcrumbPrivacyPopover() {
     const project_privacy_element = document.getElementById("breadcrumb-project-privacy-icon");
     if (!project_privacy_element) {
         return;
@@ -32,5 +37,21 @@ export function init() {
     createPopover(project_privacy_element, popover_content, {
         anchor: project_privacy_element,
         placement: "bottom-start",
+    });
+}
+
+function handleSidebarPrivacyPopover() {
+    const project_privacy_element = document.querySelector(".project-sidebar-title > .fa");
+    if (!project_privacy_element) {
+        return;
+    }
+
+    project_privacy_element.title = "";
+
+    const popover_content = document.getElementById("project-sidebar-nav-title-popover");
+
+    createPopover(project_privacy_element, popover_content, {
+        anchor: document.querySelector(".project-sidebar-header"),
+        placement: "right-start",
     });
 }

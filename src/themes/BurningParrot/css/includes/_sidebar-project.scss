@@ -45,6 +45,7 @@
 
 .project-sidebar-title-icon {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     width: 24px;
@@ -54,6 +55,7 @@
     background: darken($tlp-theme-sidebar-background-color, 5%);
     color: $tlp-ui-border-normal;
     font-size: .7rem;
+    cursor: help;
 }
 
 .project-sidebar-banner-button {

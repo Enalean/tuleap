@@ -18,9 +18,10 @@
  */
 
 #project-sidebar-project-flags-popover,
+#project-sidebar-nav-title-popover,
 #current-project-nav-title-popover {
     &[x-placement='right-start'] > .tlp-popover-arrow {
-        border-right-color: $tlp-theme-sidebar-background-color;
+        border-right-color: darken($tlp-theme-sidebar-background-color, 5%);
         border-bottom-color: transparent;
     }
 
@@ -74,10 +75,20 @@
                 margin: 0;
             }
 
+            > .fa,
             > .tuleap-svg-project-shield {
                 position: absolute;
-                top: 3px;
                 left: 0;
+            }
+
+            > .fa {
+                top: 8px;
+                color: $tlp-ui-border-light;
+                font-size: .75rem;
+            }
+
+            > .tuleap-svg-project-shield {
+                top: 3px;
                 width: 12px;
 
                 > path {
@@ -86,4 +97,8 @@
             }
         }
     }
+}
+
+#project-sidebar-nav-title-popover {
+    margin-left: -7px;
 }

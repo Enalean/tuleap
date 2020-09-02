@@ -65,6 +65,17 @@
                     {{/ has_copyright }}
                 </aside>
                 {{# project_context }}
+                    {{# privacy }}
+                        <section class="tlp-popover" id="project-sidebar-nav-title-popover">
+                            <div class="tlp-popover-arrow"></div>
+                            <div class="tlp-popover-header">
+                                <h1 class="tlp-popover-title">{{ privacy_title }}</h1>
+                            </div>
+                            <div class="tlp-popover-body">
+                                <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+                            </div>
+                        </section>
+                    {{/ privacy }}
                     {{# has_project_flags }}
                         <section class="tlp-popover" id="project-sidebar-project-flags-popover">
                             <div class="tlp-popover-arrow"></div>

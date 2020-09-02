@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #, php-format
 msgid ""
@@ -1417,6 +1417,9 @@ msgstr "Privé"
 msgid "Private incl. restricted"
 msgstr "Privé incl. les utilisateurs restreints"
 
+msgid "Private including restricted"
+msgstr "Privé incluant les utilisateurs restreints"
+
 msgid "Processors"
 msgstr "Processeurs"
 
@@ -1574,6 +1577,9 @@ msgid "Public"
 msgstr "Publique"
 
 msgid "Public incl. restricted"
+msgstr "Publique, incluant les utilisateurs restreints"
+
+msgid "Public including restricted"
 msgstr "Publique, incluant les utilisateurs restreints"
 
 msgid "Public information"
