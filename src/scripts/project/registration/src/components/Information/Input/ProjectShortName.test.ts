@@ -40,7 +40,7 @@ describe("ProjectShortName", () => {
 
         return shallowMount(ProjectShortName, {
             data(): DefaultData<ProjectShortName> {
-                return data;
+                return { ...data };
             },
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },

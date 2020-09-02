@@ -18,7 +18,7 @@
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
-    "@vue/test-utils": "^1.0.4",
+    "@vue/test-utils": "^1.0.5",
     "jquery": "^3.5.1",
     "vue-class-component": "^7.2.5",
     "vue-property-decorator": "^9.0.0",
