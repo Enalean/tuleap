@@ -73,6 +73,19 @@ class LDAP_UserDao extends DataAccessObject
         }
     }
 
+    public function hasLoginConfirmationDate(LDAP_User $user): bool
+    {
+        $sql = sprintf(
+            'SELECT NULL FROM plugin_ldap_user WHERE user_id = %d AND login_confirmation_date != 0',
+            $this->da->escapeInt($user->getId())
+        );
+        $dar = $this->retrieve($sql);
+        if ($dar && ! $dar->isError()) {
+            return count($dar) !== 0;
+        }
+        return false;
+    }
+
     /**
      * Create new entry for LDAP user.
      *

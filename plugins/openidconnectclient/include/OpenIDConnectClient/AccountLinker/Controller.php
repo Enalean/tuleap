@@ -170,7 +170,7 @@ class Controller
                 sprintf(dgettext('tuleap-openidconnectclient', 'Your account has been successfully linked to %1$s'), $provider->getName())
             );
             require_once __DIR__ . '/../../../../../src/www/include/account.php';
-            \account_redirect_after_login($request->get('return_to'));
+            \account_redirect_after_login($user, $request->get('return_to'));
         }
     }
 

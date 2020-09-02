@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\Account\RedirectAfterLogin;
 
 // adduser.php - All the forms and functions to manage unix users
 // Add user to an existing project
@@ -141,12 +142,14 @@ function account_create_mypage($user_id)
     return $um->accountCreateMyPage($user_id);
 }
 
-function account_redirect_after_login($return_to)
+function account_redirect_after_login(PFUser $user, string $return_to): void
 {
     global $pv;
 
     $event_manager = EventManager::instance();
-    $event_manager->processEvent('account_redirect_after_login', ['return_to' => &$return_to]);
+    $redirect_after_login = $event_manager->dispatch(new RedirectAfterLogin($user, $return_to, isset($pv) && $pv == 2));
+    assert($redirect_after_login instanceof RedirectAfterLogin);
+    $return_to = $redirect_after_login->getReturnTo();
 
     if ($return_to) {
         $returnToToken = parse_url($return_to);

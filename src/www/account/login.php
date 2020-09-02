@@ -91,7 +91,7 @@ if ($user === null) {
     $user = $um->getCurrentUser();
 }
 if ($user->isLoggedIn() && ($success === true || $request->get('prompt') !== 'login')) {
-    account_redirect_after_login($_rVar['return_to']);
+    account_redirect_after_login($user, $_rVar['return_to'] ?? '');
 }
 
 // Display login page

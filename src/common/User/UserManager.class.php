@@ -24,6 +24,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
+use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
@@ -340,6 +341,18 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         $users = [];
         foreach ($this->getDao()->searchByEmail($email) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        return $users;
+    }
+
+    /**
+     * @return PFUser[]
+     */
+    public function getAllUsersByLdapID(string $ldap_id): array
+    {
+        $users = [];
+        foreach ($this->getDao()->searchByLdapId($ldap_id) as $user) {
             $users[] = $this->getUserInstanceFromRow($user);
         }
         return $users;
@@ -948,12 +961,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     /**
      * Create new account
-     *
-     * @param PFUser $user
-     *
-     * @return PFUser
      */
-    public function createAccount($user)
+    public function createAccount(PFUser $user): ?PFUser
     {
         $dao = $this->getDao();
         $user_id = $dao->create(
@@ -982,14 +991,14 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         );
         if (! $user_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit', 'error'));
-            return 0;
+            return null;
         } else {
             $user->setId($user_id);
             $this->assignNextUnixUid($user);
 
             $em = $this->_getEventManager();
 
-            $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, ['user' => $user]);
+            $em->dispatch(new AccountCreated($user));
 
             $this->getDefaultWidgetCreator()->createDefaultDashboard($user);
 

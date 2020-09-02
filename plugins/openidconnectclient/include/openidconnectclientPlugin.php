@@ -23,6 +23,7 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\Client\Authentication\BasicAuth;
@@ -102,6 +103,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook(RegistrationGuardEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
     }
 
     /**
@@ -408,7 +410,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
         $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
             $user_manager,
-            $username_generator
+            $username_generator,
         );
 
         $flow    = $this->getFlow($provider_manager, new AzureProviderIssuerClaimValidator());
@@ -444,7 +446,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $username_generator          = new Login\Registration\UsernameGenerator(new Rule_UserName());
         $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
             $user_manager,
-            $username_generator
+            $username_generator,
         );
 
         $flow    = $this->getFlow($provider_manager, new GenericProviderIssuerClaimValidator());
@@ -538,5 +540,10 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
         $storage = [];
         return $storage;
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
+    {
+        $get_whitelisted_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
     }
 }

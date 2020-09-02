@@ -35,6 +35,7 @@ use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
+use Tuleap\LDAP\User\AccountCreation;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
@@ -46,10 +47,12 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
+use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\AccountInformationPresenter;
 use Tuleap\User\Account\AuthenticationMeanName;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
+use Tuleap\User\Account\RedirectAfterLogin;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
@@ -95,7 +98,7 @@ class LdapPlugin extends Plugin
         // Login
         $this->addHook('login_presenter');
         $this->addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
-        $this->addHook('account_redirect_after_login', 'account_redirect_after_login', false);
+        $this->addHook(RedirectAfterLogin::NAME);
 
         // User finder
         $this->addHook('user_manager_find_user', 'user_manager_find_user', false);
@@ -151,7 +154,7 @@ class LdapPlugin extends Plugin
 
         // User profile creation/update
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);
-        $this->addHook(Event::USER_MANAGER_CREATE_ACCOUNT);
+        $this->addHook(AccountCreated::NAME);
 
         if (defined('GIT_EVENT_PLATFORM_CAN_USE_GERRIT')) {
             $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
@@ -370,29 +373,27 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /** Hook
+    /**
      * When redirection after login happens, check if user as already filled
      * his personal info or not. If it's not the case, it means that the
      * account was automatically created and user must complete his
-     * registeration.
+     * registration.
      */
-    public function account_redirect_after_login($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function redirectAfterLogin(RedirectAfterLogin $event): void
     {
         if ($this->isLdapAuthType()) {
-            $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
-            if (! $ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
+            $ldapUserDao = new LDAP_UserDao();
+            if (! $ldapUserDao->alreadyLoggedInOnce($event->user->getId())) {
                 $return_to_arg = "";
-                if ($params['return_to']) {
-                    $return_to_arg = '?return_to=' . urlencode($params['return_to']);
-                    if (isset($pv) && $pv == 2) {
-                        $return_to_arg .= '&pv=' . $pv;
+                if ($event->getReturnTo()) {
+                    $return_to_arg = '?return_to=' . urlencode($event->getReturnTo());
+                    if ($event->is_pv2) {
+                        $return_to_arg .= '&pv=2';
                     }
-                } else {
-                    if (isset($pv) && $pv == 2) {
-                        $return_to_arg .= '?pv=' . $pv;
-                    }
+                } elseif ($event->is_pv2) {
+                    $return_to_arg .= '?pv=2';
                 }
-                $params['return_to'] = '/plugins/ldap/welcome' . $return_to_arg;
+                $event->setReturnTo('/plugins/ldap/welcome' . $return_to_arg);
             }
         }
     }
@@ -1079,19 +1080,21 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     *
-     * @see Event::USER_MANAGER_CREATE_ACCOUNT
-     */
-    public function user_manager_create_account(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function accountCreated(AccountCreated $account_created): void
     {
         try {
-            $this->getLDAPUserWrite()->updateWithUser($params['user']);
+            $this->getLDAPUserWrite()->updateWithUser($account_created->user);
         } catch (LDAP_Exception_NoWriteException $exception) {
             $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
         } catch (Exception $exception) {
-            $this->getLogger()->error('An error occured while activating user as site admin (project_admin_activate_user): ' . $exception->getMessage());
+            $this->getLogger()->error('An error occurred while creating user (AccountCreated): ' . $exception->getMessage());
         }
+        (
+            new AccountCreation(
+                $this->getLogger(),
+                $this->getLdapUserManager()
+            )
+        )->associateWithLDAPAccount($account_created);
     }
 
     private function getLDAPUserWrite()

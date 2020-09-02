@@ -123,7 +123,7 @@ class Controller
     {
         $user = $this->user_manager->getCurrentUser();
         if ($user->isLoggedIn()) {
-            \account_redirect_after_login($return_to);
+            \account_redirect_after_login($user, $return_to);
         }
     }
 
@@ -147,7 +147,7 @@ class Controller
                 dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
-        \account_redirect_after_login($return_to);
+        \account_redirect_after_login($user, $return_to);
     }
 
     /**
@@ -170,14 +170,19 @@ class Controller
             $this->redirectToLinkAnUnknowAccount($flow_response);
         }
 
-        $user_information = $flow_response->getUserInformations();
-        if (count($this->user_manager->getAllUsersByEmail($user_information['email'])) > 0) {
-            $this->redirectToLinkAnUnknowAccount($flow_response);
-        }
-
         $user_identifier = $flow_response->getUserIdentifier();
         try {
+            $user_information = $flow_response->getUserInformations();
+            if (! $this->automatic_user_registration->canCreateAccount($user_information)) {
+                $this->redirectToLinkAnUnknowAccount($flow_response);
+            }
             $user = $this->automatic_user_registration->register($user_information);
+            if (! $user) {
+                $this->logger->error('Impossible to create new user account');
+                $this->redirectAfterFailure(
+                    dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
+                );
+            }
             $this->user_mapping_manager->create($user->getId(), $provider->getId(), $user_identifier, $login_time);
         } catch (Exception $ex) {
             $this->logger->error($ex->getMessage());

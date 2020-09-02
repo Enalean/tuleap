@@ -22,32 +22,102 @@ namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-
-require_once(__DIR__ . '/../../bootstrap.php');
 
 class AutomaticUserRegistrationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
+
+    private $username_generator;
+
+    protected function setUp(): void
+    {
+        $this->username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class, ['getUsername' => 'foo']);
+    }
 
     public function testItCreatesAnAccount(): void
     {
         $user_manager       = \Mockery::spy(\UserManager::class);
         $user_manager->shouldReceive('createAccount')->once();
-        $username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
 
-        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         $automatic_user_registration->register(['email' => 'user@example.com']);
     }
 
     public function testItNeedsAnEmail(): void
     {
         $user_manager       = \Mockery::spy(\UserManager::class);
-        $username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
 
-        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
-        $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException');
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        $this->expectException(\Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException::class);
         $automatic_user_registration->register([]);
+    }
+
+    public function testItFillsLdapIdWithSpecifiedAttribute(): void
+    {
+        \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'email');
+
+        $user_manager       = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('createAccount')->once()->andReturnArg(0);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        $user = $automatic_user_registration->register(['email' => 'user@example.com']);
+
+        self::assertInstanceOf(\PFUser::class, $user);
+        self::assertSame('user@example.com', $user->getLdapId());
+    }
+
+    public function testItForbidsAccountCreationIfLdapAttributeIsNotInUserInfo(): void
+    {
+        \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'preferred_name');
+
+        $user_manager = \Mockery::mock(\UserManager::class);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        $this->expectException(\Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException::class);
+        $automatic_user_registration->register(['email' => 'user@example.com']);
+    }
+
+    public function testCanCreateAccountDefaultsToEmail(): void
+    {
+        $user_manager = \Mockery::mock(\UserManager::class);
+        $user_manager->shouldReceive('getAllUsersByEmail')->with('user@example.com')->once()->andReturn([]);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        self::assertTrue($automatic_user_registration->canCreateAccount(['email' => 'user@example.com']));
+    }
+
+    public function testCannotCreateAccountWhenNoEmail(): void
+    {
+        $user_manager = \Mockery::mock(\UserManager::class);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        $this->expectException(\Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException::class);
+        $automatic_user_registration->canCreateAccount([]);
+    }
+
+    public function testCanCreateAccountWithLdapId(): void
+    {
+        \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'preferred_name');
+
+        $user_manager = \Mockery::mock(\UserManager::class);
+        $user_manager->shouldReceive('getAllUsersByLdapID')->with('alice')->once()->andReturn([]);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        self::assertTrue($automatic_user_registration->canCreateAccount(['preferred_name' => 'alice']));
+    }
+
+    public function testCannotCreateAccountIfLdapAttributeIsNotExposedByUserInfo(): void
+    {
+        \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'preferred_name');
+
+        $user_manager = \Mockery::mock(\UserManager::class);
+
+        $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
+        $this->expectException(\Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException::class);
+        $automatic_user_registration->canCreateAccount(['email' => 'user@example.com']);
     }
 }
