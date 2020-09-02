@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use ParagonIE\EasyDB\EasyStatement;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Dao extends \Tuleap\DB\DataAccessObject
 {
@@ -102,6 +104,21 @@ class Workflow_Dao extends \Tuleap\DB\DataAccessObject
         $this->getDB()->run(
             'UPDATE tracker_workflow SET is_advanced=0 WHERE workflow_id=?',
             $workflow_id
+        );
+    }
+
+    /**
+     * @param int[] $tracker_ids
+     * @param int[] $field_ids
+     * @psalm-return array{tracker_id: int, field_id: int}[]
+     */
+    public function searchWorkflowsByFieldIDsAndTrackerIDs(array $tracker_ids, array $field_ids): array
+    {
+        $where_statement = EasyStatement::open()->in('tracker_id IN (?*)', $tracker_ids)->andIn('field_id IN (?*)', $field_ids);
+
+        return $this->getDB()->run(
+            "SELECT tracker_id, field_id FROM tracker_workflow WHERE $where_statement",
+            ...$where_statement->values()
         );
     }
 }

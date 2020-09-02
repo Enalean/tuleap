@@ -68,12 +68,7 @@ final class MilestoneTrackerCollection
      */
     public function getTrackerIds(): array
     {
-        return array_map(
-            function (\Tracker $tracker) {
-                return (int) $tracker->getId();
-            },
-            $this->milestone_trackers
-        );
+        return self::extractTrackerIDs($this->milestone_trackers);
     }
 
     /**
@@ -91,6 +86,26 @@ final class MilestoneTrackerCollection
     public function getContributorMilestoneTrackers(): array
     {
         return $this->contributor_milestone_trackers;
+    }
+
+    public function getContributorMilestoneTrackerIds(): array
+    {
+        return self::extractTrackerIDs($this->contributor_milestone_trackers);
+    }
+
+    /**
+     * @param \Tracker[] $trackers
+     * @return int[]
+     * @psalm-pure
+     */
+    private static function extractTrackerIDs(array $trackers): array
+    {
+        return array_map(
+            static function (\Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $trackers
+        );
     }
 
     public function canUserSubmitAnArtifactInAllContributorTrackers(\PFUser $user): bool

@@ -55,6 +55,10 @@ class MilestoneCreatorChecker
      */
     private $required_field_checker;
     /**
+     * @var WorkflowChecker
+     */
+    private $workflow_checker;
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -65,6 +69,7 @@ class MilestoneCreatorChecker
         SynchronizedFieldCollectionBuilder $field_collection_builder,
         SemanticChecker $semantic_checker,
         RequiredFieldChecker $required_field_checker,
+        WorkflowChecker $workflow_checker,
         LoggerInterface $logger
     ) {
         $this->projects_builder         = $contributor_projects_collection_builder;
@@ -72,6 +77,7 @@ class MilestoneCreatorChecker
         $this->field_collection_builder = $field_collection_builder;
         $this->semantic_checker         = $semantic_checker;
         $this->required_field_checker   = $required_field_checker;
+        $this->workflow_checker         = $workflow_checker;
         $this->logger                   = $logger;
     }
 
@@ -128,6 +134,16 @@ class MilestoneCreatorChecker
             )
         ) {
             $this->logger->debug("A contributor tracker has a required fields outside the synchronized fields.");
+            return false;
+        }
+
+        if (
+            ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
+                $milestone_tracker_collection,
+                $fields
+            )
+        ) {
+            $this->logger->debug("A contributor tracker is using one of the synchronized fields in a workflow rule.");
             return false;
         }
 

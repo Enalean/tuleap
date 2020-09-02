@@ -67,6 +67,10 @@ final class MilestoneCreatorCheckerTest extends TestCase
      */
     private $required_field_checker;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkflowChecker
+     */
+    private $workflow_checker;
+    /**
      * @var Project
      */
     private $project;
@@ -80,6 +84,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->field_collection_builder = Mockery::mock(SynchronizedFieldCollectionBuilder::class);
         $this->semantic_checker         = Mockery::mock(SemanticChecker::class);
         $this->required_field_checker   = Mockery::mock(RequiredFieldChecker::class);
+        $this->workflow_checker         = Mockery::mock(WorkflowChecker::class);
 
         $this->checker = new MilestoneCreatorChecker(
             $this->projects_builder,
@@ -87,6 +92,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
             $this->field_collection_builder,
             $this->semantic_checker,
             $this->required_field_checker,
+            $this->workflow_checker,
             new NullLogger()
         );
 
@@ -114,8 +120,9 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
             ->once()
             ->andReturn(new SynchronizedFieldCollection([$field]));
-
         $this->required_field_checker->shouldReceive('areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields')
+            ->andReturnTrue();
+        $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers')
             ->andReturnTrue();
 
         $this->assertTrue($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
@@ -238,6 +245,32 @@ final class MilestoneCreatorCheckerTest extends TestCase
             ->andReturn(new SynchronizedFieldCollection([$field]));
 
         $this->required_field_checker->shouldReceive('areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields')
+            ->andReturnFalse();
+
+        $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
+    }
+
+    public function testItReturnsFalseIfContributorTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
+    {
+        $user                 = UserTestBuilder::aUser()->build();
+        $aggregator_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
+        $aggregator_milestone->shouldReceive('getProject')->andReturn($this->project);
+
+        $this->mockContributorMilestoneTrackers($this->project);
+        $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
+            ->once()
+            ->andReturnTrue();
+
+        $field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('getId')->andReturn('456');
+        $field->shouldReceive('userCanSubmit')->andReturnTrue();
+        $field->shouldReceive('userCanUpdate')->andReturnTrue();
+        $this->field_collection_builder->shouldReceive('buildFromMilestoneTrackers')
+            ->once()
+            ->andReturn(new SynchronizedFieldCollection([$field]));
+        $this->required_field_checker->shouldReceive('areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields')
+            ->andReturnTrue();
+        $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers')
             ->andReturnFalse();
 
         $this->assertFalse($this->checker->canMilestoneBeCreated($aggregator_milestone, $user));
