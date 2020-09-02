@@ -614,6 +614,10 @@ done
 %{__install} src/utils/systemd/tuleap-launch-plugin-job.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-plugin-job.service $RPM_BUILD_ROOT/%{_unitdir}
 
+#Install system tmpfiles
+%{__install} -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
+%{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
+
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
 %{__install} src/utils/tuleap $RPM_BUILD_ROOT/%{_bindir}/tuleap
@@ -1087,6 +1091,8 @@ fi
 %attr(00751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/cvsroot
 %attr(00751,root,root) /var/lock/cvs
 %attr(00777,root,root) /var/run/log_accum
+# Systemd tmpfiles
+%attr(00644,root,root) %{_tmpfilesdir}/tuleap-cvs.conf
 
 #
 # Plugins
