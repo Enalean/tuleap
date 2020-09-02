@@ -156,9 +156,6 @@ class Tracker_Chart_Data_Burndown
         return isset($this->capacity) ? $this->capacity : 'null';
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function getRemainingEffortWithoutNullValues()
     {
         if ($this->is_under_calcul === true) {
@@ -168,9 +165,6 @@ class Tracker_Chart_Data_Burndown
         return $this->removeNullRemainingEffort($this->getRemainingEffort());
     }
 
-    /**
-     * @psalm-pure
-     */
     private function removeNullRemainingEffort($remaining_efforts)
     {
         $remaining_effort_without_null_values = [];

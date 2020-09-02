@@ -49,7 +49,7 @@ final class GrantedAuthorization
     }
 
     /**
-     * @psalm-pure
+     * @psalm-mutation-free
      */
     public function getUser(): \PFUser
     {
@@ -57,7 +57,7 @@ final class GrantedAuthorization
     }
 
     /**
-     * @psalm-pure
+     * @psalm-mutation-free
      * @psalm-return AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>[]
      */
     public function getScopes(): array

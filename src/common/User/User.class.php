@@ -799,7 +799,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * @psalm-pure
+     * @psalm-mutation-free
      */
     public function getAuthorizedKeysArray(): array
     {

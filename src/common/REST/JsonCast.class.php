@@ -59,6 +59,7 @@ class JsonCast
 
     /**
      * Cast a value to float if it's not null
+     * @psalm-ignore-nullable-return
      * @return float|null
      */
     public static function toFloat($value)

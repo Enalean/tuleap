@@ -106,7 +106,7 @@ class UpdateRequestValidator
     }
 
     /**
-     * @psalm-pure
+     * @psalm-mutation-free
      */
     private function planningTrackerDidNotChange(
         \Planning $original_planning,
@@ -117,7 +117,7 @@ class UpdateRequestValidator
 
     /**
      * @param int[] $unavailable_planning_tracker_ids
-     * @psalm-pure
+     * @psalm-mutation-free
      */
     private function planningTrackerIsNotUsedInAnotherPlanningInProject(
         array $unavailable_planning_tracker_ids,
