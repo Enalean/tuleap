@@ -43,8 +43,6 @@ final class AuthenticationScopeBuilderFromClassNames implements AuthenticationSc
     }
 
     /**
-     * @psalm-pure
-     *
      * @psalm-suppress InvalidReturnType It's not possible to express templating inside a class-string
      */
     public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
@@ -60,11 +58,6 @@ final class AuthenticationScopeBuilderFromClassNames implements AuthenticationSc
         return null;
     }
 
-    /**
-     * @psalm-pure
-     *
-     * @return AuthenticationScope[]
-     */
     public function buildAllAvailableAuthenticationScopes(): array
     {
         $scopes = [];

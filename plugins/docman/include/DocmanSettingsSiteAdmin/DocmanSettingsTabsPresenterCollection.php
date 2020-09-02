@@ -46,7 +46,6 @@ class DocmanSettingsTabsPresenterCollection implements Dispatchable
     }
 
     /**
-     * @psalm-pure
      * @return DocmanSettingsTabPresenter[]
      */
     public function getTabs(string $current_url): array

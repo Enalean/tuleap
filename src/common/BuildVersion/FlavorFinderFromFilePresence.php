@@ -22,9 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\BuildVersion;
 
-/**
- * @psalm-immutable
- */
 final class FlavorFinderFromFilePresence implements FlavorFinder
 {
     private const ENTERPRISE_BUILD_FILE_NAME = 'ENTERPRISE_BUILD';

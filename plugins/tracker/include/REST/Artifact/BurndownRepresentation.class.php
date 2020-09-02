@@ -70,15 +70,24 @@ class BurndownRepresentation
         $this->start_date           = JsonCast::toDate($data_burndown->getTimePeriod()->getStartDate());
         $this->duration             = JsonCast::toInt($data_burndown->getTimePeriod()->getDuration());
         $this->capacity             = JsonCast::toFloat($data_burndown->getCapacity());
-        $this->points               = array_map(
-            ['\Tuleap\REST\JsonCast', 'toFloat'],
-            $data_burndown->getRemainingEffortWithoutNullValues()
-        );
+        $this->points               = self::getPoints($data_burndown);
         $this->is_under_calculation = JsonCast::toBoolean($data_burndown->isUnderCalcul());
         foreach ($data_burndown->getRemainingEffortsAtDate() as $timestamp => $burndown_effort) {
             $this->points_with_date[] = new BurndownPointRepresentation($burndown_effort, $timestamp);
         }
 
         $this->opening_days = [1, 2, 3, 4, 5];
+    }
+
+    /**
+     * @return float[]
+     */
+    private static function getPoints(Tracker_Chart_Data_Burndown $data_burndown): array
+    {
+        $points = [];
+        foreach ($data_burndown->getRemainingEffortWithoutNullValues() as $remaining_effort) {
+            $points[] = JsonCast::toFloat($remaining_effort);
+        }
+        return $points;
     }
 }
