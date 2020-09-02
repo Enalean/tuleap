@@ -20,7 +20,7 @@
 
 <template>
     <div class="modal hide fade" id="switch-to-modal" role="dialog" v-bind:aria-label="aria_label">
-        <switch-to-header class="modal-header" />
+        <switch-to-header class="modal-header" v-bind:modal="null" />
         <switch-to-body class="modal-body" />
     </div>
 </template>
@@ -31,24 +31,33 @@ import $ from "jquery";
 import { Component } from "vue-property-decorator";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./SwitchToBody.vue";
+import { Mutation } from "vuex-class";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppFlamingParrot extends Vue {
+    @Mutation
+    private readonly updateFilterValue!: (value: string) => void;
+
     mounted(): void {
         const modal = this.$el;
         if (!(modal instanceof HTMLElement)) {
             return;
         }
 
-        // Force autofocus for bootstrap modal
-        $(modal).on("shown", () => {
-            const input = modal.querySelector("input");
-            if (input) {
-                input.focus();
-            }
-        });
+        $(modal)
+            // Force autofocus for bootstrap modal
+            .on("shown", () => {
+                const input = modal.querySelector("input");
+                if (input) {
+                    input.focus();
+                }
+            })
+            // Clear filter for bootstrap modal
+            .on("hidden", () => {
+                this.updateFilterValue("");
+            });
     }
     get aria_label(): string {
         return this.$gettext("Switch to…");

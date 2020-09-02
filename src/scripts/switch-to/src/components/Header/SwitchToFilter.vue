@@ -32,18 +32,54 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { Mutation, State } from "vuex-class";
+import { Modal } from "tlp";
+import { EVENT_TLP_MODAL_HIDDEN } from "../../../../../themes/tlp/src/js/modal";
 
 @Component
 export default class SwitchToFilter extends Vue {
+    @Prop({ required: true })
+    private readonly modal!: Modal | null;
+
     @State
     private readonly filter_value!: string;
 
     @Mutation
     private readonly updateFilterValue!: (value: string) => void;
 
+    mounted(): void {
+        this.listenToHideModalEvent();
+    }
+
+    @Watch("modal")
+    listenToHideModalEvent(): void {
+        if (this.modal) {
+            this.modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, this.clearInput);
+        }
+    }
+
+    beforeDestroy(): void {
+        if (this.modal) {
+            this.modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, this.clearInput);
+        }
+    }
+
+    clearInput(): void {
+        if (this.filter_value !== "") {
+            this.updateFilterValue("");
+        }
+    }
+
     update(event: KeyboardEvent): void {
+        if (event.key === "Escape") {
+            if (this.modal) {
+                this.modal.hide();
+            }
+            this.clearInput();
+            return;
+        }
+
         if (event.target instanceof HTMLInputElement) {
             this.updateFilterValue(event.target.value);
         }

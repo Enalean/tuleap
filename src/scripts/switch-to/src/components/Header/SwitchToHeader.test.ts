@@ -28,6 +28,9 @@ describe("SwitchToHeader", () => {
     it("Does not display the button if search is not available (user is restricted)", async () => {
         const wrapper = shallowMount(SwitchToHeader, {
             localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal: null,
+            },
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -44,6 +47,9 @@ describe("SwitchToHeader", () => {
     it("Does not display the button if user didn't type anything", async () => {
         const wrapper = shallowMount(SwitchToHeader, {
             localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal: null,
+            },
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -60,6 +66,9 @@ describe("SwitchToHeader", () => {
     it("Displays the button", async () => {
         const wrapper = shallowMount(SwitchToHeader, {
             localVue: await createSwitchToLocalVue(),
+            propsData: {
+                modal: null,
+            },
             mocks: {
                 $store: createStoreMock({
                     state: {

@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-modal" role="dialog" v-bind:aria-label="aria_label" id="switch-to-modal">
-        <switch-to-header class="tlp-modal-header" />
+        <switch-to-header class="tlp-modal-header" v-bind:modal="modal" />
         <switch-to-body class="tlp-modal-body" />
     </div>
 </template>
@@ -36,8 +36,8 @@ import SwitchToBody from "./SwitchToBody.vue";
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppBurningParrot extends Vue {
-    modal: Modal | null = null;
-    trigger: HTMLElement | null = null;
+    private modal: Modal | null = null;
+    private trigger: HTMLElement | null = null;
 
     mounted(): void {
         this.trigger = document.getElementById("switch-to-button");
