@@ -84,6 +84,7 @@ export default class BannerPresenter extends Vue {
 
     banner_is_activated: boolean = this.message !== "";
     current_message: string = this.message;
+    // eslint-disable-next-line no-undef
     editor: CKEDITOR.editor | null = null;
 
     public mounted(): void {

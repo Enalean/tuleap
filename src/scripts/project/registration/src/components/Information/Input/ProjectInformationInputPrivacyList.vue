@@ -60,15 +60,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-    DataFormat,
-    GroupedDataFormat,
-    LoadingData,
-    IdTextPair,
-    Options,
-    select2,
-    Select2Plugin,
-} from "tlp";
+import { DataFormat, GroupedDataFormat, LoadingData, Options, select2, Select2Plugin } from "tlp";
 import { VisibilityForVisibilitySelector } from "./type";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
@@ -126,8 +118,10 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         }
     }
 
-    formatVisibilityOption(visibility: DataFormat | GroupedDataFormat | LoadingData): string {
-        if (!this.isForVisibilitySelector(visibility)) {
+    formatVisibilityOption(
+        visibility: DataFormat | GroupedDataFormat | LoadingData | VisibilityForVisibilitySelector
+    ): string {
+        if (!("element" in visibility && visibility.element !== undefined)) {
             return "";
         }
 
@@ -141,17 +135,6 @@ export default class ProjectInformationInputPrivacyList extends Vue {
                 description: this.translatedVisibilityDetails(visibility.element.value),
             }
         );
-    }
-
-    isForVisibilitySelector(
-        visibility: IdTextPair | DataFormat | GroupedDataFormat | LoadingData
-    ): visibility is VisibilityForVisibilitySelector {
-        // This is a trick to fool TypeScript so that we can have description on project visibility.
-        // Default types definition of select2 forces us to have only "DataFormat" (basically: id, text) whereas
-        // we can deal with values with more attribute (for example: description).
-        //
-        // The chosen solution is to rely on visibility-defined type guards of TypeScript.
-        return "element" in visibility;
     }
 
     get is_public_included_restricted_selected(): boolean {

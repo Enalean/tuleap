@@ -108,6 +108,7 @@ import {
     TrackerReport,
     getTrackerReports,
 } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 const campaign = namespace("campaign");
 const backlog_item = namespace("backlog_item");
@@ -178,7 +179,7 @@ export default class CreateModal extends Vue {
     private async getErrorMessageDetailsFromError(
         error: Error | FetchWrapperError
     ): Promise<string> {
-        if (!this.isAFetchWrapperError(error)) {
+        if (!("response" in error)) {
             return "";
         }
 
@@ -192,10 +193,6 @@ export default class CreateModal extends Vue {
         }
 
         return json.error.message;
-    }
-
-    private isAFetchWrapperError(error: Error | FetchWrapperError): error is FetchWrapperError {
-        return "response" in error;
     }
 
     get icon_class(): string {

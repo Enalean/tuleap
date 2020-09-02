@@ -26,6 +26,7 @@ import { retrieveTrackers } from "./Tracker/trackers-retriever";
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
 import { Artifact } from "./Tracker/artifact";
 import { Tracker } from "./Tracker/tracker";
+import { VueGettextProvider } from "../../../vue-gettext-provider";
 
 const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set([
     "int",

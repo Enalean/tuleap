@@ -24,6 +24,7 @@ import {
     TestDefinition,
 } from "../../../type";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
+import { VueGettextProvider } from "../../vue-gettext-provider";
 
 export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
     campaign_id: number;
