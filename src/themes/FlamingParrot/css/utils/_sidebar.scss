@@ -323,18 +323,6 @@
     white-space: nowrap;
 }
 
-.project-sidebar-project-flags-popover.in {
-    margin: 32px 4px;
-
-    > .arrow {
-        top: 100px;
-
-        &::after {
-            border-bottom-color: transparent;
-        }
-    }
-}
-
 &.sidebar-collapsed {
     .project-sidebar-header-name {
         justify-content: center;

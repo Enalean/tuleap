@@ -1,0 +1,149 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.current-project-nav-popover {
+    max-width: 600px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: $sidebar-background;
+    color: $ui-border-dark;
+    font-size: .875rem;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1.5rem;
+    text-transform: none;
+
+    &.right > .arrow::after {
+        border-right-color: $sidebar-background;
+        border-bottom-color: transparent;
+    }
+
+    > .arrow {
+        &::after {
+            border-bottom-color: darken($sidebar-background, 5%);
+        }
+
+        + .popover-content {
+            border-radius: $nav-dropdown-content-border-radius;
+        }
+    }
+
+    > h3 {
+        margin: 0;
+        padding: $tlp-medium-spacing;
+        border-bottom: 0;
+        border-top-left-radius: $nav-dropdown-content-border-radius;
+        border-top-right-radius: $nav-dropdown-content-border-radius;
+        background-color: darken($sidebar-background, 5%);
+        color: $ui-border-light;
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: normal;
+        line-height: 1.65rem;
+        cursor: initial;
+    }
+
+    > .popover-content {
+        padding: $tlp-medium-spacing;
+        border-bottom-right-radius: $nav-dropdown-content-border-radius;
+        border-bottom-left-radius: $nav-dropdown-content-border-radius;
+        background: $sidebar-background;
+        color: $ui-border-dark;
+
+        .current-project-nav-flag-popover-separator {
+            margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+            border-top: 1px solid darken($sidebar-background, 5%);
+            border-bottom: 0;
+            background: none;
+        }
+
+        .current-project-nav-flag-popover-content-title {
+            margin: 0 0 $tlp-small-spacing;
+            padding: 0;
+            border: 0;
+            color: $ui-border-light;
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.625rem;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        .current-project-nav-flag-popover-flag {
+            position: relative;
+            margin: 0 0 $tlp-medium-spacing;
+            padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
+
+            &:last-child {
+                margin: 0;
+            }
+
+            > .tuleap-svg-project-shield {
+                position: absolute;
+                top: 3px;
+                left: 0;
+                width: 12px;
+
+                > path {
+                    fill: $ui-border-light;
+                }
+            }
+
+            > .current-project-nav-flag-popover-content-description:last-child {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.current-project-nav-popover-privacy {
+    top: 28px !important; // Override bootstrap inline position
+    left: 0 !important; // Override bootstrap inline position
+    min-width: 400px;
+
+    > .arrow {
+        left: 62px;
+    }
+}
+
+:not(.breadcrumb-project-privacy-icon-with-flags) + .current-project-nav-popover-privacy {
+    top: 28px !important; // Override bootstrap inline position
+    left: -18px !important; // Override bootstrap inline position
+
+    > .arrow {
+        left: 30px;
+    }
+}
+
+#current-project-nav-title-popover {
+    display: none;
+}
+
+.project-sidebar-project-flags-popover {
+    > .arrow {
+        top: calc(50% - #{$tlp-large-spacing});
+    }
+
+    &.in {
+        margin: $tlp-large-spacing 4px;
+    }
+}
