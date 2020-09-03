@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/core": "file:../../src",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "phptomoment": "0.0.2",
@@ -30,6 +31,7 @@
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest"
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

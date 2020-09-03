@@ -2,7 +2,8 @@ paths:
   - ./src/common
   - ./plugins
 exclude_files:
-  - .*test.*
+  - tests
+  - node_modules
 layers:
   - name: Core
     collectors:
