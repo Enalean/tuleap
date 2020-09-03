@@ -47,6 +47,10 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     &:hover {
         text-decoration: none;
     }
+
+    &.tlp-badge-outline.tlp-badge-on-dark-background {
+        font-weight: normal;
+    }
 }
 
 .tlp-badge-icon {
@@ -144,6 +148,12 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
             border: 1px solid transparentize(map-get($colors, 'primary'), .4);
             background: transparentize(map-get($colors, 'primary'), .9);
             color: map-get($colors, 'text');
+
+            &.tlp-badge-on-dark-background {
+                border: 1px solid map-get($colors, 'primary');
+                background: transparentize(map-get($colors, 'primary'), .85);
+                color: map-get($colors, 'border');
+            }
         }
     }
 }

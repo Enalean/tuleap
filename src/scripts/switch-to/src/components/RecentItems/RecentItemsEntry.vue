@@ -26,7 +26,7 @@
             class="switch-to-recent-items-entry-link"
         >
             <span
-                class="switch-to-recent-items-entry-badge badge tlp-badge-outline"
+                class="switch-to-recent-items-entry-badge badge tlp-badge-outline tlp-badge-on-dark-background"
                 v-bind:class="xref_color"
                 v-if="entry.xref"
             >

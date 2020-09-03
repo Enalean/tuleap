@@ -2,6 +2,7 @@
   "label": "Badges",
   "children": [
     "types",
-    "outline"
+    "outline",
+    "dark-background"
   ]
 }

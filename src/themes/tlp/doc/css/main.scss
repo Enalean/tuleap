@@ -25,6 +25,7 @@ $nav-margin: 30px;
 @mixin themable(
     $theme-color,
     $tlp-theme-background-color,
+    $tlp-theme-sidebar-background-color,
     $tlp-ui-dimmed,
     $tlp-ui-info,
     $tlp-ui-success,
@@ -199,6 +200,10 @@ $nav-margin: 30px;
     #illustration-helper-target {
         background: $tlp-theme-background-color;
     }
+
+    #example-badges-dark-background {
+        background: $tlp-theme-sidebar-background-color;
+    }
 }
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -210,6 +215,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -228,6 +234,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -246,6 +253,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -264,6 +272,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -282,6 +291,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -300,6 +310,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-theme-sidebar-background-color,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
