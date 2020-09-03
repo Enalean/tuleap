@@ -103,7 +103,7 @@ import { createPopover } from "tlp";
 @Component
 export default class BreadcrumbPrivacy extends Vue {
     @Prop({ required: true })
-    readonly project_flags;
+    readonly project_flags!: { label: string }[];
 
     @Prop({ required: true })
     readonly privacy!: ProjectPrivacy;

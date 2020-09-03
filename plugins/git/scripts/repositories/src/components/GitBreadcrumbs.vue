@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -78,7 +78,7 @@ import {
     getProjectFlags,
 } from "../breadcrumb-presenter.js";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
-import BreadcrumbPrivacy from "../../../../../../src/scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue";
+import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/dist/breadcrumb-privacy";
 
 export default {
     name: "GitBreadcrumbs",

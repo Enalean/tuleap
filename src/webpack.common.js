@@ -325,6 +325,34 @@ const webpack_config_for_vue = {
     },
 };
 
+const webpack_config_vue_breadcrumb_privacy = {
+    entry: "./scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue",
+    context,
+    output: {
+        path: context + "/scripts/vue-components/breadcrumb-privacy/dist/",
+        filename: "breadcrumb-privacy.js",
+        library: "BreadcrumbPrivacy",
+        libraryTarget: "umd",
+    },
+    resolve: {
+        extensions: [".ts", ".vue"],
+    },
+    externals: ["tlp", "vue"],
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_chrome_firefox
+            ),
+            webpack_configurator.rule_vue_loader,
+        ],
+    },
+    plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(true),
+    ],
+};
+
 const fat_combined_files = [
         "./www/scripts/prototype/prototype.js",
         "./www/scripts/protocheck/protocheck.js",
@@ -499,4 +527,5 @@ module.exports = [
     webpack_config_for_vue,
     webpack_config_for_burning_parrot_css,
     webpack_config_for_flaming_parrot_css,
+    webpack_config_vue_breadcrumb_privacy,
 ];
