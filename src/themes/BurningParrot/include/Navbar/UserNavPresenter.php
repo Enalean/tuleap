@@ -22,8 +22,6 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use CSRFSynchronizerToken;
 use PFUser;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHistoryPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use URLRedirect;
@@ -121,16 +119,6 @@ class UserNavPresenter
             'fa fa-user-plus',
             '',
             []
-        );
-    }
-
-    public function user_history_dropdown() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        return new DropdownMenuItemPresenter(
-            _('History'),
-            'fa fa-history',
-            new UserHistoryPresenter('user-history', $this->current_user),
-            'only-icon without-carret nav-dropdown-right'
         );
     }
 

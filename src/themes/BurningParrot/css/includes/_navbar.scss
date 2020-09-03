@@ -20,7 +20,7 @@
 @mixin nav-link($max-width) {
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 $tlp-medium-spacing;
     transition: color 100ms linear;
     color: $tlp-ui-dimmed;
     font-size: 12px;
@@ -41,10 +41,6 @@
         @media screen and (max-width: $max-width) {
             display: inline;
         }
-    }
-
-    > .nav-link-icon-dropdown {
-        margin: 0 0 0 5px;
     }
 
     > .nav-link-text {
@@ -84,20 +80,6 @@
     @include nav-link(900px);
 }
 
-.only-icon {
-    .nav-link-icon {
-        display: inline;
-    }
-
-    .nav-link-text {
-        display: none;
-    }
-}
-
-.without-carret > .nav-dropdown-link > .nav-link-icon-dropdown {
-    display: none;
-}
-
 .nav-form-button {
     width: 100%;
     margin: 0 0 $tlp-small-spacing;
@@ -126,8 +108,6 @@
 
 #user-nav {
     display: flex;
-    margin: 0 0 0 $tlp-small-spacing;
-    border-left: 1px solid $tlp-ui-border-normal;
     white-space: nowrap;
 }
 
@@ -177,6 +157,7 @@
 #switch-to-button {
     display: flex;
     align-items: center;
+    padding: 0 $tlp-medium-spacing;
     transition: color 100ms linear;
     border: 0;
     background: none;
