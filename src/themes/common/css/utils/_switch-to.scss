@@ -19,12 +19,37 @@
 
 .switch-to-projects-container {
     flex: 1 0 auto;
+    width: calc(50% - #{$tlp-large-spacing / 2});
+}
+
+.switch-to-recent-items-empty-text,
+.switch-to-projects-empty-text {
+    margin: $tlp-medium-spacing 0 $tlp-large-spacing;
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+}
+
+.switch-to-modal-no-matching-projects {
+    margin: $tlp-large-spacing 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+}
+
+.switch-to-modal-no-matching-history,
+.switch-to-modal-no-matching-history:last-child {
+    margin: $tlp-large-spacing 0 $tlp-large-spacing $tlp-small-spacing;
+}
+
+.switch-to-modal-no-matching-history,
+.switch-to-modal-no-matching-projects {
+    opacity: .75;
+    color: $dark-modal-dimmed-text-color;
 }
 
 .switch-to-recent-items {
-    display: flex;
     flex: 1 0 auto;
-    flex-direction: column;
+    width: calc(50% - #{$tlp-large-spacing / 2});
     margin: 0 0 0 $tlp-large-spacing;
 
     > .switch-to-modal-body-title {
