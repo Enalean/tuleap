@@ -1006,10 +1006,10 @@ build_dir /etc/$PROJECT_NAME/plugins/pluginsadministration $PROJECT_ADMIN $PROJE
 build_dir /var/run/log_accum root root 777
 build_dir /var/lib/$PROJECT_NAME/cvsroot $PROJECT_ADMIN $PROJECT_ADMIN 751
 build_dir /var/lib/$PROJECT_NAME/svnroot $PROJECT_ADMIN $PROJECT_ADMIN 751
-build_dir /var/lock/cvs root root 751
+build_dir /var/lib/$PROJECT_NAME/cvslocks root root 751
 $LN -sf /var/lib/$PROJECT_NAME/cvsroot /cvsroot
 $LN -sf /var/lib/$PROJECT_NAME/svnroot /svnroot
-
+$LN -sf /var/lib/$PROJECT_NAME/cvslocks /var/lock/cvs
 
 $TOUCH /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
 $CHOWN $PROJECT_ADMIN.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
