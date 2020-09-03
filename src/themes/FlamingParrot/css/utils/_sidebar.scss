@@ -254,6 +254,7 @@
         background: darken($sidebar-background, 5%);
         color: transparentize($white, .2);
         font-size: .7rem;
+        cursor: help;
     }
 }
 

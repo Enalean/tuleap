@@ -3,30 +3,42 @@
         <span
             id="breadcrumb-project-privacy-icon"
             {{# has_project_flags }}class="breadcrumb-project-privacy-icon-with-flags"{{/ has_project_flags }}
-            title="{{ project_name }}"
-            data-content="{{ project_privacy }}"
+            data-project-name="{{ project_name }}"
+            data-privacy-title="{{ privacy_title }}"
+            data-privacy-description="{{ project_privacy }}"
             data-project-flags="{{ json_encoded_project_flags }}"
-        >
             {{# are_restricted_users_allowed }}
                 {{# project_is_public }}
-                    <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-unlock"
+                    >
+                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
                 {{# project_is_public_incl_restricted }}
-                    <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-tlp-unlock-plus-r"
+                    >
+                        <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public_incl_restricted }}
                 {{# project_is_private }}
-                    <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-lock"
+                    >
+                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_private }}
                 {{# project_is_private_incl_restricted }}
-                    <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-tlp-lock-plus-r"
+                    >
+                        <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_private_incl_restricted }}
             {{/ are_restricted_users_allowed }}
             {{^ are_restricted_users_allowed }}
                 {{# project_is_public }}
-                    <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-unlock"
+                    >
+                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
                 {{^ project_is_public }}
-                    <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                        data-privacy-icon="fa-lock"
+                    >
+                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
             {{/ are_restricted_users_allowed }}
 
