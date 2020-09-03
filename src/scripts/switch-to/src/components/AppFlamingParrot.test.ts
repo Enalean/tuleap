@@ -28,6 +28,13 @@ describe("AppFlamingParrot", () => {
     it("Autofocus the first input in the modal", async () => {
         const wrapper = shallowMount(AppFlamingParrot, {
             localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "",
+                    } as State,
+                }),
+            },
             stubs: {
                 "switch-to-header": {
                     template: "<input type='text' data-test='focus'/>",
@@ -44,6 +51,23 @@ describe("AppFlamingParrot", () => {
         $(wrapper.element).trigger("shown");
 
         expect(focus).toHaveBeenCalled();
+    });
+
+    it("Loads the history when the modal is shown", async () => {
+        const wrapper = shallowMount(AppFlamingParrot, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "",
+                    } as State,
+                }),
+            },
+        });
+
+        $(wrapper.element).trigger("shown");
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadHistory");
     });
 
     it("Clears the filter value when modal is closed", async () => {

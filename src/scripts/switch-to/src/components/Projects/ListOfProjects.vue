@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="switch-to-projects-container">
         <template v-if="has_projects">
             <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>
                 Working projects

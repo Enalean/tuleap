@@ -18,7 +18,14 @@
  */
 
 import { State } from "./type";
+import { UserHistory } from "../type";
 
 export function updateFilterValue(state: State, value: string): void {
     state.filter_value = value;
+}
+
+export function saveHistory(state: State, history: UserHistory): void {
+    state.is_history_loaded = true;
+    state.is_loading_history = false;
+    state.history = history;
 }

@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
+<div
+  class="switch-to-recent-items-entry"
+>
+  <a
+    class="switch-to-recent-items-entry-link lake-placid-blue"
+  >
+    <span
+      class="switch-to-recent-items-entry-badge badge tlp-badge-outline tlp-badge-lake-placid-blue"
+    >
+      
+            art #123
+        
+    </span>
+     
+    <!---->
+    
+        Lorem ipsum
+    
+  </a>
+   
+  <!---->
+</div>
+`;
+
+exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
+<div
+  class="switch-to-recent-items-entry"
+>
+  <a
+    class="switch-to-recent-items-entry-link lake-placid-blue"
+  >
+    <span
+      class="switch-to-recent-items-entry-badge badge tlp-badge-outline tlp-badge-lake-placid-blue"
+    >
+      
+            art #123
+        
+    </span>
+     
+    <!---->
+    
+        Lorem ipsum
+    
+  </a>
+   
+  <div
+    class="switch-to-recent-items-entry-quick-links"
+  >
+    <a
+      class="switch-to-recent-items-entry-quick-links-link"
+      href="/ttm"
+      title="TTM"
+    >
+      <i
+        class="fa fa-check"
+      />
+    </a>
+    <a
+      class="switch-to-recent-items-entry-quick-links-link"
+      href="/ad"
+      title="AD"
+    >
+      <i
+        class="fa fa-table"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`RecentItemsEntry Displays a link with an icon 1`] = `
+<div
+  class="switch-to-recent-items-entry"
+>
+  <a
+    class="switch-to-recent-items-entry-link lake-placid-blue"
+  >
+    <!---->
+     
+    <i
+      aria-hidden="true"
+      class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
+    />
+    
+        Kanban
+    
+  </a>
+   
+  <!---->
+</div>
+`;

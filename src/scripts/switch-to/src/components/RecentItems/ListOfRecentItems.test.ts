@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,13 +21,68 @@
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
+import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { State } from "../../store/type";
+import { UserHistoryEntry } from "../../type";
+import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
+import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
+import RecentItemsEntry from "./RecentItemsEntry.vue";
 
 describe("ListOfRecentItems", () => {
     it("Displays an empty state", async () => {
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_loading_history: false,
+                        is_history_loaded: true,
+                        history: { entries: [] as UserHistoryEntry[] },
+                    } as State,
+                }),
+            },
         });
 
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(true);
+        expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
+    });
+
+    it("Display a loading state", async () => {
+        const wrapper = shallowMount(ListOfRecentItems, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_loading_history: true,
+                        is_history_loaded: false,
+                        history: { entries: [] as UserHistoryEntry[] },
+                    } as State,
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(true);
+        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
+    });
+
+    it("Display a recent items", async () => {
+        const wrapper = shallowMount(ListOfRecentItems, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_loading_history: false,
+                        is_history_loaded: true,
+                        history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    } as State,
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
+        expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(2);
     });
 });

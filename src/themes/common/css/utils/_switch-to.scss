@@ -1,0 +1,99 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.switch-to-projects-container {
+    flex: 1 0 auto;
+}
+
+.switch-to-recent-items {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    margin: 0 0 0 $tlp-large-spacing;
+
+    > .switch-to-modal-body-title {
+        margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) $tlp-small-spacing;
+    }
+}
+
+.switch-to-recent-items-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: $tlp-medium-spacing 0 0;
+}
+
+.switch-to-recent-items-entry {
+    display: flex;
+    align-items: baseline;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.switch-to-recent-items-entry-link {
+    display: flex;
+    align-items: baseline;
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    border-radius: 4px;
+    color: $dark-modal-default-text-color;
+
+    &:focus,
+    &:hover {
+        background: rgba(0, 0, 0, .2);
+        text-decoration: none;
+    }
+}
+
+.switch-to-recent-items-entry-icon,
+.switch-to-recent-items-entry-badge {
+    margin: 0 6px 0 0;
+}
+
+.switch-to-recent-items-entry-quick-links {
+    padding: 0 0 0 $tlp-small-spacing;
+    transition: opacity 150ms ease-in-out;
+    opacity: 0;
+}
+
+.switch-to-recent-items-entry:focus-within,
+.switch-to-recent-items-entry:hover {
+    > .switch-to-recent-items-entry-quick-links {
+        opacity: 1;
+    }
+}
+
+.switch-to-recent-items-entry-quick-links-link {
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    border-radius: 4px;
+    color: $dark-modal-default-text-color;
+
+    &:focus,
+    &:hover {
+        background: rgba(0, 0, 0, .2);
+        text-decoration: none;
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
+        color: map-get($colors, 'primary');
+    }
+}

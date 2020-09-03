@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ActionContext } from "vuex";
 import { State } from "./type";
-import Vuex, { Store } from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
-import * as actions from "./actions";
+import { get } from "../../../../themes/tlp/src/js/fetch-wrapper";
+import { UserHistory } from "../type";
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
-        actions,
-    });
+export async function loadHistory(context: ActionContext<State, State>): Promise<void> {
+    if (context.state.is_history_loaded) {
+        return;
+    }
+
+    const response = await get(`/api/users/${context.state.user_id}/history`);
+    const history: UserHistory = await response.json();
+    context.commit("saveHistory", history);
 }

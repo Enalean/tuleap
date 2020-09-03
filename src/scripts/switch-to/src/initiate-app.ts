@@ -46,6 +46,10 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
             typeof vue_mount_point.dataset.searchForm !== "undefined"
                 ? JSON.parse(vue_mount_point.dataset.searchForm)
                 : { type_of_search: "soft", hidden_fields: [] },
+        user_id: parseInt(document.body.dataset.userId || "0", 10),
+        is_loading_history: true,
+        is_history_loaded: false,
+        history: { entries: [] },
     };
 
     const store = createStore(root_state);

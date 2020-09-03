@@ -31,12 +31,15 @@ import $ from "jquery";
 import { Component } from "vue-property-decorator";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./SwitchToBody.vue";
-import { Mutation } from "vuex-class";
+import { Action, Mutation } from "vuex-class";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppFlamingParrot extends Vue {
+    @Action
+    private readonly loadHistory!: () => void;
+
     @Mutation
     private readonly updateFilterValue!: (value: string) => void;
 
@@ -49,6 +52,7 @@ export default class AppFlamingParrot extends Vue {
         $(modal)
             // Force autofocus for bootstrap modal
             .on("shown", () => {
+                this.loadHistory();
                 const input = modal.querySelector("input");
                 if (input) {
                     input.focus();
