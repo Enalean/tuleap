@@ -31,7 +31,8 @@
     </taintAnalysis>
 
     <stubs>
-        <file name="tests/psalm/stubs/EventDispatcherInterface.phpstub"/>
+        <file name="tests/psalm/stubs/Psr/EventDispatcher/EventDispatcherInterface.phpstub"/>
+        <file name="tests/psalm/stubs/ParagonIE/EasyDB/EasyDB.phpstub"/>
     </stubs>
 
     <plugins>

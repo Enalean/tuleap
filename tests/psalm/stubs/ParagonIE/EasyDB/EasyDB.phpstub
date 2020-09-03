@@ -1,0 +1,164 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace ParagonIE\EasyDB;
+
+class EasyDB
+{
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function col(string $statement, int $offset = 0, ...$params)
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function column(string $statement, array $params = [], int $offset = 0)
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function cell(string $statement, ...$params)
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function delete(string $table, $conditions): int
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function exists(string $statement, ...$params): bool
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function first(string $statement, int $offset = 0, ...$params)
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function insert(string $table, array $map): int
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function insertIgnore(string $table, array $map): int
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function insertOnDuplicateKeyUpdate(
+        string $table,
+        array $map,
+        array $on_duplicate_key_update
+    ): int {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     * @psalm-taint-source input $field
+     */
+    public function insertGet(string $table, array $map, string $field)
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function insertMany(string $table, array $maps): int
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function insertReturnId(string $table, array $map, string $sequenceName = '')
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     * @psalm-taint-source input $columns
+     */
+    public function buildInsertQuery(string $table, array $columns): string
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function buildInsertQueryBoolSafe(string $table, array $map, $duplicates_mode = null): array
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function q(string $statement, ...$params)
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function run(string $statement, ...$params)
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $statement
+     */
+    public function single(string $statement, array $params = [])
+    {
+    }
+
+    /**
+     * @psalm-taint-source input $table
+     */
+    public function update(string $table, array $changes, $conditions): int
+    {
+    }
+
+    /**
+     * @psalm-taint-sink sql $args[0]
+     */
+    public function prepare(...$args): \PDOStatement
+    {
+    }
+}
