@@ -214,10 +214,19 @@ $switch-menu-item-hover-color: $main;
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: transparentize(#d4d7e1, .5);
-    color: #747474;
+    color: $white;
     font-size: .7rem;
     cursor: help;
+
+    &.fa-lock,
+    &.fa-tlp-lock-plus-r {
+        background: $ui-color-danger;
+    }
+
+    &.fa-unlock,
+    &.fa-tlp-unlock-plus-r {
+        background: $ui-color-success;
+    }
 }
 
 .breadcrumb-project-privacy-icon-with-flags {
@@ -226,20 +235,26 @@ $switch-menu-item-hover-color: $main;
     margin: 0 $tlp-small-spacing 0 0;
     padding: 4px;
     border-radius: 4px;
-    background: transparentize(#d4d7e1, .5);
     cursor: help;
+
+    &[data-privacy-icon='fa-lock'],
+    &[data-privacy-icon='fa-tlp-lock-plus-r'] {
+        background: transparentize($ui-color-danger, .85);
+        color: darken($ui-color-danger, 10%);
+    }
+
+    &[data-privacy-icon='fa-unlock'],
+    &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
+        background: transparentize($ui-color-success, .85);
+        color: darken($ui-color-success, 10%);
+    }
 
     > .breadcrumb-project-privacy-icon {
         width: auto;
         height: auto;
         margin: 0 8px 0 6px;
         background: none;
-        color: #747474;
         font-size: .875rem;
-    }
-
-    > .current-project-nav-flag-labels {
-        color: #747474;
     }
 
     > .tuleap-svg-project-shield {

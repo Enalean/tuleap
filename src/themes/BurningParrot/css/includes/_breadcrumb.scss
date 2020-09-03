@@ -205,10 +205,19 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: transparentize($tlp-ui-border-dark, .5);
-    color: $tlp-ui-dimmed;
+    color: $tlp-ui-white;
     font-size: .7rem;
     cursor: help;
+
+    &.fa-lock,
+    &.fa-tlp-lock-plus-r {
+        background: $tlp-ui-danger;
+    }
+
+    &.fa-unlock,
+    &.fa-tlp-unlock-plus-r {
+        background: $tlp-ui-success;
+    }
 }
 
 .breadcrumb-project-privacy-icon-with-flags {
@@ -217,20 +226,34 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     margin: 0 $tlp-small-spacing 0 0;
     padding: 4px;
     border-radius: 4px;
-    background: transparentize($tlp-ui-border-dark, .5);
     cursor: help;
 
-    .breadcrumb-project-privacy-icon {
+    &[data-privacy-icon='fa-lock'],
+    &[data-privacy-icon='fa-tlp-lock-plus-r'] {
+        background: transparentize($tlp-ui-danger, .85);
+        color: darken($tlp-ui-danger, 10%);
+
+        > .fa {
+            color: darken($tlp-ui-danger, 10%);
+        }
+    }
+
+    &[data-privacy-icon='fa-unlock'],
+    &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
+        background: transparentize($tlp-ui-success, .85);
+        color: darken($tlp-ui-success, 10%);
+
+        > .fa {
+            color: darken($tlp-ui-success, 10%);
+        }
+    }
+
+    > .breadcrumb-project-privacy-icon {
         width: auto;
         height: auto;
         margin: 0 8px 0 6px;
         background: none;
-        color: $tlp-ui-dimmed;
         font-size: .875rem;
-    }
-
-    > .current-project-nav-flag-labels {
-        color: $tlp-ui-dimmed;
     }
 
     > .tuleap-svg-project-shield {
