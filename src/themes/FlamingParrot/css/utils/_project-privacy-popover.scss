@@ -31,7 +31,7 @@
     text-transform: none;
 
     &.right > .arrow::after {
-        border-right-color: $sidebar-background;
+        border-right-color: darken($sidebar-background, 5%);
         border-bottom-color: transparent;
     }
 

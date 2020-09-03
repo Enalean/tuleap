@@ -292,13 +292,13 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: #747474;
+        background: $ui-dimmed;
 
         > .tuleap-svg {
             height: 12px;
 
             > path {
-                fill: #e3e5ed;
+                fill: $ui-border-normal;
             }
         }
     }
