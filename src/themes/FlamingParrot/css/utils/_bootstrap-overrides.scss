@@ -119,6 +119,12 @@ input[type='file'] {
             border: 1px solid transparentize(map-get($colors, 'primary'), .4);
             background: transparentize(map-get($colors, 'primary'), .9);
             color: map-get($colors, 'text');
+
+            &.tlp-badge-on-dark-background {
+                border: 1px solid map-get($colors, 'primary');
+                background: transparentize(map-get($colors, 'primary'), .85);
+                color: map-get($colors, 'border');
+            }
         }
     }
 }
