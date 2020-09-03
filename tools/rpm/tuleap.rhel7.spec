@@ -631,7 +631,7 @@ done
 %{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvsroot
-%{__install} -d $RPM_BUILD_ROOT/var/lock/cvs
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvslocks
 %{__install} -d $RPM_BUILD_ROOT/var/run/log_accum
 %{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -862,6 +862,9 @@ fi
 
 chmod 750 /var/lib/gitolite
 
+%pre core-cvs
+%{__rm} -rf /var/lock/cvs
+
 #
 #
 #
@@ -878,6 +881,7 @@ fi
 %{__rm} -f %{APP_CACHE_DIR}/tuleap_hooks_cache
 
 %post core-cvs
+%{__ln_s} %{APP_DATA_DIR}/cvslocks /var/lock/cvs
 if [ ! -f %{_sysconfdir}/shells ] ; then
     echo "%{APP_LIBBIN_DIR}/cvssh" > %{_sysconfdir}/shells
     echo "%{APP_LIBBIN_DIR}/cvssh-restricted" > %{_sysconfdir}/shells
@@ -1089,7 +1093,7 @@ fi
 %files core-cvs
 %defattr(-,root,root,-)
 %attr(00751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/cvsroot
-%attr(00751,root,root) /var/lock/cvs
+%attr(00751,root,root) %{APP_DATA_DIR}/cvslocks
 %attr(00777,root,root) /var/run/log_accum
 # Systemd tmpfiles
 %attr(00644,root,root) %{_tmpfilesdir}/tuleap-cvs.conf
