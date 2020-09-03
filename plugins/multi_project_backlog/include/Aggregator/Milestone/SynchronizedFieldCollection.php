@@ -41,14 +41,14 @@ final class SynchronizedFieldCollection
     public function __construct(array $synchronized_fields)
     {
         $this->synchronized_fields    = $synchronized_fields;
-        $this->synchronized_field_ids = self::getSynchronizedFieldIDs($synchronized_fields);
+        $this->synchronized_field_ids = self::getSynchronizedFieldIDsAsKeys($synchronized_fields);
     }
 
     /**
      * @param \Tracker_FormElement_Field[] $synchronized_fields
      * @return array<int,true>
      */
-    private static function getSynchronizedFieldIDs(array $synchronized_fields): array
+    private static function getSynchronizedFieldIDsAsKeys(array $synchronized_fields): array
     {
         $ids = [];
         foreach ($synchronized_fields as $synchronized_field) {
@@ -73,5 +73,13 @@ final class SynchronizedFieldCollection
     public function isFieldSynchronized(\Tracker_FormElement_Field $field): bool
     {
         return isset($this->synchronized_field_ids[(int) $field->getId()]);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getSynchronizedFieldIDs(): array
+    {
+        return array_keys($this->synchronized_field_ids);
     }
 }

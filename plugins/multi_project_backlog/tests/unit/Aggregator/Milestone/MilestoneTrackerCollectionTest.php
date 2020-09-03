@@ -44,6 +44,20 @@ final class MilestoneTrackerCollectionTest extends TestCase
         $this->assertContains(57, $ids);
     }
 
+    public function testCanGetContributorTrackerIDs(): void
+    {
+        $first_tracker = M::mock(\Tracker::class);
+        $first_tracker->shouldReceive('getId')->andReturn(78);
+        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
+        $aggregator_project = \Project::buildForTest();
+        $second_tracker = M::mock(\Tracker::class);
+        $second_tracker->shouldReceive('getId')->andReturn(57);
+        $second_tracker->shouldReceive('getGroupId')->andReturn($aggregator_project->getID());
+
+        $collection = new MilestoneTrackerCollection($aggregator_project, [$first_tracker, $second_tracker]);
+        $this->assertEquals([78], $collection->getContributorMilestoneTrackerIds());
+    }
+
     public function testGetTrackerIdsReturnsEmpty(): void
     {
         $collection = new MilestoneTrackerCollection(\Project::buildForTest(), []);

@@ -88,4 +88,15 @@ final class SynchronizedFieldCollectionTest extends TestCase
         $not_synchronized_field->shouldReceive('getId')->andReturn('1024');
         $this->assertFalse($collection->isFieldSynchronized($not_synchronized_field));
     }
+
+    public function testCanObtainsTheSynchronizedFieldIDs(): void
+    {
+        $field1 = M::mock(\Tracker_FormElement_Field::class);
+        $field1->shouldReceive('getId')->andReturn('1023');
+        $field2 = M::mock(\Tracker_FormElement_Field::class);
+        $field2->shouldReceive('getId')->andReturn('1024');
+
+        $collection = new SynchronizedFieldCollection([$field1, $field2]);
+        $this->assertEquals([1023, 1024], $collection->getSynchronizedFieldIDs());
+    }
 }
