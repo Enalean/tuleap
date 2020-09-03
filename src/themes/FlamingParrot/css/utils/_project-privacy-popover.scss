@@ -97,10 +97,20 @@
                 margin: 0;
             }
 
+            > .fa,
             > .tuleap-svg-project-shield {
                 position: absolute;
-                top: 3px;
                 left: 0;
+            }
+
+            > .fa {
+                top: 8px;
+                color: $ui-border-light;
+                font-size: .75rem;
+            }
+
+            > .tuleap-svg-project-shield {
+                top: 3px;
                 width: 12px;
 
                 > path {
@@ -112,6 +122,19 @@
                 margin: 0;
             }
         }
+    }
+}
+
+.current-project-sidebar-popover-privacy {
+    top: 4px !important;
+    left: $sidebar-width - 6px !important;
+
+    > .arrow {
+        top: calc(50% - 4px);
+    }
+
+    > .popover-content > .privacy-description {
+        margin: 0;
     }
 }
 

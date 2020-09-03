@@ -2,28 +2,28 @@
     <div class="project-sidebar-header">
         <div class="project-sidebar-header-name">
             {{# privacy }}
-                <div class="project-title-container" data-content="{{{ project_privacy }}}" data-placement="right">
+                <div class="project-title-container">
                     <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
                         {{# are_restricted_users_allowed }}
                             {{# project_is_public }}
-                                <i class="fa fa-unlock"></i>
+                                <i class="fa fa-unlock" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_public }}
                             {{# project_is_public_incl_restricted }}
-                                <i class="fa fa-tlp-unlock-plus-r"></i>
+                                <i class="fa fa-tlp-unlock-plus-r" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_public_incl_restricted }}
                             {{# project_is_private }}
-                                <i class="fa fa-lock"></i>
+                                <i class="fa fa-lock" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_private }}
                             {{# project_is_private_incl_restricted }}
-                                <i class="fa fa-tlp-lock-plus-r"></i>
+                                <i class="fa fa-tlp-lock-plus-r" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_private_incl_restricted }}
                         {{/ are_restricted_users_allowed }}
                         {{^ are_restricted_users_allowed }}
                             {{# project_is_public }}
-                                <i class="fa fa-unlock"></i>
+                                <i class="fa fa-unlock" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_public }}
                             {{^ project_is_public }}
-                                <i class="fa fa-lock"></i>
+                                <i class="fa fa-lock" data-content="{{{ project_privacy }}}" data-title="{{ privacy_title }}" ></i>
                             {{/ project_is_public }}
                         {{/ are_restricted_users_allowed }}
 
