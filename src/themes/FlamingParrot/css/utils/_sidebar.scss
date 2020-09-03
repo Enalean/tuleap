@@ -251,10 +251,19 @@
         height: 24px;
         margin: 0 $tlp-small-spacing 0 0;
         border-radius: 50%;
-        background: darken($sidebar-background, 5%);
-        color: transparentize($white, .2);
+        color: $white;
         font-size: .7rem;
         cursor: help;
+
+        &.fa-lock,
+        &.fa-tlp-lock-plus-r {
+            background: $ui-color-danger;
+        }
+
+        &.fa-unlock,
+        &.fa-tlp-unlock-plus-r {
+            background: $ui-color-success;
+        }
     }
 }
 

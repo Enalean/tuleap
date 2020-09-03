@@ -52,10 +52,19 @@
     height: 24px;
     margin: 0 $tlp-small-spacing 0 0;
     border-radius: 50%;
-    background: darken($tlp-theme-sidebar-background-color, 5%);
-    color: $tlp-ui-border-normal;
+    color: $tlp-ui-white;
     font-size: .7rem;
     cursor: help;
+
+    &.fa-lock,
+    &.fa-tlp-lock-plus-r {
+        background: $tlp-ui-danger;
+    }
+
+    &.fa-unlock,
+    &.fa-tlp-unlock-plus-r {
+        background: $tlp-ui-success;
+    }
 }
 
 .project-sidebar-banner-button {
