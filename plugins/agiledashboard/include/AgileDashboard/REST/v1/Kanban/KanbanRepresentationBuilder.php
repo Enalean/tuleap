@@ -25,7 +25,6 @@ use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanUserPreferences;
 use Exception;
 use PFUser;
-use Tuleap\AgileDashboard\Kanban\KanbanAddArtifactConfiguration;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 
 class KanbanRepresentationBuilder
@@ -60,19 +59,15 @@ class KanbanRepresentationBuilder
      */
     public function build(AgileDashboard_Kanban $kanban, PFUser $user)
     {
-        $user_can_add_artifact = \ForgeConfig::get(KanbanAddArtifactConfiguration::CONFIG_SETTING_NAME);
-
-        if ($user_can_add_artifact) {
-            try {
-                $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);
-                $user_can_add_artifact = true;
-            } catch (KanbanUserCantAddArtifactException $exception) {
-                $user_can_add_artifact = false;
-            } catch (\Kanban_SemanticStatusNotDefinedException $e) {
-                $user_can_add_artifact = false;
-            } catch (\Kanban_TrackerNotDefinedException $e) {
-                $user_can_add_artifact = false;
-            }
+        try {
+            $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);
+            $user_can_add_artifact = true;
+        } catch (KanbanUserCantAddArtifactException $exception) {
+            $user_can_add_artifact = false;
+        } catch (\Kanban_SemanticStatusNotDefinedException $e) {
+            $user_can_add_artifact = false;
+        } catch (\Kanban_TrackerNotDefinedException $e) {
+            $user_can_add_artifact = false;
         }
 
         try {
