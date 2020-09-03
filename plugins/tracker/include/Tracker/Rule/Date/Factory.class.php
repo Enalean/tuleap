@@ -97,7 +97,7 @@ class Tracker_Rule_Date_Factory
     /** @return Tracker_Rule_Date */
     public function getRule(Tracker $tracker, $rule_id)
     {
-        $rule = $this->dao->searchById($tracker->getId(), $rule_id)->getRow();
+        $rule = $this->dao->searchById($tracker->getId(), $rule_id);
         if (! $rule) {
             return null;
         }
@@ -137,7 +137,7 @@ class Tracker_Rule_Date_Factory
 
         $rules_array = [];
 
-        while ($rule = $rules->getRow()) {
+        foreach ($rules as $rule) {
             $rules_array[] = $this->populate(
                 new Tracker_Rule_Date(),
                 $rule['tracker_id'],
@@ -159,10 +159,10 @@ class Tracker_Rule_Date_Factory
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
     {
-        $dar = $this->dao->searchByTrackerId($from_tracker_id);
+        $rows = $this->dao->searchByTrackerId($from_tracker_id);
 
         // Retrieve rules of tracker from
-        while ($row = $dar->getRow()) {
+        foreach ($rows as $row) {
             // if we already have the status field, just jump to open values
             $source_field_id = $row['source_field_id'];
             $target_field_id = $row['target_field_id'];

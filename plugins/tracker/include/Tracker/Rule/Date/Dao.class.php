@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012. All rights reserved
+  * Copyright (c) Enalean, 2012-Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -21,45 +21,28 @@
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_Date_Dao extends DataAccessObject
+class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
 {
-
-    public function __construct()
+    public function searchById($tracker_id, $id): array
     {
-        parent::__construct();
-        $this->table_name = 'tracker_rule_date';
-    }
-
-    /**
-     * Searches Tracker_Rule by Id
-     * @return DataAccessResult
-     */
-    public function searchById($tracker_id, $id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $id         = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM tracker_rule_date
-                    JOIN tracker_rule
-                    ON (id = tracker_rule_id)
-                WHERE tracker_rule.id = $id
-                  AND tracker_rule.tracker_id = $tracker_id";
-        return $this->retrieve($sql);
+                JOIN tracker_rule
+                ON (id = tracker_rule_id)
+                WHERE tracker_rule.id = ?
+                  AND tracker_rule.tracker_id = ?";
+        return $this->getDB()->row($sql, $id, $tracker_id);
     }
 
-    /**
-     * Searches Tracker_Rule by TrackerId
-     * @return DataAccessResult
-     */
-    public function searchByTrackerId($tracker_id)
+    public function searchByTrackerId($tracker_id): array
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM tracker_rule
-                    JOIN tracker_rule_date
-                    ON (id = tracker_rule_id)
-                WHERE tracker_rule.tracker_id = $tracker_id";
-        return $this->retrieve($sql);
+                JOIN tracker_rule_date
+                ON (id = tracker_rule_id)
+                WHERE tracker_rule.tracker_id = ?";
+
+        return $this->getDB()->run($sql, $tracker_id);
     }
 
     /**
@@ -73,60 +56,57 @@ class Tracker_Rule_Date_Dao extends DataAccessObject
      */
     public function insert($tracker_id, $source_field_id, $target_field_id, $comparator)
     {
-        $tracker_id      = $this->da->escapeInt($tracker_id);
-        $source_field_id = $this->da->escapeInt($source_field_id);
-        $target_field_id = $this->da->escapeInt($target_field_id);
-        $comparator      = $this->da->quoteSmart($comparator);
-        $rule_type       = $this->da->escapeInt(Tracker_Rule::RULETYPE_DATE);
+        return $this->getDB()->tryFlatTransaction(
+            static function (\ParagonIE\EasyDB\EasyDB $db) use (
+                $comparator,
+                $target_field_id,
+                $source_field_id,
+                $tracker_id
+            ): int {
+                $rule_id = (int) $db->insertReturnId(
+                    'tracker_rule',
+                    [
+                        'tracker_id' => $tracker_id,
+                        'rule_type'  => Tracker_Rule::RULETYPE_DATE
+                    ]
+                );
 
-        $this->startTransaction();
-        try {
-            $sql = "INSERT INTO tracker_rule (tracker_id, rule_type)
-                    VALUES ($tracker_id, $rule_type)";
-            $id  = $this->updateAndGetLastId($sql);
-            $sql = "INSERT INTO tracker_rule_date (tracker_rule_id, source_field_id, target_field_id, comparator)
-                    VALUES ($id, $source_field_id, $target_field_id, $comparator)";
-            $this->update($sql);
-        } catch (Exception $e) {
-            $this->rollBack();
-            throw $e;
-        }
-        $this->commit();
+                $db->insert(
+                    'tracker_rule_date',
+                    [
+                        'tracker_rule_id' => $rule_id,
+                        'source_field_id' => $source_field_id,
+                        'target_field_id' => $target_field_id,
+                        'comparator'      => $comparator
+                    ]
+                );
 
-        return $id;
+                return $rule_id;
+            }
+        );
     }
 
     public function deleteById($tracker_id, $rule_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $rule_id    = $this->da->escapeInt($rule_id);
-        $sql = "DELETE tracker_rule_date.*
+        return $this->getDB()->tryFlatTransaction(static function (\ParagonIE\EasyDB\EasyDB $db) use ($tracker_id, $rule_id): int {
+            $db->run(
+                'DELETE tracker_rule_date.*
                 FROM tracker_rule
-                    INNER JOIN tracker_rule_date ON (id = tracker_rule_id)
-                WHERE id = $rule_id
-                  AND tracker_id = $tracker_id;";
-        if ($this->update($sql)) {
-            $sql = "DELETE
-                    FROM tracker_rule
-                    WHERE id = $rule_id
-                      AND tracker_id = $tracker_id";
-            return $this->update($sql);
-        }
+                INNER JOIN tracker_rule_date ON (id = tracker_rule_id)
+                WHERE id = ? AND tracker_id = ?',
+                $rule_id,
+                $tracker_id
+            );
+            return $db->delete('tracker_rule', ['id' => $rule_id, 'tracker_id' => $tracker_id]);
+        });
     }
 
     public function save($id, $source_field_id, $target_field_id, $comparator)
     {
-        $id              = $this->da->escapeInt($id);
-        $source_field_id = $this->da->escapeInt($source_field_id);
-        $target_field_id = $this->da->escapeInt($target_field_id);
-        $comparator      = $this->da->quoteSmart($comparator);
-
-        $sql = "UPDATE tracker_rule_date
-                SET source_field_id = $source_field_id,
-                    target_field_id = $target_field_id,
-                    comparator      = $comparator
-                WHERE tracker_rule_id = $id";
-
-        return $this->update($sql);
+        return $this->getDB()->update(
+            'tracker_rule_date',
+            ['source_field_id' => $source_field_id, 'target_field_id' => $target_field_id, 'comparator' => $comparator],
+            ['tracker_rule_id' => $id]
+        );
     }
 }
