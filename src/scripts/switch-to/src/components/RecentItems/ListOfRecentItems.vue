@@ -21,15 +21,20 @@
 <template>
     <div class="switch-to-recent-items">
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
+        <template v-if="has_history">
+            <template v-if="has_filtered_history">
+                <recent-items-entry
+                    v-for="entry of filtered_history.entries"
+                    v-bind:key="entry.html_url"
+                    v-bind:entry="entry"
+                />
+            </template>
+            <p class="switch-to-modal-no-matching-history" v-else>
+                <translate>You didn't visit recently any items matching your query.</translate>
+            </p>
+        </template>
         <recent-items-loading-state v-if="is_loading_history" />
         <recent-items-empty-state v-if="has_no_history" />
-        <template v-if="has_history">
-            <recent-items-entry
-                v-for="entry of history.entries"
-                v-bind:key="entry.html_url"
-                v-bind:entry="entry"
-            />
-        </template>
     </div>
 </template>
 
@@ -39,7 +44,7 @@ import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import { State } from "vuex-class";
+import { Getter, State } from "vuex-class";
 import { UserHistory } from "../../type";
 
 @Component({
@@ -55,6 +60,9 @@ export default class ListOfRecentItems extends Vue {
     @State
     readonly history!: UserHistory;
 
+    @Getter
+    readonly filtered_history!: UserHistory;
+
     get has_no_history(): boolean {
         if (!this.is_history_loaded) {
             return false;
@@ -69,6 +77,14 @@ export default class ListOfRecentItems extends Vue {
         }
 
         return this.history.entries.length > 0;
+    }
+
+    get has_filtered_history(): boolean {
+        if (!this.is_history_loaded) {
+            return false;
+        }
+
+        return this.filtered_history.entries.length > 0;
     }
 }
 </script>

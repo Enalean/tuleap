@@ -18,14 +18,42 @@
  */
 
 import { State } from "./type";
-import { Project } from "../type";
+import { Project, UserHistory, UserHistoryEntry } from "../type";
+
+export function filtered_history(state: State): UserHistory {
+    return {
+        entries: state.history.entries.reduce(
+            (
+                matching_entriess: UserHistoryEntry[],
+                entry: UserHistoryEntry
+            ): UserHistoryEntry[] => {
+                if (isMatchingFilterValue(entry.title, state)) {
+                    matching_entriess.push(entry);
+                } else if (isMatchingFilterValue(entry.xref, state)) {
+                    matching_entriess.push(entry);
+                }
+
+                return matching_entriess;
+            },
+            []
+        ),
+    };
+}
 
 export const filtered_projects = (state: State): Project[] => {
     return state.projects.reduce((matching_projects: Project[], project: Project): Project[] => {
-        if (project.project_name.toLowerCase().indexOf(state.filter_value.toLowerCase()) !== -1) {
+        if (isMatchingFilterValue(project.project_name, state)) {
             matching_projects.push(project);
         }
 
         return matching_projects;
     }, []);
 };
+
+function isMatchingFilterValue(s: string | null, state: State): boolean {
+    if (!s) {
+        return false;
+    }
+
+    return s.toLowerCase().indexOf(state.filter_value.toLowerCase()) !== -1;
+}

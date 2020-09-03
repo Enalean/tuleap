@@ -39,6 +39,9 @@ describe("ListOfRecentItems", () => {
                         is_history_loaded: true,
                         history: { entries: [] as UserHistoryEntry[] },
                     } as State,
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
                 }),
             },
         });
@@ -58,6 +61,9 @@ describe("ListOfRecentItems", () => {
                         is_history_loaded: false,
                         history: { entries: [] as UserHistoryEntry[] },
                     } as State,
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
                 }),
             },
         });
@@ -67,7 +73,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
     });
 
-    it("Display a recent items", async () => {
+    it("Display recent items", async () => {
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
             mocks: {
@@ -77,6 +83,9 @@ describe("ListOfRecentItems", () => {
                         is_history_loaded: true,
                         history: { entries: [{}, {}] as UserHistoryEntry[] },
                     } as State,
+                    getters: {
+                        filtered_history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    },
                 }),
             },
         });
@@ -84,5 +93,27 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
         expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(2);
+    });
+
+    it("Display filtered items", async () => {
+        const wrapper = shallowMount(ListOfRecentItems, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_loading_history: false,
+                        is_history_loaded: true,
+                        history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    } as State,
+                    getters: {
+                        filtered_history: { entries: [{}] as UserHistoryEntry[] },
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
+        expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(1);
     });
 });

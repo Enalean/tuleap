@@ -21,9 +21,7 @@
 <template>
     <div class="switch-to-projects-container">
         <template v-if="has_projects">
-            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>
-                Working projects
-            </h2>
+            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>My projects</h2>
             <nav class="switch-to-projects" v-if="has_filtered_projects">
                 <project-link
                     v-for="project of filtered_projects"

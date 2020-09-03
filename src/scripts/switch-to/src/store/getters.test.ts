@@ -19,11 +19,11 @@
 
 import * as getters from "./getters";
 import { State } from "./type";
-import { Project } from "../type";
+import { Project, UserHistoryEntry } from "../type";
 
 describe("SwitchTo getters", () => {
-    describe("Filtered projects", () => {
-        it("Filter projects", () => {
+    describe("filtered_projects", () => {
+        it("Filters projects", () => {
             const state: State = {
                 projects: [
                     { project_name: "Acme" } as Project,
@@ -37,6 +37,30 @@ describe("SwitchTo getters", () => {
                 { project_name: "Acme" } as Project,
                 { project_name: "ACME Corp" } as Project,
             ]);
+        });
+    });
+
+    describe("filtered_history", () => {
+        it("Filters recent items", () => {
+            const state: State = {
+                history: {
+                    entries: [
+                        { title: "Acme" } as UserHistoryEntry,
+                        { title: "ACME Corp" } as UserHistoryEntry,
+                        { title: "Another entry" } as UserHistoryEntry,
+                        { xref: "wiki #ACME" } as UserHistoryEntry,
+                    ],
+                },
+                filter_value: "acme",
+            } as State;
+
+            expect(getters.filtered_history(state)).toStrictEqual({
+                entries: [
+                    { title: "Acme" } as UserHistoryEntry,
+                    { title: "ACME Corp" } as UserHistoryEntry,
+                    { xref: "wiki #ACME" } as UserHistoryEntry,
+                ],
+            });
         });
     });
 });

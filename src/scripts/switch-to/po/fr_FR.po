@@ -21,6 +21,9 @@ msgstr "Tout parcourir…"
 msgid "Legacy search →"
 msgstr "Recherche →"
 
+msgid "My projects"
+msgstr "Mes projets"
+
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"
 
@@ -30,8 +33,8 @@ msgstr "Éléments récents"
 msgid "Switch to…"
 msgstr "Basculer vers…"
 
-msgid "Working projects"
-msgstr "Projets de travail"
+msgid "You didn't visit recently any items matching your query."
+msgstr "Vous n'avez pas visité d'élément récemment qui corresponde à votre recherche."
 
 msgid "You don't belong to any projects"
 msgstr "Vous n'appartenez à aucun projet"
