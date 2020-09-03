@@ -50,26 +50,6 @@ function file_utils_header($params)
     }
 }
 
-// Workaround for the 2GB limitation
-function file_utils_get_size($file)
-{
-    //Uncomment when limitation is fixed
-    //return filesize($file);
-
-    if (! (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
-        //if filename containing spaces
-        $filename = escapeshellarg($file);
-        $size = trim(`stat -c%s $filename`);
-        //$size = filesize($file);
-    } else {
-        // Not tested...
-        $fsobj = new COM("Scripting.FileSystemObject");
-        $f = $fsobj->GetFile($file);
-        $size = $file->Size;
-    }
-    return $size;
-}
-
 function file_utils_footer($params)
 {
     site_project_footer($params);
@@ -1070,7 +1050,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         //uplaod release_notes and change_log if needed
         $data_uploaded = false;
         if (isset($_FILES['uploaded_change_log']) && ! $_FILES['uploaded_change_log']['error']) {
-            $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_change_log']['tmp_name'])));
+            $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), \filesize($_FILES['uploaded_change_log']['tmp_name'])));
             if ((strlen($code) > 0) && (strlen($code) < ForgeConfig::get('sys_max_size_upload'))) {
                 //size is fine
                 $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded');
@@ -1082,7 +1062,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             }
         }
         if (isset($_FILES['uploaded_release_notes']) && ! $_FILES['uploaded_release_notes']['error']) {
-            $code = addslashes(fread(fopen($_FILES['uploaded_release_notes']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_release_notes']['tmp_name'])));
+            $code = addslashes(fread(fopen($_FILES['uploaded_release_notes']['tmp_name'], 'r'), \filesize($_FILES['uploaded_release_notes']['tmp_name'])));
             if ((strlen($code) > 0) && (strlen($code) < ForgeConfig::get('sys_max_size_upload'))) {
                 //size is fine
                 if (! $data_uploaded) {

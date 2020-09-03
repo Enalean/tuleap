@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -23,6 +23,7 @@ use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\FRSPermissionManager;
 
 require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/file_utils.php';
 
 if (! user_isloggedin()) {
     exit_not_logged_in();
