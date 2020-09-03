@@ -67,15 +67,13 @@ class ProjectPresentersBuilder
         $project_id         = $project->getID();
         $project_name       = $project->getPublicName();
         $project_config_uri = '/project/admin/?group_id=' . $project_id;
-        $user_administers   = $this->current_user->isAdmin($project_id);
-        $user_belongs       = true;
+        $is_current_user_admin   = $this->current_user->isAdmin($project_id);
 
         return new ProjectPresenter(
             $project_name,
             $project->getUrl(),
             $project_config_uri,
-            $user_administers,
-            $user_belongs,
+            $is_current_user_admin,
             $project
         );
     }

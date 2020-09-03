@@ -24,7 +24,7 @@
         <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
         <i
             class="fa fa-fw fa-cog switch-to-projects-project-admin-icon"
-            v-if="project.user_administers"
+            v-if="project.is_current_user_admin"
             aria-hidden="true"
             v-on:click="goToAdmin"
         ></i>
