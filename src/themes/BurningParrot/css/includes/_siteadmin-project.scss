@@ -58,7 +58,7 @@
 .siteadmin-project-information-details-row {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 0 $tlp-medium-spacing; // stylelint-disable-line unit-whitelist
+    margin: 0 0 $tlp-medium-spacing; // stylelint-disable-line unit-allowed-list
 }
 
 .siteadmin-project-information-details-row-cell {

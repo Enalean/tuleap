@@ -5,7 +5,7 @@ module.exports = {
     reportInvalidScopeDisables: true,
     rules: {
         indentation: [4],
-        "comment-word-blacklist": [
+        "comment-word-disallowed-list": [
             [/^!/],
             {
                 message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-blacklist)`
@@ -39,7 +39,7 @@ module.exports = {
                 ignore: ["attribute"]
             }
         ],
-        "unit-whitelist": [
+        "unit-allowed-list": [
             "em",
             "rem",
             "px",
