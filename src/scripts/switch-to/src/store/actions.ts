@@ -27,7 +27,12 @@ export async function loadHistory(context: ActionContext<State, State>): Promise
         return;
     }
 
-    const response = await get(`/api/users/${context.state.user_id}/history`);
-    const history: UserHistory = await response.json();
-    context.commit("saveHistory", history);
+    try {
+        const response = await get(`/api/users/${context.state.user_id}/history`);
+        const history: UserHistory = await response.json();
+        context.commit("saveHistory", history);
+    } catch (e) {
+        context.commit("setErrorForHistory", true);
+        throw e;
+    }
 }

@@ -28,6 +28,7 @@ export interface State {
     readonly user_id: number;
     is_loading_history: boolean;
     is_history_loaded: boolean;
+    is_history_in_error: boolean;
     history: UserHistory;
     filter_value: string;
 }

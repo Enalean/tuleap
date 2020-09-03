@@ -24,6 +24,7 @@ import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
 import { State } from "../../store/type";
 import { UserHistoryEntry } from "../../type";
+import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
@@ -35,6 +36,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [] as UserHistoryEntry[] },
@@ -46,6 +48,7 @@ describe("ListOfRecentItems", () => {
             },
         });
 
+        expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
@@ -57,6 +60,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        is_history_in_error: false,
                         is_loading_history: true,
                         is_history_loaded: false,
                         history: { entries: [] as UserHistoryEntry[] },
@@ -68,6 +72,7 @@ describe("ListOfRecentItems", () => {
             },
         });
 
+        expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(true);
         expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
@@ -79,6 +84,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [{}, {}] as UserHistoryEntry[] },
@@ -90,6 +96,7 @@ describe("ListOfRecentItems", () => {
             },
         });
 
+        expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
         expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(2);
@@ -101,6 +108,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [{}, {}] as UserHistoryEntry[] },
@@ -112,8 +120,33 @@ describe("ListOfRecentItems", () => {
             },
         });
 
+        expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
         expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(1);
+    });
+
+    it("Display error state", async () => {
+        const wrapper = shallowMount(ListOfRecentItems, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_history_in_error: true,
+                        is_loading_history: true,
+                        is_history_loaded: false,
+                        history: { entries: [] as UserHistoryEntry[] },
+                    } as State,
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(true);
+        expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
     });
 });

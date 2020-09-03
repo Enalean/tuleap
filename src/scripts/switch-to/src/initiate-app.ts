@@ -49,6 +49,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         user_id: parseInt(document.body.dataset.userId || "0", 10),
         is_loading_history: true,
         is_history_loaded: false,
+        is_history_in_error: false,
         history: { entries: [] },
     };
 

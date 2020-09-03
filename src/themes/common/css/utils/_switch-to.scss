@@ -57,6 +57,18 @@
     }
 }
 
+.switch-to-recent-items-error {
+    margin: 0 $tlp-small-spacing;
+    opacity: .75;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+}
+
+.switch-to-recent-items-error-icon {
+    margin: 0 4px 0 0;
+}
+
 .switch-to-recent-items-empty {
     display: flex;
     flex-direction: column;
