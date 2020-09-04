@@ -30,7 +30,7 @@
     "phptomoment": "0.0.2",
     "pretty-kibibytes": "^4.0.4",
     "regenerator-runtime": "^0.13.5",
-    "slugify": "^1.3.6",
+    "slugify": "^1.4.5",
     "smooth-scrollbar": "^7.4.1",
     "sprintf-js": "^1.1.2",
     "tus-js-client": "^2.2.0",
