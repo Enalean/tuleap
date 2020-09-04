@@ -70,11 +70,11 @@
             allowClear: true
         });
     </script>
-    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+    <p class="tlp-text-info"><i class="fa fa-life-saver" aria-hidden="true"></i> Hey bro', I'm a help text. I'm here to help you.</p>
 </div>
 
 <div class="tlp-form-element">
-    <label class="tlp-label" for="types-select2-mandatory">Types mandatory <i class="fa fa-asterisk"></i></label>
+    <label class="tlp-label" for="types-select2-mandatory">Types mandatory <i class="fa fa-asterisk" aria-hidden="true"></i></label>
     <select class="tlp-select" id="types-select2-mandatory" name="types[]" style="width: 100%" multiple required>
         <option value="saucer">Saucer</option>
         <option value="spheroid">Spheroid</option>
@@ -115,7 +115,7 @@
         <option value="cigar">Cigar</option>
         <option value="ovoid">Ovoid</option>
     </select>
-    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o" aria-hidden="true"></i></p>
     <script type="text/javascript">
         tlp.select2(document.querySelector('#types-select2-error'), {
             placeholder: 'Choose a type',

@@ -87,7 +87,7 @@
         <option value="area-55">Area 55</option>
         <option value="area-58">Area 59</option>
     </select>
-    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> Hey bro', I'm a help text. I'm here to help you.</p>
+    <p class="tlp-text-info"><i class="fa fa-life-saver" aria-hidden="true"></i> Hey bro', I'm a help text. I'm here to help you.</p>
     <script type="text/javascript">
         tlp.select2(document.querySelector('#area-select2-help'), {
             placeholder: 'Choose an area',
@@ -97,7 +97,7 @@
 </div>
 
 <div class="tlp-form-element">
-    <label class="tlp-label" for="area-select2-mandatory">Area mandatory <i class="fa fa-asterisk"></i></label>
+    <label class="tlp-label" for="area-select2-mandatory">Area mandatory <i class="fa fa-asterisk" aria-hidden="true"></i></label>
     <select class="tlp-select" id="area-select2-mandatory" name="area"  style="width: 100%" required>
         <option value="" selected disabled>Choose your area</option>
         <optgroup label="4x areas">
@@ -158,7 +158,7 @@
             <option value="area-58">Area 59</option>
         </optgroup>
     </select>
-    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o"></i></p>
+    <p class="tlp-text-danger">Oops, it seems you missed something <i class="fa fa-frown-o" aria-hidden="true"></i></p>
     <script type="text/javascript">
         tlp.select2(document.querySelector('#area-select2-error'), {
             placeholder: 'Choose an area',
