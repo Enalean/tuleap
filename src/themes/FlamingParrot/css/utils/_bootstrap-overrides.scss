@@ -121,9 +121,16 @@ input[type='file'] {
             color: map-get($colors, 'text');
 
             &.tlp-badge-on-dark-background {
-                border: 1px solid map-get($colors, 'primary');
+                border: 1px solid mix(map-get($colors, 'primary'), $white, 85%);
                 background: transparentize(map-get($colors, 'primary'), .85);
-                color: map-get($colors, 'border');
+                color: mix(map-get($colors, 'border'), $white, 90%);
+
+                @if $color-name == 'teddy-brown'
+                    or $color-name == 'plum-crazy'
+                    or $color-name == 'red-wine'
+                    or $color-name == 'army-green' {
+                    color: mix(map-get($colors, 'border'), $white, 70%);
+                }
             }
         }
     }
