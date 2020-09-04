@@ -384,9 +384,6 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
         if (! $user) {
             $user = $this->generic_user_factory->create($group_id, $concealed_password);
-            if (! $user) {
-                throw new SoapFault('3105', "Generic User creation failure");
-            }
         } else {
             $user->setPassword($concealed_password);
             $this->generic_user_factory->update($user);
