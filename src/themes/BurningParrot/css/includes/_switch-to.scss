@@ -23,23 +23,10 @@ $dark-modal-dimmed-text-color: $tlp-ui-border-dark;
 $white-space-above-and-after-a-project-link: $tlp-small-spacing - 2px;
 $approximate-width-of-project-icon: 15.5px;
 
-#switch-to-modal {
-    width: 800px;
-}
+@import '../../../common/css/utils/switch-to';
 
 .switch-to-modal-header {
-    padding: ($tlp-medium-spacing + 1px) $tlp-medium-spacing ($tlp-medium-spacing + 1px) $tlp-large-spacing;
-    border-bottom: 1px solid rgba(104, 122, 124, .2);
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
     background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), $dark-modal-background;
-    background-blend-mode: overlay;
-}
-
-.switch-to-modal-header-filter-container {
-    display: flex;
-    flex: 1 0 auto;
-    align-items: center;
 }
 
 .switch-to-modal-header-icon {
@@ -51,139 +38,38 @@ $approximate-width-of-project-icon: 15.5px;
 }
 
 #switch-to-filter {
-    width: 100%;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
     color: $tlp-ui-white;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.1875rem;
 
     &::placeholder {
         color: $tlp-ui-dimmed;
     }
 }
 
-.switch-to-modal-header-legacy-search-button {
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
-    transition: opacity 150ms ease-in-out, background 150ms ease-in-out;
-    border: 0;
-    border-radius: 4px;
-    opacity: .75;
-    background: none;
-    color: $dark-modal-dimmed-text-color;
-    font-size: .8125rem;
-    font-weight: 600;
-    line-height: 1rem;
-
-    &:focus,
-    &:hover {
-        opacity: 1;
-        background: rgba(0, 0, 0, .2);
-    }
-}
-
-.switch-to-modal-body {
-    display: flex;
-    padding: $tlp-large-spacing $tlp-large-spacing $tlp-large-spacing ($tlp-large-spacing - $tlp-small-spacing);
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-    background: $dark-modal-background;
-    color: $dark-modal-default-text-color;
-}
-
 .switch-to-modal-body-title {
-    margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) ($tlp-medium-spacing + $approximate-width-of-project-icon);
     color: $tlp-ui-dimmed;
-    font-size: .8125rem;
-    font-weight: 600;
-    line-height: 1rem;
-    text-transform: uppercase;
-}
-
-.switch-to-projects {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 0 0 ($tlp-large-spacing - $white-space-above-and-after-a-project-link);
 }
 
 .switch-to-projects-project {
-    display: flex;
-    align-items: center;
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
-    border-radius: 4px;
-    color: $dark-modal-default-text-color;
-
     &:hover,
     &:focus {
-        background: rgba(0, 0, 0, .2);
-        text-decoration: none;
-
         > .switch-to-projects-project-label {
             color: $tlp-ui-white;
-        }
-
-        > .switch-to-projects-project-admin-icon {
-            opacity: .5;
-
-            &:hover {
-                opacity: 1;
-            }
         }
     }
 }
 
 .switch-to-projects-project-icon {
-    margin: 0 $tlp-small-spacing 0 0;
-    font-size: .75rem;
-    line-height: .875rem;
-
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        color: $tlp-ui-danger;
+        color: $tlp-theme-color;
     }
 }
 
-.switch-to-projects-project-admin-icon {
-    margin: 0 0 0 $tlp-small-spacing;
-    transition: opacity 150ms ease-in-out;
-    opacity: 0;
-    color: $dark-modal-dimmed-text-color;
-    font-size: .75rem;
-    line-height: .875rem;
-    cursor: pointer;
-}
-
-.switch-to-projects-softwaremap {
-    padding: 0 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
-    opacity: .75;
-    color: $dark-modal-dimmed-text-color;
-    font-size: .8125rem;
-    font-weight: 600;
-    line-height: 1rem;
-}
-
-.switch-to-projects-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 200px;
-    padding: 38px 0 46px;
-}
 
 .switch-to-projects-softwaremap-empty-state {
-    border: 0;
     background: $tlp-theme-background-color;
-    color: $dark-modal-background;
-    font-size: .75rem;
-    font-weight: 600;
-    line-height: .875rem;
 }
 
-@import '../../../common/css/utils/switch-to';
 
 .switch-to-recent-items-error {
     color: mix($tlp-ui-danger, $tlp-ui-white, 85%);
