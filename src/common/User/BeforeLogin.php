@@ -1,0 +1,72 @@
+<?php
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\User;
+
+use PFUser;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Event\Dispatchable;
+
+final class BeforeLogin implements Dispatchable
+{
+    public const NAME = 'beforeLogin';
+
+    /**
+     * @var string
+     */
+    private $login_name;
+    /**
+     * @var ConcealedString
+     */
+    private $password;
+    /**
+     * @var PFUser|null
+     */
+    private $user;
+
+    public function __construct(string $login_name, ConcealedString $password)
+    {
+        $this->login_name = $login_name;
+        $this->password   = $password;
+    }
+
+    public function getLoginName(): string
+    {
+        return $this->login_name;
+    }
+
+    public function getPassword(): ConcealedString
+    {
+        return $this->password;
+    }
+
+    public function setUser(PFUser $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getUser(): ?PFUser
+    {
+        return $this->user;
+    }
+}

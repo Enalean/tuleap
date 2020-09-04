@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\BeforeLogin;
 use Tuleap\User\PasswordVerifier;
 
-class User_LoginManager
+class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var EventManager */
     private $event_manager;
@@ -70,45 +71,35 @@ class User_LoginManager
     /**
      * Authenticate user but doesn't verify if they are valid
      *
-     * @param String $name
-     * @return PFUser
      * @throws User_InvalidPasswordWithUserException
      * @throws User_InvalidPasswordException
      * @throws User_PasswordExpiredException
      */
-    public function authenticate($name, ConcealedString $password)
+    public function authenticate(string $name, ConcealedString $password): PFUser
     {
-        $auth_success     = false;
-        $auth_user_id     = null;
-        $auth_user_status = null;
+        $beforeLogin = $this->event_manager->dispatch(new BeforeLogin($name, $password));
+        assert($beforeLogin instanceof BeforeLogin);
+        $user = $beforeLogin->getUser();
 
-        $this->event_manager->processEvent(
-            Event::SESSION_BEFORE_LOGIN,
-            [
-                'loginname'        => $name,
-                'passwd'           => $password,
-                'auth_success'     => &$auth_success,
-                'auth_user_id'     => &$auth_user_id,
-                'auth_user_status' => &$auth_user_status,
-            ]
-        );
-
-        if ($auth_success) {
-            $user = $this->user_manager->getUserById($auth_user_id);
-        } else {
+        $auth_success = false;
+        if ($user === null) {
             $user = $this->user_manager->getUserByUserName($name);
-            if (! is_null($user)) {
+            if ($user !== null) {
                 $auth_success = $this->authenticateFromDatabase($user, $password);
             }
+        } else {
+            $auth_success = true;
         }
 
         if (! $user) {
             throw new User_InvalidPasswordException();
-        } elseif (! $auth_success) {
+        }
+
+        if (! $auth_success) {
             throw new User_InvalidPasswordWithUserException($user);
         }
 
-        $this->event_manager->processEvent(new \Tuleap\User\UserAuthenticationSucceeded($user));
+        $this->event_manager->dispatch(new \Tuleap\User\UserAuthenticationSucceeded($user));
 
         return $user;
     }

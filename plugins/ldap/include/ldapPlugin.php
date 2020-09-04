@@ -55,6 +55,7 @@ use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\RedirectAfterLogin;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\User\BeforeLogin;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -92,7 +93,7 @@ class LdapPlugin extends Plugin
         $this->addHook(Event::SEARCH_TYPE);
 
         // Authentication
-        $this->addHook(Event::SESSION_BEFORE_LOGIN, 'authenticate', false);
+        $this->addHook(BeforeLogin::NAME);
         $this->addHook(Event::SESSION_AFTER_LOGIN, 'allowCodendiLogin', false);
 
         // Login
@@ -343,32 +344,18 @@ class LdapPlugin extends Plugin
         );
     }
 
-    /**
-     * Hook
-     *
-     * @params $params $params['login']
-     *                 $params['password']
-     *                 $params['auth_success']
-     *                 $params['auth_user_id']
-     *                 $params['auth_user_status']
-     */
-    public function authenticate($params)
+    public function beforeLogin(BeforeLogin $event): void
     {
         if ($this->isLdapAuthType()) {
             try {
-                $params['auth_success'] = false;
-
-                $user = $this->getLdapUserManager()->authenticate($params['loginname'], $params['passwd']);
+                $user = $this->getLdapUserManager()->authenticate($event->getLoginName(), $event->getPassword());
                 if ($user) {
-                    $params['auth_user_id']     = $user->getId();
-                    $params['auth_user_status'] = $user->getStatus();
-                    $params['auth_success']     = true;
+                    $event->setUser($user);
                 }
             } catch (LDAP_UserNotFoundException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
-                $logger = $this->getLogger();
-                $logger->info("[LDAP] User " . $params['loginname'] . " failed to authenticate");
+                $this->getLogger()->info("[LDAP] User " . $event->getLoginName() . " failed to authenticate");
             }
         }
     }

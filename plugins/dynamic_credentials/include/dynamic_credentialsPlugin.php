@@ -28,6 +28,7 @@ use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\User\DynamicUser;
 use Tuleap\DynamicCredentials\User\DynamicUserCreator;
+use Tuleap\User\BeforeLogin;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 {
@@ -52,7 +53,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::SESSION_BEFORE_LOGIN);
+        $this->addHook(BeforeLogin::NAME);
         $this->addHook(Event::SESSION_AFTER_LOGIN);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
@@ -66,7 +67,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         $injector->populate($params['restler']);
     }
 
-    public function sessionBeforeLogin(array $params)
+    public function beforeLogin(BeforeLogin $event): void
     {
         $credential_retriever = $this->getCredentialRetriever();
         if (session_status() === PHP_SESSION_NONE) {
@@ -74,12 +75,14 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
         $support_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
         try {
-            $support_session->initialize($params['loginname'], $params['passwd']);
+            $support_session->initialize($event->getLoginName(), $event->getPassword());
         } catch (\Tuleap\DynamicCredentials\Credential\CredentialException $e) {
             return;
         }
-        $params['auth_success'] = true;
-        $params['auth_user_id'] = DynamicUser::ID;
+        $user = UserManager::instance()->getUserById(DynamicUser::ID);
+        if ($user) {
+            $event->setUser($user);
+        }
     }
 
     public function sessionAfterLogin(array $params)

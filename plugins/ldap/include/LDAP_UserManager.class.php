@@ -318,11 +318,10 @@ class LDAP_UserManager
     }
 
     /**
-     * @return PFUser|false
      * @throws LDAP_AuthenticationFailedException
      * @throws LDAP_UserNotFoundException
      */
-    public function authenticate($username, ConcealedString $password)
+    public function authenticate($username, ConcealedString $password): ?PFUser
     {
         if (! $this->ldap->authenticate($username, $password)) {
             throw new LDAP_AuthenticationFailedException();
@@ -340,7 +339,7 @@ class LDAP_UserManager
             return $user;
         }
 
-        return false;
+        return null;
     }
 
     private function mergeDefaultAttributesAndSiteAttributes()

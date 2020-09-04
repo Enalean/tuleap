@@ -20,6 +20,8 @@
 declare(strict_types=1);
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\BeforeLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -52,8 +54,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->event_manager     = Mockery::mock(EventManager::class);
+        $this->event_manager     = new EventManager();
         $this->user_manager      = \Mockery::spy(\UserManager::class);
         $this->password_verifier = \Mockery::spy(\Tuleap\User\PasswordVerifier::class);
         $this->password_expiration_checker = Mockery::spy(\User_PasswordExpirationChecker::class);
@@ -69,39 +70,58 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testItDelegatesAuthenticationToPlugin(): void
     {
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
-        $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
+        $plugin = new class extends \Plugin {
+            public $before_called        = false;
+            public $after_called         = false;
+            public $auth_succeded_called = false;
 
-        $this->event_manager->shouldReceive('processEvent')->with(
-            Event::SESSION_BEFORE_LOGIN,
-            [
-                'loginname' => 'john',
-                'passwd'  => 'password',
-                'auth_success' => false,
-                'auth_user_id' => null,
-                'auth_user_status' => null
-            ]
-        )->once();
-        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_AFTER_LOGIN, Mockery::any())->once();
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($hook) {
-            return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
-        }))->once();
+            public function beforeLogin(BeforeLogin $event): void
+            {
+                if ($event->getLoginName() === 'john' && (string) $event->getPassword() === 'password') {
+                    $this->before_called = true;
+                    $event->setUser(UserTestBuilder::aUser()->withStatus(PFUser::STATUS_ACTIVE)->build());
+                }
+            }
+
+            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            {
+                $this->after_called = true;
+            }
+
+            public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+            {
+                $this->auth_succeded_called = true;
+            }
+        };
+        $this->addListeners($plugin);
+
+        $this->user_manager->shouldNotReceive('getUserByUserName');
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
+
+        self::assertTrue($plugin->before_called);
+        self::assertFalse($plugin->after_called);
+        self::assertTrue($plugin->auth_succeded_called);
     }
 
     public function testItUsesDbAuthIfPluginDoesntAnswer(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->times(3);
+        $plugin = $this->getCatchEventsPlugin();
+
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
         $this->user_manager->shouldReceive('getUserByUserName')->with('john')->once()->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
+
+        self::assertTrue($plugin->before_called);
+        self::assertTrue($plugin->after_called);
+        self::assertTrue($plugin->auth_succeded_called);
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotFound(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->getCatchEventsPlugin();
+
         $this->expectException(\User_InvalidPasswordException::class);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
         $this->login_manager->authenticate('john', new ConcealedString('password'));
@@ -109,7 +129,8 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionWhenPasswordIsWrong(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->getCatchEventsPlugin();
+
         $this->expectException(\User_InvalidPasswordWithUserException::class);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
         $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
@@ -117,7 +138,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionWithUserWhenPasswordIsWrong(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->getCatchEventsPlugin();
         $exception_catched = false;
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
@@ -134,33 +155,50 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
-
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_BEFORE_LOGIN, Mockery::any())->once();
-        $this->event_manager->shouldReceive('processEvent')->with(
-            Event::SESSION_AFTER_LOGIN,
-            [
-                'user' => $user,
-                'allow_codendi_login'  => true
-            ]
-        )->once();
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($hook) {
-            return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
-        }))->once();
+        $plugin = new class extends \Plugin {
+            public $before_called        = false;
+            public $after_called         = false;
+            public $auth_succeded_called = false;
+            public $user;
+
+            public function beforeLogin(BeforeLogin $event): void
+            {
+                $this->before_called = true;
+            }
+
+            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            {
+                $this->after_called = true;
+                $this->user = $params['user'];
+                $params['allow_codendi_login'] = true;
+            }
+
+            public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+            {
+                $this->auth_succeded_called = true;
+            }
+        };
+        $this->addListeners($plugin);
+
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
+        self::assertTrue($plugin->before_called);
+        self::assertTrue($plugin->after_called);
+        self::assertTrue($plugin->auth_succeded_called);
+        self::assertSame($user, $plugin->user);
     }
 
     public function testItReturnsTheUserOnSuccess(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->times(3);
+        $this->getCatchEventsPlugin();
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
-        $this->assertEquals(
+        self::assertSame(
+            $user,
             $this->login_manager->authenticate('john', new ConcealedString('password')),
-            $user
         );
     }
 
@@ -192,45 +230,34 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->validateAndSetCurrentUser($user);
     }
 
-    public function testItDoesntUseDbAuthIfPluginAuthenticate(): void
-    {
-        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->buildUser(PFUser::STATUS_ACTIVE))->once();
-        $this->event_manager->shouldReceive('processEvent')->with(
-            Event::SESSION_BEFORE_LOGIN,
-            Mockery::on(
-                static function (array $params): bool {
-                    $params['auth_success'] = true;
-                    $params['auth_user_id'] = 105;
-
-                    return true;
-                }
-            )
-        )->once();
-        $this->event_manager->shouldReceive('processEvent')
-            ->with(Mockery::type(UserAuthenticationSucceeded::class))
-            ->once();
-
-
-        $this->user_manager->shouldReceive('getUserByUserName')->never();
-        $this->login_manager->authenticate('john', new ConcealedString('password'));
-    }
-
     public function testItRaisesAnExceptionIfPluginForbidLogin(): void
     {
         $this->expectException(\User_InvalidPasswordWithUserException::class);
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
 
-        $this->event_manager->shouldReceive('processEvent')->with(
-            Event::SESSION_BEFORE_LOGIN,
-            Mockery::on(
-                static function (array $params): bool {
-                    $params['allow_codendi_login'] = false;
+        $plugin = new class extends \Plugin {
+            public $before_called        = false;
+            public $after_called         = false;
+            public $auth_succeded_called = false;
 
-                    return true;
-                }
-            )
-        )->once();
+            public function beforeLogin(BeforeLogin $event): void
+            {
+                $this->before_called = true;
+            }
+
+            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            {
+                $this->after_called = true;
+                $params['allow_codendi_login'] = false;
+            }
+
+            public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+            {
+                $this->auth_succeded_called = true;
+            }
+        };
+        $this->addListeners($plugin);
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
@@ -238,5 +265,39 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     private function buildUser(string $status): PFUser
     {
         return new PFUser(['status' => $status, 'password' => 'password']);
+    }
+
+    private function getCatchEventsPlugin(): \Plugin
+    {
+        return $this->addListeners(
+            new class extends \Plugin {
+                public $before_called        = false;
+                public $after_called         = false;
+                public $auth_succeded_called = false;
+
+                public function beforeLogin(BeforeLogin $event): void
+                {
+                    $this->before_called = true;
+                }
+
+                public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+                {
+                    $this->after_called = true;
+                }
+
+                public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+                {
+                    $this->auth_succeded_called = true;
+                }
+            }
+        );
+    }
+
+    private function addListeners(\Plugin $plugin): \Plugin
+    {
+        $this->event_manager->addListener(BeforeLogin::NAME, $plugin, BeforeLogin::NAME, false);
+        $this->event_manager->addListener(Event::SESSION_AFTER_LOGIN, $plugin, Event::SESSION_AFTER_LOGIN, false);
+        $this->event_manager->addListener(UserAuthenticationSucceeded::NAME, $plugin, UserAuthenticationSucceeded::NAME, false);
+        return $plugin;
     }
 }
