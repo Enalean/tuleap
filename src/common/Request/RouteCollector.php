@@ -133,6 +133,7 @@ use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
+use Tuleap\User\Account\UserWellKnownChangePasswordController;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\AvatarGenerator;
 use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
@@ -376,6 +377,17 @@ class RouteCollector
     public function postAccountSecurityPassword(): DispatchableWithRequest
     {
         return UpdatePasswordController::buildSelf();
+    }
+
+    public function getWellKnownUrlChangePassword(): UserWellKnownChangePasswordController
+    {
+        return new UserWellKnownChangePasswordController(
+            \UserManager::instance(),
+            EventManager::instance(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new SapiEmitter()
+        );
     }
 
     public static function postAccountSSHKeyCreate(): DispatchableWithRequest
@@ -792,6 +804,7 @@ class RouteCollector
             $r->post('/logout', [self::class, 'postLogoutAccount']);
             $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);
         });
+        $r->get('/.well-known/change-password', [self::class, 'getWellKnownUrlChangePassword']);
 
         $r->addGroup('/users', function (FastRoute\RouteCollector $r) {
             $r->get('/{name}[/]', [self::class, 'getUsersName']);
