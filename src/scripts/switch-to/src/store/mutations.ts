@@ -29,3 +29,7 @@ export function saveHistory(state: State, history: UserHistory): void {
     state.is_loading_history = false;
     state.history = history;
 }
+
+export function setErrorForHistory(state: State, is_error: boolean): void {
+    state.is_history_in_error = is_error;
+}

@@ -184,3 +184,7 @@ $approximate-width-of-project-icon: 15.5px;
 }
 
 @import '../../../common/css/utils/switch-to';
+
+.switch-to-recent-items-error {
+    color: mix($tlp-ui-danger, $tlp-ui-white, 85%);
+}

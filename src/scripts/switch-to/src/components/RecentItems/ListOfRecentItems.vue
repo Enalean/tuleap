@@ -33,8 +33,9 @@
                 <translate>You didn't visit recently any items matching your query.</translate>
             </p>
         </template>
-        <recent-items-loading-state v-if="is_loading_history" />
-        <recent-items-empty-state v-if="has_no_history" />
+        <recent-items-error-state v-if="is_history_in_error" />
+        <recent-items-loading-state v-else-if="is_loading_history" />
+        <recent-items-empty-state v-else-if="has_no_history" />
     </div>
 </template>
 
@@ -46,9 +47,15 @@ import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { Getter, State } from "vuex-class";
 import { UserHistory } from "../../type";
+import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 
 @Component({
-    components: { RecentItemsEmptyState, RecentItemsLoadingState, RecentItemsEntry },
+    components: {
+        RecentItemsErrorState,
+        RecentItemsEmptyState,
+        RecentItemsLoadingState,
+        RecentItemsEntry,
+    },
 })
 export default class ListOfRecentItems extends Vue {
     @State
@@ -56,6 +63,9 @@ export default class ListOfRecentItems extends Vue {
 
     @State
     readonly is_history_loaded!: boolean;
+
+    @State
+    readonly is_history_in_error!: boolean;
 
     @State
     readonly history!: UserHistory;
@@ -72,6 +82,10 @@ export default class ListOfRecentItems extends Vue {
     }
 
     get has_history(): boolean {
+        if (this.is_history_in_error) {
+            return false;
+        }
+
         if (!this.is_history_loaded) {
             return false;
         }

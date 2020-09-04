@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "An error occurred while loading your recent items."
+msgstr "Une erreur est survenue lors du chargement de votre historique."
+
 msgid "Browse all projects"
 msgstr "Parcourir tous les projets"
 
