@@ -55,6 +55,7 @@ use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\RedirectAfterLogin;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
@@ -94,7 +95,7 @@ class LdapPlugin extends Plugin
 
         // Authentication
         $this->addHook(BeforeLogin::NAME);
-        $this->addHook(Event::SESSION_AFTER_LOGIN, 'allowCodendiLogin', false);
+        $this->addHook(AfterLocalLogin::NAME);
 
         // Login
         $this->addHook('login_presenter');
@@ -385,33 +386,27 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * @params $params $params['user'] IN
-     *                 $params['allow_codendi_login'] IN/OUT
-     */
-    public function allowCodendiLogin($params)
+    public function afterLocalLogin(AfterLocalLogin $event): void
     {
         if ($this->isLdapAuthType()) {
-            if ($params['user']->getLdapId() != null) {
-                $params['allow_codendi_login'] = false;
+            if ($event->user->getLdapId() != null) {
+                $event->refuseLogin();
                 return;
             }
 
             $ldapUm = $this->getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
+            $lr = $ldapUm->getLdapFromUserId($event->user->getId());
             if ($lr) {
-                $params['allow_codendi_login'] = false;
+                $event->refuseLogin();
                 $GLOBALS['feedback'] .= ' ' . sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get('sys_name'));
-            } else {
-                $params['allow_codendi_login'] = true;
             }
         }
 
-        if ($this->hasLDAPWrite() && $params['user']->getLdapId() == null) {
+        if ($this->hasLDAPWrite() && $event->user->getLdapId() == null) {
             try {
-                $this->getLDAPUserWrite()->updateWithUser($params['user']);
+                $this->getLDAPUserWrite()->updateWithUser($event->user);
             } catch (Exception $exception) {
-                $this->getLogger()->error('An error occured while registering user (session_after_login): ' . $exception->getMessage());
+                $this->getLogger()->error('An error occurred while registering user (afterLogin): ' . $exception->getMessage());
             }
         }
     }

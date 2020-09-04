@@ -650,15 +650,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 
     /**
-     * Allow plugin to deal after authentication
-     *
-     * Parameters:
-     * 'user'                => PFUser  (IN)
-     * 'allow_codendi_login' => Boolean (OUT)
-     */
-    public const SESSION_AFTER_LOGIN = 'session_after_login';
-
-    /**
      * Allow plugin to add another ways to log in
      *
      * Parameters:
