@@ -54,6 +54,8 @@ describe("FRS plugin", () => {
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
 
+                cy.visitProjectService("frs-plugin", "Files");
+
                 cy.visit(`/file/showfiles.php?group_id=${this.frs_project_id}`);
                 cy.get(`[data-test=toggle-package]`).click();
                 cy.get(`[data-test=release-note-access]`).click();
