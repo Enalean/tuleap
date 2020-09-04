@@ -296,19 +296,7 @@ $nav-dropdown-content-border-radius: 4px;
                 border: 0;
                 background-color: #f3f3f3;
             }
-
-            &.user-navbar-history { //stylelint-disable-line selector-no-qualifying-type
-                right: 120px;
-                width: auto;
-                min-width: 0;
-                font-size: 14px;
-                font-weight: normal;
-                letter-spacing: normal;
-                text-transform: none;
-            }
         }
-
-        @import 'navbar-dropdown-history';
     }
 
     .user-avatar {
@@ -335,6 +323,7 @@ $nav-dropdown-content-border-radius: 4px;
 
 .navbar-user-dropdown {
     position: unset;
+    padding: 0 0 0 $tlp-medium-spacing;
 
     > .dropdown-toggle {
         margin: 0 16px 0 0;
@@ -346,7 +335,7 @@ $nav-dropdown-content-border-radius: 4px;
 
 #switch-to-button,
 .navbar-new-dropdown > .dropdown-toggle {
-    margin: 0 $tlp-medium-spacing 0 $tlp-small-spacing;
+    margin: 0 $tlp-medium-spacing;
     padding: 0;
     border: 0;
     background: none;
@@ -409,4 +398,17 @@ $nav-dropdown-content-border-radius: 4px;
 
 .nav-history-entry {
     border-left: 1px solid #e3e5ed;
+}
+
+
+.nav-dropdown-content-title {
+    padding: 10px;
+    border-top-left-radius: $nav-dropdown-content-border-radius;
+    border-top-right-radius: $nav-dropdown-content-border-radius;
+    background-color: $main;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: normal;
+    text-align: center;
+    cursor: initial;
 }

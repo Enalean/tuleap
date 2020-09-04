@@ -23,9 +23,6 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $history;
-    public $empty_history;
-    public $error_fetch;
-    public $error_clear;
     public $homepage_label;
 
     private $imgroot;

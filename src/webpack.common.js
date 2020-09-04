@@ -163,7 +163,7 @@ const webpack_config_for_flaming_parrot_code = {
     },
     resolve: {
         alias: webpack_configurator.extendAliases(
-            // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
+            // because TLP is not included in FlamingParrot
             webpack_configurator.tlp_fetch_alias
         ),
         extensions: [".ts", ".js"],
