@@ -17,22 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import hotkeys from "hotkeys-js";
-import { handleCreateShortcut } from "./handle-create-shortcut";
-import { handleSearchShortcut } from "./handle-search-shortcut";
-import { handleDashboardShortcut } from "./handle-dashboard-shortcut";
-import { handleHelpShortcut } from "./handle-help-shortcut";
+import { callHelpShortcut } from "./handle-help-shortcut";
 
-hotkeys("c", handleCreateShortcut);
-hotkeys("/,s", handleSearchShortcut);
-hotkeys("d", handleDashboardShortcut);
-hotkeys("*", function (event): void {
-    // Should be hotkeys("?", …),
-    // however for unknown reason it does not work (maybe due to shift key?),
-    // therefore we're using wildcard as a workaround
-    if (event.key !== "?") {
-        return;
-    }
+describe("callHelpShortcut", () => {
+    let button: HTMLElement;
+    let doc: Document;
 
-    handleHelpShortcut();
+    beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+        button = doc.createElement("button");
+        button.id = "help-dropdomn-shortcuts";
+        doc.body.appendChild(button);
+    });
+
+    it("Clicks on the button to open the help modal", () => {
+        const click = jest.spyOn(button, "click");
+
+        callHelpShortcut(doc);
+
+        expect(click).toHaveBeenCalled();
+    });
 });
