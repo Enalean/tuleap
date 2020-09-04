@@ -66,6 +66,7 @@ import KanbanColumnController from "./kanban-column/kanban-column-controller.js"
 import KanbanDirective from "./kanban-directive.js";
 import ColumnWipHeaderDirective from "./kanban-column/column-wip-header/column-wip-header-directive.js";
 import FeedbackComponent from "./feedback-component.js";
+import UnderTheFoldNotificationComponent from "./under-the-fold-notification-component.js";
 
 export default angular
     .module("kanban", [
@@ -120,6 +121,7 @@ export default angular
     .directive("columnWipHeader", ColumnWipHeaderDirective)
     .value("KanbanFilterValue", KanbanFilterValue)
     .filter("InPropertiesFilter", InPropertiesFilter)
+    .component("underTheFoldNotification", UnderTheFoldNotificationComponent)
     .component("feedbackMessage", FeedbackComponent).name;
 
 var kanban_elements = document.getElementsByClassName("widget-kanban");

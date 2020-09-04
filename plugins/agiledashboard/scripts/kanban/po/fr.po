@@ -184,6 +184,9 @@ msgstr "Afficher plus de détails"
 msgid "Show reports"
 msgstr "Afficher les rapports"
 
+msgid "The card has been created below."
+msgstr "La carte a été créée ci-dessous."
+
 msgid ""
 "The deletion of a Kanban is irreversible. Please be certain before doing it."
 msgstr ""

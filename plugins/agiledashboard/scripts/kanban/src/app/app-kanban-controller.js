@@ -4,12 +4,14 @@ import { resetError, setError } from "./feedback-state.js";
 import _ from "lodash";
 import angular from "angular";
 import { highlightColumn } from "./kanban-column/kanban-column-highlighter";
+import { under_the_fold_notification_event_source } from "./event/UnderTheFoldNotificationEventDispatcher";
 
 export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
     "$q",
     "$scope",
+    "$timeout",
     "gettextCatalog",
     "SharedPropertiesService",
     "KanbanService",
@@ -29,6 +31,7 @@ KanbanCtrl.$inject = [
 function KanbanCtrl(
     $q,
     $scope,
+    $timeout,
     gettextCatalog,
     SharedPropertiesService,
     KanbanService,
@@ -371,7 +374,6 @@ function KanbanCtrl(
 
     function openAddArtifactModal($event) {
         $event.preventDefault();
-
         const callback = (artifact_id) => {
             KanbanItemRestService.getItem(artifact_id).then((artifact) => {
                 if (!artifact) {
@@ -398,6 +400,24 @@ function KanbanCtrl(
                     KanbanColumnService.addItem(artifact, column, compared_to);
                     KanbanColumnService.filterItems(column);
                 }
+                $timeout(() => {
+                    const created_artifact_in_dom = document.getElementById("item_" + artifact.id);
+
+                    if (!created_artifact_in_dom) {
+                        return;
+                    }
+
+                    const magic_number_in_px_to_detect_if_we_partially_show_the_item = 20;
+                    const position_from_top =
+                        created_artifact_in_dom.getBoundingClientRect().top +
+                        magic_number_in_px_to_detect_if_we_partially_show_the_item;
+                    const viewport_height =
+                        window.innerHeight || document.documentElement.clientHeight;
+                    const is_under_the_fold = position_from_top > viewport_height;
+                    if (is_under_the_fold && column.is_open) {
+                        under_the_fold_notification_event_source.dispatch();
+                    }
+                }, 50);
 
                 if (!column.is_open) {
                     column.filtered_content = [];
@@ -542,6 +562,7 @@ function KanbanCtrl(
         _.extend(item, response.data);
 
         reflowKustomScrollBars();
+        under_the_fold_notification_event_source.dispatch();
     }
 
     function createItemInPlace(item, column) {
