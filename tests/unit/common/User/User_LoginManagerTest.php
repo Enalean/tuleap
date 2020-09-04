@@ -263,6 +263,29 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
+    public function testItRaisesAnExceptionIfAPluginForbidLoginOfAnotherPlugin(): void
+    {
+        $plugin1 = new class extends \Plugin {
+            public function beforeLogin(BeforeLogin $event): void
+            {
+                $event->setUser(UserTestBuilder::aUser()->withStatus(PFUser::STATUS_ACTIVE)->build());
+            }
+        };
+        $this->event_manager->addListener(BeforeLogin::NAME, $plugin1, BeforeLogin::NAME, false);
+
+        $plugin2 = new class extends \Plugin {
+            public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+            {
+                $event->refuseLogin();
+            }
+        };
+        $this->event_manager->addListener(UserAuthenticationSucceeded::NAME, $plugin2, UserAuthenticationSucceeded::NAME, false);
+
+        $this->expectException(\User_InvalidPasswordWithUserException::class);
+
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
+    }
+
     private function buildUser(string $status): PFUser
     {
         return new PFUser(['status' => $status, 'password' => 'password']);

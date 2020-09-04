@@ -22,6 +22,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
 use Tuleap\User\PasswordVerifier;
+use Tuleap\User\UserAuthenticationSucceeded;
 
 class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -100,7 +101,11 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             throw new User_InvalidPasswordWithUserException($user);
         }
 
-        $this->event_dispatcher->dispatch(new \Tuleap\User\UserAuthenticationSucceeded($user));
+        $auth_succeeded = $this->event_dispatcher->dispatch(new UserAuthenticationSucceeded($user));
+        assert($auth_succeeded instanceof UserAuthenticationSucceeded);
+        if (! $auth_succeeded->isLoginAllowed()) {
+            throw new User_InvalidPasswordWithUserException($user);
+        }
 
         return $user;
     }

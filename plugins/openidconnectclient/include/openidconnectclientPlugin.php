@@ -75,6 +75,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\RegistrationGuardEvent;
+use Tuleap\User\UserAuthenticationSucceeded;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -104,6 +105,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(UserAuthenticationSucceeded::NAME);
     }
 
     /**
@@ -309,12 +311,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         if ($link_id) {
             $user_manager             = UserManager::instance();
             $provider_manager         = $this->getProviderManager();
-            $user_mapping_manager     = new UserMappingManager(
-                new UserMappingDao(),
-                new UserDao(),
-                new CanRemoveUserMappingChecker(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            );
+            $user_mapping_manager     = $this->getUserMappingManager();
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             $account_linker_controler = new AccountLinker\Controller(
                 $user_manager,
@@ -382,24 +379,14 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return new UnlinkController(
             OIDCProvidersController::getCSRFToken(),
             $this->getProviderManager(),
-            new UserMappingManager(
-                new UserMappingDao(),
-                new UserDao(),
-                new CanRemoveUserMappingChecker(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            )
+            $this->getUserMappingManager()
         );
     }
 
     public function routeAzureIndex(): DispatchableWithRequest
     {
         $user_manager             = UserManager::instance();
-        $user_mapping_manager     = new UserMappingManager(
-            new UserMappingDao(),
-            new UserDao(),
-            new CanRemoveUserMappingChecker(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
+        $user_mapping_manager     = $this->getUserMappingManager();
         $unlinked_account_manager = new UnlinkedAccountManager(
             new UnlinkedAccountDao(),
             new RandomNumberGenerator()
@@ -433,12 +420,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     {
         $user_manager                = UserManager::instance();
         $provider_manager            = $this->getProviderManager();
-        $user_mapping_manager        = new UserMappingManager(
-            new UserMappingDao(),
-            new UserDao(),
-            new CanRemoveUserMappingChecker(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
+        $user_mapping_manager        = $this->getUserMappingManager();
         $unlinked_account_manager    = new UnlinkedAccountManager(
             new UnlinkedAccountDao(),
             new RandomNumberGenerator()
@@ -481,12 +463,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $provider_manager                               = $this->getProviderManager();
         $generic_provider_manager                       = new GenericProviderManager(new GenericProviderDao());
         $azure_provider_manager                         = new AzureADProviderManager(new AzureADProviderDao());
-        $user_mapping_manager                           = new UserMappingManager(
-            new UserMappingDao(),
-            new UserDao(),
-            new CanRemoveUserMappingChecker(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
+        $user_mapping_manager                           = $this->getUserMappingManager();
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
@@ -545,5 +522,22 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
     {
         $get_whitelisted_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
+    }
+
+    public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
+    {
+        if ($this->getUserMappingManager()->userHasProvider($event->user)) {
+            $event->refuseLogin();
+        }
+    }
+
+    private function getUserMappingManager(): UserMappingManager
+    {
+        return new UserMappingManager(
+            new UserMappingDao(),
+            new UserDao(),
+            new CanRemoveUserMappingChecker(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
     }
 }

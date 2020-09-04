@@ -195,7 +195,7 @@ class create_test_envPlugin extends Plugin
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event)
     {
         $platform_url = HTTPRequest::instance()->getServerUrl();
-        $current_user = $event->getUser();
+        $current_user = $event->user;
         if ($current_user->isSuperUser()) {
             return;
         }
