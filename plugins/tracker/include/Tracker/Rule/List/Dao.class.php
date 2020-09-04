@@ -21,80 +21,63 @@
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_List_Dao extends DataAccessObject
+class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
 {
-
-    public function __construct()
+    public function searchById($id): array
     {
-        parent::__construct();
-        $this->table_name = 'tracker_rule_list';
-    }
-
-    /**
-     * Searches Tracker_Rule by Id
-     * @return DataAccessResult | false
-     */
-    public function searchById($id)
-    {
-        $rule_id = $this->da->escapeInt($id);
-        $sql = "SELECT *
+        $sql = 'SELECT *
                 FROM tracker_rule_list
                     JOIN tracker_rule
                     ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                WHERE tracker_rule.id = $rule_id";
-        return $this->retrieve($sql);
+                WHERE tracker_rule.id = ?';
+
+        return $this->getDB()->row($sql, $id);
     }
 
-    /**
-     * Searches Tracker_Rule by TrackerId
-     * @return DataAccessResult
-     */
-    public function searchByTrackerId($tracker_id)
+    public function searchByTrackerId($tracker_id): array
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM tracker_rule
                     JOIN tracker_rule_list
                     ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                WHERE tracker_rule.tracker_id = $tracker_id";
-        return $this->retrieve($sql);
+                WHERE tracker_rule.tracker_id = ?";
+
+        return $this->getDB()->run($sql, $tracker_id);
     }
 
     public function insert(Tracker_Rule_List $rule): int
     {
-        $rule_id = $this->da->escapeInt($rule->getTrackerId());
-        $rule_type = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
+        $rule_id = $rule->getTrackerId();
 
-        $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
+        $source_field_id = $rule->getSourceFieldId();
         if ($rule->getSourceValue() instanceof Tracker_FormElement_Field_List_Value) {
-            $source_value_id = $this->da->quoteSmart($rule->getSourceValue()->getId());
+            $source_value_id = $rule->getSourceValue()->getId();
         } else {
-            $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
+            $source_value_id = $rule->getSourceValue();
         }
 
-        $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
+        $target_field_id = $rule->getTargetFieldId();
         if ($rule->getTargetValue() instanceof Tracker_FormElement_Field_List_Value) {
-            $target_value_id = $this->da->quoteSmart($rule->getTargetValue()->getId());
+            $target_value_id = $rule->getTargetValue()->getId();
         } else {
-            $target_value_id = $this->da->quoteSmart($rule->getTargetValue());
+            $target_value_id = $rule->getTargetValue();
         }
 
-        $transaction_executor = new \Tuleap\DB\DBTransactionExecutorWithConnection(
-            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
-        );
-
-        return $transaction_executor->execute(
-            function () use (
+        return $this->getDB()->tryFlatTransaction(
+            static function (\ParagonIE\EasyDB\EasyDB $db) use (
                 $rule_id,
-                $rule_type,
                 $source_field_id,
                 $source_value_id,
                 $target_field_id,
                 $target_value_id
-            ) {
-                $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
-                                    VALUES ($rule_id, $rule_type)";
-                $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
+            ): int {
+                $tracker_rule_id = (int) $db->insertReturnId(
+                    'tracker_rule',
+                    [
+                        'tracker_id' => $rule_id,
+                        'rule_type'  => Tracker_Rule::RULETYPE_VALUE
+                    ]
+                );
 
                 $sql = "INSERT INTO tracker_rule_list (
                         tracker_rule_id,
@@ -102,59 +85,48 @@ class Tracker_Rule_List_Dao extends DataAccessObject
                         source_value_id,
                         target_field_id,
                         target_value_id
-                        )
-                    VALUES (
-                        $tracker_rule_id,
-                        $source_field_id,
-                        $source_value_id,
-                        $target_field_id,
-                        $target_value_id)";
-                $this->retrieve($sql);
+                        ) VALUES (?,?,?,?,?)";
+                $db->run($sql, $tracker_rule_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id);
 
-                return (int) $tracker_rule_id;
+                return $tracker_rule_id;
             }
         );
     }
 
-    /**
-     * create a row in the table tracker_rule and in tracker_rule_list
-     * @return false|DataAccessResult or id(auto_increment) if there is no error
-     */
-    public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id)
+    public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id): void
     {
-        $rule_type       = Tracker_Rule::RULETYPE_VALUE;
-        $tracker_id      = $this->da->escapeInt($tracker_id);
-        $source_field_id = $this->da->escapeInt($source_field_id);
-        $source_value_id = $this->da->escapeInt($source_value_id);
-        $target_field_id = $this->da->escapeInt($target_field_id);
-        $target_value_id = $this->da->escapeInt($target_value_id);
+        $this->getDB()->tryFlatTransaction(
+            function (\ParagonIE\EasyDB\EasyDB $db) use (
+                $tracker_id,
+                $source_field_id,
+                $source_value_id,
+                $target_field_id,
+                $target_value_id
+            ): void {
+                $tracker_rule_id = (int) $db->insertReturnId(
+                    'tracker_rule',
+                    [
+                        'tracker_id' => $tracker_id,
+                        'rule_type' => Tracker_Rule::RULETYPE_VALUE
+                    ]
+                );
 
-        $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
-                            VALUES ($tracker_id, $rule_type)";
-
-        try {
-            $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
-
-            $sql = "INSERT INTO tracker_rule_list (
+                $sql = "INSERT INTO tracker_rule_list (
                         tracker_rule_id,
                         source_field_id,
                         source_value_id,
                         target_field_id,
                         target_value_id)
-                    VALUES (
-                        $tracker_rule_id,
-                        $source_field_id,
-                        $source_value_id,
-                        $target_field_id,
-                        $target_value_id)";
-
-            $retrieve = $this->retrieve($sql);
-        } catch (Exception $e) {
-            $this->rollBack();
-            throw $e;
-        }
-
-        $this->commit();
-        return $retrieve;
+                    VALUES (?,?,?,?,?)";
+                $this->getDB()->run(
+                    $sql,
+                    $tracker_rule_id,
+                    $source_field_id,
+                    $source_value_id,
+                    $target_field_id,
+                    $target_value_id
+                );
+            }
+        );
     }
 }

@@ -93,7 +93,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->date_rule_dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
+        $this->date_rule_dao->shouldReceive('searchById')->andReturns([]);
         $date_rule = $this->date_rule_factory
                 ->getRule($this->tracker, 20);
 
@@ -110,8 +110,8 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
             'tracker_id'        => $this->tracker_id,
         ];
 
-        $this->date_rule_dao->shouldReceive('searchById')->with($this->tracker_id, 20)->andReturns(\TestHelper::arrayToDar($data));
-        $this->date_rule_dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
+        $this->date_rule_dao->shouldReceive('searchById')->with($this->tracker_id, 20)->andReturns($data);
+        $this->date_rule_dao->shouldReceive('searchById')->andReturns([]);
         $date_rule = $this->date_rule_factory
                 ->getRule($this->tracker, 20);
 
@@ -120,7 +120,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::emptyDar());
+        $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $date_rule = $this->date_rule_factory
                 ->searchByTrackerId($this->tracker_id);
 
@@ -139,7 +139,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
             'id'                => 20
         ];
 
-        $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($data));
+        $this->date_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
         $date_rules = $this->date_rule_factory
                 ->searchByTrackerId($this->tracker_id);
 
@@ -178,10 +178,8 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $db_data = false;
-
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data));
+        $dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $dao->shouldReceive('insert')->never();
         $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -212,7 +210,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data));
+        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data]);
         $dao->shouldReceive('insert')->with($to_tracker_id, 888, 999, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->once();
         $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -256,7 +254,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data1, $db_data2));
+        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2]);
         $dao->shouldReceive('insert')->with($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
         $dao->shouldReceive('insert')->with($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
         $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);

@@ -65,7 +65,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->list_rule_dao->shouldReceive('searchById')->andReturns(false);
+        $this->list_rule_dao->shouldReceive('searchById')->andReturns([]);
         $list_rule = $this->list_rule_factory
                 ->searchById(999);
 
@@ -91,7 +91,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::emptyDar());
+        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $list_rule = $this->list_rule_factory
                 ->searchByTrackerId(999);
 
@@ -101,8 +101,6 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao(): void
     {
-        $data_access_result = \Mockery::spy(\DataAccessResult::class);
-
         $data = [
             'source_field_id'   => 46345,
             'target_field_id'   => 465,
@@ -111,10 +109,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
             'target_value_id'   => '465',
         ];
 
-        $data_access_result->shouldReceive('rowCount')->andReturns(1);
-        $data_access_result->shouldReceive('getRow')->andReturns($data, false);
-
-        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($data));
+        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns([$data]);
         $list_rules = $this->list_rule_factory
                 ->searchByTrackerId(999);
 
@@ -138,10 +133,8 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $db_data = false;
-
         $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data));
+        $dao->shouldReceive('searchByTrackerId')->andReturns([]);
         $dao->shouldReceive('create')->never();
 
         $factory = new Tracker_Rule_List_Factory($dao);
@@ -207,11 +200,10 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data1, $db_data2, $db_data3));
+        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2, $db_data3]);
         $dao->shouldReceive('create')->with($to_tracker_id, 888, 777, 999, 666)->once();
         $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9996)->once();
         $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9995)->once();
-        $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $factory = new Tracker_Rule_List_Factory($dao);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
