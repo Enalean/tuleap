@@ -257,12 +257,13 @@
 
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: $ui-color-danger;
+            background: $main;
+            text-shadow: 0 0 1px rgba(0, 0, 0, .2);
         }
 
         &.fa-unlock,
         &.fa-tlp-unlock-plus-r {
-            background: $ui-color-success;
+            background: darken($sidebar-background, 5%);
         }
     }
 }

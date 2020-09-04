@@ -211,12 +211,13 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: $tlp-ui-danger;
+        background: $tlp-theme-color;
     }
 
     &.fa-unlock,
     &.fa-tlp-unlock-plus-r {
-        background: $tlp-ui-success;
+        background: transparentize($tlp-theme-sidebar-background-color, .9);
+        color: transparentize($tlp-theme-sidebar-background-color, .2);
     }
 }
 
@@ -230,21 +231,21 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
     &[data-privacy-icon='fa-lock'],
     &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-        background: transparentize($tlp-ui-danger, .85);
-        color: darken($tlp-ui-danger, 10%);
+        background: transparentize($tlp-theme-color, .9);
+        color: darken($tlp-theme-color, 3%);
 
         > .fa {
-            color: darken($tlp-ui-danger, 10%);
+            color: darken($tlp-theme-color, 3%);
         }
     }
 
     &[data-privacy-icon='fa-unlock'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-        background: transparentize($tlp-ui-success, .85);
-        color: darken($tlp-ui-success, 10%);
+        background: transparentize($tlp-theme-sidebar-background-color, .9);
+        color: transparentize($tlp-theme-sidebar-background-color, .2);
 
         > .fa {
-            color: darken($tlp-ui-success, 10%);
+            color: transparentize($tlp-theme-sidebar-background-color, .2);
         }
     }
 

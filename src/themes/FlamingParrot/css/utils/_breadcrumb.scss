@@ -220,12 +220,13 @@ $switch-menu-item-hover-color: $main;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: $ui-color-danger;
+        background: $main;
     }
 
     &.fa-unlock,
     &.fa-tlp-unlock-plus-r {
-        background: $ui-color-success;
+        background: transparentize($sidebar-background, .9);
+        color: transparentize($sidebar-background, .2);
     }
 }
 
@@ -239,14 +240,22 @@ $switch-menu-item-hover-color: $main;
 
     &[data-privacy-icon='fa-lock'],
     &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-        background: transparentize($ui-color-danger, .85);
-        color: darken($ui-color-danger, 10%);
+        background: transparentize($main, .9);
+        color: darken($main, 3%);
+
+        > .fa {
+            color: darken($main, 3%);
+        }
     }
 
     &[data-privacy-icon='fa-unlock'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-        background: transparentize($ui-color-success, .85);
-        color: darken($ui-color-success, 10%);
+        background: transparentize($sidebar-background, .9);
+        color: transparentize($sidebar-background, .2);
+
+        > .fa {
+            color: transparentize($sidebar-background, .2);
+        }
     }
 
     > .breadcrumb-project-privacy-icon {
