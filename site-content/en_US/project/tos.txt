@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// 
+//
 //
 -->
 <?php
@@ -11,11 +11,16 @@ if (! $exchange_policy_url) {
     $exchange_policy_url = "javascript:;";
 }
 ?>
-<h2><?=\ForgeConfig::get('sys_name')?> Terms of Service Agreement</h2>
-<p>
-<B>1. ACCEPTANCE OF TERMS</B> 
-</p>
 
+<h1><?=\ForgeConfig::get('sys_name')?> Terms of Service Agreement</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Terms of Service</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">1. ACCEPTANCE OF TERMS</h2>
 <p>
 A person's use of <?php echo \ForgeConfig::get('sys_name'); ?> and any of its Services (as defined below) at
 any time is subject to <?php echo \ForgeConfig::get('sys_name'); ?> then-current Terms of Service ("TOS"),
@@ -51,10 +56,12 @@ herein.
 <p>
 <?php echo \ForgeConfig::get('sys_name'); ?> is a website owned and operated by <?php echo \ForgeConfig::get('sys_org_name'); ?> for
 the purpose of fostering the cross-organizational software development as well as content and source code sharing under
- the terms of the <b><u><a href="<?php echo $exchange_policy_url; ?>" target="_blank" rel="noreferrer"><?php echo \ForgeConfig::get('sys_org_name'); ?> Code eXchange Policy</a></b></u>.  Registering your project on <?php echo \ForgeConfig::get('sys_name'); ?> implies that you fully understand this corporate policy and take the commitment to comply with it.
+ the terms of the <a href="<?php echo $exchange_policy_url; ?>" target="_blank" rel="noreferrer"><?php echo \ForgeConfig::get('sys_org_name'); ?> Code eXchange Policy</a>.  Registering your project on <?php echo \ForgeConfig::get('sys_name'); ?> implies that you fully understand this corporate policy and take the commitment to comply with it.
 <p>
-<B>2. DESCRIPTION OF SERVICE</B> 
-</p>
+
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">2. DESCRIPTION OF SERVICE</h2>
 
 <p>
 <P>
@@ -64,9 +71,9 @@ and content creation, including various  communications tools, source code
 control and project management tools, online forums (collectively, the "Services").
 </p>
 
-<p>
-<B>3. REGISTRATION OBLIGATIONS</B> 
-</p>
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">3. REGISTRATION OBLIGATIONS</h2>
 
 <p>
 If required by the site in question, each user must: (a) provide true,
@@ -93,10 +100,9 @@ account at the end of each session.
 </p>
 
 
-<p>
-<B>4. CONTENT</B> 
-</p>
-
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">4. CONTENT</h2>
 <p>
 All information, data, text, software, music, sound, photographs, graphics,
 video, messages or any other materials whatsoever (collectively, "Content"),
@@ -124,10 +130,9 @@ incurred as a result of the use of any Content posted, emailed or otherwise
 transmitted via <?php echo \ForgeConfig::get('sys_name'); ?> or any Service thereon.
 </p>
 
-
-<p>
-<B>5. GENERAL PRACTICES REGARDING USE AND STORAGE</B> 
-</p>
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">5. GENERAL PRACTICES REGARDING USE AND STORAGE</h2>
 
 <p>
 <?php echo \ForgeConfig::get('sys_name'); ?> may establish general practices and limits concerning use of the
@@ -143,9 +148,9 @@ Service-specific Rules at any time, in its sole discretion, with notice to
 users and the public as described in Section 1 above.
 </p>
 
-<p>
-<B>6. TERMINATION</B>
-</p>
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">6. TERMINATION</h2>
 
 <p>
 A user's account may be terminated for reasons that include, but are not
@@ -166,9 +171,9 @@ that user's access or account hereunder.
 </p>
 
 
-<p>
-<b>7. VIOLATIONS</b>
-</p>
+    </section>
+    <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">7. VIOLATIONS</h2>
 
 <p>
 Please report any violations of the TOS, any alleged copyright infringements
@@ -179,3 +184,7 @@ or any other matters to the <a href="/contact.php"><?php echo \ForgeConfig::get(
 <p>
 Content owned by <?php echo \ForgeConfig::get('sys_long_org_name'); ?>. Copyright 2000-<?php print date('Y',time()); ?>, <?php echo \ForgeConfig::get('sys_org_name'); ?> Team. All rights reserved.
 </p>
+
+        </section>
+    </div>
+</section>

@@ -4,7 +4,7 @@
 // http://sourceforge.net
 require_once __DIR__ . '/../include/pre.php';  // Initial db and session library, opens session
 
-$HTML->header(['title' => "Terms of Service Agreement"]);
+$HTML->header(['title' => "Terms of Service Agreement", "main_classes" => ["tlp-framed", "tlp-centered"]]);
 
 include($Language->getContent('project/tos'));
 

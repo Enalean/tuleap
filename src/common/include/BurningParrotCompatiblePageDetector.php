@@ -58,7 +58,8 @@ class BurningParrotCompatiblePageDetector
             || $this->isInContact()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
-            || $this->isSoftwareMap();
+            || $this->isSoftwareMap()
+            || $this->isTos();
     }
 
     private function isManagingLabels()
@@ -118,6 +119,11 @@ class BurningParrotCompatiblePageDetector
     private function isSoftwareMap()
     {
         return strpos($_SERVER['REQUEST_URI'], '/softwaremap/') === 0;
+    }
+
+    private function isTos(): bool
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/tos/') === 0;
     }
 
     private function isInBurningParrotCompatiblePage()
