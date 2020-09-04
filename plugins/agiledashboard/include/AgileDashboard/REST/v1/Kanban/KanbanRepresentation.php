@@ -27,7 +27,6 @@ use Exception;
 use PFUser;
 use TrackerFactory;
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -50,7 +49,7 @@ class KanbanRepresentation
     public $tracker_id;
 
     /**
-     * @var \Tuleap\Tracker\REST\TrackerReference
+     * @var KanbanTrackerRepresentation
      */
     public $tracker;
 
@@ -102,7 +101,7 @@ class KanbanRepresentation
     private function __construct(
         int $id,
         int $tracker_id,
-        TrackerReference $tracker,
+        KanbanTrackerRepresentation $tracker,
         string $uri,
         string $label,
         array $columns,
@@ -144,7 +143,7 @@ class KanbanRepresentation
         return new self(
             JsonCast::toInt($kanban_id),
             JsonCast::toInt($kanban->getTrackerId()),
-            TrackerReference::build(self::getTracker($kanban)),
+            KanbanTrackerRepresentation::fromKanban(TrackerFactory::instance(), $kanban),
             $kanban_uri,
             $kanban->getName(),
             self::getColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user),
@@ -197,19 +196,5 @@ class KanbanRepresentation
             $column_representations[] = $column_representation;
         }
         return $column_representations;
-    }
-
-    private static function getTracker(AgileDashboard_Kanban $kanban): \Tracker
-    {
-        $tracker_id = $kanban->getTrackerId();
-        $tracker    = TrackerFactory::instance()->getTrackerById($tracker_id);
-
-        if ($tracker === null) {
-            throw new \RuntimeException(
-                sprintf("Cannot find the tracker #%d associated with the kanban #%d", $tracker_id, $kanban->getId())
-            );
-        }
-
-        return $tracker;
     }
 }
