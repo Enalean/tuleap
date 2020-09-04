@@ -308,7 +308,12 @@ final class multi_project_backlogPlugin extends Plugin
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\RequiredFieldChecker($logger),
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\WorkflowChecker(new Workflow_Dao(), $logger),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\WorkflowChecker(
+                new Workflow_Dao(),
+                new Tracker_Rule_Date_Dao(),
+                new Tracker_Rule_List_Dao(),
+                $logger
+            ),
             $logger
         );
     }
