@@ -28,6 +28,7 @@ use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\User\DynamicUser;
 use Tuleap\DynamicCredentials\User\DynamicUserCreator;
+use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
@@ -54,7 +55,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(BeforeLogin::NAME);
-        $this->addHook(Event::SESSION_AFTER_LOGIN);
+        $this->addHook(AfterLocalLogin::NAME);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
 
@@ -85,10 +86,10 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function sessionAfterLogin(array $params)
+    public function afterLocalLogin(AfterLocalLogin $event): void
     {
-        if ((int) $params['user']->getId() === DynamicUser::ID) {
-            $params['allow_codendi_login'] = false;
+        if ((int) $event->user->getId() === DynamicUser::ID) {
+            $event->refuseLogin();
         }
     }
 

@@ -17,14 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
 use Tuleap\User\PasswordVerifier;
 
 class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /** @var EventManager */
-    private $event_manager;
+    /** @var EventDispatcherInterface */
+    private $event_dispatcher;
 
     /** @var UserManager */
     private $user_manager;
@@ -38,13 +40,13 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private $password_handler;
 
     public function __construct(
-        EventManager $event_manager,
+        EventDispatcherInterface $event_dispatcher,
         UserManager $user_manager,
         PasswordVerifier $password_verifier,
         User_PasswordExpirationChecker $password_expiration_checker,
         PasswordHandler $password_handler
     ) {
-        $this->event_manager               = $event_manager;
+        $this->event_dispatcher            = $event_dispatcher;
         $this->user_manager                = $user_manager;
         $this->password_verifier           = $password_verifier;
         $this->password_expiration_checker = $password_expiration_checker;
@@ -73,11 +75,10 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      *
      * @throws User_InvalidPasswordWithUserException
      * @throws User_InvalidPasswordException
-     * @throws User_PasswordExpiredException
      */
     public function authenticate(string $name, ConcealedString $password): PFUser
     {
-        $beforeLogin = $this->event_manager->dispatch(new BeforeLogin($name, $password));
+        $beforeLogin = $this->event_dispatcher->dispatch(new BeforeLogin($name, $password));
         assert($beforeLogin instanceof BeforeLogin);
         $user = $beforeLogin->getUser();
 
@@ -99,30 +100,23 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             throw new User_InvalidPasswordWithUserException($user);
         }
 
-        $this->event_manager->dispatch(new \Tuleap\User\UserAuthenticationSucceeded($user));
+        $this->event_dispatcher->dispatch(new \Tuleap\User\UserAuthenticationSucceeded($user));
 
         return $user;
     }
 
     private function authenticateFromDatabase(PFUser $user, ConcealedString $password)
     {
-        $is_auth_valid          = false;
-
-        if ($this->password_verifier->verifyPassword($user, $password)) {
-            $user->setPassword($password);
-            $this->checkPasswordStorageConformity($user);
-
-            $is_auth_valid = true;
-            $this->event_manager->processEvent(
-                Event::SESSION_AFTER_LOGIN,
-                [
-                    'user'                => $user,
-                    'allow_codendi_login' => &$is_auth_valid
-                ]
-            );
+        if (! $this->password_verifier->verifyPassword($user, $password)) {
+            return false;
         }
 
-        return $is_auth_valid;
+        $user->setPassword($password);
+        $this->checkPasswordStorageConformity($user);
+
+        $afterLogin = $this->event_dispatcher->dispatch(new AfterLocalLogin($user));
+        assert($afterLogin instanceof AfterLocalLogin);
+        return $afterLogin->isIsLoginAllowed();
     }
 
     private function checkPasswordStorageConformity(PFUser $user)

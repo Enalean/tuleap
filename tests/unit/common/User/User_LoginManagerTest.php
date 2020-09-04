@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\AfterLocalLogin;
 use Tuleap\User\BeforeLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 
@@ -83,7 +84,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
                 }
             }
 
-            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            public function afterLocalLogin(AfterLocalLogin $event): void
             {
                 $this->after_called = true;
             }
@@ -168,11 +169,10 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
                 $this->before_called = true;
             }
 
-            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            public function afterLocalLogin(AfterLocalLogin $event): void
             {
                 $this->after_called = true;
-                $this->user = $params['user'];
-                $params['allow_codendi_login'] = true;
+                $this->user = $event->user;
             }
 
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
@@ -235,6 +235,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\User_InvalidPasswordWithUserException::class);
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
+        $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
 
         $plugin = new class extends \Plugin {
             public $before_called        = false;
@@ -246,10 +247,10 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
                 $this->before_called = true;
             }
 
-            public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            public function afterLocalLogin(AfterLocalLogin $event): void
             {
                 $this->after_called = true;
-                $params['allow_codendi_login'] = false;
+                $event->refuseLogin();
             }
 
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
@@ -280,7 +281,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
                     $this->before_called = true;
                 }
 
-                public function session_after_login(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+                public function afterLocalLogin(AfterLocalLogin $event): void
                 {
                     $this->after_called = true;
                 }
@@ -296,7 +297,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     private function addListeners(\Plugin $plugin): \Plugin
     {
         $this->event_manager->addListener(BeforeLogin::NAME, $plugin, BeforeLogin::NAME, false);
-        $this->event_manager->addListener(Event::SESSION_AFTER_LOGIN, $plugin, Event::SESSION_AFTER_LOGIN, false);
+        $this->event_manager->addListener(AfterLocalLogin::NAME, $plugin, AfterLocalLogin::NAME, false);
         $this->event_manager->addListener(UserAuthenticationSucceeded::NAME, $plugin, UserAuthenticationSucceeded::NAME, false);
         return $plugin;
     }
