@@ -17,11 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.switch-to-modal-body-global-empty {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 200px;
+    padding: 38px 0 46px;
+}
+
 .switch-to-projects-container {
     flex: 1 0 auto;
     width: calc(50% - #{$tlp-large-spacing / 2});
 }
 
+.switch-to-modal-body-global-empty-text,
 .switch-to-recent-items-empty-text,
 .switch-to-projects-empty-text {
     margin: $tlp-medium-spacing 0 $tlp-large-spacing;

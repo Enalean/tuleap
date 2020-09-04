@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalEmptyState Display an empty state 1`] = `
+<div
+  class="switch-to-modal-body-global-empty"
+>
+  <global-empty-state-svg-stub />
+   
+  <translate-stub
+    class="switch-to-modal-body-global-empty-text"
+    tag="span"
+  >
+    
+        You don’t belong to any project or haven’t viewed anything yet
+    
+  </translate-stub>
+   
+  <a
+    class="tlp-button-secondary switch-to-projects-softwaremap-empty-state"
+    data-test="trove-cat-link"
+    href="/softwaremap/trove_list.php"
+  >
+    
+        Start exploring Tuleap
+    
+  </a>
+</div>
+`;
