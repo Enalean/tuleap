@@ -56,6 +56,17 @@ input[type='file'] {
     background-color: $dark-grey;
 }
 
+kbd { // Use the same definition than the one defined for code in bootstrap
+    padding: 2px 4px;
+    border: 1px solid #e1e1e8;
+    border-radius: 3px;
+    background-color: #f7f7f9;
+    color: #dd1144;
+    font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
 .alert {
     margin: 10px 0;
     padding: 20px;
