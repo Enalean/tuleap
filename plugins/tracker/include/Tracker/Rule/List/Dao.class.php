@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use ParagonIE\EasyDB\EasyStatement;
+
 /**
  *  Data Access Object for Tracker_Rule
  */
@@ -127,6 +129,29 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
                     $target_value_id
                 );
             }
+        );
+    }
+
+    /**
+     * @param int[] $tracker_ids
+     * @param int[] $field_ids
+     * @psalm-return int[]
+     */
+    public function searchTrackersWithRulesByFieldIDsAndTrackerIDs(array $tracker_ids, array $field_ids): array
+    {
+        $where_statement_field_tracker = EasyStatement::open()
+            ->in('tracker_id IN (?*)', $tracker_ids)
+            ->andGroup()
+                ->in('source_field_id IN (?*)', $field_ids)
+                ->orIn('target_field_id IN (?*)', $field_ids)
+            ->endGroup();
+
+        return $this->getDB()->column(
+            "SELECT DISTINCT tracker_rule.tracker_id
+                       FROM tracker_rule
+                       JOIN tracker_rule_list ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                       WHERE tracker_rule.rule_type = ? AND $where_statement_field_tracker",
+            array_merge([Tracker_Rule::RULETYPE_VALUE], $where_statement_field_tracker->values())
         );
     }
 }

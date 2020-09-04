@@ -37,19 +37,36 @@ final class WorkflowCheckerTest extends TestCase
      */
     private $workflow_dao;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Rule_Date_Dao
+     */
+    private $rule_date_dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Rule_List_Dao
+     */
+    private $rule_list_dao;
+    /**
      * @var WorkflowChecker
      */
     private $checker;
 
     protected function setUp(): void
     {
-        $this->workflow_dao = \Mockery::mock(\Workflow_Dao::class);
-        $this->checker      = new WorkflowChecker($this->workflow_dao, new NullLogger());
+        $this->workflow_dao  = \Mockery::mock(\Workflow_Dao::class);
+        $this->rule_date_dao = \Mockery::mock(\Tracker_Rule_Date_Dao::class);
+        $this->rule_list_dao = \Mockery::mock(\Tracker_Rule_List_Dao::class);
+        $this->checker = new WorkflowChecker(
+            $this->workflow_dao,
+            $this->rule_date_dao,
+            $this->rule_list_dao,
+            new NullLogger()
+        );
     }
 
     public function testConsiderTrackerContributorsAreValidWhenAllRulesAreVerified(): void
     {
         $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
 
         $this->assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
@@ -64,6 +81,45 @@ final class WorkflowCheckerTest extends TestCase
         $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn(
             [['tracker_id' => 758, 'field_id' => 963]]
         );
+
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(758);
+        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('getId')->andReturn('963');
+
+        $this->assertFalse(
+            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
+                new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+                new SynchronizedFieldCollection([$field])
+            )
+        );
+    }
+
+    public function testRejectsWhenSomeDateRulesAreDefinedWithASynchronizedField(): void
+    {
+        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
+
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(758);
+        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $field->shouldReceive('getId')->andReturn('963');
+
+        $this->assertFalse(
+            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
+                new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+                new SynchronizedFieldCollection([$field])
+            )
+        );
+    }
+
+    public function testRejectsWhenSomeListRulesAreDefinedWithASynchronizedField(): void
+    {
+        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(758);
