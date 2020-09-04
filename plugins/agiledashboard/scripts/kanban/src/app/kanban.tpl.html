@@ -7,7 +7,7 @@
     <div class="kanban-header-config">
         <go-to-kanban></go-to-kanban>
 
-        <button type="button"
+        <a href="/plugins/tracker/?tracker={{kanban.kanban.tracker.id}}&func=new-artifact" type="button"
                 class="tlp-button-primary tlp-button-small kanban-header-add-artifact-button"
                 ng-show="kanban.user_can_add_artifact"
                 ng-click="kanban.openAddArtifactModal($event)"
@@ -16,7 +16,7 @@
                ng-class="{ 'fa-spinner fa-spin': kanban.is_artifact_modal_loading }"
             ></i>
             <span translate>Add new {{ kanban.kanban.tracker.label }}</span>
-        </button>
+        </a>
 
         <button type="button"
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
