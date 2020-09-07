@@ -34,10 +34,10 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
-import GlobalEmptyState from "./Body/GlobalEmptyState.vue";
+import GlobalEmptyState from "./GlobalEmptyState.vue";
 import { State } from "vuex-class";
-import { Project, UserHistory } from "../type";
-import GlobalLoadingState from "./Body/GlobalLoadingState.vue";
+import { Project, UserHistory } from "../../type";
+import GlobalLoadingState from "./GlobalLoadingState.vue";
 
 @Component({
     components: { GlobalLoadingState, GlobalEmptyState, ListOfProjects, ListOfRecentItems },

@@ -50,7 +50,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
 import { Getter, State } from "vuex-class";
-import { Project } from "../../type";
+import { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 
 @Component({

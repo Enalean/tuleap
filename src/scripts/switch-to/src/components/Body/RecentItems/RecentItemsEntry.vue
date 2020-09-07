@@ -57,7 +57,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { UserHistoryEntry } from "../../type";
+import { UserHistoryEntry } from "../../../type";
 
 @Component
 export default class RecentItemsEntry extends Vue {

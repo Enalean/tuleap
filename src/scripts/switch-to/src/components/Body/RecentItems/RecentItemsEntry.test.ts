@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { QuickLink, UserHistoryEntry } from "../../type";
+import { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 
 describe("RecentItemsEntry", () => {

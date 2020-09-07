@@ -18,10 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { Project } from "../../type";
+import { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
-import { State } from "../../store/type";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { State } from "../../../store/type";
 
 describe("ProjectLink", () => {
     it("Displays the link to a project", () => {
