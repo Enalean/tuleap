@@ -62,7 +62,7 @@ export default class ProjectLink extends Vue {
             project_is_private_incl_restricted: this.project.is_private_incl_restricted,
             project_is_public_incl_restricted: this.project.is_public_incl_restricted,
             are_restricted_users_allowed: this.are_restricted_users_allowed,
-            project_privacy: "",
+            explanation_text: "",
         };
 
         return getProjectPrivacyIcon(privacy);

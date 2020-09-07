@@ -26,7 +26,7 @@ use Project;
 /**
  * @psalm-immutable
  */
-class ProjectPrivacyPresenter
+final class ProjectPrivacyPresenter
 {
     /**
      * @var bool
@@ -51,7 +51,7 @@ class ProjectPrivacyPresenter
     /**
      * @var string
      */
-    public $project_privacy;
+    public $explanation_text;
     /**
      * @var string
      */
@@ -61,15 +61,15 @@ class ProjectPrivacyPresenter
      */
     public $project_name;
 
-    public function __construct(
+    private function __construct(
         Project $project,
-        string $project_privacy,
+        string $explanation_text,
         string $privacy_title
     ) {
         $this->project_is_public  = $project->isPublic();
         $this->project_is_private = ! $this->project_is_public;
         $this->project_name       = (string) $project->getPublicName();
-        $this->project_privacy    = $project_privacy;
+        $this->explanation_text   = $explanation_text;
         $this->privacy_title      = $privacy_title;
 
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
@@ -83,10 +83,10 @@ class ProjectPrivacyPresenter
 
     public static function fromProject(Project $project): self
     {
-        return new self($project, self::getProjectPrivacyText($project), self::getPrivacyTitle($project));
+        return new self($project, self::getExplanationText($project), self::getPrivacyTitle($project));
     }
 
-    private static function getProjectPrivacyText(Project $project): string
+    private static function getExplanationText(Project $project): string
     {
         if (ForgeConfig::areRestrictedUsersAllowed()) {
             switch ($project->getAccess()) {
