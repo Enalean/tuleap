@@ -72,18 +72,18 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
     {
         $title = '';
         if ($this->job && $this->test_result) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_widget_title', [$this->job->getName(), $this->test_result->getPassCount(), $this->test_result->getTotalCount()]);
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Test Results (%2$s / %3$s)'), $this->job->getName(), $this->test_result->getPassCount(), $this->test_result->getTotalCount());
         } elseif ($this->job && ! $this->test_result) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_projectname', [$this->job->getName()]);
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Test Results'), $this->job->getName());
         } else {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults');
+            $title .= dgettext('tuleap-hudson', 'Test Results');
         }
         return $title;
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testresults');
+        return dgettext('tuleap-hudson', 'Show the test results of the latest build for the selected job.To display something, your job needs to execute tests and publish them. The result is shown on a pie chart.');
     }
 
     public function loadContent($id)
@@ -134,9 +134,9 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
             );
         } else {
             if ($this->job != null) {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found');
+                $html .= dgettext('tuleap-hudson', 'No test found for this job.');
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+                $html .= dgettext('tuleap-hudson', 'Job not found.');
             }
         }
 

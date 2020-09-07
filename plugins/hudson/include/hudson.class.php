@@ -42,7 +42,7 @@ class hudson extends Controler
                                 if ($request->exist('hudson_job_url') && trim($request->get('hudson_job_url') != '')) {
                                     $this->action = 'addJob';
                                 } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'job_url_missing'));
+                                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job URL (eg: http://myCIserver:8080/jenkins/job/MyJob)'));
                                 }
                                 $this->view = 'projectOverview';
                             } else {
@@ -55,7 +55,7 @@ class hudson extends Controler
                                 if ($request->exist('job_id')) {
                                     $this->view = 'editJob';
                                 } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'job_id_missing'));
+                                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job ID'));
                                 }
                             } else {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
@@ -68,10 +68,10 @@ class hudson extends Controler
                                     if ($request->exist('hudson_job_url') && $request->get('hudson_job_url') != '') {
                                         $this->action = 'updateJob';
                                     } else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'job_url_missing'));
+                                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job URL (eg: http://myCIserver:8080/jenkins/job/MyJob)'));
                                     }
                                 } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'job_id_missing'));
+                                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job ID'));
                                 }
                                 $this->view = 'projectOverview';
                             } else {
@@ -84,7 +84,7 @@ class hudson extends Controler
                                 if ($request->exist('job_id')) {
                                     $this->action = 'deleteJob';
                                 } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'job_id_missing'));
+                                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job ID'));
                                 }
                                 $this->view = 'projectOverview';
                             } else {
@@ -112,10 +112,10 @@ class hudson extends Controler
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'service_not_used'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Continuous integration service is not enabled'));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'group_id_missing'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing group_id parameter.'));
         }
     }
 }

@@ -66,9 +66,9 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
     {
         $title = '';
         if ($this->job) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts', [$this->job->getName()]);
+            $title .= sprintf(dgettext('tuleap-hudson', '%1$s Last Artifacts'), $this->job->getName());
         } else {
-             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts');
+             $title .= sprintf(dgettext('tuleap-hudson', '%1$s Last Artifacts'), '');
         }
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -77,7 +77,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastartifacts');
+        return dgettext('tuleap-hudson', 'Show the last successfully published artifacts of one job. To display something, your job needs to publish artifacts.');
     }
 
     public function loadContent($id)
@@ -127,7 +127,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
 
             $dom = $build->getDom();
             if (count($dom->artifact) === 0) {
-                return $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'no_artifact_found'));
+                return $purifier->purify(dgettext('tuleap-hudson', 'No artifact found.'));
             }
 
             $html .= '<ul>';
@@ -137,9 +137,9 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
             $html .= '</ul>';
         } else {
             if ($this->job != null) {
-                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found'));
+                $html .= $purifier->purify(dgettext('tuleap-hudson', 'No build found for this job.'));
             } else {
-                $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
+                $html .= $purifier->purify(dgettext('tuleap-hudson', 'Job not found.'));
             }
         }
         return $html;

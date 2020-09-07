@@ -65,39 +65,39 @@ class HudsonJob
         switch ($this->getColor()) {
             case "blue":
                 // The last build was successful.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_blue');
+                return dgettext('tuleap-hudson', 'Success');
                 break;
             case "blue_anime":
                 // The last build was successful. A new build is in progress.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_blue_anime');
+                return dgettext('tuleap-hudson', 'In progress');
                 break;
             case "yellow":
                 // The last build was successful but unstable. This is primarily used to represent test failures.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_yellow');
+                return dgettext('tuleap-hudson', 'Unstable');
                 break;
             case "yellow_anime":
                 // The last build was successful but unstable. This is primarily used to represent test failures. A new build is in progress.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_yellow_anime');
+                return dgettext('tuleap-hudson', 'In progress');
                 break;
             case "red":
                 // The last build fatally failed.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_red');
+                return dgettext('tuleap-hudson', 'Failure');
                 break;
             case "red_anime":
                 // The last build fatally failed. A new build is in progress.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_red_anime');
+                return dgettext('tuleap-hudson', 'In progress');
                 break;
             case "grey":
                 // The project has never been built before, or the project is disabled.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_grey');
+                return dgettext('tuleap-hudson', 'Pending');
                 break;
             case "grey_anime":
                 // The project has never been built before, or the project is disabled. The first build of this project is in progress.
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_grey_anime');
+                return dgettext('tuleap-hudson', 'In progress');
                 break;
             default:
                 // Can we have anime icons here?
-                return $GLOBALS['Language']->getText('plugin_hudson', 'status_unknown');
+                return dgettext('tuleap-hudson', 'Unknown status');
                 break;
         }
     }

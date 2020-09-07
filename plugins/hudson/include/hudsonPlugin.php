@@ -241,8 +241,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     public function getAvailableReferenceNatures($params)
     {
         $hudson_plugin_reference_natures = [
-            'hudson_build'  => ['keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')],
-            'hudson_job' => ['keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')]];
+            'hudson_build'  => ['keyword' => 'build', 'label' => dgettext('tuleap-hudson', 'Jenkins Build')],
+            'hudson_job' => ['keyword' => 'job', 'label' => dgettext('tuleap-hudson', 'Jenkins Job')]];
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }
 
@@ -275,11 +275,11 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                         HTTPFactoryBuilder::requestFactory()
                     );
                     $event->setOutput(
-                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />' .
-                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult())
+                        '<strong>' . dgettext('tuleap-hudson', 'Build performed on:') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />' .
+                        '<strong>' . dgettext('tuleap-hudson', 'Status:') . '</strong> ' . $html_purifier->purify($build->getResult())
                     );
                 } else {
-                    $event->setOutput('<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>');
+                    $event->setOutput('<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>');
                 }
                 break;
             case 'hudson_job':
@@ -308,16 +308,16 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                         $html .= '  <td>';
                         $html .= '   <ul>';
                         if ($job->hasBuilds()) {
-                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastBuildNumber() . '"># ' . $job->getLastBuildNumber() . '</a></li>';
-                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_success') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastSuccessfulBuildNumber() . '"># ' . $job->getLastSuccessfulBuildNumber() . '</a></li>';
-                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastFailedBuildNumber() . '"># ' . $job->getLastFailedBuildNumber() . '</a></li>';
+                            $html .= ' <li>' . dgettext('tuleap-hudson', 'Last Build:') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastBuildNumber() . '"># ' . $job->getLastBuildNumber() . '</a></li>';
+                            $html .= ' <li>' . dgettext('tuleap-hudson', 'Last Success:') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastSuccessfulBuildNumber() . '"># ' . $job->getLastSuccessfulBuildNumber() . '</a></li>';
+                            $html .= ' <li>' . dgettext('tuleap-hudson', 'Last Failure:') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastFailedBuildNumber() . '"># ' . $job->getLastFailedBuildNumber() . '</a></li>';
                         } else {
-                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
+                            $html .= ' <li>' . dgettext('tuleap-hudson', 'No build found for this job.') . '</li>';
                         }
                         $html .= '   </ul>';
                         $html .= '  </td>';
                         $html .= '  <td class="widget_lastbuilds_weather">';
-                        $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report') . '<img src="' . $job->getWeatherReportIcon() . '" align="middle" />';
+                        $html .= dgettext('tuleap-hudson', 'Weather Report:') . '<img src="' . $job->getWeatherReportIcon() . '" align="middle" />';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= '</table>';
@@ -325,7 +325,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                     } catch (Exception $e) {
                     }
                 } else {
-                    $event->setOutput('<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>');
+                    $event->setOutput('<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>');
                 }
                 break;
         }
@@ -418,8 +418,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             }
             $formatter->clearContent();
             $formatter->addEmptyLine();
-            $formatter->addLine([$GLOBALS['Language']->getText('plugin_hudson', 'title')]);
-            $formatter->addLine([$GLOBALS['Language']->getText('plugin_hudson', 'job_count', [date('Y-m-d')]), $count]);
+            $formatter->addLine([dgettext('tuleap-hudson', 'Continuous Integration')]);
+            $formatter->addLine([sprintf(dgettext('tuleap-hudson', 'Number of jobs until %1$s'), date('Y-m-d')), $count]);
             echo $formatter->getCsvContent();
             $formatter->clearContent();
         }

@@ -22,6 +22,6 @@ class hudsonPluginDescriptor extends PluginDescriptor
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_hudson', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_hudson', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-hudson', 'Continuous Integration'), false, dgettext('tuleap-hudson', 'Continuous Integration with Hudson/Jenkins'));
     }
 }

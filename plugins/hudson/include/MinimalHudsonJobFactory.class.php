@@ -106,7 +106,7 @@ class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
         $parsed_url = parse_url($url);
 
         if (! $parsed_url || ! array_key_exists('scheme', $parsed_url)) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson', 'wrong_job_url', [$url]));
+            throw new HudsonJobURLMalformedException(sprintf(dgettext('tuleap-hudson', 'Wrong Job URL: %1$s'), $url));
         }
 
         $matches = [];

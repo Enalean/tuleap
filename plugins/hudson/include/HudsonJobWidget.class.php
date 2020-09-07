@@ -95,7 +95,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         if (count($jobs) > 0) {
             $html = '<div class="tlp-form-element">
                 <label class="tlp-label" for="' . $select_id . '">
-                    ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')) . '
+                    ' . $purifier->purify(dgettext('tuleap-hudson', 'Monitored job')) . '
                 </label>
                 <select class="tlp-select"
                     id="' . $select_id . '"
@@ -111,15 +111,11 @@ abstract class HudsonJobWidget extends HudsonWidget
             $html .= '</select>
                 </div>';
         } elseif ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $html = '<div class="tlp-alert-warning">' . $GLOBALS['Language']->getText(
-                'plugin_hudson',
-                'widget_no_job_project',
-                [$this->group_id]
-            ) . '</div>';
+            $html = '<div class="tlp-alert-warning">' . sprintf(dgettext('tuleap-hudson', 'No job found. Please <a href="/plugins/hudson/?group_id=%1$s">add a job</a> before adding any Jenkins widget.'), $this->group_id) . '</div>';
         } else {
             $message = $this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE ?
-                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', [$this->group_id]) :
-                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
+                sprintf(dgettext('tuleap-hudson', 'No job found. Please <a href="/plugins/hudson/?group_id=%1$s">add a job</a> before adding any Jenkins widget.'), $this->group_id) :
+                dgettext('tuleap-hudson', 'No job found. Please add a job to any of your project before.');
 
             $html = '<div class="tlp-alert-warning">' . $message . '</div>';
         }

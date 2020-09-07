@@ -1,5 +1,14 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8\n"
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s jobs triggered"
+msgstr "%1$s jobs déclenchés"
 
 msgid ""
 "A Jenkins server has been defined globally for the project and will be "
@@ -17,8 +26,17 @@ msgstr[1] ""
 msgid "Actions"
 msgstr "Actions"
 
+msgid "Add Jenkins hook"
+msgstr "Ajouter un hook Jenkins"
+
+msgid "Add Jenkins webhook"
+msgstr "Ajouter le webhook Jenkins"
+
 msgid "Add a Jenkins server"
 msgstr "Ajouter un serveur Jenkins"
+
+msgid "Add a Jenkins webhook"
+msgstr "Ajouter un webhook Jenkins"
 
 msgid "Branch source plugin:"
 msgstr "Plugin Branch source :"
@@ -39,6 +57,18 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Continuous Integration for Git plugin"
+msgstr "Intégration Continue pour le plugin Git"
+
+msgid "Continuous Integration with Hudson/Jenkins for Git plugin"
+msgstr "Intégration continue avec Hudson/Jenkins pour le plugin Git"
+
+msgid "Edit the Jenkins webhook"
+msgstr "Éditer le webhook Jenkins"
+
+msgid "Error while saving Job data"
+msgstr "Une erreur est survenue lors de l'enregistrement des données du job"
+
 msgid "Expected Jenkins server ID not found"
 msgstr "L'ID attendu du serveur Jenkins n'a pas été trouvée"
 
@@ -48,8 +78,20 @@ msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
 msgid "Git plugin triggered jobs:"
 msgstr "Jobs déclenchés par le plugin Git :"
 
+msgid "Invalid repository"
+msgstr "Dépôt invalide"
+
 msgid "Jenkins URL"
 msgstr "URL Jenkins"
+
+msgid "Jenkins documentation"
+msgstr "documentation Jenkins"
+
+msgid "Jenkins hook"
+msgstr "Hook Jenkins"
+
+msgid "Jenkins server"
+msgstr "Serveur Jenkins"
 
 msgid "Jenkins server is not reachable."
 msgstr "Le serveur Jenkins n'est pas joignable."
@@ -63,6 +105,19 @@ msgid ""
 msgstr ""
 "Le serveur Jenkins sera notifié à propos de l'activité git sur l'ensemble "
 "des dépôts du projet."
+
+msgid ""
+"Jenkins server will be notified about git activity on this repository and "
+"will trigger git polling. More details on"
+msgstr ""
+"Le serveur Jenkins sera notifié à propos de l'activité git sur ce dépôt et "
+"déclenchera une opération de 'polling'. Plus de détails dans la"
+
+msgid "Jenkins webhook successfully removed"
+msgstr "Le webhook Jenkins a été enlevé avec succès"
+
+msgid "Jenkins webhook successfully saved"
+msgstr "Le webhook Jenkins a été sauvergardée avec succès"
 
 msgid "Logs"
 msgstr "Historique"
@@ -85,6 +140,9 @@ msgstr "Aucun job déclenché"
 msgid "Nothing has been triggered for this push."
 msgstr "Rien n'a été déclenché pour ce push."
 
+msgid "Only one Jenkins hook can be configured"
+msgstr "Seulement un hook Jenkins peut être configuré"
+
 msgid "Provided job does not belong to the Jenkins server's project."
 msgstr "Le job et le serveur Jenkins ne sont pas dans le même projet."
 
@@ -99,6 +157,9 @@ msgstr "Dépôt"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Save Jenkins webhook"
+msgstr "Sauvegarder le webhook Jenkins"
 
 msgid "Test the server"
 msgstr "Tester le serveur"
@@ -115,6 +176,9 @@ msgstr "Le serveur Jenkins a été ajouté."
 msgid "The Jenkins server is already defined in project."
 msgstr "Le serveur Jenkins est déjà défini pour ce projet."
 
+msgid "Unable to save Jenkins webhook"
+msgstr "Impossible d'enregistrer le webhook Jenkins"
+
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."
 
@@ -122,3 +186,7 @@ msgid "You are about to remove the Jenkins server. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer le serveur Jenkins. Veuillez confirmer "
 "la suppression."
+
+msgid "You can define one Jenkins webhook and several generic webhooks."
+msgstr ""
+"Vous pouvez definir un webhook Jenkins et plusieurs webhooks génériques."

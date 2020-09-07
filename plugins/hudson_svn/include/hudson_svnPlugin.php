@@ -52,6 +52,8 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
+        bindtextdomain('tuleap-hudson_svn', __DIR__ . '/../site-content');
+
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
 
@@ -231,7 +233,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         if ($this->isJobValid($params['job_id'])) {
             if (! $this->getJobManager()->delete($params['job_id'])) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson_svn', 'ci_trigger_not_deleted'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson_svn', 'An error occurred while deleting job.'));
             }
         }
     }

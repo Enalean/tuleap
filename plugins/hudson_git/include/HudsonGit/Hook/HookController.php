@@ -87,9 +87,9 @@ class HookController
         }
 
         if ($this->dao->save($repository->getId(), $jenkins_server)) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_hudson_git', 'update_success'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_database'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
         }
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
@@ -100,9 +100,9 @@ class HookController
         $this->checkCSRFToken($repository);
 
         if ($this->dao->delete($repository->getId())) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_hudson_git', 'delete_success'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully removed'));
         } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_database'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
         }
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
@@ -113,7 +113,7 @@ class HookController
         $repository_id = $this->request->getValidated('repo_id', 'uint', 0);
         $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
         if (! $repository) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Invalid repository'));
             $GLOBALS['Response']->redirect(GIT_BASE_URL . "/?group_id=" . $this->request->getProject()->getID());
         }
 

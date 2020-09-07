@@ -1,0 +1,68 @@
+msgid ""
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s will automatically pass following parameters to the job:"
+msgstr "%1$s passera automatiquement les paramètres suivants au job jenkins:"
+
+msgid "An error occurred while adding job."
+msgstr "Une erreur est survenue lors de l'ajout du job."
+
+msgid "An error occurred while deleting job."
+msgstr "Une erreur est survenue lors de la suppression du job."
+
+msgid "Continuous Integration for Subversion plugin"
+msgstr "Intégration Continue pour le plugin Subversion"
+
+msgid "Continuous Integration with Hudson/Jenkins for Subversion plugin"
+msgstr "Intégration continue avec Hudson/Jenkins pour le plugin Subversion"
+
+#, php-format
+msgid "Identifier (String) of %1$s user who made the commit."
+msgstr "Identifiant (Chaine) de l'utilisateur %1$s qui a fait le commit."
+
+msgid "Identifier (String) of the current project."
+msgstr "Identifiant (Chaine) du projet courant."
+
+msgid "If empty, every commits will trigger a build."
+msgstr "Si vide, tous les commits déclencheront un build."
+
+msgid "One path per line..."
+msgstr "Un chemin par ligne..."
+
+msgid "Only when commit occurs on following paths:"
+msgstr "Uniquement lors de commit sur les répertoires suivants :"
+
+msgid "Repository not found."
+msgstr "Le dépôt demandé n'existe pas."
+
+msgid "SVN multiple repositories"
+msgstr "SVN dépôt multiple"
+
+msgid "Subversion multi repositories trigger"
+msgstr "Evénement Subversion multi dépôts"
+
+msgid "This request is not valid."
+msgstr "La requête n'est pas valide."
+
+msgid "Trigger a build after a commit in repository:"
+msgstr "Déclencher un build après un commit dans le dépôt :"
+
+msgid ""
+"URL (String) of the updated repository (https://svn.example.com/svnplugin/"
+"ExampleDepot/)."
+msgstr ""
+"URL (Chaine) du dépôt mis à jour (https://svn.exemple.com/svnplugin/"
+"ExempleDepot/)."
+
+msgid ""
+"Value (string) of paths impacted by commit. Please note that paths are end "
+"of line separated."
+msgstr ""
+"Valeur (Chaine) des chemins impactés par le commit. Merci de noter que les "
+"chemins sont séparés par un caractère de retour à la ligne."

@@ -47,7 +47,7 @@ class HudsonTestResult
         $parsed_url = parse_url($hudson_job_url);
 
         if (! $parsed_url || ! array_key_exists('scheme', $parsed_url)) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson', 'wrong_job_url', [$hudson_job_url]));
+            throw new HudsonJobURLMalformedException(sprintf(dgettext('tuleap-hudson', 'Wrong Job URL: %1$s'), $hudson_job_url));
         }
 
         $this->hudson_test_result_url = $hudson_job_url . "/lastBuild/testReport/api/xml/";
@@ -63,14 +63,14 @@ class HudsonTestResult
             $this->request_factory->createRequest('GET', $hudson_test_result_url)
         );
         if ($response->getStatusCode() !== 200) {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', [$hudson_test_result_url]));
+            throw new HudsonJobURLFileNotFoundException(sprintf(dgettext('tuleap-hudson', 'File not found at URL: %1$s'), $hudson_test_result_url));
         }
 
         $xmlobj = simplexml_load_string($response->getBody()->getContents());
         if ($xmlobj !== false) {
             return $xmlobj;
         }
-        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', [$hudson_test_result_url]));
+        throw new HudsonJobURLFileException(sprintf(dgettext('tuleap-hudson', 'Unable to read file at URL: %1$s'), $hudson_test_result_url));
     }
 
     public function getFailCount()

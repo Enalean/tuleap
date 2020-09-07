@@ -55,12 +55,12 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'my_jobs');
+        return dgettext('tuleap-hudson', 'My Jenkins Jobs');
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_myjobs');
+        return dgettext('tuleap-hudson', 'Show an overview of all the jobs of all the projects you\'re member of. You can of course select the jobs you wish to display by selecting the preferences link of the widget.');
     }
 
     public function updatePreferences(Codendi_Request $request)
@@ -102,7 +102,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
                 <tr>
                     <th></th>
                     <th style="width:100%">
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs')) . '
+                        ' . $purifier->purify(dgettext('tuleap-hudson', 'Monitored jobs')) . '
                     </th>
                 </tr>
             </thead>
@@ -182,10 +182,10 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
                 }
                 $html .= '</table>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_monitoredjob_my');
+                $html .= dgettext('tuleap-hudson', 'You are not monitoring any job. Select preferences link to monitor a job.');
             }
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
+            $html .= dgettext('tuleap-hudson', 'No job found. Please add a job to any of your project before.');
         }
         if ($nb_jobs_in_error > 0) {
             $html_error_string  = '<div class="tlp-alert-warning">';
