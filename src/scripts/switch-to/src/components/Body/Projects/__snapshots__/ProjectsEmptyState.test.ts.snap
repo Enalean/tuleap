@@ -18,14 +18,12 @@ exports[`ProjectsEmptyState Display an empty state 1`] = `
     
   </span>
    
-  <a
+  <trove-cat-link-stub
     class="tlp-button-secondary switch-to-projects-softwaremap-empty-state"
-    data-test="trove-cat-link"
-    href="/softwaremap/trove_list.php"
   >
     
         Browse all projects
     
-  </a>
+  </trove-cat-link-stub>
 </div>
 `;

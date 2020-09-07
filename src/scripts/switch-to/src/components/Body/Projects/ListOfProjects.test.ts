@@ -25,6 +25,7 @@ import { State } from "../../../store/type";
 import { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
+import TroveCatLink from "../TroveCatLink.vue";
 
 describe("ListOfProjects", () => {
     it("Displays empty state if no projects", async () => {
@@ -33,7 +34,6 @@ describe("ListOfProjects", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        is_trove_cat_enabled: true,
                         projects: [] as Project[],
                     } as State,
                     getters: {
@@ -52,7 +52,6 @@ describe("ListOfProjects", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        is_trove_cat_enabled: true,
                         projects: [
                             { project_uri: "/a" } as Project,
                             { project_uri: "/b" } as Project,
@@ -71,25 +70,6 @@ describe("ListOfProjects", () => {
 
         expect(wrapper.findAllComponents(ProjectLink).length).toBe(2);
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(false);
-        expect(wrapper.find("[data-test=trove-cat-link]").exists()).toBe(true);
-    });
-
-    it("Does not display link to trove cat if it is deactivated", async () => {
-        const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_trove_cat_enabled: false,
-                        projects: [{ project_uri: "/a" } as Project],
-                    } as State,
-                    getters: {
-                        filtered_projects: [] as Project[],
-                    },
-                }),
-            },
-        });
-
-        expect(wrapper.find("[data-test=trove-cat-link]").exists()).toBe(false);
+        expect(wrapper.findComponent(TroveCatLink).exists()).toBe(true);
     });
 });
