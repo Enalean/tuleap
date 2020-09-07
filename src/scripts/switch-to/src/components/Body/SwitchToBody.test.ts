@@ -19,12 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SwitchToBody from "./SwitchToBody.vue";
-import { createStoreMock } from "../../../vue-components/store-wrapper-jest";
-import { Project, UserHistory } from "../type";
+import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { Project, UserHistory } from "../../type";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
-import GlobalEmptyState from "./Body/GlobalEmptyState.vue";
-import GlobalLoadingState from "./Body/GlobalLoadingState.vue";
+import GlobalEmptyState from "./GlobalEmptyState.vue";
+import GlobalLoadingState from "./GlobalLoadingState.vue";
 
 describe("SwitchToBody", () => {
     it("Displays projects and recent items", () => {

@@ -46,7 +46,7 @@ import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { Getter, State } from "vuex-class";
-import { UserHistory } from "../../type";
+import { UserHistory } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 
 @Component({

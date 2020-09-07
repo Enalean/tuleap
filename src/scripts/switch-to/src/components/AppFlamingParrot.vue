@@ -30,7 +30,7 @@ import Vue from "vue";
 import $ from "jquery";
 import { Component } from "vue-property-decorator";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
-import SwitchToBody from "./SwitchToBody.vue";
+import SwitchToBody from "./Body/SwitchToBody.vue";
 import { Action, Mutation } from "vuex-class";
 
 @Component({

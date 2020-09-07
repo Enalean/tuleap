@@ -19,10 +19,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ListOfProjects from "./ListOfProjects.vue";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
-import { State } from "../../store/type";
-import { Project } from "../../type";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { State } from "../../../store/type";
+import { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
 

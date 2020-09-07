@@ -19,11 +19,11 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
-import { State } from "../../store/type";
-import { UserHistoryEntry } from "../../type";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { State } from "../../../store/type";
+import { UserHistoryEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";

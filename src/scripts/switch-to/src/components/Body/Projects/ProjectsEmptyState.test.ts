@@ -19,9 +19,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { State } from "../../store/type";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { State } from "../../../store/type";
 
 describe("ProjectsEmptyState", () => {
     it("Display an empty state", async () => {

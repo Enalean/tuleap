@@ -34,11 +34,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Project } from "../../type";
+import { Project } from "../../../type";
 import {
     getProjectPrivacyIcon,
     ProjectPrivacy,
-} from "../../../../project/privacy/project-privacy-helper";
+} from "../../../../../project/privacy/project-privacy-helper";
 import { State } from "vuex-class";
 
 @Component
