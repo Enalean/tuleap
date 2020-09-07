@@ -111,34 +111,9 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
          $this->assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
-    public function newCardwall_Column($id, $label)
+    public function newCardwall_Column($id, $label) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $header_color = 0;
         return new Cardwall_Column($id, $label, $header_color);
-    }
-}
-
-class Cardwall_Column_canContainStatusTest extends \PHPUnit\Framework\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $column;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $id = 100;
-        $label = $header_color = 'whatever';
-        $this->column = new Cardwall_Column($id, $label, $header_color);
-    }
-
-    public function testItReturnsTrueOnNoneColumnIfStatusIsNone(): void
-    {
-        $this->assertTrue($this->column->canContainStatus('None'));
-    }
-    public function testItReturnsTrueOnNoneColumnIfStatusIsNull(): void
-    {
-        $this->assertTrue($this->column->canContainStatus(null));
     }
 }
