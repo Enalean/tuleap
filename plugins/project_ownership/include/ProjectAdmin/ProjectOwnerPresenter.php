@@ -37,7 +37,7 @@ class ProjectOwnerPresenter
     public function __construct(\UserHelper $user_helper, \BaseLanguage $language)
     {
         $this->user_helper               = $user_helper;
-        $this->project_owner_description = $language->getText('plugin_project_ownership', 'project_owner_description');
+        $this->project_owner_description = dgettext('tuleap-project_ownership', 'Project owner is accountable for project visibility, permissions & groups membership.');
     }
 
     public function build(?\PFUser $project_owner = null)

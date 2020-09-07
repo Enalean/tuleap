@@ -29,8 +29,34 @@ msgstr "Responsable"
 msgid "Project owner"
 msgstr "Responsable du projet"
 
+msgid ""
+"Project owner is accountable for project visibility, permissions & groups "
+"membership."
+msgstr ""
+"Le responsable du projet s'engage sur la conformité du projet: visibilité, "
+"permissions et groupes d'utilisateurs."
+
 msgid "Project ownership"
 msgstr "Responsable de projet"
+
+msgid "Project status updated"
+msgstr "Statut de projet mis à jour"
+
+#, php-format
+msgid "The project %1$s is now active."
+msgstr "Le projet %1$s a été activé."
+
+#, php-format
+msgid "The project %1$s is now deleted."
+msgstr "Le projet %1$s a été supprimé."
+
+#, php-format
+msgid "The project %1$s is now pending."
+msgstr "Le projet %1$s a été mis en attente."
+
+#, php-format
+msgid "The project %1$s is now suspended."
+msgstr "Le projet %1$s a été suspendu."
 
 msgid "The project owner cannot be removed."
 msgstr "Il n'est pas possible de supprimer le responsable du projet."

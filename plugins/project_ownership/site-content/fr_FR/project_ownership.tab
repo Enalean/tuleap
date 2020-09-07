@@ -1,7 +1,0 @@
-plugin_project_ownership	project_owner_description	Le responsable du projet s'engage sur la conformité du projet: visibilité, permissions et groupes d'utilisateurs.
-
-plugin_project_ownership	email_status_change_title	Statut de projet mis à jour
-plugin_project_ownership	email_status_change_body_status_H	Le projet $1 a été suspendu.
-plugin_project_ownership	email_status_change_body_status_P	Le projet $1 a été mis en attente.
-plugin_project_ownership	email_status_change_body_status_A	Le projet $1 a été activé.
-plugin_project_ownership	email_status_change_body_status_D	Le projet $1 a été supprimé.
