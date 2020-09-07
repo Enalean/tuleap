@@ -83,37 +83,31 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         assert($beforeLogin instanceof BeforeLogin);
         $user = $beforeLogin->getUser();
 
-        $auth_success = false;
         if ($user === null) {
             $user = $this->user_manager->getUserByUserName($name);
-            if ($user !== null) {
-                $auth_success = $this->authenticateFromDatabase($user, $password);
+            if (! $user) {
+                throw new User_InvalidPasswordException();
             }
-        } else {
-            $auth_success = true;
-        }
 
-        if (! $user) {
-            throw new User_InvalidPasswordException();
-        }
-
-        if (! $auth_success) {
-            throw new User_InvalidPasswordWithUserException($user);
+            $this->authenticateFromDatabase($user, $password);
         }
 
         $auth_succeeded = $this->event_dispatcher->dispatch(new UserAuthenticationSucceeded($user));
         assert($auth_succeeded instanceof UserAuthenticationSucceeded);
         if (! $auth_succeeded->isLoginAllowed()) {
-            throw new User_InvalidPasswordWithUserException($user);
+            throw new User_InvalidPasswordWithUserException($user, $auth_succeeded->getFeedbackMessage());
         }
 
         return $user;
     }
 
+    /**
+     * @throws User_InvalidPasswordWithUserException
+     */
     private function authenticateFromDatabase(PFUser $user, ConcealedString $password)
     {
         if (! $this->password_verifier->verifyPassword($user, $password)) {
-            return false;
+            throw new User_InvalidPasswordWithUserException($user);
         }
 
         $user->setPassword($password);
@@ -121,7 +115,9 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $afterLogin = $this->event_dispatcher->dispatch(new AfterLocalLogin($user));
         assert($afterLogin instanceof AfterLocalLogin);
-        return $afterLogin->isIsLoginAllowed();
+        if (! $afterLogin->isIsLoginAllowed()) {
+            throw new User_InvalidPasswordWithUserException($user, $afterLogin->getFeedbackMessage());
+        }
     }
 
     private function checkPasswordStorageConformity(PFUser $user)

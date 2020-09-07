@@ -37,19 +37,29 @@ final class UserAuthenticationSucceeded implements Dispatchable
      * @var bool
      */
     private $is_login_allowed = true;
+    /**
+     * @var string
+     */
+    private $feedback_message = '';
 
     public function __construct(PFUser $user)
     {
         $this->user = $user;
     }
 
-    public function refuseLogin(): void
+    public function refuseLogin(string $feedback = ''): void
     {
         $this->is_login_allowed = false;
+        $this->feedback_message = $feedback;
     }
 
     public function isLoginAllowed(): bool
     {
         return $this->is_login_allowed;
+    }
+
+    public function getFeedbackMessage(): string
+    {
+        return $this->feedback_message;
     }
 }

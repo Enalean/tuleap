@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_InvalidPasswordWithUserException extends User_LoginException
 {
     /** @var PFUser */
     private $user;
 
-    public function __construct(PFUser $user)
+    public function __construct(PFUser $user, string $message = '')
     {
         $this->user = $user;
-        parent::__construct($GLOBALS['Language']->getText('include_session', 'invalid_pwd'));
+        if ($message === '') {
+            $message = $GLOBALS['Language']->getText('include_session', 'invalid_pwd');
+        }
+        parent::__construct($message);
     }
 
     public function getUser()
