@@ -22,10 +22,12 @@ import { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import { State } from "../../../store/type";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("ProjectLink", () => {
-    it("Displays the link to a project", () => {
+    it("Displays the link to a project", async () => {
         const wrapper = shallowMount(ProjectLink, {
+            localVue: await createSwitchToLocalVue(),
             propsData: {
                 project: {
                     is_public: true,

@@ -19,16 +19,19 @@
   -->
 
 <template>
-    <a v-bind:href="project.project_uri" class="switch-to-projects-project">
-        <i class="fa fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
-        <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
-        <i
-            class="fa fa-fw fa-cog switch-to-projects-project-admin-icon"
-            v-if="project.is_current_user_admin"
-            aria-hidden="true"
-            v-on:click="goToAdmin"
-        ></i>
-    </a>
+    <div class="switch-to-projects-project">
+        <a v-bind:href="project.project_uri" class="switch-to-projects-project-link">
+            <i class="fa fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
+            <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
+        </a>
+        <a
+            v-bind:href="project.project_config_uri"
+            class="switch-to-projects-project-admin-icon"
+            v-bind:title="admin_title"
+        >
+            <i class="fa fa-fw fa-cog" v-if="project.is_current_user_admin" aria-hidden="true"></i>
+        </a>
+    </div>
 </template>
 
 <script lang="ts">
@@ -40,6 +43,7 @@ import {
     ProjectPrivacy,
 } from "../../../../../project/privacy/project-privacy-helper";
 import { State } from "vuex-class";
+import { sprintf } from "sprintf-js";
 
 @Component
 export default class ProjectLink extends Vue {
@@ -63,9 +67,17 @@ export default class ProjectLink extends Vue {
             project_is_public_incl_restricted: this.project.is_public_incl_restricted,
             are_restricted_users_allowed: this.are_restricted_users_allowed,
             explanation_text: "",
+            privacy_title: "",
         };
 
         return getProjectPrivacyIcon(privacy);
+    }
+
+    get admin_title(): string {
+        return sprintf(
+            this.$gettext("Go to project administration of %s"),
+            this.project.project_name
+        );
     }
 }
 </script>
