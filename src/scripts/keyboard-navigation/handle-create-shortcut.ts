@@ -17,22 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import hotkeys from "hotkeys-js";
-import { handleCreateShortcut } from "./handle-create-shortcut";
-import { handleSearchShortcut } from "./handle-search-shortcut";
-import { handleDashboardShortcut } from "./handle-dashboard-shortcut";
-import { handleHelpShortcut } from "./handle-help-shortcut";
+export function handleCreateShortcut(): void {
+    callCreateShortcut(document);
+}
 
-hotkeys("c", handleCreateShortcut);
-hotkeys("/,s", handleSearchShortcut);
-hotkeys("d", handleDashboardShortcut);
-hotkeys("*", function (event): void {
-    // Should be hotkeys("?", …),
-    // however for unknown reason it does not work (maybe due to shift key?),
-    // therefore we're using wildcard as a workaround
-    if (event.key !== "?") {
-        return;
+export function callCreateShortcut(doc: Document): void {
+    const new_dropdown_trigger = doc.querySelector("[data-shortcut-create]");
+    if (new_dropdown_trigger instanceof HTMLElement) {
+        new_dropdown_trigger.click();
+        const option = doc.querySelector("[data-shortcut-create-option]");
+        if (option instanceof HTMLElement) {
+            option.focus();
+        }
     }
-
-    handleHelpShortcut();
-});
+}
