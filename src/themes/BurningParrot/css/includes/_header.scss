@@ -17,19 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-header {
-    display: flex;
+.motd {
     position: fixed;
     z-index: 2004;
     top: 0;
     left: 0;
-    flex-direction: column;
-    width: 100%;
-    background: $navbar-background;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-}
-
-.header-motd {
+    width: 100vw;
     padding: $tlp-medium-spacing;
     background: $tlp-theme-sidebar-background-color;
     color: $tlp-ui-white;
@@ -46,12 +39,58 @@ header {
     }
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    height: $navbar-height;
+/* stylelint-disable selector-no-qualifying-type */
+body.has-visible-project-banner > .motd {
+    padding: $tlp-medium-spacing $tlp-medium-spacing $top-floating-buttons-space;
+
+    + header > .header-container {
+        padding: $tlp-small-spacing $tlp-medium-spacing 0 0;
+    }
 }
 
-.header-nav {
+header {
+    position: fixed;
+    z-index: 2004;
+    top: 0;
+    right: 0;
+    justify-content: space-between;
+    transition: background ease-in-out 100ms, box-shadow ease-in-out 100ms, top ease-in-out 50ms;
+
+    &.full-width {
+        width: 100vw;
+
+        + #main-container {
+            margin-top: 64px;
+        }
+    }
+
+    &.pinned {
+        background: $tlp-ui-white;
+        box-shadow: 0 1px 2px transparentize($tlp-theme-sidebar-background-color, .9);
+
+        > .header-container {
+            padding: 0 $tlp-medium-spacing 0 0;
+        }
+    }
+}
+/* stylelint-enable */
+
+.header-container {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    transition: padding ease-in-out 100ms;
+
+    a[class*='tlp-button'],
+    button[class*='tlp-button'] {
+        height: 40px;
+        margin: 0 0 0 $tlp-small-spacing;
+        transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
+        border-radius: 30px;
+    }
+}
+
+.header-container-spacer {
+    flex: 1 1 auto;
 }

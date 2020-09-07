@@ -41,7 +41,8 @@ class PresenterBuilder
     public function build(
         PFUser $current_user,
         URLRedirect $url_redirect,
-        NewDropdownPresenter $new_dropdown_presenter
+        NewDropdownPresenter $new_dropdown_presenter,
+        bool $should_logo_be_displayed
     ) {
         $this->current_user    = $current_user;
 
@@ -60,7 +61,8 @@ class PresenterBuilder
                 $user_dashboard_retriever->getAllUserDashboards($this->current_user)
             ),
             $new_dropdown_presenter,
-            $current_user->isSuperUser()
+            $current_user->isSuperUser(),
+            $should_logo_be_displayed
         );
     }
 

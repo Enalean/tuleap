@@ -1,97 +1,89 @@
 {{# user_nav_presenter }}
 <nav id="user-nav">
     {{# is_user_logged_in }}
-        {{# logout_menu_item }}
-            {{> navbar/menu-item/menu-item-logout }}
-        {{/ logout_menu_item }}
-
-        <div id="nav-dropdown-user" class="nav-dropdown nav-dropdown-right">
-            <div class="nav-dropdown-link"
-                 data-nav-dropdown-content-id="nav-dropdown-content-user"
-                 data-shortcut-mydashboard
-            >
-                <div class="tlp-avatar">
-                    {{# user_has_avatar }}
-                        <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
-                    {{/ user_has_avatar }}
-                </div>
+        <div id="nav-dropdown-user">
+            <div class="tlp-avatar" data-shortcut-mydashboard>
+                {{# user_has_avatar }}
+                    <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
+                {{/ user_has_avatar }}
             </div>
 
-            <div id="nav-dropdown-content-user" class="nav-dropdown-content nav-dropdown-content-hidden">
-                <div class="arrow-up nav-dropdown-content-arrow-up"></div>
-                <div class="nav-dropdown-content-title user-block">
+            <div id="nav-dropdown-user-content" class="tlp-popover nav-dropdown">
+                <div class="tlp-popover-arrow"></div>
+                <div class="tlp-popover-header">
                     <div class="tlp-avatar">
                         {{# user_has_avatar }}
                             <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
                         {{/ user_has_avatar }}
                     </div>
-                    <div class="user-block-names">
-                        <span class="user-nav-display-name">{{ user_real_name }}</span>
-                        <span class="user-nav-username">@{{ user_user_name }}</span>
+                    <div class="nav-dropdown-user-names">
+                        <span class="name">{{ user_real_name }}</span>
+                        <span class="username">@{{ user_user_name }}</span>
                     </div>
                 </div>
-
-                {{# has_no_dashboards }}
-                    <a href="/my/"
-                       class="nav-dropdown-content-item nav-dropdown-content-item-unique-dashboard"
-                       data-shortcut-mydashboard-option
-                    >
-                        {{# gettext }}My dashboard{{/ gettext }}
-                    </a>
-                {{/ has_no_dashboards }}
-                {{^ has_no_dashboards }}
-                    {{^ has_one_dashboard }}
-                        <div class="nav-dropdown-content-item-title">Dashboards</div>
-                    {{/ has_one_dashboard }}
-                    <div>
-                        {{# dashboards }}
-                            <a href="/my/?dashboard_id={{ getId }}"
-                                class="nav-dropdown-content-item {{# has_one_dashboard }}nav-dropdown-content-item-unique-dashboard{{/ has_one_dashboard }}"
-                                data-shortcut-mydashboard-option
-                            >
-                                {{ getName }}
-                            </a>
-                        {{/ dashboards }}
-                    </div>
-                {{/ has_no_dashboards }}
-
-                <hr class="nav-dropdown-content-user-divider">
-
-                <a href="/account/" class="nav-dropdown-content-item">
-                    <i class="fa fa-fw fa-cog nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
-                    {{# gettext }}Preferences{{/ gettext }}
-                </a>
-                {{# logout_menu_item }}
-                    <form
-                        action="/account/logout"
-                        method="POST"
-                    >
-                        {{# csrf_token }}
-                            {{> csrf_token_input }}
-                        {{/ csrf_token }}
-                        <button
-                            class="nav-dropdown-content-item nav-form-button"
-                            type="submit"
-                            title="{{ label }}"
-                            data-test="user_logout"
+                <div class="tlp-popover-body">
+                    {{# has_no_dashboards }}
+                        <a href="/my/"
+                        class="nav-dropdown-item nav-dropdown-item-unique-dashboard"
+                        data-shortcut-mydashboard-option
                         >
-                            <i class="fa fa-fw fa-power-off nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
-                            {{# gettext }}Logout{{/gettext}}
-                        </button>
-                    </form>
-                {{/ logout_menu_item }}
+                            {{# gettext }}My dashboard{{/ gettext }}
+                        </a>
+                    {{/ has_no_dashboards }}
+                    {{^ has_no_dashboards }}
+                        {{^ has_one_dashboard }}
+                            <div class="nav-dropdown-item-title">Dashboards</div>
+                        {{/ has_one_dashboard }}
+                        <div>
+                            {{# dashboards }}
+                                <a href="/my/?dashboard_id={{ getId }}"
+                                    class="nav-dropdown-item {{# has_one_dashboard }}nav-dropdown-item-unique-dashboard{{/ has_one_dashboard }}"
+                                    data-shortcut-mydashboard-option
+                                >
+                                    {{ getName }}
+                                </a>
+                            {{/ dashboards }}
+                        </div>
+                    {{/ has_no_dashboards }}
+
+                    <hr class="nav-dropdown-item-divider">
+
+                    <a href="/account/" class="nav-dropdown-item">
+                        <i class="fa fa-fw fa-cog nav-dropdown-item-icon" aria-hidden="true"></i>
+                        {{# gettext }}Preferences{{/ gettext }}
+                    </a>
+                    {{# logout_menu_item }}
+                        <form
+                            action="/account/logout"
+                            method="POST"
+                        >
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+                            <button
+                                class="nav-dropdown-item"
+                                type="submit"
+                                title="{{ label }}"
+                                data-test="user_logout"
+                            >
+                                <i class="fa fa-fw fa-power-off nav-dropdown-item-icon" aria-hidden="true"></i>
+                                {{# gettext }}Logout{{/gettext}}
+                            </button>
+                        </form>
+                    {{/ logout_menu_item }}
+                </div>
             </div>
         </div>
     {{/ is_user_logged_in }}
 
     {{^ is_user_logged_in }}
         {{# login_menu_item }}
-            {{> navbar/menu-item/menu-item }}
+            {{> navbar/menu-item }}
         {{/ login_menu_item }}
 
         {{# display_new_user_menu_item }}
             {{# new_user_menu_item }}
-                {{> navbar/menu-item/menu-item }}
+                {{> navbar/menu-item }}
             {{/ new_user_menu_item }}
         {{/ display_new_user_menu_item }}
     {{/ is_user_logged_in }}

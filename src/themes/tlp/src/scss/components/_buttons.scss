@@ -52,9 +52,9 @@ $tlp-button-mini-radius: 3px;
 $tlp-button-outline-hover-color: #fcfcfc;
 
 $tlp-button-secondary-background: $tlp-ui-border-light;
-$tlp-button-secondary-color: $tlp-ui-dimmed;
+$tlp-button-secondary-color: $tlp-theme-sidebar-background-color;
 $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
-$tlp-button-secondary-outline-color: $tlp-ui-dimmed;
+$tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
 
 
 %tlp-button {
@@ -67,7 +67,7 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
     border: 1px solid transparent;
     border-radius: $tlp-button-normal-radius;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
+    box-shadow: $tlp-button-shadow;
     color: $tlp-button-color;
     font-family: $tlp-font-family;
     font-size: $tlp-button-normal-font-size;
@@ -85,7 +85,7 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     &:active,
     &:focus {
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 1px rgba(0, 0, 0, .08), 0 -1px 0 rgba(0, 0, 0, .03);
+        box-shadow: $tlp-button-shadow-hover;
         text-decoration: none;
     }
 
@@ -93,6 +93,12 @@ $tlp-button-secondary-outline-color: $tlp-ui-dimmed;
     &.disabled {
         box-shadow: none;
         cursor: not-allowed;
+    }
+
+    &.tlp-button-round {
+        width: $tlp-button-normal-height;
+        padding: 0;
+        border-radius: $tlp-button-normal-height / 2;
     }
 
     > .tlp-button-icon {

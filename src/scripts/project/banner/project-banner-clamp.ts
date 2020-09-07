@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { updateFloatingButtonsPosition } from "./update-floating-buttons-position";
+
 export const PROJECT_BANNER_MESSAGE_ID = "current-project-banner-message";
 export const PROJECT_BANNER_MESSAGE_CLAMP_CLASS = "project-banner-clamped";
 export const PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS = "project-banner-can-be-unclamped";
@@ -40,6 +42,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
         if (!ticking) {
             window.requestAnimationFrame(() => {
                 addHintMessageIsClampedIfNeeded(project_banner_message);
+                updateFloatingButtonsPosition();
                 ticking = false;
             });
             ticking = true;
@@ -48,8 +51,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
     const fully_display_message_event_listener = function (): void {
         fullyDisplayProjectBannerMessage(
             project_banner_message,
-            fully_display_message_event_listener,
-            resize_event_listener
+            fully_display_message_event_listener
         );
     };
     window.addEventListener("resize", resize_event_listener);
@@ -62,15 +64,16 @@ function isMessageClamped(banner_message: HTMLElement): boolean {
 
 function fullyDisplayProjectBannerMessage(
     project_banner_message: HTMLElement,
-    fully_display_event_listener: () => void,
-    resize_event_listener: () => void
+    fully_display_event_listener: () => void
 ): void {
     project_banner_message.classList.remove(
         PROJECT_BANNER_MESSAGE_CLAMP_CLASS,
         PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
     );
+
+    updateFloatingButtonsPosition();
+
     project_banner_message.removeEventListener("click", fully_display_event_listener);
-    window.removeEventListener("resize", resize_event_listener);
 }
 
 function addHintMessageIsClampedIfNeeded(project_banner_message: HTMLElement): void {

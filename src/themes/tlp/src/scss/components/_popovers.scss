@@ -19,7 +19,7 @@
 
 $tlp-popover-radius: 4px;
 $tlp-popover-arrow-size: 10px;
-$tlp-popover-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+$tlp-popover-shadow: $tlp-dropdown-shadow;
 $tlp-popover-hover-transition-show: 75ms ease-out 500ms;
 $tlp-popover-hover-transition-hide: 75ms ease-out 250ms;
 $tlp-popover-click-transition: 75ms ease-out;

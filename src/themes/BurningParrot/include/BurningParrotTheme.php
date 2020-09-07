@@ -198,8 +198,9 @@ class BurningParrotTheme extends BaseLayout
             $open_graph,
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($this->user, $project),
+            $this->isInSiteAdmin($params),
             $project_context,
-            $switch_to_presenter_builder->build($this->user),
+            $switch_to_presenter_builder->build($this->user)
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -352,9 +353,14 @@ class BurningParrotTheme extends BaseLayout
 
     private function shouldIncludeSitebarStatePreference(array $params)
     {
-        $is_in_siteadmin     = isset($params['in_siteadmin']) && $params['in_siteadmin'] === true;
+        $is_in_siteadmin     = $this->isInSiteAdmin($params);
         $user_has_preference = $this->user->getPreference('sidebar_state');
 
         return ! $is_in_siteadmin && $user_has_preference;
+    }
+
+    private function isInSiteAdmin(array $params)
+    {
+        return isset($params['in_siteadmin']) && $params['in_siteadmin'] === true;
     }
 }

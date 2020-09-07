@@ -17,186 +17,158 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin nav-link($max-width) {
-    display: flex;
-    align-items: center;
-    padding: 0 $tlp-medium-spacing;
-    transition: color 100ms linear;
-    color: $tlp-ui-dimmed;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
+/* stylelint-disable selector-no-qualifying-type */
+header.pinned > .header-container {
+    .tlp-button-outline {
+        padding: 0 $tlp-small-spacing;
+        transition: opacity ease-in-out 75ms;
+        background: none;
+        box-shadow: none;
 
-    &:hover {
-        text-decoration: none;
-    }
-
-    > .nav-link-icon {
-        display: none;
-        font-size: 16px;
-
-        @media screen and (max-width: $max-width) {
-            display: inline;
+        &:focus,
+        &:active,
+        &:hover {
+            opacity: .7;
+            background: none;
+            box-shadow: none;
         }
     }
 
-    > .nav-link-text {
-        @media screen and (max-width: $max-width) {
-            display: none;
-        }
+    #nav-dropdown-user > .tlp-avatar {
+        box-shadow: none;
     }
 }
+/* stylelint-enable */
 
 .nav-link {
-    @include nav-link(900px);
-
-    &.go-to-admin {
-        color: $tlp-ui-danger;
-    }
+    margin: 0 0 0 $tlp-large-spacing;
+    transition: opacity ease-in-out 75ms;
+    color: $tlp-ui-dimmed;
+    font-size: .875rem;
+    font-weight: 500;
 
     &:hover {
-        transition: color 100ms linear;
-        color: $tlp-theme-color;
+        color: $tlp-theme-sidebar-background-color;
+        text-decoration: none;
     }
 }
 
 .nav-dropdown {
-    display: flex;
-    position: relative;
-    cursor: pointer;
-    -ms-user-select: none; // stylelint-disable-line property-no-vendor-prefix
-    user-select: none;
+    width: 250px;
 
-    &:hover > .nav-dropdown-link {
-        transition: color 100ms linear;
-        color: $tlp-theme-color;
+    > .tlp-popover-arrow {
+        border-bottom-color: $tlp-theme-sidebar-background-color;
+    }
+
+    > .tlp-popover-header {
+        display: flex;
+        align-items: center;
+        min-height: 4px;
+        padding: 0 $tlp-small-spacing;
+        background: $tlp-theme-sidebar-background-color;
+    }
+
+    > .tlp-popover-body {
+        padding: 0;
     }
 }
 
-.nav-dropdown-link {
-    @include nav-link(900px);
-}
-
-.nav-form-button {
+.nav-dropdown-item {
+    display: flex;
+    align-items: center;
     width: 100%;
-    margin: 0 0 $tlp-small-spacing;
-    transition: color 100ms linear;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
+    overflow: hidden;
     border: 0;
-    background: none;
+    background: $tlp-ui-white;
+    color: $tlp-typo-default-text-color;
+    font-family: $tlp-font-family;
+    font-size: .875rem;
+    font-weight: 500;
+    letter-spacing: normal;
+    line-height: 1rem;
     text-align: left;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
     cursor: pointer;
-}
 
-#logo {
-    display: inline-block;
-    flex: 0 0 auto;
-    width: $sidebar-expanded-width;
-    height: $navbar-height;
-    background: $tlp-theme-color url('/images/organization_logo.png') no-repeat center center;
+    &:focus,
+    &:hover {
+        background: transparentize($tlp-theme-color, .93);
+        color: $tlp-theme-color;
+        text-decoration: none;
+    }
 
-    + #global-nav {
-        margin: 0 0 0 $tlp-small-spacing;
+    &:last-child {
+        margin: 0 0 $tlp-small-spacing;
+    }
+
+    > .nav-dropdown-item-icon {
+        margin: 0 4px 0 0;
+        font-size: .75rem;
     }
 }
 
-#global-nav {
-    display: flex;
+.nav-dropdown-item-title {
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
+    color: $tlp-ui-dimmed;
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.nav-dropdown-item-divider {
+    margin: $tlp-small-spacing 0;
+    border-top: 1px solid $tlp-ui-border-normal;
+
+    &:first-child {
+        display: none;
+    }
 }
 
 #user-nav {
     display: flex;
+    margin: 0 0 0 $tlp-small-spacing;
     white-space: nowrap;
 }
 
-.user-block {
-    display: flex;
-    align-items: center;
+#nav-dropdown-user > .tlp-avatar {
+    border: 1px solid $tlp-ui-white;
+    box-shadow: $tlp-button-shadow;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: $tlp-button-shadow-hover;
+    }
 }
 
-.user-block-names {
+#nav-dropdown-user-content > .tlp-popover-header > .tlp-avatar {
+    margin: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing 0;
+}
+
+.nav-dropdown-user-names {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0 0 0 $tlp-small-spacing;
     letter-spacing: normal;
     text-transform: none;
 
-    > .user-nav-display-name {
-        margin: 0 0 3px;
+    > .name {
+        margin: 0 0 4px;
         color: $tlp-ui-white;
-        font-size: 14px;
+        font-size: .875rem;
         font-weight: 600;
     }
 
-    > .user-nav-username {
-        font-size: 12px;
+    > .username {
+        color: $tlp-ui-border-dark;
+        font-size: .75rem;
         font-weight: 400;
     }
 }
 
-#nav-dropdown-content-user {
-    left: calc(100% - 12px);
-}
-
-.nav-dropdown-content-user-link-icon {
-    margin: 0 $tlp-small-spacing 0 0;
-}
-
-.nav-dropdown-content-user-divider {
+.nav-dropdown-item-unique-dashboard:last-child {
     margin: $tlp-small-spacing 0;
-    border-top: 1px solid $tlp-ui-border-normal;
-}
-
-.nav-dropdown-content-item-unique-dashboard {
-    margin: $tlp-small-spacing 0 0;
-}
-
-#switch-to-button {
-    display: flex;
-    align-items: center;
-    padding: 0 $tlp-medium-spacing;
-    transition: color 100ms linear;
-    border: 0;
-    background: none;
-    color: $tlp-ui-dimmed;
-    font-size: .75rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
-    cursor: pointer;
-
-    &:hover {
-        color: $tlp-theme-color;
-    }
-}
-
-.nav-switch-to-icon,
-.nav-dropdown-new-icon {
-    margin: 0 $tlp-small-spacing 0 0;
-}
-
-#nav-dropdown-content-new {
-    white-space: nowrap;
-
-    > .nav-dropdown-content-arrow-up {
-        border-bottom-color: $tlp-ui-white;
-
-        + .nav-dropdown-content-user-divider {
-            display: none;
-        }
-    }
-
-    > .nav-dropdown-content-item:last-child {
-        margin: 0 0 $tlp-small-spacing;
-    }
-
-    > .nav-dropdown-content-user-divider,
-    > .nav-dropdown-content-arrow-up + .nav-dropdown-content-item {
-        margin: $tlp-small-spacing 0 0;
-    }
 }

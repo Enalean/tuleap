@@ -1,0 +1,27 @@
+{{# new_dropdown }}
+    {{# has_sections }}
+        <div id="nav-dropdown-new">
+            <button class="tlp-button-secondary tlp-button-outline" data-shortcut-create>
+                <i class="tlp-button-icon fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
+                {{# gettext }}New{{/ gettext }}
+            </button>
+
+            <div id="nav-dropdown-new-content" class="tlp-popover nav-dropdown">
+                <div class="tlp-popover-arrow"></div>
+                <div class="tlp-popover-header"></div>
+                <div class="tlp-popover-body">
+                    {{# sections }}
+                        <hr class="nav-dropdown-item-divider">
+                        <div class="nav-dropdown-item-title">{{ label }}</div>
+                        {{# links }}
+                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option>
+                                <i class="fa fa-fw {{ icon }} nav-dropdown-item-icon" aria-hidden="true"></i>
+                                {{ label }}
+                            </a>
+                        {{/ links }}
+                    {{/ sections }}
+                </div>
+            </div>
+        </div>
+    {{/ has_sections }}
+{{/ new_dropdown }}
