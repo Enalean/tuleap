@@ -199,19 +199,19 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $parent_properties,
             [
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_start'), 'chart[field_start]', $this->getField_start()),
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_due'), 'chart[field_due]', $this->getField_due(), true),
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_finish'), 'chart[field_finish]', $this->getField_finish())
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Start Date'), 'chart[field_start]', $this->getField_start()),
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Due Date'), 'chart[field_due]', $this->getField_due(), true),
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Finish Date'), 'chart[field_finish]', $this->getField_finish())
                 ),
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_summary'), 'chart[summary]', $this->getSummary()),
-                    new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
-                    new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_scale'), 'chart[scale]', $this->getScale())
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Summary'), 'chart[summary]', $this->getSummary()),
+                    new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Progress'), 'chart[field_percentage]', $this->getField_percentage(), true),
+                    new HTML_Element_Selectbox_Scale(dgettext('tuleap-graphontrackersv5', 'Time Scale'), 'chart[scale]', $this->getScale())
                 ),
 
                 new HTML_Element_Columns(
-                    new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
+                    new HTML_Element_Input_Date(dgettext('tuleap-graphontrackersv5', 'As of date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Informations at the right of the bars'), 'chart[field_righttext]', $this->getField_righttext(), true)
                 ),
             ]
         );

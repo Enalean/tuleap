@@ -213,17 +213,17 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
             [
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_NumericFieldsV5(
                     $this->getTracker(),
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_effort'),
+                    dgettext('tuleap-graphontrackersv5', 'Effort field'),
                     'chart[field_id]',
                     $this->getFieldId()
                 ),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_start_date'),
+                    dgettext('tuleap-graphontrackersv5', 'Start of the sprint'),
                     'chart[start_date]',
                     $this->getStartDate()
                 ),
                 'duration'   => new HTML_Element_Input_Text(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_duration'),
+                    dgettext('tuleap-graphontrackersv5', 'Duration (in days)'),
                     'chart[duration]',
                     $this->getDuration(),
                     4

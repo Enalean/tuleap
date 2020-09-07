@@ -3,25 +3,124 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.0.6\n"
+
+msgid "'Are you sure that you want to delete this chart ?'"
+msgstr "'Etes vous sur de vouloir supprimer ce graphique ?'"
+
+msgid "Add a Chart"
+msgstr "Ajouter un graphique"
+
+msgid "Add to my dashboard"
+msgstr "Ajouter à mon tableau de bord"
+
+msgid "Add to project dashboard"
+msgstr "Ajouter au tableau de bord du projet"
+
+msgid "As of date"
+msgstr "A la date"
+
+msgid "Bar"
+msgstr "Bâtons"
+
+msgid "Chart Properties"
+msgstr "Propriétés du graphique"
 
 msgid "Chart not found."
 msgstr "Graphique non trouvé."
 
+msgid "Cumulative flow chart"
+msgstr "Graph de flux cumulatif"
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Delete Chart"
+msgstr "Supprimer ce graphique"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Due Date"
+msgstr "Fin prévue"
+
+msgid "Duration (in days)"
+msgstr "Durée (en jours)"
+
+msgid "Edit Chart"
+msgstr "Modifier ce graphique"
+
+msgid "Effort field"
+msgstr "Champ Effort"
+
+msgid "Finish Date"
+msgstr "Date de fin"
+
+msgid "Finish date (optionnal)"
+msgstr "Date de fin (facultatif)"
+
+msgid "Gantt"
+msgstr "Gantt"
+
+msgid "Go back to charts"
+msgstr "Retourner aux graphiques"
+
+msgid "Graphic Report updated successfully"
+msgstr "Le rapport graphique a été mis à jour avec succès"
+
+msgid "Graphs On Trackers v5"
+msgstr "Graphiques sur les outils de suivi v5"
+
+msgid "Group by"
+msgstr "Grouper par"
+
+msgid "Height"
+msgstr "Hauteur"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Informations at the right of the bars"
+msgstr "Information à droite des barres"
+
+msgid "Month"
+msgstr "Mois"
+
 msgid "No data to display."
 msgstr "Aucune donnée à afficher."
+
+#, php-format
+msgid "No datas to display for graph %1$s"
+msgstr "Pas de données à afficher pour le graphique %1$s"
 
 msgid "No start date defined."
 msgstr "Aucune date de début définie."
 
+msgid "Pie"
+msgstr "Camembert"
+
 msgid "Please choose a smaller period, or increase the scale."
 msgstr "Veuillez choisir une période plus courte, ou augmenter l'échelle."
+
+msgid "Plugin that allow drawing graphic on trackers v5"
+msgstr ""
+"Plugin permettant la création de rapports graphiques sur les outils de suivi "
+"v5"
+
+msgid "Preview"
+msgstr "Aperçu"
+
+msgid "Progress"
+msgstr "Progression"
+
+msgid "Rank"
+msgstr "Rang"
 
 msgid "Renderer not found."
 msgstr "Rendu non trouvé."
@@ -29,8 +128,52 @@ msgstr "Rendu non trouvé."
 msgid "Report not found."
 msgstr "Rapport non trouvé."
 
+msgid "Scrum BurnDown"
+msgstr "Scrum BurnDown"
+
+msgid "Source Data"
+msgstr "Données sources"
+
+msgid "Source data"
+msgstr "Données sources"
+
+msgid "Start Date"
+msgstr "Date de début"
+
+msgid "Start date"
+msgstr "Date de début"
+
 msgid "Start date must be before the end date."
 msgstr "La date de début doit être avant la date de fin."
 
+msgid "Start of the sprint"
+msgstr "Début du sprint"
+
+msgid "Summary"
+msgstr "Résumé"
+
+msgid "Time Scale"
+msgstr "Echelle Temporelle"
+
+msgid "Time scale"
+msgstr "Echelle Temporelle"
+
+msgid "Title"
+msgstr "Titre"
+
+#, php-format
+msgid ""
+"Unable to find the needed field to build the chart \"%1$s\". Please edit the "
+"chart and ajust settings."
+msgstr ""
+"Impossible de trouver le champ qui sert à construire le graphique \"%1$s\". "
+"Merci de corriger le problème en éditant la configuration du graphique."
+
 msgid "Unable to render the chart"
 msgstr "Impossible de construire le graphique"
+
+msgid "Week"
+msgstr "Semaine"
+
+msgid "Width"
+msgstr "Largeur"

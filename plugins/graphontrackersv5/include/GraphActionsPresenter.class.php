@@ -70,27 +70,27 @@ class GraphOnTrackersV5_GraphActionsPresenter
 
     public function confirm_label()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'confirm_del');
+        return dgettext('tuleap-graphontrackersv5', '\'Are you sure that you want to delete this chart ?\'');
     }
 
     public function delete_title()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_del');
+        return dgettext('tuleap-graphontrackersv5', 'Delete Chart');
     }
 
     public function edit_title()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_edit');
+        return dgettext('tuleap-graphontrackersv5', 'Edit Chart');
     }
 
     public function add_to_my_dashboard_label()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_dashboard');
+        return dgettext('tuleap-graphontrackersv5', 'Add to my dashboard');
     }
 
     public function add_to_project_dashboard_label()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_project_dashboard');
+        return dgettext('tuleap-graphontrackersv5', 'Add to project dashboard');
     }
 
     public function report_is_created()

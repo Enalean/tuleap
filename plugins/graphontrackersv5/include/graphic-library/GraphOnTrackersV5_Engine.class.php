@@ -41,7 +41,7 @@ abstract class GraphOnTrackersV5_Engine
         } else {
             $GLOBALS['Response']->addFeedback(
                 'info',
-                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', [$this->title])
+                sprintf(dgettext('tuleap-graphontrackersv5', 'No datas to display for graph %1$s'), $this->title)
             );
 
             return false;

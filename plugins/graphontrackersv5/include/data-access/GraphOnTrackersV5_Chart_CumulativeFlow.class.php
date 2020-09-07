@@ -232,32 +232,32 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     public function getProperties()
     {
         $scaleSelect = new HTML_Element_Selectbox(
-            $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_scale'),
+            dgettext('tuleap-graphontrackersv5', 'Time scale'),
             'chart[scale]',
             'value'
         );
         $scaleSelect->addMultipleOptions([
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_day'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_week'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_month'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => dgettext('tuleap-graphontrackersv5', 'Day'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => dgettext('tuleap-graphontrackersv5', 'Week'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => dgettext('tuleap-graphontrackersv5', 'Month'),
                                               ], $this->getScale());
         return array_merge(
             parent::getProperties(),
             [
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
                     $this->getTracker(),
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_field'),
+                    dgettext('tuleap-graphontrackersv5', 'Source data'),
                     'chart[field_id]',
                     $this->getFieldId()
                 ),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_start_date'),
+                    dgettext('tuleap-graphontrackersv5', 'Start date'),
                     'chart[start_date]',
                     $this->getStartDate()
                 ),
                     'scale'   => ( $scaleSelect),
                 'stop_date'   => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_stop_date'),
+                    dgettext('tuleap-graphontrackersv5', 'Finish date (optionnal)'),
                     'chart[stop_date]',
                     $this->getStopDate()
                 ),

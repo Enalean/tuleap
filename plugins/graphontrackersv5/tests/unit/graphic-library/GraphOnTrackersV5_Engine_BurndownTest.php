@@ -49,6 +49,6 @@ class GraphOnTrackersV5_Engine_BurndownTest extends TestCase
         $burndown_engine->duration = 1;
 
         $this->assertFalse($burndown_engine->validData());
-        $this->expectOutputString(" <p class='feedback_info'></p>");
+        $this->expectOutputString(" <p class='feedback_info'>No datas to display for graph my burndown title</p>");
     }
 }

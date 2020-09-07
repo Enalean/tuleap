@@ -291,17 +291,17 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         $params['factories']['pie'] = [
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'pie'),
+            'title'           => dgettext('tuleap-graphontrackersv5', 'Pie'),
         ];
         $params['factories']['bar'] = [
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'bar'),
+            'title'           => dgettext('tuleap-graphontrackersv5', 'Bar'),
         ];
         $params['factories']['gantt'] = [
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'gantt'),
+            'title'           => dgettext('tuleap-graphontrackersv5', 'Gantt'),
         ];
         $params['factories']['burndown'] = [
             //The type of the chart
@@ -309,7 +309,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_Burndown',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burndown'),
+            'title'           => dgettext('tuleap-graphontrackersv5', 'Scrum BurnDown'),
         ];
         $params['factories']['cumulative_flow'] = [
             //The type of the chart
@@ -317,7 +317,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'cumulative_flow'),
+            'title'           => dgettext('tuleap-graphontrackersv5', 'Cumulative flow chart'),
         ];
     }
 
