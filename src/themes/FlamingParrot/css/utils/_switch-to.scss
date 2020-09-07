@@ -33,8 +33,10 @@ $approximate-width-of-project-icon: 15.5px;
 
 #switch-to-modal {
     top: 5vh;
+    right: 0;
+    left: 0;
     box-sizing: border-box;
-    margin-left: -400px;
+    margin: 0 auto;
     background: none;
     font-size: 1rem;
 }

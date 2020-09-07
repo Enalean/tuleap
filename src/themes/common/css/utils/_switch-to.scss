@@ -18,7 +18,9 @@
  */
 
 #switch-to-modal {
-    width: 800px;
+    width: 75vw;
+    min-width: 700px;
+    max-width: 1200px;
 }
 
 .switch-to-modal-header {
