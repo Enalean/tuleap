@@ -22,10 +22,23 @@ import { handleCreateShortcut } from "./handle-create-shortcut";
 import { handleSearchShortcut } from "./handle-search-shortcut";
 import { handleDashboardShortcut } from "./handle-dashboard-shortcut";
 import { handleHelpShortcut } from "./handle-help-shortcut";
+import { closeExistingModal } from "./close-existing-modal";
 
-hotkeys("c", handleCreateShortcut);
-hotkeys("/,s", handleSearchShortcut);
-hotkeys("d", handleDashboardShortcut);
+hotkeys("c", () => {
+    closeExistingModal(document);
+    handleCreateShortcut();
+});
+
+hotkeys("/,s", (event: KeyboardEvent) => {
+    closeExistingModal(document);
+    handleSearchShortcut(event);
+});
+
+hotkeys("d", () => {
+    closeExistingModal(document);
+    handleDashboardShortcut;
+});
+
 hotkeys("*", function (event): void {
     // Should be hotkeys("?", …),
     // however for unknown reason it does not work (maybe due to shift key?),
@@ -34,5 +47,6 @@ hotkeys("*", function (event): void {
         return;
     }
 
+    closeExistingModal(document);
     handleHelpShortcut();
 });
