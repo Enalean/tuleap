@@ -27,6 +27,7 @@
                     v-for="project of filtered_projects"
                     v-bind:key="project.project_uri"
                     v-bind:project="project"
+                    v-bind:has_programmatically_focus="hasProgrammaticallyFocus(project)"
                 />
             </nav>
             <p class="switch-to-modal-no-matching-projects" v-else>
@@ -45,7 +46,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
 import { Getter, State } from "vuex-class";
-import { Project } from "../../../type";
+import { Project, UserHistoryEntry } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 
@@ -58,6 +59,13 @@ export default class ListOfProjects extends Vue {
 
     @Getter
     private readonly filtered_projects!: Project[];
+
+    @State
+    private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
+
+    hasProgrammaticallyFocus(project: Project): boolean {
+        return project === this.programmatically_focused_element;
+    }
 
     get trove_cat_label(): string {
         return this.$gettext("Browse all…");

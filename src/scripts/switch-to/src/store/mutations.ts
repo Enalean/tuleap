@@ -18,7 +18,7 @@
  */
 
 import { State } from "./type";
-import { UserHistory } from "../type";
+import { Project, UserHistory, UserHistoryEntry } from "../type";
 
 export function updateFilterValue(state: State, value: string): void {
     state.filter_value = value;
@@ -32,4 +32,11 @@ export function saveHistory(state: State, history: UserHistory): void {
 
 export function setErrorForHistory(state: State, is_error: boolean): void {
     state.is_history_in_error = is_error;
+}
+
+export function setProgrammaticallyFocusedElement(
+    state: State,
+    element: Project | UserHistoryEntry
+): void {
+    state.programmatically_focused_element = element;
 }

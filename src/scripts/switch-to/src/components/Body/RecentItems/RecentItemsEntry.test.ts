@@ -20,6 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { State } from "../../../store/type";
 
 describe("RecentItemsEntry", () => {
     it("Displays a link with a cross ref", () => {
@@ -31,6 +33,7 @@ describe("RecentItemsEntry", () => {
                     color_name: "lake-placid-blue",
                     quick_links: [] as QuickLink[],
                 } as UserHistoryEntry,
+                has_programmatically_focus: false,
             },
         });
 
@@ -49,6 +52,7 @@ describe("RecentItemsEntry", () => {
                         { name: "AD", icon_name: "fa-table", html_url: "/ad" },
                     ],
                 } as UserHistoryEntry,
+                has_programmatically_focus: false,
             },
         });
 
@@ -64,9 +68,65 @@ describe("RecentItemsEntry", () => {
                     color_name: "lake-placid-blue",
                     quick_links: [] as QuickLink[],
                 } as UserHistoryEntry,
+                has_programmatically_focus: false,
             },
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Changes the focus with arrow keys", async () => {
+        const entry = {
+            icon_name: "fa-columns",
+            title: "Kanban",
+            color_name: "lake-placid-blue",
+            quick_links: [] as QuickLink[],
+        } as UserHistoryEntry;
+
+        const wrapper = shallowMount(RecentItemsEntry, {
+            propsData: {
+                entry,
+                has_programmatically_focus: false,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {} as State,
+                }),
+            },
+        });
+
+        const key = "ArrowUp";
+        await wrapper.trigger("keydown", { key });
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("changeFocusFromHistory", {
+            entry,
+            key,
+        });
+    });
+
+    it("Forces the focus from the outside", async () => {
+        const wrapper = shallowMount(RecentItemsEntry, {
+            propsData: {
+                entry: {
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                } as UserHistoryEntry,
+                has_programmatically_focus: false,
+            },
+        });
+
+        const link = wrapper.find("[data-test=entry-link]");
+        if (!(link.element instanceof HTMLAnchorElement)) {
+            throw Error("Unable to find the link");
+        }
+
+        const focus = jest.spyOn(link.element, "focus");
+
+        wrapper.setProps({ has_programmatically_focus: true });
+        await wrapper.vm.$nextTick();
+
+        expect(focus).toHaveBeenCalled();
     });
 });

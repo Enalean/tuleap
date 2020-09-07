@@ -27,6 +27,7 @@
                     v-for="entry of filtered_history.entries"
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
+                    v-bind:has_programmatically_focus="hasProgrammaticallyFocus(entry)"
                 />
             </template>
             <p class="switch-to-modal-no-matching-history" v-else>
@@ -46,7 +47,7 @@ import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { Getter, State } from "vuex-class";
-import { UserHistory } from "../../../type";
+import { Project, UserHistory, UserHistoryEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 
 @Component({
@@ -72,6 +73,13 @@ export default class ListOfRecentItems extends Vue {
 
     @Getter
     readonly filtered_history!: UserHistory;
+
+    @State
+    private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
+
+    hasProgrammaticallyFocus(entry: UserHistoryEntry): boolean {
+        return entry === this.programmatically_focused_element;
+    }
 
     get has_no_history(): boolean {
         if (!this.is_history_loaded) {

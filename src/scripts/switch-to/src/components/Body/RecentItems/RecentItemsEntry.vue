@@ -19,11 +19,13 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items-entry">
+    <div class="switch-to-recent-items-entry" v-on:keydown="changeFocus">
         <a
             v-bind:href="entry.html_url"
             v-bind:class="entry.color_name"
             class="switch-to-recent-items-entry-link"
+            ref="entry_link"
+            data-test="entry-link"
         >
             <span
                 class="switch-to-recent-items-entry-badge badge tlp-badge-outline tlp-badge-on-dark-background"
@@ -56,13 +58,46 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { UserHistoryEntry } from "../../../type";
+import { Action } from "vuex-class";
+import { FocusFromHistoryPayload } from "../../../store/type";
 
 @Component
 export default class RecentItemsEntry extends Vue {
     @Prop({ required: true })
     private readonly entry!: UserHistoryEntry;
+
+    @Prop({ required: true })
+    private readonly has_programmatically_focus!: boolean;
+
+    @Action
+    private readonly changeFocusFromHistory!: (payload: FocusFromHistoryPayload) => void;
+
+    @Watch("has_programmatically_focus")
+    forceFocus(): void {
+        if (!this.has_programmatically_focus) {
+            return;
+        }
+
+        const link = this.$refs.entry_link;
+        if (link instanceof HTMLAnchorElement) {
+            link.focus();
+        }
+    }
+
+    changeFocus(event: KeyboardEvent): void {
+        switch (event.key) {
+            case "ArrowUp":
+            case "ArrowRight":
+            case "ArrowDown":
+            case "ArrowLeft":
+                event.preventDefault();
+                this.changeFocusFromHistory({ entry: this.entry, key: event.key });
+                break;
+            default:
+        }
+    }
 
     get xref_color(): string {
         return "tlp-badge-" + this.entry.color_name;

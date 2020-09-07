@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Project, SearchForm, UserHistory } from "../type";
+import { Project, SearchForm, UserHistory, UserHistoryEntry } from "../type";
 
 export interface State {
     readonly projects: Project[];
@@ -31,4 +31,15 @@ export interface State {
     is_history_in_error: boolean;
     history: UserHistory;
     filter_value: string;
+    programmatically_focused_element: Project | UserHistoryEntry | null;
+}
+
+export interface FocusFromProjectPayload {
+    readonly project: Project;
+    readonly key: "ArrowUp" | "ArrowRight" | "ArrowDown" | "ArrowLeft";
+}
+
+export interface FocusFromHistoryPayload {
+    readonly entry: UserHistoryEntry;
+    readonly key: "ArrowUp" | "ArrowRight" | "ArrowDown" | "ArrowLeft";
 }

@@ -6,6 +6,7 @@ exports[`ProjectLink Displays the link to a project 1`] = `
 >
   <a
     class="switch-to-projects-project-link"
+    data-test="project-link"
     href="/pojects/gpig"
   >
     <i

@@ -18,7 +18,8 @@
  */
 
 import { State } from "./type";
-import { updateFilterValue } from "./mutations";
+import { updateFilterValue, setProgrammaticallyFocusedElement } from "./mutations";
+import { Project } from "../type";
 
 describe("SwitchTo mutations", () => {
     describe("updateFilterValue", () => {
@@ -30,6 +31,19 @@ describe("SwitchTo mutations", () => {
             updateFilterValue(state, "abc");
 
             expect(state.filter_value).toBe("abc");
+        });
+    });
+
+    describe("setProgrammaticallyFocusedElement", () => {
+        it("updates the focused element in the store", () => {
+            const state: State = {
+                programmatically_focused_element: null,
+            } as State;
+
+            const project = {} as Project;
+            setProgrammaticallyFocusedElement(state, project);
+
+            expect(state.programmatically_focused_element).toBe(project);
         });
     });
 });

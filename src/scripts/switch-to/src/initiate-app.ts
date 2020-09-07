@@ -51,6 +51,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         is_history_loaded: false,
         is_history_in_error: false,
         history: { entries: [] },
+        programmatically_focused_element: null,
     };
 
     const store = createStore(root_state);
