@@ -21,6 +21,9 @@ msgstr "Parcourir tous les projets"
 msgid "Browse all…"
 msgstr "Tout parcourir…"
 
+msgid "Go to project administration of %s"
+msgstr "Aller à l'administration du projet $s"
+
 msgid "Legacy search →"
 msgstr "Recherche →"
 

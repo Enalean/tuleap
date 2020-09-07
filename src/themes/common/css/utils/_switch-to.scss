@@ -108,17 +108,26 @@
     color: $dark-modal-default-text-color;
 
     &:hover,
-    &:focus {
+    &:focus-within {
         background: rgba(0, 0, 0, .2);
-        text-decoration: none;
 
         > .switch-to-projects-project-admin-icon {
             opacity: .5;
 
-            &:hover {
+            &:hover,
+            &:focus {
                 opacity: 1;
             }
         }
+    }
+}
+
+.switch-to-projects-project-link {
+    color: $dark-modal-default-text-color;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
     }
 }
 
