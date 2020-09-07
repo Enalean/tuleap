@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TroveCatLink Display the link 1`] = `
+<a
+  href="/softwaremap/trove_list.php"
+/>
+`;
+
+exports[`TroveCatLink Does net display the link to trove cat if it is deactivated 1`] = `<!---->`;

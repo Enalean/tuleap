@@ -18,13 +18,37 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import GlobalEmptyState from "./GlobalEmptyState.vue";
+import TroveCatLink from "./TroveCatLink.vue";
+import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
+import { State } from "../../store/type";
 
-describe("GlobalEmptyState", () => {
-    it("Display an empty state", async () => {
-        const wrapper = shallowMount(GlobalEmptyState, {
+describe("TroveCatLink", () => {
+    it("Display the link", async () => {
+        const wrapper = shallowMount(TroveCatLink, {
             localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_trove_cat_enabled: true,
+                    } as State,
+                }),
+            },
+        });
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Does net display the link to trove cat if it is deactivated", async () => {
+        const wrapper = shallowMount(TroveCatLink, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_trove_cat_enabled: false,
+                    } as State,
+                }),
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

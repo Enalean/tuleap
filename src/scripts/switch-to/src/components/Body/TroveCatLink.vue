@@ -19,31 +19,19 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body-global-empty">
-        <global-empty-state-svg />
-
-        <translate class="switch-to-modal-body-global-empty-text">
-            You don’t belong to any project or haven’t viewed anything yet
-        </translate>
-
-        <trove-cat-link class="tlp-button-secondary switch-to-projects-softwaremap-empty-state">
-            {{ trove_cat_label }}
-        </trove-cat-link>
-    </div>
+    <a v-if="is_trove_cat_enabled" href="/softwaremap/trove_list.php">
+        <slot />
+    </a>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import GlobalEmptyStateSvg from "./GlobalEmptyStateSvg.vue";
-import TroveCatLink from "./TroveCatLink.vue";
+import { State } from "vuex-class";
 
-@Component({
-    components: { TroveCatLink, GlobalEmptyStateSvg },
-})
-export default class GlobalEmptyState extends Vue {
-    get trove_cat_label(): string {
-        return this.$gettext("Start exploring Tuleap");
-    }
+@Component
+export default class TroveCatLink extends Vue {
+    @State
+    private readonly is_trove_cat_enabled!: boolean;
 }
 </script>

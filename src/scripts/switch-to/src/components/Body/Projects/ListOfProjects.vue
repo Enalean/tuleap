@@ -32,14 +32,9 @@
             <p class="switch-to-modal-no-matching-projects" v-else>
                 <translate>You don't belong to any projects matching your query.</translate>
             </p>
-            <a
-                v-if="is_trove_cat_enabled"
-                href="/softwaremap/trove_list.php"
-                class="switch-to-projects-softwaremap"
-                data-test="trove-cat-link"
-            >
+            <trove-cat-link class="switch-to-projects-softwaremap">
                 {{ trove_cat_label }}
-            </a>
+            </trove-cat-link>
         </template>
         <projects-empty-state v-else />
     </div>
@@ -52,14 +47,12 @@ import ProjectLink from "./ProjectLink.vue";
 import { Getter, State } from "vuex-class";
 import { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
+import TroveCatLink from "../TroveCatLink.vue";
 
 @Component({
-    components: { ProjectLink, ProjectsEmptyState },
+    components: { TroveCatLink, ProjectLink, ProjectsEmptyState },
 })
 export default class ListOfProjects extends Vue {
-    @State
-    private readonly is_trove_cat_enabled!: boolean;
-
     @State
     private readonly projects!: Project[];
 

@@ -145,6 +145,10 @@
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
+
+    &:focus {
+        text-decoration: underline;
+    }
 }
 
 .switch-to-projects-empty {
