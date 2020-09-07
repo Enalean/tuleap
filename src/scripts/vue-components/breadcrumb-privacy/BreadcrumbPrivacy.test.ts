@@ -29,7 +29,7 @@ describe("BreadcrumbPrivacy", () => {
                 privacy: {
                     are_restricted_users_allowed: false,
                     project_is_public: true,
-                    project_privacy: "Some text",
+                    explanation_text: "Some text",
                 } as ProjectPrivacy,
                 project_public_name: "ACME",
             },
@@ -48,7 +48,7 @@ describe("BreadcrumbPrivacy", () => {
                 privacy: {
                     are_restricted_users_allowed: false,
                     project_is_public: true,
-                    project_privacy: "Some text",
+                    explanation_text: "Some text",
                 } as ProjectPrivacy,
                 project_public_name: "ACME",
             },

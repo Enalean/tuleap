@@ -50,7 +50,7 @@
                             {{ privacy.privacy_title }}
                         </h2>
                         <p class="current-project-nav-title-popover-description">
-                            {{ privacy.project_privacy }}
+                            {{ privacy.explanation_text }}
                         </p>
                     </div>
                     <hr class="current-project-nav-flag-popover-separator" />
@@ -84,7 +84,7 @@
                     </div>
                 </template>
                 <p v-else class="current-project-nav-title-popover-description">
-                    {{ privacy.project_privacy }}
+                    {{ privacy.explanation_text }}
                 </p>
             </div>
         </section>

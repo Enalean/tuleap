@@ -5,7 +5,7 @@
             {{# has_project_flags }}class="breadcrumb-project-privacy-icon-with-flags"{{/ has_project_flags }}
             data-project-name="{{ project_name }}"
             data-privacy-title="{{ privacy_title }}"
-            data-privacy-description="{{ project_privacy }}"
+            data-privacy-description="{{ explanation_text }}"
             data-project-flags="{{ json_encoded_project_flags }}"
             {{# are_restricted_users_allowed }}
                 {{# project_is_public }}
@@ -90,7 +90,7 @@
                         <h2 class="current-project-nav-flag-popover-content-title">
                             {{ privacy_title }}
                         </h2>
-                        <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+                        <p class="current-project-nav-title-popover-description">{{ explanation_text }}</p>
                     </div>
                     <hr class="current-project-nav-flag-popover-separator">
                     {{# project_flags }}
@@ -108,7 +108,7 @@
                     {{/ project_flags }}
                 {{/ has_project_flags }}
                 {{^ has_project_flags}}
-                    <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+                    <p class="current-project-nav-title-popover-description">{{ explanation_text }}</p>
                 {{/ has_project_flags }}
             </div>
         </section>

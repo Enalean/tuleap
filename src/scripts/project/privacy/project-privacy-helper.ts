@@ -23,7 +23,7 @@ export interface ProjectPrivacy {
     readonly project_is_public_incl_restricted: boolean;
     readonly project_is_public: boolean;
     readonly project_is_private_incl_restricted: boolean;
-    readonly project_privacy: string;
+    readonly explanation_text: string;
     readonly privacy_title: string;
 }
 
