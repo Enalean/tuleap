@@ -252,6 +252,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
         }
 
+        $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
+
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
@@ -282,7 +284,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
-            $new_dropdown_presenter_builder->getPresenter($current_user, $project),
+            $new_dropdown_presenter_builder->getPresenter($current_user, $project, $current_context_section),
             $switch_to,
         ));
 

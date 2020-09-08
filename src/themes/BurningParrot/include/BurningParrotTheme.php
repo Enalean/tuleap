@@ -181,6 +181,8 @@ class BurningParrotTheme extends BaseLayout
             new SearchFormPresenterBuilder($this->event_manager, $this->request)
         );
 
+        $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->user,
@@ -197,7 +199,7 @@ class BurningParrotTheme extends BaseLayout
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
-            $new_dropdown_presenter_builder->getPresenter($this->user, $project),
+            $new_dropdown_presenter_builder->getPresenter($this->user, $project, $current_context_section),
             $this->isInSiteAdmin($params),
             $project_context,
             $switch_to_presenter_builder->build($this->user)

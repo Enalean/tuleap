@@ -25,13 +25,14 @@ namespace Tuleap\Tracker\NewDropdown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
 
 class TrackerLinksInNewDropdownCollectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItCollectLinksForTrackers(): void
+    public function testItCollectsLinksForTrackers(): void
     {
         $bug_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
@@ -55,6 +56,44 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
         $links_collector
             ->shouldReceive('addCurrentProjectLink')
             ->twice();
+
+        $collector = new TrackerLinksInNewDropdownCollector($retriever);
+        $collector->collect($links_collector);
+    }
+
+    public function testItOmitsTrackersThatAreAlreadyInTheCurrentContextSection(): void
+    {
+        $bug_tracker = Mockery::mock(\Tracker::class)
+            ->shouldReceive([
+                'getItemName' => 'bug',
+                'getSubmitUrl' => '/path/to/submit/bugs'
+            ])
+            ->getMock();
+        $story_tracker = Mockery::mock(\Tracker::class)
+            ->shouldReceive([
+                'getItemName' => 'story',
+                'getSubmitUrl' => '/path/to/submit/story'
+            ])
+            ->getMock();
+
+        $retriever = Mockery::mock(TrackerInNewDropdownRetriever::class);
+        $retriever
+            ->shouldReceive('getTrackers')
+            ->andReturn([$bug_tracker, $story_tracker]);
+
+        $links_collector = Mockery::spy(NewDropdownProjectLinksCollector::class);
+        $links_collector
+            ->shouldReceive('addCurrentProjectLink')
+            ->once();
+
+        $current_context_section = new NewDropdownLinkSectionPresenter("section label", [
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus')
+        ]);
+
+        $links_collector
+            ->shouldReceive('getCurrentContextSection')
+            ->once()
+            ->andReturn($current_context_section);
 
         $collector = new TrackerLinksInNewDropdownCollector($retriever);
         $collector->collect($links_collector);

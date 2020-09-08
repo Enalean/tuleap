@@ -36,6 +36,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
@@ -421,5 +422,16 @@ abstract class BaseLayout extends Response
     final protected function getBanner(Project $project, PFUser $current_user): ?BannerDisplay
     {
         return (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
+    }
+
+    protected function getNewDropdownCurrentContextSectionFromParams(array $params): ?NewDropdownLinkSectionPresenter
+    {
+        if (! isset($params['new_dropdown_current_context_section'])) {
+            return null;
+        }
+
+        $section = $params['new_dropdown_current_context_section'];
+
+        return $section instanceof NewDropdownLinkSectionPresenter ? $section : null;
     }
 }
