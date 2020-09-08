@@ -196,7 +196,18 @@ blockquote {
     line-height: 1.375rem;
 }
 
-kbd,
+kbd {
+    display: inline-block;
+    padding: 2px $tlp-small-spacing;
+    border-radius: 4px;
+    background: $tlp-theme-sidebar-background-color;
+    color: $tlp-ui-white;
+    font-family: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',sans-serif;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    vertical-align: 1px;
+}
+
 code {
     @extend %tlp-code;
 
