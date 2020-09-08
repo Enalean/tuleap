@@ -184,15 +184,15 @@ export default function (options = {}) {
         chart
             .g()
             .selectAll(".area")
-            .on("mouseover", function (d) {
+            .on("mouseover", function (event, d) {
                 d3.select("#area_" + d.key).classed("hover", true);
                 var column = find(chart.columns(), { id: d.key });
                 if (column) {
                     column.hover = true;
                 }
             })
-            .on("mousemove", function () {
-                var data_set = getDataSet(d3.mouse(this)[0]);
+            .on("mousemove", function (event) {
+                var data_set = getDataSet(d3.pointer(event)[0]);
 
                 if (data_set && total(data_set) > 0) {
                     chart
@@ -210,7 +210,7 @@ export default function (options = {}) {
                         .classed("tooltip-displayed", true)
                         .classed("tooltip-undisplayed", false);
 
-                    var position = getTooltipPosition(d3.mouse(this)[0], d3.mouse(this)[1]);
+                    var position = getTooltipPosition(d3.pointer(event)[0], d3.pointer(event)[1]);
 
                     chart
                         .tooltip()
@@ -219,12 +219,12 @@ export default function (options = {}) {
                         .style("top", position.top + "px");
                 }
             })
-            .on("mouseout", function (d) {
+            .on("mouseout", function (event, d) {
                 if (
-                    d3.event.relatedTarget &&
-                    d3.event.relatedTarget.nodeName !== "line" &&
-                    d3.event.relatedTarget.id !== "tooltip_" + d.key &&
-                    d3.event.relatedTarget.id !== "area_" + d.key
+                    event.relatedTarget &&
+                    event.relatedTarget.nodeName !== "line" &&
+                    event.relatedTarget.id !== "tooltip_" + d.key &&
+                    event.relatedTarget.id !== "area_" + d.key
                 ) {
                     d3.select("#area_" + d.key).classed("hover", false);
                     var column = find(chart.columns(), { id: d.key });
@@ -352,14 +352,14 @@ export default function (options = {}) {
 
     chart.initLegendEvents = function () {
         d3.selectAll(".legend-value")
-            .on("click", function (d) {
+            .on("click", function (event, d) {
                 updateLegend(d, d3.select(this));
                 chart.redraw();
             })
-            .on("mouseover", function (d) {
+            .on("mouseover", function (event, d) {
                 d3.select("#area_" + d.id).classed("hover", true);
             })
-            .on("mouseout", function (d) {
+            .on("mouseout", function (event, d) {
                 d3.select("#area_" + d.id).classed("hover", false);
             });
     };
