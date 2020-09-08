@@ -2,11 +2,11 @@
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
   "dependencies": {
-    "dompurify": "^2.0.10"
+    "dompurify": "^2.0.15"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.5.0",
-    "@types/dompurify": "^2.0.3"
+    "@types/dompurify": "^2.0.4"
   },
   "config": {
     "bin": "../../node_modules/.bin"
