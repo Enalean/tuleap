@@ -21,11 +21,11 @@
     display: flex;
     position: fixed;
     z-index: 1000;
-    top: $navbar-height;
+    top: 0;
     left: 0;
     flex-direction: column;
     width: $sidebar-expanded-width;
-    height: calc(100vh - #{$navbar-height});
+    height: 100vh;
     background: $tlp-theme-sidebar-background-color;
 }
 

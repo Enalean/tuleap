@@ -21,6 +21,8 @@
     display: inline-block;
     overflow: hidden;
     border-radius: 50%;
+    background: $tlp-ui-border-normal url('../images/tlp-default-avatar.svg') no-repeat center center;
+    background-size: contain;
     vertical-align: middle;
 
     > img {
@@ -32,41 +34,36 @@
 .tlp-avatar-jumbo {
     @extend %tlp-avatar;
 
-    width: 100px;
-    height: 100px;
-    background: url('../images/tlp-avatar-jumbo.png');
+    width: 96px;
+    height: 96px;
 }
 
 .tlp-avatar-extra-large {
     @extend %tlp-avatar;
 
-    width: 75px;
-    height: 75px;
-    background: url('../images/tlp-avatar-extra-large.png');
+    width: 72px;
+    height: 72px;
 }
 
 .tlp-avatar-large {
     @extend %tlp-avatar;
 
-    width: 50px;
-    height: 50px;
-    background: url('../images/tlp-avatar-large.png');
+    width: 48px;
+    height: 48px;
 }
 
 .tlp-avatar {
     @extend %tlp-avatar;
 
-    width: 35px;
-    height: 35px;
-    background: url('../images/tlp-avatar.png');
+    width: 40px;
+    height: 40px;
 }
 
 .tlp-avatar-small {
     @extend %tlp-avatar;
 
-    width: 25px;
-    height: 25px;
-    background: url('../images/tlp-avatar-small.png');
+    width: 24px;
+    height: 24px;
 }
 
 .tlp-avatar-mini {
@@ -74,5 +71,4 @@
 
     width: 20px;
     height: 20px;
-    background: url('../images/tlp-avatar-mini.png');
 }

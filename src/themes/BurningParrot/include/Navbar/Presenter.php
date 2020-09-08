@@ -26,8 +26,6 @@ class Presenter
 {
     /** @var UserNavPresenter */
     public $user_nav_presenter;
-
-    public $homepage_label;
     /**
      * @var NewDropdownPresenter
      */
@@ -37,15 +35,21 @@ class Presenter
      * @psalm-readonly
      */
     public $is_super_user;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $should_logo_be_displayed;
 
     public function __construct(
         UserNavPresenter $user_nav_presenter,
         NewDropdownPresenter $new_dropdown,
-        bool $is_super_user
+        bool $is_super_user,
+        bool $should_logo_be_displayed
     ) {
-        $this->user_nav_presenter   = $user_nav_presenter;
-        $this->homepage_label       = _('Homepage');
-        $this->new_dropdown         = $new_dropdown;
-        $this->is_super_user        = $is_super_user;
+        $this->user_nav_presenter       = $user_nav_presenter;
+        $this->new_dropdown             = $new_dropdown;
+        $this->is_super_user            = $is_super_user;
+        $this->should_logo_be_displayed = $should_logo_be_displayed;
     }
 }

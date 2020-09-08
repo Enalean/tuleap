@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { updateTopMarginAccordinglyToMOTDHeight } from "../../BurningParrot/src/update-ui-margins-according-to-motd";
+import { updateFloatingButtonsPosition } from "./update-floating-buttons-position";
+
 export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
 export const PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID = "project-banner-close";
 export const PROJECT_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-project-banner";
@@ -41,6 +44,8 @@ export function allowToHideAndShowProjectBanner(
             "Project banner close button is supposed to be contained in the project banner"
         );
     }
+
+    updateFloatingButtonsPosition();
 
     project_banner_navbar.addEventListener("click", (event: Event): void => {
         toggleProjectBannerMessage(
@@ -83,6 +88,9 @@ function toggleProjectBannerMessage(
     document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
+
+    updateTopMarginAccordinglyToMOTDHeight();
+    updateFloatingButtonsPosition();
 }
 
 async function hideProjectBannerMessage(
@@ -96,6 +104,9 @@ async function hideProjectBannerMessage(
     document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
+
+    updateTopMarginAccordinglyToMOTDHeight();
+    updateFloatingButtonsPosition();
 
     // Not dealing with potential errors here, worst case scenario the user will have to close the banner again on the next page
     await tlpPatch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {

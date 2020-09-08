@@ -19,26 +19,26 @@
 
 .dashboard-project-header {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    flex-direction: column;
     margin: $tlp-medium-spacing;
+    padding: 0 400px 0 0;
 }
 
 .dashboard-project-header-main {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .dashboard-project-header-access {
-    margin: 0 $tlp-small-spacing 7px 0;
+    margin: 12px $tlp-small-spacing 0 0; // magix value
 }
 
 .dashboard-project-header-members {
-    margin: 0 0 7px;
+    margin: 12px 0 0; // magix value
 }
 
 .dashboard-project-header-trovecat {
-    margin: 0 0 12px $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 14px;
 }

@@ -21,7 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: $navbar-height 0 0;
+    padding: 0;
     background: $tlp-theme-background-color;
     font-family: $tlp-font-family;
 }
@@ -51,7 +51,7 @@ main {
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
-    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+    margin: ($top-floating-buttons-space + $tlp-medium-spacing) $tlp-medium-spacing 0;
 
     &:empty {
         margin: 0;
@@ -112,6 +112,5 @@ main[role=main]:not(.tlp-framed) > #feedback {
 @import 'sidebar';
 @import 'toolbar';
 @import 'navbar';
-@import 'navbar-dropdown';
-@import 'navbar-dropdown-items';
+@import 'logo';
 @import 'footer';

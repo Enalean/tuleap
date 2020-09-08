@@ -61,8 +61,11 @@ class HeaderPresenterBuilder
     /** @var SidebarPresenter */
     private $sidebar;
 
-    /** @var CssAssetCollection */
-    private $css_assets;
+    /** @var bool */
+    private $is_in_siteadmin;
+
+    /** @var ProjectContextPresenter|null */
+    private $project_context;
 
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
@@ -81,6 +84,7 @@ class HeaderPresenterBuilder
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
         NewDropdownPresenter $new_dropdown_presenter,
+        $is_in_siteadmin,
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to
     ) {
@@ -92,6 +96,8 @@ class HeaderPresenterBuilder
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
         $this->css_assets                            = $css_assets;
+        $this->is_in_siteadmin                        = $is_in_siteadmin;
+        $this->project_context                       = $project_context;
 
         $color = $this->getMainColor();
         $theme_variation = new ThemeVariation($color, $current_user);
@@ -103,7 +109,8 @@ class HeaderPresenterBuilder
             $this->navbar_presenter_builder->build(
                 $this->current_user,
                 $url_redirect,
-                $new_dropdown_presenter
+                $new_dropdown_presenter,
+                $this->shouldLogoBeDisplayed()
             ),
             $color,
             $this->getStylesheets($theme_variation),
@@ -116,9 +123,14 @@ class HeaderPresenterBuilder
             $motd,
             $open_graph,
             $help_dropdown_presenter,
-            $project_context,
+            $this->project_context,
             $switch_to
         );
+    }
+
+    private function shouldLogoBeDisplayed()
+    {
+        return ! $this->is_in_siteadmin && ! isset($this->project_context);
     }
 
     private function getPageTitle()

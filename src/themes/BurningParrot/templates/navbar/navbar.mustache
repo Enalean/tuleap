@@ -1,58 +1,31 @@
 {{# navbar_presenter }}
-<header>
-    {{# has_motd }}
-        <div class="header-motd">{{{ motd }}}</div>
-    {{/ has_motd }}
+{{# has_motd }}
+    <div class="motd">{{{ motd }}}</div>
+{{/ has_motd }}
+<header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }}">
     <div class="header-container">
-        <div class="header-nav">
-            <a href="/" id="logo" aria-label="{{ homepage_label }}"></a>
+        {{# should_logo_be_displayed }}
+            <a href="/" id="logo" aria-label="{{# gettext }}Homepage{{/ gettext }}"></a>
+        {{/ should_logo_be_displayed }}
 
-            <nav id="global-nav">
-                {{> navbar/global-nav }}
+        <div class="header-container-spacer"></div>
 
-                {{# is_super_user }}
-                    <a href="/admin/" class="nav-link go-to-admin" data-test="platform-administration-link">
-                        <span class="nav-link-test">{{# gettext }}Administration{{/ gettext }}</span>
-                    </a>
-                {{/ is_super_user }}
-            </nav>
-        </div>
+        {{# is_super_user }}
+            <a href="/admin/" class="tlp-button-danger tlp-button-round tlp-button-outline go-to-admin" arial-label="{{# gettext }}Administration{{/ gettext }}" data-test="platform-administration-link">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+            </a>
+        {{/ is_super_user }}
 
-        <div class="header-nav">
-            {{# new_dropdown }}
-                {{# has_sections }}
-                    <div id="nav-dropdown-new" class="nav-dropdown nav-dropdown-right">
-                        <div class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-new" data-shortcut-create>
-                            <i class="fa fa-plus nav-dropdown-new-icon" aria-hidden="true"></i>
-                            {{# gettext }}New{{/ gettext }}
-                        </div>
+        {{> navbar/new-nav }}
 
-                        <div id="nav-dropdown-content-new" class="nav-dropdown-content nav-dropdown-content-hidden">
-                            <div class="arrow-up nav-dropdown-content-arrow-up"></div>
-                            {{# sections }}
-                                <hr class="nav-dropdown-content-user-divider">
-                                <div class="nav-dropdown-content-item-title">{{ label }}</div>
-                                {{# links }}
-                                    <a href="{{ url }}" class="nav-dropdown-content-item" data-shortcut-create-option>
-                                        <i class="fa fa-fw {{ icon }} nav-dropdown-content-user-link-icon" aria-hidden="true"></i>
-                                        {{ label }}
-                                    </a>
-                                {{/ links }}
-                             {{/ sections }}
-                        </div>
-                    </div>
-                {{/ has_sections }}
-            {{/ new_dropdown }}
+        {{# switch_to }}
+            <button type="button" class="tlp-button-secondary tlp-button-outline" id="switch-to-button" data-target-modal-id="switch-to-modal">
+                <i class="fa fa-search tlp-button-icon" aria-hidden="true"></i>
+                {{# gettext }}Switch to...{{/ gettext }}
+            </button>
+        {{/ switch_to }}
 
-            {{# switch_to }}
-                <button type="button" id="switch-to-button" data-target-modal-id="switch-to-modal">
-                    <i class="fa fa-search nav-switch-to-icon" aria-hidden="true"></i>
-                    {{# gettext }}Switch to...{{/ gettext }}
-                </button>
-            {{/ switch_to }}
-
-            {{> navbar/user-nav }}
-        </div>
+        {{> navbar/user-nav }}
     </div>
 </header>
 {{/ navbar_presenter }}

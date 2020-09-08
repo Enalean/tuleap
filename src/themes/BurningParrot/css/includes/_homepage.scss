@@ -18,10 +18,11 @@
  */
 
 $homepage-small-screen-width: 850px;
+$homepage-background-height: 733px;
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.homepage > #main-container {
-    background: $tlp-theme-sidebar-background-color;
+    background: linear-gradient(to bottom, $tlp-theme-background-color $homepage-background-height, $tlp-theme-sidebar-background-color $homepage-background-height);
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
@@ -188,7 +189,7 @@ body.homepage > #main-container {
     bottom: -1px;
     left: 0;
     width: 100%;
-    height: 733px;
+    height: $homepage-background-height;
     overflow: hidden;
 }
 

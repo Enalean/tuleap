@@ -18,11 +18,11 @@
  */
 
 .has-sidebar {
-    padding: $navbar-height 0 0 $sidebar-expanded-width;
+    padding: 0 0 0 $sidebar-expanded-width;
 }
 
 .sidebar-collapsed {
-    padding: $navbar-height 0 0 $sidebar-collapsed-width;
+    padding: 0 0 0 $sidebar-collapsed-width;
 
     .sidebar {
         width: $sidebar-collapsed-width;
