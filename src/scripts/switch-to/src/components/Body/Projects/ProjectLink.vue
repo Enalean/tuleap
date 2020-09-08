@@ -19,8 +19,13 @@
   -->
 
 <template>
-    <div class="switch-to-projects-project">
-        <a v-bind:href="project.project_uri" class="switch-to-projects-project-link">
+    <div class="switch-to-projects-project" v-on:keydown="changeFocus">
+        <a
+            v-bind:href="project.project_uri"
+            class="switch-to-projects-project-link"
+            ref="project_link"
+            data-test="project-link"
+        >
             <i class="fa fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
             <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
         </a>
@@ -36,22 +41,54 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { Project } from "../../../type";
 import {
     getProjectPrivacyIcon,
     ProjectPrivacy,
 } from "../../../../../project/privacy/project-privacy-helper";
-import { State } from "vuex-class";
+import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
+import { FocusFromProjectPayload } from "../../../store/type";
 
 @Component
 export default class ProjectLink extends Vue {
     @Prop({ required: true })
-    readonly project!: Project;
+    private readonly project!: Project;
+
+    @Prop({ required: true })
+    private readonly has_programmatically_focus!: boolean;
 
     @State
-    readonly are_restricted_users_allowed!: boolean;
+    private readonly are_restricted_users_allowed!: boolean;
+
+    @Action
+    private readonly changeFocusFromProject!: (payload: FocusFromProjectPayload) => void;
+
+    @Watch("has_programmatically_focus")
+    forceFocus(): void {
+        if (!this.has_programmatically_focus) {
+            return;
+        }
+
+        const link = this.$refs.project_link;
+        if (link instanceof HTMLAnchorElement) {
+            link.focus();
+        }
+    }
+
+    changeFocus(event: KeyboardEvent): void {
+        switch (event.key) {
+            case "ArrowUp":
+            case "ArrowRight":
+            case "ArrowDown":
+            case "ArrowLeft":
+                event.preventDefault();
+                this.changeFocusFromProject({ project: this.project, key: event.key });
+                break;
+            default:
+        }
+    }
 
     goToAdmin(event: Event): void {
         event.preventDefault();

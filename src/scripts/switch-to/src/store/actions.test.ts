@@ -25,6 +25,7 @@ import {
 } from "../../../../themes/tlp/mocks/tlp-fetch-mock-helper";
 import * as tlp from "../../../../themes/tlp/src/js/fetch-wrapper";
 import { ActionContext } from "vuex";
+import { Project, UserHistory, UserHistoryEntry } from "../type";
 
 jest.mock("tlp");
 
@@ -89,6 +90,473 @@ describe("SwitchTo actions", () => {
             await actions.loadHistory(context);
 
             expect(tlpGetMock).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("changeFocusFromProject", () => {
+        it("does nothing if user hits left key", () => {
+            const context = ({
+                commit: jest.fn(),
+            } as unknown) as ActionContext<State, State>;
+
+            actions.changeFocusFromProject(context, {
+                project: {} as Project,
+                key: "ArrowLeft",
+            });
+
+            expect(context.commit).not.toHaveBeenCalled();
+        });
+
+        describe("When user hits ArrowRight", () => {
+            it("does nothing if the history is not loaded yet", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    state: {
+                        is_history_loaded: false,
+                    } as State,
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowRight",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the history is in error", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    state: {
+                        is_history_loaded: true,
+                        is_history_in_error: true,
+                    } as State,
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowRight",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the history is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    state: {
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                    } as State,
+                    getters: {
+                        filtered_history: { entries: [] } as UserHistory,
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowRight",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("focus the first history entry", () => {
+                const first_project = { html_url: "/first" } as UserHistoryEntry;
+                const another_project = { html_url: "/another" } as UserHistoryEntry;
+
+                const context = ({
+                    commit: jest.fn(),
+                    state: {
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                    } as State,
+                    getters: {
+                        filtered_history: {
+                            entries: [first_project, another_project],
+                        } as UserHistory,
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowRight",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_project
+                );
+            });
+        });
+
+        describe("When user hits ArrowUp", () => {
+            it("does nothing if the project list is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [] as Project[],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the project list contains only one element", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [{} as Project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("goes up", () => {
+                const first_project = { project_uri: "/first" } as Project;
+                const another_project = { project_uri: "/another" } as Project;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [first_project, another_project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: another_project,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_project
+                );
+            });
+
+            it("goes around if the current is the first in the list", () => {
+                const first_project = { project_uri: "/first" } as Project;
+                const another_project = { project_uri: "/another" } as Project;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [first_project, another_project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: first_project,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    another_project
+                );
+            });
+        });
+
+        describe("When user hits ArrowDown", () => {
+            it("does nothing if the project list is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [] as Project[],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the project list contains only one element", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [{} as Project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: {} as Project,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("goes down", () => {
+                const first_project = { project_uri: "/first" } as Project;
+                const another_project = { project_uri: "/another" } as Project;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [first_project, another_project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: first_project,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    another_project
+                );
+            });
+
+            it("goes around if the current is the first in the list", () => {
+                const first_project = { project_uri: "/first" } as Project;
+                const another_project = { project_uri: "/another" } as Project;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_projects: [first_project, another_project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromProject(context, {
+                    project: another_project,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_project
+                );
+            });
+        });
+    });
+
+    describe("changeFocusFromHistory", () => {
+        it("does nothing if user hits right key", () => {
+            const context = ({
+                commit: jest.fn(),
+            } as unknown) as ActionContext<State, State>;
+
+            actions.changeFocusFromHistory(context, {
+                entry: {} as UserHistoryEntry,
+                key: "ArrowRight",
+            });
+
+            expect(context.commit).not.toHaveBeenCalled();
+        });
+
+        describe("When user hits ArrowLeft", () => {
+            it("does nothing if the project list is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    state: {} as State,
+                    getters: {
+                        filtered_projects: [] as Project[],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowLeft",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("focus the first project", () => {
+                const first_project = { project_uri: "/first" } as Project;
+                const another_project = { project_uri: "/another" } as Project;
+
+                const context = ({
+                    commit: jest.fn(),
+                    state: {} as State,
+                    getters: {
+                        filtered_projects: [first_project, another_project],
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowLeft",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_project
+                );
+            });
+        });
+
+        describe("When user hits ArrowUp", () => {
+            it("does nothing if the history is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the history contains only one element", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [{} as UserHistoryEntry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("goes up", () => {
+                const first_entry = { html_url: "/first" } as UserHistoryEntry;
+                const another_entry = { html_url: "/another" } as UserHistoryEntry;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [first_entry, another_entry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: another_entry,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_entry
+                );
+            });
+
+            it("goes around if the current is the first in the list", () => {
+                const first_entry = { html_url: "/first" } as UserHistoryEntry;
+                const another_entry = { html_url: "/another" } as UserHistoryEntry;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [first_entry, another_entry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: first_entry,
+                    key: "ArrowUp",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    another_entry
+                );
+            });
+        });
+
+        describe("When user hits ArrowDown", () => {
+            it("does nothing if the history is empty", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("does nothing if the history contains only one element", () => {
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [{} as UserHistoryEntry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: {} as UserHistoryEntry,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).not.toHaveBeenCalled();
+            });
+
+            it("goes down", () => {
+                const first_entry = { html_url: "/first" } as UserHistoryEntry;
+                const another_entry = { html_url: "/another" } as UserHistoryEntry;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [first_entry, another_entry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: first_entry,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    another_entry
+                );
+            });
+
+            it("goes around if the current is the first in the list", () => {
+                const first_entry = { html_url: "/first" } as UserHistoryEntry;
+                const another_entry = { html_url: "/another" } as UserHistoryEntry;
+
+                const context = ({
+                    commit: jest.fn(),
+                    getters: {
+                        filtered_history: { entries: [first_entry, another_entry] },
+                    },
+                } as unknown) as ActionContext<State, State>;
+
+                actions.changeFocusFromHistory(context, {
+                    entry: another_entry,
+                    key: "ArrowDown",
+                });
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setProgrammaticallyFocusedElement",
+                    first_entry
+                );
+            });
         });
     });
 });

@@ -34,6 +34,7 @@ describe("ProjectLink", () => {
                     project_name: "Guinea Pig",
                     project_uri: "/pojects/gpig",
                 } as Project,
+                has_programmatically_focus: false,
             },
             mocks: {
                 $store: createStoreMock({
@@ -45,5 +46,69 @@ describe("ProjectLink", () => {
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Changes the focus with arrow keys", async () => {
+        const project = {
+            is_public: true,
+            project_name: "Guinea Pig",
+            project_uri: "/pojects/gpig",
+        } as Project;
+
+        const wrapper = shallowMount(ProjectLink, {
+            localVue: await createSwitchToLocalVue(),
+            propsData: {
+                project,
+                has_programmatically_focus: false,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        are_restricted_users_allowed: true,
+                    } as State,
+                }),
+            },
+        });
+
+        const key = "ArrowUp";
+        await wrapper.trigger("keydown", { key });
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("changeFocusFromProject", {
+            project,
+            key,
+        });
+    });
+
+    it("Forces the focus from the outside", async () => {
+        const wrapper = shallowMount(ProjectLink, {
+            localVue: await createSwitchToLocalVue(),
+            propsData: {
+                project: {
+                    is_public: true,
+                    project_name: "Guinea Pig",
+                    project_uri: "/pojects/gpig",
+                } as Project,
+                has_programmatically_focus: false,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        are_restricted_users_allowed: true,
+                    } as State,
+                }),
+            },
+        });
+
+        const link = wrapper.find("[data-test=project-link]");
+        if (!(link.element instanceof HTMLAnchorElement)) {
+            throw Error("Unable to find the link");
+        }
+
+        const focus = jest.spyOn(link.element, "focus");
+
+        wrapper.setProps({ has_programmatically_focus: true });
+        await wrapper.vm.$nextTick();
+
+        expect(focus).toHaveBeenCalled();
     });
 });
