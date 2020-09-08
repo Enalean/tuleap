@@ -43,11 +43,13 @@ function TestManagementCtrl(
 
         const project_public_name = testmanagement_init_data.projectPublicName;
         const project_url = testmanagement_init_data.projectUrl;
+        const ttm_admin_url = testmanagement_init_data.ttmAdminUrl;
+        const ttm_admin_label = testmanagement_init_data.ttmAdminLabel;
 
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
 
-        moveBreadCrumbs(project_public_name, project_url);
+        moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label);
     };
 }

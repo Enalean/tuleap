@@ -303,15 +303,6 @@ class Router
         $project     = $request->getProject();
         $toolbar     = [];
         $breadcrumbs = $controller->getBreadcrumbs();
-        if ($this->userIsAdmin($request)) {
-            $toolbar[] = [
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
-                    'group_id' => $request->get('group_id'),
-                    'action'   => 'admin',
-                ])
-            ];
-        }
 
         $service->displayHeader(
             $title,
@@ -319,11 +310,6 @@ class Router
             $toolbar,
             ['body_class' => ['testmanagement'], 'without-project-in-breadcrumbs' => $without_project_in_breadcrumb]
         );
-    }
-
-    private function userIsAdmin(Codendi_Request $request): bool
-    {
-        return $request->getProject()->userIsAdmin();
     }
 
     /**

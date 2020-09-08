@@ -102,6 +102,11 @@ class IndexPresenter
      * @psalm-readonly
      */
     public $has_project_flags;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $ttm_admin_url = '';
 
     /**
      * @param int|false $campaign_tracker_id
@@ -129,6 +134,12 @@ class IndexPresenter
 
         $user_representation = UserRepresentation::build($current_user);
         $this->current_user = json_encode($user_representation);
+        if ($current_user->isAdmin($project->getID())) {
+            $this->ttm_admin_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
+                'group_id' => $this->project_id,
+                'action'   => 'admin',
+            ]);
+        }
 
         $this->test_definition_tracker_id = intval($test_definition_tracker_id);
         $this->test_execution_tracker_id  = intval($test_execution_tracker_id);
