@@ -16,10 +16,20 @@
         <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
         <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
-        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
         <!-- conflict and mostly checked by TuleapCodingStandard.Sniffs.Commenting.FileCopyrightSniff -->
         <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
     </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+      <exclude-pattern>*/phpwiki/*</exclude-pattern>
+      <exclude-pattern>*/embedded_vendor/*</exclude-pattern>
+      <exclude-pattern>*/www/include/nusoap.php$</exclude-pattern>
+      <exclude-pattern>*/fusionforge/FusionForge.php$</exclude-pattern>
+      <exclude-pattern>*/mediawiki/www/skins/Tuleap123/Tuleap123.php$</exclude-pattern>
+      <exclude-pattern>*/mediawiki/www/LocalSettings.php$</exclude-pattern>
+      <exclude-pattern>*/mediawiki-skin/Tuleap.php$</exclude-pattern>
+    </rule>
+
     <rule ref="PSR12.Operators.OperatorSpacing"/>
     <!-- Type casting operators MUST NOT have any space within the parentheses. -->
     <rule ref="Squiz.WhiteSpace.CastSpacing"/>

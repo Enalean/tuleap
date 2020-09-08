@@ -19,32 +19,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * Various tools to assist test in her duty
- */
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TestHelper
+class ErrorDataAccessResult extends DataAccessResult
 {
-    /**
-     * Generate a DataAccessResult
-     */
-    public static function arrayToDar()
+    public function __construct()
     {
-        return self::argListToDar(func_get_args());
     }
 
-    public static function argListToDar($argList)
+    public function valid()
     {
-        return new \Tuleap\FakeDataAccessResult($argList);
+        return false;
     }
 
-    public static function emptyDar()
+    public function current()
     {
-        return self::arrayToDar();
+        return false;
     }
 
-    public static function errorDar()
+    public function rowCount()
     {
-        return new ErrorDataAccessResult();
+        return 0;
+    }
+
+    public function isError()
+    {
+        return true;
+    }
+
+    public function getRow()
+    {
+        return false;
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Backend;
 
 use BackendSVN;
-use FakeDataAccessResult;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -32,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessRestrictedException;
 use ProjectUGroup;
+use Tuleap\FakeDataAccessResult;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\ProjectAccessChecker;
 use UGroupDao;
