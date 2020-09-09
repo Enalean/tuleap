@@ -45,7 +45,12 @@ class ProjectPresentersBuilder
         $this->project_manager = ProjectManager::instance();
         $this->projects        = $this->project_manager->getActiveProjectsForUser($this->current_user);
 
-        return $this->getProjectPresenters();
+        $presenters = $this->getProjectPresenters();
+        usort($presenters, static function (ProjectPresenter $a, ProjectPresenter $b) {
+            return strnatcasecmp($a->project_name, $b->project_name);
+        });
+
+        return $presenters;
     }
 
     /**
