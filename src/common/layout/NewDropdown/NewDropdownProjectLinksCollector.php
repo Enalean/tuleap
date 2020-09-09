@@ -42,11 +42,19 @@ class NewDropdownProjectLinksCollector implements Dispatchable
      * @var Project
      */
     private $project;
+    /**
+     * @var NewDropdownLinkSectionPresenter|null
+     */
+    private $current_context_section;
 
-    public function __construct(PFUser $current_user, Project $project)
-    {
-        $this->current_user = $current_user;
-        $this->project      = $project;
+    public function __construct(
+        PFUser $current_user,
+        Project $project,
+        ?NewDropdownLinkSectionPresenter $current_context_section
+    ) {
+        $this->current_user            = $current_user;
+        $this->project                 = $project;
+        $this->current_context_section = $current_context_section;
     }
 
     /**
@@ -70,5 +78,10 @@ class NewDropdownProjectLinksCollector implements Dispatchable
     public function getProject(): Project
     {
         return $this->project;
+    }
+
+    public function getCurrentContextSection(): ?NewDropdownLinkSectionPresenter
+    {
+        return $this->current_context_section;
     }
 }

@@ -74,7 +74,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('isUserAllowedToCreateProjects')
             ->andReturn(false);
 
-        $presenter = $this->builder->getPresenter($this->user, null);
+        $presenter = $this->builder->getPresenter($this->user, null, null);
 
         $this->assertFalse($presenter->has_sections);
     }
@@ -85,7 +85,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('isUserAllowedToCreateProjects')
             ->andReturn(true);
 
-        $presenter = $this->builder->getPresenter($this->user, null);
+        $presenter = $this->builder->getPresenter($this->user, null, null);
 
         $this->assertTrue($presenter->has_sections);
         $this->assertCount(1, $presenter->sections);
@@ -101,9 +101,9 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
-            ->andReturn(new NewDropdownProjectLinksCollector($this->user, $this->project));
+            ->andReturn(new NewDropdownProjectLinksCollector($this->user, $this->project, null));
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project);
+        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
 
         $this->assertFalse($presenter->has_sections);
     }
@@ -114,14 +114,14 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('isUserAllowedToCreateProjects')
             ->andReturn(false);
 
-        $collector = new NewDropdownProjectLinksCollector($this->user, $this->project);
+        $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
             ->andReturn($collector);
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project);
+        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
 
         $this->assertTrue($presenter->has_sections);
         $this->assertCount(1, $presenter->sections);
@@ -135,14 +135,14 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('isUserAllowedToCreateProjects')
             ->andReturn(true);
 
-        $collector = new NewDropdownProjectLinksCollector($this->user, $this->project);
+        $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
             ->andReturn($collector);
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project);
+        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
 
         $this->assertTrue($presenter->has_sections);
         $this->assertCount(2, $presenter->sections);
@@ -150,5 +150,29 @@ class NewDropdownPresenterBuilderTest extends TestCase
         $this->assertEquals('/url', $presenter->sections[0]->links[0]->url);
         $this->assertEquals('ACME', $presenter->sections[1]->label);
         $this->assertEquals('/project/new', $presenter->sections[1]->links[0]->url);
+    }
+
+    public function testItAddsACurrentContextSection(): void
+    {
+        $this->project_registration
+            ->shouldReceive('isUserAllowedToCreateProjects')
+            ->andReturn(true);
+
+        $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
+        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
+
+        $this->event_dispatcher
+            ->shouldReceive('dispatch')
+            ->andReturn($collector);
+
+        $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus')
+        ]);
+        $presenter = $this->builder->getPresenter($this->user, $this->project, $current_context_section);
+
+        $this->assertTrue($presenter->has_sections);
+        $this->assertCount(3, $presenter->sections);
+        $this->assertEquals('Current context', $presenter->sections[0]->label);
+        $this->assertEquals('/path/to/submit/story', $presenter->sections[0]->links[0]->url);
     }
 }

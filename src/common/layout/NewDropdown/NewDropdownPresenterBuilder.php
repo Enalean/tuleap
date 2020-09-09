@@ -46,23 +46,27 @@ class NewDropdownPresenterBuilder
         $this->project_registration_user_permission_checker = $project_registration_user_permission_checker;
     }
 
-    public function getPresenter(PFUser $current_user, ?Project $project): NewDropdownPresenter
+    public function getPresenter(PFUser $current_user, ?Project $project, ?NewDropdownLinkSectionPresenter $current_context_section): NewDropdownPresenter
     {
         $sections = [];
 
-        $this->appendProjectSection($current_user, $project, $sections);
+        if ($current_context_section) {
+            $sections[] = $current_context_section;
+        }
+
+        $this->appendProjectSection($current_user, $project, $current_context_section, $sections);
         $this->appendGlobalSection($current_user, $sections);
 
         return new NewDropdownPresenter($sections);
     }
 
-    private function appendProjectSection(PFUser $current_user, ?Project $project, array &$sections): void
+    private function appendProjectSection(PFUser $current_user, ?Project $project, ?NewDropdownLinkSectionPresenter $current_context_section, array &$sections): void
     {
         if (! $project) {
             return;
         }
 
-        $collector = $this->event_dispatcher->dispatch(new NewDropdownProjectLinksCollector($current_user, $project));
+        $collector = $this->event_dispatcher->dispatch(new NewDropdownProjectLinksCollector($current_user, $project, $current_context_section));
         $current_project_links = $collector->getCurrentProjectLinks();
         if (empty($current_project_links)) {
             return;

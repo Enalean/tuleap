@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\NewDropdown;
 
+use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
 
 class TrackerLinksInNewDropdownCollector
@@ -43,7 +44,15 @@ class TrackerLinksInNewDropdownCollector
             $collector->getCurrentUser(),
             $collector->getProject()
         );
+
+        $current_context_section = $collector->getCurrentContextSection();
+        $current_context_links   = $current_context_section ? $current_context_section->links : [];
+
         foreach ($trackers_in_dropdown as $tracker) {
+            if ($this->isTrackerInCurrentContextSection($tracker, $current_context_links)) {
+                continue;
+            }
+
             $collector->addCurrentProjectLink(
                 new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
                     $tracker->getSubmitUrl(),
@@ -55,5 +64,24 @@ class TrackerLinksInNewDropdownCollector
                 )
             );
         }
+    }
+
+    /**
+     * @param NewDropdownLinkPresenter[] $current_context_links
+     */
+    private function isTrackerInCurrentContextSection(\Tracker $tracker, array $current_context_links): bool
+    {
+        if (empty($current_context_links)) {
+            return false;
+        }
+
+        $submit_url = $tracker->getSubmitUrl();
+        foreach ($current_context_links as $link) {
+            if ($link->url === $submit_url) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
