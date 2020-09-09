@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
+use Account_TimezoneSelectorPresenter;
+use ForgeConfig;
 use HTTPRequest;
 use LDAP_UserManager;
+use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -126,7 +129,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
 
 <p>' . $star . ' ' . dgettext('tuleap-ldap', 'Timezone') . ':';
 
-        echo html_get_timezone_popup($timezone);
+        echo $this->getTimezonePopup($layout, $timezone);
 
         print '</p>
 <p><input type="checkbox" name="form_mail_site" value="1" checked />' . dgettext('tuleap-ldap', 'Receive Email about Site Updates <em>(Very low traffic and includes security notices. Highly Recommended.)</em>');
@@ -162,5 +165,16 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '</fieldset>';
 
         ($pv === 2) ? $layout->pv_footer([]) : $layout->footer([]);
+    }
+
+    /**
+     * @param string|false $timezone
+     */
+    private function getTimezonePopup(BaseLayout $layout, $timezone): string
+    {
+        $layout->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
+        $layout->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
+        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
+        return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($timezone));
     }
 }

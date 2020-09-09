@@ -74,14 +74,6 @@ function html_image($src, $args, $display = 1)
     }
 }
 
-function html_get_timezone_popup($selected = 0)
-{
-    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
-    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
-    return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
-}
-
 /**
  * html_get_language_popup() - Pop up box of supported languages
  *
@@ -516,47 +508,6 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
     return $return;
 }
 
-function html_buildpriority_select_box($name = 'priority', $checked_val = '5')
-{
-    /*
-        Return a select box of standard priorities.
-        The name of this select box is optional and so is the default checked value
-    */
-    global $Language;
-    $purifier = Codendi_HTMLPurifier::instance();
-    ?>
-    <SELECT NAME="<?php echo $purifier->purify($name); ?>">
-    <OPTION VALUE="1"<?php if ($checked_val == "1") {
-        echo " SELECTED";
-                     } ?>>1 - <?php echo $Language->getText('include_html', 'lowest'); ?></OPTION>
-    <OPTION VALUE="2"<?php if ($checked_val == "2") {
-        echo " SELECTED";
-                     } ?>>2</OPTION>
-    <OPTION VALUE="3"<?php if ($checked_val == "3") {
-        echo " SELECTED";
-                     } ?>>3</OPTION>
-    <OPTION VALUE="4"<?php if ($checked_val == "4") {
-        echo " SELECTED";
-                     } ?>>4</OPTION>
-    <OPTION VALUE="5"<?php if ($checked_val == "5") {
-        echo " SELECTED";
-                     } ?>>5 - <?php echo $Language->getText('include_html', 'medium'); ?></OPTION>
-    <OPTION VALUE="6"<?php if ($checked_val == "6") {
-        echo " SELECTED";
-                     } ?>>6</OPTION>
-    <OPTION VALUE="7"<?php if ($checked_val == "7") {
-        echo " SELECTED";
-                     } ?>>7</OPTION>
-    <OPTION VALUE="8"<?php if ($checked_val == "8") {
-        echo " SELECTED";
-                     } ?>>8</OPTION>
-    <OPTION VALUE="9"<?php if ($checked_val == "9") {
-        echo " SELECTED";
-                     } ?>>9 - <?php echo $Language->getText('include_html', 'highest'); ?></OPTION>
-    </SELECT>
-    <?php
-}
-
 /*!     @function site_user_header
         @abstract everything required to handle security and
                 add navigation for user pages like /my/ and /account/
@@ -653,45 +604,12 @@ function site_project_footer($params)
     }
 }
 
-
-function html_display_boolean($value, $true_value = 'Yes', $false_value = 'No')
-{
-    global $Language;
-
-    // Position default values for special menu items
-    if (! isset($true_value)) {
-        $true_value = $Language->getText('global', 'yes');
-    }
-    if (! isset($false_value)) {
-        $false_value = $Language->getText('global', 'no');
-    }
-    if (($value == 1) || ($value == true)) {
-        echo $true_value;
-    } else {
-        echo $false_value;
-    }
-}
-
-function html_trash_image($alt)
-{
-    $purifier = Codendi_HTMLPurifier::instance();
-    return '<img src="' . util_get_image_theme("ic/trash.png") . '" ' .
-        'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">';
-}
-
 function html_trash_link($link, $warn, $alt)
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    return '<a data-test="html_trash_link" href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' . html_trash_image($alt) . '</a>';
-}
-
-/**
- * @deprecated
- */
-function html_trash_link_fontawesome($link, $warn)
-{
-    $purifier = Codendi_HTMLPurifier::instance();
-    return '<a href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="fa fa-trash-o"></i></a>';
+    return '<a data-test="html_trash_link" href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' .
+        '<img src="' . util_get_image_theme("ic/trash.png") . '" ' . 'height="16" width="16" border="0" alt="' . $purifier->purify($alt) . '" title="' . $purifier->purify($alt) . '">' .
+        '</a>';
 }
 
 /**

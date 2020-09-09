@@ -21,13 +21,6 @@
 
 require_once('session.php');
 
-function util_microtime_float($offset = null)
-{
-    [$usec, $sec] = explode(" ", microtime());
-    $now = ((float) $usec + (float) $sec);
-    return ($offset !== null) ? ($now - $offset) : $now;
-}
-
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
 function format_date($format, $value, $default_value = '-')
@@ -37,29 +30,6 @@ function format_date($format, $value, $default_value = '-')
     } else {
         return date($format, $value);
     }
-}
-
-/**
-* Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
-* into the user defined format.
-* This format is depending on the choosen language, and is defined
-* in the site-content file <language>.tab
-*
-* @global $sys_datefmt the user preference date format defined in the language file, and set by pre.php
-*
-* @param string $date the date in the sys_datefmt format (Y-M-d H:i ex: 2004-Feb-03 16:13)
-* @return string|null the date in the user format, or null if the conversion was not possible or wrong
-*/
-function util_sysdatefmt_to_userdateformat($date)
-{
-    $user_date = null;
-    $unix_timestamp = util_sysdatefmt_to_unixtime($date);
-    if ($unix_timestamp[1]) {
-        $user_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $unix_timestamp[0], null);
-    } else {
-        $user_date = null;
-    }
-    return $user_date;
 }
 
 function util_get_user_preferences_export_datefmt()
@@ -198,22 +168,6 @@ function util_date_explode($date)
     return [$year, $month, $day];
 }
 
-// Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
-// into a Unix time. if string is empty return 0 (Epoch time)
-// Returns a list with two values: the unix time and a boolean saying whether the conversion
-// went well (true) or bad (false)
-function util_sysdatefmt_to_unixtime($date)
-{
-    $time = 0;
-    if (! $date || $date == "") {
-        return [$time, false];
-    }
-
-    [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
-    $time = mktime($hour, $minute, 0, $month, $day, $year);
-    return [$time, true];
-}
-
 // Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
 function util_sysdatefmt_explode($date)
@@ -275,29 +229,6 @@ function getMonth($month, &$ok)
     }
     $ok = false;
     return 1;
-}
-
-/**
- * ISO8601 dates are used by subversion.
- * It looks like YYYY-MM-DDTHH-mm-ss.������Z
- * where T separates date and time
- * and Z ends the time.
- * ������ are milliseconds.
- */
-function util_ISO8601_to_date($ISO8601_date)
-{
-    $date = str_replace("T", " ", $ISO8601_date);
-    $date = substr($date, 0, 16);
-    return $date;
-}
-
-function util_prep_string_for_sendmail($body)
-{
-    $body = str_replace("\\", "\\\\", $body);
-    $body = str_replace("\"", "\\\"", $body);
-    $body = str_replace("\$", "\\\$", $body);
-        $body = str_replace("`", "\\`", $body);
-    return $body;
 }
 
 /**

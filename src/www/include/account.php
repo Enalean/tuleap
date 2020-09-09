@@ -56,57 +56,6 @@ function account_make_login_from_email($email)
     return strtolower($name);
 }
 
-/**
- * Check username validity. DEPRECATED
- *
- * @deprecated
- * @see Valid_UserNameFormat
- * @param String $name
- * @return int
- */
-function account_namevalid($name, $key = '')
-{
-    $rule = new Rule_UserName();
-    if (! $rule->isValid($name)) {
-        $GLOBALS['register_error'] = $rule->getErrorMessage();
-        return 0;
-    }
-    return 1;
-}
-
-/**
- * Check groupname validity. DEPRECATED
- *
- * @deprecated
- * @see Rule_ProjectName
- * @param String $name
- * @return int
- */
-function account_groupnamevalid($name)
-{
-    $rule = new Rule_ProjectName();
-    if (! $rule->isValid($name)) {
-        $GLOBALS['register_error'] = $rule->getErrorMessage();
-        return 0;
-    }
-    return 1;
-}
-
-
-// print out shell selects
-function account_shellselects($current)
-{
-    if (! $current) {
-        $current = '/sbin/nologin';
-    }
-    foreach (PFUser::getAllUnixShells() as $shell) {
-        $selected = '';
-        if ($current == $shell) {
-            $selected = ' selected="selected"';
-        }
-        echo '<option value="' . $shell . '"' . $selected . '>' . $shell . '</option>' . PHP_EOL;
-    }
-}
 // Set user password (Unix, Web)
 function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
 {
@@ -135,11 +84,6 @@ function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', 
     } else {
         return $u;
     }
-}
-function account_create_mypage($user_id)
-{
-    $um   = UserManager::instance();
-    return $um->accountCreateMyPage($user_id);
 }
 
 function account_redirect_after_login(PFUser $user, string $return_to): void
