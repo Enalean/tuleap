@@ -724,6 +724,9 @@ done
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
 
+# Plugin docman
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/docman
+
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 %{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
@@ -1289,6 +1292,7 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/docman
 %{APP_DIR}/src/www/assets/docman
+%attr(00700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/docman
 
 %files plugin-api-explorer
 %defattr(-,root,root,-)
