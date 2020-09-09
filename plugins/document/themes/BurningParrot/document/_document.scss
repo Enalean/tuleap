@@ -38,7 +38,7 @@
 .document-app {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+    height: 100vh;
 
     > .breadcrumb {
         flex: 0 0 auto;
@@ -46,7 +46,7 @@
 }
 
 .has-visible-project-banner .document-app {
-    height: calc(100vh - #{$navbar-height} - #{$project-banner-base-height});
+    height: calc(100vh - #{$project-banner-base-height});
 }
 
 .document-error-modal-link {
