@@ -130,6 +130,15 @@ class UserMappingManager
         return $user_mappings_usage;
     }
 
+    public function userHasProvider(PFUser $user): bool
+    {
+        $results = $this->dao->searchUsageByUserId($user->getId());
+        if ($results === false) {
+            return false;
+        }
+        return count($results) > 0;
+    }
+
     /**
      * @throws UserMappingDataAccessException
      */

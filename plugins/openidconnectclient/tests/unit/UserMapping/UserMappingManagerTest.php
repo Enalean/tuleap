@@ -24,6 +24,7 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\FakeDataAccessResult;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -115,5 +116,29 @@ final class UserMappingManagerTest extends TestCase
         $this->dao->shouldReceive('save')->once()->andReturn(true);
 
         $this->user_mapping_manager->create(102, 1, 'identifier', 10);
+    }
+
+    public function testItDoesntHaveMappingWhenDBIsMad(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(false);
+
+        self::assertFalse($this->user_mapping_manager->userHasProvider($user));
+    }
+
+    public function testItDoesntHaveMappingWhenDBReturnsNoResults(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(new \DataAccessResultEmpty());
+
+        self::assertFalse($this->user_mapping_manager->userHasProvider($user));
+    }
+
+    public function testItHasMapping(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(new FakeDataAccessResult([1]));
+
+        self::assertTrue($this->user_mapping_manager->userHasProvider($user));
     }
 }
