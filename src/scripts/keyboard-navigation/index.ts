@@ -36,7 +36,7 @@ hotkeys("/,s", (event: KeyboardEvent) => {
 
 hotkeys("d", () => {
     closeExistingModal(document);
-    handleDashboardShortcut;
+    handleDashboardShortcut();
 });
 
 hotkeys("*", function (event): void {
