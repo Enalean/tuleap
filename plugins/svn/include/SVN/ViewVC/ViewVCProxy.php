@@ -157,7 +157,7 @@ class ViewVCProxy
             $matches = [];
 
             if (preg_match('/^Location:(.*)$/', $location_line, $matches)) {
-                return $matches[1];
+                return trim($matches[1]);
             }
 
             $location_line = strtok("\n\t\r\0\x0B");
