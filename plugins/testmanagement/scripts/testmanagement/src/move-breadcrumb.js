@@ -17,11 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function moveBreadCrumbs(project_public_name, project_url) {
+export function moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label) {
     window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");
         if (!origin) {
             return;
+        }
+
+        const nav = origin.querySelector("nav");
+        const campaigns_item = nav.firstElementChild;
+        if (ttm_admin_url && ttm_admin_label) {
+            campaigns_item.classList.add("breadcrumb-switchable");
+            const container = document.createElement("div");
+            container.classList.add("breadcrumb-switch-menu-container");
+
+            const sub_nav = document.createElement("div");
+            sub_nav.classList.add("breadcrumb-switch-menu");
+
+            const admin_item = document.createElement("span");
+            admin_item.classList.add("breadcrumb-dropdown-item");
+
+            const admin_link = document.createElement("a");
+            admin_link.classList.add("breadcrumb-dropdown-link");
+            admin_link.href = ttm_admin_url;
+            admin_link.textContent = ttm_admin_label;
+
+            admin_item.appendChild(admin_link);
+            sub_nav.appendChild(admin_item);
+            container.appendChild(sub_nav);
+            campaigns_item.appendChild(container);
         }
 
         const project_item = document.createElement("span");
@@ -34,8 +58,7 @@ export function moveBreadCrumbs(project_public_name, project_url) {
         project_link.textContent = project_public_name;
 
         project_item.appendChild(project_link);
-        const nav = origin.querySelector("nav");
-        nav.insertBefore(project_item, nav.firstChild);
+        nav.insertBefore(project_item, campaigns_item);
 
         const main = document.querySelector("main");
         if (!main) {

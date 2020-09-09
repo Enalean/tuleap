@@ -38,15 +38,18 @@ class AdmininistrationBreadcrumbs implements Breadcrumbs
             'action'  => 'admin'
         ]);
 
+        $admin_item = [
+            'title' => _('Administration'),
+            'url'   => $administration_url
+        ];
+
         return [
             [
-                'title' => 'TestManagement',
-                'url'   => $home_url
+                'title' => dgettext('tuleap-testmanagement', 'Campaigns'),
+                'url'   => $home_url,
+                'sub_items' => [ $admin_item ],
             ],
-            [
-                'title' => 'Administration',
-                'url'   => $administration_url
-            ]
+            $admin_item,
         ];
     }
 }
