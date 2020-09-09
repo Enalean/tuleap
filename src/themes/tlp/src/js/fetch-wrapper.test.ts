@@ -32,65 +32,6 @@ describe(`fetch-wrapper`, () => {
         };
     });
 
-    describe(`get()`, () => {
-        const url = "https://example.com/fetch-wrapper-get";
-
-        it(`will query the given URL with GET`, async () => {
-            mockFetchSuccess(globalFetch, { return_json: { value: 1 } });
-
-            const response = await wrapper.get(url);
-            const json = await response.json();
-            expect(json.value).toBe(1);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({
-                    method: "GET",
-                    credentials: "same-origin",
-                })
-            );
-        });
-
-        it(`given parameters, it will URI-encode them and
-            concatenate them to the given URL`, async () => {
-            const params = {
-                quinonyl: "mem",
-                "R&D": 91,
-                Jwahar: false,
-            };
-            mockFetchSuccess(globalFetch);
-
-            await wrapper.get(url, { params });
-
-            const expected_url =
-                "https://example.com/fetch-wrapper-get?quinonyl=mem&R%26D=91&Jwahar=false";
-            expect(window.fetch).toHaveBeenCalledWith(expected_url, expect.any(Object));
-        });
-
-        it(`given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`, async () => {
-            mockFetchSuccess(globalFetch);
-
-            await wrapper.get(url, { cache: "force-cache", redirect: "error" });
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({ cache: "force-cache", redirect: "error" })
-            );
-        });
-
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
-
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.get(url)).rejects.toEqual(expected_error);
-        });
-    });
-
     describe(`recursiveGet()`, () => {
         const url = "https://example.com/fetch-wrapper-recursive-get";
 
@@ -196,18 +137,6 @@ describe(`fetch-wrapper`, () => {
             );
         });
 
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
-
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.recursiveGet(url)).rejects.toEqual(expected_error);
-        });
-
         describe(`when the route provides a X-PAGINATION-SIZE header
             and there are more entries to fetch`, () => {
             function mockSuccessiveCalls(return_json: unknown): void {
@@ -282,188 +211,89 @@ describe(`fetch-wrapper`, () => {
         });
     });
 
-    describe(`put()`, () => {
-        const url = "https://example.com/fetch-wrapper-put";
+    describe.each([
+        ["get", wrapper.get],
+        ["head", wrapper.head],
+    ])(`%s can receive auto-encoded params`, (method_name, methodUnderTest) => {
+        const url = "https://example.com/fetch-wrapper-test";
+        it(`given "params", it will URI-encode them and concatenate them to the given URL`, async () => {
+            const params = {
+                quinonyl: "mem",
+                "R&D": 91,
+                Jwahar: false,
+            };
+            mockFetchSuccess(globalFetch);
 
-        it(`will query the given URL with PUT and return Fetch's response`, async () => {
-            mockFetchSuccess(globalFetch, { return_json: "success" });
-            const result = await wrapper.put(url);
+            await methodUnderTest(url, { params });
+            const expected_url =
+                "https://example.com/fetch-wrapper-test?quinonyl=mem&R%26D=91&Jwahar=false";
+            expect(window.fetch).toHaveBeenCalledWith(expected_url, expect.any(Object));
+        });
+
+        it(`given an empty params object {}, it will ignore it`, async () => {
+            mockFetchSuccess(globalFetch);
+
+            await methodUnderTest(url, { params: {} });
+            expect(window.fetch).toHaveBeenCalledWith(
+                "https://example.com/fetch-wrapper-test",
+                expect.any(Object)
+            );
+        });
+    });
+
+    it.each([
+        ["GET", wrapper.get],
+        ["PUT", wrapper.put],
+        ["PATCH", wrapper.patch],
+        ["POST", wrapper.post],
+        ["DELETE", wrapper.del],
+    ])(
+        `will query the given URL with %s and return Fetch's response`,
+        async (expectedMethod, methodUnderTest) => {
+            const url = "https://example.com/fetch-wrapper-test";
+            mockFetchSuccess(globalFetch, { return_json: { value: "success" } });
+            const response = await methodUnderTest(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
                 expect.objectContaining({
-                    method: "PUT",
+                    method: expectedMethod,
                     credentials: "same-origin",
                 })
             );
-            expect(await result.json()).toEqual("success");
-        });
+            const json = await response.json();
+            expect(json.value).toEqual("success");
+        }
+    );
 
-        it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
+    it.each([[wrapper.put], [wrapper.patch], [wrapper.post]])(
+        `given a "body" and a "content-type" header, it will pass them to Fetch`,
+        async (methodUnderTest) => {
+            const url = "https://example.com/fetch-wrapper-test";
             mockFetchSuccess(globalFetch);
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ hoodwise: "peripheroneural" }),
             };
-            await wrapper.put(url, expected_options);
+            await methodUnderTest(url, expected_options);
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
                 expect.objectContaining(expected_options)
             );
-        });
+        }
+    );
 
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
+    it.each([
+        [wrapper.options, "OPTIONS"],
+        [wrapper.head, "HEAD"],
+    ])(
+        `will query the given URL with the appropriate method and return Fetch's response with headers`,
+        async (methodUnderTest, expectedMethod) => {
+            const url = "https://example.com/fetch-wrapper-test";
 
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.put(url)).rejects.toEqual(expected_error);
-        });
-    });
-
-    describe(`patch()`, () => {
-        const url = "https://example.com/fetch-wrapper-patch";
-
-        it(`will query the given URL with PATCH and return Fetch's response`, async () => {
-            mockFetchSuccess(globalFetch, { return_json: "success" });
-            const result = await wrapper.patch(url);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({
-                    method: "PATCH",
-                    credentials: "same-origin",
-                })
-            );
-            expect(await result.json()).toEqual("success");
-        });
-
-        it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
-            mockFetchSuccess(globalFetch);
-
-            const expected_options = {
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({ hoodwise: "peripheroneural" }),
-            };
-            await wrapper.patch(url, expected_options);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining(expected_options)
-            );
-        });
-
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
-
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.patch(url)).rejects.toEqual(expected_error);
-        });
-    });
-
-    describe(`post()`, () => {
-        const url = "https://example.com/fetch-wrapper-post";
-
-        it(`will query the given URL with POST and return Fetch's response`, async () => {
-            mockFetchSuccess(globalFetch, { return_json: "success" });
-            const result = await wrapper.post(url);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({
-                    method: "POST",
-                    credentials: "same-origin",
-                })
-            );
-            expect(await result.json()).toEqual("success");
-        });
-
-        it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
-            mockFetchSuccess(globalFetch);
-
-            const expected_options = {
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({ hoodwise: "peripheroneural" }),
-            };
-            await wrapper.post(url, expected_options);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining(expected_options)
-            );
-        });
-
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
-
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.post(url)).rejects.toEqual(expected_error);
-        });
-    });
-
-    describe(`del()`, () => {
-        const url = "https://example.com/fetch-wrapper-del";
-
-        it(`will query the given URL with DELETE and return Fetch's response`, async () => {
-            mockFetchSuccess(globalFetch, { return_json: "success" });
-            const result = await wrapper.del(url);
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({
-                    method: "DELETE",
-                    credentials: "same-origin",
-                })
-            );
-            expect(await result.json()).toEqual("success");
-        });
-
-        it(`given Fetch parameters like "redirect", it will pass them to Fetch`, async () => {
-            mockFetchSuccess(globalFetch);
-
-            await wrapper.del(url, { redirect: "error" });
-
-            expect(window.fetch).toHaveBeenCalledWith(
-                url,
-                expect.objectContaining({ redirect: "error" })
-            );
-        });
-
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
-            const expected_response = {
-                ok: false,
-                statusText: "Not found",
-            };
-            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
-
-            const expected_error = new Error("Not found");
-            Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.del(url)).rejects.toEqual(expected_error);
-        });
-    });
-
-    describe(`options()`, () => {
-        const url = "https://example.com/fetch-wrapper-options";
-
-        it(`will query the given URL with OPTIONS and return Fetch's response`, async () => {
             mockFetchSuccess(globalFetch, {
-                return_json: "success",
                 headers: {
                     get(name): string | null {
                         if (name !== "X-PAGINATION-SIZE") {
@@ -473,30 +303,55 @@ describe(`fetch-wrapper`, () => {
                     },
                 },
             });
-            const result = await wrapper.options(url);
+            const result = await methodUnderTest(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
                 expect.objectContaining({
-                    method: "OPTIONS",
+                    method: expectedMethod,
                     credentials: "same-origin",
                 })
             );
             expect(await result.headers.get("X-PAGINATION-SIZE")).toEqual("2");
-        });
+        }
+    );
 
-        it(`given Fetch parameters like "redirect", it will pass them to Fetch`, async () => {
+    it.each([
+        [wrapper.get],
+        [wrapper.put],
+        [wrapper.patch],
+        [wrapper.post],
+        [wrapper.del],
+        [wrapper.options],
+        [wrapper.head],
+    ])(
+        `given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`,
+        async (methodUnderTest) => {
+            const url = "https://example.com/fetch-wrapper-test";
             mockFetchSuccess(globalFetch);
 
-            await wrapper.options(url, { redirect: "error" });
+            await methodUnderTest(url, { cache: "force-cache", redirect: "error" });
 
             expect(window.fetch).toHaveBeenCalledWith(
                 url,
-                expect.objectContaining({ redirect: "error" })
+                expect.objectContaining({ cache: "force-cache", redirect: "error" })
             );
-        });
+        }
+    );
 
-        it(`when the route fails, it will return a rejected promise with the error`, async () => {
+    it.each([
+        [wrapper.get],
+        [wrapper.recursiveGet],
+        [wrapper.put],
+        [wrapper.patch],
+        [wrapper.post],
+        [wrapper.del],
+        [wrapper.options],
+        [wrapper.head],
+    ])(
+        `when the route fails, it will return a rejected promise with the error`,
+        async (methodUnderTest) => {
+            const url = "https://example.com/fetch-wrapper-test";
             const expected_response = {
                 ok: false,
                 statusText: "Not found",
@@ -505,7 +360,7 @@ describe(`fetch-wrapper`, () => {
 
             const expected_error = new Error("Not found");
             Object.assign(expected_error, { response: expected_response });
-            await expect(wrapper.options(url)).rejects.toEqual(expected_error);
-        });
-    });
+            await expect(methodUnderTest(url)).rejects.toEqual(expected_error);
+        }
+    );
 });

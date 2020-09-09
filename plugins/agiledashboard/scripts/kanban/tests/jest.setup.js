@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import lodash from "lodash";
 import jquery from "jquery";
 
-//We must provide a global "_" because Restangular depends on it.
-Object.defineProperty(window, "_", { value: lodash });
 //We must provide a global jQuery because Angular's jqLite does not have a "closest" function
 window.jQuery = jquery;

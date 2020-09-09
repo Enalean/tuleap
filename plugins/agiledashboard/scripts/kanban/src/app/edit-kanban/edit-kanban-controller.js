@@ -252,7 +252,7 @@ function EditKanbanCtrl(
 
             KanbanService.addColumn(self.kanban.id, self.new_column_label).then(
                 function (column_representation) {
-                    ColumnCollectionService.addColumn(column_representation.data);
+                    ColumnCollectionService.addColumn(column_representation);
 
                     self.adding_column = false;
                     self.saving_new_column = false;

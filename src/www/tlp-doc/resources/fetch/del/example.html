@@ -1,8 +1,7 @@
-
 <script>
-import { del } from 'tlp';
+    import { del } from "tlp";
 
-function removeUser(user_id) {
-    return del(`/api/v1/users/${user_id}`);
-}
+    function removeUser(user_id) {
+        return del(encodeURI(`/api/v1/users/${user_id}`));
+    }
 </script>

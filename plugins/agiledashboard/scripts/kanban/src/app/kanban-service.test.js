@@ -20,25 +20,33 @@
 import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("KanbanService -", () => {
+jest.mock("tlp");
+
+describe("KanbanService", () => {
     let wrapPromise,
         $window,
-        $httpBackend,
+        $q,
         KanbanService,
         RestErrorService,
         FilterTrackerReportService,
         SharedPropertiesService;
 
     beforeEach(() => {
-        angular.mock.module(kanban_module);
+        angular.mock.module(kanban_module, function ($provide) {
+            $provide.decorator("SharedPropertiesService", function ($delegate) {
+                jest.spyOn($delegate, "getUUID").mockReturnValue(1312);
+                return $delegate;
+            });
+        });
 
         let $rootScope;
         angular.mock.inject(function (
             _$rootScope_,
             _$window_,
-            _$httpBackend_,
+            _$q_,
             _KanbanService_,
             _RestErrorService_,
             _FilterTrackerReportService_,
@@ -46,7 +54,7 @@ describe("KanbanService -", () => {
         ) {
             $rootScope = _$rootScope_;
             $window = _$window_;
-            $httpBackend = _$httpBackend_;
+            $q = _$q_;
             KanbanService = _KanbanService_;
             RestErrorService = _RestErrorService_;
             FilterTrackerReportService = _FilterTrackerReportService_;
@@ -57,775 +65,378 @@ describe("KanbanService -", () => {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(() => {
-        $httpBackend.verifyNoOutstandingExpectation(false); // We already trigger $digest
-        $httpBackend.verifyNoOutstandingRequest(false); // We already trigger $digest
-    });
-
-    describe(`getBacklog`, () => {
-        it.each([
-            [0, "", true],
-            [0, "", false],
-            [129, "&query=%7B%22tracker_report_id%22:129%7D", true],
-        ])(
-            `will call GET on the kanban's backlog,
-            will augment each kanban item
-            and return the total number of items`,
-            async (filter_report_id, query, should_item_be_collapsed) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                    should_item_be_collapsed
-                );
-
-                const first_item = { id: 94, item_name: "exotropia" };
-                const second_item = { id: 96, item_name: "trigeminous" };
-
-                $httpBackend
-                    .expectGET("/api/v1/kanban/32/backlog?limit=50&offset=0" + query)
-                    .respond({ collection: [first_item, second_item] }, { "X-PAGINATION-SIZE": 2 });
-
-                const promise = KanbanService.getBacklog(32, 50, 0);
-                $httpBackend.flush();
-                const response = await wrapPromise(promise);
-
-                expect(response.total).toEqual("2");
-                const first_kanban_item = response.results[0];
-                expect(first_kanban_item.id).toEqual(94);
-                expect(first_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-
-                const second_kanban_item = response.results[1];
-                expect(second_kanban_item.id).toEqual(96);
-                expect(second_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-            }
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
         );
-    });
+    }
 
-    describe("getBacklogSize", () => {
-        it.each([
-            [0, ""],
-            [37, "?query=%7B%22tracker_report_id%22:37%7D"],
-        ])(
-            `will call HEAD on the kanban's backlog
-            and will return the total number of items`,
-            async (filter_report_id, query) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                $httpBackend.expectHEAD("/api/v1/kanban/40/backlog" + query).respond(200, "", {
-                    "X-PAGINATION-SIZE": 27,
-                });
-
-                const promise = KanbanService.getBacklogSize(40);
-                $httpBackend.flush();
-                expect(await wrapPromise(promise)).toEqual(27);
-            }
+    function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.reject({
+                response: {
+                    status,
+                    statusText,
+                    json: () => $q.when(error_json),
+                },
+            })
         );
-    });
+    }
 
-    describe(`getArchive`, () => {
-        it.each([
-            [0, "", true],
-            [0, "", false],
-            [129, "&query=%7B%22tracker_report_id%22:129%7D", true],
-        ])(
-            `will call GET on the kanban's archive,
-            will augment each kanban item
-            and return the total number of items`,
-            async (filter_report_id, query, should_item_be_collapsed) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                    should_item_be_collapsed
-                );
+    const expected_headers = {
+        "content-type": "application/json",
+        "X-Client-UUID": 1312,
+    };
 
-                const first_item = { id: 94, item_name: "exotropia" };
-                const second_item = { id: 96, item_name: "trigeminous" };
+    describe.each([
+        ["getBacklog", "/api/v1/kanban/32/backlog", {}, () => KanbanService.getBacklog(32, 50, 0)],
+        ["getArchive", "/api/v1/kanban/32/archive", {}, () => KanbanService.getArchive(32, 50, 0)],
+        [
+            "getItems",
+            "/api/v1/kanban/73/items",
+            { column_id: 87 },
+            () => KanbanService.getItems(73, 87, 50, 0),
+        ],
+    ])(
+        `%s will call GET on %s`,
+        (function_name, expected_url, additional_params, methodUnderTest) => {
+            it.each([
+                [0, {}, true],
+                [0, {}, false],
+                [129, { query: JSON.stringify({ tracker_report_id: 129 }) }, true],
+            ])(
+                `will augment each kanban item and return the total number of items`,
+                async (filter_report_id, query, should_item_be_collapsed) => {
+                    jest.spyOn(
+                        FilterTrackerReportService,
+                        "getSelectedFilterTrackerReportId"
+                    ).mockReturnValue(filter_report_id);
+                    jest.spyOn(
+                        SharedPropertiesService,
+                        "doesUserPrefersCompactCards"
+                    ).mockReturnValue(should_item_be_collapsed);
+                    const first_item = { id: 94, item_name: "exotropia" };
+                    const second_item = { id: 96, item_name: "trigeminous" };
 
-                $httpBackend
-                    .expectGET("/api/v1/kanban/32/archive?limit=50&offset=0" + query)
-                    .respond({ collection: [first_item, second_item] }, { "X-PAGINATION-SIZE": 2 });
-
-                const promise = KanbanService.getArchive(32, 50, 0);
-                $httpBackend.flush();
-                const response = await wrapPromise(promise);
-
-                expect(response.total).toEqual("2");
-                const first_kanban_item = response.results[0];
-                expect(first_kanban_item.id).toEqual(94);
-                expect(first_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-
-                const second_kanban_item = response.results[1];
-                expect(second_kanban_item.id).toEqual(96);
-                expect(second_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-            }
-        );
-    });
-
-    describe("getArchiveSize", () => {
-        it.each([
-            [0, ""],
-            [37, "?query=%7B%22tracker_report_id%22:37%7D"],
-        ])(
-            `will call HEAD on the kanban's archive
-            and will return the total number of items`,
-            async (filter_report_id, query) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                $httpBackend.expectHEAD("/api/v1/kanban/7/archive" + query).respond(200, "", {
-                    "X-PAGINATION-SIZE": 17,
-                });
-
-                const promise = KanbanService.getArchiveSize(7);
-                $httpBackend.flush();
-                expect(await wrapPromise(promise)).toEqual(17);
-            }
-        );
-    });
-
-    describe(`getItems`, () => {
-        it.each([
-            [0, "", true],
-            [0, "", false],
-            [129, "&query=%7B%22tracker_report_id%22:129%7D", true],
-        ])(
-            `will call GET on the kanban's items with a column_id,
-            will augment each kanban item
-            and return the total number of items`,
-            async (filter_report_id, query, should_item_be_collapsed) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
-                    should_item_be_collapsed
-                );
-
-                const first_item = { id: 94, item_name: "exotropia" };
-                const second_item = { id: 96, item_name: "trigeminous" };
-
-                $httpBackend
-                    .expectGET("/api/v1/kanban/73/items?column_id=87&limit=50&offset=0" + query)
-                    .respond({ collection: [first_item, second_item] }, { "X-PAGINATION-SIZE": 2 });
-
-                const promise = KanbanService.getItems(73, 87, 50, 0);
-                $httpBackend.flush();
-                const response = await wrapPromise(promise);
-
-                expect(response.total).toEqual("2");
-                const first_kanban_item = response.results[0];
-                expect(first_kanban_item.id).toEqual(94);
-                expect(first_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-
-                const second_kanban_item = response.results[1];
-                expect(second_kanban_item.id).toEqual(96);
-                expect(second_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
-            }
-        );
-    });
-
-    describe("getColumnContentSize", () => {
-        it.each([
-            [0, ""],
-            [37, "&query=%7B%22tracker_report_id%22:37%7D"],
-        ])(
-            `will call HEAD on the kanban's items with a column_id
-            and will return the total number of items`,
-            async (filter_report_id, query) => {
-                jest.spyOn(
-                    FilterTrackerReportService,
-                    "getSelectedFilterTrackerReportId"
-                ).mockReturnValue(filter_report_id);
-                $httpBackend
-                    .expectHEAD("/api/v1/kanban/6/items?column_id=68" + query)
-                    .respond(200, "", {
-                        "X-PAGINATION-SIZE": 36,
+                    const tlpGet = jest.spyOn(tlp, "get");
+                    mockFetchSuccess(tlpGet, {
+                        return_json: { collection: [first_item, second_item] },
+                        headers: { get: () => "2" },
                     });
 
-                const promise = KanbanService.getColumnContentSize(6, 68);
-                $httpBackend.flush();
-                expect(await wrapPromise(promise)).toEqual(36);
-            }
-        );
-    });
+                    const promise = methodUnderTest();
+                    const response = await wrapPromise(promise);
 
-    describe("reorderColumn() -", function () {
-        var kanban_id, column_id, kanban_item_id, compared_to;
+                    expect(response.total).toEqual("2");
+                    const first_kanban_item = response.results[0];
+                    expect(first_kanban_item.id).toEqual(94);
+                    expect(first_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
 
-        beforeEach(function () {
-            kanban_id = 7;
-            column_id = 66;
-            kanban_item_id = 996;
-            compared_to = {
-                direction: "after",
-                item_id: 268,
-            };
-        });
+                    const second_kanban_item = response.results[1];
+                    expect(second_kanban_item.id).toEqual(96);
+                    expect(second_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
 
-        it(`Given a kanban id, a column id, a kanban item id and a compared_to object,
-            when I reorder the kanban item in the column,
-            then a PATCH request will be made and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id, {
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "after",
-                        compared_to: 268,
-                    },
-                })
-                .respond(200);
-
-            const promise = KanbanService.reorderColumn(
-                kanban_id,
-                column_id,
-                kanban_item_id,
-                compared_to
+                    expect(tlpGet).toHaveBeenCalledWith(expected_url, {
+                        params: { limit: 50, offset: 0, ...additional_params, ...query },
+                    });
+                }
             );
-            $httpBackend.flush();
+        }
+    );
+
+    describe.each([
+        ["getBacklogSize", "/api/v1/kanban/40/backlog", {}, () => KanbanService.getBacklogSize(40)],
+        ["getArchiveSize", "/api/v1/kanban/42/archive", {}, () => KanbanService.getArchiveSize(42)],
+        [
+            "getColumnContentSize",
+            "/api/v1/kanban/45/items",
+            { column_id: 68 },
+            () => KanbanService.getColumnContentSize(45, 68),
+        ],
+    ])(
+        "%s will call HEAD on %s",
+        (function_name, expected_url, additional_params, methodUnderTest) => {
+            it.each([
+                [0, {}],
+                [37, { query: JSON.stringify({ tracker_report_id: 37 }) }],
+            ])(`will return the total number of items`, async (filter_report_id, query) => {
+                const tlpHead = jest.spyOn(tlp, "head");
+                mockFetchSuccess(tlpHead, { headers: { get: () => "27" } });
+                jest.spyOn(
+                    FilterTrackerReportService,
+                    "getSelectedFilterTrackerReportId"
+                ).mockReturnValue(filter_report_id);
+
+                const promise = methodUnderTest();
+                expect(await wrapPromise(promise)).toEqual(27);
+                expect(tlpHead).toHaveBeenCalledWith(expected_url, {
+                    params: { ...additional_params, ...query },
+                });
+            });
+        }
+    );
+
+    it.each([
+        [
+            "reorderBacklog",
+            "/api/v1/kanban/37/backlog",
+            { order: { ids: [987], direction: "after", compared_to: 234 } },
+            () => KanbanService.reorderBacklog(37, 987, { direction: "after", item_id: 234 }),
+        ],
+        [
+            "reorderArchive",
+            "/api/v1/kanban/6/archive",
+            { order: { ids: [987], direction: "before", compared_to: 234 } },
+            () => KanbanService.reorderArchive(6, 987, { direction: "before", item_id: 234 }),
+        ],
+        [
+            "reorderColumn",
+            "/api/v1/kanban/7/items?column_id=66",
+            { order: { ids: [987], direction: "after", compared_to: 234 } },
+            () => KanbanService.reorderColumn(7, 66, 987, { direction: "after", item_id: 234 }),
+        ],
+        [
+            "moveInBacklog",
+            "/api/v1/kanban/9/backlog",
+            {
+                add: { ids: [987] },
+                from_column: 88,
+                order: { ids: [987], direction: "after", compared_to: 234 },
+            },
+            () => KanbanService.moveInBacklog(9, 987, { direction: "after", item_id: 234 }, 88),
+        ],
+        [
+            "moveInBacklog with null compared to",
+            "/api/v1/kanban/9/backlog",
+            { add: { ids: [987] }, from_column: 88 },
+            () => KanbanService.moveInBacklog(9, 987, null, 88),
+        ],
+        [
+            "moveInArchive",
+            "/api/v1/kanban/4/archive",
+            {
+                add: { ids: [987] },
+                from_column: 73,
+                order: { ids: [987], direction: "before", compared_to: 234 },
+            },
+            () => KanbanService.moveInArchive(4, 987, { direction: "before", item_id: 234 }, 73),
+        ],
+        [
+            "moveInArchive with null compared to",
+            "/api/v1/kanban/4/archive",
+            { add: { ids: [987] }, from_column: 73 },
+            () => KanbanService.moveInArchive(4, 987, null, 73),
+        ],
+        [
+            "moveInColumn",
+            "/api/v1/kanban/1/items?column_id=88",
+            {
+                add: { ids: [987] },
+                from_column: 12,
+                order: { ids: [987], direction: "before", compared_to: 234 },
+            },
+            () => KanbanService.moveInColumn(1, 88, 987, { direction: "before", item_id: 234 }, 12),
+        ],
+        [
+            "moveInColumn with null compared to",
+            "/api/v1/kanban/1/items?column_id=88",
+            { add: { ids: [987] }, from_column: 12 },
+            () => KanbanService.moveInColumn(1, 88, 987, null, 12),
+        ],
+    ])(
+        `%s will call PATCH on the kanban column and will move and reorder items`,
+        async (function_name, expected_url, expected_body, methodUnderTest) => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = methodUnderTest();
             expect(await wrapPromise(promise)).toBeTruthy();
-        });
+            expect(tlpPatch).toHaveBeenCalledWith(expected_url, {
+                headers: expected_headers,
+                body: JSON.stringify(expected_body),
+            });
+        }
+    );
 
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id)
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.reorderColumn(
-                kanban_id,
-                column_id,
-                kanban_item_id,
-                compared_to
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
+    it.each([
+        [() => KanbanService.reorderBacklog(37, 987, { direction: "after", item_id: 234 })],
+        [() => KanbanService.reorderArchive(6, 987, { direction: "after", item_id: 234 })],
+        [() => KanbanService.reorderColumn(7, 66, 987, { direction: "after", item_id: 234 })],
+        [() => KanbanService.moveInBacklog(9, 987, { direction: "before", item_id: 234 }, 918)],
+        [() => KanbanService.moveInArchive(9, 987, { direction: "before", item_id: 234 }, 918)],
+        [() => KanbanService.moveInColumn(9, 66, 987, { direction: "before", item_id: 234 }, 918)],
+    ])(
+        `When there is an error with my request,
+    then the error will be handled by RestErrorService
+    and a rejected promise will be returned`,
+        (methodUnderTest) => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchError(tlpPatch, {
+                status: 401,
+                error_json: { error: { message: "Unauthorized" } },
             });
 
-            $httpBackend.flush();
-            return wrapPromise(promise);
-        });
-    });
-
-    describe("reorderBacklog() -", function () {
-        var kanban_id, kanban_item_id, compared_to;
-
-        beforeEach(function () {
-            kanban_id = 10;
-            kanban_item_id = 194;
-            compared_to = {
-                direction: "before",
-                item_id: 181,
-            };
-        });
-
-        it(`Given a kanban_id, a kanban item id and a compared_to object,
-            when I reorder the kanban item in the backlog,
-            then a PATCH request will be made and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog", {
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "before",
-                        compared_to: 181,
-                    },
-                })
-                .respond(200);
-
-            const promise = KanbanService.reorderBacklog(kanban_id, kanban_item_id, compared_to);
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog")
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.reorderBacklog(
-                kanban_id,
-                kanban_item_id,
-                compared_to
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
+            const promise = methodUnderTest().catch(() => {
+                expect(RestErrorService.reload).toHaveBeenCalled();
             });
 
-            $httpBackend.flush();
             return wrapPromise(promise);
-        });
-    });
-
-    describe("reorderArchive() -", function () {
-        var kanban_id, kanban_item_id, compared_to;
-
-        beforeEach(function () {
-            kanban_id = 6;
-            kanban_item_id = 806;
-            compared_to = {
-                direction: "after",
-                item_id: 620,
-            };
-        });
-
-        it(`Given a kanban_id, a kanban item id and a compared_to object,
-            when I reorder the kanban item in the archive,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive", {
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "after",
-                        compared_to: 620,
-                    },
-                })
-                .respond(200);
-
-            const promise = KanbanService.reorderArchive(kanban_id, kanban_item_id, compared_to);
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive")
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.reorderArchive(
-                kanban_id,
-                kanban_item_id,
-                compared_to
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
-            });
-
-            $httpBackend.flush();
-            return wrapPromise(promise);
-        });
-    });
-
-    describe("moveInBacklog() -", function () {
-        var kanban_id, kanban_item_id, compared_to, from_column;
-
-        beforeEach(function () {
-            kanban_id = 9;
-            kanban_item_id = 931;
-            compared_to = {
-                direction: "after",
-                item_id: 968,
-            };
-            from_column = 912;
-        });
-
-        it(`Given a kanban id, a kanban item id and a compared_to object,
-            when I move the kanban item to the backlog,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog", {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "after",
-                        compared_to: 968,
-                    },
-                    from_column: 912,
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInBacklog(
-                kanban_id,
-                kanban_item_id,
-                compared_to,
-                from_column
-            );
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`Given a null compared_to,
-            when I add the kanban item to an empty backlog,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog", {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                    from_column: 912,
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInBacklog(
-                kanban_id,
-                kanban_item_id,
-                null,
-                from_column
-            );
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog")
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.moveInBacklog(
-                kanban_id,
-                kanban_item_id,
-                compared_to,
-                from_column
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
-            });
-
-            $httpBackend.flush();
-            return wrapPromise(promise);
-        });
-    });
-
-    describe("moveInArchive() -", function () {
-        var kanban_id, kanban_item_id, compared_to;
-
-        beforeEach(function () {
-            kanban_id = 4;
-            kanban_item_id = 598;
-            compared_to = {
-                direction: "before",
-                item_id: 736,
-            };
-        });
-
-        it(`Given a kanban id, a kanban item id and a compared_to object,
-            when I move the kanban item to the archive,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive", {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "before",
-                        compared_to: 736,
-                    },
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInArchive(kanban_id, kanban_item_id, compared_to);
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`Given a null compared_to,
-            when I add the kanban item to an empty archive,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive", {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInArchive(kanban_id, kanban_item_id, null);
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive")
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.moveInArchive(
-                kanban_id,
-                kanban_item_id,
-                compared_to
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
-            });
-
-            $httpBackend.flush();
-            return wrapPromise(promise);
-        });
-    });
-
-    describe("moveInColumn() -", function () {
-        var kanban_id, column_id, kanban_item_id, compared_to, from_column;
-
-        beforeEach(function () {
-            kanban_id = 1;
-            column_id = 88;
-            kanban_item_id = 911;
-            compared_to = {
-                direction: "before",
-                item_id: 537,
-            };
-            from_column = 912;
-        });
-
-        it(`Given a kanban id, a column id, a kanban item id and a compared_to object,
-            when I move the kanban item to the column,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id, {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                    order: {
-                        ids: [kanban_item_id],
-                        direction: "before",
-                        compared_to: 537,
-                    },
-                    from_column: 912,
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInColumn(
-                kanban_id,
-                column_id,
-                kanban_item_id,
-                compared_to,
-                from_column
-            );
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`Given a null compared_to,
-            when I add the kanban item to an empty column,
-            then a PATCH request will be made
-            and a resolved promise will be returned`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id, {
-                    add: {
-                        ids: [kanban_item_id],
-                    },
-                    from_column: 912,
-                })
-                .respond(200);
-
-            const promise = KanbanService.moveInColumn(
-                kanban_id,
-                column_id,
-                kanban_item_id,
-                null,
-                from_column
-            );
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
-        });
-
-        it(`When there is an error with my request,
-            then the error will be handled by RestErrorService
-            and a rejected promise will be returned`, () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id)
-                .respond(401, { error: 401, message: "Unauthorized" });
-
-            // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = KanbanService.moveInColumn(
-                kanban_id,
-                column_id,
-                kanban_item_id,
-                compared_to,
-                from_column
-            ).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 401,
-                            message: "Unauthorized",
-                        },
-                    })
-                );
-            });
-
-            $httpBackend.flush();
-            return wrapPromise(promise);
-        });
-    });
+        }
+    );
 
     describe(`updateKanbanLabel`, () => {
         it(`will call PATCH on the kanban to change its label`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/8", {
-                    label: "relicmonger",
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.updateKanbanLabel(8, "relicmonger");
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ label: "relicmonger" }),
+            });
         });
     });
 
     describe(`deleteKanban`, () => {
         it(`will call DELETE on the kanban`, async () => {
-            $httpBackend.expectDELETE("/api/v1/kanban/8").respond(200);
+            const tlpDelete = jest.spyOn(tlp, "del");
+            mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.deleteKanban(8);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban/8");
         });
     });
 
     describe(`expandColumn`, () => {
         it(`will call PATCH on the kanban to expand a column`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/8", {
-                    collapse_column: { column_id: 97, value: false },
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandColumn(8, 97);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_column: { column_id: 97, value: false } }),
+            });
         });
     });
 
     describe(`collapseColumn`, () => {
         it(`will call PATCH on the kanban to collapse a column`, async () => {
-            $httpBackend
-                .expectPATCH("/api/v1/kanban/8", {
-                    collapse_column: { column_id: 97, value: true },
-                })
-                .respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseColumn(8, 97);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_column: { column_id: 97, value: true } }),
+            });
         });
     });
 
     describe(`expandBacklog`, () => {
         it(`will call PATCH on the kanban to expand its backlog column`, async () => {
-            $httpBackend.expectPATCH("/api/v1/kanban/8", { collapse_backlog: false }).respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandBacklog(8);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_backlog: false }),
+            });
         });
     });
 
     describe(`collapseBacklog`, () => {
         it(`will call PATCH on the kanban to collapse its backlog column`, async () => {
-            $httpBackend.expectPATCH("/api/v1/kanban/8", { collapse_backlog: true }).respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseBacklog(8);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_backlog: true }),
+            });
         });
     });
 
     describe(`expandArchive`, () => {
         it(`will call PATCH on the kanban to expand its archive column`, async () => {
-            $httpBackend.expectPATCH("/api/v1/kanban/8", { collapse_archive: false }).respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandArchive(8);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_archive: false }),
+            });
         });
     });
 
     describe(`collapseArchive`, () => {
         it(`will call PATCH on the kanban to collapse its archive column`, async () => {
-            $httpBackend.expectPATCH("/api/v1/kanban/8", { collapse_archive: true }).respond(200);
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseArchive(8);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+                body: JSON.stringify({ collapse_archive: true }),
+            });
         });
     });
 
     describe(`addColumn`, () => {
-        it(`will call POST on the kanban's columns to create a new column`, async () => {
-            $httpBackend.expectPOST("/api/v1/kanban/8/columns", { label: "Review" }).respond(200);
+        it(`will call POST on the kanban's columns to create a new column
+            and will return the new column's representation`, async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            const column_representation = { id: 876, label: "Review", is_open: true };
+            mockFetchSuccess(tlpPost, { return_json: column_representation });
 
             const promise = KanbanService.addColumn(8, "Review");
-            $httpBackend.flush();
-            expect(await wrapPromise(promise)).toBeTruthy();
+            const new_column = await wrapPromise(promise);
+            expect(new_column).toEqual(column_representation);
+            expect(tlpPost).toHaveBeenCalledWith("/api/v1/kanban/8/columns", {
+                headers: expected_headers,
+                body: JSON.stringify({ label: "Review" }),
+            });
         });
     });
 
     describe(`reorderColumns`, () => {
         it(`will call PUT on the kanban's columns to reorder columns`, async () => {
-            $httpBackend.expectPUT("/api/v1/kanban/8/columns", [20, 19, 21]).respond(200);
+            const tlpPut = jest.spyOn(tlp, "put");
+            mockFetchSuccess(tlpPut);
 
             const promise = KanbanService.reorderColumns(8, [20, 19, 21]);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPut).toHaveBeenCalledWith("/api/v1/kanban/8/columns", {
+                headers: expected_headers,
+                body: JSON.stringify([20, 19, 21]),
+            });
         });
     });
 
     describe(`removeColumn`, () => {
         it(`will call DELETE on the kanban columns`, async () => {
-            $httpBackend.expectDELETE("/api/v1/kanban_columns/19?kanban_id=8").respond(200);
+            const tlpDelete = jest.spyOn(tlp, "del");
+            mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.removeColumn(8, 19);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban_columns/19?kanban_id=8", {
+                headers: expected_headers,
+            });
         });
     });
 
@@ -837,20 +448,19 @@ describe("KanbanService -", () => {
             `will call PATCH on the kanban columns
             and will edit the column's label and WIP limit`,
             async (column_wip_limit, expected_wip_limit) => {
-                $httpBackend
-                    .expectPATCH("/api/v1/kanban_columns/21?kanban_id=8", {
-                        label: "On going",
-                        wip_limit: expected_wip_limit,
-                    })
-                    .respond(200);
+                const tlpPatch = jest.spyOn(tlp, "patch");
+                mockFetchSuccess(tlpPatch);
 
                 const promise = KanbanService.editColumn(8, {
                     id: 21,
                     label: "On going",
                     limit_input: column_wip_limit,
                 });
-                $httpBackend.flush();
                 expect(await wrapPromise(promise)).toBeTruthy();
+                expect(tlpPatch).toHaveBeenCalledWith("/api/v1/kanban_columns/21?kanban_id=8", {
+                    headers: expected_headers,
+                    body: JSON.stringify({ label: "On going", wip_limit: expected_wip_limit }),
+                });
             }
         );
     });
@@ -884,20 +494,20 @@ describe("KanbanService -", () => {
     });
 
     describe("updateSelectableReports", () => {
-        it(`Given a kanban id and an array of report ids,
-            then a resolved promise will be returned`, async () => {
+        it(`will call PUT on the kanban's tracker reports
+            and update the selectable reports`, async () => {
+            const tlpPut = jest.spyOn(tlp, "put");
+            mockFetchSuccess(tlpPut);
+
             const kanban_id = 59;
             const selectable_report_ids = [61, 21];
 
-            $httpBackend
-                .expectPUT("/api/v1/kanban/" + kanban_id + "/tracker_reports", {
-                    tracker_report_ids: selectable_report_ids,
-                })
-                .respond(200);
-
             const promise = KanbanService.updateSelectableReports(kanban_id, selectable_report_ids);
-            $httpBackend.flush();
             expect(await wrapPromise(promise)).toBeTruthy();
+            expect(tlpPut).toHaveBeenCalledWith("/api/v1/kanban/59/tracker_reports", {
+                headers: expected_headers,
+                body: JSON.stringify({ tracker_report_ids: selectable_report_ids }),
+            });
         });
     });
 });

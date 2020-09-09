@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+const base_config = require("../../../../tests/jest/jest.base.config.js");
 
-export default JWTService;
-
-JWTService.$inject = ["$q", "jwtHelper"];
-
-function JWTService($q, jwtHelper) {
-    return {
-        getJWT,
-        getTokenExpiredDate,
-    };
-
-    function getJWT() {
-        return $q.when(get(encodeURI(`/api/v1/jwt`)).then((response) => response.json()));
-    }
-
-    function getTokenExpiredDate(token) {
-        return jwtHelper.getTokenExpirationDate(token);
-    }
-}
+module.exports = {
+    ...base_config,
+    displayName: "agiledashboard-shared",
+};

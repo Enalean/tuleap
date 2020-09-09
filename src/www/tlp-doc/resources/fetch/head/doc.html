@@ -1,0 +1,39 @@
+<p>
+    Performs a
+    <code class="code-inline">HEAD</code>
+    operation. This function is useful to get the headers of a given REST route and (optionally) a
+    given query.
+</p>
+<h4>Arguments:</h4>
+<ul>
+    <li>{ String } URL to query</li>
+    <li>
+        (Optional) { Object } options. Contains:
+        <ul>
+            <li>
+                (Optional)
+                <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">
+                    Fetch init options
+                </a>
+            </li>
+            <li>
+                (Optional) { Object } params
+                <p>Parameters to be added to the query URL.</p>
+            </li>
+        </ul>
+    </li>
+</ul>
+<p>
+    To use get, import it:
+    <code class="code-inline">import { head } from "tlp";</code>
+    <br />
+    You can pass parameters directly to Fetch, such as
+    <code class="code-inline">{ cache: "force-cache", ... }</code>
+    . See
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request/Request">the Request API</a>
+    .
+    <br />
+    All parameters in
+    <code class="code-inline">{ params: { ... }}</code>
+    will be URI-encoded. Common cases are to pass limit and offset for paginated routes.
+</p>

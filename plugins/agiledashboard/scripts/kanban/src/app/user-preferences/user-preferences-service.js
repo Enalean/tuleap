@@ -17,19 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { patch } from "tlp";
+
 export default UserPreferencesService;
 
-UserPreferencesService.$inject = ["Restangular"];
+UserPreferencesService.$inject = ["$q"];
 
-function UserPreferencesService(Restangular) {
+function UserPreferencesService($q) {
     return {
         setPreference,
     };
 
     function setPreference(user_id, key, value) {
-        return Restangular.one("users", user_id).all("preferences").patch({
-            key: key,
-            value: value,
-        });
+        return $q.when(
+            patch(encodeURI(`/api/v1/users/${user_id}/preferences`), {
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ key, value }),
+            })
+        );
     }
 }

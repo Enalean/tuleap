@@ -20,22 +20,30 @@
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
 describe("KanbanItemRestService -", function () {
-    let wrapPromise, mockBackend, KanbanItemRestService, RestErrorService;
+    let wrapPromise, $q, KanbanItemRestService, RestErrorService;
     beforeEach(function () {
-        angular.mock.module(kanban_module);
+        angular.mock.module(kanban_module, function ($provide) {
+            $provide.decorator("SharedPropertiesService", function ($delegate) {
+                jest.spyOn($delegate, "getUUID").mockReturnValue(1312);
+                return $delegate;
+            });
+        });
 
         let $rootScope;
         angular.mock.inject(function (
             _$rootScope_,
-            $httpBackend,
+            _$q_,
             _KanbanItemRestService_,
             _RestErrorService_
         ) {
             $rootScope = _$rootScope_;
-            mockBackend = $httpBackend;
+            $q = _$q_;
             KanbanItemRestService = _KanbanItemRestService_;
             RestErrorService = _RestErrorService_;
         });
@@ -44,80 +52,102 @@ describe("KanbanItemRestService -", function () {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
+
+    function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.reject({
+                response: {
+                    status,
+                    statusText,
+                    json: () => $q.when(error_json),
+                },
+            })
+        );
+    }
+
+    const expected_headers = {
+        "content-type": "application/json",
+        "X-Client-UUID": 1312,
+    };
+
     describe(`createItem`, () => {
-        it(`will call POST on kanban items to create an item in a given column`, async () => {
-            mockBackend
-                .expectPOST("/api/v1/kanban_items", {
+        it(`will call POST on kanban items to create an item in a given column
+            and will return the newly created item`, async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            const item_representation = { id: 987, label: "prebenediction" };
+            mockFetchSuccess(tlpPost, { return_json: item_representation });
+
+            const promise = KanbanItemRestService.createItem(17, 64, "prebenediction");
+
+            const new_item = await wrapPromise(promise);
+            expect(new_item).toEqual(item_representation);
+            expect(tlpPost).toHaveBeenCalledWith("/api/v1/kanban_items", {
+                headers: expected_headers,
+                body: JSON.stringify({
                     label: "prebenediction",
                     kanban_id: 17,
                     column_id: 64,
-                })
-                .respond(200);
-
-            const promise = KanbanItemRestService.createItem(17, 64, "prebenediction");
-            mockBackend.flush();
-
-            expect(await wrapPromise(promise)).toBeTruthy();
+                }),
+            });
         });
     });
 
     describe(`createItemInBacklog`, () => {
-        it(`will call POST on kanban items to create an item in the backlog column`, async () => {
-            mockBackend
-                .expectPOST("/api/v1/kanban_items", {
-                    label: "prebenediction",
-                    kanban_id: 17,
-                })
-                .respond(200);
+        it(`will call POST on kanban items to create an item in the backlog column
+            and will return the newly created item`, async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            const item_representation = { id: 987, label: "prebenediction" };
+            mockFetchSuccess(tlpPost, { return_json: item_representation });
 
             const promise = KanbanItemRestService.createItemInBacklog(17, "prebenediction");
-            mockBackend.flush();
 
-            expect(await wrapPromise(promise)).toBeTruthy();
+            const new_item = await wrapPromise(promise);
+            expect(new_item).toEqual(item_representation);
+            expect(tlpPost).toHaveBeenCalledWith("/api/v1/kanban_items", {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    label: "prebenediction",
+                    kanban_id: 17,
+                }),
+            });
         });
     });
 
-    describe("getItem", function () {
+    describe("getItem", () => {
         it(`will call GET on the kanban item and will return it`, async () => {
-            mockBackend.expectGET("/api/v1/kanban_items/410").respond({
+            const kanban_item = {
                 id: 410,
                 item_name: "paterfamiliarly",
                 label: "Disaccustomed",
-            });
+            };
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, { return_json: kanban_item });
 
             const promise = KanbanItemRestService.getItem(410);
-            mockBackend.flush();
 
             const response = await wrapPromise(promise);
-            expect(response).toEqual(
-                expect.objectContaining({
-                    id: 410,
-                    item_name: "paterfamiliarly",
-                    label: "Disaccustomed",
-                })
-            );
+            expect(response).toEqual(kanban_item);
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/kanban_items/410");
         });
 
         it(`When there is an error with my request,
             then the error will be handled by RestErrorService
             and a rejected promise will be returned`, () => {
-            mockBackend
-                .expectGET("/api/v1/kanban_items/410")
-                .respond(404, { error: 404, message: "Error" });
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchError(tlpGet, { status: 404, error_json: { error: { message: "Error" } } });
 
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = KanbanItemRestService.getItem(410).catch(() => {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 404,
-                            message: "Error",
-                        },
-                    })
-                );
+                expect(RestErrorService.reload).toHaveBeenCalled();
             });
-
-            mockBackend.flush();
             return wrapPromise(promise);
         });
     });

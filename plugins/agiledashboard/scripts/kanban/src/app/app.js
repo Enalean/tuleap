@@ -29,7 +29,6 @@ import angular_async from "angular-tlp/angular-async";
 import "angular-locker";
 import "angular-gettext";
 import "ng-scrollbar";
-import "restangular";
 import translations from "../../po/fr.po";
 
 import jwt from "./jwt/jwt.js";
@@ -41,7 +40,6 @@ import user_preferences from "./user-preferences/user-preferences.js";
 import error_modal from "./error-modal/error-modal.js";
 
 import ErrorCtrl from "./error-modal/error-controller.js";
-import KanbanConfig from "./app-config.js";
 import MainCtrl from "./app-main-controller.js";
 import KanbanService from "./kanban-service.js";
 import ColumnCollectionService from "./column-collection-service.js";
@@ -74,7 +72,6 @@ export default angular
         "angular-locker",
         "gettext",
         "ngScrollbar",
-        "restangular",
         angular_artifact_modal,
         angular_async,
         angular_tlp,
@@ -88,7 +85,6 @@ export default angular
         user_preferences,
         uuid_generator,
     ])
-    .config(KanbanConfig)
     .run([
         "gettextCatalog",
         function (gettextCatalog) {
