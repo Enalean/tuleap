@@ -24,7 +24,7 @@
          ng-if="$ctrl.isRealtimeEnabled()"
          ng-repeat="presence in $ctrl.campaign_state.presences_on_campaign | orderBy:'-score' | limitTo:6"
     >
-        <div class="tlp-avatar tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
+        <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
             <img title="{{ presence.real_name }}"
                  ng-src="{{ presence.avatar_url }}"
                  onerror="this.src='/themes/common/images/avatar_default.png'"
