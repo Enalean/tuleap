@@ -52,11 +52,15 @@ $kanban-column-footer-height: 50px;
 .kanban {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
+    height: calc(100vh - #{$breadcrumb-height});
 }
 
 .has-visible-project-banner .kanban {
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$project-banner-base-height});
+    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height});
+}
+
+.has-visible-project-banner.sidebar-collapsed .kanban {
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height});
 }
 
 .kanban-header {
