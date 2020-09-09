@@ -24,6 +24,7 @@ import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
 import "../../src/js/custom-elements/relative-date";
 import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inline-table";
+import { createListPicker } from "../../../../scripts/list-picker/src/list-picker";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -157,6 +158,20 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 placeholder: "Choose an area",
                 allowClear: true,
             });
+
+            if (example.id === "example-list-picker-") {
+                createListPicker(document.querySelector("#list-picker-sb"), {
+                    placeholder: "<script>alert('yolo')</script>",
+                });
+
+                createListPicker(document.querySelector("#list-picker-sb-disabled"), {
+                    placeholder: "You can't choose any value yet",
+                });
+
+                createListPicker(document.querySelector("#list-picker-sb-error"), {
+                    placeholder: "Choose a value",
+                });
+            }
 
             const example_links = example.querySelectorAll('a[href="#"]');
             [].forEach.call(example_links, (link) => {

@@ -329,7 +329,7 @@ const webpack_config_vue_breadcrumb_privacy = {
     entry: "./scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue",
     context,
     output: {
-        path: context + "/scripts/vue-components/breadcrumb-privacy/dist/",
+        path: path.join(context, "./scripts/vue-components/breadcrumb-privacy/dist/"),
         filename: "breadcrumb-privacy.js",
         library: "BreadcrumbPrivacy",
         libraryTarget: "umd",
@@ -350,6 +350,31 @@ const webpack_config_vue_breadcrumb_privacy = {
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(true),
+    ],
+};
+
+const webpack_config_list_picker = {
+    entry: "./scripts/list-picker/src/list-picker.ts",
+    context,
+    output: {
+        path: path.join(context, "./scripts/list-picker/dist/"),
+        filename: "list-picker.js",
+        library: "ListPicker",
+        libraryTarget: "umd",
+    },
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+        ],
+    },
+    plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false),
     ],
 };
 
@@ -527,5 +552,6 @@ module.exports = [
     webpack_config_for_vue,
     webpack_config_for_burning_parrot_css,
     webpack_config_for_flaming_parrot_css,
+    webpack_config_list_picker,
     webpack_config_vue_breadcrumb_privacy,
 ];

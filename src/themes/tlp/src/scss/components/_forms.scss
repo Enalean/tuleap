@@ -68,7 +68,8 @@ $tlp-form-element-select-small-background-size: 6px;
         > .tlp-radio > input,
         > .select2-container.select2-container--disabled .select2-selection--single,
         > .select2-container.select2-container--disabled .select2-selection--multiple,
-        > .select2-container.select2-container--disabled .select2-selection__clear {
+        > .select2-container.select2-container--disabled .select2-selection__clear,
+        > .list-picker.list-picker-disabled {
             cursor: not-allowed;
         }
         /* stylelint-enable */
@@ -304,6 +305,38 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &.tlp-select-adjusted {
         width: auto;
+    }
+}
+
+.list-picker {
+    z-index: 2003;
+
+    &.list-picker-disabled {
+        border-color: $tlp-form-element-border-color;
+
+        .list-picker-single {
+            cursor: not-allowed;
+        }
+    }
+
+    .list-picker-single {
+        @extend %tlp-form-element;
+
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: $tlp-form-element-height;
+        padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
+        background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
+        background-position: right $tlp-form-element-padding-horizontal center;
+        line-height: normal;
+        cursor: default;
+
+        user-select: none;
+    }
+
+    .list-picker-placeholder {
+        color: $tlp-form-element-placeholder-color;
     }
 }
 
