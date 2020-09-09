@@ -95,4 +95,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     new AppComponent({
         store: createStore(initial_root_state, initial_user_state, initial_column_state),
     }).$mount(vue_mount_point);
+
+    const header = document.querySelector("header");
+    if (header) {
+        let ticking = false;
+        window.addEventListener("scroll", () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // magic value 190 ≃ distance between top and swimlanes header
+                    if (window.pageYOffset > 190) {
+                        header.classList.add("header-taskboard-pinned");
+                        header.classList.add("pinned");
+                    } else {
+                        header.classList.remove("header-taskboard-pinned");
+                        header.classList.remove("pinned");
+                    }
+                    ticking = false;
+                });
+            }
+            ticking = true;
+        });
+    }
 });

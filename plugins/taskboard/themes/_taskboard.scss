@@ -29,6 +29,18 @@
 @import 'includes/button-bar';
 @import '../scripts/taskboard/src/helpers/drag-and-drop/drekkenov';
 
+.header-taskboard-pinned {
+    width: calc(100vw - #{$sidebar-expanded-width} - 12px);
+
+    > .header-container {
+        height: $navbar-height;
+    }
+}
+
+.sidebar-collapsed .header-taskboard-pinned {
+    width: calc(100vw - #{$sidebar-collapsed-width} - 12px);
+}
+
 .taskboard-under-construction {
     color: $tlp-ui-dimmed;
 }
@@ -36,12 +48,20 @@
 .taskboard-root {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
+    height: calc(100vh - #{$breadcrumb-height} - #{$tlp-medium-spacing});
     margin: $tlp-medium-spacing 0 0;
 }
 
+.sidebar-collapsed .taskboard-root {
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$tlp-medium-spacing});
+}
+
 .has-visible-project-banner .taskboard-root {
-    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$project-banner-base-height});
+    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$tlp-medium-spacing});
+}
+
+.has-visible-project-banner.sidebar-collapsed .taskboard-root {
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$tlp-medium-spacing});
 }
 
 .taskboard-root-title,
