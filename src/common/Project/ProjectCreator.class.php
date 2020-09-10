@@ -270,7 +270,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 $event_manager,
                 $service_dao,
                 ServiceManager::instance(),
-                new ServiceLinkDataBuilder()
+                new ServiceLinkDataBuilder(),
+                ReferenceManager::instance()
             ),
             $force_activation
         );

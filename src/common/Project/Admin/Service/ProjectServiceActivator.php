@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -26,8 +26,8 @@ namespace Tuleap\Project\Admin\Service;
 use EventManager;
 use Project;
 use ProjectCreationData;
+use ReferenceManager;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
-use Tuleap\Project\Event\ReferencesGroupCreatorPostProjectCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
@@ -54,18 +54,25 @@ class ProjectServiceActivator
      */
     private $link_data_builder;
 
+    /**
+     * @var ReferenceManager
+     */
+    private $reference_manager;
+
     public function __construct(
         ServiceCreator $service_creator,
         EventManager $event_manager,
         \ServiceDao $service_dao,
         \ServiceManager $service_manager,
-        ServiceLinkDataBuilder $link_data_builder
+        ServiceLinkDataBuilder $link_data_builder,
+        ReferenceManager $reference_manager
     ) {
         $this->service_creator   = $service_creator;
         $this->event_manager     = $event_manager;
         $this->service_dao       = $service_dao;
         $this->service_manager   = $service_manager;
         $this->link_data_builder = $link_data_builder;
+        $this->reference_manager = $reference_manager;
     }
 
     /**
@@ -164,11 +171,10 @@ class ProjectServiceActivator
                 $is_used = $is_used['is_used'];
             }
 
-            $event = new ReferencesGroupCreatorPostProjectCreation($short_name, $project);
-            $this->event_manager->processEvent($event);
+            $created_project_id = (int) $project->getID();
 
             $this->service_dao->create(
-                $project->getID(),
+                $created_project_id,
                 $service->getLabel(),
                 $icon,
                 $service->getDescription(),
@@ -180,6 +186,20 @@ class ProjectServiceActivator
                 $service->getRank(),
                 $service->isOpenedInNewTab()
             );
+
+            if ($short_name !== "") {
+                $this->reference_manager->addSystemReferencesForService(
+                    (int) $data->getBuiltFromTemplateProject()->getProject()->getID(),
+                    $created_project_id,
+                    $short_name
+                );
+
+                $this->reference_manager->updateReferenceForService(
+                    $created_project_id,
+                    $short_name,
+                    (int) $is_used
+                );
+            }
         }
     }
 
