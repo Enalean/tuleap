@@ -1570,6 +1570,9 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Projects visibility"
 msgstr "Visibilité des projets"
 
+msgid "Projects..."
+msgstr "Projets…"
+
 msgid "Provided release note URL is not well formed"
 msgstr "Le lien de la release note n'est pas au bon format."
 

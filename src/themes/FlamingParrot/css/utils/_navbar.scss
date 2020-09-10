@@ -126,12 +126,12 @@ header {
 
         &:active,
         &:focus {
-            background: rgba(234, 236, 236, .6) !important;
+            background: opacify(mix(transparentize($sidebar-background, .8), $white), .8) !important;
         }
 
         > .btn-icon {
             margin: 0 8px 0 0;
-            font-size: .75rem;
+            font-size: .85rem;
         }
     }
 }

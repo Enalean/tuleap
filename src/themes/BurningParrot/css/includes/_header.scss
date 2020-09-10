@@ -89,6 +89,10 @@ header {
         margin: 0 0 0 $tlp-small-spacing;
         transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
         border-radius: 30px;
+
+        > .tlp-button-icon {
+            font-size: .85rem;
+        }
     }
 }
 
