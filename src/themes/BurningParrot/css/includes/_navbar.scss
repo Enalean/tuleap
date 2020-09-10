@@ -135,6 +135,7 @@ header.pinned > .header-container {
 }
 
 #nav-dropdown-user > .tlp-avatar {
+    transition: box-shadow 100ms ease-in-out;
     border: 1px solid $tlp-ui-white;
     box-shadow: $tlp-button-shadow;
     cursor: pointer;

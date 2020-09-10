@@ -179,6 +179,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function body($params)
     {
         $current_user = UserManager::instance()->getCurrentUser();
+        $project_manager = ProjectManager::instance();
 
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
         $body_class       = isset($params['body_class']) ? $params['body_class'] : [];
@@ -190,6 +191,17 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         if ($current_user->getPreference('sidebar_state')) {
             $sidebar_state = $current_user->getPreference('sidebar_state');
+        }
+
+        $banner = null;
+        $project = null;
+        if (! empty($params['group'])) {
+            $project = $project_manager->getProject($params['group']);
+            $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
+
+            if ($banner && $banner->isVisible()) {
+                $body_class[] = 'has-visible-project-banner';
+            }
         }
 
         $body_class[] = $has_sidebar;
@@ -220,7 +232,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $body_class
         ));
 
-        $this->navbar($params, $current_user, $selected_top_tab);
+        $this->navbar($params, $current_user, $selected_top_tab, $project, $banner);
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -238,19 +250,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    private function navbar($params, PFUser $current_user, $selected_top_tab)
+    private function navbar($params, PFUser $current_user, $selected_top_tab, ?Project $project, ?BannerDisplay $banner)
     {
-        $project_manager   = ProjectManager::instance();
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
         $url_redirect      = new URLRedirect($event_manager);
-
-        $banner = null;
-        $project = null;
-        if (! empty($params['group'])) {
-            $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
-        }
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
 
@@ -285,10 +289,21 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
             $new_dropdown_presenter_builder->getPresenter($current_user, $project, $current_context_section),
-            $switch_to,
+            $this->shouldLogoBeDisplayed($params, $project),
+            $switch_to
         ));
 
         $this->container($params, $current_user, $banner, $switch_to);
+    }
+
+    private function shouldLogoBeDisplayed(array $params, ?Project $project): bool
+    {
+        return ! $this->isInSiteAdmin($params) && ! isset($project);
+    }
+
+    private function isInSiteAdmin(array $params): bool
+    {
+        return isset($params['in_siteadmin']) && $params['in_siteadmin'] === true;
     }
 
     private function displayNewAccount(): bool

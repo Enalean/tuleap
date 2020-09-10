@@ -479,6 +479,7 @@ legend {
  ************/
 
 .modal {
+    z-index: 2006;
     overflow: hidden;
     border: 1px solid transparent;
     box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
@@ -550,6 +551,7 @@ legend {
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
+    z-index: 2005;
     opacity: .5;
 }
 

@@ -77,12 +77,12 @@ function updateSidebarWidth(new_width, duration) {
 }
 
 function updateNavbarLogo(new_width) {
-    var logo = document.querySelector("#navbar-logo > .logo");
+    var logo = document.getElementById("logo");
 
     if (new_width === width_expanded) {
-        logo.classList.remove("logo-collapsed");
+        logo.classList.remove("collapsed");
     } else {
-        logo.classList.add("logo-collapsed");
+        logo.classList.add("collapsed");
     }
 }
 

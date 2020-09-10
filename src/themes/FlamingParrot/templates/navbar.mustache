@@ -1,18 +1,30 @@
-<div class="navbar navbar-fixed-top">
-    {{# has_motd }}<div class="motd">{{{ motd }}}</div>{{/ has_motd }}
-    <a id="navbar-logo" href="/" aria-label="{{ homepage_label }}"><div class="logo"></div></a>
-    <div class="navbar-inner">
-        <div class="container-fluid header-navbar-container">
-            <ul class="nav header-navbar-container-project-nav">
-                {{# is_super_user }}
-                    <li class="admin ">
-                        <a class="admin-link" href="/admin/">
-                            {{# gettext }}Administration{{/ gettext }}
-                        </a>
-                    </li>
-                {{/ is_super_user }}
-            </ul>
-            {{> navbar-user-navigation }}
-        </div>
+{{# has_motd }}
+    <div class="motd">{{{ motd }}}</div>
+{{/ has_motd }}
+
+<header>
+    <div class="header-container">
+        {{# should_logo_be_displayed }}
+            <a id="logo" href="/" aria-label="{{ homepage_label }}"></a>
+        {{/ should_logo_be_displayed }}
+
+        <div class="header-container-spacer"></div>
+
+        {{# is_super_user }}
+            <a class="btn admin-link" href="/admin/" arial-label="{{# gettext }}Administration{{/ gettext }}">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+            </a>
+        {{/ is_super_user }}
+
+        {{> navbar-new-nav }}
+
+        {{# switch_to }}
+            <button type="button" data-toggle="modal" id="switch-to-button" data-target="#switch-to-modal" class="btn">
+                <i class="fa fa-search btn-icon" aria-hidden="true"></i>
+                {{# gettext }}Switch to...{{/ gettext }}
+            </button>
+        {{/ switch_to }}
+
+        {{> navbar-user-nav }}
     </div>
-</div>
+</header>

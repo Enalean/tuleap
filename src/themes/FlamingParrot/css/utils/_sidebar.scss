@@ -21,9 +21,10 @@
 .sidebar-nav {
     position: fixed;
     z-index: 1000;
+    top: 0;
     width: $sidebar-width;
     max-width: $sidebar-width;
-    height: calc(100vh - #{$navbar-height});
+    height: 100vh;
     overflow: hidden;
     background: $sidebar-background;
     @media screen and (max-width: 880px) {

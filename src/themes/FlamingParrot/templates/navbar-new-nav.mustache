@@ -1,0 +1,26 @@
+{{# new_dropdown }}
+    {{# has_sections }}
+        <div class="new-nav">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-shortcut-create>
+                <i class="fa fa-plus btn-icon" aria-hidden="true"></i>
+                {{# gettext }}New{{/gettext}}
+            </button>
+            <div class="dropdown-menu pull-right">
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-header"></div>
+                <div class="dropdown-body">
+                    {{# sections }}
+                        <div class="nav-dropdown-item-divider"></div>
+                        <div class="nav-dropdown-item-title">{{ label }}</div>
+                        {{# links }}
+                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option>
+                                <i class="fa fa-fw {{ icon }} nav-dropdown-item-icon" aria-hidden="true"></i>
+                                {{ label }}
+                            </a>
+                        {{/ links }}
+                    {{/ sections }}
+                </div>
+            </div>
+        </div>
+    {{/ has_sections }}
+{{/ new_dropdown }}
