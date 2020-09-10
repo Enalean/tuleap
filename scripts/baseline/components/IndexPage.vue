@@ -19,6 +19,7 @@
 
 <template>
     <div>
+        <h1 v-translate>Baselines</h1>
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
