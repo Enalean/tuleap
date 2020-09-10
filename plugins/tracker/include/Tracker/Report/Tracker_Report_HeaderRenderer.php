@@ -62,9 +62,8 @@ class Tracker_Report_HeaderRenderer
             $title            = '';
             $breadcrumbs      = [];
             $params           = ['body_class' => ['in_tracker_report']];
-            $toolbar          = $report->getTracker()->getDefaultToolbar();
 
-            $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
+            $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, [], $params);
         }
 
         if ($request->get('pv')) {
