@@ -18,7 +18,7 @@
  */
 
 import { init as initNavbarDropdown } from "./navbar-dropdown.js";
-import { init as initNavbarPinned } from "./navbar-pinned.js";
+import { init as initNavbarPinned } from "../../tuleap/navbar-pinned.js";
 import { init as initMotd } from "./motd.js";
 import { init as initSidebar } from "./sidebar.js";
 import { init as initScrollbar } from "./scrollbar.js";

@@ -66,11 +66,22 @@
     </div>
 {{/ user_is_logged_in }}
 {{^ user_is_logged_in }}
-    <a id="navbar-user-login" href="{{ login_url }}" class="nav-link">
+    <a id="navbar-user-login"
+        href="{{ login_url }}"
+        class="
+            {{# should_logo_be_displayed }}nav-link{{/ should_logo_be_displayed }}
+            {{^ should_logo_be_displayed }}btn{{/ should_logo_be_displayed }}
+        "
+    >
         {{ include_menu_login_text }}
     </a>
     {{# display_new_user }}
-        <a href="/account/register.php" class="nav-link">
+        <a href="/account/register.php"
+            class="
+                {{# should_logo_be_displayed }}nav-link{{/ should_logo_be_displayed }}
+                {{^ should_logo_be_displayed }}btn{{/ should_logo_be_displayed }}
+            "
+        >
             {{ include_menu_new_user_text }}
         </a>
     {{/ display_new_user }}

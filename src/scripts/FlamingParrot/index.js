@@ -19,9 +19,14 @@
 
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import { init as initNavbarPinned } from "../tuleap/navbar-pinned.js";
 
 import "./sidebar.js";
 import "./motd.js";
 import "./project-flags.js";
 import "./project-privacy.js";
 import "./help-dropdown.ts";
+
+document.addEventListener("DOMContentLoaded", () => {
+    initNavbarPinned();
+});
