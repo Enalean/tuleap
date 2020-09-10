@@ -1,5 +1,8 @@
 <a href="{{ link }}"
-    class="nav-link {{ additional_classes }}"
+    class="
+        {{# should_logo_be_displayed }}nav-link{{/ should_logo_be_displayed }}
+        {{^ should_logo_be_displayed }}tlp-button-secondary tlp-button-outline{{/ should_logo_be_displayed }}
+    "
     title="{{ label }}"
     {{# additional_attributes }} {{ . }}{{/ additional_attributes }}
 >

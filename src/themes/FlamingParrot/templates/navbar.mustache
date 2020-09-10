@@ -2,7 +2,7 @@
     <div class="motd">{{{ motd }}}</div>
 {{/ has_motd }}
 
-<header>
+<header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }}">
     <div class="header-container">
         {{# should_logo_be_displayed }}
             <a id="logo" href="/" aria-label="{{ homepage_label }}"></a>
