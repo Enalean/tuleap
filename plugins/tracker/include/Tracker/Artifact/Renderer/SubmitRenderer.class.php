@@ -56,7 +56,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             $this->layout,
             $this->tracker->name,
             $breadcrumbs,
-            [],
+            $this->tracker->getDefaultToolbar(),
             ['body_class' => ['widgetable']]
         );
 

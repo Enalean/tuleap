@@ -1111,7 +1111,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($report) {
             $report->process($layout, $request, $current_user);
         } elseif (! $link_artifact_id) {
-            $this->displayHeader($layout, $this->name, [], []);
+            $this->displayHeader($layout, $this->name, [], $this->getDefaultToolbar());
             echo dgettext('tuleap-tracker', 'No reports available');
 
             if ($this->userIsAdmin($current_user)) {
@@ -1193,7 +1193,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         'url'   => TRACKER_BASE_URL . '/?tracker=' . $this->getId(),
                 ],
         ];
-        $this->displayHeader($layout, $this->name, $breadcrumbs, []);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, $this->getDefaultToolbar());
         $html = '';
 
         $words    = $request->get('words');
@@ -1344,16 +1344,6 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $title = ($title ? $title . ' - ' : '') . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
-
-            if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
-                $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/artifact');
-                $renderer->renderToPage(
-                    "create-by-mail-modal-info",
-                    [
-                        'email' => $this->getInsecureCreationEmailAddress(),
-                    ]
-                );
-            }
         }
     }
 
@@ -1377,6 +1367,15 @@ class Tracker implements Tracker_Dispatchable_Interface
                 )
             );
         }
+        if ($this->userIsAdmin($user)) {
+            $links_collection->add(
+                new BreadCrumbLinkWithIcon(
+                    dgettext('tuleap-tracker', 'Administration'),
+                    $this->getAdministrationUrl(),
+                    'fa-cog'
+                )
+            );
+        }
         if ($user->isLoggedIn()) {
             $links_collection->add(
                 new BreadCrumbLinkWithIcon(
@@ -1386,44 +1385,60 @@ class Tracker implements Tracker_Dispatchable_Interface
                 )
             );
         }
-
-        if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
-            $links_collection->add(
-                new BreadCrumbLinkWithIcon(
-                    dgettext('tuleap-tracker', 'Create by email...'),
-                    '#create-by-mail-modal-info',
-                    'fa-envelope'
-                )
-            );
-        }
-
-        $admin_sections = [];
-        if ($this->userIsAdmin($user)) {
-            $admin_sections[] = new SubItemsSection(
-                '',
-                new BreadCrumbLinkCollection(
-                    [
-                        new BreadCrumbLinkWithIcon(
-                            dgettext('tuleap-tracker', 'Administration'),
-                            $this->getAdministrationUrl(),
-                            'fa-cog'
-                        )
-                    ]
-                )
-            );
-        }
-
         if (count($links_collection) > 0) {
             $sub_items->setSections(
                 array_merge(
                     [new SubItemsSection('', $links_collection)],
-                    $admin_sections,
                     $existing_sections
                 )
             );
         }
 
         return $crumb;
+    }
+
+    public function getDefaultToolbar()
+    {
+        $toolbar = [];
+
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
+        $artifact_by_email_status = $this->getArtifactByMailStatus();
+        if ($artifact_by_email_status->canCreateArtifact($this)) {
+            $email_domain = ForgeConfig::get('sys_default_mail_domain');
+
+            if (! $email_domain) {
+                $email_domain = ForgeConfig::get('sys_default_domain');
+            }
+
+            $email = trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+' . $this->id . '@' . $email_domain;
+            $email = $html_purifier->purify($email);
+            $toolbar[] = [
+                    'title'      => '<span class="email-tracker" data-email="' . $email . '"><i class="fa fa-envelope"></i></span>',
+                    'url'        => 'javascript:;',
+                    'submit-new' => 1
+            ];
+        }
+
+        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
+            $toolbar[] = [
+                    'title' => dgettext('tuleap-tracker', 'Notifications'),
+                    'url'   => TRACKER_BASE_URL . '/notifications/my/' . urlencode($this->id) . '/',
+            ];
+        }
+        if ($this->userIsAdmin()) {
+            $toolbar[] = [
+                    'title' => dgettext('tuleap-tracker', 'Administration'),
+                    'url'   => $this->getAdministrationUrl(),
+                    'data-test' => "tracker-administration"
+            ];
+        }
+        $toolbar[] = [
+                'title' => dgettext('tuleap-tracker', 'Help'),
+                'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/tracker.html\');',
+        ];
+
+        return $toolbar;
     }
 
     public function displayFooter(Tracker_IDisplayTrackerLayout $layout)
@@ -1676,7 +1691,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
-        $this->displayHeader($layout, $this->name, $breadcrumbs, []);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, $this->getDefaultToolbar());
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
@@ -3548,16 +3563,5 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function getDropDownDao(): TrackerInNewDropdownDao
     {
         return new TrackerInNewDropdownDao();
-    }
-
-    protected function getInsecureCreationEmailAddress(): string
-    {
-        $email_domain = ForgeConfig::get('sys_default_mail_domain');
-
-        if (! $email_domain) {
-            $email_domain = ForgeConfig::get('sys_default_domain');
-        }
-
-        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+' . $this->id . '@' . $email_domain;
     }
 }

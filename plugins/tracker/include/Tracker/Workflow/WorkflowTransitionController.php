@@ -80,7 +80,6 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-email-copy-paste.js'));
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-workflow-transitions.js'));
         $layout->addCssAsset(new CssAsset($assets, 'workflow'));
 

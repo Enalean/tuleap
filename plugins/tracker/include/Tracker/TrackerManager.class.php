@@ -293,6 +293,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayHeader($title, $breadcrumbs, $toolbar, $params);
+            echo '<div id="submit-new-by-mail-popover-container"></div>';
         }
     }
 

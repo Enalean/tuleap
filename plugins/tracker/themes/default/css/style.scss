@@ -2835,29 +2835,30 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     }
 }
 
-#create-by-mail-modal-info {
-    .tlp-modal-title {
-        flex: 1;
-        order: 1;
-        margin: 0;
-        border: 0;
-        font-size: 1.5rem;
-        font-weight: 400;
-        line-height: 1.875rem;
-    }
-
-    .tlp-modal-close {
-        display: none;
-    }
+.submit-new-by-mail-copy-fallback {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.tracker-email-copy-to-clipboard-info {
-    visibility: hidden;
-    margin: 0;
-    font-size: .8rem;
+#submit-new-by-mail-popover-container > .popover {
+    max-width: 288px;
 
-    &.shown {
-        visibility: visible;
+    p {
+        font-size: 12px;
+    }
+
+    #tracker-email-copy-to-clipboard {
+        margin: 0;
+    }
+
+    .text-info {
+        visibility: hidden;
+        margin: 0;
+        font-size: .8em;
+
+        &.copied {
+            visibility: visible;
+        }
     }
 }
 

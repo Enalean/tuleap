@@ -23,8 +23,6 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
-use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
-use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
@@ -132,6 +130,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             ['title' => $this->artifact->getXRef(),
                   'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
         ];
+        $toolbar = $this->tracker->getDefaultToolbar();
         $params = [
             'body_class' => ['widgetable'],
             'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
@@ -155,20 +154,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         foreach ($event->getFileURLs() as $file_url) {
             $GLOBALS['HTML']->includeFooterJavascriptFile($file_url);
         }
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, [], $params);
-
-
-        $status = new Tracker_ArtifactByEmailStatus(
-            new MailGatewayConfig(
-                new MailGatewayConfigDao()
-            )
-        );
-        if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {
-            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/artifact');
-            $renderer->renderToPage("reply-by-mail-modal-info", [
-                'email' => $this->artifact->getInsecureEmailAddress()
-            ]);
-        }
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, $params);
     }
 
     protected function fetchView(Codendi_Request $request, PFUser $user)

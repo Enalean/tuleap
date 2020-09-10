@@ -69,7 +69,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
             $this->layout,
             $title,
             $breadcrumbs,
-            [],
+            $this->tracker->getDefaultToolbar(),
             ['body_class' => ['widgetable']]
         );
     }
