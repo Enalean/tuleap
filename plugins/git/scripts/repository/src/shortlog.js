@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown as createDropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 export default function initShortlog() {
     const shortlog = document.getElementById("git-repository-shortlog");

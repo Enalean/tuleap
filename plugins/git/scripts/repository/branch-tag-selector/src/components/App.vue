@@ -58,7 +58,7 @@
     </div>
 </template>
 <script>
-import { dropdown as createDropdown } from "tlp";
+import { createDropdown } from "tlp";
 import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
 

@@ -69,7 +69,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 import { BacklogItem, TestDefinition } from "../../../type";
 import {
     buildEditTestDefinitionItemLink,
@@ -99,7 +99,7 @@ export default class TestDefinitionCardXrefTitle extends Vue {
     };
 
     mounted(): void {
-        dropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
+        createDropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
     }
 
     get go_to_test_def_link(): string {

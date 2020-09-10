@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown as createDropdown } from "tlp";
+import { createDropdown } from "tlp";
 import { applyLayout } from "./dashboard-layout.js";
 
 export { init as default, addLayoutDropdown };

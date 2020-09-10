@@ -1,4 +1,4 @@
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 import {
     SIDE_BY_SIDE_DIFF,
     UNIFIED_DIFF,
@@ -104,9 +104,12 @@ function FilesController(
     }
 
     function initFileDropdown() {
-        self.file_selector = dropdown(document.getElementById("file-switcher-dropdown-button"), {
-            keyboard: false,
-        });
+        self.file_selector = createDropdown(
+            document.getElementById("file-switcher-dropdown-button"),
+            {
+                keyboard: false,
+            }
+        );
     }
 
     function isFileSelected(file) {

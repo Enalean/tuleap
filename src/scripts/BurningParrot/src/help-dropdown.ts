@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { dropdown, createModal, Modal, Dropdown, patch } from "tlp";
+import { createDropdown, createModal, Modal, Dropdown, patch } from "tlp";
 import { manageUserPreferences } from "../../user/user-patch-release-note-preference";
 
 export function initHelpDropdown(): void {
     const help_button = document.getElementById("help");
     if (help_button) {
-        const help_dropdown: Dropdown = dropdown(help_button);
+        const help_dropdown: Dropdown = createDropdown(help_button);
         help_dropdown.addEventListener("tlp-dropdown-shown", function () {
             manageUserPreferences(help_button, patch);
         });

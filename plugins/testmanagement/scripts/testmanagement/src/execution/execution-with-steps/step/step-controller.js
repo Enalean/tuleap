@@ -4,7 +4,7 @@ import {
     BLOCKED_STATUS,
     NOT_RUN_STATUS,
 } from "../../execution-constants.js";
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 import { setError, resetError } from "../../../feedback-state.js";
 import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
 
@@ -43,7 +43,7 @@ export default function controller($element, gettextCatalog, ExecutionRestServic
         const $trigger = $element.find(".steps-step-action-dropdown-trigger");
         const $dropdown_menu = $element.find(".steps-step-action-dropdown");
 
-        self.dropdown = dropdown($trigger[0], {
+        self.createDropdown = createDropdown($trigger[0], {
             dropdown_menu: $dropdown_menu[0],
         });
     }

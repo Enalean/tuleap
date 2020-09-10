@@ -1,4 +1,4 @@
-import * as tlp from "tlp";
+import { createDropdown } from "tlp";
 
 export default OpenTlpDropdown;
 
@@ -8,7 +8,7 @@ function OpenTlpDropdown() {
     return {
         restrict: "A",
         link: function (scope, element) {
-            tlp.dropdown(element[0]);
+            createDropdown(element[0]);
         },
     };
 }

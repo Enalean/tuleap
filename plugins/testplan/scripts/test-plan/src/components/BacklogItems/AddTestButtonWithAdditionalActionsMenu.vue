@@ -57,7 +57,7 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
 import { State } from "vuex-class";
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 import {
     buildCreateNewTestDefinitionLink,
     buildEditBacklogItemLink,
@@ -112,7 +112,7 @@ export default class AddTestButtonWithAdditionalActionsMenu extends Vue {
                 return;
             }
 
-            dropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
+            createDropdown(this.$refs.dropdownTrigger, { dropdown_menu: this.$refs.dropdownMenu });
         });
     }
 }

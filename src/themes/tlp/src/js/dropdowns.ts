@@ -39,8 +39,11 @@ interface EventListener {
     eventHandler: DropdownEventHandler;
 }
 
-export const dropdown = (doc: Document, trigger: Element, options?: DropdownOptions): Dropdown =>
-    new Dropdown(doc, trigger, options);
+export const createDropdown = (
+    doc: Document,
+    trigger: Element,
+    options?: DropdownOptions
+): Dropdown => new Dropdown(doc, trigger, options);
 
 const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
 

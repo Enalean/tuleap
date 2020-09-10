@@ -19,7 +19,7 @@
 
 import {
     Dropdown,
-    dropdown as createDropdown,
+    createDropdown,
     EVENT_TLP_DROPDOWN_SHOWN,
     EVENT_TLP_DROPDOWN_HIDDEN,
     DROPDOWN_MENU_CLASS_NAME,

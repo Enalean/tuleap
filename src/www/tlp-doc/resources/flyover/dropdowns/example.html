@@ -17,10 +17,10 @@
 </div>
 
 <script>
-    var dropdown = tlp.dropdown(document.getElementById('dropdown-example'));
+    const dropdown = tlp.createDropdown(document.getElementById("dropdown-example"));
 
-    dropdown.addEventListener('tlp-dropdown-shown', callback);
-    dropdown.addEventListener('tlp-dropdown-hidden', callback);
+    dropdown.addEventListener("tlp-dropdown-shown", callback);
+    dropdown.addEventListener("tlp-dropdown-hidden", callback);
 
     function callback(event) {
         // Do something...
@@ -43,11 +43,11 @@
 </div>
 
 <script>
-    tlp.dropdown(
-        document.getElementById('dropdown-example-options'),
+    tlp.createDropdown(
+        document.getElementById("dropdown-example-options"),
         {
             keyboard     : false,
-            dropdown_menu: document.getElementById('dropdown-menu-example-options'),
+            dropdown_menu: document.getElementById("dropdown-menu-example-options"),
         }
     );
 </script>
@@ -68,11 +68,11 @@
 </div>
 
 <script>
-    tlp.dropdown(
-        document.getElementById('dropdown-disable-options'),
+    tlp.createDropdown(
+        document.getElementById("dropdown-disable-options"),
         {
             keyboard     : false,
-            dropdown_menu: document.getElementById('dropdown-menu-disable-options'),
+            dropdown_menu: document.getElementById("dropdown-menu-disable-options"),
         }
     );
 </script>
@@ -96,7 +96,7 @@ Check out this right aligned dropdown menu <span class="tlp-text-danger">with ic
 </div>
 
 <script>
-    tlp.dropdown(document.getElementById('dropdown-right-example'));
+    tlp.createDropdown(document.getElementById("dropdown-right-example"));
 </script>
 
 <br>
@@ -119,7 +119,7 @@ Check out this top aligned dropdown menu <span class="tlp-text-danger">with icon
 </div>
 
 <script>
-    tlp.dropdown(document.getElementById('dropdown-top-example'));
+    tlp.createDropdown(document.getElementById("dropdown-top-example"));
 </script>
 <br>
 <br>
@@ -141,7 +141,7 @@ Check out this top right aligned dropdown menu <span class="tlp-text-danger">wit
 </div>
 
 <script>
-    tlp.dropdown(document.getElementById('dropdown-top-right-example'));
+    tlp.createDropdown(document.getElementById("dropdown-top-right-example"));
 </script>
 
 <br>
@@ -161,7 +161,7 @@ the trigger of the dropdown is a unique icon like this: <div class="tlp-dropdown
 </div>
 
 <script>
-    tlp.dropdown(document.getElementById('dropdown-icon-right-example'));
+    tlp.createDropdown(document.getElementById("dropdown-icon-right-example"));
 </script>
 
 <br>
@@ -188,7 +188,7 @@ Checkout this dropdown
 </div>
 
 <script>
-    tlp.dropdown(document.getElementById('dropdown-with-tabs-example'));
+    tlp.createDropdown(document.getElementById("dropdown-with-tabs-example"));
 </script>
 
 <br>
@@ -219,9 +219,9 @@ Split button dropdown
     </div>
 </div>
 <script>
-    tlp.dropdown(
-        document.getElementById('dropdown-split-example'),
-        {dropdown_menu: document.getElementById('dropdown-split-example-menu')}
+    tlp.createDropdown(
+        document.getElementById("dropdown-split-example"),
+        {dropdown_menu: document.getElementById("dropdown-split-example-menu")}
     );
 </script>
 &nbsp;
@@ -247,9 +247,9 @@ Split button dropdown
     </div>
 </div>
 <script>
-    tlp.dropdown(
-        document.getElementById('dropdown-split-example2'),
-        {dropdown_menu: document.getElementById('dropdown-split-example2-menu')}
+    tlp.createDropdown(
+        document.getElementById("dropdown-split-example2"),
+        {dropdown_menu: document.getElementById("dropdown-split-example2-menu")}
     );
 </script>
 
@@ -279,8 +279,8 @@ Split large button dropdown
     </div>
 </div>
 <script>
-    tlp.dropdown(
-        document.getElementById('dropdown-large-split-example'),
-        {dropdown_menu: document.getElementById('dropdown-large-split-example-menu')}
+    tlp.createDropdown(
+        document.getElementById("dropdown-large-split-example"),
+        {dropdown_menu: document.getElementById("dropdown-large-split-example-menu")}
     );
 </script>

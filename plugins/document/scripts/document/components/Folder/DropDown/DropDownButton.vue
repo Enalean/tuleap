@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { dropdown as createDropdown } from "tlp";
+import { createDropdown } from "tlp";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
