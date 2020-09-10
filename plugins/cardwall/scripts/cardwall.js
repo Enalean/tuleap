@@ -632,7 +632,11 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.width = this.width - this.margin.left - this.margin.right;
         this.height = this.height - this.margin.top - this.margin.bottom;
 
-        this.ideal_data = [Number(this.data.capacity), 0];
+        if (!this.data.capacity || !Number(this.data.capacity)) {
+            this.ideal_data = [0, 0];
+        } else {
+            this.ideal_data = [Number(this.data.capacity), 0];
+        }
     },
 
     display: function (append_element_selector) {
