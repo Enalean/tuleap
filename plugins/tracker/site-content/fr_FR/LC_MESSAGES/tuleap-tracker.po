@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -1049,7 +1049,6 @@ msgstr "Nombre (par groupe)"
 msgid "Create Report"
 msgstr "Créer un rapport"
 
-#, php-format
 msgid "Create a %s"
 msgstr "Créer un(e) %s"
 
@@ -2731,8 +2730,8 @@ msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
 msgid ""
 "The artifact link type \"%s\" cannot be used to link artifact #%s manually"
 msgstr ""
-"Le lien entre artéfacts typé \"%s\" ne peut pas être utilisé pour manuellement "
-"lier l'artéfact #%s."
+"Le lien entre artéfacts typé \"%s\" ne peut pas être utilisé pour "
+"manuellement lier l'artéfact #%s."
 
 #, php-format
 msgid ""
