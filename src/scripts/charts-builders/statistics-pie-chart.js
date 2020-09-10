@@ -111,11 +111,11 @@ export class StatisticsPieChart {
             });
 
         legend
-            .on("mouseover", (d) => {
+            .on("mouseover", (event, d) => {
                 this.onSliceAndTextOver(d.key);
                 this.replaceText(this.group.select("." + this.getSliceClassByKey(d.key)).datum());
             })
-            .on("mouseout", (d) => {
+            .on("mouseout", (event, d) => {
                 this.onSliceAndTextOut(d.key);
             });
 
@@ -157,11 +157,11 @@ export class StatisticsPieChart {
             });
 
         arc_elements
-            .on("mouseover", (d) => {
+            .on("mouseover", (event, d) => {
                 this.onSliceAndTextOver(d.data.key);
                 this.replaceText(d);
             })
-            .on("mouseout", (d) => {
+            .on("mouseout", (event, d) => {
                 this.onSliceAndTextOut(d.data.key);
             });
     }
