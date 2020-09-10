@@ -43,10 +43,30 @@ final class BindDecoratorExporterTest extends TestCase
         $this->decorator_exporter->exportToXml($root, 'val', true, '255', '255', '255', null);
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals(255, (string) $attr->r);
-        $this->assertEquals(255, (string) $attr->g);
-        $this->assertEquals(255, (string) $attr->b);
+        $this->assertEquals("255", (string) $attr->r);
+        $this->assertEquals("255", (string) $attr->g);
+        $this->assertEquals("255", (string) $attr->b);
         $this->assertEquals("val", (string) $attr->REF);
+    }
+
+    public function testItExportOldPaletteColorIfAColorIsEqualToZero(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $this->decorator_exporter->exportToXml($root, 'val', true, '0', '255', '255', null);
+
+        $attr = $root->decorator->attributes();
+        $this->assertEquals("0", (string) $attr->r);
+        $this->assertEquals("255", (string) $attr->g);
+        $this->assertEquals("255", (string) $attr->b);
+        $this->assertEquals("val", (string) $attr->REF);
+    }
+
+    public function testItDoesNotExportOldPaletteColorIfAColorIsNull(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $this->decorator_exporter->exportToXml($root, 'val', true, null, '255', '255', null);
+
+        $this->assertCount(1, $root->decorator->attributes());
     }
 
     public function testitExportTlpColor(): void
@@ -65,9 +85,9 @@ final class BindDecoratorExporterTest extends TestCase
         $this->decorator_exporter->exportNoneToXml($root, true, '255', '255', '255', null);
 
         $attr = $root->decorator->attributes();
-        $this->assertEquals(255, (string) $attr->r);
-        $this->assertEquals(255, (string) $attr->g);
-        $this->assertEquals(255, (string) $attr->b);
+        $this->assertEquals("255", (string) $attr->r);
+        $this->assertEquals("255", (string) $attr->g);
+        $this->assertEquals("255", (string) $attr->b);
         $this->assertNull($attr->REF);
     }
 
