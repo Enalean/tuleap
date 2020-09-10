@@ -133,7 +133,7 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     }
 
     &:active {
-        background: mix(transparentize($outline-color, .8), $tlp-ui-white);
+        background: opacify(mix(transparentize($outline-color, .8), $tlp-ui-white), .8);
     }
 
     &:disabled,
