@@ -1034,6 +1034,9 @@ msgstr "Copie de %1$s"
 msgid "Copy of %1$s #%2$s is finished."
 msgstr "La copie de %1$s #%2$s est terminée."
 
+msgid "Copy to clipboard"
+msgstr "Copier dans le presse-papier"
+
 msgid "Copy with children"
 msgstr "Copier avec les enfants"
 
@@ -1064,8 +1067,14 @@ msgstr "Créer une nouvelle réponse"
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 
+msgid "Create artifact by email"
+msgstr "Créer un artéfact par courriel"
+
 msgid "Create artifact by mail is <b>not</b> possible:"
 msgstr "Créer un artéfact par courriel <b>n'est pas</b> possible :"
+
+msgid "Create by email..."
+msgstr "Créer par courriel..."
 
 msgid "Create new trigger"
 msgstr "Ajouter un nouveau déclencheur"
@@ -1584,9 +1593,6 @@ msgstr "Champs regroupés dans une colonne"
 
 msgid "Group fields in a set"
 msgstr "Marque un groupe de champs"
-
-msgid "Help"
-msgstr "Aide"
 
 msgid "Hidden fieldsets:"
 msgstr "Groupes de champs cachés:"
@@ -2316,6 +2322,9 @@ msgstr "Id du rendu"
 msgid "Renderer name is mandatory."
 msgstr "Le nom est obligatoire."
 
+msgid "Reply artifact by email"
+msgstr "Répondre à un artéfact par courriel"
+
 msgid "Reply to artifact by mail is possible"
 msgstr "Répondre à un artéfact par courriel est possible"
 
@@ -2830,6 +2839,9 @@ msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
 #, php-format
 msgid "The description is now: %1$s"
 msgstr "La description est maintenant : %1$s"
+
+msgid "The email has been copied to clipboard"
+msgstr "L'adresse a été copiée dans votre presse-papier"
 
 msgid "The feature is deactivated, nobody can interact with trackers by email."
 msgstr ""
@@ -3973,6 +3985,20 @@ msgid "You can retrieve the imported data here:"
 msgstr "Vous pouvez retrouver les données importées ici :"
 
 msgid ""
+"You can send an email to the following email address in order to create an "
+"artifact:"
+msgstr ""
+"Vous pouvez envoyer un courriel à l'adresse suivante afin de créer un "
+"artéfact :"
+
+msgid ""
+"You can send an email to the following email address in order to reply to "
+"this artifact:</p>"
+msgstr ""
+"Vous pouvez envoyer un courriel à l'adresse suivante afin de répondre à cet "
+"artéfact :"
+
+msgid ""
 "You can use variables to customize the sender field. The available variables "
 "are %%realname and %%username.\n"
 "    These will be replaced by the full name and username of the user who "
@@ -4377,3 +4403,6 @@ msgstr ""
 
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"
+
+#~ msgid "Help"
+#~ msgstr "Aide"
