@@ -61,7 +61,7 @@ class BindDecoratorExporter
         ?string $b,
         ?string $tlp_color_name
     ): void {
-        if ($is_using_old_palette && $r && $g && $b) {
+        if ($is_using_old_palette && $r !== null && $g !== null && $b !== null) {
             $child->addAttribute('r', $r);
             $child->addAttribute('g', $g);
             $child->addAttribute('b', $b);
