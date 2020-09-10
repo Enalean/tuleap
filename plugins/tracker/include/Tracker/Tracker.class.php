@@ -1326,19 +1326,21 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $breadcrumbs
             );
 
-            $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
-                sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
-                [
-                    new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
-                        $this->getSubmitUrl(),
-                        sprintf(
-                            dgettext('tuleap-tracker', 'New %s'),
-                            $this->getItemName()
-                        ),
-                        'fa-plus'
-                    )
-                ],
-            );
+            if ($this->userCanSubmitArtifact($this->getUserManager()->getCurrentUser())) {
+                $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
+                    sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
+                    [
+                        new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
+                            $this->getSubmitUrl(),
+                            sprintf(
+                                dgettext('tuleap-tracker', 'New %s'),
+                                $this->getItemName()
+                            ),
+                            'fa-plus'
+                        )
+                    ],
+                );
+            }
 
             $title = ($title ? $title . ' - ' : '') . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
@@ -1355,14 +1357,16 @@ class Tracker implements Tracker_Dispatchable_Interface
         $sub_items = $crumb->getSubItems();
         $existing_sections = $sub_items->getSections();
 
-
-        $links_collection = new BreadCrumbLinkCollection([
-            new BreadCrumbLinkWithIcon(
-                sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName()),
-                $this->getSubmitUrl(),
-                'fa-plus'
-            )
-        ]);
+        $links_collection = new BreadCrumbLinkCollection([]);
+        if ($this->userCanSubmitArtifact($user)) {
+            $links_collection->add(
+                new BreadCrumbLinkWithIcon(
+                    sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getItemName()),
+                    $this->getSubmitUrl(),
+                    'fa-plus'
+                )
+            );
+        }
         if ($this->userIsAdmin($user)) {
             $links_collection->add(
                 new BreadCrumbLinkWithIcon(
@@ -1381,12 +1385,15 @@ class Tracker implements Tracker_Dispatchable_Interface
                 )
             );
         }
-        $sub_items->setSections(
-            array_merge(
-                [new SubItemsSection('', $links_collection)],
-                $existing_sections
-            )
-        );
+        if (count($links_collection) > 0) {
+            $sub_items->setSections(
+                array_merge(
+                    [new SubItemsSection('', $links_collection)],
+                    $existing_sections
+                )
+            );
+        }
+
         return $crumb;
     }
 
@@ -1395,16 +1402,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         $toolbar = [];
 
         $html_purifier = Codendi_HTMLPurifier::instance();
-
-        $toolbar[] = [
-                'title'      => $html_purifier->purify(
-                    sprintf(dgettext('tuleap-tracker', 'Create a %s'), $this->getItemName())
-                ),
-                'url'        => $this->getSubmitUrl(),
-                'class'      => 'tracker-submit-new',
-                'submit-new' => 1,
-                'data-test' => "new-artifact"
-        ];
 
         $artifact_by_email_status = $this->getArtifactByMailStatus();
         if ($artifact_by_email_status->canCreateArtifact($this)) {
