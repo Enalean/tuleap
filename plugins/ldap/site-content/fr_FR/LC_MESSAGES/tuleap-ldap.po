@@ -101,7 +101,7 @@ msgstr "Veuillez sélectionner un groupe %s."
 
 #, php-format
 msgid "Please use your %1$s login (not the %2$s one)."
-msgstr "Merci d'utiliser le login %2$s (pas celui de %1$s)."
+msgstr "Merci d'utiliser vos identifiants %1$s (pas ceux de %2$s)."
 
 msgid "Preserve members"
 msgstr "Préserver les membres"

@@ -89,7 +89,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function afterLocalLogin(AfterLocalLogin $event): void
     {
         if ((int) $event->user->getId() === DynamicUser::ID) {
-            $event->refuseLogin();
+            $event->refuseLogin(dgettext('tuleap-dynamic_credentials', 'Dynamic User cannot authenticate with login/password'));
         }
     }
 

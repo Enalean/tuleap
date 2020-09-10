@@ -527,7 +527,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
     {
         if ($this->getUserMappingManager()->userHasProvider($event->user)) {
-            $event->refuseLogin();
+            $event->refuseLogin(dgettext('tuleap-openidconnectclient', 'Your account is linked to an OpenID Connect provider, you must use it to authenticate'));
         }
     }
 

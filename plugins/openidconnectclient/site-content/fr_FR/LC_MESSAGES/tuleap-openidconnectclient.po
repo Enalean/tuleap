@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "Add Azure Active Directory provider"
 msgstr "Ajouter un fournisseur s'appuyant sur Azure Active Directory"
@@ -241,6 +241,13 @@ msgstr "Votre compte a bien été lié à %1$s"
 msgid ""
 "Your account have been created but needs to be approved by an administrator"
 msgstr "Votre compte a été créé mais doit être approuvé par un administrateur"
+
+msgid ""
+"Your account is linked to an OpenID Connect provider, you must use it to "
+"authenticate"
+msgstr ""
+"Votre compte est associé à un fournisseur OpenID Connect, vous devez "
+"utiliser celui ci pour vous identifier"
 
 #, php-format
 msgid "Your new user account will be linked with %1$s."

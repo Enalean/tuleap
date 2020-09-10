@@ -32,7 +32,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     use \Tuleap\GlobalLanguageMock;
 
     /**
-     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var EventManager
      */
     private $event_manager;
     /**
@@ -232,7 +232,6 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testItRaisesAnExceptionIfPluginForbidLogin(): void
     {
-        $this->expectException(\User_InvalidPasswordWithUserException::class);
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
@@ -250,7 +249,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             public function afterLocalLogin(AfterLocalLogin $event): void
             {
                 $this->after_called = true;
-                $event->refuseLogin();
+                $event->refuseLogin("nope");
             }
 
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
@@ -259,6 +258,9 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             }
         };
         $this->addListeners($plugin);
+
+        $this->expectException(\User_InvalidPasswordWithUserException::class);
+        $this->expectExceptionMessage('nope');
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }

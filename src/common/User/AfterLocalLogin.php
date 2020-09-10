@@ -42,19 +42,29 @@ final class AfterLocalLogin implements Dispatchable
      * @var bool
      */
     private $is_login_allowed = true;
+    /**
+     * @var string
+     */
+    private $feedback_message = '';
 
     public function __construct(\PFUser $user)
     {
         $this->user = $user;
     }
 
-    public function refuseLogin(): void
+    public function refuseLogin(string $feedback = ''): void
     {
+        $this->feedback_message = $feedback;
         $this->is_login_allowed = false;
     }
 
     public function isIsLoginAllowed(): bool
     {
         return $this->is_login_allowed;
+    }
+
+    public function getFeedbackMessage(): string
+    {
+        return $this->feedback_message;
     }
 }
