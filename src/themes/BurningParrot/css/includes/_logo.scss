@@ -24,3 +24,52 @@
     height: $navbar-height;
     background: $tlp-theme-color url('/images/organization_logo.png') no-repeat center center;
 }
+
+.logo-svg-link {
+    display: flex;
+    align-items: center;
+    height: $navbar-height;
+    min-height: $navbar-height;
+    margin: 0 0 0 $tlp-large-spacing;
+}
+
+.logo-svg-petals {
+    fill: $tlp-theme-color;
+}
+
+.logo-svg-text {
+    fill: $tlp-theme-sidebar-background-color;
+}
+
+.sidebar > .logo-svg-link {
+    justify-content: center;
+    width: $sidebar-expanded-width;
+    margin: 0;
+    background: $tlp-theme-color;
+
+    .logo-svg-petals {
+        fill: $tlp-ui-white;
+    }
+
+    .logo-svg-text {
+        fill: $tlp-ui-white;
+    }
+}
+
+.logo-svg-small {
+    display: none;
+}
+
+.sidebar-collapsed {
+    .logo-svg-link {
+        width: $sidebar-collapsed-width;
+    }
+
+    .logo-svg-normal {
+        display: none;
+    }
+
+    .logo-svg-small {
+        display: block;
+    }
+}

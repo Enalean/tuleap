@@ -78,6 +78,9 @@ function updateSidebarWidth(new_width, duration) {
 
 function updateNavbarLogo(new_width) {
     var logo = document.getElementById("logo");
+    if (!logo) {
+        return;
+    }
 
     if (new_width === width_expanded) {
         logo.classList.remove("collapsed");

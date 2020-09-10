@@ -42,7 +42,8 @@ class PresenterBuilder
         PFUser $current_user,
         URLRedirect $url_redirect,
         NewDropdownPresenter $new_dropdown_presenter,
-        bool $should_logo_be_displayed
+        bool $should_logo_be_displayed,
+        bool $is_legacy_logo_customized
     ) {
         $this->current_user    = $current_user;
 
@@ -62,7 +63,8 @@ class PresenterBuilder
             ),
             $new_dropdown_presenter,
             $current_user->isSuperUser(),
-            $should_logo_be_displayed
+            $should_logo_be_displayed,
+            $is_legacy_logo_customized
         );
     }
 
