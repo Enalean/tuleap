@@ -25,6 +25,10 @@ $illustration-width: 319px;
 $illustration-spacing: (2 * $tlp-large-spacing);
 $title-margin-left: $illustration-width + $illustration-spacing;
 
+.body-project-registration {
+    background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-ui-white 70px, $tlp-theme-background-color 470px);
+}
+
 .project-registration {
     padding: $tlp-x-large-spacing $tlp-x-large-spacing 100px;
     background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-theme-background-color 400px);
