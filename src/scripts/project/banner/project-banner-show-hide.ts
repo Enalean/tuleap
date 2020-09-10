@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { updateTopMarginAccordinglyToMOTDHeight } from "../../BurningParrot/src/update-ui-margins-according-to-motd";
 import { updateFloatingButtonsPosition } from "./update-floating-buttons-position";
 
 export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
@@ -27,6 +26,7 @@ export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
 
 export function allowToHideAndShowProjectBanner(
     mount_point: Document,
+    updateTopMarginAccordinglyToMOTDHeight: () => void,
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>
 ): void {
     const project_banner_navbar = mount_point.getElementById(PROJECT_BANNER_NAVBAR_ID);
@@ -50,6 +50,7 @@ export function allowToHideAndShowProjectBanner(
     project_banner_navbar.addEventListener("click", (event: Event): void => {
         toggleProjectBannerMessage(
             event,
+            updateTopMarginAccordinglyToMOTDHeight,
             mount_point.body,
             project_banner_navbar,
             full_project_banner
@@ -67,6 +68,7 @@ export function allowToHideAndShowProjectBanner(
         async (): Promise<void> => {
             await hideProjectBannerMessage(
                 tlpPatch,
+                updateTopMarginAccordinglyToMOTDHeight,
                 mount_point.body,
                 project_banner_navbar,
                 full_project_banner,
@@ -79,6 +81,7 @@ export function allowToHideAndShowProjectBanner(
 
 function toggleProjectBannerMessage(
     event: Event,
+    updateTopMarginAccordinglyToMOTDHeight: () => void,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement
@@ -95,6 +98,7 @@ function toggleProjectBannerMessage(
 
 async function hideProjectBannerMessage(
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
+    updateTopMarginAccordinglyToMOTDHeight: () => void,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement,

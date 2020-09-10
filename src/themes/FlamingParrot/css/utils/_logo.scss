@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I make sure that the sidebar and the main content are not hidden under the
- * top navbar whent the motd is displayed
- */
+#logo {
+    width: $sidebar-width;
+    max-width: $sidebar-width;
+    height: $navbar-height;
+    background: $navbar-color url('/images/organization_logo.png') no-repeat center center;
 
-import { updateTopMarginAccordinglyToMOTDHeight } from "./update-ui-margins-according-to-motd.ts";
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.querySelector(".motd")) {
-        window.addEventListener("resize", updateTopMarginAccordinglyToMOTDHeight);
-        updateTopMarginAccordinglyToMOTDHeight();
+    &.collapsed {
+        width: $sidebar-width-collapsed;
+        max-width: $sidebar-width-collapsed;
+        background: $navbar-color url('/images/organization_logo_small.png') no-repeat center center;
     }
-});
+}

@@ -24,9 +24,9 @@ let sidebar: HTMLElement | null;
 
 document.addEventListener("DOMContentLoaded", () => {
     motd = document.querySelector(".motd");
-    main = document.querySelector("main");
-    sidebar = document.querySelector(".sidebar");
+    main = document.querySelector(".main");
     header = document.querySelector("header");
+    sidebar = document.querySelector(".sidebar-nav");
 });
 
 export function updateTopMarginAccordinglyToMOTDHeight(): void {
