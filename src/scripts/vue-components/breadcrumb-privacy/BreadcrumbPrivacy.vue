@@ -22,6 +22,7 @@
     <div class="breadcrumb-privacy-icon-container">
         <span
             v-bind:class="{ 'breadcrumb-project-privacy-icon-with-flags': has_project_flags }"
+            v-bind:data-privacy-icon="project_privacy_icon"
             ref="popover_icon"
         >
             <i class="fa breadcrumb-project-privacy-icon" v-bind:class="project_privacy_icon"></i>
