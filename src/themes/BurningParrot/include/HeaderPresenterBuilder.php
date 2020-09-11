@@ -29,6 +29,7 @@ use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
@@ -86,7 +87,8 @@ class HeaderPresenterBuilder
         NewDropdownPresenter $new_dropdown_presenter,
         $is_in_siteadmin,
         ?ProjectContextPresenter $project_context,
-        ?SwitchToPresenter $switch_to
+        ?SwitchToPresenter $switch_to,
+        CustomizedLogoDetector $customized_logo_detector
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -96,11 +98,13 @@ class HeaderPresenterBuilder
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
         $this->css_assets                            = $css_assets;
-        $this->is_in_siteadmin                        = $is_in_siteadmin;
+        $this->is_in_siteadmin                       = $is_in_siteadmin;
         $this->project_context                       = $project_context;
 
         $color = $this->getMainColor();
         $theme_variation = new ThemeVariation($color, $current_user);
+
+        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomised();
 
         return new HeaderPresenter(
             $this->current_user,
@@ -110,7 +114,8 @@ class HeaderPresenterBuilder
                 $this->current_user,
                 $url_redirect,
                 $new_dropdown_presenter,
-                $this->shouldLogoBeDisplayed()
+                $this->shouldLogoBeDisplayed(),
+                $is_legacy_logo_customized,
             ),
             $color,
             $this->getStylesheets($theme_variation),
@@ -124,7 +129,8 @@ class HeaderPresenterBuilder
             $open_graph,
             $help_dropdown_presenter,
             $this->project_context,
-            $switch_to
+            $switch_to,
+            $is_legacy_logo_customized,
         );
     }
 

@@ -29,3 +29,51 @@
         background: $navbar-color url('/images/organization_logo_small.png') no-repeat center center;
     }
 }
+
+.logo-svg-link {
+    display: flex;
+    align-items: center;
+    height: $navbar-height;
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
+.logo-svg-petals {
+    fill: $main;
+}
+
+.logo-svg-text {
+    fill: $sidebar-background;
+}
+
+.sidebar-nav .logo-svg-link {
+    justify-content: center;
+    width: $sidebar-width;
+    margin: 0;
+    background: $navbar-color;
+
+    .logo-svg-petals {
+        fill: $white;
+    }
+
+    .logo-svg-text {
+        fill: $white;
+    }
+}
+
+.logo-svg-small {
+    display: none;
+}
+
+&.sidebar-collapsed {
+    .logo-svg-link {
+        width: $sidebar-width-collapsed;
+    }
+
+    .logo-svg-normal {
+        display: none;
+    }
+
+    .logo-svg-small {
+        display: block;
+    }
+}

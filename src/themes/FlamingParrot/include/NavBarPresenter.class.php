@@ -23,7 +23,6 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $history;
-    public $homepage_label;
 
     private $imgroot;
 
@@ -89,6 +88,11 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      * @psalm-readonly
      */
     public $should_logo_be_displayed;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_legacy_logo_customized;
 
     public function __construct(
         $imgroot,
@@ -100,22 +104,24 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         array $dashboards,
         NewDropdownPresenter $new_dropdown,
         $should_logo_be_displayed,
-        ?\Tuleap\User\SwitchToPresenter $switch_to
+        ?\Tuleap\User\SwitchToPresenter $switch_to,
+        bool $is_legacy_logo_customized
     ) {
-        $this->imgroot                  = $imgroot;
-        $this->user                     = $user;
-        $this->display_new_account      = $display_new_account;
-        $this->motd                     = $motd;
-        $this->has_motd                 = ! empty($motd);
-        $this->logout_csrf              = $logout_csrf;
-        $this->url_redirect             = $url_redirect;
-        $this->dashboards               = $dashboards;
-        $this->has_no_dashboards        = count($dashboards) === 0;
-        $this->has_one_dashboard        = count($dashboards) === 1;
-        $this->new_dropdown             = $new_dropdown;
-        $this->switch_to                = $switch_to;
-        $this->should_logo_be_displayed = $should_logo_be_displayed;
-        $this->is_super_user            = $user->isSuperUser();
+        $this->imgroot                   = $imgroot;
+        $this->user                      = $user;
+        $this->display_new_account       = $display_new_account;
+        $this->motd                      = $motd;
+        $this->has_motd                  = ! empty($motd);
+        $this->logout_csrf               = $logout_csrf;
+        $this->url_redirect              = $url_redirect;
+        $this->dashboards                = $dashboards;
+        $this->has_no_dashboards         = count($dashboards) === 0;
+        $this->has_one_dashboard         = count($dashboards) === 1;
+        $this->new_dropdown              = $new_dropdown;
+        $this->switch_to                 = $switch_to;
+        $this->should_logo_be_displayed  = $should_logo_be_displayed;
+        $this->is_legacy_logo_customized = $is_legacy_logo_customized;
+        $this->is_super_user             = $user->isSuperUser();
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
@@ -126,7 +132,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->empty_history   = _('Your history is empty');
         $this->error_fetch     = _('An error occurred while fetching the content of your history');
         $this->error_clear     = _('An error occurred while clearing the content of your history');
-        $this->homepage_label  = _('Homepage');
     }
 
     public function imgroot()

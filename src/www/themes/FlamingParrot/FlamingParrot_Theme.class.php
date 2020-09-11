@@ -33,6 +33,8 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\Logo\CustomizedLogoDetector;
+use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
@@ -280,6 +282,9 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $switch_to = $switch_to_presenter_builder->build($current_user);
 
+        $customized_logo_detector = new CustomizedLogoDetector(new LogoRetriever(), new FileContentComparator());
+
+        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomised();
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -290,10 +295,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $user_dashboard_retriever->getAllUserDashboards($current_user),
             $new_dropdown_presenter_builder->getPresenter($current_user, $project, $current_context_section),
             $this->shouldLogoBeDisplayed($params, $project),
-            $switch_to
+            $switch_to,
+            $is_legacy_logo_customized,
         ));
 
-        $this->container($params, $current_user, $banner, $switch_to);
+        $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized);
     }
 
     private function shouldLogoBeDisplayed(array $params, ?Project $project): bool
@@ -317,7 +323,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         array $params,
         PFUser $current_user,
         ?BannerDisplay $banner,
-        ?\Tuleap\User\SwitchToPresenter $switch_to
+        ?\Tuleap\User\SwitchToPresenter $switch_to,
+        bool $is_legacy_logo_customized
     ): void {
         $project_tabs        = null;
         $project_name        = null;
@@ -366,7 +373,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $sidebar_collapsable,
             $current_user,
             $project_context,
-            $switch_to
+            $switch_to,
+            $is_legacy_logo_customized,
         ));
     }
 

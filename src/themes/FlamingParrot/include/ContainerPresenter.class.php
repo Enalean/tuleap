@@ -76,6 +76,11 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $switch_to;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_legacy_logo_customized;
 
     public function __construct(
         array $breadcrumbs,
@@ -89,21 +94,23 @@ class FlamingParrot_ContainerPresenter
         $sidebar_collapsable,
         PFUser $current_user,
         ?ProjectContextPresenter $project_context,
-        ?\Tuleap\User\SwitchToPresenter $switch_to
+        ?\Tuleap\User\SwitchToPresenter $switch_to,
+        bool $is_legacy_logo_customized
     ) {
-        $this->breadcrumbs             = $breadcrumbs;
-        $this->has_only_one_breadcrumb = count($breadcrumbs) === 1;
-        $this->toolbar                 = $toolbar;
-        $this->project_name            = $project_name;
-        $this->project_link            = $project_link;
-        $this->project_tabs            = $project_tabs;
-        $this->feedback                = $feedback;
-        $this->feedback_content        = $feedback_content;
-        $this->version                 = $version;
-        $this->sidebar_collapsable     = $sidebar_collapsable;
-        $this->current_user_id         = $current_user->getId();
-        $this->project_context         = $project_context;
-        $this->switch_to               = $switch_to;
+        $this->breadcrumbs               = $breadcrumbs;
+        $this->has_only_one_breadcrumb   = count($breadcrumbs) === 1;
+        $this->toolbar                   = $toolbar;
+        $this->project_name              = $project_name;
+        $this->project_link              = $project_link;
+        $this->project_tabs              = $project_tabs;
+        $this->feedback                  = $feedback;
+        $this->feedback_content          = $feedback_content;
+        $this->version                   = $version;
+        $this->sidebar_collapsable       = $sidebar_collapsable;
+        $this->current_user_id           = $current_user->getId();
+        $this->project_context           = $project_context;
+        $this->switch_to                 = $switch_to;
+        $this->is_legacy_logo_customized = $is_legacy_logo_customized;
     }
 
     public function hasBreadcrumbs()
