@@ -282,9 +282,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $switch_to = $switch_to_presenter_builder->build($current_user);
 
-        $customized_logo_detector = new CustomizedLogoDetector(new LogoRetriever(), new FileContentComparator());
+        $customized_logo_detector = new \Tuleap\Layout\Logo\CachedCustomizedLogoDetector(
+            new CustomizedLogoDetector(new LogoRetriever(), new FileContentComparator()),
+            BackendLogger::getDefaultLogger(),
+        );
 
-        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomised();
+        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,

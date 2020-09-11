@@ -29,7 +29,7 @@ use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\Logo\CustomizedLogoDetector;
+use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
@@ -88,7 +88,7 @@ class HeaderPresenterBuilder
         $is_in_siteadmin,
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to,
-        CustomizedLogoDetector $customized_logo_detector
+        IDetectIfLogoIsCustomized $customized_logo_detector
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -104,7 +104,7 @@ class HeaderPresenterBuilder
         $color = $this->getMainColor();
         $theme_variation = new ThemeVariation($color, $current_user);
 
-        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomised();
+        $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
 
         return new HeaderPresenter(
             $this->current_user,

@@ -25,7 +25,7 @@ namespace Tuleap\Layout\Logo;
 use ForgeConfig;
 use LogoRetriever;
 
-class CustomizedLogoDetector
+class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
 {
     /**
      * @var LogoRetriever
@@ -42,7 +42,7 @@ class CustomizedLogoDetector
         $this->comparator     = $comparator;
     }
 
-    public function isLegacyOrganizationLogoCustomised(): bool
+    public function isLegacyOrganizationLogoCustomized(): bool
     {
         if (! $this->isLegacyOrganizationLogoDeployed()) {
             return false;

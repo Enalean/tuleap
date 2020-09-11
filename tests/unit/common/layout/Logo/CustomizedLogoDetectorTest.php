@@ -45,7 +45,7 @@ class CustomizedLogoDetectorTest extends TestCase
     {
         $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
 
-        self::assertFalse($detector->isLegacyOrganizationLogoCustomised());
+        self::assertFalse($detector->isLegacyOrganizationLogoCustomized());
     }
 
     public function testItConsidersLogoNotCustomizedIfItIsTheSameAsOurs(): void
@@ -57,7 +57,7 @@ class CustomizedLogoDetectorTest extends TestCase
 
         $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
 
-        self::assertFalse($detector->isLegacyOrganizationLogoCustomised());
+        self::assertFalse($detector->isLegacyOrganizationLogoCustomized());
     }
 
     public function testItConsidersLogoCustomizedIfContentIsNotTheSameAsOurs(): void
@@ -66,6 +66,6 @@ class CustomizedLogoDetectorTest extends TestCase
 
         $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
 
-        self::assertTrue($detector->isLegacyOrganizationLogoCustomised());
+        self::assertTrue($detector->isLegacyOrganizationLogoCustomized());
     }
 }
