@@ -63,23 +63,6 @@ function checkRestrictedAccess($group)
     }
 }
 
-/**
- * Returns true is the current user is a member of the given group
- */
-function checkGroupMemberAccess($group)
-{
-    if ($group) {
-        $user = UserManager::instance()->getCurrentUser();
-        if ($user) {
-            return $group->userIsMember();
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
 function ugroups_to_soap($ugroups)
 {
     $return = [];

@@ -85,14 +85,14 @@ function trove_setnode($group_id, $trove_cat_id, $rootnode = 0)
 
 function trove_getrootcat($trove_cat_id)
 {
-    $parent = 1;
+    $parent      = 1;
     $current_cat = $trove_cat_id;
 
     while ($parent > 0) {
         $res_par = db_query("SELECT parent FROM trove_cat WHERE "
-               . "trove_cat_id=" . db_ei($current_cat));
+            . "trove_cat_id=" . db_ei($current_cat));
         $row_par = db_fetch_array($res_par);
-        $parent = $row_par["parent"];
+        $parent  = $row_par["parent"];
         if ($parent == 0) {
             return $current_cat;
         }
@@ -100,38 +100,6 @@ function trove_getrootcat($trove_cat_id)
     }
 
     return 0;
-}
-
-// return boolean true when project is categorized
-function trove_project_categorized($group_id)
-{
-    $res_trovecat = db_query('SELECT NULL '
-        . 'FROM trove_cat,trove_group_link '
-        . 'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id '
-        . 'AND trove_group_link.group_id=' . db_ei($group_id));
-    if (db_numrows($res_trovecat) < 1) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-// returns a full path for a trove category
-function trove_getfullpath($node)
-{
-    $currentcat = $node;
-    $first = 1;
-    $return = '';
-
-    while ($currentcat > 0) {
-        $res = db_query('SELECT trove_cat_id,parent,fullname FROM trove_cat '
-        . 'WHERE trove_cat_id=' . db_ei($currentcat));
-        $row = db_fetch_array($res);
-        $return = $row["fullname"] . ($first ? "" : " :: ") . $return;
-        $currentcat = $row["parent"];
-        $first = 0;
-    }
-    return $return;
 }
 
 function trove_get_visibility_for_user($field, PFUser $user)

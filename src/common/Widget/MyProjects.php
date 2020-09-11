@@ -164,7 +164,9 @@ class MyProjects extends \Widget
                 // Remove from project
                 $html .= '<td class="widget_my_projects_remove' . $tdClass . '">';
                 if ($row['admin_flags'] != 'A') {
-                    $html .= html_trash_link_fontawesome('rmproject.php?group_id=' . $row['group_id'], $GLOBALS['Language']->getText('my_index', 'quit_proj'));
+                    $link = 'rmproject.php?group_id=' . urlencode($row['group_id']);
+                    $warn = $GLOBALS['Language']->getText('my_index', 'quit_proj');
+                    $html .= '<a href="' . $link . '" onClick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="fa fa-trash-o"></i></a>';
                 } else {
                     $html .= '&nbsp;';
                 }

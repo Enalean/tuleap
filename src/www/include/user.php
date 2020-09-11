@@ -29,12 +29,6 @@ function user_isloggedin()
     return UserManager::instance()->getCurrentUser()->isLoggedIn();
 }
 
-//Deprecated. Use User->isRestricted() instead
-function user_isrestricted()
-{
-    return UserManager::instance()->getCurrentUser()->isRestricted();
-}
-
 //Deprecated. Use User->isSuperUser() instead
 function user_is_super_user()
 {
@@ -74,19 +68,6 @@ function user_getname($user_id = 0)
     }
 }
 
-//quick hack - this entire library needs a rewrite similar to groups library
-//Deprecated. Use User->getRealName() instead
-function user_getrealname($user_id)
-{
-    global $Language;
-        $result = user_get_result_set($user_id);
-    if ($result && db_numrows($result) > 0) {
-        return db_result($result, 0, "realname");
-    } else {
-        return $Language->getText('include_user', 'not_found');
-    }
-}
-
 // LJ - Added here because we use the real e-mail addresse
 // on Codendi - No e-mail aliases like on SF
 //Deprecated. Use User->getEmail() instead
@@ -98,17 +79,6 @@ function user_getemail($user_id)
         return db_result($result, 0, "email");
     } else {
         return $Language->getText('include_user', 'email_not_found');
-    }
-}
-
-function user_getid_from_email($email)
-{
-    global $Language;
-    $result = db_query("SELECT user_id FROM user WHERE email='" . db_es($email) . "'");
-    if ($result && db_numrows($result) > 0) {
-        return db_result($result, 0, "user_id");
-    } else {
-        return $Language->getText('include_user', 'not_found');
     }
 }
 
@@ -185,11 +155,13 @@ function user_set_preference($preference_name, $value)
     if (user_isloggedin()) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
         $preference_name = strtolower(trim($preference_name));
+        /** @psalm-suppress DeprecatedFunction */
         $result = db_query("UPDATE user_preferences SET preference_value='" . db_es($value) . "' " .
         "WHERE user_id='" . $db_escaped_user_id . "' AND preference_name='" . db_es($preference_name) . "'");
         if (db_affected_rows($result) < 1) {
             echo db_error();
-            $result = db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) " .
+            /** @psalm-suppress DeprecatedFunction */
+            db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) " .
              "VALUES ('" . $db_escaped_user_id . "','" . db_es($preference_name) . "','" . db_es($value) . "')");
         }
 
@@ -224,6 +196,7 @@ function user_get_preference($preference_name)
         } else {
             $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
          //we haven't returned prefs - go to the db
+            /** @psalm-suppress DeprecatedFunction */
             $result = db_query("SELECT preference_name,preference_value FROM user_preferences " .
             "WHERE user_id='" . $db_escaped_user_id . "'");
 
