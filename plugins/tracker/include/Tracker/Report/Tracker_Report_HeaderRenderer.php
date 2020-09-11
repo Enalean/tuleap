@@ -108,10 +108,10 @@ class Tracker_Report_HeaderRenderer
                 $this->getReportOptionsDropdown($current_user, $report, $options_params, $reports),
                 $options_params,
                 $this->getSaveOrRevert($current_user, $report, $options_params, $report_can_be_modified),
-                $report->getLastUpdaterUserName(),
                 $this->getClassNameHasChanged($report),
-                $report->getName(),
-                $warnings
+                $warnings,
+                $report,
+                $current_user
             )
         );
     }
@@ -263,9 +263,8 @@ class Tracker_Report_HeaderRenderer
         return '?' . http_build_query($params);
     }
 
-    private function getReportSelector(Tracker_Report $report, array $reports)
+    private function getReportSelector(Tracker_Report $report, array $reports): string
     {
-        $options = '';
         if (count($reports) > 1) {
             $options = '<select id="tracker_select_report" name="select_report">';
             $personal = '';

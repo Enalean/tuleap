@@ -24,6 +24,13 @@
                     {{> button_dropdowns }}
                 {{/ options_dropdown }}
             {{/ can_save }}
+
+            {{^ is_user_anonymous }}
+                <a class="btn btn-primary" data-test="new-artifact" href="{{ artifact_creation_url }}">
+                    <i class="fa fa-plus" ></i>
+                    {{# dgettext }} tuleap-tracker |New %s | {{ item_name }} {{/ dgettext }}
+                </a>
+            {{/ is_user_anonymous }}
         </h2>
     </div>
 
