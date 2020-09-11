@@ -22,7 +22,7 @@ import { getChartData } from "./rest-querier.js";
 import { gettext_provider } from "./gettext_provider.js";
 import { bar } from "./graphs-bar.js";
 import { groupedbar } from "./graphs-groupedbar.js";
-import { pie } from "./graphs-pie.js";
+import { graphOnTrackerPie } from "./graphs-pie.js";
 import { cumulativeflow } from "./graph-cumulative-flow.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -53,6 +53,7 @@ async function buildGraph(graph_node) {
         graphFactory(graphId, graph_data);
     } catch (e) {
         showError(graph_node, e.message);
+        throw e;
     } finally {
         graph_node.removeChild(spinner_node);
     }
@@ -70,7 +71,7 @@ function graphFactory(graph_id, graph_data) {
         return;
     }
     if (type === TYPE_PIE) {
-        pie(graph_id, graph_data);
+        graphOnTrackerPie(graph_id, graph_data);
         return;
     }
     if (type === TYPE_CUMULATIVE_FLOW_CHART) {

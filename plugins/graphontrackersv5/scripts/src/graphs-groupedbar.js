@@ -17,14 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from "d3";
-
+import { scaleLinear, scaleBand } from "d3-scale";
 import {
     topRoundedRect,
     alternateXAxisLabels,
     addLegendBox,
     defineGradients,
 } from "./graphs-layout-helper.js";
+import { selectAll } from "d3-selection";
+import { axisBottom, axisRight } from "d3-axis";
+import { interpolateNumber } from "d3-interpolate";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { max } from "d3-array";
 
 // Inspired from  http://bl.ocks.org/mbostock/3887051
 export function groupedbar(id, graph) {
@@ -32,7 +36,7 @@ export function groupedbar(id, graph) {
         axis_margin = { bottom: 20, left: 20 },
         width = graph.width - margin.left - margin.right - axis_margin.left,
         height = graph.height - margin.top - margin.bottom - axis_margin.bottom,
-        d3_colors = d3.scale.category20(),
+        d3_colors = schemeCategory10,
         legend_width = 170,
         legend_margin = 20,
         margin_left = margin.left + axis_margin.left,
@@ -41,26 +45,26 @@ export function groupedbar(id, graph) {
     // Fix a d3 color when the backend doesn't define one
     graph.colors.forEach(({ color }, i) => {
         if (color === null) {
-            graph.colors[i].color = d3_colors(i);
+            graph.colors[i].color = d3_colors[i];
         } else {
             graph.colors[i].color = color;
         }
     });
 
-    const x = d3.scale.ordinal().rangeRoundBands([0, chart_width], 0.35);
+    const x = scaleBand().range([0, chart_width]).padding(0.35);
 
-    const xGrouped = d3.scale.ordinal();
+    const xGrouped = scaleBand();
 
-    const y = d3.scale.linear().range([height, 0]);
+    const y = scaleLinear().range([height, 0]);
 
-    const xAxis = d3.svg.axis().scale(x).orient("bottom");
-
-    const yAxis = d3.svg.axis().scale(y).ticks(5).tickSize(chart_width).orient("right");
-    const svg = d3
-        .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
+    const svg = selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", graph.width)
         .attr("height", graph.height);
+
+    const xAxis = axisBottom(x);
+
+    const yAxis = axisRight(y).ticks(5).tickSize(chart_width);
 
     defineGradients(svg, graph.colors, getGradientId);
 
@@ -71,13 +75,14 @@ export function groupedbar(id, graph) {
     const xAxisLabels = graph.values.map(({ label }) => label);
 
     x.domain(graph.values.map((d, i) => i));
-    xGrouped.domain(graph.grouped_labels.map((d, i) => i)).rangeRoundBands([0, x.rangeBand()]);
-    y.domain([
-        0,
-        d3.max(graph.values, ({ values }) =>
-            d3.max(d3.values(values).map(({ value }) => parseFloat(value)))
-        ),
-    ]);
+
+    xGrouped.domain(graph["grouped_labels"].map((d, i) => i)).range([0, x.bandwidth()]);
+
+    const max_grouped_value = max(graph.values, ({ values }) =>
+        max(Object.values(values).map(({ value }) => parseFloat(value)))
+    );
+
+    y.domain([0, max_grouped_value]);
 
     alternateXAxisLabels(chart, height, xAxis, xAxisLabels);
 
@@ -99,8 +104,14 @@ export function groupedbar(id, graph) {
         .data(({ values }) => values)
         .enter()
         .append("g")
-        .on("mouseover", onOverValue)
-        .on("mouseout", onOutValue);
+        .on("mouseover", function (event, data) {
+            const index = grouped_bar.data().findIndex((d) => d.label === data.label);
+            return onOverValue(index);
+        })
+        .on("mouseout", function (event, data) {
+            const index = grouped_bar.data().findIndex((d) => d.label === data.label);
+            return onOutValue(index);
+        });
 
     grouped_bar
         .append("path")
@@ -125,13 +136,13 @@ export function groupedbar(id, graph) {
         .transition()
         .duration(750)
         .attrTween("d", ({ value }, i) => {
-            const interpolate = d3.interpolateNumber(height, y(value));
+            const interpolate = interpolateNumber(height, y(value));
 
             return (t) =>
                 topRoundedRect(
                     xGrouped(i),
                     interpolate(t),
-                    xGrouped.rangeBand(),
+                    xGrouped.bandwidth(),
                     height - interpolate(t),
                     3
                 );
@@ -140,8 +151,7 @@ export function groupedbar(id, graph) {
     grouped_bar
         .append("text")
         .attr("class", (d, i) => getTextClass(i))
-        .attr("x", (d, i) => xGrouped(i) + xGrouped.rangeBand() / 2)
-        .attr("y", () => height)
+        .attr("x", (d, i) => xGrouped(i) + xGrouped.bandwidth() / 2)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(({ value }) => value)
@@ -172,12 +182,12 @@ export function groupedbar(id, graph) {
         return "text_" + id + "_" + value_index;
     }
 
-    function onOverValue(d, index) {
+    function onOverValue(index) {
         svg.selectAll("." + getTextClass(index)).style("font-weight", "bold");
         svg.select("." + getLegendClass(index)).style("font-weight", "bold");
     }
 
-    function onOutValue(d, index) {
+    function onOutValue(index) {
         svg.selectAll("." + getTextClass(index)).style("font-weight", "normal");
         svg.select("." + getLegendClass(index)).style("font-weight", "normal");
     }

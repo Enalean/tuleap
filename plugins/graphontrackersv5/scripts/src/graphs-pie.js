@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from "d3";
+// I don't know why eslint is not happy here, transition is used in this file
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { transition } from "d3-transition";
+import { selectAll } from "d3-selection";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { interpolateNumber } from "d3-interpolate";
+import { arc, pie } from "d3-shape";
 
 import { addLegendBox, defineGradients } from "./graphs-layout-helper.js";
 
 // Inspired from http://bl.ocks.org/mbostock/3887193
-export function pie(id, graph) {
+export function graphOnTrackerPie(id, graph) {
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
     const width = graph.width;
     const height = graph.height;
@@ -30,7 +36,7 @@ export function pie(id, graph) {
 
     const data = [];
     let total_values = 0;
-    const color = d3.scale.category20c();
+    const color = schemeCategory10;
 
     for (let i = 0; i < graph.data.length; ++i) {
         total_values += parseFloat(graph.data[i]);
@@ -39,7 +45,7 @@ export function pie(id, graph) {
     for (let i = 0; i < graph.data.length; ++i) {
         let c = graph.colors[i];
         if (c === null) {
-            c = color(i);
+            c = color[i];
         }
         const value = parseFloat(graph.data[i]);
         const line = {
@@ -53,18 +59,15 @@ export function pie(id, graph) {
         graph.colors[i] = c;
     }
 
-    const pie = d3.layout
-        .pie()
+    const d3_pie = pie()
         .value(({ value }) => value)
         .sort(null);
 
-    const arc = d3.svg
-        .arc()
+    const d3_arc = arc()
         .innerRadius((radius - 50) / 2)
         .outerRadius(radius - 50);
 
-    const svg = d3
-        .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
+    const svg = selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", width)
         .attr("height", height);
@@ -80,7 +83,7 @@ export function pie(id, graph) {
     function drawDonutChart() {
         const slice = chart
             .selectAll(".arc")
-            .data(pie(data))
+            .data(d3_pie(data))
             .enter()
             .append("g")
             .attr("class", "arc");
@@ -93,7 +96,7 @@ export function pie(id, graph) {
 
         slice
             .append("path")
-            .attr("d", arc)
+            .attr("d", d3_arc)
             .style("fill", (d, i) => {
                 if (!isHexaColor(d.data.color)) {
                     return "";
@@ -108,12 +111,20 @@ export function pie(id, graph) {
 
                 return getDonutSliceClass(i) + " graph-element-" + d.data.color;
             })
-            .on("mouseover", onOverValue)
-            .on("mouseout", onOutValue)
+            .on("mouseover", function (event, data) {
+                const index = slice.data().findIndex((d) => d.value === data.value);
+                return onOverValue(index);
+            })
+            .on("mouseout", function (event, data) {
+                const index = slice.data().findIndex((d) => d.value === data.value);
+                return onOutValue(index);
+            });
+
+        svg.selectAll(".arc")
             .transition()
             .duration(750)
             .attrTween("d", (b) => {
-                const i = d3.interpolate(
+                const i = interpolateNumber(
                     {
                         startAngle: 0,
                         endAngle: 0,
@@ -145,7 +156,7 @@ export function pie(id, graph) {
 
         slice
             .append("text")
-            .attr("transform", (d) => "translate(" + arc.centroid(d) + ")")
+            .attr("transform", (d) => "translate(" + d3_arc.centroid(d) + ")")
             .attr("transform", ({ startAngle, endAngle }, i) => {
                 let dist;
                 if (i % 2 === 0) {
@@ -175,14 +186,14 @@ export function pie(id, graph) {
 
     addLegendBox(svg, graph, margin, width / 3, data, onOverValue, onOutValue, getLegendClass);
 
-    function onOverValue(d, index) {
-        svg.select("." + getDonutSliceClass(index))
+    function onOverValue(index) {
+        svg.selectAll("." + getDonutSliceClass(index))
             .transition()
             .attr("transform", "scale(1.05)");
-        svg.select("." + getLegendClass(index)).style("font-weight", "bold");
+        svg.selectAll("." + getLegendClass(index)).style("font-weight", "bold");
     }
 
-    function onOutValue(d, index) {
+    function onOutValue(index) {
         svg.select("." + getDonutSliceClass(index))
             .transition()
             .attr("transform", "scale(1)");
