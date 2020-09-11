@@ -20,8 +20,9 @@
 $dark-modal-background: $tlp-theme-sidebar-background-color;
 $dark-modal-default-text-color: $tlp-ui-border-normal;
 $dark-modal-dimmed-text-color: $tlp-ui-border-dark;
-$white-space-above-and-after-a-project-link: $tlp-small-spacing - 2px;
+$white-space-above-and-after-a-project-link: $tlp-small-spacing;
 $approximate-width-of-project-icon: 15.5px;
+$switch-to-font-family: $tlp-font-family;
 
 @import '../../../common/css/utils/switch-to';
 
@@ -29,24 +30,12 @@ $approximate-width-of-project-icon: 15.5px;
     background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), $dark-modal-background;
 }
 
-.switch-to-modal-header-icon {
-    margin: 0 6px 0 0;
-    opacity: .7;
+.switch-to-modal-body-title {
     color: $tlp-ui-dimmed;
-    font-size: .875rem;
-    line-height: 1rem;
 }
 
 #switch-to-filter {
     color: $tlp-ui-white;
-
-    &::placeholder {
-        color: $tlp-ui-dimmed;
-    }
-}
-
-.switch-to-modal-body-title {
-    color: $tlp-ui-dimmed;
 }
 
 .switch-to-projects-project-link {

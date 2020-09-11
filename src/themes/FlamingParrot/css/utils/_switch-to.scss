@@ -23,10 +23,11 @@ $tlp-ui-dimmed: $ui-dimmed;
 @import '../../../tlp/src/scss/components/skeleton';
 
 $dark-modal-background: $sidebar-background;
-$dark-modal-default-text-color: $light-grey;
-$dark-modal-dimmed-text-color: $grey;
-$white-space-above-and-after-a-project-link: $tlp-small-spacing - 2px;
+$dark-modal-default-text-color: $ui-border-normal;
+$dark-modal-dimmed-text-color: $ui-border-dark;
+$white-space-above-and-after-a-project-link: $tlp-small-spacing;
 $approximate-width-of-project-icon: 15.5px;
+$switch-to-font-family: $base-font;
 
 
 @import '../../../common/css/utils/switch-to';
@@ -37,8 +38,15 @@ $approximate-width-of-project-icon: 15.5px;
     left: 0;
     box-sizing: border-box;
     margin: 0 auto;
+    border: 0;
     background: none;
     font-size: 1rem;
+    line-height: 1;
+
+    > .modal-body {
+        $modal-header-height: 64px;
+        max-height: calc(70vh - #{$modal-header-height});
+    }
 }
 
 .switch-to-modal-header.modal-header {
@@ -57,18 +65,17 @@ $approximate-width-of-project-icon: 15.5px;
 
 #switch-to-filter {
     margin: 0;
-    padding: 1px;
     box-shadow: none;
     color: $white;
 
     &::placeholder {
-        color: $grey;
+        color: $ui-dimmed;
     }
 }
 
 .switch-to-modal-body-title {
     border: 0; // overrides phpwiki style
-    color: $grey;
+    color: $ui-dimmed;
 }
 
 .switch-to-projects-project-link {

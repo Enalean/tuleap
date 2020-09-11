@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$projects-container-width: 400px;
+
 #switch-to-modal {
     width: 75vw;
     min-width: 700px;
     max-width: 1200px;
+    overflow: hidden;
+    border-radius: 6px;
 }
 
 .switch-to-modal-header {
     padding: ($tlp-medium-spacing + 1px) $tlp-medium-spacing ($tlp-medium-spacing + 1px) $tlp-large-spacing;
     border-bottom: 1px solid rgba(104, 122, 124, .2);
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
     background-blend-mode: overlay;
 }
 
@@ -47,9 +49,11 @@
 
 #switch-to-filter {
     width: 100%;
+    padding: 0 $tlp-small-spacing;
     border: 0;
     border-radius: 0;
     background: transparent;
+    font-family: $switch-to-font-family;
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.1875rem;
@@ -57,38 +61,55 @@
     &::placeholder {
         color: $tlp-ui-dimmed;
     }
+
+    &::-ms-clear,
+    &::-ms-reveal {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration { display: none; }
 }
 
 .switch-to-modal-header-legacy-search-button {
+    margin: -2px 0;
     padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
-    transition: opacity 150ms ease-in-out, background 150ms ease-in-out;
+    transition: opacity 100ms ease-in-out, background 100ms ease-in-out;
     border: 0;
     border-radius: 4px;
     opacity: .75;
     background: none;
     color: $dark-modal-dimmed-text-color;
+    font-family: $switch-to-font-family;
     font-size: .8125rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1rem;
+    cursor: pointer;
 
     &:focus,
     &:hover {
         opacity: 1;
         background: rgba(0, 0, 0, .2);
     }
+
+    > .fa-long-arrow-right {
+        margin: 0 0 0 $tlp-small-spacing;
+    }
 }
 
 .switch-to-modal-body {
     display: flex;
     padding: $tlp-large-spacing $tlp-large-spacing $tlp-large-spacing ($tlp-large-spacing - $tlp-small-spacing);
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
     background: $dark-modal-background;
     color: $dark-modal-default-text-color;
 }
 
 .switch-to-modal-body-title {
-    margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    margin: 0 0 $tlp-medium-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
@@ -104,57 +125,59 @@
 
 .switch-to-projects-project {
     display: flex;
-    align-items: center;
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
-    border-radius: 4px;
+    align-items: baseline;
     color: $dark-modal-default-text-color;
 
     &:hover,
     &:focus-within {
-        background: rgba(0, 0, 0, .2);
-
         > .switch-to-projects-project-admin-icon {
-            opacity: .5;
-
-            &:hover,
-            &:focus {
-                opacity: 1;
-            }
+            opacity: 1;
         }
     }
 }
 
 .switch-to-projects-project-link {
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    border-radius: 4px;
     color: $dark-modal-default-text-color;
 
     &:hover,
     &:focus {
+        background: rgba(0, 0, 0, .2);
         text-decoration: none;
     }
 }
 
 .switch-to-projects-project-icon {
     margin: 0 $tlp-small-spacing 0 0;
-    font-size: .75rem;
-    line-height: .875rem;
+    font-size: .8rem;
 }
 
 .switch-to-projects-project-admin-icon {
-    margin: 0 0 0 $tlp-small-spacing;
-    transition: opacity 150ms ease-in-out;
+    position: relative;
+    top: -1px;
+    margin: 0 0 0 4px;
+    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    transition: opacity 100ms ease-in-out;
+    border-radius: 4px;
     opacity: 0;
     color: $dark-modal-dimmed-text-color;
-    font-size: .75rem;
-    line-height: .875rem;
+    font-size: .8125rem;
     cursor: pointer;
+
+    &:hover,
+    &:focus {
+        background: rgba(0, 0, 0, .2);
+        text-decoration: none;
+    }
 }
 
 .switch-to-projects-softwaremap {
-    padding: 0 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    padding: 6px 8px ($tlp-large-spacing + 6px) 36px;
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
     font-size: .8125rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1rem;
 
     &:focus {
@@ -189,8 +212,12 @@
 }
 
 .switch-to-projects-container {
-    flex: 1 0 auto;
-    width: calc(50% - #{$tlp-large-spacing / 2});
+    flex: 0 0 auto;
+    width: $projects-container-width;
+
+    > .switch-to-modal-body-title {
+        margin: 0 0 $tlp-medium-spacing 36px;
+    }
 }
 
 .switch-to-modal-body-global-empty-text,
@@ -205,7 +232,7 @@
 }
 
 .switch-to-modal-no-matching-projects {
-    margin: $tlp-large-spacing 0 $tlp-large-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
+    margin: $tlp-large-spacing 0 $tlp-large-spacing 36px;
 }
 
 .switch-to-modal-no-matching-history,
@@ -217,15 +244,15 @@
 .switch-to-modal-no-matching-projects {
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
+    font-size: .875rem;
 }
 
 .switch-to-recent-items {
-    flex: 1 0 auto;
-    width: calc(50% - #{$tlp-large-spacing / 2});
-    margin: 0 0 0 $tlp-large-spacing;
+    flex: 1 1 auto;
+    width: calc(100% - #{$projects-container-width});
 
     > .switch-to-modal-body-title {
-        margin: 0 0 ($tlp-medium-spacing - $white-space-above-and-after-a-project-link) $tlp-small-spacing;
+        margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
     }
 }
 
@@ -250,19 +277,21 @@
 
 .switch-to-recent-items-entry {
     display: flex;
-    align-items: baseline;
+    align-items: center;
 
     &:last-child {
-        margin: 0;
+        margin: 0 0 $tlp-large-spacing;
     }
 }
 
 .switch-to-recent-items-entry-link {
-    display: flex;
-    align-items: baseline;
+    min-width: 0;
     padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    overflow: hidden;
     border-radius: 4px;
     color: $dark-modal-default-text-color;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &:focus,
     &:hover {
@@ -273,12 +302,14 @@
 
 .switch-to-recent-items-entry-icon,
 .switch-to-recent-items-entry-badge {
-    margin: 0 6px 0 0;
+    margin: 0 4px 0 0;
+    font-weight: 400;
 }
 
 .switch-to-recent-items-entry-quick-links {
+    display: flex;
     padding: 0 0 0 $tlp-small-spacing;
-    transition: opacity 150ms ease-in-out;
+    transition: opacity 100ms ease-in-out;
     opacity: 0;
 }
 
@@ -293,6 +324,7 @@
     padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
     border-radius: 4px;
     color: $dark-modal-default-text-color;
+    font-size: .8125rem;
 
     &:focus,
     &:hover {
