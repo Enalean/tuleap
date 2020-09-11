@@ -125,6 +125,7 @@
                ng-if="! planning.thereAreClosedMilestonesLoaded() && ! planning.milestones.loading && ! planning.milestones.closed_milestones_fully_loaded"
                ng-click="planning.displayClosedMilestones()"
                class="milestones-load-closed-link"
+               data-test="load-closed-milestones-button"
                translate
             >Load closed milestones</a>
         </div>

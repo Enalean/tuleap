@@ -64,10 +64,12 @@
     scroll-callback="backlog.displayBacklogItems()"
     scroll-threshold="100"
 >
-    <div class="backlog-items backlog"
+    <div
+        class="backlog-items backlog"
         ng-class="{ 'backlog-empty': backlog.isBacklogLoadedAndEmpty() }"
         data-accept="{{ backlog.details.accepted_types.toString() }}"
         data-nodrop="{{ ! backlog.canUserMoveCards() }}"
+        data-test="backlog"
     >
         <div ng-repeat="backlog_item in backlog.backlog_items.filtered_content"
             class="backlog-item {{ planning.current_view_class }}"
@@ -76,6 +78,7 @@
             collapsed="true"
             data-nodrag="{{ ! backlog.canUserMoveCards() }}"
             data-item-id="{{ backlog_item.id }}"
+            data-test="backlog-item"
             backlog-item-index="$index"
             backlog-item-select="backlog_item"
             backlog-item
