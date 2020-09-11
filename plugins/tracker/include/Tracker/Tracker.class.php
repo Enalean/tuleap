@@ -1399,17 +1399,16 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $admin_sections = [];
         if ($this->userIsAdmin($user)) {
-            $admin_sections[] = new SubItemsSection(
+            $admin_breadcrumb = new BreadCrumbLinkWithIcon(
+                dgettext('tuleap-tracker', 'Administration'),
+                $this->getAdministrationUrl(),
+                'fa-cog'
+            );
+            $admin_breadcrumb->setDataAttribute("test", "link-to-current-tracker-administration");
+
+            $admin_sections[]           = new SubItemsSection(
                 '',
-                new BreadCrumbLinkCollection(
-                    [
-                        new BreadCrumbLinkWithIcon(
-                            dgettext('tuleap-tracker', 'Administration'),
-                            $this->getAdministrationUrl(),
-                            'fa-cog'
-                        )
-                    ]
-                )
+                new BreadCrumbLinkCollection([$admin_breadcrumb])
             );
         }
 

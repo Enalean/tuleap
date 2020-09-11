@@ -38,14 +38,26 @@ class BreadCrumbLinkPresenter
      * @var string
      */
     public $icon_name;
+    /**
+     * @var array<array{key: string, value: string}>
+     * @psalm-readonly
+     */
+    public $data_attributes;
 
     public function __construct(BreadCrumbLink $link)
     {
         $this->label = $link->getLabel();
         $this->url   = $link->getUrl();
 
-        $icon_name       = $link->getIconName();
-        $this->has_icon  = ($icon_name !== '');
-        $this->icon_name = ($this->has_icon) ? $icon_name : "";
+        $icon_name             = $link->getIconName();
+        $this->has_icon        = ($icon_name !== '');
+        $this->icon_name       = ($this->has_icon) ? $icon_name : "";
+        $this->data_attributes = [];
+        foreach ($link->getDataAttributes() as $key => $value) {
+            $this->data_attributes[] = [
+                'key'   => $key,
+                'value' => $value,
+            ];
+        }
     }
 }

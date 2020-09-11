@@ -24,7 +24,7 @@ describe("Time tracking", function () {
 
         cy.visitProjectService("timetracking", "Trackers");
         cy.get("[data-test=tracker-link-issue]").click();
-        cy.get("[data-test=tracker-administration]").click();
+        cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         cy.get("[data-test=tracker-admin-more-options]").click();
         cy.get("[data-test=timetracking]").click();
 

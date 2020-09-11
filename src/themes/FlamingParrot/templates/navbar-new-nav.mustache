@@ -1,7 +1,7 @@
 {{# new_dropdown }}
     {{# has_sections }}
         <div class="new-nav">
-            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-shortcut-create>
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-shortcut-create data-test="create-new">
                 <i class="fa fa-plus btn-icon" aria-hidden="true"></i>
                 {{# gettext }}New{{/gettext}}
             </button>
@@ -13,7 +13,7 @@
                         <div class="nav-dropdown-item-divider"></div>
                         <div class="nav-dropdown-item-title">{{ label }}</div>
                         {{# links }}
-                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option>
+                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option data-test="create-new-item">
                                 <i class="fa fa-fw {{ icon }} nav-dropdown-item-icon" aria-hidden="true"></i>
                                 {{ label }}
                             </a>
