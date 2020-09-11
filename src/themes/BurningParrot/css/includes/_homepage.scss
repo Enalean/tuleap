@@ -26,8 +26,6 @@ body.homepage > #main-container {
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
-        margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
         background: $tlp-theme-background-color;
     }
 }

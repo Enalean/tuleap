@@ -58,6 +58,14 @@ main[role=main]:not(.tlp-framed) > #feedback {
     }
 }
 
+main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback {
+    margin: ($top-floating-buttons-space - $breadcrumb-height + $tlp-medium-spacing) $tlp-medium-spacing 0;
+}
+
+.full-width + #main-container > main[role=main]:not(.tlp-framed) > #feedback {
+    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+}
+
 %empty-container {
     display: flex;
     flex-direction: column;
