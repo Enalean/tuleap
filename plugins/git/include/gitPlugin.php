@@ -157,7 +157,6 @@ use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
-use Tuleap\Project\Event\ReferencesGroupCreatorPostProjectCreation;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
@@ -253,7 +252,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook(ReferencesGroupCreatorPostProjectCreation::NAME);
 
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
@@ -436,13 +434,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
         $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
-    }
-
-    public function referencesGroupCreatorPostProjectCreation(ReferencesGroupCreatorPostProjectCreation $event): void
-    {
-        if ($event->getShortName() === self::SERVICE_SHORTNAME) {
-            $this->getReferenceManager()->createReferenceGroupForNewProject('git', $event->getProjectId());
-        }
     }
 
     public function javascript($params)
@@ -2786,10 +2777,5 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\Git\Account\AccountTabsBuilder($this->getGerritServerFactory()))->addTabs($collection);
-    }
-
-    private function getReferenceManager(): ReferenceManager
-    {
-        return ReferenceManager::instance();
     }
 }

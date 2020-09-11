@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -26,8 +26,10 @@ namespace Tuleap\common\Project\Admin\Service;
 use EventManager;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use ReferenceManager;
 use ServiceDao;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
@@ -60,6 +62,11 @@ final class ProjectServiceActivatorTest extends TestCase
      */
     private $service_creator;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
+     */
+    private $reference_manager;
+
     protected function setUp(): void
     {
         $this->service_creator   = Mockery::mock(ServiceCreator::class);
@@ -67,13 +74,15 @@ final class ProjectServiceActivatorTest extends TestCase
         $this->service_dao       = Mockery::mock(ServiceDao::class);
         $this->service_manager   = Mockery::mock(\ServiceManager::class);
         $this->link_builder      = Mockery::mock(ServiceLinkDataBuilder::class);
+        $this->reference_manager = Mockery::mock(ReferenceManager::class);
 
         $this->service_activator = new ProjectServiceActivator(
             $this->service_creator,
             $this->event_manager,
             $this->service_dao,
             $this->service_manager,
-            $this->link_builder
+            $this->link_builder,
+            $this->reference_manager
         );
     }
 
@@ -213,13 +222,17 @@ final class ProjectServiceActivatorTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $template = \Mockery::mock(\Project::class);
-        $template->shouldReceive('getID')->andReturn(201);
+        $template_project = \Mockery::mock(\Project::class);
+        $template_project->shouldReceive('getID')->andReturn(201);
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
         $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
+
+        $template_for_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_creation->shouldReceive('getProject')->andReturn($template_project);
+        $data->shouldReceive('getBuiltFromTemplateProject')->andReturn($template_for_creation);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('tracker');
@@ -257,9 +270,12 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->reference_manager->shouldReceive('addSystemReferencesForService')->once();
+        $this->reference_manager->shouldReceive('updateReferenceForService')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
 
     public function testTV3ServiceUsageIsNotInheritedFromTemplate(): void
@@ -306,13 +322,17 @@ final class ProjectServiceActivatorTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $template = \Mockery::mock(\Project::class);
-        $template->shouldReceive('getID')->andReturn(201);
+        $template_project = \Mockery::mock(\Project::class);
+        $template_project->shouldReceive('getID')->andReturn(201);
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
         $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
+
+        $template_for_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_creation->shouldReceive('getProject')->andReturn($template_project);
+        $data->shouldReceive('getBuiltFromTemplateProject')->andReturn($template_for_creation);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('svn');
@@ -350,9 +370,12 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->reference_manager->shouldReceive('addSystemReferencesForService')->once();
+        $this->reference_manager->shouldReceive('updateReferenceForService')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
 
     public function testSvnCoreServiceUsageIsNotInheritedFromTemplate(): void
@@ -399,13 +422,17 @@ final class ProjectServiceActivatorTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $template = Mockery::mock(\Project::class);
-        $template->shouldReceive('getID')->andReturn(201);
+        $template_project = Mockery::mock(\Project::class);
+        $template_project->shouldReceive('getID')->andReturn(201);
 
         $data = Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
         $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
+
+        $template_for_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_creation->shouldReceive('getProject')->andReturn($template_project);
+        $data->shouldReceive('getBuiltFromTemplateProject')->andReturn($template_for_creation);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('document');
@@ -443,9 +470,12 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->reference_manager->shouldReceive('addSystemReferencesForService')->once();
+        $this->reference_manager->shouldReceive('updateReferenceForService')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
 
     public function testAdminServiceShouldAlwaysBeEnabledForProjectFromXmlImport(): void
@@ -453,13 +483,17 @@ final class ProjectServiceActivatorTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $template = Mockery::mock(\Project::class);
-        $template->shouldReceive('getID')->andReturn(201);
+        $template_project = Mockery::mock(\Project::class);
+        $template_project->shouldReceive('getID')->andReturn(201);
 
         $data = Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn([]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
         $data->shouldReceive('getDataServices')->andReturn([10 => false]);
+
+        $template_for_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_creation->shouldReceive('getProject')->andReturn($template_project);
+        $data->shouldReceive('getBuiltFromTemplateProject')->andReturn($template_for_creation);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('admin');
@@ -490,9 +524,12 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->reference_manager->shouldReceive('addSystemReferencesForService')->once();
+        $this->reference_manager->shouldReceive('updateReferenceForService')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
 
     public function testGitServiceUsageIsInheritedFromXml(): void
@@ -500,13 +537,17 @@ final class ProjectServiceActivatorTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $template = \Mockery::mock(\Project::class);
-        $template->shouldReceive('getID')->andReturn(201);
+        $template_project = \Mockery::mock(\Project::class);
+        $template_project->shouldReceive('getID')->andReturn(201);
 
         $data = \Mockery::mock(\ProjectCreationData::class);
         $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
         $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
         $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
+
+        $template_for_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_creation->shouldReceive('getProject')->andReturn($template_project);
+        $data->shouldReceive('getBuiltFromTemplateProject')->andReturn($template_for_creation);
 
         $service = Mockery::mock(\Service::class);
         $service->shouldReceive('getShortName')->andReturn('plugin_git');
@@ -544,8 +585,11 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->reference_manager->shouldReceive('addSystemReferencesForService')->once();
+        $this->reference_manager->shouldReceive('updateReferenceForService')->once();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
     }
 }

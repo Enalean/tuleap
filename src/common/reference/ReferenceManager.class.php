@@ -476,20 +476,6 @@ class ReferenceManager
         );
     }
 
-    public function createReferenceGroupForNewProject(string $keyword, int $project_id): void
-    {
-        $reference_dao = $this->_getReferenceDao();
-        $ref           = $reference_dao->searchByKeyword($keyword);
-
-        if (isset($ref['reference_id'])) {
-            $reference_dao->create_ref_group(
-                $ref['reference_id'],
-                false,
-                $project_id
-            );
-        }
-    }
-
     /**
      * Return true if keyword is valid to reference artifacts
      *
