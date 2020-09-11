@@ -20,28 +20,33 @@
 
 namespace Tuleap\Git\Repository\View;
 
+/**
+ * @psalm-immutable
+ */
 class CloneURLPresenter
 {
-    /** @var string */
-    public $url;
-    /** @var string */
-    public $label;
-    /** @var bool */
-    public $is_selected;
-    /** @var bool */
-    public $is_read_only;
-
     /**
-     * @param string $url
-     * @param string $label
-     * @param bool   $is_selected
-     * @param bool   $is_read_only
+     * @var string
      */
-    public function __construct($url, $label, $is_selected, $is_read_only)
+    public $url;
+    /**
+     * @var string
+     */
+    public $label;
+    /**
+     * @var bool
+     */
+    public $is_read_only;
+    /**
+     * @var string
+     */
+    public $id;
+
+    public function __construct(string $id, string $url, string $label, bool $is_read_only)
     {
+        $this->id           = $id;
         $this->url          = $url;
         $this->label        = $label;
-        $this->is_selected  = $is_selected;
         $this->is_read_only = $is_read_only;
     }
 }

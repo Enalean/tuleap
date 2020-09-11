@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@ import Gettext from "node-gettext";
 import french_translations from "../po/fr.po";
 
 export default function initCopyButton() {
-    const copy_button = document.getElementById("git-repository-copy-url");
-    if (!copy_button) {
+    const buttons = document.querySelectorAll(".git-repository-copy-url");
+    if (buttons.length === 0) {
         return;
     }
 
@@ -31,20 +31,25 @@ export default function initCopyButton() {
     const locale = document.body.dataset.userLocale;
     gettext_provider.setLocale(locale);
 
-    const input = document.getElementById("git-repository-clone-input");
+    for (const copy_button of buttons) {
+        const input = document.getElementById(copy_button.dataset.inputId);
+        if (!input) {
+            continue;
+        }
 
-    const original_title = copy_button.getAttribute("data-tlp-tooltip");
+        const original_title = copy_button.getAttribute("data-tlp-tooltip");
 
-    copy_button.addEventListener("click", function () {
-        input.select();
-        document.execCommand("copy");
-        copy_button.setAttribute(
-            "data-tlp-tooltip",
-            gettext_provider.gettext("URL have been copied")
-        );
+        copy_button.addEventListener("click", function () {
+            input.select();
+            document.execCommand("copy");
+            copy_button.setAttribute(
+                "data-tlp-tooltip",
+                gettext_provider.gettext("URL have been copied")
+            );
 
-        removeTooltipDisplay(copy_button, original_title);
-    });
+            removeTooltipDisplay(copy_button, original_title);
+        });
+    }
 }
 
 function removeTooltipDisplay(copy_button, original_title) {

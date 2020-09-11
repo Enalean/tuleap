@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,7 @@ class DefaultCloneURLSelector
         if ($current_user->isAnonymous()) {
             if ($clone_urls->hasHttpsUrl()) {
                 return new DefaultCloneURL(
+                    ClonePresenter::HTTPS_ID,
                     $clone_urls->getHttpsUrl(),
                     $this->getDefaultLabel(ClonePresenter::HTTPS_LABEL)
                 );
@@ -42,17 +43,18 @@ class DefaultCloneURLSelector
 
         if ($clone_urls->hasGerritUrl()) {
             return new DefaultCloneURL(
+                ClonePresenter::GERRIT_ID,
                 $clone_urls->getGerritUrl(),
                 $this->getDefaultLabel(ClonePresenter::GERRIT_LABEL)
             );
         }
 
         if ($clone_urls->hasSshUrl()) {
-            return new DefaultCloneURL($clone_urls->getSshUrl(), $this->getDefaultLabel(ClonePresenter::SSH_LABEL));
+            return new DefaultCloneURL(ClonePresenter::SSH_ID, $clone_urls->getSshUrl(), $this->getDefaultLabel(ClonePresenter::SSH_LABEL));
         }
 
         if ($clone_urls->hasHttpsUrl()) {
-            return new DefaultCloneURL($clone_urls->getHttpsUrl(), $this->getDefaultLabel(ClonePresenter::HTTPS_LABEL));
+            return new DefaultCloneURL(ClonePresenter::HTTPS_ID, $clone_urls->getHttpsUrl(), $this->getDefaultLabel(ClonePresenter::HTTPS_LABEL));
         }
 
         throw new NoCloneURLException();

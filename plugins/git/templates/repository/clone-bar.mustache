@@ -1,50 +1,35 @@
-{{# default_url }}
-    <label class="git-repository-clone-label tlp-label"
-           for="git-repository-clone-dropdown-button">
-        {{# dgettext }}tuleap-git | Clone or download:{{/ dgettext }}
-    </label>
-    <div class="tlp-form-element tlp-form-element-prepend tlp-form-element-append git-repository-clone-form-element">
-        <div class="tlp-dropdown tlp-prepend">
-            <button class="tlp-button-primary tlp-button-outline"
-                    id="git-repository-clone-dropdown-button"
-                    type="button"
-                    title="{{# dgettext }}tuleap-git | Clone or download{{/ dgettext }}"
-            >
-                <span id="git-repository-clone-button-text">{{ default_label }}</span>
-                <i class="fa fa-caret-down tlp-button-icon-right"></i>
-            </button>
-            <div class="tlp-dropdown-menu git-repository-clone-dropdown-menu" role="menu">
-                <span class="tlp-dropdown-menu-title" role="menuitem">
-                    {{# dgettext }}tuleap-git | Clone{{/ dgettext }}
-                </span>
-                {{# clone_url_presenters }}
-                    {{> repository/clone-bar-url }}
-                {{/ clone_url_presenters }}
+{{# has_clone_urls }}
+    <button
+        type="button"
+        class="tlp-button-primary git-repository-actions-button"
+        id="git-repository-clone-popover-button"
+        data-placement="bottom"
+        data-trigger="click"
+    >
+        <i class="tlp-button-icon fa fa-download" aria-hidden="true"></i>
+        {{# dgettext }}tuleap-git | Clone{{/ dgettext }}
+        <i class="fa fa-caret-down tlp-button-icon-right" aria-hidden="true" id="git-repository-clone-popover-caret"></i>
+    </button>
 
-                {{# has_ssh_mirrors }}
-                    <span class="tlp-dropdown-menu-title" role="menuitem">
-                        {{# dgettext }}tuleap-git | Clone from SSH mirrors{{/ dgettext }}
-                    </span>
-                    {{# ssh_mirrors_presenters }}
-                        {{> repository/clone-bar-url }}
-                    {{/ ssh_mirrors_presenters }}
-                {{/ has_ssh_mirrors }}
-            </div>
+    <section class="tlp-popover" id="git-repository-clone-popover">
+        <div class="tlp-popover-arrow"></div>
+        <div class="tlp-popover-header">
+            <h1 class="tlp-popover-title">{{# dgettext }}tuleap-git | Clone or download{{/ dgettext }}</h1>
         </div>
-        <span class="tlp-prepend {{^ default_url_is_read_only }}git-repository-clone-hidden{{/ default_url_is_read_only }}" id="git-repository-clone-read-only">
-            <span class="tlp-badge-info">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span>
-        </span>
-        <input type="text"
-               class="tlp-input"
-               id="git-repository-clone-input"
-               value="{{ default_url }}"
-               readonly
-        >
-        <button class="tlp-append tlp-button-secondary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
-                id="git-repository-copy-url"
-                data-tlp-tooltip="{{# dgettext }}tuleap-git | Copy to clipboard{{/ dgettext }}"
-        >
-            <i class="fa fa-clipboard" ></i>
-        </button>
-    </div>
-{{/ default_url }}
+        <div class="tlp-popover-body">
+            {{# clone_url_presenters }}
+                {{> repository/clone-bar-input }}
+            {{/ clone_url_presenters }}
+
+            {{# has_ssh_mirrors }}
+                <hr class="git-repository-clone-popover-separator">
+                <p>
+                    {{# dgettext }}tuleap-git | Clone from SSH mirrors{{/ dgettext }}
+                </p>
+                {{# ssh_mirrors_presenters }}
+                    {{> repository/clone-bar-input }}
+                {{/ ssh_mirrors_presenters }}
+            {{/ has_ssh_mirrors }}
+        </div>
+    </section>
+{{/ has_clone_urls }}

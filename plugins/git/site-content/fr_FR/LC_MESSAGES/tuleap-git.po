@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid "%1$s"
@@ -325,9 +325,6 @@ msgstr "Cloner depuis les miroirs SSH"
 
 msgid "Clone or download"
 msgstr "Cloner ou télécharger"
-
-msgid "Clone or download:"
-msgstr "Cloner ou télécharger :"
 
 msgid "Command sent to remote gerrit servers"
 msgstr "Commande transmise au(x) serveur(s) gerrit"
