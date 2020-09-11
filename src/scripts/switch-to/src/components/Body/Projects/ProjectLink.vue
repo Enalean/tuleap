@@ -30,11 +30,12 @@
             <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
         </a>
         <a
+            v-if="project.is_current_user_admin"
             v-bind:href="project.project_config_uri"
             class="switch-to-projects-project-admin-icon"
             v-bind:title="admin_title"
         >
-            <i class="fa fa-fw fa-cog" v-if="project.is_current_user_admin" aria-hidden="true"></i>
+            <i class="fa fa-cog" aria-hidden="true"></i>
         </a>
     </div>
 </template>

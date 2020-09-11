@@ -41,10 +41,10 @@
             <button
                 type="submit"
                 class="switch-to-modal-header-legacy-search-button"
-                v-translate
                 data-test="legacy-search-button"
             >
-                Legacy search →
+                <translate>Legacy search</translate>
+                <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
             </button>
         </template>
     </form>

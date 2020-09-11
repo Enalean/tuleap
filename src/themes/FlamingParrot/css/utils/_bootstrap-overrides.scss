@@ -122,9 +122,13 @@ kbd {
 @each $color-name, $colors in $swatch-color-map {
     .badge.tlp-badge-#{$color-name},
     .badge.#{$color-name} {
+        padding: 5px 8px;
         border: 1px solid map-get($colors, 'primary');
+        border-radius: 15px;
         background: map-get($colors, 'primary');
         color: #ffffff;
+        font-size: .75rem;
+        line-height: 1;
         text-shadow: none;
 
         &.tlp-badge-outline {
