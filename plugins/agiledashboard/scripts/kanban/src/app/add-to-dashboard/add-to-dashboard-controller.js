@@ -1,4 +1,4 @@
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 export default AddToDashboardController;
 
@@ -19,7 +19,7 @@ function AddToDashboardController($element, SharedPropertiesService) {
     function init() {
         const dashboard_dropdown = $element[0].querySelector("#dashboard-dropdown-button");
         if (dashboard_dropdown) {
-            dropdown(dashboard_dropdown);
+            createDropdown(dashboard_dropdown);
         }
     }
 

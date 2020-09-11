@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown as createDropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 export default function initCloneBarDropdown() {
     const button = document.getElementById("git-repository-clone-dropdown-button");

@@ -44,7 +44,7 @@ describe("StepController", () => {
             show: jest.fn(),
         };
 
-        jest.spyOn(tlp, "dropdown").mockReturnValue(fake_dropdown_object);
+        jest.spyOn(tlp, "createDropdown").mockReturnValue(fake_dropdown_object);
 
         setError = jest.spyOn(feedback_state, "setError");
         resetError = jest.spyOn(feedback_state, "resetError");

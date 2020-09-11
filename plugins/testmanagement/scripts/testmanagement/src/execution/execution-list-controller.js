@@ -22,7 +22,7 @@ import angular from "angular";
 
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 export default ExecutionListCtrl;
 
@@ -179,7 +179,7 @@ function ExecutionListCtrl(
         const trigger = $element.find("#toggle-filters-dropdown");
         const dropdown_menu = $element.find("#filters-dropdown-menu");
 
-        dropdown(trigger[0], {
+        createDropdown(trigger[0], {
             dropdown_menu: dropdown_menu[0],
         });
 

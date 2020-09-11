@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const dropdown_triggers = document.querySelectorAll(
@@ -23,6 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     [].forEach.call(dropdown_triggers, (dropdown_trigger) => {
-        dropdown(dropdown_trigger);
+        createDropdown(dropdown_trigger);
     });
 });

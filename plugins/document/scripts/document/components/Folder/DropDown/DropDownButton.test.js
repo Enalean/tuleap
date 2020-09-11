@@ -28,7 +28,7 @@ jest.mock("tlp");
 describe("DropDownButton", () => {
     let dropdown_factory;
     beforeEach(() => {
-        jest.spyOn(tlp, "dropdown");
+        jest.spyOn(tlp, "createDropdown");
         dropdown_factory = (props = {}) => {
             return shallowMount(DropDownButton, {
                 localVue,

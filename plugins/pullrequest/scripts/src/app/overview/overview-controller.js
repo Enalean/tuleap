@@ -1,4 +1,4 @@
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 export default OverviewController;
 
@@ -137,7 +137,7 @@ function OverviewController(
     }
 
     function initCheckoutDropdown() {
-        dropdown(document.getElementById("pull-request-checkout-dropdown"), {
+        createDropdown(document.getElementById("pull-request-checkout-dropdown"), {
             keyboard: false,
         });
     }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal, select2, dropdown as createDropdown } from "tlp";
+import { createModal, select2, createDropdown } from "tlp";
 import jQuery from "jquery";
 
 !(function ($) {

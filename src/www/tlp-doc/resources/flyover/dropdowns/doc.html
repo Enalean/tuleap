@@ -3,9 +3,9 @@
     <li>You can right align the dropdown menu with the <code class="code-inline">.tlp-dropdown-menu-right</code> class.</li>
     <li>You can top align the dropdown menu with the <code class="code-inline">.tlp-dropdown-menu-top</code> class.</li>
     <li>Don't forget the <code class="code-inline">.tlp-dropdown-menu-item-icon</code> class if you use icons.</li>
-    <li>You can remove closing the dropdopwn on the escape key pressed: <code class="code-inline">var the_dropdown = tlp.dropdown(trigger_element, {keyboard: false} );</code></li>
+    <li>You can disable closing the dropdopwn on the escape key pressed: <code class="code-inline">const the_dropdown = tlp.createDropdown(trigger_element, {keyboard: false} );</code></li>
     <li>
-        <code class="code-inline">var the_dropdown = tlp.dropdown('element-id');</code> will return a <code class="code-inline">Dropdown</code> instance. You can then call
+        <code class="code-inline">const the_dropdown = tlp.createDropdown(trigger_element);</code> will return a <code class="code-inline">Dropdown</code> instance. You can then call
         <code class="code-inline">show()</code>,
         <code class="code-inline">hide()</code>, or
         <code class="code-inline">toggle()</code> methods on this instance.

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown } from "tlp";
+import { createDropdown } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const menu = document.getElementById("agiledashboard-scrum-milestone-menu");
@@ -25,5 +25,5 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    dropdown(menu);
+    createDropdown(menu);
 });
