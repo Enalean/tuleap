@@ -37,6 +37,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -205,7 +206,10 @@ class BurningParrotTheme extends BaseLayout
             $this->isInSiteAdmin($params),
             $project_context,
             $switch_to_presenter_builder->build($this->user),
-            new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
+            new CachedCustomizedLogoDetector(
+                new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
+                \BackendLogger::getDefaultLogger(),
+            ),
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

@@ -38,6 +38,7 @@ class SiteCache
         $this->invalidateLanguage();
         $this->invalidateWSDL();
         $this->invalidatePlugin();
+        $this->invalidateCustomizedLogoCache();
     }
 
     private function invalidateTemplateEngine()
@@ -134,5 +135,11 @@ class SiteCache
         \Tuleap\Request\FrontRouter::restoreOwnership($this->logger, $backend);
 
         PluginLoader::restoreOwnershipOnCacheFile($this->logger, $backend);
+    }
+
+    private function invalidateCustomizedLogoCache(): void
+    {
+        $this->logger->info('Invalidate customized logo cache');
+        \Tuleap\Layout\Logo\CachedCustomizedLogoDetector::invalidateCache();
     }
 }
