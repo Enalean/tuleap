@@ -173,4 +173,34 @@ class CachedCustomizedLogoDetectorTest extends TestCase
 
         self::assertFileDoesNotExist($this->cache_file);
     }
+
+    public function testItStoresTrueInTheCacheIfSvgLogoIsCustomized(): void
+    {
+        $logger   = \Mockery::mock(LoggerInterface::class);
+        $detector = \Mockery::mock(CustomizedLogoDetector::class);
+        $detector
+            ->shouldReceive('isSvgOrganizationLogoCustomized')
+            ->once()
+            ->andReturn(true);
+
+        $cache = new CachedCustomizedLogoDetector($detector, $logger);
+        self::assertTrue($cache->isSvgOrganizationLogoCustomized());
+
+        self::assertStringEqualsFile($this->cache_file, '{"is_svg_organization_logo_customized":true}');
+    }
+
+    public function testItUsesInformationInCacheToKnowIfSvgLogoIsCustomized(): void
+    {
+        $content = json_encode(["is_svg_organization_logo_customized" => true], JSON_THROW_ON_ERROR);
+        file_put_contents($this->cache_file, $content);
+
+        $logger   = \Mockery::mock(LoggerInterface::class);
+        $detector = \Mockery::mock(CustomizedLogoDetector::class);
+        $detector
+            ->shouldReceive('isSvgOrganizationLogoCustomized')
+            ->never();
+
+        $cache = new CachedCustomizedLogoDetector($detector, $logger);
+        self::assertTrue($cache->isSvgOrganizationLogoCustomized());
+    }
 }

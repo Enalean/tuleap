@@ -69,6 +69,19 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         return $information['is_legacy_organization_logo_customized'];
     }
 
+    public function isSvgOrganizationLogoCustomized(): bool
+    {
+        $information = $this->getInformationFromCacheFile();
+        if (isset($information['is_svg_organization_logo_customized'])) {
+            return $information['is_svg_organization_logo_customized'];
+        }
+
+        $information['is_svg_organization_logo_customized'] = $this->detector->isSvgOrganizationLogoCustomized();
+        $this->storeInformationInCache($information);
+
+        return $information['is_svg_organization_logo_customized'];
+    }
+
     private function getInformationFromCacheFile(): array
     {
         $path = self::getCacheFile();

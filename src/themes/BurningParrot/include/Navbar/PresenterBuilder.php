@@ -43,7 +43,8 @@ class PresenterBuilder
         URLRedirect $url_redirect,
         NewDropdownPresenter $new_dropdown_presenter,
         bool $should_logo_be_displayed,
-        bool $is_legacy_logo_customized
+        bool $is_legacy_logo_customized,
+        bool $is_svg_logo_customized
     ) {
         $this->current_user    = $current_user;
 
@@ -64,7 +65,8 @@ class PresenterBuilder
             $new_dropdown_presenter,
             $current_user->isSuperUser(),
             $should_logo_be_displayed,
-            $is_legacy_logo_customized
+            $is_legacy_logo_customized,
+            $is_svg_logo_customized,
         );
     }
 

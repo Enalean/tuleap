@@ -164,6 +164,11 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $is_legacy_logo_customized;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_svg_logo_customized;
 
     public function __construct(
         PFUser $user,
@@ -183,7 +188,8 @@ class HeaderPresenter
         HelpDropdownPresenter $help_dropdown_presenter,
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to,
-        bool $is_legacy_logo_customized
+        bool $is_legacy_logo_customized,
+        bool $is_svg_logo_customized
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -208,6 +214,7 @@ class HeaderPresenter
         $this->project_context             = $project_context;
         $this->switch_to                   = $switch_to;
         $this->is_legacy_logo_customized   = $is_legacy_logo_customized;
+        $this->is_svg_logo_customized      = $is_svg_logo_customized;
 
         $this->buildFeedbacks($feedback_logs);
 

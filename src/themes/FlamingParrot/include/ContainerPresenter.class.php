@@ -81,6 +81,11 @@ class FlamingParrot_ContainerPresenter
      * @psalm-readonly
      */
     public $is_legacy_logo_customized;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_svg_logo_customized;
 
     public function __construct(
         array $breadcrumbs,
@@ -95,7 +100,8 @@ class FlamingParrot_ContainerPresenter
         PFUser $current_user,
         ?ProjectContextPresenter $project_context,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
-        bool $is_legacy_logo_customized
+        bool $is_legacy_logo_customized,
+        bool $is_svg_logo_customized
     ) {
         $this->breadcrumbs               = $breadcrumbs;
         $this->has_only_one_breadcrumb   = count($breadcrumbs) === 1;
@@ -111,6 +117,7 @@ class FlamingParrot_ContainerPresenter
         $this->project_context           = $project_context;
         $this->switch_to                 = $switch_to;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
+        $this->is_svg_logo_customized    = $is_svg_logo_customized;
     }
 
     public function hasBreadcrumbs()

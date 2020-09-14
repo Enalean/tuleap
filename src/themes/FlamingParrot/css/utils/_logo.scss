@@ -37,11 +37,11 @@
     margin: 0 0 0 $tlp-medium-spacing;
 }
 
-.logo-svg-petals {
+.logo-svg-fill-theme-color {
     fill: $main;
 }
 
-.logo-svg-text {
+.logo-svg-fill-default-text-color {
     fill: $sidebar-background;
 }
 
@@ -51,11 +51,11 @@
     margin: 0;
     background: $navbar-color;
 
-    .logo-svg-petals {
+    .logo-svg-fill-theme-color {
         fill: $white;
     }
 
-    .logo-svg-text {
+    .logo-svg-fill-default-text-color {
         fill: $white;
     }
 }

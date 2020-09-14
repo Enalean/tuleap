@@ -33,11 +33,11 @@
     margin: 0 0 0 $tlp-large-spacing;
 }
 
-.logo-svg-petals {
+.logo-svg-fill-theme-color {
     fill: $tlp-theme-color;
 }
 
-.logo-svg-text {
+.logo-svg-fill-default-text-color {
     fill: $tlp-theme-sidebar-background-color;
 }
 
@@ -47,11 +47,11 @@
     margin: 0;
     background: $tlp-theme-color;
 
-    .logo-svg-petals {
+    .logo-svg-fill-theme-color {
         fill: $tlp-ui-white;
     }
 
-    .logo-svg-text {
+    .logo-svg-fill-default-text-color {
         fill: $tlp-ui-white;
     }
 }

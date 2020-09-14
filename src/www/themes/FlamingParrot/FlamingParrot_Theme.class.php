@@ -288,6 +288,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
+        $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -300,9 +301,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->shouldLogoBeDisplayed($params, $project),
             $switch_to,
             $is_legacy_logo_customized,
+            $is_svg_logo_customized,
         ));
 
-        $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized);
+        $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized, $is_svg_logo_customized);
     }
 
     private function shouldLogoBeDisplayed(array $params, ?Project $project): bool
@@ -327,7 +329,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         PFUser $current_user,
         ?BannerDisplay $banner,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
-        bool $is_legacy_logo_customized
+        bool $is_legacy_logo_customized,
+        bool $is_svg_logo_customized
     ): void {
         $project_tabs        = null;
         $project_name        = null;
@@ -378,6 +381,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $project_context,
             $switch_to,
             $is_legacy_logo_customized,
+            $is_svg_logo_customized,
         ));
     }
 

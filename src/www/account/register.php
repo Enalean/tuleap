@@ -334,7 +334,7 @@ if ($request->isPost() && $request->exist('Register')) {
                     );
                 }
                 $presenter = new MailPresenterFactory();
-                $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getUrl());
+                $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getLegacyUrl());
             }
 
             $title  = $Language->getText('account_register', 'title_confirm');
@@ -370,7 +370,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();
-            $email_presenter    = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getUrl());
+            $email_presenter    = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", $logo_retriever->getLegacyUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,

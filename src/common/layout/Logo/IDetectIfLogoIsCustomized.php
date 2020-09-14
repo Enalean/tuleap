@@ -25,4 +25,6 @@ namespace Tuleap\Layout\Logo;
 interface IDetectIfLogoIsCustomized
 {
     public function isLegacyOrganizationLogoCustomized(): bool;
+
+    public function isSvgOrganizationLogoCustomized(): bool;
 }

@@ -68,4 +68,30 @@ class CustomizedLogoDetectorTest extends TestCase
 
         self::assertTrue($detector->isLegacyOrganizationLogoCustomized());
     }
+
+    public function testItDoesNotConsiderSvgLogoCustomizedIfItIsNotDeployed(): void
+    {
+        $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
+
+        self::assertFalse($detector->isSvgOrganizationLogoCustomized());
+    }
+
+    public function testItDoesNotConsiderSvgLogoCustomizedIfTheSmallVariantIsNotDeployed(): void
+    {
+        touch($this->data_dir_path . '/images/organization_logo.svg');
+
+        $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
+
+        self::assertFalse($detector->isSvgOrganizationLogoCustomized());
+    }
+
+    public function testItConsidersSvgLogoCustomizedIfItIsDeployedAsWellAsItsSmallVariant(): void
+    {
+        touch($this->data_dir_path . '/images/organization_logo.svg');
+        touch($this->data_dir_path . '/images/organization_logo_small.svg');
+
+        $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
+
+        self::assertTrue($detector->isSvgOrganizationLogoCustomized());
+    }
 }

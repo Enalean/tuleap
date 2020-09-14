@@ -105,6 +105,7 @@ class HeaderPresenterBuilder
         $theme_variation = new ThemeVariation($color, $current_user);
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
+        $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
 
         return new HeaderPresenter(
             $this->current_user,
@@ -116,6 +117,7 @@ class HeaderPresenterBuilder
                 $new_dropdown_presenter,
                 $this->shouldLogoBeDisplayed(),
                 $is_legacy_logo_customized,
+                $is_svg_logo_customized,
             ),
             $color,
             $this->getStylesheets($theme_variation),
@@ -131,6 +133,7 @@ class HeaderPresenterBuilder
             $this->project_context,
             $switch_to,
             $is_legacy_logo_customized,
+            $is_svg_logo_customized,
         );
     }
 

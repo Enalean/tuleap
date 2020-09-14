@@ -51,9 +51,15 @@ class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
         return $this->isLegacyOrganizationLogoDifferentThanOurs();
     }
 
+    public function isSvgOrganizationLogoCustomized(): bool
+    {
+        return $this->logo_retriever->getSvgPath() !== null
+            && $this->logo_retriever->getSmallSvgPath() !== null;
+    }
+
     private function isLegacyOrganizationLogoDeployed(): bool
     {
-        return $this->logo_retriever->getPath() !== null;
+        return $this->logo_retriever->getLegacyPath() !== null;
     }
 
     private function isLegacyOrganizationLogoDifferentThanOurs(): bool

@@ -20,38 +20,83 @@
 
 class LogoRetriever
 {
-    private $logo_path;
-    private $logo_mimetype;
+    /**
+     * @var string
+     */
+    private $legacy_logo_path;
+    /**
+     * @var string
+     */
+    private $legacy_logo_mimetype;
+    /**
+     * @var string
+     */
+    private $svg_logo_path;
+    /**
+     * @var string
+     */
+    private $small_svg_logo_path;
 
     public function __construct()
     {
-        $this->logo_path     = ForgeConfig::get('sys_data_dir') . '/images/organization_logo.png';
-        $this->logo_mimetype = 'image/png';
+        $this->svg_logo_path        = ForgeConfig::get('sys_data_dir') . '/images/organization_logo.svg';
+        $this->small_svg_logo_path  = ForgeConfig::get('sys_data_dir') . '/images/organization_logo_small.svg';
+        $this->legacy_logo_path     = ForgeConfig::get('sys_data_dir') . '/images/organization_logo.png';
+        $this->legacy_logo_mimetype = 'image/png';
     }
 
-    public function getPath()
+    public function getLegacyPath(): ?string
     {
-        if ($this->hasLogo()) {
-            return $this->logo_path;
+        if ($this->hasLegacyLogo()) {
+            return $this->legacy_logo_path;
         }
+
         return null;
     }
 
-    public function getUrl()
+    public function getSvgPath(): ?string
     {
-        if ($this->hasLogo()) {
+        if ($this->hasSvgLogo()) {
+            return $this->svg_logo_path;
+        }
+
+        return null;
+    }
+
+    public function getSmallSvgPath(): ?string
+    {
+        if ($this->hasSmallSvgLogo()) {
+            return $this->small_svg_logo_path;
+        }
+
+        return null;
+    }
+
+    public function getLegacyUrl(): ?string
+    {
+        if ($this->hasLegacyLogo()) {
             return HTTPRequest::instance()->getServerUrl() . '/images/organization_logo.png';
         }
         return null;
     }
 
-    public function getMimetype()
+    public function getMimetype(): string
     {
-        return $this->logo_mimetype;
+        return $this->legacy_logo_mimetype;
     }
 
-    private function hasLogo()
+    private function hasLegacyLogo(): bool
     {
-        return file_exists($this->logo_path);
+        return file_exists($this->legacy_logo_path);
+    }
+
+    private function hasSvgLogo(): bool
+    {
+        return file_exists($this->svg_logo_path);
+    }
+
+    private function hasSmallSvgLogo(): bool
+    {
+        return file_exists($this->small_svg_logo_path);
     }
 }
