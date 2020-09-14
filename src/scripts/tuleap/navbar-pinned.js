@@ -19,6 +19,10 @@
 
 export function init() {
     const header = document.querySelector("header");
+    if (!header) {
+        return;
+    }
+
     let ticking = false;
 
     if (document.body.classList.contains("has-sidebar")) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,7 @@ class AgileDashboardCrumbBuilder
         return $agile_breadcrumb;
     }
 
-    private function addAdministrationLink(Project $project, BreadCrumb $agile_breadcrumb)
+    private function addAdministrationLink(Project $project, BreadCrumb $agile_breadcrumb): void
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
             http_build_query(
@@ -73,19 +73,15 @@ class AgileDashboardCrumbBuilder
                 ]
             );
 
-        $sub_items = new BreadCrumbSubItems();
-        $sub_items->addSection(
-            new SubItemsUnlabelledSection(
-                new BreadCrumbLinkCollection(
-                    [
-                        new BreadCrumbLink(
-                            $GLOBALS['Language']->getText('global', 'Administration'),
-                            $admin_url
-                        )
-                    ]
-                )
-            )
+        $link = new BreadCrumbLink(
+            $GLOBALS['Language']->getText('global', 'Administration'),
+            $admin_url
         );
+        $link->setDataAttribute('test', 'link-to-ad-administration');
+
+
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$link])));
         $agile_breadcrumb->setSubItems($sub_items);
     }
 }

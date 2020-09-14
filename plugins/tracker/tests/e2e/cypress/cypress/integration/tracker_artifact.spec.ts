@@ -26,7 +26,8 @@ function submitAndStay(): void {
 function createNewBug(bug_title: string): void {
     cy.visitProjectService("tracker-artifact", "Trackers");
     cy.get("[data-test=tracker-link-bug]").click();
-    cy.get("[data-test=new-artifact]").click();
+    cy.get("[data-test=create-new]").click();
+    cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=summary]").type(bug_title);
 }
 
@@ -190,7 +191,8 @@ describe("Tracker artifacts", function () {
             cy.visitProjectService("tracker-artifact", "Trackers");
 
             cy.get("[data-test=tracker-link-bug]").click();
-            cy.get("[data-test=tracker-administration]").click();
+
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
 
             cy.get("[data-test=admin-permissions]").click();
             cy.get("[data-test=tracker-permissions]").click();
@@ -204,7 +206,7 @@ describe("Tracker artifacts", function () {
             cy.visitProjectService("tracker-artifact", "Trackers");
 
             cy.get("[data-test=tracker-link-story]").click();
-            cy.get("[data-test=tracker-administration]").click();
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
 
             cy.get("[data-test=admin-permissions]").click();
             cy.get("[data-test=tracker-permissions]").click();
@@ -240,7 +242,7 @@ describe("Tracker artifacts", function () {
             cy.visitProjectService("tracker-artifact", "Trackers");
 
             cy.get("[data-test=tracker-link-bug]").click();
-            cy.get("[data-test=tracker-administration]").click();
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         });
     });
 

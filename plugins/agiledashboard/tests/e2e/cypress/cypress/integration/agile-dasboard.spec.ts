@@ -49,8 +49,7 @@ describe("Agile Dashboard", function () {
         });
 
         it("should start a Kanban with Scrum elements", function () {
-            //This the Administration menu in the breadcrumb.
-            cy.get("[data-test=breadcrumb-dropdown-link]").click({ force: true });
+            cy.get("[data-test=link-to-ad-administration]").click({ force: true });
             cy.get("[data-test=admin-kanban-pane]").click();
             cy.get("[data-test=admin-kanban-activate-checkbox]").check();
             cy.get("[data-test=ad-service-submit]").click();
