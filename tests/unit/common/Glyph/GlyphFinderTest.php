@@ -24,11 +24,14 @@ namespace Tuleap\Glyph;
 
 use EventManager;
 use Mockery;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
 class GlyphFinderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testItThrowsAnExceptionWhenTheGlyphCanNotBeFound(): void
     {
@@ -46,6 +49,22 @@ class GlyphFinderTest extends TestCase
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph        = $glyph_finder->get('scrum');
+
+        $this->assertStringStartsWith('<svg', $glyph->getInlineString());
+    }
+
+    public function testItFindsGlyphsInCustomImagesDirectory(): void
+    {
+        $images_path = vfsStream::setup('/')->url();
+        \ForgeConfig::set('sys_data_dir', $images_path);
+        mkdir($images_path . '/images');
+        file_put_contents($images_path . '/images/organization_logo.svg', '<svg></svg>');
+
+        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager->shouldNotReceive('processEvent');
+
+        $glyph_finder = new GlyphFinder($event_manager);
+        $glyph        = $glyph_finder->get('organization_logo');
 
         $this->assertStringStartsWith('<svg', $glyph->getInlineString());
     }

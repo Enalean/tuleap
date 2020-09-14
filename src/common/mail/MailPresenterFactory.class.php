@@ -287,8 +287,8 @@ class MailPresenterFactory
         $color_logo = "#000";
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
-        $logo_url = $logo_retriever->getUrl();
-        return new MailAccountSuspensionAlertPresenter($logo_url, $color_logo, $last_access_date, $suspension_date, $language);
+        $logo_url = $logo_retriever->getLegacyUrl();
+        return new MailAccountSuspensionAlertPresenter((string) $logo_url, $color_logo, $last_access_date, $suspension_date, $language);
     }
 
     /**
@@ -300,7 +300,7 @@ class MailPresenterFactory
         $color_logo = "#000";
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
-        $logo_url = $logo_retriever->getUrl();
-        return new MailAccountSuspensionPresenter($logo_url, $color_logo, $last_access_date, $language);
+        $logo_url = $logo_retriever->getLegacyUrl();
+        return new MailAccountSuspensionPresenter((string) $logo_url, $color_logo, $last_access_date, $language);
     }
 }

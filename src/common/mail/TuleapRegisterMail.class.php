@@ -145,7 +145,7 @@ class TuleapRegisterMail
     {
         $logo_retriever = new LogoRetriever();
         $cid_logo       = '';
-        $path_logo      = $logo_retriever->getPath();
+        $path_logo      = $logo_retriever->getLegacyPath();
         if ($path_logo) {
             $id_attachment  = 'logo';
             $mail->addInlineAttachment(file_get_contents($path_logo), $logo_retriever->getMimetype(), $id_attachment);

@@ -93,6 +93,11 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      * @psalm-readonly
      */
     public $is_legacy_logo_customized;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_svg_logo_customized;
 
     public function __construct(
         $imgroot,
@@ -105,7 +110,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         NewDropdownPresenter $new_dropdown,
         $should_logo_be_displayed,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
-        bool $is_legacy_logo_customized
+        bool $is_legacy_logo_customized,
+        bool $is_svg_logo_customized
     ) {
         $this->imgroot                   = $imgroot;
         $this->user                      = $user;
@@ -121,6 +127,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->switch_to                 = $switch_to;
         $this->should_logo_be_displayed  = $should_logo_be_displayed;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
+        $this->is_svg_logo_customized    = $is_svg_logo_customized;
         $this->is_super_user             = $user->isSuperUser();
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');

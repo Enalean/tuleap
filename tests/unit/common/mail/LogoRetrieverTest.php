@@ -39,12 +39,12 @@ final class LogoRetrieverTest extends \PHPUnit\Framework\TestCase
         touch($this->path . '/images/organization_logo.png');
 
         $logo_retriever = new LogoRetriever();
-        $this->assertNotNull($logo_retriever->getPath());
+        $this->assertNotNull($logo_retriever->getLegacyPath());
     }
 
     public function testItDoesNotFoundUnavailableLogo(): void
     {
         $logo_retriever = new LogoRetriever();
-        $this->assertNull($logo_retriever->getPath());
+        $this->assertNull($logo_retriever->getLegacyPath());
     }
 }
