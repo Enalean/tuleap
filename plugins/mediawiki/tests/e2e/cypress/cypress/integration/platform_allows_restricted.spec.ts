@@ -25,7 +25,7 @@ describe("Plateform allows restricted", function () {
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
 
-        cy.get("[data-test=mediawiki-administration-link]").click();
+        cy.get("[data-test=mediawiki-administration-link]").click({ force: true });
         cy.get("[data-test=mediawiki-read-ugroups]").select("2");
 
         cy.get("[data-test=mediawiki-administration-permission-submit-button]").click();
@@ -59,7 +59,7 @@ describe("Plateform allows restricted", function () {
         cy.get("[data-test=project-details-submit-button]").click();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
-        cy.get("[data-test=mediawiki-administration-link]").click();
+        cy.get("[data-test=mediawiki-administration-link]").click({ force: true });
 
         cy.get('[data-test=mediawiki-read-ugroups] > [value="3"]')
             .should("be.selected")

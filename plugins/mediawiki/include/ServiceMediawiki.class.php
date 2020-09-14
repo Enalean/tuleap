@@ -46,16 +46,17 @@ class ServiceMediawiki extends Service
 
     public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], array $params = []): void
     {
-        if ($this->userIsAdmin(UserManager::instance()->getCurrentUser())) {
-            $toolbar[] = [
-                'title' => $GLOBALS['Language']->getText('global', 'Administration'),
-                'url'   => MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query([
-                    'group_id'   => $this->project->getID(),
-                ])
-            ];
-        }
+        $breadcrumb_builder = new \Tuleap\Mediawiki\MediawikiBreadcrumbBuilder(
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao(),
+            ),
+        );
+        $breadcrumbs = $breadcrumb_builder->getBreadcrumbs(
+            $this->project,
+            UserManager::instance()->getCurrentUser(),
+        );
 
-        $title       = $title . ' - ' . dgettext('tuleap-mediawiki', 'Mediawiki');
+        $title = $title . ' - ' . dgettext('tuleap-mediawiki', 'Mediawiki');
         parent::displayHeader($title, $breadcrumbs, $toolbar);
     }
 

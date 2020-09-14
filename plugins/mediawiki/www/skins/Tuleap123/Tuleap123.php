@@ -121,17 +121,17 @@ class Tuleap123Template extends BaseTemplate
         if ($this->isCompatibilityViewEnabled()) {
             $this->addForgeBackLinksToSidebar();
         } else {
+            $breadcrumb_builder = new \Tuleap\Mediawiki\MediawikiBreadcrumbBuilder(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao(),
+                ),
+            );
+            $breadcrumbs = $breadcrumb_builder->getBreadcrumbs(
+                $GLOBALS['group'],
+                UserManager::instance()->getCurrentUser(),
+            );
+            $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
             $GLOBALS['HTML']->header($this->params);
-            if ($this->IsUserAdmin()) {
-                echo '<ul class="nav nav-pills toolbar">
-                            <li>
-                                <a href="/plugins/mediawiki/forge_admin.php?group_id=' . $GLOBALS['group']->getId() . '"
-                                    data-test="mediawiki-administration-link">' .
-                                $GLOBALS['Language']->getText('global', 'Administration') . '
-                                </a>
-                            </li>
-                        </ul>';
-            }
         }
 
             echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
