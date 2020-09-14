@@ -65,6 +65,12 @@ function forum_header($params)
                 $params['group'] = db_result($result, 0, 'group_id');
                 $params['toptab'] = 'news';
                 $group_id = db_result($result, 0, 'group_id');
+                $GLOBALS['HTML']->addBreadcrumbs([
+                    [
+                        'title' => $Language->getText('news_index', 'news'),
+                        'url' => '/news/?group_id=' . urlencode($group_id),
+                    ],
+                ]);
                 site_project_header($params);
             } else {
                 $HTML->header($params);

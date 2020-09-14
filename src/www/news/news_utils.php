@@ -55,6 +55,13 @@ function news_header($params)
         $group_id        = $params['project_id'];
     }
 
+    $GLOBALS['HTML']->addBreadcrumbs([
+        [
+            'title' => $Language->getText('news_index', 'news'),
+            'url' => '/news/?group_id=' . urlencode($group_id),
+        ],
+    ]);
+
     /*
         Show horizontal links
     */
