@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,11 +24,17 @@ use GitRepository;
 
 class ClonePresenter
 {
-    public const GERRIT_LABEL = 'Gerrit';
-    public const SSH_LABEL = 'SSH';
-    public const HTTPS_LABEL = 'HTTPS';
+    public const  GERRIT_ID    = 'gerrit';
+    public const  GERRIT_LABEL = 'Gerrit';
 
-    private const IS_SELECTED = true;
+    public const  SSH_ID    = 'ssh';
+    public const  SSH_LABEL = 'SSH';
+
+    public const  HTTPS_ID    = 'https';
+    public const  HTTPS_LABEL = 'HTTPS';
+
+    private const MIRROR_ID_PREFIX = 'mirror-';
+
     private const IS_READ_ONLY = true;
 
     /** @var CloneURLPresenter[] */
@@ -37,18 +43,15 @@ class ClonePresenter
     /** @var CloneURLPresenter[] */
     public $ssh_mirrors_presenters = [];
 
-    /** @var string */
-    public $default_url;
-    /** @var string */
-    public $default_label;
-    /** @var bool */
-    public $default_url_is_read_only = false;
-
     /** @var bool */
     public $has_ssh_mirrors = false;
 
     /** @var DefaultCloneURLSelector */
     private $default_url_selector;
+    /**
+     * @var bool
+     */
+    public $has_clone_urls;
 
     public function __construct(DefaultCloneURLSelector $default_url_selector)
     {
@@ -61,22 +64,17 @@ class ClonePresenter
             $selected_clone_url = $this->default_url_selector->select($clone_urls, $current_user);
 
             $this->clone_url_presenters[] = new CloneURLPresenter(
+                $selected_clone_url->getId(),
                 $selected_clone_url->getUrl(),
                 $selected_clone_url->getLabel(),
-                self::IS_SELECTED,
                 $current_user->isAnonymous()
             );
-            $this->default_url            = $selected_clone_url->getUrl();
-            $this->default_label          = $selected_clone_url->getLabel();
 
-            if ($current_user->isAnonymous()) {
-                $this->default_url_is_read_only = true;
-                return;
-            }
+            $this->has_clone_urls = true;
+
             $this->buildAdditionalCloneURLs($clone_urls, $selected_clone_url, $repository);
         } catch (NoCloneURLException $e) {
-            $this->default_url   = null;
-            $this->default_label = null;
+            $this->has_clone_urls = false;
         }
     }
 
@@ -87,17 +85,17 @@ class ClonePresenter
     ): void {
         if ($clone_urls->hasSshUrl() && ! $selected_clone_url->hasSameUrl($clone_urls->getSshUrl())) {
             $this->clone_url_presenters[] = new CloneURLPresenter(
+                self::SSH_ID,
                 $clone_urls->getSshUrl(),
                 self::SSH_LABEL,
-                ! self::IS_SELECTED,
                 $clone_urls->hasGerritUrl()
             );
         }
         if ($clone_urls->hasHttpsUrl() && ! $selected_clone_url->hasSameUrl($clone_urls->getHttpsUrl())) {
             $this->clone_url_presenters[] = new CloneURLPresenter(
+                self::HTTPS_ID,
                 $clone_urls->getHttpsUrl(),
                 self::HTTPS_LABEL,
-                ! self::IS_SELECTED,
                 $clone_urls->hasGerritUrl()
             );
         }
@@ -114,9 +112,9 @@ class ClonePresenter
 
         foreach ($clone_urls->getMirrorsLinks() as $mirror) {
             $presenters[] = new CloneURLPresenter(
+                self::MIRROR_ID_PREFIX . $mirror->id,
                 $repository->getSSHForMirror($mirror),
                 $mirror->name,
-                ! self::IS_SELECTED,
                 self::IS_READ_ONLY
             );
         }

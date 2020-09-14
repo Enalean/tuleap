@@ -62,53 +62,12 @@
     margin: 5px 0 $tlp-medium-spacing;
 }
 
-.git-repository-actions-spacer {
-    flex: 1;
-    min-width: 20px;
-}
-
 .git-repository-actions-button {
-    margin: 0 0 0 10px;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
-.git-repository-clone-label {
-    align-self: center;
-    margin: 0 5px 0 0;
-}
-
-.git-repository-clone-dropdown-menu > .tlp-dropdown-menu-title {
-    white-space: nowrap;
-}
-
-#git-repository-clone-read-only {
-    margin-left: 1px;
-    padding: 0 0 0 12px;
-    border-right: 0;
-    border-left: 0;
-    background: $tlp-ui-white;
-
-    &.git-repository-clone-hidden {
-        width: 0;
-        padding: 0;
-        border-width: 1px 0;
-
-        > .tlp-badge-info {
-            display: none;
-        }
-    }
-}
-
-.git-repository-clone-form-element {
-    display: flex;
-    flex: 2 1 auto;
-    margin: 0;
-}
-
-#git-repository-clone-input {
-    min-width: 100px;
-    border-left: 0;
-    color: $tlp-ui-dimmed;
-    text-overflow: ellipsis;
+.git-repository-clone-popover-separator {
+    margin: $tlp-small-spacing (-$tlp-medium-spacing);
 }
 
 .git-repository-gerrit-status:last-child {
@@ -173,7 +132,6 @@
 }
 
 @media screen and (max-width: 1250px) {
-    .git-repository-clone-label,
     .git-repository-actions-settings-label {
         display: none;
     }

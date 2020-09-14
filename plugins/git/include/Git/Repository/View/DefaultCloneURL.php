@@ -28,9 +28,14 @@ class DefaultCloneURL
     private $url;
     /** @var string */
     private $label;
+    /**
+     * @var string
+     */
+    private $id;
 
-    public function __construct(string $url, string $label)
+    public function __construct(string $id, string $url, string $label)
     {
+        $this->id    = $id;
         $this->url   = $url;
         $this->label = $label;
     }
@@ -48,5 +53,10 @@ class DefaultCloneURL
     public function hasSameUrl(string $url): bool
     {
         return $this->url === $url;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 }

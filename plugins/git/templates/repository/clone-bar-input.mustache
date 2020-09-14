@@ -1,0 +1,23 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="clone-input-{{ id }}">{{ label }}</label>
+    <div class="tlp-form-element tlp-form-element-prepend tlp-form-element-append">
+        {{# is_read_only }}
+            <span class="tlp-prepend"><span class="tlp-badge-info">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span></span>
+        {{/ is_read_only }}
+        <input
+            type="text"
+            class="tlp-input"
+            id="clone-input-{{ id }}"
+            value="{{ url }}"
+            readonly>
+        <button
+            type="button"
+            class="tlp-append tlp-button-secondary tlp-button-outline tlp-tooltip tlp-tooltip-right git-repository-copy-url"
+            data-tlp-tooltip="{{# dgettext }}tuleap-git | Copy to clipboard{{/ dgettext }}"
+            aria-label="{{# dgettext }}tuleap-git | Copy to clipboard{{/ dgettext }}"
+            data-input-id="clone-input-{{ id }}"
+        >
+            <i class="fa fa-clipboard" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
