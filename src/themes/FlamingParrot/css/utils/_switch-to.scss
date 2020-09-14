@@ -99,6 +99,9 @@ $switch-to-font-family: $base-font;
     padding: 0 $tlp-medium-spacing;
     border-radius: 4px;
     background: $main-background;
+    color: $sidebar-background;
+    font-size: .875rem;
+    font-weight: 500;
     line-height: 38px;
     text-align: center;
 

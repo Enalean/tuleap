@@ -19,9 +19,12 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items-error">
-        <i class="fa fa-info-circle switch-to-recent-items-error-icon" aria-hidden="true"></i>
-        <translate>An error occurred while loading your recent items.</translate>
+    <div>
+        <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
+        <div class="switch-to-recent-items-error">
+            <i class="fa fa-danger-sign switch-to-recent-items-error-icon" aria-hidden="true"></i>
+            <translate>An error occurred while loading your recent items.</translate>
+        </div>
     </div>
 </template>
 

@@ -20,8 +20,8 @@
 
 <template>
     <div class="switch-to-recent-items">
-        <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
         <template v-if="has_history">
+            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
             <template v-if="has_filtered_history">
                 <recent-items-entry
                     v-for="entry of filtered_history.entries"

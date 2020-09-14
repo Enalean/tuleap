@@ -19,5 +19,12 @@
   -->
 
 <template functional>
-    <p><span class="tlp-skeleton-text"></span></p>
+    <div class="switch-to-modal-body-global-loading">
+        <p>
+            <span class="tlp-skeleton-text"></span>
+        </p>
+        <p>
+            <span class="tlp-skeleton-text"></span>
+        </p>
+    </div>
 </template>
