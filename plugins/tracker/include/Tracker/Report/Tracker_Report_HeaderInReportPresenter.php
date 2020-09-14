@@ -63,7 +63,7 @@ class Tracker_Report_HeaderInReportPresenter
      */
     public $updated_by_username;
     /**
-     * @var bool
+     * @var string
      */
     public $has_changed_classname;
     /**
@@ -87,7 +87,7 @@ class Tracker_Report_HeaderInReportPresenter
         Templating_Presenter_ButtonDropdowns $options_dropdown,
         array $options_params,
         $save_button,
-        bool $has_changed_classname,
+        string $has_changed_classname,
         array $warnings,
         Tracker_Report $report,
         PFUser $user
