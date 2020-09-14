@@ -23,7 +23,7 @@ describe("Plateform allows anonymous", function () {
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
 
-        cy.get("[data-test=mediawiki-administration-link]").click();
+        cy.get("[data-test=mediawiki-administration-link]").click({ force: true });
         cy.get("[data-test=mediawiki-read-ugroups]").select("1");
 
         cy.get("[data-test=mediawiki-administration-permission-submit-button]").click();
