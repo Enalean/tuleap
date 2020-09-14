@@ -1,6 +1,6 @@
 {{# artifact_move_button_presenter }}
-    <li>
-        <a class="btn tracker-action-button {{# hasError }}disabled{{/ hasError}}"
+    <li class="{{# hasError }}disabled{{/ hasError}}">
+        <a class="tracker-action-button"
             id="tracker-action-button-move"
             data-test="tracker-action-button-move"
             {{# hasError }}title="{{ errors_content }}"{{/ hasError }}

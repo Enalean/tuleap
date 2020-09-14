@@ -509,7 +509,7 @@ document.observe("dom:loaded", function () {
                     var link = new Element("a", {
                         title: codendi.locales.tracker_artifact_link.select,
                     })
-                        .addClassName("tracker-form-element-artifactlink-selector btn")
+                        .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
                             '<img src="' + codendi.imgroot + 'ic/clipboard-search-result.png" />'
                         );
@@ -518,7 +518,7 @@ document.observe("dom:loaded", function () {
                         title: codendi.locales.tracker_artifact_link.create,
                         href: "#",
                     })
-                        .addClassName("tracker-form-element-artifactlink-selector btn")
+                        .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
                             '<img src="' +
                                 codendi.imgroot +
@@ -527,6 +527,7 @@ document.observe("dom:loaded", function () {
 
                     var preview_button = document.createElement("button");
                     preview_button.classList.add("btn");
+                    preview_button.classList.add("btn-small");
                     preview_button.classList.add("tracker-form-element-artifactlink-add");
                     preview_button.type = "button";
                     preview_button.innerText = input.dataset.previewLabel;

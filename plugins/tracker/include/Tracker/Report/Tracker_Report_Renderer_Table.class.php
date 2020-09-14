@@ -725,7 +725,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if ($report_can_be_modified) {
                 $chunk .= '<div class="input-append">';
                 $chunk .= '<input id="renderer_table_chunksz_input" type="text" name="renderer_table[chunksz]" size="1" maxlength="5" value="' . (int) $this->chunksz . '" />';
-                $chunk .= '<button type="submit" class="btn">Ok</button> ';
+                $chunk .= '<button type="submit" class="btn btn-small">Ok</button> ';
                 $chunk .= '</div> ';
             } else {
                 $chunk .= (int) $this->chunksz;
