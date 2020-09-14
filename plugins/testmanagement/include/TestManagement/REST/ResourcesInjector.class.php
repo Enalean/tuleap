@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,22 +23,24 @@ namespace Tuleap\TestManagement\REST;
 use Project;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\TestManagement\REST\v1\CampaignRepresentation;
+use Tuleap\TestManagement\REST\v1\CampaignsResource;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionsResource;
+use Tuleap\TestManagement\REST\v1\ExecutionsResource;
 use Tuleap\TestManagement\REST\v1\NodeReferenceRepresentation;
+use Tuleap\TestManagement\REST\v1\NodeResource;
+use Tuleap\TestManagement\REST\v1\ProjectResource;
 
-/**
- * Inject resource into restler
- */
 class ResourcesInjector
 {
 
     public function populate(\Luracast\Restler\Restler $restler): void
     {
-        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ProjectResource', 'projects');
-        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
-        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');
-        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ExecutionsResource', 'testmanagement_executions');
-        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\NodeResource', 'testmanagement_nodes');
+        $restler->addAPIClass(ProjectResource::class, 'projects');
+        $restler->addAPIClass(CampaignsResource::class, 'testmanagement_campaigns');
+        $restler->addAPIClass(DefinitionsResource::class, 'testmanagement_definitions');
+        $restler->addAPIClass(ExecutionsResource::class, 'testmanagement_executions');
+        $restler->addAPIClass(NodeResource::class, 'testmanagement_nodes');
     }
 
     public function declareProjectResource(array &$resources, Project $project): void

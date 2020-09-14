@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\Campaign\AutomatedTests;
 
 use Jenkins_Client;
+use Tuleap\REST\JsonCast;
 use Tuleap\TestManagement\Campaign\Campaign;
 
 class AutomatedTestsTriggerer
@@ -36,7 +37,6 @@ class AutomatedTestsTriggerer
     /**
      * @throws NoJobConfiguredForCampaignException
      * @throws \Jenkins_ClientUnableToLaunchBuildException
-     *
      */
     public function triggerAutomatedTests(Campaign $campaign): void
     {
@@ -54,7 +54,8 @@ class AutomatedTestsTriggerer
         $this->jenkins_client->launchJobBuild(
             $url,
             [
-                'campaign' => $campaign->getLabel()
+                'campaign_id' => JsonCast::toInt($campaign->getArtifact()->getId()),
+                'campaign'    => $campaign->getLabel()
             ]
         );
     }
