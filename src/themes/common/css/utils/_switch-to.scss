@@ -109,7 +109,6 @@ $projects-container-width: 400px;
 }
 
 .switch-to-modal-body-title {
-    margin: 0 0 $tlp-medium-spacing ($tlp-medium-spacing + $approximate-width-of-project-icon);
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
@@ -189,17 +188,22 @@ $projects-container-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    min-height: 200px;
-    padding: 38px 0 46px;
+    padding: 0 0 $tlp-jumbo-spacing;
 }
 
-.switch-to-projects-softwaremap-empty-state {
-    border: 0;
-    color: $dark-modal-background;
-    font-size: .75rem;
-    font-weight: 600;
-    line-height: .875rem;
+
+.switch-to-modal-body-global-loading {
+    display: flex;
+    width: 100%;
+
+    > p {
+        flex: 1 1 auto;
+
+        > .tlp-skeleton-text {
+            display: block;
+            margin: 0 auto;
+        }
+    }
 }
 
 .switch-to-modal-body-global-empty {
@@ -208,7 +212,7 @@ $projects-container-width: 400px;
     flex-direction: column;
     align-items: center;
     min-height: 200px;
-    padding: 38px 0 46px;
+    padding: 0 0 $tlp-jumbo-spacing;
 }
 
 .switch-to-projects-container {
@@ -227,8 +231,20 @@ $projects-container-width: 400px;
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
     font-size: .8125rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1rem;
+}
+
+.switch-to-empty-illustration {
+    opacity: .5;
+
+    .stroked {
+        stroke: $dark-modal-dimmed-text-color;
+    }
+
+    .filled {
+        fill: $dark-modal-dimmed-text-color;
+    }
 }
 
 .switch-to-modal-no-matching-projects {
@@ -251,13 +267,12 @@ $projects-container-width: 400px;
     flex: 1 1 auto;
     width: calc(100% - #{$projects-container-width});
 
-    > .switch-to-modal-body-title {
+    .switch-to-modal-body-title {
         margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
     }
 }
 
 .switch-to-recent-items-error {
-    margin: 0 $tlp-small-spacing;
     opacity: .75;
     font-size: .8125rem;
     font-weight: 600;
@@ -268,11 +283,15 @@ $projects-container-width: 400px;
     margin: 0 4px 0 0;
 }
 
+.switch-to-recent-items-loading > p > .tlp-skeleton-text {
+    margin: 0 0 0 8px;
+}
+
 .switch-to-recent-items-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: $tlp-medium-spacing 0 0;
+    margin: 0 0 $tlp-jumbo-spacing;
 }
 
 .switch-to-recent-items-entry {
