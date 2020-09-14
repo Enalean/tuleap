@@ -45,15 +45,15 @@
     justify-content: center;
     width: $sidebar-expanded-width;
     margin: 0;
-    background: $tlp-theme-color;
-
-    .logo-svg-fill-theme-color {
-        fill: $tlp-ui-white;
-    }
+    background: darken($tlp-theme-sidebar-background-color, 5%);
 
     .logo-svg-fill-default-text-color {
         fill: $tlp-ui-white;
     }
+}
+
+.logo-svg-normal {
+    display: flex;
 }
 
 .logo-svg-small {
@@ -70,6 +70,6 @@
     }
 
     .logo-svg-small {
-        display: block;
+        display: flex;
     }
 }

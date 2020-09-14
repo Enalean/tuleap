@@ -49,15 +49,15 @@
     justify-content: center;
     width: $sidebar-width;
     margin: 0;
-    background: $navbar-color;
-
-    .logo-svg-fill-theme-color {
-        fill: $white;
-    }
+    background: darken($sidebar-background, 5%);
 
     .logo-svg-fill-default-text-color {
         fill: $white;
     }
+}
+
+.logo-svg-normal {
+    display: flex;
 }
 
 .logo-svg-small {
@@ -74,6 +74,6 @@
     }
 
     .logo-svg-small {
-        display: block;
+        display: flex;
     }
 }
