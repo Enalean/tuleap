@@ -60,9 +60,12 @@ button[name=tracker_query_submit] {
     }
 }
 
+#tracker_report_selection .btn {
+    font-weight: 500;
+}
+
 #tracker_report_options {
     position: relative;
-    font-weight: normal;
 }
 
 div.tracker-cant-delete {
@@ -3307,21 +3310,12 @@ td.tracker-unsubscriber-actions {
     margin: 0 0 10px;
 }
 
-#tracker-action-button-section {
-    .tracker-action-button {
-        border-color: #ffffff;
-        background-color: #ffffff;
-        box-shadow: none;
-        text-align: left;
-    }
-
-    .tracker-action-button:last-child {
-        margin: 5px 0;
-    }
+.tracker-action-button {
+    cursor: pointer;
 }
 
 #tracker-action-icon {
-    margin: 10px 0 0 5px;
+    margin: 8px 0 0 5px;
 }
 
 .tracker-richtexteditor-help {

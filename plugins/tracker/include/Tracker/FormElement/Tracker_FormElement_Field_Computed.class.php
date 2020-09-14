@@ -344,8 +344,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                     <div class="input-append">';
         $html .= $this->fetchArtifactValue($artifact, $value, $submitted_values);
         $html .= $this->fetchBackToAutocomputedButton(false);
+        $html .= '</div>';
         $html .= $this->fetchComputedValueWithLabel($computed_value);
-        $html .= '</div></div>';
+        $html .= '</div>';
 
         return $html;
     }
@@ -356,7 +357,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($is_disabled) {
             $disabled = 'disabled="disabled"';
         }
-        $html  = '<a class="btn auto-compute" ' . $disabled . ' data-test="switch-to-autocompute">
+        $html  = '<a class="btn btn-small auto-compute" ' . $disabled . ' data-test="switch-to-autocompute">
                     <i class="fa fa-repeat fa-flip-horizontal"></i>';
         $html .= dgettext('tuleap-tracker', 'Auto-compute');
         $html .= '</a>';

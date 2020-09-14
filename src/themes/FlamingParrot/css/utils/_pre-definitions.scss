@@ -35,6 +35,7 @@ $tlp-font-basepath: '../../tlp/src';
 html,
 body {
     height: 100%;
+    color: $sidebar-background;
     font-family: $base-font;
 }
 

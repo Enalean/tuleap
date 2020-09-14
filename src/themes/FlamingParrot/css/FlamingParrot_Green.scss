@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@import './utils/variables-green';
 @import './utils/pre-definitions';
 
 body.FlamingParrot_Green { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-    @import './utils/variables-green';
     @import './utils/definitions';
     @import './utils/post-definitions';
 }
