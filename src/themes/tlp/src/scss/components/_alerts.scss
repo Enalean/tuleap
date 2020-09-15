@@ -48,7 +48,7 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-info;
-    background: transparentize($tlp-ui-info, .9);
+    background: mix($tlp-theme-background-color, $tlp-ui-info, 90%);
     color: darken($tlp-ui-info, 30%);
 
     &::before {
@@ -64,7 +64,7 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-success;
-    background: transparentize($tlp-ui-success, .9);
+    background: mix($tlp-theme-background-color, $tlp-ui-success, 90%);
     color: $tlp-ui-success;
 
     &::before {
@@ -80,7 +80,7 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-warning;
-    background: transparentize($tlp-ui-warning, .9);
+    background: mix($tlp-theme-background-color, $tlp-ui-warning, 90%);
     color: darken($tlp-ui-warning, 10%);
 
     &::before {
@@ -96,7 +96,7 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-danger;
-    background: transparentize($tlp-ui-danger, .9);
+    background: mix($tlp-theme-background-color, $tlp-ui-danger, 90%);
     color: $tlp-ui-danger;
 
     &::before {

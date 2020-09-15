@@ -71,7 +71,12 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
             return;
         }
 
-        $layout->header(['title' => UserHelper::instance()->getDisplayNameFromUser($user)]);
+        $layout->header(
+            [
+                'title' => UserHelper::instance()->getDisplayNameFromUser($user),
+                'body_class' => ['body-user-profile'],
+            ],
+        );
         $this->renderToPage($user, $current_user);
         $layout->footer([]);
     }
