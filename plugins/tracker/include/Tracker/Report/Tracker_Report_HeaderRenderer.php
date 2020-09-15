@@ -61,7 +61,7 @@ class Tracker_Report_HeaderRenderer
         if ($report_can_be_modified) {
             $title            = '';
             $breadcrumbs      = [];
-            $params           = ['body_class' => ['in_tracker_report']];
+            $params           = ['body_class' => ['in_tracker_report', 'has-sidebar-with-pinned-header']];
 
             $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, [], $params);
         }

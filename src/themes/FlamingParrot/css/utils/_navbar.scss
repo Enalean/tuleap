@@ -74,7 +74,38 @@ header {
 
         > .header-container {
             padding: 0 $tlp-medium-spacing 0 0;
+
+            .btn {
+                padding: 0 $tlp-small-spacing;
+                border: 0 !important;
+                box-shadow: none !important;
+
+                &:hover,
+                &:focus,
+                &:active {
+                    opacity: .7;
+                    background: none !important;
+                }
+            }
+
+            .user-nav > .user-avatar {
+                box-shadow: none;
+            }
         }
+    }
+}
+
+&.has-sidebar {
+    header.pinned {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: calc(100% - #{$sidebar-width});
+        height: $navbar-height;
+    }
+
+    &.sidebar-collapsed header.pinned {
+        width: calc(100% - #{$sidebar-width-collapsed});
     }
 }
 
@@ -290,7 +321,7 @@ header {
         border-radius: 50%;
         box-shadow:  0 1px 4px rgba(0, 0, 0, .08),
             0 1px 2px rgba(0, 0, 0, .1),
-            0 -1px 0 rgba(0, 0, 0, .03) !important;
+            0 -1px 0 rgba(0, 0, 0, .03);
         cursor: pointer;
 
         &:hover {

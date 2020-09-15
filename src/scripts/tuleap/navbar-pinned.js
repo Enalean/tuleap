@@ -23,12 +23,15 @@ export function init() {
         return;
     }
 
-    let ticking = false;
-
-    if (document.body.classList.contains("has-sidebar")) {
+    const has_sidebar = document.body.classList.contains("has-sidebar");
+    const has_sidebar_with_pinned_header = document.body.classList.contains(
+        "has-sidebar-with-pinned-header"
+    );
+    if (has_sidebar && !has_sidebar_with_pinned_header) {
         return;
     }
 
+    let ticking = false;
     handlePinnedHeader(header);
     window.addEventListener("scroll", () => {
         if (!ticking) {
