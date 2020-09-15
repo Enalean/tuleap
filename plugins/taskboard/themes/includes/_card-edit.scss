@@ -221,8 +221,8 @@
         content: '\f040'; // fa-pencil
         display: flex;
         position: absolute;
-        top: 0;
-        left: -$tlp-medium-spacing;
+        top: -2px;
+        left: -18px;
         align-items: center;
         width: 20px;
         height: 26px;
@@ -231,6 +231,10 @@
         font-family: FontAwesome;
         font-size: 14px;
         font-weight: 300;
+
+        @if $tlp-density == $tlp-density-condensed {
+            top: -3px;
+        }
     }
 
     &:not(.taskboard-card-remaining-effort-edit-mode):hover::before {
@@ -244,7 +248,11 @@
 
         &::after {
             right: -16px;
-            border-width: 15px 0 15px 15px;
+            border-width: 14px 0 14px 15px;
+
+            @if $tlp-density == $tlp-density-condensed {
+                border-width: 13px 0 13px 15px;
+            }
         }
     }
 

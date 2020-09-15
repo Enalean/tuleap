@@ -30,7 +30,7 @@
 @import '../scripts/taskboard/src/helpers/drag-and-drop/drekkenov';
 
 .header-taskboard-pinned {
-    width: calc(100vw - #{$sidebar-expanded-width} - 12px);
+    width: calc(100% - #{$sidebar-expanded-width});
 
     > .header-container {
         height: $navbar-height;
@@ -38,7 +38,7 @@
 }
 
 .sidebar-collapsed .header-taskboard-pinned {
-    width: calc(100vw - #{$sidebar-collapsed-width} - 12px);
+    width: calc(100% - #{$sidebar-collapsed-width});
 }
 
 .taskboard-under-construction {

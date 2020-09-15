@@ -103,11 +103,13 @@ $tlp-tabs-transition: 75ms ease-out;
 }
 
 .tlp-tab {
+    $tab-vertical-padding: 16px;
+
     display: flex;
     position: relative;
     flex: 0 0 auto;
     align-items: center;
-    padding: $tlp-medium-spacing $tlp-large-spacing ($tlp-medium-spacing - 2);
+    padding: $tab-vertical-padding $tlp-large-spacing ($tab-vertical-padding - 2);
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
     color: $tlp-ui-dimmed;
