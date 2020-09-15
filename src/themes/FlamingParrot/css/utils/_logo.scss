@@ -30,6 +30,10 @@
     }
 }
 
+.sidebar-nav #logo {
+    background-color: darken($sidebar-background, 5%);
+}
+
 .logo-svg-link {
     display: flex;
     align-items: center;
