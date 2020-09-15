@@ -43,6 +43,17 @@
     font-size: 14px;
 }
 
+.dashboard-project-header-trovecat-link {
+    color: $tlp-ui-warning;
+    text-decoration: underline;
+
+    &:focus,
+    &:hover,
+    &:active {
+        color: darken($tlp-ui-warning, 10%);
+    }
+}
+
 .dashboard-project-header-trovecat-icon {
     margin: 0 3px 0 0;
     color: $tlp-theme-color;

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -1360,6 +1360,9 @@ msgstr ""
 "tous les comptes d'utilisateurs passent par une procédure de renouvellement  "
 "automatique. Les comptes inactifs sont considérés comme non utilisés et "
 "seront désactivés."
+
+msgid "Please categorize it."
+msgstr "Merci de le catégoriser."
 
 msgid "Please choose a valid text file"
 msgstr "Veuillez choisir un fichier texte valide"

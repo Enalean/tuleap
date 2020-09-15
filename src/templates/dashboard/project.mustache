@@ -43,7 +43,13 @@
         {{/ has_trove_cat }}
         {{# should_display_a_warning_message_for_no_trove_cat }}
             <div class="dashboard-project-header-trovecat">
-                <span class="tlp-text-danger"><i class="fa fa-warning"></i> {{ warning_no_trove_cat }}</span>
+                <span class="tlp-text-warning">
+                    <i class="fa fa-warning"></i>
+                    {{# gettext }}This project is not categorized yet.{{/ gettext }}
+                    <a href="{{ trove_url }}" class="dashboard-project-header-trovecat-link">
+                        {{# gettext }}Please categorize it.{{/gettext}}
+                    </a>
+                </span>
             </div>
         {{/ should_display_a_warning_message_for_no_trove_cat }}
     {{/ project_presenter }}
