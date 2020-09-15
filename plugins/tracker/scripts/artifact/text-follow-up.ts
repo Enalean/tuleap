@@ -20,9 +20,7 @@
 import { get } from "../../../../src/themes/tlp/src/js/fetch-wrapper";
 import { sanitize } from "dompurify";
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await showDiffDirectlyIfInUrl();
-
+document.addEventListener("DOMContentLoaded", () => {
     const markup_buttons = document.getElementsByClassName("toggle-diff");
 
     for (const diff_button of markup_buttons) {
@@ -30,18 +28,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             event.preventDefault();
 
             let changeset_id;
+            let field_id;
             if (diff_button instanceof HTMLElement) {
                 changeset_id = diff_button.dataset.changesetId;
+                field_id = diff_button.dataset.fieldId;
             }
 
             if (!changeset_id) {
                 throw new Error("Missing changeset id -" + changeset_id);
             }
 
+            if (!field_id) {
+                throw new Error("Missing field id -" + field_id);
+            }
+
             await toggleDiffContent(
                 diff_button,
                 document,
                 changeset_id,
+                field_id,
                 "strip-html",
                 "show-diff-follow-up"
             );
@@ -56,10 +61,13 @@ export async function toggleDiffContent(
     diff_button: Element,
     document: Document,
     changeset_id: string,
+    field_id: string,
     format: string,
     spinner_to_toogle: string
 ): Promise<void> {
-    const diff = await document.getElementById(`tracker-changeset-diff-comment-${changeset_id}`);
+    const diff = await document.getElementById(
+        `tracker-changeset-diff-comment-${changeset_id}-${field_id}`
+    );
     if (!diff) {
         return;
     }
@@ -195,8 +203,12 @@ function toggleMarkupButton(diff_button: Element, changeset_id: string): void {
         event.preventDefault();
         if (markup_button instanceof HTMLElement) {
             const changeset_id = markup_button.dataset.changesetId;
+            const field_id = markup_button.dataset.fieldId;
             if (!changeset_id) {
                 throw new Error("Missing changeset id -" + changeset_id);
+            }
+            if (!field_id) {
+                throw new Error("Missing field id -" + field_id);
             }
 
             try {
@@ -204,6 +216,7 @@ function toggleMarkupButton(diff_button: Element, changeset_id: string): void {
                     markup_button,
                     document,
                     changeset_id,
+                    field_id,
                     "html",
                     "show-markup-diff-follow-up"
                 );
@@ -227,36 +240,4 @@ function getFormattedDiffDiv(
     }
 
     return only_formatted_message;
-}
-
-async function showDiffDirectlyIfInUrl(): Promise<void> {
-    const url = document.location.toString(),
-        reg_ex = /#followup_(\d+)/,
-        matches = url.match(reg_ex);
-
-    if (!matches) {
-        return;
-    }
-
-    const followup_id = matches[1];
-
-    const follow_up = document.getElementById("followup_" + followup_id);
-    if (!follow_up) {
-        throw Error("Follow up " + followup_id + " not found in DOM");
-    }
-
-    const toggle_diff_button = follow_up.getElementsByClassName("toggle-diff");
-
-    if (!toggle_diff_button[0]) {
-        throw Error("Changeset " + followup_id + "does not have a diff button");
-    }
-    toggleIcon(toggle_diff_button[0]);
-    await toggleDiffContent(
-        toggle_diff_button[0],
-        document,
-        followup_id,
-        "strip-html",
-        "show-diff-follow-up"
-    );
-    toggleMarkupButton(toggle_diff_button[0], followup_id);
 }

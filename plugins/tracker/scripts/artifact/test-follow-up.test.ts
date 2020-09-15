@@ -70,6 +70,7 @@ describe("Text follow up", () => {
             diff_button_element,
             local_document_with_followup,
             changeset_id,
+            field_id,
             "strip-html",
             "show-diff-follow-up"
         );
@@ -96,6 +97,7 @@ describe("Text follow up", () => {
             diff_button_element,
             local_document_with_followup,
             changeset_id,
+            field_id,
             "strip-html",
             "show-diff-follow-up"
         );
@@ -184,7 +186,10 @@ describe("Text follow up", () => {
 
         const diff_element = local_document.createElement("div");
         diff_element.classList.add("diff");
-        diff_element.setAttribute("id", `tracker-changeset-diff-comment-${changeset_id}`);
+        diff_element.setAttribute(
+            "id",
+            `tracker-changeset-diff-comment-${changeset_id}-${field_id}`
+        );
 
         diff_element.setAttribute("data-artifact-id", value);
         diff_element.setAttribute("data-field-id", field_id);
