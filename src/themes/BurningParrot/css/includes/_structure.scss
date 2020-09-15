@@ -58,7 +58,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
     }
 }
 
-main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback {
+main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
     margin: ($top-floating-buttons-space - $breadcrumb-height + $tlp-medium-spacing) $tlp-medium-spacing 0;
 }
 
