@@ -19,10 +19,24 @@
 
 $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
+.body-user-profile {
+    background: linear-gradient(to bottom, $tlp-theme-sidebar-background-color 0, $tlp-theme-sidebar-background-color 200px, $tlp-theme-background-color 200px);
+
+    header:not(.pinned) .logo-svg-fill-default-text-color {
+        fill: $tlp-ui-white;
+    }
+
+    .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
+        margin: 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-large-spacing;
+        background: $tlp-theme-sidebar-background-color;
+    }
+}
+
 .user-profile {
     display: flex;
     justify-content: center;
-    padding: $tlp-jumbo-spacing;
+    padding: 0 $tlp-jumbo-spacing $tlp-jumbo-spacing;
     border-bottom: 5px solid $tlp-theme-color;
     background: $tlp-theme-sidebar-background-color;
     color: $tlp-ui-white;
