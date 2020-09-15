@@ -25,6 +25,10 @@
     background: $tlp-theme-color url('/images/organization_logo.png') no-repeat center center;
 }
 
+.sidebar > #logo {
+    background-color: darken($tlp-theme-sidebar-background-color, 5%);
+}
+
 .logo-svg-link {
     display: flex;
     align-items: center;
