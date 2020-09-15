@@ -1,17 +1,31 @@
-import _ from "lodash";
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { augment } from "../backlog-item-rest/backlog-item-factory";
 
 export default BacklogService;
 
-BacklogService.$inject = [
-    "$filter",
-    "BacklogItemFactory",
-    "ProjectService",
-    "BacklogItemCollectionService",
-];
+BacklogService.$inject = ["$filter", "ProjectService", "BacklogItemCollectionService"];
 
-function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItemCollectionService) {
-    var self = this;
-    _.extend(self, {
+function BacklogService($filter, ProjectService, BacklogItemCollectionService) {
+    const self = this;
+    Object.assign(self, {
         backlog: {
             accepted_types: {
                 toString: function () {
@@ -31,20 +45,18 @@ function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItem
             fully_loaded: false,
             pagination: { limit: 50, offset: 0 },
         },
-        addOrReorderBacklogItemsInBacklog: addOrReorderBacklogItemsInBacklog,
-        appendBacklogItems: appendBacklogItems,
-        canUserMoveCards: canUserMoveCards,
-        filterItems: filterItems,
-        loadMilestoneBacklog: loadMilestoneBacklog,
-        loadProjectBacklog: loadProjectBacklog,
-        removeBacklogItemsFromBacklog: removeBacklogItemsFromBacklog,
+        addOrReorderBacklogItemsInBacklog,
+        appendBacklogItems,
+        canUserMoveCards,
+        filterItems,
+        loadMilestoneBacklog,
+        loadProjectBacklog,
+        removeBacklogItemsFromBacklog,
     });
 
     function appendBacklogItems(items) {
-        items.forEach(function (item) {
-            BacklogItemFactory.augment(item);
-            self.items.content.push(item);
-        });
+        const augmented_items = items.map((item) => augment(item));
+        self.items.content.push(...augmented_items);
         self.items.loading = false;
     }
 
@@ -83,7 +95,7 @@ function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItem
     }
 
     function loadProjectBacklog(project_id) {
-        _.extend(self.backlog, {
+        Object.assign(self.backlog, {
             rest_base_route: "projects",
             rest_route_id: project_id,
         });
@@ -107,7 +119,7 @@ function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItem
     }
 
     function loadMilestoneBacklog(milestone) {
-        _.extend(self.backlog, {
+        Object.assign(self.backlog, {
             rest_base_route: "milestones",
             rest_route_id: milestone.id,
             current_milestone: milestone,

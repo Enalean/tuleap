@@ -18,14 +18,15 @@
  */
 
 import { get, patch } from "tlp";
+import { augment } from "../backlog-item-rest/backlog-item-factory";
 
 export default MilestoneService;
 
 const headers = { "content-type": "application/json" };
 
-MilestoneService.$inject = ["$q", "BacklogItemFactory"];
+MilestoneService.$inject = ["$q"];
 
-function MilestoneService($q, BacklogItemFactory) {
+function MilestoneService($q) {
     const self = this;
     Object.assign(self, {
         milestone_content_pagination: { limit: 50, offset: 0 },
@@ -107,10 +108,10 @@ function MilestoneService($q, BacklogItemFactory) {
             function fetchMilestoneContent(limit, offset) {
                 return getContent(milestone.id, limit, offset).then((data) => {
                     data.results.forEach((backlog_item) => {
-                        scope_items[backlog_item.id] = backlog_item;
-                        augmentBacklogItem(backlog_item);
+                        const augmented = augment(backlog_item);
+                        scope_items[augmented.id] = augmented;
 
-                        milestone.content.push(scope_items[backlog_item.id]);
+                        milestone.content.push(scope_items[augmented.id]);
                     });
 
                     updateInitialEffort(milestone);
@@ -120,10 +121,6 @@ function MilestoneService($q, BacklogItemFactory) {
                     }
                     milestone.loadingContent = false;
                 });
-            }
-
-            function augmentBacklogItem(data) {
-                BacklogItemFactory.augment(data);
             }
         }
     }

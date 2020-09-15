@@ -21,6 +21,7 @@ import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import * as tlp from "tlp";
+import * as factory from "./backlog-item-factory";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 jest.mock("tlp");
@@ -28,14 +29,10 @@ jest.mock("tlp");
 const expected_headers = { "content-type": "application/json" };
 
 describe("BacklogItemService", () => {
-    let $q, wrapPromise, BacklogItemService, BacklogItemFactory;
+    let $q, wrapPromise, BacklogItemService;
 
     beforeEach(() => {
-        BacklogItemFactory = { augment: jest.fn() };
-
-        angular.mock.module(planning_module, function ($provide) {
-            $provide.value("BacklogItemFactory", BacklogItemFactory);
-        });
+        angular.mock.module(planning_module);
 
         let $rootScope;
         angular.mock.inject(function (_$rootScope_, _$q_, _BacklogItemService_) {
@@ -43,6 +40,8 @@ describe("BacklogItemService", () => {
             $rootScope = _$rootScope_;
             BacklogItemService = _BacklogItemService_;
         });
+
+        jest.spyOn(factory, "augment").mockImplementation((backlog_item) => backlog_item);
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });

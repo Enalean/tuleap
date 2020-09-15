@@ -21,6 +21,7 @@ import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import * as tlp from "tlp";
+import * as factory from "../backlog-item-rest/backlog-item-factory";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 jest.mock("tlp");
@@ -28,14 +29,10 @@ jest.mock("tlp");
 const expected_headers = { "content-type": "application/json" };
 
 describe("MilestoneService", () => {
-    let $q, wrapPromise, MilestoneService, BacklogItemFactory;
+    let $q, wrapPromise, MilestoneService;
 
     beforeEach(() => {
-        BacklogItemFactory = { augment: jest.fn() };
-
-        angular.mock.module(planning_module, function ($provide) {
-            $provide.value("BacklogItemFactory", BacklogItemFactory);
-        });
+        angular.mock.module(planning_module);
 
         let $rootScope;
         angular.mock.inject(function (_$rootScope_, _$q_, _MilestoneService_) {
@@ -123,6 +120,7 @@ describe("MilestoneService", () => {
 
         it(`after getting the milestone, when I call getContent() on it,
             it will call GET on the milestone's content`, async () => {
+            jest.spyOn(factory, "augment").mockImplementation((backlog_item) => backlog_item);
             const first_backlog_item = { id: 704, label: "First user Story", initial_effort: 1 };
             const second_backlog_item = { id: 999, label: "Second user Story", initial_effort: 3 };
 

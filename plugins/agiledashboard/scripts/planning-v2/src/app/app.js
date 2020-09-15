@@ -61,7 +61,6 @@ import ItemAnimatorService from "./animator/item-animator-service.js";
 import BacklogDirective from "./backlog/backlog-directive.js";
 import BacklogItemDirective from "./backlog-item/backlog-item-directive.js";
 import BacklogService from "./backlog-rest/backlog-service.js";
-import BacklogItemFactory from "./backlog-item-rest/backlog-item-factory.js";
 import { ErrorState } from "./rest-error/ErrorState";
 
 export default angular
@@ -107,7 +106,6 @@ export default angular
     .service("BacklogService", BacklogService)
     .service("BacklogItemService", BacklogItemService)
     .service("MilestoneService", MilestoneService)
-    .factory("BacklogItemFactory", BacklogItemFactory)
     .component("successMessage", SuccessMessageComponent)
     .component("itemProgress", ItemProgressComponent)
     .component("globalError", GlobalErrorComponent)

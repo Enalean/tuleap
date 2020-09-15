@@ -1,18 +1,32 @@
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as factory from "../backlog-item-rest/backlog-item-factory";
 
-describe("BacklogService -", function () {
-    var $q, $scope, $filter, BacklogService, BacklogItemFactory, ProjectService;
+describe("BacklogService", () => {
+    let $q, $scope, $filter, BacklogService, ProjectService;
 
-    beforeEach(function () {
+    beforeEach(() => {
         angular.mock.module(planning_module, function ($provide) {
-            $provide.decorator("BacklogItemFactory", function ($delegate) {
-                jest.spyOn($delegate, "augment").mockImplementation(() => {});
-
-                return $delegate;
-            });
-
             $provide.decorator("$filter", function () {
                 return jest.fn(function () {
                     return function () {};
@@ -32,27 +46,30 @@ describe("BacklogService -", function () {
             _$rootScope_,
             _$filter_,
             _BacklogService_,
-            _BacklogItemFactory_,
             _ProjectService_
         ) {
             $q = _$q_;
             $scope = _$rootScope_.$new();
             $filter = _$filter_;
             BacklogService = _BacklogService_;
-            BacklogItemFactory = _BacklogItemFactory_;
             ProjectService = _ProjectService_;
         });
     });
 
-    describe("appendBacklogItems() -", function () {
-        it("Given an array of items, when I append them to the backlog, then each item will be augmented using BacklogItemFactory and appended to the items' content, and the items object will no longer be marked as loading", function () {
+    describe("appendBacklogItems()", () => {
+        it(`Given an array of items, when I append them to the backlog,
+            then each item will be augmented using BacklogItemFactory and appended to the items' content,
+            and the items object will no longer be marked as loading`, () => {
+            let augment = jest
+                .spyOn(factory, "augment")
+                .mockImplementation((backlog_item) => backlog_item);
             BacklogService.items.content = [{ id: 37 }];
 
             BacklogService.appendBacklogItems([{ id: 64 }, { id: 13 }]);
 
             expect(BacklogService.items.content).toEqual([{ id: 37 }, { id: 64 }, { id: 13 }]);
-            expect(BacklogItemFactory.augment).toHaveBeenCalledWith({ id: 64 });
-            expect(BacklogItemFactory.augment).toHaveBeenCalledWith({ id: 13 });
+            expect(augment).toHaveBeenCalledWith({ id: 64 });
+            expect(augment).toHaveBeenCalledWith({ id: 13 });
             expect(BacklogService.items.loading).toBeFalsy();
         });
     });

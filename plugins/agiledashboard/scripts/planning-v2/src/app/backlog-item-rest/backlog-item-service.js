@@ -18,14 +18,15 @@
  */
 
 import { get, patch } from "tlp";
+import { augment } from "./backlog-item-factory";
 
 export default BacklogItemService;
 
 const headers = { "content-type": "application/json" };
 
-BacklogItemService.$inject = ["$q", "BacklogItemFactory"];
+BacklogItemService.$inject = ["$q"];
 
-function BacklogItemService($q, BacklogItemFactory) {
+function BacklogItemService($q) {
     const self = this;
     Object.assign(self, {
         getBacklogItem,
@@ -43,8 +44,7 @@ function BacklogItemService($q, BacklogItemFactory) {
             get(encodeURI(`/api/v1/backlog_items/${backlog_item_id}`))
                 .then((response) => response.json())
                 .then((backlog_item) => {
-                    augmentBacklogItem(backlog_item);
-                    return { backlog_item };
+                    return { backlog_item: augment(backlog_item) };
                 })
         );
     }
@@ -56,8 +56,8 @@ function BacklogItemService($q, BacklogItemFactory) {
             }).then((response) => {
                 const total = response.headers.get("X-PAGINATION-SIZE");
                 return response.json().then((backlog_items) => {
-                    backlog_items.forEach(augmentBacklogItem);
-                    return { results: backlog_items, total };
+                    const augmented = backlog_items.map(augment);
+                    return { results: augmented, total };
                 });
             })
         );
@@ -70,8 +70,8 @@ function BacklogItemService($q, BacklogItemFactory) {
             }).then((response) => {
                 const total = response.headers.get("X-PAGINATION-SIZE");
                 return response.json().then((backlog_items) => {
-                    backlog_items.forEach(augmentBacklogItem);
-                    return { results: backlog_items, total };
+                    const augmented = backlog_items.map(augment);
+                    return { results: augmented, total };
                 });
             })
         );
@@ -84,15 +84,11 @@ function BacklogItemService($q, BacklogItemFactory) {
             }).then((response) => {
                 const total = response.headers.get("X-PAGINATION-SIZE");
                 return response.json().then((backlog_items) => {
-                    backlog_items.forEach(augmentBacklogItem);
-                    return { results: backlog_items, total };
+                    const augmented = backlog_items.map(augment);
+                    return { results: augmented, total };
                 });
             })
         );
-    }
-
-    function augmentBacklogItem(data) {
-        BacklogItemFactory.augment(data);
     }
 
     function reorderBacklogItemChildren(backlog_item_id, dropped_item_ids, compared_to) {
