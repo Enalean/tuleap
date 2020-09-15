@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             toggleIcon(diff_button);
-            toggleMarkupButton(diff_button, changeset_id);
+            toggleMarkupButton(diff_button, changeset_id, field_id);
         });
     }
 });
@@ -177,9 +177,9 @@ export function shouldLoadSomeContent(
     return last_load_by === "html" && new_format === "strip-html" && !is_open;
 }
 
-function toggleMarkupButton(diff_button: Element, changeset_id: string): void {
+function toggleMarkupButton(diff_button: Element, changeset_id: string, field_id: string): void {
     const markup_button = document.getElementById(
-        `tracker-changeset-markup-diff-button-${changeset_id}`
+        `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`
     );
 
     if (!markup_button) {

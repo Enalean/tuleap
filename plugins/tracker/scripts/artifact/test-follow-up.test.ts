@@ -181,7 +181,7 @@ describe("Text follow up", () => {
         markup_diff_button.setAttribute("data-field-id", field_id);
         markup_diff_button.setAttribute(
             "id",
-            `tracker-changeset-markup-diff-button-${changeset_id}`
+            `tracker-changeset-markup-diff-button-${changeset_id}-${field_id}`
         );
 
         const diff_element = local_document.createElement("div");
