@@ -1,0 +1,80 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.trackers-homepage-title {
+    display: flex;
+    align-items: center;
+
+    > .tlp-button-primary {
+        margin: 0 0 0 $tlp-medium-spacing;
+    }
+}
+
+.trackers-homepage-tracker {
+    width: 50%;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.#{$color-name} {
+            &:hover {
+                border-color: map-get($colors, 'border');
+            }
+
+            > .trackers-homepage-tracker-title-container > .trackers-homepage-tracker-title {
+                color: map-get($colors, 'text');
+            }
+        }
+    }
+}
+
+.trackers-homepage-tracker-title-container {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-medium-spacing;
+}
+
+.trackers-homepage-tracker-title {
+    flex: 0 0 auto;
+    margin: 0 $tlp-small-spacing 0 0;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.trackers-homepage-tracker-badge {
+    flex: 0 0 auto;
+}
+
+.trackers-homepage-tracker-spacer {
+    flex: 1 1 auto;
+}
+
+.trackers-homepage-tracker-trash {
+    color: $tlp-ui-danger;
+    cursor: pointer;
+
+    &.disabled {
+        color: transparentize($tlp-ui-dimmed, .5);
+        cursor: default;
+    }
+}
+
+.trackers-homepage-tracker-description {
+    display: block;
+    color: $tlp-ui-dimmed;
+    font-size: .875rem;
+}

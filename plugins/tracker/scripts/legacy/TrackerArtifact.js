@@ -89,14 +89,6 @@ document.observe("dom:loaded", function () {
     });
     bindShowHideFieldsets();
 
-    $$(".tracker_statistics").each(function (div) {
-        codendi.Tooltips.push(
-            new codendi.Tooltip(div.up().previous().down("a.link-to-tracker"), "").createTooltip(
-                div.remove().setStyle({ fontSize: "1.1em" })
-            )
-        );
-    });
-
     $$(".tracker_artifact_followup_header").each(function (header) {
         if (header.up().next()) {
             header.observe("mouseover", function () {

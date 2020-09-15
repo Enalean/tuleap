@@ -1,27 +1,36 @@
-<div class="tracker_statistics">
-    <div style="text-align:right;font-size:0.825em;">
-        #{{ tracker_id }}
+<section class="tlp-popover" id="tracker-statistics-popover-{{ tracker_id }}">
+    <div class="tlp-popover-arrow"></div>
+    <div class="tlp-popover-body">
+        <div class="tlp-property">
+            <label class="tlp-label">{{# dgettext }} tuleap-tracker | Tracker id {{/ dgettext }}</label>
+            #{{ tracker_id }}
+        </div>
+        {{# can_display_nb_artifacts }}
+            <div class="tlp-property">
+                <label class="tlp-label">{{# dgettext }} tuleap-tracker | Number of open artifacts {{/ dgettext }}</label>
+                {{ nb_open_artifacts }}
+            </div>
+        {{/ can_display_nb_artifacts }}
+
+        <div class="tlp-property">
+            <label class="tlp-label">{{# dgettext }} tuleap-tracker | Total number of artifacts {{/ dgettext }}</label>
+            {{ total_nb_artifacts }}
+        </div>
+
+        {{# has_last_creation_and_update_dates }}
+            {{# tlp_relative_date_last_update_purified }}
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }} tuleap-tracker | Last update {{/ dgettext }}</label>
+                    {{{ tlp_relative_date_last_update_purified }}}
+                </div>
+            {{/ tlp_relative_date_last_update_purified }}
+
+            {{# tlp_relative_date_last_update_purified }}
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }} tuleap-tracker | Last artifact created {{/ dgettext }}</label>
+                    {{{ tlp_relative_date_last_creation_purified }}}
+                </div>
+            {{/ tlp_relative_date_last_update_purified }}
+        {{/ has_last_creation_and_update_dates }}
     </div>
-    {{# can_display_nb_artifacts }}
-        {{# dgettext }} tuleap-tracker | Number of open artifacts: {{/ dgettext }}
-        {{ nb_open_artifacts }}
-        <br>
-    {{/ can_display_nb_artifacts }}
-
-    {{# dgettext }} tuleap-tracker | Total number of artifacts: {{/ dgettext }}
-    {{ total_nb_artifacts }}
-    <br>
-
-    {{# has_last_creation_and_update_dates }}
-        {{# dgettext }} tuleap-tracker | Recent activity: {{/ dgettext }}
-        <ul>
-            {{# tlp_relative_date_last_update_purified }}
-                <li>{{# dgettext }} tuleap-tracker | Last update: {{/ dgettext }} {{{ tlp_relative_date_last_update_purified }}}</li>
-            {{/ tlp_relative_date_last_update_purified }}
-
-            {{# tlp_relative_date_last_update_purified }}
-                <li>{{# dgettext }} tuleap-tracker | Last artifact created: {{/ dgettext }} {{{ tlp_relative_date_last_creation_purified }}}</li>
-            {{/ tlp_relative_date_last_update_purified }}
-        </ul>
-    {{/ has_last_creation_and_update_dates }}
-</div>
+</section>
