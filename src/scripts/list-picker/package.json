@@ -1,0 +1,16 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/list-picker",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/list-picker.js",
+  "dependencies": {
+    "dompurify": "^2.0.15",
+    "mustache": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.0.1"
+  }
+}

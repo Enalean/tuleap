@@ -58,6 +58,10 @@ test-results.xml
 ENTERPRISE_BUILD
 .deptrac.cache
 
+# "Internal" npm packages
+src/scripts/vue-components/breadcrumb-privacy/dist/
+src/scripts/list-picker/dist/
+
 #legacy
 coverage/
 src/www/themes/*/vendor/

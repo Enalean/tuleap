@@ -5,6 +5,7 @@
     },
     "include": [
         "scripts/account/**/*",
+        "scripts/list-picker/src/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/banner/**/*",
         "scripts/project/registration/**/*",

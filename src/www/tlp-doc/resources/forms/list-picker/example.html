@@ -1,0 +1,56 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="list-picker-sb">ListPicker</label>
+    <select id="list-picker-sb" name="list-value">
+        <option value=""></option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker";
+
+        createListPicker(document.querySelector('#list-picker-sb'), {
+            placeholder: "Choose a value in the list"
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-disabled">
+    <label class="tlp-label" for="list-picker-sb-disabled">ListPicker disabled</label>
+    <select id="list-picker-sb-disabled"
+            name="list-value"
+            disabled
+    >
+        <option value=""></option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker";
+
+        createListPicker(document.querySelector('#list-picker-sb-disabled'), {
+            placeholder: "You can't choose any value yet"
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element tlp-form-element-error">
+    <label class="tlp-label" for="list-picker-sb-error">ListPicker error <i class="fa fa-asterisk" aria-hidden="true"></i></label>
+    <select id="list-picker-sb-error"
+            name="list-value"
+    >
+        <option value="" disabled selected></option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+    <p class="tlp-text-danger">This field is mandatory, please choose a value in the list.</p>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker";
+
+        createListPicker(document.querySelector('#list-picker-sb-disabled'), {
+            placeholder: "Choose a value in the list"
+        });
+    </script>
+</div>
