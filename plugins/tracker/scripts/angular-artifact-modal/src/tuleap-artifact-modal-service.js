@@ -134,7 +134,7 @@ function ArtifactModalService(
                 );
                 modal_model.tracker = transformed_tracker;
                 modal_model.color = transformed_tracker.color_name;
-                modal_model.title = transformed_tracker.label;
+                modal_model.title = transformed_tracker.item_name;
 
                 var initial_values = mapPrefillsToFieldValues(
                     prefill_values || [],
