@@ -119,7 +119,7 @@ describe("NewTuleapArtifactModalService", () => {
             tracker = {
                 id: tracker_id,
                 color_name: "importer",
-                label: "preinvest",
+                item_name: "preinvest",
                 parent: null,
             };
             getTracker.mockReturnValue($q.when(tracker));
