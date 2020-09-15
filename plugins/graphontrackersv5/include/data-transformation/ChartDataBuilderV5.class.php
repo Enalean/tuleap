@@ -62,11 +62,7 @@ abstract class ChartDataBuilderV5
 
     protected function displayNoFieldError()
     {
-        $error_message = $GLOBALS['Language']->getText(
-            'plugin_graphontrackersv5',
-            'field_not_found',
-            $this->chart->getTitle()
-        );
+        $error_message = sprintf(dgettext('tuleap-graphontrackersv5', 'Unable to find the needed field to build the chart "%1$s". Please edit the chart and ajust settings.'), $this->chart->getTitle());
         echo "<p class='feedback_error'>$error_message</p>";
     }
 }

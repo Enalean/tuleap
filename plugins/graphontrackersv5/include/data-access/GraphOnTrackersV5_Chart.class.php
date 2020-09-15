@@ -464,13 +464,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $siblings = $this->getSiblingsForRankSelectbox();
 
         return [
-            'id'          => new HTML_Element_Input_Hidden($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'id'), 'chart[id]', $this->getId()),
-            'title'       => new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'title'), 'chart[title]', $this->getTitle()),
-            'description' => new HTML_Element_Textarea($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'description'), 'chart[description]', $this->getDescription()),
-            'rank'        => new HTML_Element_Selectbox_Rank($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'rank'), 'chart[rank]', $this->getRank(), $this->getId(), $siblings),
+            'id'          => new HTML_Element_Input_Hidden(dgettext('tuleap-graphontrackersv5', 'Id'), 'chart[id]', $this->getId()),
+            'title'       => new HTML_Element_Input_Text(dgettext('tuleap-graphontrackersv5', 'Title'), 'chart[title]', $this->getTitle()),
+            'description' => new HTML_Element_Textarea(dgettext('tuleap-graphontrackersv5', 'Description'), 'chart[description]', $this->getDescription()),
+            'rank'        => new HTML_Element_Selectbox_Rank(dgettext('tuleap-graphontrackersv5', 'Rank'), 'chart[rank]', $this->getRank(), $this->getId(), $siblings),
             'dimensions'  => new HTML_Element_Columns(
-                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'width'), 'chart[width]', $this->getWidth(), 4),
-                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'height'), 'chart[height]', $this->getHeight(), 4)
+                new HTML_Element_Input_Text(dgettext('tuleap-graphontrackersv5', 'Width'), 'chart[width]', $this->getWidth(), 4),
+                new HTML_Element_Input_Text(dgettext('tuleap-graphontrackersv5', 'Height'), 'chart[height]', $this->getHeight(), 4)
             ),
         ];
     }

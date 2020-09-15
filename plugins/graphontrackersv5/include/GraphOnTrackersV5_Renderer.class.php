@@ -98,15 +98,15 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $url = '?' . http_build_query([
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id]);
-            $html .= '<p><a href="' . $url . '">&laquo; ' . $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'return_renderer') . '</a></p>';
+            $html .= '<p><a href="' . $url . '">&laquo; ' . dgettext('tuleap-graphontrackersv5', 'Go back to charts') . '</a></p>';
             $html .= '<form action="' . $url . '" name="edit_chart_form" method="post">';
             $html .= '<input type="hidden" name="func" VALUE="renderer" />';
             $html .= '<input type="hidden" name="renderer_plugin_graphontrackersv5[edit_chart]" VALUE="' . $this->chart_to_edit->getId() . '" />';
             $html .= '<table>';
             $html .= '<thead>
                         <tr class="boxtable">
-                            <th class="boxtitle">' . $GLOBALS['Language']->getText('plugin_graphontrackersv5_boxtable', 'chart_properties') . '</th>
-                            <th class="boxtitle">' . $GLOBALS['Language']->getText('plugin_graphontrackersv5_boxtable', 'preview') . '</th>
+                            <th class="boxtitle">' . dgettext('tuleap-graphontrackersv5', 'Chart Properties') . '</th>
+                            <th class="boxtitle">' . dgettext('tuleap-graphontrackersv5', 'Preview') . '</th>
                         </tr>
                       </thead>';
             $html .= '<tbody><tr valign="top"><td>';
@@ -156,7 +156,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html .= '<div class="btn-group">';
             $html .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
             $html .= '<i class="fa fa-plus"></i> ';
-            $html .= $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart');
+            $html .= dgettext('tuleap-graphontrackersv5', 'Add a Chart');
             $html .= ' <span class="caret"></span>';
             $html .= '</a>';
             $html .= '<ul class="dropdown-menu pull-right"> ';
@@ -250,7 +250,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
                             $this->chart_to_edit,
                             $chart_data['rank']
                         );
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'updated_report'));
+                        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-graphontrackersv5', 'Graphic Report updated successfully'));
                     }
                 }
                 $this->report->display($tracker_manager, $request, $current_user);
