@@ -77,7 +77,6 @@ include_html	highest	Maximum
 include_html	g_not_exist	Ce groupe n'existe pas.
 include_html	invalid_g	Groupe invalide
 include_html	unknown_value	*** valeur inconnue ***
-include_html	no_trovcat	Ce projet n'est pas categorisé prière de selectionner <a href="$1">[Catégorisation]</a>
 #
 #-----------------------------------------------
 # Script: SF/www/include/layout.php

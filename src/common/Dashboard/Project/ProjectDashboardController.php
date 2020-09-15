@@ -167,19 +167,6 @@ class ProjectDashboardController
             foreach ($trove_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
                 $trove_cats[] = $row_trovecat['fullname'];
             }
-
-            if (
-                ForgeConfig::get('sys_trove_cat_mandatory')
-                && $request->getCurrentUser()->isAdmin($project->getID())
-                && empty($trove_cats)
-            ) {
-                $trove_url = '/project/' . (int) $project->getID() . '/admin/categories';
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    $GLOBALS['Language']->getText('include_html', 'no_trovcat', $trove_url),
-                    CODENDI_PURIFIER_DISABLED
-                );
-            }
         }
 
         $this->assets_includer->includeAssets($project_dashboards_presenter);

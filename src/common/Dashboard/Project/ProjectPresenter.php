@@ -35,6 +35,11 @@ class ProjectPresenter
     public $trove_cats;
     public $has_trove_cat;
     public $should_display_a_warning_message_for_no_trove_cat;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $trove_url;
 
     public function __construct(
         Project $project,
@@ -46,12 +51,12 @@ class ProjectPresenter
         $this->access        = new ProjectAccessPresenter($project->getAccess());
         $this->trove_cats    = implode(', ', $trove_cats);
         $this->has_trove_cat = ! empty($this->trove_cats);
+        $this->trove_url     = '/project/' . (int) $project->getID() . '/admin/categories';
 
         $this->should_display_a_warning_message_for_no_trove_cat = $current_user->isAdmin($project->getID())
             && ! $this->has_trove_cat
             && \ForgeConfig::get('sys_use_trove')
             && \ForgeConfig::get('sys_trove_cat_mandatory');
-        $this->warning_no_trove_cat = _('This project is not categorized yet.');
 
         $parent_project = $project_manager->getParentProject($project->getID());
         if ($parent_project) {
