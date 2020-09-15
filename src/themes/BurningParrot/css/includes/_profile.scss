@@ -17,19 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$profile-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
 $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
 .body-user-profile {
-    background: linear-gradient(to bottom, $tlp-theme-sidebar-background-color 0, $tlp-theme-sidebar-background-color 200px, $tlp-theme-background-color 200px);
+    background: linear-gradient(to bottom, $profile-header-background 0, $profile-header-background 200px, $tlp-theme-background-color 200px);
 
-    header:not(.pinned) .logo-svg-fill-default-text-color {
-        fill: $tlp-ui-white;
+    header:not(.pinned) {
+        #logo {
+            background-color: transparent;
+            background-position: left center;
+        }
+
+        .logo-svg-fill-default-text-color {
+            fill: $tlp-ui-white;
+        }
     }
 
     .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
         margin: 0;
         padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-large-spacing;
-        background: $tlp-theme-sidebar-background-color;
+        background: $profile-header-background;
+    }
+
+    #nav-dropdown-user-content,
+    #nav-dropdown-new-content {
+        > .tlp-popover-arrow {
+            border-bottom-color: lighten($tlp-theme-sidebar-background-color, 10%);
+        }
+
+        > .tlp-popover-header {
+            background: lighten($tlp-theme-sidebar-background-color, 10%);
+        }
     }
 }
 
@@ -38,7 +57,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
     justify-content: center;
     padding: 0 $tlp-jumbo-spacing $tlp-jumbo-spacing;
     border-bottom: 5px solid $tlp-theme-color;
-    background: $tlp-theme-sidebar-background-color;
+    background: $profile-header-background;
     color: $tlp-ui-white;
 }
 

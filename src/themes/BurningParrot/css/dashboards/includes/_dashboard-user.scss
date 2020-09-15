@@ -1,19 +1,73 @@
+$dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
+
+.body-user-dashboard {
+    background: linear-gradient(to bottom, $dashboard-header-background 0, $dashboard-header-background 100px, $tlp-theme-background-color 100px);
+
+    header:not(.pinned) {
+        #logo {
+            background-color: transparent;
+            background-position: left center;
+        }
+
+        .logo-svg-fill-default-text-color {
+            fill: $tlp-ui-white;
+        }
+    }
+
+    .full-width:not(.pinned) .logo-svg-link {
+        margin: 0;
+    }
+
+    .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
+        margin: 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-large-spacing;
+        background: $dashboard-header-background;
+    }
+
+    #nav-dropdown-user-content,
+    #nav-dropdown-new-content {
+        > .tlp-popover-arrow {
+            border-bottom-color: lighten($tlp-theme-sidebar-background-color, 10%);
+        }
+
+        > .tlp-popover-header {
+            background: lighten($tlp-theme-sidebar-background-color, 10%);
+        }
+    }
+
+    .dashboard-tabs {
+        padding: 0 ($tlp-medium-spacing + 4px);
+        background: lighten($tlp-theme-sidebar-background-color, 5%);
+        box-shadow: none;
+
+        > .tlp-tab {
+            color: transparentize($tlp-ui-border-dark, .2);
+
+            &:hover,
+            &.tlp-tab-active {
+                border-bottom-color: transparent;
+                color: $tlp-ui-white;
+            }
+
+            #dashboard-tabs-dropdown-trigger {
+                color: $tlp-ui-border-normal;
+
+                &:hover {
+                    color: $tlp-ui-white;
+                }
+            }
+        }
+    }
+}
+
+.dashboard-user-title-container {
+    padding: 0 $tlp-medium-spacing $tlp-large-spacing;
+    background: $dashboard-header-background;
+}
+
 .dashboard-user-title {
-    display: flex;
-    align-items: center;
-    margin: 0 0 $tlp-medium-spacing;
-}
-
-.dashboard-user-title-name {
-    margin: 0 0 0 $tlp-small-spacing;
-    color: $tlp-theme-color;
-    font-size: 30px;
-    font-weight: 300;
-    line-height: 26px;
-}
-
-.dashboard-user-title-login {
-    display: block;
-    margin: 2px 0 0;
-    font-size: 16px;
+    margin: 0;
+    color: $tlp-ui-white;
+    font-size: 3rem;
+    font-weight: 600;
 }

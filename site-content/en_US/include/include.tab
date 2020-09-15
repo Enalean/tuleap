@@ -132,7 +132,6 @@ include_menu	my_perso_page	My Personal Page
 include_menu	bookmark_this_page	Bookmark This Page
 include_menu	login	Login
 include_menu	new_user	New User
-include_menu	auth_prev_success	Previous successful log-on:
 include_menu	auth_last_failure	Last log-on failure:
 include_menu	auth_nb_failure	Number of bad attempts:
 include_menu	help	Help
