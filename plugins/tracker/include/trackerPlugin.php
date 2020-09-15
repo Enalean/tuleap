@@ -408,12 +408,26 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
+        $request = HTTPRequest::instance();
+
         if (
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
+            $this->isInTrackersHomepage() ||
             $this->isInDashboard()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
+    }
+
+    private function isInTrackersHomepage(): bool
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
+        parse_str($_SERVER['QUERY_STRING'], $output);
+
+        return array_keys($output) === ['group_id'];
     }
 
     public function cssFile()

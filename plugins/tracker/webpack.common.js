@@ -54,6 +54,7 @@ const webpack_config_for_vue = {
     entry: {
         "admin-nature": "./scripts/admin-nature.js",
         "global-admin": "./scripts/global-admin.js",
+        "tracker-homepage": "./scripts/tracker-homepage/index.js",
         "tracker-admin": "./scripts/tracker-admin/index.js",
         "tracker-creation": "./scripts/tracker-creation/index.ts",
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",

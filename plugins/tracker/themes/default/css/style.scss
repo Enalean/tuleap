@@ -68,10 +68,6 @@ button[name=tracker_query_submit] {
     position: relative;
 }
 
-div.tracker-cant-delete {
-    opacity: .3;
-}
-
 #report_copy_name_input {
     position: relative;
     top: 4.5px;
@@ -1215,26 +1211,6 @@ ul.tracker-form-element-checkbox {
     margin-top: 0;
     padding-left: .5em;
     list-style-type: none;
-}
-
-.tracker_alltrackers dd {
-    margin-bottom: 1.5em;
-    margin-left: 1.5em;
-}
-
-.tracker_alltrackers dt {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-.tracker_homepage_info > .link-to-tracker > .tracker_color_info {
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-#tracker_createnewlink img {
-    vertical-align: middle;
 }
 
 .tracker-admin-field {

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -935,11 +935,6 @@ msgstr "Enfants"
 msgid "Choose a field..."
 msgstr "Choisir un champ ..."
 
-msgid "Choose a tracker and you can browse/edit/add artifacts to it."
-msgstr ""
-"Choisissez un outil de suivi pour visualiser, éditer ou ajouter des "
-"artefacts."
-
 msgid "Choose values"
 msgstr "Choisir les valeurs"
 
@@ -1760,14 +1755,14 @@ msgstr "Date de dernière mise à jour"
 msgid "Last Updated By"
 msgstr "Dernière Modification Par"
 
-msgid "Last artifact created:"
-msgstr "Dernier artefact crée :"
+msgid "Last artifact created"
+msgstr "Dernier artefact crée"
 
 msgid "Last push"
 msgstr "Dernier push"
 
-msgid "Last update:"
-msgstr "Dernière modification :"
+msgid "Last update"
+msgstr "Dernière modifications"
 
 msgid "Latest modifications"
 msgstr "Dernières modifications"
@@ -2081,8 +2076,8 @@ msgstr "Me notifier à chaque changement de statut"
 msgid "Notify me when artifacts are created"
 msgstr "Me notifier lors de la création d'un nouvel artéfact"
 
-msgid "Number of open artifacts:"
-msgstr "Nombre d'artefacts ouverts :"
+msgid "Number of open artifacts"
+msgstr "Nombre d'artefacts ouverts"
 
 msgid "OK, got it!"
 msgstr "OK, vu."
@@ -2292,9 +2287,6 @@ msgstr ""
 
 msgid "Receive notifications for this artifact"
 msgstr "Recevoir les notifications de cet artefact"
-
-msgid "Recent activity:"
-msgstr "Activité récente :"
 
 msgid "Recent artifacts"
 msgstr "Artefacts récents"
@@ -3548,8 +3540,8 @@ msgstr "Passerelle basée sur un jeton d'authentification"
 msgid "Tooltip"
 msgstr "Tooltip"
 
-msgid "Total number of artifacts:"
-msgstr "Nombre total d'artefacts :"
+msgid "Total number of artifacts"
+msgstr "Nombre total d'artefacts"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
@@ -3586,6 +3578,9 @@ msgstr "Hiérarchie de l'outil de suivi"
 
 msgid "Tracker hierarchy is Cyclic"
 msgstr "La hiérarchie est cyclique"
+
+msgid "Tracker id"
+msgstr "Id de l'outil de suivi"
 
 msgid "Tracker name"
 msgstr "Nom de l'outil de suivi"

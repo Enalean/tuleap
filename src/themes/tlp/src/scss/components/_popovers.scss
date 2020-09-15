@@ -84,6 +84,10 @@ $tlp-popover-click-transition: 75ms ease-out;
     font-weight: normal;
     text-align: left;
 
+    &:nth-child(2):last-child {
+        border-radius: $tlp-popover-radius;
+    }
+
     &:last-child {
         border-bottom-right-radius: $tlp-popover-radius;
         border-bottom-left-radius: $tlp-popover-radius;
