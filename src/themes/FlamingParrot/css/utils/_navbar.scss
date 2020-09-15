@@ -61,7 +61,7 @@ header {
     transition: background ease-in-out 100ms, box-shadow ease-in-out 100ms, top ease-in-out 50ms;
 
     &.full-width {
-        width: 100vw;
+        width: 100%;
 
         + #main-container {
             margin-top: 64px;

@@ -130,7 +130,10 @@ class UserDashboardController
 
         $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
-        $GLOBALS['Response']->header(['title' => $purifier->purify($title)]);
+        $GLOBALS['Response']->header([
+            'title' => $purifier->purify($title),
+            'body_class' => ['body-user-dashboard']
+        ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );

@@ -1,44 +1,31 @@
-<div class="tlp-framed-vertically">
-    {{# user_presenter }}
-        <div class="tlp-framed-horizontally dashboard-user-title">
-            <div class="tlp-avatar-large">
-                {{# has_avatar }}
-                    <img src="{{ avatar_url }}" alt="{{ avatar_alt }}">
-                {{/ has_avatar }}
-            </div>
-            <h1 class="dashboard-user-title-name">
-                {{ real_name }}
-                <small class="dashboard-user-title-login">@{{ login }}</small>
-            </h1>
-
-        </div>
-    {{/ user_presenter }}
-    {{# has_dashboard }}
-        {{> dashboard-tabs }}
-
-        {{# dashboards }}
-            {{# is_active }}
-                {{# has_widget }}
-                    {{> widgets }}
-                {{/ has_widget }}
-                {{^ has_widget }}
-                    <div class="empty-page">
-                        <p class="empty-page-text">{{ no_widget_label }}</p>
-                        <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
-                        <button class="tlp-button-primary tlp-button-large add-widget-button"
-                                data-target-modal-id="add-widget-modal"
-                                data-href="{{ url_add_widget_content }}"
-                                data-test="dashboard-add-widget-empty-state-button"
-                        >
-                            <i class="fa fa-plus tlp-button-icon"></i>
-                            {{ add_widget_title }}
-                        </button>
-                    </div>
-                {{/ has_widget }}
-            {{/ is_active }}
-        {{/ dashboards }}
-    {{/ has_dashboard }}
+<div class="tlp-framed-horizontally dashboard-user-title-container">
+    <h1 class="dashboard-user-title">{{# gettext }}My Dashboard{{/ gettext }}</h1>
 </div>
+{{# has_dashboard }}
+    {{> dashboard-tabs }}
+
+    {{# dashboards }}
+        {{# is_active }}
+            {{# has_widget }}
+                {{> widgets }}
+            {{/ has_widget }}
+            {{^ has_widget }}
+                <div class="empty-page">
+                    <p class="empty-page-text">{{ no_widget_label }}</p>
+                    <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
+                    <button class="tlp-button-primary tlp-button-large add-widget-button"
+                            data-target-modal-id="add-widget-modal"
+                            data-href="{{ url_add_widget_content }}"
+                            data-test="dashboard-add-widget-empty-state-button"
+                    >
+                        <i class="fa fa-plus tlp-button-icon"></i>
+                        {{ add_widget_title }}
+                    </button>
+                </div>
+            {{/ has_widget }}
+        {{/ is_active }}
+    {{/ dashboards }}
+{{/ has_dashboard }}
 
 {{^ has_dashboard }}
     <div class="empty-page">
