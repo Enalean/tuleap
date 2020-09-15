@@ -4,7 +4,6 @@ import ui_router from "angular-ui-router";
 import angular_artifact_modal from "../../../../../tracker/scripts/angular-artifact-modal/index.js";
 import angular_tlp from "angular-tlp";
 
-import "restangular";
 import "angular-gettext";
 
 import execution_collection_module from "../execution-collection/execution-collection.js";
@@ -28,7 +27,6 @@ import RobotSvgDisplayer from "./svg/robot-svg-displayer-component.js";
 export default angular
     .module("execution", [
         "gettext",
-        "restangular",
         angular_artifact_modal,
         angular_tlp,
         artifact_links_module,

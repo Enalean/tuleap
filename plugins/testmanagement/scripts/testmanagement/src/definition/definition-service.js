@@ -17,22 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
-import { recursiveGet } from "tlp";
+import { merge } from "lodash";
+import { get, recursiveGet } from "tlp";
 import { UNCATEGORIZED } from "./definition-constants.js";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
 
 export default DefinitionService;
 
-DefinitionService.$inject = ["Restangular", "$q", "SharedPropertiesService"];
+DefinitionService.$inject = ["$q", "SharedPropertiesService"];
 
-function DefinitionService(Restangular, $q, SharedPropertiesService) {
-    var rest = Restangular.withConfig(function (RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl("/api/v1");
-    });
-
+function DefinitionService($q, SharedPropertiesService) {
     return {
         UNCATEGORIZED,
         getDefinitions,
@@ -43,57 +38,45 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
     };
 
     function getDefinitions(project_id, report_id) {
-        return tlpGetDefinitions(project_id, report_id).then((definitions) =>
-            categorize(definitions)
+        return $q.when(
+            tlpGetDefinitions(project_id, report_id).then((definitions) => categorize(definitions))
         );
     }
 
     function categorize(definitions) {
         return definitions.map((definition) => {
-            return _.merge(definition, {
+            return merge(definition, {
                 category: definition.category || UNCATEGORIZED,
             });
         });
     }
 
-    async function getDefinitionReports() {
-        var def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
-        const response = await recursiveGet(
-            "/api/v1/trackers/" + encodeURI(def_tracker_id) + "/tracker_reports",
-            {
-                params: {
-                    limit: 10,
-                },
-            }
+    function getDefinitionReports() {
+        const def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
+        return $q.when(
+            recursiveGet(encodeURI(`/api/v1/trackers/${def_tracker_id}/tracker_reports`), {
+                params: { limit: 10 },
+            })
         );
-
-        return response;
     }
 
     function getArtifactById(artifact_id) {
-        return rest
-            .one("artifacts", artifact_id)
-            .get()
-            .then(function (response) {
-                return response.data;
-            });
+        return $q.when(
+            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json())
+        );
     }
 
     function getDefinitionById(artifact_id) {
-        return rest
-            .one("testmanagement_definitions", artifact_id)
-            .get()
-            .then(function (response) {
-                return response.data;
-            });
+        return $q.when(
+            get(encodeURI(`/api/v1/testmanagement_definitions/${artifact_id}`)).then((response) =>
+                response.json()
+            )
+        );
     }
 
     function getTracker(tracker_id) {
-        return rest
-            .one("trackers", tracker_id)
-            .get()
-            .then(function (response) {
-                return response.data;
-            });
+        return $q.when(
+            get(encodeURI(`/api/v1/trackers/${tracker_id}`)).then((response) => response.json())
+        );
     }
 }

@@ -62,6 +62,8 @@ describe("ExecutionDetailController -", () => {
 
         $scope = $rootScope.$new();
 
+        jest.spyOn(ExecutionRestService, "leaveTestExecution").mockImplementation(() => $q.when());
+
         jest.spyOn(SharedPropertiesService, "getIssueTrackerConfig").mockReturnValue({
             permissions: {
                 create: true,

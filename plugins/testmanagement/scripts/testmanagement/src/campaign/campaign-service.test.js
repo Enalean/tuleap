@@ -21,71 +21,141 @@ import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("CampaignService", () => {
-    let mockBackend, wrapPromise, CampaignService;
+    let $q, wrapPromise, CampaignService;
 
     beforeEach(() => {
         angular.mock.module(testmanagement_module);
 
         let $rootScope;
-        angular.mock.inject(function (_$rootScope_, _CampaignService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _$q_, _CampaignService_) {
             $rootScope = _$rootScope_;
+            $q = _$q_;
             CampaignService = _CampaignService_;
-            mockBackend = $httpBackend;
         });
-
-        mockBackend.when("GET", "campaign-list.tpl.html").respond(200);
-
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(() => {
-        mockBackend.verifyNoOutstandingExpectation();
-        mockBackend.verifyNoOutstandingRequest();
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
+
+    function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.reject({
+                response: {
+                    status,
+                    statusText,
+                    json: () => $q.when(error_json),
+                },
+            })
+        );
+    }
+
+    const expected_headers = { "content-type": "application/json" };
+
+    describe(`getCampaign()`, () => {
+        it(`will call GET on the testmanagement_campaigns and return the test campaign`, async () => {
+            const campaign = { id: 98 };
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, { return_json: campaign });
+
+            const promise = CampaignService.getCampaign(98);
+            const result = await wrapPromise(promise);
+
+            expect(result).toEqual(campaign);
+        });
     });
 
-    it("createCampaign()", async () => {
-        var campaign_to_create = {
-            label: "Release",
-            project_id: 101,
-        };
-        var milestone_id = "133";
-        var report_id = "24";
-        var test_selector = "report";
-        var campaign_created = {
-            id: 17,
-            tracker: {
-                id: 11,
-                uri: "trackers/11",
-                label: "Validation Campaign",
-            },
-            uri: "artifacts/17",
-        };
-        var expected_request =
-            "/api/v1/testmanagement_campaigns" +
-            "?milestone_id=" +
-            milestone_id +
-            "&report_id=" +
-            report_id +
-            "&test_selector=" +
-            test_selector;
+    describe(`createCampaign()`, () => {
+        let campaign_to_create, tlpPost;
+        beforeEach(() => {
+            campaign_to_create = { label: "Test Campaign", project_id: 101 };
+            tlpPost = jest.spyOn(tlp, "post");
+        });
 
-        mockBackend
-            .expectPOST(expected_request, campaign_to_create)
-            .respond(JSON.stringify(campaign_created));
+        it(`given a milestone and a report, it will call POST on the testmanagement_campaigns
+            and create a campaign`, async () => {
+            const milestone_id = "133";
+            const report_id = "24";
+            const promise = CampaignService.createCampaign(
+                campaign_to_create,
+                "report",
+                milestone_id,
+                report_id
+            );
+            await wrapPromise(promise);
 
-        var promise = CampaignService.createCampaign(
-            campaign_to_create,
-            test_selector,
-            milestone_id,
-            report_id
-        );
+            expect(
+                tlpPost
+            ).toHaveBeenCalledWith(
+                `/api/v1/testmanagement_campaigns?test_selector=report&milestone_id=133&report_id=24`,
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+            );
+        });
 
-        mockBackend.flush();
+        it(`given no milestone, it will create a campaign not linked to a milestone`, async () => {
+            const report_id = "24";
+            const promise = CampaignService.createCampaign(
+                campaign_to_create,
+                "report",
+                undefined,
+                report_id
+            );
+            await wrapPromise(promise);
 
-        const response = await wrapPromise(promise);
-        expect(response.data.id).toEqual(17);
+            expect(
+                tlpPost
+            ).toHaveBeenCalledWith(
+                `/api/v1/testmanagement_campaigns?test_selector=report&report_id=24`,
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+            );
+        });
+
+        it(`given no report, it will create a campaign with all tests`, async () => {
+            const milestone_id = "133";
+            const promise = CampaignService.createCampaign(
+                campaign_to_create,
+                "all",
+                milestone_id,
+                null
+            );
+            await wrapPromise(promise);
+
+            expect(
+                tlpPost
+            ).toHaveBeenCalledWith(
+                `/api/v1/testmanagement_campaigns?test_selector=all&milestone_id=133`,
+                { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
+            );
+        });
+
+        it(`given neither milestone nor report, it will create a campaign`, async () => {
+            const promise = CampaignService.createCampaign(
+                campaign_to_create,
+                "all",
+                undefined,
+                null
+            );
+            await wrapPromise(promise);
+
+            expect(tlpPost).toHaveBeenCalledWith(
+                `/api/v1/testmanagement_campaigns?test_selector=all`,
+                {
+                    headers: expected_headers,
+                    body: JSON.stringify(campaign_to_create),
+                }
+            );
+        });
     });
 
     it("patchCampaign()", async () => {
@@ -94,81 +164,78 @@ describe("CampaignService", () => {
             url: "https://example.com/badan/",
             token: "phrenicopericardiac",
         };
+        const patched_campaign = { id: 17, label, job_configuration };
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        mockFetchSuccess(tlpPatch, { return_json: patched_campaign });
+
+        const promise = CampaignService.patchCampaign(17, label, job_configuration);
+        const response = await wrapPromise(promise);
+
+        expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_campaigns/17", {
+            headers: expected_headers,
+            body: JSON.stringify({ label, job_configuration }),
+        });
+        expect(response).toEqual(patched_campaign);
+    });
+
+    it("patchExecutions()", async () => {
+        const definition_ids = [1, 2];
+        const execution_ids = [4];
         const executions = [
             {
-                id: 4,
+                id: 1,
+                previous_result: {
+                    status: "notrun",
+                },
+            },
+            {
+                id: 2,
                 previous_result: {
                     status: "notrun",
                 },
             },
         ];
 
-        mockBackend
-            .expectPATCH("/api/v1/testmanagement_campaigns/17", {
-                label,
-                job_configuration,
-            })
-            .respond(executions);
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        mockFetchSuccess(tlpPatch, { headers: { get: () => "2" }, return_json: executions });
 
-        const promise = CampaignService.patchCampaign(17, label, job_configuration);
-
-        mockBackend.flush();
-
+        const promise = CampaignService.patchExecutions(17, definition_ids, execution_ids);
         const response = await wrapPromise(promise);
-        expect(response.length).toEqual(1);
+
+        expect(response.total).toEqual("2");
+        expect(response.results).toEqual(executions);
+        expect(tlpPatch).toHaveBeenCalledWith(
+            `/api/v1/testmanagement_campaigns/17/testmanagement_executions`,
+            {
+                headers: expected_headers,
+                body: JSON.stringify({
+                    definition_ids_to_add: definition_ids,
+                    execution_ids_to_remove: execution_ids,
+                }),
+            }
+        );
     });
 
-    it("patchExecutions()", async () => {
-        var definition_ids = [1, 2],
-            execution_ids = [4],
-            executions = [
-                {
-                    id: 1,
-                    previous_result: {
-                        status: "notrun",
-                    },
-                },
-                {
-                    id: 2,
-                    previous_result: {
-                        status: "notrun",
-                    },
-                },
-            ];
-
-        mockBackend
-            .expectPATCH("/api/v1/testmanagement_campaigns/17/testmanagement_executions", {
-                definition_ids_to_add: definition_ids,
-                execution_ids_to_remove: execution_ids,
-            })
-            .respond(executions);
-
-        var promise = CampaignService.patchExecutions(17, definition_ids, execution_ids);
-
-        mockBackend.flush();
-
-        const response = await wrapPromise(promise);
-        expect(response.results.length).toEqual(2);
-    });
-
-    describe("triggerAutomatedTests() -", () => {
-        it("When the server responds with code 200, then a promise will be resolved", () => {
-            mockBackend
-                .expectPOST("/api/v1/testmanagement_campaigns/53/automated_tests")
-                .respond(200);
+    describe("triggerAutomatedTests()", () => {
+        it(`When the server responds with code 200, then a promise will be resolved`, async () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPost);
 
             const promise = CampaignService.triggerAutomatedTests(53);
-            mockBackend.flush();
+            await wrapPromise(promise);
 
-            return wrapPromise(promise);
+            expect(tlpPost).toHaveBeenCalledWith(
+                `/api/v1/testmanagement_campaigns/53/automated_tests`
+            );
         });
 
-        it("When the server responds with code 500, then a promise will be rejected", () => {
-            mockBackend
-                .expectPOST("/api/v1/testmanagement_campaigns/31/automated_tests")
-                .respond(500, {
+        it(`When the server responds with code 500, then a promise will be rejected`, () => {
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchError(tlpPost, {
+                error_json: {
                     error: { message: "Message: The requested URL returned error: 403 Forbidden" },
-                });
+                },
+            });
 
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
@@ -177,7 +244,6 @@ describe("CampaignService", () => {
                     "Message: The requested URL returned error: 403 Forbidden"
                 );
             });
-            mockBackend.flush();
             return wrapPromise(promise);
         });
     });

@@ -1,21 +1,34 @@
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 export default ExecutionRestService;
-import { put } from "tlp";
+import { get, patch, post, put } from "tlp";
 
-ExecutionRestService.$inject = ["$http", "$q", "Restangular", "SharedPropertiesService"];
+ExecutionRestService.$inject = ["$http", "$q", "SharedPropertiesService"];
 
-const headers = {
-    "content-type": "application/json",
-};
-
-function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
-    Object.assign(Restangular.configuration.defaultHeaders, {
+function ExecutionRestService($http, $q, SharedPropertiesService) {
+    const headers = {
+        "content-type": "application/json",
         "X-Client-UUID": SharedPropertiesService.getUUID(),
-    });
+    };
 
     const self = this;
-    const baseurl = "/api/v1";
-    const rest = Restangular.withConfig(setRestangularConfig);
-
     Object.assign(self, {
         getRemoteExecutions,
         postTestExecution,
@@ -31,39 +44,35 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
         updateStepStatus,
     });
 
-    function setRestangularConfig(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl(baseurl);
-    }
-
     function getRemoteExecutions(campaign_id, limit, offset) {
-        return rest
-            .one("testmanagement_campaigns", campaign_id)
-            .all("testmanagement_executions")
-            .getList({
-                limit: limit,
-                offset: offset,
+        return $q.when(
+            get(
+                encodeURI(
+                    `/api/v1/testmanagement_campaigns/${campaign_id}/testmanagement_executions`
+                ),
+                {
+                    params: { limit, offset },
+                }
+            ).then((response) => {
+                const total = response.headers.get("X-PAGINATION-SIZE");
+                return response.json().then((executions) => {
+                    return { results: executions, total };
+                });
             })
-            .then(function (response) {
-                var result = {
-                    results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE"),
-                };
-                return result;
-            });
+        );
     }
 
     function postTestExecution(tracker_id, definition_id, status) {
-        return rest
-            .all("testmanagement_executions")
-            .post({
-                tracker: { id: tracker_id },
-                definition_id: definition_id,
-                status: status,
-            })
-            .then(function (response) {
-                return response.data;
-            });
+        return $q.when(
+            post(encodeURI("/api/v1/testmanagement_executions"), {
+                headers,
+                body: JSON.stringify({
+                    tracker: { id: tracker_id },
+                    definition_id,
+                    status,
+                }),
+            }).then((response) => response.json())
+        );
     }
 
     function putTestExecution(execution_id, new_status, results, uploaded_file_ids) {
@@ -75,27 +84,33 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
 
         const body = JSON.stringify(param);
 
-        return $q
-            .when(
-                put(`/api/v1/testmanagement_executions/${execution_id}`, {
-                    headers,
-                    body,
-                })
-            )
-            .then((response) => response.json());
+        return $q.when(
+            put(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`), {
+                headers,
+                body,
+            }).then((response) => response.json())
+        );
     }
 
     function updateExecutionToUseLatestVersionOfDefinition(execution_id) {
-        rest.one("testmanagement_executions", execution_id).patch({
-            force_use_latest_definition_version: true,
-        });
+        return $q.when(
+            patch(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`), {
+                headers,
+                body: JSON.stringify({ force_use_latest_definition_version: true }),
+            })
+        );
     }
 
     function changePresenceOnTestExecution(execution_id, old_execution_id) {
-        return rest.one("testmanagement_executions", execution_id).all("presences").patch({
-            uuid: SharedPropertiesService.getUUID(),
-            remove_from: old_execution_id,
-        });
+        return $q.when(
+            patch(encodeURI(`/api/v1/testmanagement_executions/${execution_id}/presences`), {
+                headers,
+                body: JSON.stringify({
+                    uuid: SharedPropertiesService.getUUID(),
+                    remove_from: old_execution_id,
+                }),
+            })
+        );
     }
 
     function leaveTestExecution(execution_id) {
@@ -103,9 +118,9 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     }
 
     function getArtifactById(artifact_id) {
-        return $http.get("/api/v1/artifacts/" + artifact_id).then((response) => {
-            return response.data;
-        });
+        return $q.when(
+            get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => response.json())
+        );
     }
 
     function linkIssue(issue_id, test_execution) {
@@ -136,62 +151,52 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     }
 
     function linkExecutionToIssue(issue_id, test_execution, comment) {
-        return rest
-            .one("testmanagement_executions", test_execution.id)
-            .all("issues")
-            .patch({
-                issue_id: issue_id,
-                comment: comment,
+        return $q.when(
+            patch(encodeURI(`/api/v1/testmanagement_executions/${test_execution.id}/issues`), {
+                headers,
+                body: JSON.stringify({ issue_id, comment }),
+            }).catch((exception) => {
+                return exception.response.json().then((json) => $q.reject(json.error));
             })
-            .catch(function (response) {
-                return Promise.reject(response.data.error);
-            });
+        );
     }
 
     function getLinkedArtifacts(test_execution, limit, offset) {
         const { id: execution_id } = test_execution;
-        return $http
-            .get(`/api/v1/artifacts/${execution_id}/linked_artifacts`, {
+        return $q.when(
+            get(encodeURI(`/api/v1/artifacts/${execution_id}/linked_artifacts`), {
                 params: {
                     direction: "forward",
                     nature: "",
                     limit,
                     offset,
                 },
+            }).then((response) => {
+                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+                return response.json().then(({ collection }) => {
+                    return { collection, total };
+                });
             })
-            .then((response) => {
-                return {
-                    collection: response.data.collection,
-                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10),
-                };
-            });
+        );
     }
 
     function getExecution(execution_id) {
-        return $http.get(`/api/v1/testmanagement_executions/${execution_id}`).then((response) => {
-            return response.data;
-        });
+        return $q.when(
+            get(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`)).then((response) =>
+                response.json()
+            )
+        );
     }
 
     function updateStepStatus(test_execution, step_id, step_status) {
         const { id: execution_id } = test_execution;
-        return $http
-            .patch(
-                `/api/v1/testmanagement_executions/${execution_id}`,
-                {
-                    steps_results: [
-                        {
-                            step_id,
-                            status: step_status,
-                        },
-                    ],
-                },
-                {
-                    headers: {
-                        "X-Client-UUID": SharedPropertiesService.getUUID(),
-                    },
-                }
-            )
-            .catch((response) => $q.reject(response.data.error.message));
+        return $q.when(
+            patch(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`), {
+                headers,
+                body: JSON.stringify({ steps_results: [{ step_id, status: step_status }] }),
+            }).catch((exception) => {
+                return exception.response.json().then((json) => $q.reject(json.error));
+            })
+        );
     }
 }
