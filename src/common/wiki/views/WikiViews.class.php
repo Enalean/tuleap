@@ -145,6 +145,14 @@ class WikiViews extends Views
         $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki-codendi.css';
         $this->html_params['service_name'] = 'wiki';
         $this->html_params['project_id']   = $this->gid;
+
+        $GLOBALS['HTML']->addBreadcrumbs([
+            [
+                'title' => _('Wiki'),
+                'url' => '/wiki/?group_id=' . (int) $this->gid,
+            ],
+        ]);
+
         parent::header();
         $this->displayMenu();
     }
