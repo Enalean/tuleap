@@ -529,17 +529,20 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
         $html .= '<div class="tlp-framed">';
-        $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers') . ' ';
+        $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers');
 
-        if (! count($trackers)) {
-            $html .= '</h1><p>' . dgettext('tuleap-tracker', '<strong>No trackers have been set up, or you are not allowed to view them.</strong>') . '</p>';
-        }
         if ($this->userCanCreateTracker($project->group_id, $user)) {
             $html .= '<a id="tracker_createnewlink" class="tlp-button-primary" data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
                 urlencode($project->getUnixNameLowerCase()) . '/new">';
             $html .= '<i class="fa fa-plus tlp-button-icon"></i>';
             $html .= dgettext('tuleap-tracker', 'New tracker');
             $html .= '</a></h1>';
+        } else {
+            $html .= '</h1>';
+        }
+
+        if (! count($trackers)) {
+            $html .= '<p>' . dgettext('tuleap-tracker', 'No trackers have been set up, or you are not allowed to view them.') . '</p>';
         }
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
