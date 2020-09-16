@@ -34,8 +34,13 @@
     align-items: center;
     height: $navbar-height;
     min-height: $navbar-height;
-    margin: 0 0 0 $tlp-large-spacing;
 }
+
+/* stylelint-disable selector-no-qualifying-type */
+header.pinned .logo-svg-link {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+/* stylelint-enable selector-no-qualifying-type */
 
 .logo-svg-fill-theme-color {
     fill: $tlp-theme-color;
