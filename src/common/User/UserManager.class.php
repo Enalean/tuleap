@@ -594,6 +594,15 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } catch (User_PasswordExpiredException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $GLOBALS['Response']->redirect(DisplaySecurityController::URL);
+        } catch (User_StatusSuspendedException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    _('Your account has been suspended. If you have questions regarding your suspension, please email <a href="mailto:%s">the site administrators</a>.'),
+                    ForgeConfig::get('sys_email_admin')
+                ),
+                CODENDI_PURIFIER_LIGHT
+            );
         } catch (User_StatusInvalidException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (SessionNotCreatedException $exception) {

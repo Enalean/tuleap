@@ -216,11 +216,6 @@ account_register	mail_signature	- L'équipe $1.
 account_register	restricted_user	Utilisateur restreint
 account_register	welcome_email_title	Bienvenue sur $1!
 #
-#-----------------------------------------------
-# Script: SF/www/account/suspended.php
-#
-account_suspended	title	Compte utilisateur suspendu
-account_suspended	message	Votre compte utilisateur a été suspendu. Si vous avez des questions à ce sujet, veuillez envoyez un e-mail aux <a href="mailto:$1">administrateurs du site</A>.
 #
 #-----------------------------------------------
 # Script: SF/www/account/login.php
