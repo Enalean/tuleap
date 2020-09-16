@@ -324,13 +324,6 @@ msgstr ""
 "possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à "
 "la place&nbsp;:"
 
-msgid ""
-"<strong>No trackers have been set up, or you are not allowed to view them.</"
-"strong>"
-msgstr ""
-"<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les "
-"consulter.</strong>"
-
 msgid "A"
 msgstr "A"
 
@@ -2005,6 +1998,11 @@ msgstr "Aucun rapport disponible"
 
 msgid "No semantic defined in this tracker."
 msgstr "Aucune sémantique n'est définie pour cet outil de suivi."
+
+msgid "No trackers have been set up, or you are not allowed to view them."
+msgstr ""
+"Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les "
+"consulter."
 
 msgid "No type"
 msgstr "Sans nature"
