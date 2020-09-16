@@ -121,7 +121,7 @@ msgid "Confirm"
 msgstr "Confirmer"
 
 msgid "Confirm deleting the transition"
-msgstr "Confrimer la suppression de cette transition"
+msgstr "Confirmer la suppression de cette transition"
 
 msgid "Current time"
 msgstr "Date courante"
