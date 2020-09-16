@@ -14,10 +14,6 @@ $dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
         }
     }
 
-    .full-width:not(.pinned) .logo-svg-link {
-        margin: 0;
-    }
-
     .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
         margin: 0;
         padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-large-spacing;
