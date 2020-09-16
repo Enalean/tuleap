@@ -157,7 +157,7 @@ describe("SVN", function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
             cy.ProjectAdministratorLogin();
             cy.visitProjectService("svn-project-full", "SVN");
-            cy.get("[data-test=svn-admin-groups]").click();
+            cy.get("[data-test=svn-admin-groups]").click({ force: true });
             cy.get("[data-test=svn-admin-group-select]").select([
                 "Project administrators",
                 "Registered users",
@@ -171,7 +171,7 @@ describe("SVN", function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
             cy.projectMemberLogin();
             cy.visitProjectService("svn-project-full", "SVN");
-            cy.get("[data-test=svn-admin-groups]").click();
+            cy.get("[data-test=svn-admin-groups]").click({ force: true });
         });
     });
 });

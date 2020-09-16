@@ -19,7 +19,7 @@
 
 @import '../../default/css/style';
 
-@mixin definitions($main) {
+@mixin definitions($main, $main-background) {
     &.viewvc-epel {
         #svn-repository #svn-repository-viewvc {
             border-top-color: $main;
@@ -29,37 +29,41 @@
             padding: 20px;
             background: #fcfcfc;
         }
+
+        .svn-repository-header {
+            background: $main-background;
+        }
     }
 }
 
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body {
     @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @include definitions($main);
+    @include definitions($main, $main-background);
 
     &.FlamingParrot_Blue {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Green {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_BlueGrey {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Purple {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Red {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 }
 /* stylelint-enable */

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2019-10-18 14:33+0200\n"
+"PO-Revision-Date: 2020-09-16 14:57+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -220,6 +220,9 @@ msgstr "Dépôt"
 #, php-format
 msgid "Repository '%1$s' will be removed in a few seconds"
 msgstr "Le dépôt '%1$s' va être supprimé dans quelques secondes"
+
+msgid "Repository list"
+msgstr "Liste des dépôts"
 
 msgid "Repository name"
 msgstr "Nom du dépôt"
