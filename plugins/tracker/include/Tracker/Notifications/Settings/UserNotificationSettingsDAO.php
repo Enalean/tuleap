@@ -141,6 +141,7 @@ class UserNotificationSettingsDAO extends DataAccessObject
                 LEFT OUTER JOIN tracker_global_notification_users ON (tracker_global_notification.id = tracker_global_notification_users.notification_id)
                 LEFT OUTER JOIN tracker_global_notification_ugroups ON (tracker_global_notification.id = tracker_global_notification_ugroups.notification_id)
                 WHERE tracker_global_notification_users.notification_id IS NULL AND tracker_global_notification_ugroups.notification_id IS NULL
+                  AND tracker_global_notification.addresses = \'\'
                   AND tracker_global_notification.tracker_id = ?';
         $this->getDB()->run($sql, $tracker_id);
     }
