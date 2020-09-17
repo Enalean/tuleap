@@ -45,7 +45,6 @@ use Widget_ProjectDescription;
 use Widget_ProjectImageViewer;
 use Widget_ProjectLatestCvsCommits;
 use Widget_ProjectLatestFileReleases;
-use Widget_ProjectLatestNews;
 use Widget_ProjectLatestSvnCommits;
 use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;

@@ -19,10 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\Widget;
+
+use HTTPRequest;
+use Project;
+use ProjectManager;
+use Tuleap\date\RelativeDatesAssetsRetriever;
+use Widget;
+
 /**
  * Widget_ProjectLatestNews
  */
-class Widget_ProjectLatestNews extends Widget
+class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public $content;
@@ -114,5 +122,12 @@ class Widget_ProjectLatestNews extends Widget
     private function getProjectManager()
     {
         return ProjectManager::instance();
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        return [
+            ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
+        ];
     }
 }

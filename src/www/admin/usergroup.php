@@ -53,8 +53,6 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 );
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
 
-RelativeDatesAssetsRetriever::includeAssetsInSnippet();
-
 $um                  = UserManager::instance();
 $em                  = EventManager::instance();
 $purifier            = Codendi_HTMLPurifier::instance();
@@ -355,3 +353,4 @@ $siteadmin->renderAPresenter(
         $user_has_rest_read_only_administration_delegation
     )
 );
+RelativeDatesAssetsRetriever::includeAssetsInSnippet();

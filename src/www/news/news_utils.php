@@ -204,8 +204,6 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
 
     $user = UserManager::instance()->getCurrentUser();
 
-    \Tuleap\date\RelativeDatesAssetsRetriever::includeAssetsInSnippet();
-
     $proj_name = '';
     if ($show_projectname && $limit) {
         //show the project name
