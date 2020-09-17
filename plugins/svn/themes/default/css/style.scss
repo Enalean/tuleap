@@ -24,30 +24,28 @@ body.viewvc-epel {
         margin: 12px;
     }
 
-    #svn-repository {
-        > h2 {
-            margin: 10px 20px;
-        }
-
-        #svn-repository-url-bar {
-            margin: 0 20px;
-        }
-
-        #svn-repository-viewvc {
-            margin: 20px 0 0;
-            padding: 0;
-            border: 0;
-            border-top: 2px solid #e3e3e3;
-            border-radius: 0;
-            background: none;
-        }
-    }
-
-    #svn-repository-help {
-        margin: 10px 20px;
+    #svn-repository-viewvc {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-top: 2px solid #e3e3e3;
+        border-radius: 0;
+        background: none;
     }
 }
 /* stylelint-enable */
+
+.svn-repository-header {
+    padding: 0 20px 20px;
+
+    > h2 {
+        margin: 0 0 10px;
+    }
+}
+
+#svn-repository-help {
+    margin: 10px 0 0;
+}
 
 .viewvc-epel-references {
     margin: 0 0 40px;
@@ -81,19 +79,10 @@ body.viewvc-epel {
 
     #svn-repository-help {
         display: none;
-        margin: 10px 0;
 
         .svn-intro-command {
             margin: 0;
         }
-    }
-
-    #svn-repository-viewvc {
-        margin: 30px 0 0;
-        padding: 15px;
-        border: 1px solid #e3e3e3;
-        border-radius: 3px;
-        background: #fcfcfc;
     }
 }
 

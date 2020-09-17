@@ -25,6 +25,12 @@ use PermissionsManager;
 use Service;
 use SvnPlugin;
 use TemplateRendererFactory;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class ServiceSvn extends Service
 {
@@ -80,23 +86,30 @@ class ServiceSvn extends Service
         $GLOBALS['HTML']->includeJavascriptSnippet(
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
-        $toolbar = [];
+        $title = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
+
+        $repository_list_breadcrumb = new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext("tuleap-svn", "Repository list"),
+                SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId()
+            )
+        );
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
-            $toolbar[] = [
-                'title'     => "Administration",
-                'url'       => SVN_BASE_URL . "/?group_id=" . urlencode((string) $request->getProject()->getId()) .
-                    "&action=admin-groups",
-                'data-test' => 'svn-admin-groups'
-            ];
+            $admin_link = new BreadCrumbLink(
+                _('Administration'),
+                SVN_BASE_URL . "/?group_id=" . urlencode((string) $request->getProject()->getId()) . "&action=admin-groups",
+            );
+            $admin_link->setDataAttribute('test', 'svn-admin-groups');
+
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$admin_link])));
+
+            $repository_list_breadcrumb->setSubItems($sub_items);
         }
-        $title       = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
-        $breadcrumbs = [
-            [
-                'title' => "Repository List",
-                'url'   => SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId()
-            ]
-        ];
-        $this->displayHeader($title, $breadcrumbs, $toolbar, $params);
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($repository_list_breadcrumb);
+        $this->displayHeader($title, $breadcrumbs, [], $params);
     }
 
     public static function getDefaultServiceData($project_id)
