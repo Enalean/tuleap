@@ -48,7 +48,7 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-info;
-    background: mix($tlp-theme-background-color, $tlp-ui-info, 90%);
+    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-info, 25%), 23%), 15%);
     color: darken($tlp-ui-info, 30%);
 
     &::before {
@@ -64,8 +64,8 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-success;
-    background: mix($tlp-theme-background-color, $tlp-ui-success, 90%);
-    color: $tlp-ui-success;
+    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-success, 25%), 26%), 15%);
+    color: darken($tlp-ui-success, 20%);
 
     &::before {
         content: '\f087'; // fa-thumbs-o-up
@@ -80,8 +80,8 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-warning;
-    background: mix($tlp-theme-background-color, $tlp-ui-warning, 90%);
-    color: darken($tlp-ui-warning, 10%);
+    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-warning, 20%), 23%), 15%);
+    color: saturate(darken($tlp-ui-warning, 30%), 10%);
 
     &::before {
         content: '\f071'; // fa-exclamation-triangle
@@ -96,8 +96,8 @@
     @extend %tlp-alert;
 
     border-left-color: $tlp-ui-danger;
-    background: mix($tlp-theme-background-color, $tlp-ui-danger, 90%);
-    color: $tlp-ui-danger;
+    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%);
+    color: darken($tlp-ui-danger, 15%);
 
     &::before {
         content: '\f06a'; // fa-exclamation-circle
