@@ -1401,7 +1401,9 @@ class LdapPlugin extends Plugin
 
     public function authenticationMeanName(AuthenticationMeanName $event): void
     {
-        $event->setName($this->getLDAPServerCommonName());
+        if ($this->isLdapAuthType()) {
+            $event->setName($this->getLDAPServerCommonName());
+        }
     }
 
     private function getLDAPServerCommonName(): string
