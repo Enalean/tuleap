@@ -322,7 +322,7 @@ class ExecutionsResource
             );
 
             if (! empty($values)) {
-                $artifact_reference = $creator->create($user, $tracker_reference, $values);
+                $artifact_reference = $creator->create($user, $tracker_reference, $values, true);
             } else {
                 throw new RestException(400, "No valid data are provided");
             }

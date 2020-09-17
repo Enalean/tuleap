@@ -804,7 +804,7 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact_reference = null;
 
             if (! empty($values)) {
-                $artifact_reference = $creator->create($user, $tracker, $values);
+                $artifact_reference = $creator->create($user, $tracker, $values, true);
             } elseif (! empty($values_by_field)) {
                 $artifact_reference = $creator->createWithValuesIndexedByFieldName($user, $tracker, $values_by_field);
             } else {

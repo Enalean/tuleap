@@ -143,7 +143,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
         );
     }
 
@@ -159,7 +160,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
         );
 
         $this->assertFalse($result);
@@ -176,7 +178,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
         );
     }
 
@@ -192,7 +195,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
         );
 
         $this->assertFalse($result);
@@ -226,7 +230,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
         );
     }
 
@@ -246,7 +251,29 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->fields_data,
             $this->user,
             $this->submitted_on,
-            $this->send_notification
+            $this->send_notification,
+            true
+        );
+    }
+
+    public function testItDoesNotMarksTheArtifactAsVisitedWhenNotNeeded()
+    {
+        $this->fields_validator->shouldReceive('validate')->andReturns(true);
+        $this->dao->shouldReceive('create')->andReturn(1001);
+        $this->changeset_creator->shouldReceive('create')->andReturn(1);
+
+        $this->send_notification = false;
+        $this->bare_artifact->setId(1001);
+
+        $this->visit_recorder->shouldReceive('record')->never();
+
+        $this->creator->create(
+            $this->tracker,
+            $this->fields_data,
+            $this->user,
+            $this->submitted_on,
+            $this->send_notification,
+            false
         );
     }
 }

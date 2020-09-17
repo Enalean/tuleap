@@ -155,7 +155,7 @@ class KanbanItemsResource extends AuthenticatedResource
 
         $artifact_fields = $this->buildFieldsData($tracker, $item);
 
-        $art_ref = $updater->create($current_user, $tracker_reference, $artifact_fields);
+        $art_ref = $updater->create($current_user, $tracker_reference, $artifact_fields, true);
 
         $artifact = $art_ref->getArtifact();
         if (! $artifact) {

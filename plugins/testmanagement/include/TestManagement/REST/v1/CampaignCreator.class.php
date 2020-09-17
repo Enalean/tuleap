@@ -92,7 +92,7 @@ class CampaignCreator
             );
             $tracker       = $this->getCampaignTrackerReferenceForProject($project_id);
             $values        = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label, $execution_ids);
-            $artifact_ref  = $this->artifact_creator->create($user, $tracker, $values);
+            $artifact_ref  = $this->artifact_creator->create($user, $tracker, $values, true);
 
             if (! empty($milestone_id)) {
                 $artifact_ref->getArtifact()->linkArtifact($milestone_id, $user);

@@ -78,7 +78,7 @@ class ExecutionCreator
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
 
-        $execution = $this->artifact_creator->create($user, $tracker, $values);
+        $execution = $this->artifact_creator->create($user, $tracker, $values, false);
         $last_changeset = $definition->getLastChangeset();
         if ($last_changeset) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(

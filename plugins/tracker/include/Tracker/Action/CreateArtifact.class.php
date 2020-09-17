@@ -80,7 +80,7 @@ class Tracker_Action_CreateArtifact
 
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email);
+        return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email, true);
     }
 
     private function associateImmediatelyIfNeeded(Tracker_Artifact $new_artifact, $link_artifact_id, $doitnow, PFUser $current_user)
