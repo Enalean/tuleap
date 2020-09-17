@@ -31,6 +31,7 @@ use ProjectManager;
 use SVN_LogDao;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\layout\HomePage\NewsCollection;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\News\NewsDao;
@@ -92,17 +93,21 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         ];
 
         $header_params['body_class'] = ['homepage'];
+        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
+        $news_collection = $news_collection_builder->build();
 
         $layout->header($header_params);
         $this->displayStandardHomepage(
             $registration_guard->isRegistrationPossible(),
             $login_url,
-            $request->isSecure()
+            $request->isSecure(),
+            $news_collection
         );
         $layout->footer([]);
+        $this->includeRelativeDatesAssetsIfNeeded($news_collection);
     }
 
-    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure): void
+    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure, NewsCollection $news_collection): void
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -131,14 +136,8 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             $this->event_manager,
             new SVN_LogDao()
         );
+
         $statistics_collection = $statistics_collection_builder->build();
-
-        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
-        $news_collection = $news_collection_builder->build();
-
-        if ($news_collection->hasNews()) {
-            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
-        }
 
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
@@ -153,5 +152,13 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             $news_collection
         );
         $renderer->renderToPage('homepage', $presenter);
+    }
+
+    private function includeRelativeDatesAssetsIfNeeded(NewsCollection $news_collection): void
+    {
+        if (! $news_collection->hasNews()) {
+            return;
+        }
+        RelativeDatesAssetsRetriever::includeAssetsInSnippet();
     }
 }
