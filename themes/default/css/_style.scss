@@ -1,35 +1,34 @@
 #git-notification-mattermost-section {
-
     img.avatar {
-        margin: 0 10px 0 0;
         width: 20px;
         height: 20px;
+        margin: 0 10px 0 0;
     }
 
     .bot-assigned-label {
         display: block;
         position: relative;
         margin: 0 0 8px;
-        color: #666;
+        color: #666666;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
     }
 
     .panel {
+        width: 100%;
+        min-width: 400px;
+        max-width: 960px;
         margin: 0 0 20px;
         border: 1px solid #dddddd;
         border-radius: 3px;
-        background: #fff;
-        max-width: 960px;
-        min-width: 400px;
-        width: 100%;
+        background: #ffffff;
     }
 
     .panel-header {
-        background: #eeeeee;
-        border-bottom: 2px solid #333333;
         padding: 10px;
+        border-bottom: 2px solid #333333;
+        background: #eeeeee;
     }
 
     .panel-container {
@@ -60,7 +59,7 @@
 }
 
 .git-notification-mattermost-configuration-empty-state {
-    color: #888;
+    color: #888888;
     font-style: italic;
 }
 
