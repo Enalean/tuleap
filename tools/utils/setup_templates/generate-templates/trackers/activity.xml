@@ -53,7 +53,7 @@
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="V13415" label="To be done" is_hidden="0"/>
-                  <item ID="V13416" label="On going" is_hidden="0"/>
+                  <item ID="V13416" label="In progress" is_hidden="0"/>
                   <item ID="V13417" label="Review" is_hidden="0"/>
                   <item ID="V13418" label="Done" is_hidden="0"/>
                 </items>
@@ -63,6 +63,9 @@
                   <decorator REF="V13417" tlp_color_name="neon-green"/>
                   <decorator REF="V13418" tlp_color_name="army-green"/>
                 </decorators>
+                <default_values>
+                  <value REF="V13415"/>
+                </default_values>
               </bind>
             </formElement>
             <formElement type="sb" ID="F13046" rank="3">
@@ -175,23 +178,8 @@
     <list_rules/>
   </rules>
   <reports>
-    <report is_default="0" is_in_expert_mode="1" expert_query="assigned_to = MYSELF()">
-      <name>Assigned to me</name>
-      <description>The system default artifact report</description>
-      <criterias/>
-      <renderers>
-        <renderer ID="R1494" type="table" rank="0" chunksz="15">
-          <name>Results</name>
-          <columns>
-            <field REF="F13053"/>
-            <field REF="F13039"/>
-            <field REF="F13045"/>
-          </columns>
-        </renderer>
-      </renderers>
-    </report>
-    <report>
-      <name>Default</name>
+    <report is_default="1" is_in_expert_mode="0">
+      <name>Activities</name>
       <description>The system default artifact report</description>
       <criterias/>
       <renderers>
