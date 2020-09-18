@@ -52,6 +52,8 @@ describe("Transform an export report into a XSLX sheet", () => {
 
         const sheet = transformAReportIntoASheet(report);
 
+        // Make an exception for XLSX output
+        // eslint-disable-next-line jest/no-large-snapshots
         expect(sheet).toMatchInlineSnapshot(`
             Object {
               "!cols": Array [

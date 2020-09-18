@@ -318,14 +318,15 @@ describe(`Swimlane state mutations`, () => {
 
             const state_swimlane = state.swimlanes[1];
             expect(state_swimlane.card.remaining_effort).not.toBeNull();
-            if (state_swimlane.card.remaining_effort) {
-                expect(state_swimlane.card.remaining_effort).toStrictEqual({
-                    value: 0,
-                    can_update: true,
-                    is_in_edit_mode: true,
-                    is_being_saved: false,
-                });
+            if (!state_swimlane.card.remaining_effort) {
+                throw new Error("Expected the swimlane's card to have a remaining effort");
             }
+            expect(state_swimlane.card.remaining_effort).toStrictEqual({
+                value: 0,
+                can_update: true,
+                is_in_edit_mode: true,
+                is_being_saved: false,
+            });
         });
     });
 

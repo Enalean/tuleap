@@ -94,9 +94,10 @@ describe("CreateCampaignTestSelector", () => {
         wrapper.get("select").setValue("none");
         const emitted_input = wrapper.emitted("input");
         expect(emitted_input).toBeDefined();
-        if (emitted_input !== undefined) {
-            expect(emitted_input.length).toBe(1);
-            expect(emitted_input[0]).toEqual([{ test_selector: "none" }]);
+        if (emitted_input === undefined) {
+            throw new Error("Expected an input event to be emitted");
         }
+        expect(emitted_input.length).toBe(1);
+        expect(emitted_input[0]).toEqual([{ test_selector: "none" }]);
     });
 });

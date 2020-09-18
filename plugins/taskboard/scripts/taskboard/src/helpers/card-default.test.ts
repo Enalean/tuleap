@@ -49,19 +49,19 @@ describe("injectDefaultPropertiesInCard", () => {
         const card: Card = { remaining_effort: { value: 3 } } as Card;
         injectDefaultPropertiesInCard(card);
 
-        expect.assertions(1);
-        if (card.remaining_effort) {
-            expect(card.remaining_effort.is_being_saved).toBe(false);
+        if (!card.remaining_effort) {
+            throw new Error("Expected the card to have a remaining effort");
         }
+        expect(card.remaining_effort.is_being_saved).toBe(false);
     });
 
     it("Set is_in_edit_mode for remaining effort to false", () => {
         const card: Card = { remaining_effort: { value: 3 } } as Card;
         injectDefaultPropertiesInCard(card);
 
-        expect.assertions(1);
-        if (card.remaining_effort) {
-            expect(card.remaining_effort.is_in_edit_mode).toBe(false);
+        if (!card.remaining_effort) {
+            throw new Error("Expected the card to have a remaining effort");
         }
+        expect(card.remaining_effort.is_in_edit_mode).toBe(false);
     });
 });
