@@ -69,7 +69,7 @@ class ExecutionFromAutomatedTestsUpdater
         PFUser $user
     ): void {
         if (! empty($automated_tests_results->junit_contents)) {
-            $all_test_cases = $this->tests_data_extractor->getTestsCaseFromJunit(
+            $all_test_cases = $this->tests_data_extractor->getTestsResultsFromJunit(
                 $automated_tests_results
             );
 
@@ -86,7 +86,7 @@ class ExecutionFromAutomatedTestsUpdater
 
     /**
      *
-     * @param ExtractedTestCaseFromJunit[]                  $all_test_cases
+     * @param ExtractedTestResultFromJunit[]                  $all_test_cases
      * @param array<string, ExecutionWithAutomatedTestData> $executions_with_automated_test_data
      * @throws \Luracast\Restler\RestException
      */
