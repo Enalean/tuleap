@@ -161,7 +161,11 @@ import { createListPicker } from "../../../../scripts/list-picker/src/list-picke
 
             if (example.id === "example-list-picker-") {
                 createListPicker(document.querySelector("#list-picker-sb"), {
-                    placeholder: "<script>alert('yolo')</script>",
+                    placeholder: "Choose a value",
+                });
+
+                createListPicker(document.querySelector("#list-picker-sb-with-optgroups"), {
+                    placeholder: "Choose a value",
                 });
 
                 createListPicker(document.querySelector("#list-picker-sb-disabled"), {

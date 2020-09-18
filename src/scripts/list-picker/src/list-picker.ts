@@ -19,45 +19,73 @@
 
 import { render } from "mustache";
 import { sanitize } from "dompurify";
-
-interface ListPickerOptions {
-    placeholder?: string;
-}
+import { renderListPickerDropdownContent } from "./helpers/dropdown-content-renderer";
+import { ListPickerOptions } from "./type";
+import { attachEvents } from "./helpers/list-picker-events-helper";
 
 export function createListPicker(
-    source_select_box: HTMLSelectElement | null,
+    source_select_box: HTMLSelectElement,
     options?: ListPickerOptions
 ): void {
-    if (source_select_box === null) {
+    if (source_select_box === null || source_select_box.parentElement === null) {
         return;
     }
 
-    const is_disabled = Boolean(source_select_box.disabled);
-    const rendered_list_picker = getRenderedListPicker();
+    const rendered_list_picker = getRenderedListPicker(source_select_box.parentElement);
 
-    hideSourceSelectBox(source_select_box);
+    hideSourceSelectBox();
 
     source_select_box.insertAdjacentHTML("afterend", sanitize(rendered_list_picker));
 
-    function getRenderedListPicker(): string {
+    const parent_element = source_select_box.parentElement;
+    const component_root = parent_element.querySelector(".list-picker");
+    const component_dropdown = parent_element.querySelector(".list-picker-dropdown");
+
+    if (!isElement(component_root) || !isElement(component_dropdown)) {
+        throw new Error("List picker not found in DOM.");
+    }
+
+    function isElement(element: Element | EventTarget | null): element is Element {
+        return element !== null && element instanceof Element;
+    }
+
+    attachEvents(document, source_select_box, component_root, component_dropdown);
+    renderListPickerDropdownContent(source_select_box, component_dropdown);
+
+    function getRenderedListPicker(parent_element: HTMLElement): string {
+        const parent_element_width = parent_element.clientWidth;
+
         return render(
             `
-            <span class="list-picker{{# is_disabled }} list-picker-disabled {{/ is_disabled }}">
-                <span class="list-picker-container list-picker-single" role="textbox" aria-readonly="true">
-                   <span class="list-picker-placeholder">{{ placeholder }}</span>
+                <span class="list-picker{{# is_disabled }} list-picker-disabled {{/ is_disabled }}">
+                    <span class="list-picker-single" role="textbox" aria-readonly="true">
+                       <span class="list-picker-placeholder">{{ placeholder }}</span>
+                    </span>
                 </span>
-            </span>
+                <span class="list-picker-dropdown" style="width: {{ parent_element_width }}px">
+                    <ul
+                        class="list-picker-dropdown-values-list"
+                        role="listbox"
+                        aria-expanded="false"
+                        aria-hidden="false"
+                    ></ul>
+                </span>
             `,
             {
                 placeholder: options?.placeholder,
-                is_disabled,
+                is_disabled: isComponentDisabled(),
+                parent_element_width,
             }
         );
     }
 
-    function hideSourceSelectBox(source_select_box: HTMLSelectElement): void {
+    function hideSourceSelectBox(): void {
         source_select_box.classList.add("list-picker-hidden-accessible");
         source_select_box.setAttribute("tabindex", "-1");
         source_select_box.setAttribute("aria-hidden", "true");
+    }
+
+    function isComponentDisabled(): boolean {
+        return Boolean(source_select_box.disabled);
     }
 }
