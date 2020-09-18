@@ -22,8 +22,8 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
-use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -31,7 +31,6 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
-use Tuleap\Layout\IncludeAssets;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
 {
@@ -309,7 +308,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $service_tracker_breadcrumb['sub_items'] = [
                 [
                     'title' => $GLOBALS['Language']->getText('global', 'Administration'),
-                    'url'   => GlobalAdminController::getTrackerGlobalAdministrationURL($project)
+                    'url'   => Tracker::getTrackerGlobalAdministrationURL($project)
                 ]
             ];
         }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Admin;
+namespace Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks;
 
 use CSRFSynchronizerToken;
 use EventManager;
@@ -35,14 +35,16 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-class GlobalAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
+class ArtifactLinksController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
-    public const URL = '/global-admin';
+    public const URL = 'artifact-links';
 
     /**
      * @var ArtifactLinksUsageDao
@@ -105,16 +107,16 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
             throw new ForbiddenException();
         }
         switch ($request->get('func')) {
-            case 'edit-global-admin':
+            case 'edit-artifact-links':
                 $this->updateGlobalAdministration($layout, $project);
                 $layout->redirect(self::getTrackerGlobalAdministrationURL($project));
                 break;
             case 'use-artifact-link-type':
-                $type_shortname = $request->get('type-shortname');
+                $type_shortname = (string) $request->get('type-shortname');
                 $this->updateArtifactLinkUsage($project, $type_shortname);
                 $GLOBALS['Response']->redirect(self::getTrackerGlobalAdministrationURL($project));
                 break;
-            case 'global-admin':
+            case 'artifact-links':
             default:
                 $this->displayGlobalAdministration($project, $layout);
                 break;
@@ -129,8 +131,8 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
 
         $response->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/trackers', '/assets/trackers'),
-                'global-admin.js'
+                new IncludeAssets(__DIR__ . '/../../../../../../../src/www/assets/trackers', '/assets/trackers'),
+                'global-admin-artifact-links.js'
             )
         );
         $this->tracker_manager->displayHeader(
@@ -144,16 +146,16 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         $formatted_types = $this->buildFormattedTypes($project);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-        $presenter = new GlobalAdminPresenter(
+        $presenter = new ArtifactLinksPresenter(
             $project,
             $this->getCSRF($project),
-            $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
+            (bool) $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
             $formatted_types,
             $this->hasAtLeastOneDisabledType($formatted_types)
         );
 
         $renderer->renderToPage(
-            'global-admin',
+            'global-admin/artifact-links',
             $presenter
         );
 
@@ -170,7 +172,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         $this->updater->forceUsageOfArtifactLinkTypes($project);
     }
 
-    private function updateArtifactLinkUsage(Project $project, $type_shortname): void
+    private function updateArtifactLinkUsage(Project $project, string $type_shortname): void
     {
         $type_presenter = $this->types_presenter_factory->getFromShortname($type_shortname);
 
@@ -222,7 +224,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
 
     public static function getTrackerGlobalAdministrationURL(Project $project): string
     {
-        return TRACKER_BASE_URL . self::URL . '/' . (int) $project->getID();
+        return \Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
 
     /**

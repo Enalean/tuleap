@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Admin;
+namespace Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks;
 
 use CSRFSynchronizerToken;
 use Project;
 
-class GlobalAdminPresenter
+class ArtifactLinksPresenter
 {
     /**
      * @var string
@@ -76,30 +76,46 @@ class GlobalAdminPresenter
     public $warning_message;
 
     /**
-     * @var string
+     * @var bool
      */
     public $has_at_least_one_disabled_type;
     /**
      * @var string
      */
     public $global_admin_url;
+    /**
+     * @var string
+     */
+    public $available_types;
+    /**
+     * @var string
+     */
+    public $shortname_label;
+    /**
+     * @var string
+     */
+    public $forward_label_label;
+    /**
+     * @var string
+     */
+    public $reverse_label_label;
 
     public function __construct(
         Project $project,
         CSRFSynchronizerToken $csrf_token,
-        $are_artifact_link_types_enabled,
+        bool $are_artifact_link_types_enabled,
         array $artifact_link_types,
-        $has_at_least_one_disabled_type
+        bool $has_at_least_one_disabled_type
     ) {
         $this->title        = dgettext('tuleap-tracker', 'Tracker global admininistration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
 
-        $base_url = GlobalAdminController::getTrackerGlobalAdministrationURL($project);
+        $base_url = ArtifactLinksController::getTrackerGlobalAdministrationURL($project);
         $this->global_admin_url = $base_url;
         $this->form_url = $base_url . '?' . http_build_query(
             [
-                'func' => 'edit-global-admin'
+                'func' => 'edit-artifact-links'
             ]
         );
 
