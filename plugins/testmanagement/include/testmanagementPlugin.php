@@ -54,6 +54,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
+use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -67,6 +68,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
+use Tuleap\User\History\HistoryQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -124,6 +126,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
+            $this->addHook(HistoryQuickLinkCollection::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -811,5 +814,34 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     private function getImportXmlFromTracker(): ImportXMLFromTracker
     {
         return new ImportXMLFromTracker(new XML_RNGValidator());
+    }
+
+    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    {
+        $config  = $this->getConfig();
+        $tracker = $collection->getArtifact()->getTracker();
+
+        $project = $tracker->getProject();
+        if (! $this->isUsedByProject($project)) {
+            return;
+        }
+
+        $campaign_tracker_id = $config->getCampaignTrackerId($project);
+        if ($campaign_tracker_id !== $tracker->getId()) {
+            return;
+        }
+        $url = '/plugins/testmanagement/?' . http_build_query(
+            [
+                    'group_id' => $project->getID(),
+                ]
+        ) . '#!/campaigns/' . urlencode((string) $collection->getArtifact()->getId());
+
+        $collection->add(
+            new HistoryQuickLink(
+                dgettext('tuleap-testmanagement', 'Tests campaign'),
+                $url,
+                'fa-check'
+            )
+        );
     }
 }
