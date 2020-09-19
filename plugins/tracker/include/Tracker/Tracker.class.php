@@ -126,6 +126,8 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public const MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
 
+    public const GLOBAL_ADMIN_URL = 'global-admin';
+
     public $id;
     public $group_id;
     public $name;
@@ -3558,5 +3560,10 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+' . $this->id . '@' . $email_domain;
+    }
+
+    public static function getTrackerGlobalAdministrationURL(Project $project): string
+    {
+        return TRACKER_BASE_URL . '/' . self::GLOBAL_ADMIN_URL . '/' . (int) $project->getID();
     }
 }

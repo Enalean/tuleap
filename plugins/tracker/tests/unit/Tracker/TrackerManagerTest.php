@@ -23,7 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerManagerTest extends TestCase
@@ -179,7 +179,7 @@ class TrackerManagerTest extends TestCase
         $project = Mockery::spy(Project::class);
         $tm->shouldReceive('getProject')->with(5)->andReturn($project)->once();
         $tm->shouldReceive('checkServiceEnabled')->with($project, $request_artifact)->andReturn(true);
-        $tm->shouldReceive('getGlobalAdminController')->andReturn(Mockery::mock(GlobalAdminController::class));
+        $tm->shouldReceive('getGlobalAdminController')->andReturn(Mockery::mock(ArtifactLinksController::class));
         $tm->shouldReceive('displayAllTrackers')->with($project, $this->user)->once();
 
         $this->artifact->shouldReceive('process')->never();

@@ -30,7 +30,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
-use Tuleap\Tracker\Admin\GlobalAdminController;
 
 class TrackerCreationBreadCrumbsBuilder
 {
@@ -66,7 +65,7 @@ class TrackerCreationBreadCrumbsBuilder
     {
         $global_admin_link = new BreadCrumbLink(
             dgettext('tuleap-tracker', 'Administration'),
-            GlobalAdminController::getTrackerGlobalAdministrationURL($project)
+            \Tracker::getTrackerGlobalAdministrationURL($project)
         );
 
         $link_collection = new BreadCrumbLinkCollection();

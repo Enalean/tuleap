@@ -53,7 +53,7 @@ const webpack_config_for_burndown_chart = {
 const webpack_config_for_vue = {
     entry: {
         "admin-nature": "./scripts/admin-nature.js",
-        "global-admin": "./scripts/global-admin.js",
+        "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
         "tracker-homepage": "./scripts/tracker-homepage/index.js",
         "tracker-admin": "./scripts/tracker-admin/index.js",
         "tracker-creation": "./scripts/tracker-creation/index.ts",

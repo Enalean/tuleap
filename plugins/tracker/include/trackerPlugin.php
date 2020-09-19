@@ -72,7 +72,7 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
@@ -1985,7 +1985,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
 
-            $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
+            $r->addRoute(['GET', 'POST'], '/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdminArtifactLinks'));
+            $r->addRoute(['GET', 'POST'], '/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}/' . ArtifactLinksController::URL, $this->getRouteHandler('routeGlobalAdminArtifactLinks'));
 
             $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraProjectListController'));
             $r->post('/{project_name:[A-z0-9-]+}/jira/{jira_project_key:[A-z]+}/tracker_list', $this->getRouteHandler('routeJiraTrackerListController'));
@@ -2003,7 +2004,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    public function routeGlobalAdmin(): GlobalAdminController
+    public function routeGlobalAdminArtifactLinks(): ArtifactLinksController
     {
         $dao                     = new ArtifactLinksUsageDao();
         $hierarchy_dao           = new HierarchyDAO();
@@ -2011,7 +2012,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
         $event_manager           = EventManager::instance();
 
-        return new GlobalAdminController(
+        return new ArtifactLinksController(
             ProjectManager::instance(),
             new TrackerManager(),
             $dao,
