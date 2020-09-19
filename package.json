@@ -18,7 +18,7 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
-    "@vue/test-utils": "^1.0.5",
+    "@vue/test-utils": "^1.1.0",
     "vuex-mock-store": "0.0.8"
   },
   "config": {
