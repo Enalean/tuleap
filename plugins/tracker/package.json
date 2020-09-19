@@ -41,7 +41,7 @@
     "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
     "@types/sprintf-js": "^1.1.2",
-    "@vue/test-utils": "^1.0.5",
+    "@vue/test-utils": "^1.1.0",
     "angular-mocks": "^1.8.0",
     "concurrently": "^5.2.0",
     "gulp": "^4.0.2",
