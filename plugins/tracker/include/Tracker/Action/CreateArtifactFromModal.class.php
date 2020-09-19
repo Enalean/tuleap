@@ -58,7 +58,7 @@ class Tracker_Action_CreateArtifactFromModal
         $fields_data = $this->request->get('artifact');
         $this->tracker->augmentDataFromRequest($fields_data);
 
-        return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, $email);
+        return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, $email, true);
     }
 
     private function linkArtifact(PFUser $current_user, Tracker_Artifact $new_artifact)

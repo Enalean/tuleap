@@ -355,7 +355,7 @@ class Tracker_ArtifactFactory
      *
      * @return Tracker_Artifact|false false if an error occurred
      */
-    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true)
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, bool $should_visit_be_recorded, $send_notification = true)
     {
         $formelement_factory = Tracker_FormElementFactory::instance();
         $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
@@ -380,7 +380,7 @@ class Tracker_ArtifactFactory
         }
 
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        return $creator->create($tracker, $fields_data, $user, $submitted_on, $send_notification);
+        return $creator->create($tracker, $fields_data, $user, $submitted_on, $send_notification, $should_visit_be_recorded);
     }
 
     public function save(Tracker_Artifact $artifact)

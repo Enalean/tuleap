@@ -43,7 +43,7 @@ class Tracker_REST_Artifact_ArtifactCreator
      * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
      * @throws \Luracast\Restler\RestException
      */
-    public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values)
+    public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values, bool $should_visit_be_recorded)
     {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->artifact_validator->getFieldsDataOnCreate($values, $tracker);
@@ -51,7 +51,7 @@ class Tracker_REST_Artifact_ArtifactCreator
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, ''),
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', $should_visit_be_recorded),
             ''
         );
     }
@@ -70,7 +70,7 @@ class Tracker_REST_Artifact_ArtifactCreator
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, ''),
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', true),
             'by_field'
         );
     }

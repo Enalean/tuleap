@@ -166,7 +166,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
         array $fields_data,
         PFUser $user,
         $submitted_on,
-        $send_notification
+        $send_notification,
+        bool $should_visit_be_recorded
     ) {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
@@ -200,7 +201,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
             return false;
         }
 
-        if ($artifact !== false) {
+        if ($artifact !== false && $should_visit_be_recorded) {
             $this->visit_recorder->record($user, $artifact);
         }
 
