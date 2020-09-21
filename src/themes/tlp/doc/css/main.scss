@@ -27,6 +27,7 @@ $nav-margin: 30px;
     $theme-color,
     $tlp-theme-background-color,
     $tlp-theme-sidebar-background-color,
+    $tlp-ui-white,
     $tlp-ui-dimmed,
     $tlp-ui-info,
     $tlp-ui-success,
@@ -39,6 +40,18 @@ $nav-margin: 30px;
     $tlp-illustration-tertiary-color
 ) {
     background: $tlp-theme-background-color;
+
+    &.doc-background-white {
+        background: $tlp-ui-white;
+    }
+
+    &.doc-background-grey {
+        background: $tlp-theme-background-color;
+    }
+
+    &.doc-background-dark {
+        background: $tlp-theme-sidebar-background-color;
+    }
 
     .doc-section {
         p a:not([class^=tlp-button]) {
@@ -205,6 +218,23 @@ $nav-margin: 30px;
     #example-badges-dark-background {
         background: $tlp-theme-sidebar-background-color;
     }
+
+
+    .doc-appearance {
+        border-top: 2px solid $theme-color;
+    }
+
+    .switch-to-background-white { background-color: $tlp-ui-white;   }
+    .switch-to-background-grey { background-color: $tlp-theme-background-color; }
+    .switch-to-background-dark { background-color: $tlp-theme-sidebar-background-color; }
+
+    .switch-to-background-white,
+    .switch-to-background-grey,
+    .switch-to-background-dark {
+        &.active::before {
+            color: $theme-color;
+        }
+    }
 }
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -217,6 +247,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -236,6 +267,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -255,6 +287,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -274,6 +307,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -293,6 +327,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
@@ -312,6 +347,7 @@ body {
             $tlp-theme-color,
             $tlp-theme-background-color,
             $tlp-theme-sidebar-background-color,
+            $tlp-ui-white,
             $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,

@@ -89,17 +89,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
 
 <body class="blue">
 <nav class="tlp-tabs main-nav">
-    <div class="tlp-tab">
-        <span id="doc-title">TLP</span> <i class="fa fa-dot-circle-o"></i>
-        <nav class="tlp-tab-menu color-switcher">
-            <a href="javascript:;" class="switch-to-orange"></a>
-            <a href="javascript:;" class="switch-to-blue active"></a>
-            <a href="javascript:;" class="switch-to-green"></a>
-            <a href="javascript:;" class="switch-to-grey"></a>
-            <a href="javascript:;" class="switch-to-purple"></a>
-            <a href="javascript:;" class="switch-to-red"></a>
-        </nav>
-    </div>
+    <span id="doc-title">TLP</span>
     <?php
     foreach ($sections as $main => $section) {
         $selected_class = ($main === $current_section ? 'tlp-tab-active' : '');
@@ -261,7 +251,23 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
             ?>
         </section>
     <?php endforeach; ?>
-    <a href="#" title="Back to top" id="back-to-top"><i class="fa fa-arrow-up"></i></a>
+    <section class="doc-appearance">
+        <div class="color-switcher">
+            Theme color:
+            <a href="javascript:;" class="switch-to-orange" title="Orange"></a>
+            <a href="javascript:;" class="switch-to-blue active" title="Blue"></a>
+            <a href="javascript:;" class="switch-to-green" title="Green"></a>
+            <a href="javascript:;" class="switch-to-grey" title="Grey"></a>
+            <a href="javascript:;" class="switch-to-purple" title="Purple"></a>
+            <a href="javascript:;" class="switch-to-red" title="Red"></a>
+        </div>
+        <div class="background-color-switcher">
+            Background:
+            <a href="javascript:;" class="switch-to-background-white" title="White"></a>
+            <a href="javascript:;" class="switch-to-background-grey active" title="Grey"></a>
+            <a href="javascript:;" class="switch-to-background-dark" title="Dark"></a>
+        </div>
+    </section>
 </main>
 <?php echo $tlp_script_tag; ?>
 <script type="text/javascript">

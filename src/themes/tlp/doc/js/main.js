@@ -19,6 +19,7 @@
 
 (function colorSwitcher() {
     var color_switchers = document.querySelectorAll(".color-switcher > a"),
+        background_color_switchers = document.querySelectorAll(".background-color-switcher > a"),
         stylesheet = document.getElementById("tlp-stylesheet");
 
     [].forEach.call(color_switchers, function (color_switcher) {
@@ -33,6 +34,30 @@
 
                 document.body.classList.remove("orange", "blue", "green", "red", "grey", "purple");
                 document.body.classList.add(color);
+
+                loadStylesheet(color);
+            }
+        });
+    });
+
+    [].forEach.call(background_color_switchers, function (color_switcher) {
+        color_switcher.addEventListener("click", function () {
+            if (!this.classList.contains("active")) {
+                var color = this.classList[0].replace("switch-to-background-", "");
+                var active_color_switcher = document.querySelector(
+                    ".background-color-switcher > a.active"
+                );
+
+                active_color_switcher.classList.remove("active");
+
+                this.classList.add("active");
+
+                document.body.classList.remove(
+                    "doc-background-white",
+                    "doc-background-grey",
+                    "doc-background-dark"
+                );
+                document.body.classList.add("doc-background-" + color);
 
                 loadStylesheet(color);
             }
@@ -92,30 +117,3 @@
 window.toggleMargins = function (id) {
     document.getElementById(id).classList.toggle("example-hide-margins");
 };
-
-var last_known_scroll_position = 0;
-var ticking = false;
-
-function showAtTopLink(scroll_pos) {
-    var back_to_top = document.querySelector("#back-to-top");
-    if (!back_to_top) {
-        return;
-    }
-
-    if (scroll_pos > 600) {
-        back_to_top.style.display = "flex";
-    } else {
-        back_to_top.style.display = "none";
-    }
-}
-
-window.addEventListener("scroll", function () {
-    last_known_scroll_position = window.scrollY;
-    if (!ticking) {
-        window.requestAnimationFrame(function () {
-            showAtTopLink(last_known_scroll_position);
-            ticking = false;
-        });
-    }
-    ticking = true;
-});
