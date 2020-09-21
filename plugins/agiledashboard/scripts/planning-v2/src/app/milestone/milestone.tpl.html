@@ -1,6 +1,8 @@
 <div class="tlp-pane-container" data-test="milestone">
-    <div class="tlp-pane-header milestone-header"
+    <div
+        class="tlp-pane-header milestone-header"
         ng-click="milestoneController.toggleMilestone()"
+        data-test="expand-collapse-milestone"
     >
         <i class="tlp-pane-title-icon fa fa-fw"
             ng-class="{
@@ -92,6 +94,7 @@
             ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0"
             title="{{::'Planning' | translate }}"
             class="milestone-info-link"
+            data-test="go-to-submilestone-planning"
         ><i class="fa fa-sign-in"></i><span translate>Planning</span></a>
 
         <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}"
