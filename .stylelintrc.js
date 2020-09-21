@@ -8,7 +8,7 @@ module.exports = {
         "comment-word-disallowed-list": [
             [/^!/],
             {
-                message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-blacklist)`
+                message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-disallowed-list)`
             }
         ],
         "color-hex-length": ["long"],
