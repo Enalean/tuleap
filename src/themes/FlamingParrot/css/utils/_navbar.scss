@@ -172,7 +172,7 @@ header {
     flex: 1 1 auto;
 }
 
-.btn.admin-link {
+.btn.admin-link:not(.btn-link) {
     width: 40px;
     padding: 0;
     color: $ui-color-danger;
