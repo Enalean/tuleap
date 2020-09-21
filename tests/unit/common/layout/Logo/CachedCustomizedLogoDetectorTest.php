@@ -60,28 +60,6 @@ class CachedCustomizedLogoDetectorTest extends TestCase
         $cache->isLegacyOrganizationLogoCustomized();
     }
 
-    public function testItDoesRealComputationIfCacheFileIsNotReadableButLogsAnError(): void
-    {
-        $logger   = \Mockery::mock(LoggerInterface::class);
-        $detector = \Mockery::mock(CustomizedLogoDetector::class);
-
-        touch($this->cache_file);
-        chmod($this->cache_file, 0000);
-
-        $cache = new CachedCustomizedLogoDetector($detector, $logger);
-
-        $logger
-            ->shouldReceive('error')
-            ->once();
-
-        $detector
-            ->shouldReceive('isLegacyOrganizationLogoCustomized')
-            ->once()
-            ->andReturn(true);
-
-        self::assertTrue($cache->isLegacyOrganizationLogoCustomized());
-    }
-
     public function testItUsesOnlyInformationAlreadyInCache(): void
     {
         $logger   = \Mockery::mock(LoggerInterface::class);
@@ -155,7 +133,7 @@ class CachedCustomizedLogoDetectorTest extends TestCase
         file_put_contents($this->cache_file, $content);
 
         $logger
-            ->shouldReceive('warning')
+            ->shouldReceive('error')
             ->once();
 
         $cache = new CachedCustomizedLogoDetector($detector, $logger);
