@@ -89,16 +89,10 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
             return [];
         }
 
-        if (! is_readable($path)) {
-            $this->logger->error("Unable to read cache file $path");
-
-            return [];
-        }
-
         try {
             $information = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            $this->logger->warning(
+            $this->logger->error(
                 "Cache file $path was containing unreadable information. It has been reset.",
                 ["exception" => $e]
             );
