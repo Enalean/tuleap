@@ -31,6 +31,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
     const project_banner_message_wrapper = project_banner_message.parentElement;
 
     addHintMessageIsClampedIfNeeded(project_banner_message);
+    updateFloatingButtonsPosition();
 
     const observer = new MutationObserver(() => {
         addHintMessageIsClampedIfNeeded(project_banner_message);
