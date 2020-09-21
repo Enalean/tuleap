@@ -19,7 +19,7 @@
     "d3-shape": "^2.0.0",
     "d3-transition": "^2.0.0",
     "dom4": "^2.1.5",
-    "dompurify": "^2.0.15",
+    "dompurify": "^2.0.17",
     "dragula": "^3.7.2",
     "get-dataset": "^0.0.4",
     "hotkeys-js": "^3.8.1",
