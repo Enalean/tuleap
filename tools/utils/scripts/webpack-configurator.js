@@ -24,7 +24,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
@@ -99,15 +99,12 @@ function getCSSExtractionPlugins() {
 }
 
 function getCSSOptimizerPlugin() {
-    return new OptimizeCssAssetsPlugin({
-        cssProcessor: require("cssnano"),
-        cssProcessorPluginOptions: {
+    return new CssMinimizerPlugin({
+        minimizerOptions: {
             preset: [
                 "default",
                 {
-                    discardComments: {
-                        removeAll: true,
-                    },
+                    discardComments: { removeAll: true },
                 },
             ],
         },
