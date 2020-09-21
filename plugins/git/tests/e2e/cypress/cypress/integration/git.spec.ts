@@ -62,7 +62,6 @@ describe("Git", function () {
                     cy.get("[data-test=create_repository_name]").type("Mazda/MX5");
                     cy.root().submit();
                 });
-                cy.get("[data-test=git-repository-path]").contains("Mazda/");
                 cy.get("[data-test=git_repo_name]").contains("MX5");
 
                 // return to the git repositories list page
