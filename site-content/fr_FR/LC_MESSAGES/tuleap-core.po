@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -2876,6 +2876,15 @@ msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
 #, php-format
 msgid "Your account has been created on %s"
 msgstr "Votre compte a été créé sur %s"
+
+#, php-format
+msgid ""
+"Your account has been suspended. If you have questions regarding your "
+"suspension, please email <a href=\"mailto:%s\">the site administrators</a>."
+msgstr ""
+"Votre compte utilisateur a été suspendu. Si vous avez des questions à ce "
+"sujet, veuillez envoyez un e-mail aux <a href=\"mailto:%s\">administrateurs "
+"du site</a>."
 
 msgid "Your avatar"
 msgstr "Votre avatar"
