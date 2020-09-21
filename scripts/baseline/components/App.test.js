@@ -44,7 +44,7 @@ describe("App", () => {
                 project_url: "/project_url",
                 privacy: {},
                 project_flags: [],
-            }
+            },
         });
     });
 
