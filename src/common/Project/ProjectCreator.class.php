@@ -71,12 +71,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     public const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
 
-    /**
-     * Waiting for "private const" in PHP 7.1 https://wiki.php.net/rfc/class_const_visibility
-     */
-    private static $TYPE_PROJECT  = 1;
-    private static $TYPE_TEMPLATE = 2;
-    private static $TYPE_TEST     = 3;
+    private const TYPE_PROJECT  = 1;
+    private const TYPE_TEMPLATE = 2;
+    private const TYPE_TEST     = 3;
 
     /**
      * @var UgroupDuplicator
@@ -490,11 +487,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $access = $data->getAccess();
 
-        $type = self::$TYPE_PROJECT;
+        $type = self::TYPE_PROJECT;
         if ($data->isTest()) {
-            $type = self::$TYPE_TEST;
+            $type = self::TYPE_TEST;
         } elseif ($data->isTemplate()) {
-            $type = self::$TYPE_TEMPLATE;
+            $type = self::TYPE_TEMPLATE;
         }
 
         // make group entry

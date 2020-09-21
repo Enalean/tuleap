@@ -31,6 +31,7 @@ class ForgeConfig
 
     /**
      * Hold the configuration variables
+     * @var array
      */
     protected static $conf_stack = [0 => []];
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2013-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -69,7 +69,7 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var bool */
     private $has_children = null;
     /**
-     * @var
+     * @var bool
      */
     private $is_inconsistent;
     /**
@@ -77,7 +77,7 @@ class AgileDashboard_BacklogItemPresenter implements
      */
     private $short_type;
 
-    public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent)
+    public function __construct(Tracker_Artifact $artifact, $redirect_to_self, bool $is_inconsistent)
     {
         $this->id               = $artifact->getId();
         $this->title            = $artifact->getTitle() ?? '';

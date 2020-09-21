@@ -34,6 +34,8 @@ class Widget_MyLatestSvnCommits extends Widget
 
     /**
      * Number of SVN commits to display (user preferences)
+     *
+     * @var int|false
      */
     private $_nb_svn_commits;
 

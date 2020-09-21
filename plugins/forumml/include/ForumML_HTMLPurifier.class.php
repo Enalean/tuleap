@@ -30,6 +30,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
 
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     private static $ForumML_HTMLPurifier_instance;
 

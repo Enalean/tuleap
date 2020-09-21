@@ -33,16 +33,22 @@ class ProjectQuotaManager
 
     /**
      * The Projects dao used to fetch data
+     *
+     * @var Statistics_ProjectQuotaDao
      */
     protected $dao;
 
     /**
      * ProjectManager instance
+     *
+     * @var ProjectManager
      */
     protected $pm;
 
     /**
      * Statistics_DiskUsageManager instance
+     *
+     * @var Statistics_DiskUsageManager
      */
     protected $diskUsageManager;
 

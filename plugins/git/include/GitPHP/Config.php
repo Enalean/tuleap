@@ -40,6 +40,7 @@ class Config
      *
      * @access protected
      * @static
+     * @var self|null
      */
     protected static $instance;
 

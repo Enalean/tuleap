@@ -37,6 +37,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 {
     /**
      * Html purifier
+     * @var Codendi_HTMLPurifier
      */
     protected $purifier;
 
@@ -65,6 +66,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     /**
      * Background for priorities
+     *
+     * @var array
      */
     private $bgpri = [];
 

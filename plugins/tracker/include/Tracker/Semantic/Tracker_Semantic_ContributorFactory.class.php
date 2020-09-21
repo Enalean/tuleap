@@ -26,6 +26,7 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
 
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     protected static $instance;
 

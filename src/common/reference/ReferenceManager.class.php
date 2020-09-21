@@ -80,6 +80,8 @@ class ReferenceManager
 
     /**
      * Hold an instance of the class
+     *
+     * @var self
      */
     protected static $instance;
 
@@ -126,8 +128,7 @@ class ReferenceManager
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
-            self::$instance = new $c();
+            self::$instance = new self();
         }
         return self::$instance;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,19 +27,19 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
 
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     protected static $instance;
 
     /**
      * The singleton method
      *
-     * @return Tracker_Semantic_TitleFactory an instance of the factory
+     * @return self an instance of the factory
      */
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
-            self::$instance = new $c();
+            self::$instance = new self();
         }
         return self::$instance;
     }

@@ -35,6 +35,8 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
      *
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
+     *
+     * @var int
      */
     public $leading_context_lines = 0;
     /**
@@ -42,6 +44,8 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
      *
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
+     *
+     * @var int
      */
     public $trailing_context_lines = 0;
     /**

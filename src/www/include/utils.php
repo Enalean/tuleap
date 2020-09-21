@@ -502,7 +502,7 @@ function util_cleanup_emails($addresses)
 // login name
 function util_normalize_email($address)
 {
-    if (strpos(':', ForgeConfig::get('sys_default_domain')) === false) {
+    if (strpos(ForgeConfig::get('sys_default_domain'), ':') === false) {
         $host = ForgeConfig::get('sys_default_domain');
     } else {
         [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));

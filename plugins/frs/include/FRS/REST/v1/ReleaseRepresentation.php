@@ -51,17 +51,17 @@ class ReleaseRepresentation
     ];
 
     /**
-     * @var id {@type int}
+     * @var int id {@type int}
      */
     public $id;
 
     /**
-     * @var $uri {@type string}
+     * @var string $uri {@type string}
      */
     public $uri;
 
     /**
-     * @var $name {@type string}
+     * @var string $name {@type string}
      */
     public $name;
 
@@ -76,17 +76,17 @@ class ReleaseRepresentation
     public $links = [];
 
     /**
-     * @var $changelog {@type string}
+     * @var string $changelog {@type string}
      */
     public $changelog;
 
     /**
-     * @var $release_note {@type string}
+     * @var string $release_note {@type string}
      */
     public $release_note;
 
     /**
-     * @var $resources {@type array}
+     * @var array $resources {@type array}
      */
     public $resources;
 
@@ -111,7 +111,7 @@ class ReleaseRepresentation
     public $package;
 
     /**
-     * @var $status {@type string}
+     * @var string $status {@type string}
      */
     public $status;
 

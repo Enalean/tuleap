@@ -48,6 +48,7 @@ class Tracker_FormElementFactory
 
     /**
      * Cache formElements
+     * @var array
      */
     protected $formElements              = [];
     protected $formElements_by_parent    = [];
@@ -139,6 +140,8 @@ class Tracker_FormElementFactory
 
     /**
      * Hold an instance of the class
+     *
+     * @var self|null
      */
     protected static $_instance;
 

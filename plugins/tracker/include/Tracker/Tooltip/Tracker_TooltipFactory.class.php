@@ -25,6 +25,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
 {
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     protected static $instance;
 

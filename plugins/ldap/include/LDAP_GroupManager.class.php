@@ -48,7 +48,7 @@ abstract class LDAP_GroupManager
     public const PRESERVE_MEMBERS_OPTION = 'preserve_members';
 
     /**
-     * @type LDAP
+     * @var LDAP
      */
     private $ldap;
 

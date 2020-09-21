@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,10 +26,14 @@ use RandomNumberGenerator;
 
 class Manager
 {
-    /** Dao */
+    /**
+     * @var Dao
+     */
     private $dao;
 
-    /** RandomNumberGenerator */
+    /**
+     * @var RandomNumberGenerator
+     */
     private $token_generator;
 
     public function __construct(Dao $dao)
