@@ -66,11 +66,11 @@ describe("CreateNewVersionEmptyModal", () => {
         });
         store.dispatch.mockImplementation((actionMethodName) => {
             if (actionMethodName === "createNewVersionFromEmpty") {
-                expect(wrapper.vm.is_loading).toBe(true);
-                expect(wrapper.vm.new_item_version.type).toBe(TYPE_LINK);
                 store.state.error.has_modal_error = false;
             }
         });
         wrapper.get("form").trigger("submit.prevent");
+        expect(wrapper.vm.is_loading).toBe(true);
+        expect(wrapper.vm.new_item_version.type).toBe(TYPE_LINK);
     });
 });

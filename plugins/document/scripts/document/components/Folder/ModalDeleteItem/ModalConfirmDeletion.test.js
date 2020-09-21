@@ -93,9 +93,8 @@ describe("ModalConfirmDeletion", () => {
         });
 
         it(`When some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
-            store.dispatch.mockImplementation((actionName, payload) => {
+            store.dispatch.mockImplementation((actionName) => {
                 if (actionName === "getWikisReferencingSameWikiPage") {
-                    expect(payload).toEqual(item);
                     return [
                         {
                             id: 43,
@@ -119,9 +118,8 @@ describe("ModalConfirmDeletion", () => {
         });
 
         it(`When there is a problem retrieving the wiki page referencers (either not found or either unreadable), then it should not add a checkbox`, async () => {
-            store.dispatch.mockImplementation((actionName, payload) => {
+            store.dispatch.mockImplementation((actionName) => {
                 if (actionName === "getWikisReferencingSameWikiPage") {
-                    expect(payload).toEqual(item);
                     return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
                 }
                 return undefined;

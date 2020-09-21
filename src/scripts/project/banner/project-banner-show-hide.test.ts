@@ -153,8 +153,9 @@ describe("Show and hide project banner", () => {
         );
         expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
         expect(click_event).toBeDefined();
-        if (click_event !== undefined) {
-            expect(click_event.defaultPrevented).toBe(true);
+        if (click_event === undefined) {
+            throw new Error("Expected a click event to be received");
         }
+        expect(click_event.defaultPrevented).toBe(true);
     });
 });

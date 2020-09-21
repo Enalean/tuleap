@@ -66,12 +66,12 @@ describe(`Card mutations`, () => {
 
             mutations.startSavingRemainingEffort(state, payload);
 
-            expect.assertions(3);
-            if (state.swimlanes[0].card.remaining_effort) {
-                expect(state.swimlanes[0].card.remaining_effort.value).toBe(42);
-                expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(true);
-                expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
+            if (!state.swimlanes[0].card.remaining_effort) {
+                throw new Error("Expected the first swimlane's card to have a remaining effort");
             }
+            expect(state.swimlanes[0].card.remaining_effort.value).toBe(42);
+            expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(true);
+            expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
         });
     });
 
@@ -86,11 +86,11 @@ describe(`Card mutations`, () => {
 
             mutations.resetSavingRemainingEffort(state, card);
 
-            expect.assertions(2);
-            if (state.swimlanes[0].card.remaining_effort) {
-                expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(false);
-                expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
+            if (!state.swimlanes[0].card.remaining_effort) {
+                throw new Error("Expected the first swimlane's card to have a remaining effort");
             }
+            expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(false);
+            expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
         });
     });
 
@@ -103,12 +103,12 @@ describe(`Card mutations`, () => {
 
             mutations.removeRemainingEffortFromEditMode(state, card);
 
-            expect.assertions(2);
-            const remaining_effort = state.swimlanes[0].card.remaining_effort;
-            if (remaining_effort) {
-                expect(remaining_effort.is_in_edit_mode).toBe(false);
-                expect(remaining_effort.is_being_saved).toBe(false);
+            if (!state.swimlanes[0].card.remaining_effort) {
+                throw new Error("Expected the first swimlane's card to have a remaining effort");
             }
+            const remaining_effort = state.swimlanes[0].card.remaining_effort;
+            expect(remaining_effort.is_in_edit_mode).toBe(false);
+            expect(remaining_effort.is_being_saved).toBe(false);
         });
     });
 
