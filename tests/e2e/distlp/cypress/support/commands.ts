@@ -22,6 +22,8 @@ declare global {
     // Be consistent with Cypress declaration
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
+        // Be consistent with Cypress declaration
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
             login(): void;
 
