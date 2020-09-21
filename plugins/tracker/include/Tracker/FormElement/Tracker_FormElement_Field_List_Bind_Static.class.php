@@ -982,10 +982,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $this->getValueFromRow($row);
     }
 
-    /**
-     * @return array
-     */
-    protected function filterDefaultValues(array $bind_default)
+    protected function filterDefaultValues(array $bind_default): array
     {
         return array_intersect($bind_default, array_keys($this->getAllVisibleValues()));
     }

@@ -706,6 +706,20 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return parent::process($params, $no_redirect);
     }
 
+    protected function filterDefaultValues(array $bind_default): array
+    {
+        if (! $this->field instanceof Tracker_FormElement_Field_OpenList || ! isset($bind_default[0])) {
+            return $bind_default;
+        }
+
+        $bind_default = explode(',', $bind_default[0]);
+        foreach ($bind_default as $key => $value) {
+            $bind_default[$key] = str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', $value);
+        }
+
+        return $bind_default;
+    }
+
     /**
      * Transforms Bind into a SimpleXMLElement
      */
