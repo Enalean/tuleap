@@ -55,6 +55,10 @@ $kanban-column-footer-height: 50px;
     height: calc(100vh - #{$breadcrumb-height});
 }
 
+.sidebar-collapsed .kanban {
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar});
+}
+
 .has-visible-project-banner .kanban {
     height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height});
 }
