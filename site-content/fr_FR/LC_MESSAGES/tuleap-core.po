@@ -985,6 +985,9 @@ msgstr ""
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
 
+msgid "Invite"
+msgstr "Inviter"
+
 msgid "Is default?"
 msgstr "Par défaut ?"
 

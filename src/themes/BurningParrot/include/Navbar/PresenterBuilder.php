@@ -25,6 +25,7 @@ use PFUser;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\Widget\WidgetFactory;
@@ -67,6 +68,7 @@ class PresenterBuilder
             $should_logo_be_displayed,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
+            (new InviteBuddyConfiguration())->canBuddiesBeInvited(),
         );
     }
 

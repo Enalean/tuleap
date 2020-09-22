@@ -50,6 +50,11 @@ class Presenter
      * @psalm-readonly
      */
     public $is_svg_logo_customized;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $can_buddies_be_invited;
 
     public function __construct(
         UserNavPresenter $user_nav_presenter,
@@ -57,7 +62,8 @@ class Presenter
         bool $is_super_user,
         bool $should_logo_be_displayed,
         bool $is_legacy_logo_customized,
-        bool $is_svg_logo_customized
+        bool $is_svg_logo_customized,
+        bool $can_buddies_be_invited
     ) {
         $this->user_nav_presenter        = $user_nav_presenter;
         $this->new_dropdown              = $new_dropdown;
@@ -65,5 +71,6 @@ class Presenter
         $this->should_logo_be_displayed  = $should_logo_be_displayed;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
         $this->is_svg_logo_customized    = $is_svg_logo_customized;
+        $this->can_buddies_be_invited    = $can_buddies_be_invited;
     }
 }
