@@ -402,8 +402,6 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.fr.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js",
-        "./www/scripts/jscrollpane/jquery.mousewheel.js",
-        "./www/scripts/jscrollpane/jquery.jscrollpane.min.js",
         "./www/scripts/select2/select2.min.js",
         "./www/scripts/vendor/at/js/caret.min.js",
         "./www/scripts/vendor/at/js/atwho.min.js",
@@ -448,8 +446,6 @@ const fat_combined_files = [
     subset_combined_flamingparrot_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
         "./www/scripts/bootstrap/bootstrap-modal.js",
-        "./www/scripts/jscrollpane/jquery.mousewheel.js",
-        "./www/scripts/jscrollpane/jquery.jscrollpane.min.js",
         "./scripts/tuleap/listFilter.js",
         "./scripts/codendi/Tooltip.js",
     ];

@@ -19,9 +19,11 @@
 
 /* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
+    display: flex;
     position: fixed;
     z-index: 1000;
     top: 0;
+    flex-direction: column;
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: 100vh;

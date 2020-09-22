@@ -5,8 +5,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {
-    "smooth-scrollbar": "^7.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }

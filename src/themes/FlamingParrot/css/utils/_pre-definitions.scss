@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../../../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
+
 $tuleap-common-theme-basepath: '../../../www/themes/common/';
 
 @import '../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css';
