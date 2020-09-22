@@ -32,7 +32,7 @@ use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
-class RecipientsManagerTest extends TestCase
+final class RecipientsManagerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -187,6 +187,34 @@ class RecipientsManagerTest extends TestCase
         );
     }
 
+    public function testItCleansUserFromRecipientsWhenTheyCannotReadTheArtifact(): void
+    {
+        $this->mockADateField(false, true);
+
+        $changeset = $this->getAMockedChangeset(
+            true,
+            ['recipient2'],
+            [],
+            'On going',
+            'Review',
+            [],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            true,
+            Mockery::spy(Tracker_Artifact_Changeset::class)
+        );
+        $changeset->shouldReceive('hasChanged')->andReturn(true);
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(false);
+
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
+        $this->assertEquals(
+            [],
+            $this->recipients_manager->getRecipients($changeset, true)
+        );
+    }
+
     public function testItCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField(): void
     {
         $this->mockADateField(false, false);
@@ -203,6 +231,9 @@ class RecipientsManagerTest extends TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
         $changeset->shouldReceive('hasChanged')->andReturn(true);
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 

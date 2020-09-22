@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -104,7 +104,7 @@ class RecipientsManager
                 }
             }
         }
-        $this->removeRecipientsThatMayReceiveAnEmptyNotification($changeset, $tablo);
+        $this->removeRecipientsThatCannotReadAnything($changeset, $tablo);
         $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
         $this->removeRecipientsWhenTheyAreInStatusUpdateOnlyMode($changeset, $tablo);
         if ($is_update) {
@@ -114,7 +114,7 @@ class RecipientsManager
         return $tablo;
     }
 
-    private function removeRecipientsThatMayReceiveAnEmptyNotification(Tracker_Artifact_Changeset $changeset, array &$recipients)
+    private function removeRecipientsThatCannotReadAnything(Tracker_Artifact_Changeset $changeset, array &$recipients): void
     {
         if ($changeset->getComment() && ! $changeset->getComment()->hasEmptyBody()) {
             return;
@@ -126,7 +126,7 @@ class RecipientsManager
             }
 
             $user = $this->getUserFromRecipientName($recipient);
-            if (! $user || ! $this->userCanReadAtLeastOneChangedField($changeset, $user)) {
+            if (! $user || ! $changeset->getArtifact()->userCanView($user) || ! $this->userCanReadAtLeastOneChangedField($changeset, $user)) {
                 unset($recipients[$recipient]);
             }
         }
