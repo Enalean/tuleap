@@ -68,7 +68,7 @@ function renderGroupedOptions(
 function getRenderedListItem(option_id: string, current_item: ListPickerItem): Element {
     const list_item = document.createElement("li");
     list_item.id = option_id;
-    list_item.innerHTML = sanitize(current_item.template);
+    list_item.appendChild(document.createTextNode(sanitize(current_item.template)));
     list_item.setAttribute("role", "option");
     list_item.setAttribute("aria-selected", "false");
 
