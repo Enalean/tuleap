@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,40 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-use Project;
-
-final class ContributorProjectsCollection
+final class NoTitleChangesetValueException extends \RuntimeException implements MilestoneMirroringException
 {
-    /**
-     * @var Project[]
-     * @psalm-readonly
-     */
-    private $contributor_projects;
-
-    /**
-     * @param Project[] $contributor_projects
-     */
-    public function __construct(array $contributor_projects)
+    public function __construct(int $changeset_id, int $title_field_id)
     {
-        $this->contributor_projects = $contributor_projects;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function isEmpty(): bool
-    {
-        return empty($this->contributor_projects);
-    }
-
-    /**
-     * @return Project[]
-     * @psalm-mutation-free
-     */
-    public function getContributorProjects(): array
-    {
-        return $this->contributor_projects;
+        parent::__construct("Expected changeset #$changeset_id to have a value for Title field #$title_field_id, but this value was not found");
     }
 }

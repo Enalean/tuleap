@@ -18,16 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
-
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
-
-final class NoTitleFieldException extends \RuntimeException implements SynchronizedFieldRetrievalException, MilestoneMirroringException
+interface MilestoneMirroringException extends \Throwable
 {
-    public function __construct(int $tracker_id)
-    {
-        parent::__construct("Expected tracker with id $tracker_id to have a field associated to its Title semantic, but this field was not found");
-    }
 }

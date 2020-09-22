@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,40 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-use Project;
-
-final class ContributorProjectsCollection
+/**
+ * @psalm-immutable
+ */
+final class TargetFields
 {
     /**
-     * @var Project[]
-     * @psalm-readonly
+     * @var int
      */
-    private $contributor_projects;
+    private $title_field_id;
 
-    /**
-     * @param Project[] $contributor_projects
-     */
-    public function __construct(array $contributor_projects)
+    public function __construct(int $title_field_id)
     {
-        $this->contributor_projects = $contributor_projects;
+        $this->title_field_id = $title_field_id;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function isEmpty(): bool
+    public function getTitleFieldId(): int
     {
-        return empty($this->contributor_projects);
-    }
-
-    /**
-     * @return Project[]
-     * @psalm-mutation-free
-     */
-    public function getContributorProjects(): array
-    {
-        return $this->contributor_projects;
+        return $this->title_field_id;
     }
 }
