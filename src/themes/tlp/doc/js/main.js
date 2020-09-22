@@ -58,8 +58,6 @@
                     "doc-background-dark"
                 );
                 document.body.classList.add("doc-background-" + color);
-
-                loadStylesheet(color);
             }
         });
     });
