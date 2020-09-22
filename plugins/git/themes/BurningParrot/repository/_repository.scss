@@ -25,11 +25,6 @@
 @import 'gitphp/highlight';
 @import '../gitphp-override';
 
-.git-repository-path {
-    color: $tlp-ui-dimmed;
-    font-size: 16px;
-}
-
 .git-repository-header {
     padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
