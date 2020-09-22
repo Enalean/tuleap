@@ -17,7 +17,6 @@ import campaign_module from "../campaign/campaign.js";
 import ExecutionConfig from "./execution-config.js";
 import ExecutionListCtrl from "./execution-list-controller.js";
 import ExecutionDetailCtrl from "./execution-detail-controller.js";
-import ExecutionTimerDirective from "./timer/execution-timer-directive.js";
 import ExecutionListFilter from "./execution-list-filter.js";
 import AutomatedTestsFilter from "./automated-tests-filter.js";
 import ExecutionListHeader from "./execution-list-header/execution-list-header-component.js";
@@ -43,7 +42,6 @@ export default angular
     .config(ExecutionConfig)
     .controller("ExecutionListCtrl", ExecutionListCtrl)
     .controller("ExecutionDetailCtrl", ExecutionDetailCtrl)
-    .directive("timer", ExecutionTimerDirective)
     .component("executionDetailJustUpdated", ExecutionDetailJustUpdated)
     .component("executionListHeader", ExecutionListHeader)
     .component("executionWithSteps", ExecutionWithSteps)

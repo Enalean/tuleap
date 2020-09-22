@@ -99,7 +99,7 @@ describe("ExecutionRestService", () => {
         const tlpPutSpy = jest.spyOn(tlp, "put");
         mockFetchSuccess(tlpPutSpy);
 
-        await ExecutionRestService.putTestExecution(4, "passed", 1, "nothing", [13]);
+        await ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]);
 
         expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/testmanagement_executions/4", {
             headers: {
@@ -109,7 +109,6 @@ describe("ExecutionRestService", () => {
                 status: "passed",
                 uploaded_file_ids: [13],
                 results: "nothing",
-                time: 1,
             }),
         });
     });

@@ -130,13 +130,6 @@ function ExecutionDetailCtrl(
 
         $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
         $scope.edit_artifact_modal_loading = NewTuleapArtifactModalService.loading;
-        resetTimer();
-    }
-
-    function resetTimer() {
-        $scope.timer = {
-            execution_time: 0,
-        };
     }
 
     function showLinkToNewBugModal() {
@@ -305,17 +298,14 @@ function ExecutionDetailCtrl(
     }
 
     function pass(execution) {
-        updateTime(execution);
         setNewStatus(execution, PASSED_STATUS);
     }
 
     function fail(execution) {
-        updateTime(execution);
         setNewStatus(execution, FAILED_STATUS);
     }
 
     function block(execution) {
-        updateTime(execution);
         setNewStatus(execution, BLOCKED_STATUS);
     }
 
@@ -323,25 +313,14 @@ function ExecutionDetailCtrl(
         setNewStatus(execution, NOT_RUN_STATUS);
     }
 
-    function updateTime(execution) {
-        if (execution.time) {
-            execution.time += $scope.timer.execution_time;
-        }
-    }
-
     function setNewStatus(execution, new_status) {
         execution.saving = true;
-        let execution_time = null;
-        if (execution.time) {
-            execution_time = execution.time;
-        }
 
         let uploaded_file_ids = ExecutionService.getUsedUploadedFilesIds(execution);
 
         ExecutionRestService.putTestExecution(
             execution.id,
             new_status,
-            execution_time,
             execution.results,
             uploaded_file_ids
         )
@@ -351,11 +330,12 @@ function ExecutionDetailCtrl(
                     SharedPropertiesService.getCurrentUser()
                 );
                 ExecutionService.clearEditor(execution);
-                resetTimer();
             })
             .catch(function (response) {
                 ExecutionService.displayError(execution, response);
             });
+
+        execution.saving = false;
     }
 
     function getStatusLabel(status) {

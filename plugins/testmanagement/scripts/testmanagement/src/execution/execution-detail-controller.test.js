@@ -159,7 +159,6 @@ describe("ExecutionDetailController -", () => {
             time: "",
             results: "psychoanalyzer rupture solidish",
         };
-        const time = 570;
 
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
@@ -170,11 +169,10 @@ describe("ExecutionDetailController -", () => {
             );
             ExecutionService.editor = ckeditorGetData;
             $scope.execution = execution;
-            $scope.timer = { execution_time: time };
         });
 
         describe("pass()", () => {
-            it("Then the status will be saved to 'passed' and the timer will be reset", () => {
+            it("Then the status will be saved to 'passed'", () => {
                 execution.uploaded_files = [];
 
                 $scope.pass(execution);
@@ -183,13 +181,11 @@ describe("ExecutionDetailController -", () => {
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
                     execution.id,
                     "passed",
-                    null,
                     execution.results,
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
-                expect($scope.timer.execution_time).toEqual(0);
             });
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
@@ -205,41 +201,37 @@ describe("ExecutionDetailController -", () => {
         });
 
         describe("fail()", () => {
-            it("Then the status will be saved to 'failed' and the timer will be reset", () => {
+            it("Then the status will be saved to 'failed'", () => {
                 $scope.fail(execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
                     execution.id,
                     "failed",
-                    null,
                     execution.results,
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.timer.execution_time).toEqual(0);
             });
         });
 
         describe("block()", () => {
-            it("Then the status will be saved to 'blocked' and the timer will be reset", () => {
+            it("Then the status will be saved to 'blocked'", () => {
                 $scope.block(execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
                     execution.id,
                     "blocked",
-                    null,
                     execution.results,
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.timer.execution_time).toEqual(0);
             });
         });
 
         describe("notrun()", () => {
-            it("Then the status will be saved to 'notrun' and the timer will be reset", () => {
+            it("Then the status will be saved to 'notrun'", () => {
                 ckeditorGetData.getData = () => ["/download/href"];
                 execution.uploaded_files = [
                     {
@@ -254,15 +246,13 @@ describe("ExecutionDetailController -", () => {
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
                     execution.id,
                     "notrun",
-                    null,
                     execution.results,
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.timer.execution_time).toEqual(0);
             });
 
-            it("Then the status will be saved to 'notrun', the timer will be reset and only the file in ckeditor will be send", () => {
+            it("Then the status will be saved to 'notrun' and only the file in ckeditor will be send", () => {
                 ckeditorGetData.getData = () => ["/download/href"];
                 execution.uploaded_files = [
                     {
@@ -281,12 +271,10 @@ describe("ExecutionDetailController -", () => {
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
                     execution.id,
                     "notrun",
-                    null,
                     execution.results,
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect($scope.timer.execution_time).toEqual(0);
             });
         });
     });
