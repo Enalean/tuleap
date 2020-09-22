@@ -32,16 +32,21 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     /**
      * The title given by the user to the widget
+     *
+     * @var string|null
      */
     protected $plugin_docman_widget_embedded_title;
 
     /**
      * The item id to display
+     *
+     * @var int|null
      */
     protected $plugin_docman_widget_embedded_item_id;
 
     /**
      * The path to this plugin
+     * @var string
      */
     protected $plugin_path;
 
@@ -185,7 +190,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
             $this->plugin_docman_widget_embedded_title   = $data['title'];
-            $this->plugin_docman_widget_embedded_item_id = $data['item_id'];
+            $this->plugin_docman_widget_embedded_item_id = (int) $data['item_id'];
             $this->content_id = $id;
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,22 +35,22 @@ class SystemEventRepresentation
     public $id;
 
     /**
-     * @string
+     * @var string
      */
     public $type;
 
     /**
-     * @string
+     * @var string
      */
     public $status;
 
     /**
-     * @string
+     * @var string
      */
     public $owner;
 
     /**
-     * @string
+     * @var string
      */
     public $log;
 

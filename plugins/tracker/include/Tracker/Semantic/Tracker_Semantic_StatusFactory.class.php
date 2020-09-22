@@ -25,6 +25,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
 {
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     protected static $instance;
 

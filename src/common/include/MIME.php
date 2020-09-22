@@ -27,6 +27,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     private static $_instance;
     /**

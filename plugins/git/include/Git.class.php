@@ -158,12 +158,12 @@ class Git extends PluginController
     private $projectManager;
 
     /**
-     * @var GitPlugin
+     * @var GitPlugin
      */
     private $plugin;
 
     /**
-     * @var Git_RemoteServer_GerritServerFactory
+     * @var Git_RemoteServer_GerritServerFactory
      */
     private $gerrit_server_factory;
 

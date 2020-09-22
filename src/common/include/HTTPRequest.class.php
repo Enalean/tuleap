@@ -71,6 +71,7 @@ class HTTPRequest extends Codendi_Request
 
     /**
      * Hold an instance of the class
+     * @var self|null
      */
     protected static $_instance;
 

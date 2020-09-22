@@ -40,11 +40,13 @@ class BaseLanguage
 
     /**
      * Supported languages
+     * @var string[]
      */
     public $allLanguages;
 
     /**
      * Default languages
+     * @var string
      */
     public $defaultLanguage;
 

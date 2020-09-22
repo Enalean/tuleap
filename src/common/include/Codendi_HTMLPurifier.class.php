@@ -61,6 +61,8 @@ class Codendi_HTMLPurifier
 
     /**
      * Hold an instance of the class
+     *
+     * @var self|null
      */
     private static $Codendi_HTMLPurifier_instance;
     private $config = [];

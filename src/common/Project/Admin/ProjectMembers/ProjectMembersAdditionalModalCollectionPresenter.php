@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -43,7 +43,7 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
     public $modals_buttons = [];
     public $modals_content = [];
     /**
-     * @var
+     * @var string
      */
     private $user_locale;
     /**

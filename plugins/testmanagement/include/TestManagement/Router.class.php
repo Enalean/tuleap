@@ -48,7 +48,7 @@ class Router
     private $tracker_factory;
 
     /**
-     * @param \Service
+     * @var \Service
      */
     private $service;
 

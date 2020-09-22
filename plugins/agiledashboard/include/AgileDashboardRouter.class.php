@@ -69,7 +69,7 @@ class AgileDashboardRouter
     private $plugin;
 
     /**
-     * @param Service
+     * @var Service|null
      */
     private $service;
 

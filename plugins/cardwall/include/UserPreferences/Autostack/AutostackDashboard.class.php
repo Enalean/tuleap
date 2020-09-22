@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -25,7 +25,7 @@
 class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_UserPreferences_UserPreferencesAutostack
 {
     /**
-     * @param Tracker $tracker
+     * @var Tracker $tracker
      */
     private $tracker;
 

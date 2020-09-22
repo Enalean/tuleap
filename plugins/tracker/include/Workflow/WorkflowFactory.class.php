@@ -76,6 +76,8 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
     /**
      * Hold an instance of the class
+     *
+     * @var self|null
      */
     protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 

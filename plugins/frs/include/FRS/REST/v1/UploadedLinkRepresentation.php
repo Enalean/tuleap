@@ -31,7 +31,7 @@ use Tuleap\User\REST\UserRepresentation;
 class UploadedLinkRepresentation
 {
     /**
-     * @var $id {@type int}
+     * @var int $id {@type int}
      */
     public $id;
 
@@ -41,17 +41,17 @@ class UploadedLinkRepresentation
     public $owner;
 
     /**
-     * @var $link {@type string}
+     * @var string $link {@type string}
      */
     public $link;
 
     /**
-     * @var $link {@type string}
+     * @var string $link {@type string}
      */
     public $name;
 
     /**
-     * @param $release_time {@type string}
+     * @var string $release_time {@type string}
      */
     public $release_time;
 
