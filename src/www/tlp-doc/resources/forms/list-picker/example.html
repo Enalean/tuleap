@@ -15,6 +15,32 @@
     </script>
 </div>
 
+<div class="tlp-form-element">
+    <label class="tlp-label" for="list-picker-sb">ListPicker with grouped options</label>
+    <select id="list-picker-sb-with-optgroups" name="list-value">
+        <option value=""></option>
+        <optgroup label="4x areas">
+            <option value="area-46">Area 46</option>
+            <option value="area-49">Area 49</option>
+        </optgroup>
+        <optgroup label="5x areas">
+            <option value="area-51">Area 51</option>
+            <option value="area-52">Area 52</option>
+            <option value="area-53" disabled>Area 53</option>
+            <option value="area-54">Area 54</option>
+            <option value="area-55">Area 55</option>
+            <option value="area-58">Area 59</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker";
+
+        createListPicker(document.querySelector('#list-picker-sb-with-optgroups'), {
+            placeholder: "Choose a value in the list"
+        });
+    </script>
+</div>
+
 <div class="tlp-form-element tlp-form-element-disabled">
     <label class="tlp-label" for="list-picker-sb-disabled">ListPicker disabled</label>
     <select id="list-picker-sb-disabled"
