@@ -18,6 +18,8 @@
  */
 
 #logo {
+    display: inline-block;
+    flex: 0 0 auto;
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: $navbar-height;

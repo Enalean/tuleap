@@ -18,11 +18,10 @@
  */
 
 import $ from "jquery";
+import { init as initScrollBar } from "../BurningParrot/src/scrollbar.js";
 
 var width_collapsed = "50px";
 var width_expanded = "250px";
-var api;
-var throttleTimeout;
 
 function getSidebarUserPreference() {
     if ($("body").hasClass("sidebar-collapsed")) {
@@ -137,40 +136,13 @@ function sidebarCollapseEvent(duration) {
     updateSidebarWidth(new_size, duration);
     updateSidebarIcon(new_direction, show_only_icon);
     updateSidebarServices(show_only_icon, duration);
-    updateCustomScrollbar();
-}
-
-function updateCustomScrollbar() {
-    api.destroy();
-    throttleTimeout = null;
-    initCustomScrollbar();
-}
-
-function initCustomScrollbar() {
-    $(".sidebar-nav")
-        .jScrollPane({
-            verticalGutter: 0,
-            hideFocus: true,
-            contentWidth: getSidebarUserPreference(),
-        })
-        .bind("mousewheel", function (e) {
-            e.preventDefault();
-        });
-    api = $(".sidebar-nav").data("jsp");
-
-    $(window).bind("resize", function () {
-        if (!throttleTimeout) {
-            throttleTimeout = setTimeout(updateCustomScrollbar, 50);
-        }
-    });
 }
 
 $(window).load(function () {
     var current_size = getSidebarUserPreference();
+    initScrollBar();
 
     if ($(".sidebar-nav").length > 0) {
-        initCustomScrollbar();
-
         $(".sidebar-nav li a").tooltip({
             placement: "right",
             container: "body",

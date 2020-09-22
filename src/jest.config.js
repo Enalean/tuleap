@@ -26,7 +26,6 @@ module.exports = {
         ...base_config.collectCoverageFrom,
         "!common/**",
         "!www/**/jquery/**",
-        "!www/**/jscrollpane/**",
         "!www/**/jstimezonedetect/**",
         "!www/**/lightwindow/**",
         "!www/**/lytebox/**",

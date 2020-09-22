@@ -1,94 +1,96 @@
 <div class="sidebar-nav" data-test="current-project-id" data-project-id="{{ project_id }}">
     {{> logo }}
-    <div class="project-sidebar-header">
-        <div class="project-sidebar-header-name">
-            {{# privacy }}
-                <div class="project-title-container">
-                    <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
-                        {{# are_restricted_users_allowed }}
-                            {{# project_is_public }}
-                                <i class="fa fa-unlock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_public }}
-                            {{# project_is_public_incl_restricted }}
-                                <i class="fa fa-tlp-unlock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_public_incl_restricted }}
-                            {{# project_is_private }}
-                                <i class="fa fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_private }}
-                            {{# project_is_private_incl_restricted }}
-                                <i class="fa fa-tlp-lock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_private_incl_restricted }}
-                        {{/ are_restricted_users_allowed }}
-                        {{^ are_restricted_users_allowed }}
-                            {{# project_is_public }}
-                                <i class="fa fa-unlock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_public }}
-                            {{^ project_is_public }}
-                                <i class="fa fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                            {{/ project_is_public }}
-                        {{/ are_restricted_users_allowed }}
+    <div scrollbar>
+        <div class="project-sidebar-header">
+            <div class="project-sidebar-header-name">
+                {{# privacy }}
+                    <div class="project-title-container">
+                        <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
+                            {{# are_restricted_users_allowed }}
+                                {{# project_is_public }}
+                                    <i class="fa fa-unlock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_public }}
+                                {{# project_is_public_incl_restricted }}
+                                    <i class="fa fa-tlp-unlock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_public_incl_restricted }}
+                                {{# project_is_private }}
+                                    <i class="fa fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_private }}
+                                {{# project_is_private_incl_restricted }}
+                                    <i class="fa fa-tlp-lock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_private_incl_restricted }}
+                            {{/ are_restricted_users_allowed }}
+                            {{^ are_restricted_users_allowed }}
+                                {{# project_is_public }}
+                                    <i class="fa fa-unlock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_public }}
+                                {{^ project_is_public }}
+                                    <i class="fa fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
+                                {{/ project_is_public }}
+                            {{/ are_restricted_users_allowed }}
 
-                        {{ project_name }}
-                    </a>
-                </div>
-            {{/ privacy }}
+                            {{ project_name }}
+                        </a>
+                    </div>
+                {{/ privacy }}
 
-            {{# has_project_banner }}
-                <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
-                    <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
-                </span>
-            {{/ has_project_banner }}
-        </div>
-        {{# has_project_flags }}
-            <div class="project-sidebar-project-flags"
-                  title="{{# project_flags }}{{ label }}{{/ project_flags }}"
-                  data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
-                  data-project-flags="{{ json_encoded_project_flags }}"
-            >
-                <div class="project-sidebar-project-flags-icon">
-                    {{# glyph }}project-shield{{/ glyph }}
-                </div>
-                <span class="project-sidebar-project-flags-labels">
-                    {{# project_flags }}
-                        <span class="project-sidebar-project-flags-label">{{ label }}</span>
-                    {{/ project_flags }}
-                </span>
+                {{# has_project_banner }}
+                    <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
+                        <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
+                    </span>
+                {{/ has_project_banner }}
             </div>
-        {{/ has_project_flags }}
-    </div>
+            {{# has_project_flags }}
+                <div class="project-sidebar-project-flags"
+                      title="{{# project_flags }}{{ label }}{{/ project_flags }}"
+                      data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
+                      data-project-flags="{{ json_encoded_project_flags }}"
+                >
+                    <div class="project-sidebar-project-flags-icon">
+                        {{# glyph }}project-shield{{/ glyph }}
+                    </div>
+                    <span class="project-sidebar-project-flags-labels">
+                        {{# project_flags }}
+                            <span class="project-sidebar-project-flags-label">{{ label }}</span>
+                        {{/ project_flags }}
+                    </span>
+                </div>
+            {{/ has_project_flags }}
+        </div>
 
-    <ul class="nav nav-list">
-        {{# sidebar }}
-            {{# is_project_defined }}
-                <li>
-                    <a href="{{{ link }}}"
-                       aria-label="{{ label }}"
-                       {{# open_in_new_tab }}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                       {{/ open_in_new_tab }}
-                    >
-                        <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                        <span title="{{ description }}" class="project-sidebar-nav-item-label">{{ label }}</span>
-                        {{# open_in_new_tab }}
-                            <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
-                        {{/ open_in_new_tab }}
-                    </a>
-                </li>
-            {{/ is_project_defined }}
-            {{^ is_project_defined }}
-                <li {{# enabled }}class="active"{{/ enabled }}>
-                    <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}">
-                        <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                        <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
-                    </a>
-                </li>
-            {{/ is_project_defined }}
-        {{/ sidebar }}
-    </ul>
-    {{# is_sidebar_collapsable }}
-        <i id="sidebar-collapser" class="fa fa-chevron-left sidebar-collapse"></i>
-    {{/ is_sidebar_collapsable }}
+        <ul class="nav nav-list">
+            {{# sidebar }}
+                {{# is_project_defined }}
+                    <li>
+                        <a href="{{{ link }}}"
+                           aria-label="{{ label }}"
+                           {{# open_in_new_tab }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                           {{/ open_in_new_tab }}
+                        >
+                            <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                            <span title="{{ description }}" class="project-sidebar-nav-item-label">{{ label }}</span>
+                            {{# open_in_new_tab }}
+                                <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
+                            {{/ open_in_new_tab }}
+                        </a>
+                    </li>
+                {{/ is_project_defined }}
+                {{^ is_project_defined }}
+                    <li {{# enabled }}class="active"{{/ enabled }}>
+                        <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}">
+                            <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                            <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
+                        </a>
+                    </li>
+                {{/ is_project_defined }}
+            {{/ sidebar }}
+        </ul>
+        {{# is_sidebar_collapsable }}
+            <i id="sidebar-collapser" class="fa fa-chevron-left sidebar-collapse"></i>
+        {{/ is_sidebar_collapsable }}
+    </div>
     <div class="sidebar-spacer"></div>
     <a href="https://www.tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge"
         class="sidebar-about"
