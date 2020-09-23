@@ -45,13 +45,11 @@ class BindStaticXmlExporter
      */
     public function exportToXml(
         \SimpleXMLElement $root,
-        bool $is_rank_alpha,
         array $values,
         ?array $decorators,
         ?array $default_values,
         array &$xml_mapping
     ): void {
-        $root->addAttribute('is_rank_alpha', $is_rank_alpha ? "1" : "0");
         $child = $root->addChild('items');
 
         foreach ($values as $value) {

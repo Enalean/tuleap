@@ -774,6 +774,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $project_export_context,
         UserXMLExporter $user_xml_exporter
     ) {
+        $root->addAttribute('is_rank_alpha', $this->is_rank_alpha ? "1" : "0");
         if (! $this->getAllValues()) {
             return;
         }
@@ -781,7 +782,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $exporter = new BindStaticXmlExporter(new XML_SimpleXMLCDATAFactory());
         $exporter->exportToXml(
             $root,
-            $this->is_rank_alpha,
             $this->getAllValues(),
             $this->decorators,
             $this->default_values,
