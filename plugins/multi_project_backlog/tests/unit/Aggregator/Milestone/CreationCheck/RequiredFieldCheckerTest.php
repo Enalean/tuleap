@@ -25,7 +25,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 
 final class RequiredFieldCheckerTest extends TestCase
@@ -62,13 +62,13 @@ final class RequiredFieldCheckerTest extends TestCase
         $other_tracker_with_no_required_field->shouldReceive('getGroupId')->andReturn('148');
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields(
-            new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker, $other_tracker_with_no_required_field]),
+            new ContributorMilestoneTrackerCollection([$tracker, $other_tracker_with_no_required_field]),
             new SynchronizedFieldCollection([$required_field, $non_required_field])
         );
         $this->assertTrue($no_other_required_fields);
     }
 
-    public function testDisallowsCreationWhenANonSynchronizedFields(): void
+    public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
         $required_field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $required_field->shouldReceive('isRequired')->andReturn(true);
@@ -84,7 +84,7 @@ final class RequiredFieldCheckerTest extends TestCase
         $tracker->shouldReceive('getGroupId')->andReturn('147');
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields(
-            new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+            new ContributorMilestoneTrackerCollection([$tracker]),
             new SynchronizedFieldCollection([$required_field])
         );
         $this->assertFalse($no_other_required_fields);

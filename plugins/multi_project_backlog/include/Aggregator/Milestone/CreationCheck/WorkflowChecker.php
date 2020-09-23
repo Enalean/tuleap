@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 
 class WorkflowChecker
@@ -58,27 +58,27 @@ class WorkflowChecker
     }
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-        MilestoneTrackerCollection $tracker_collection,
+        ContributorMilestoneTrackerCollection $contributor_milestones,
         SynchronizedFieldCollection $field_collection
     ): bool {
         return $this->areTransitionRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-            $tracker_collection,
+            $contributor_milestones,
             $field_collection
         ) && $this->areDateRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-            $tracker_collection,
+            $contributor_milestones,
             $field_collection
         ) && $this->areListRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-            $tracker_collection,
+            $contributor_milestones,
             $field_collection
         );
     }
 
     private function areTransitionRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-        MilestoneTrackerCollection $tracker_collection,
+        ContributorMilestoneTrackerCollection $contributor_milestones,
         SynchronizedFieldCollection $field_collection
     ): bool {
         $workflow_transition_rules = $this->workflow_dao->searchWorkflowsByFieldIDsAndTrackerIDs(
-            $tracker_collection->getContributorMilestoneTrackerIds(),
+            $contributor_milestones->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
@@ -100,11 +100,11 @@ class WorkflowChecker
     }
 
     private function areDateRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-        MilestoneTrackerCollection $tracker_collection,
+        ContributorMilestoneTrackerCollection $contributor_milestones,
         SynchronizedFieldCollection $field_collection
     ): bool {
         $tracker_ids_with_date_rules = $this->tracker_rule_date_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
-            $tracker_collection->getContributorMilestoneTrackerIds(),
+            $contributor_milestones->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
@@ -122,11 +122,11 @@ class WorkflowChecker
     }
 
     private function areListRulesNotUsedWithSynchronizedFieldsInContributorTrackers(
-        MilestoneTrackerCollection $tracker_collection,
+        ContributorMilestoneTrackerCollection $contributor_milestones,
         SynchronizedFieldCollection $field_collection
     ): bool {
         $tracker_ids_with_list_rules = $this->tracker_rule_list_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
-            $tracker_collection->getContributorMilestoneTrackerIds(),
+            $contributor_milestones->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 

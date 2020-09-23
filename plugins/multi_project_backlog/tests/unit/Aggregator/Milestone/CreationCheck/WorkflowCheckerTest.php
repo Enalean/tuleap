@@ -25,7 +25,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 
 final class WorkflowCheckerTest extends TestCase
@@ -70,7 +70,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-                new MilestoneTrackerCollection(\Project::buildForTest(), []),
+                new ContributorMilestoneTrackerCollection([]),
                 new SynchronizedFieldCollection([])
             )
         );
@@ -90,7 +90,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-                new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+                new ContributorMilestoneTrackerCollection([$tracker]),
                 new SynchronizedFieldCollection([$field])
             )
         );
@@ -109,7 +109,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-                new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+                new ContributorMilestoneTrackerCollection([$tracker]),
                 new SynchronizedFieldCollection([$field])
             )
         );
@@ -129,7 +129,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-                new MilestoneTrackerCollection(\Project::buildForTest(), [$tracker]),
+                new ContributorMilestoneTrackerCollection([$tracker]),
                 new SynchronizedFieldCollection([$field])
             )
         );

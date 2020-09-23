@@ -26,7 +26,7 @@ use PFUser;
 use Planning_VirtualTopMilestone;
 use Psr\Log\LoggerInterface;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
@@ -38,9 +38,9 @@ class MilestoneCreatorChecker
      */
     private $projects_builder;
     /**
-     * @var MilestoneTrackerCollectionBuilder
+     * @var MilestoneTrackerCollectionFactory
      */
-    private $trackers_builder;
+    private $milestone_trackers_factory;
     /**
      * @var SynchronizedFieldCollectionBuilder
      */
@@ -65,20 +65,20 @@ class MilestoneCreatorChecker
 
     public function __construct(
         ContributorProjectsCollectionBuilder $contributor_projects_collection_builder,
-        MilestoneTrackerCollectionBuilder $milestone_trackers_builder,
+        MilestoneTrackerCollectionFactory $milestone_trackers_factory,
         SynchronizedFieldCollectionBuilder $field_collection_builder,
         SemanticChecker $semantic_checker,
         RequiredFieldChecker $required_field_checker,
         WorkflowChecker $workflow_checker,
         LoggerInterface $logger
     ) {
-        $this->projects_builder         = $contributor_projects_collection_builder;
-        $this->trackers_builder         = $milestone_trackers_builder;
-        $this->field_collection_builder = $field_collection_builder;
-        $this->semantic_checker         = $semantic_checker;
-        $this->required_field_checker   = $required_field_checker;
-        $this->workflow_checker         = $workflow_checker;
-        $this->logger                   = $logger;
+        $this->projects_builder           = $contributor_projects_collection_builder;
+        $this->milestone_trackers_factory = $milestone_trackers_factory;
+        $this->field_collection_builder   = $field_collection_builder;
+        $this->semantic_checker           = $semantic_checker;
+        $this->required_field_checker     = $required_field_checker;
+        $this->workflow_checker           = $workflow_checker;
+        $this->logger                     = $logger;
     }
 
     public function canMilestoneBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
@@ -98,8 +98,12 @@ class MilestoneCreatorChecker
             return true;
         }
         try {
-            $milestone_tracker_collection = $this->trackers_builder->buildFromAggregatorProjectAndItsContributors(
+            $milestone_tracker_collection = $this->milestone_trackers_factory->buildFromAggregatorProjectAndItsContributors(
                 $aggregator_project,
+                $contributor_projects_collection,
+                $user
+            );
+            $contributor_milestones       = $this->milestone_trackers_factory->buildFromContributorProjects(
                 $contributor_projects_collection,
                 $user
             );
@@ -111,7 +115,7 @@ class MilestoneCreatorChecker
             $this->logger->error("Semantics are not well configured.");
             return false;
         }
-        if (! $milestone_tracker_collection->canUserSubmitAnArtifactInAllContributorTrackers($user)) {
+        if (! $contributor_milestones->canUserSubmitAnArtifactInAllTrackers($user)) {
             $this->logger->debug("User cannot submit an artifact in all contributor trackers.");
             return false;
         }
@@ -129,7 +133,7 @@ class MilestoneCreatorChecker
 
         if (
             ! $this->required_field_checker->areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields(
-                $milestone_tracker_collection,
+                $contributor_milestones,
                 $fields
             )
         ) {
@@ -139,7 +143,7 @@ class MilestoneCreatorChecker
 
         if (
             ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInContributorTrackers(
-                $milestone_tracker_collection,
+                $contributor_milestones,
                 $fields
             )
         ) {

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 
 class RequiredFieldChecker
@@ -39,10 +39,10 @@ class RequiredFieldChecker
     }
 
     public function areRequiredFieldsOfContributorTrackersLimitedToTheSynchronizedFields(
-        MilestoneTrackerCollection $tracker_collection,
+        ContributorMilestoneTrackerCollection $contributor_milestones,
         SynchronizedFieldCollection $field_collection
     ): bool {
-        foreach ($tracker_collection->getContributorMilestoneTrackers() as $contributor_milestone_tracker) {
+        foreach ($contributor_milestones->getMilestoneTrackers() as $contributor_milestone_tracker) {
             foreach ($contributor_milestone_tracker->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
                     $this->logger->debug(
