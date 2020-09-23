@@ -316,7 +316,7 @@ class Tracker_NotificationsManager
     private function displayAdminNotifications_Global() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         echo '<h3><a name="GlobalEmailNotification"></a>' . dgettext('tuleap-tracker', 'Global Email Notification') . ' ' .
-        help_button('tracker.html#e-mail-notification') . '</h3>';
+        help_button('trackers/administration/configuration/notifications.html#global-email-notification') . '</h3>';
 
         $notifs   = $this->getGlobalNotifications();
         $renderer = $this->getNotificationsRenderer();
