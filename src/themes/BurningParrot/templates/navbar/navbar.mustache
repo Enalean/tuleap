@@ -16,6 +16,17 @@
             </a>
         {{/ is_super_user }}
 
+        {{# can_buddies_be_invited }}
+            <button
+                type="button"
+                class="tlp-button-secondary tlp-button-outline tlp-button-disabled"
+                disabled
+            >
+                <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
+                {{# gettext }}Invite{{/ gettext }}
+            </button>
+        {{/ can_buddies_be_invited }}
+
         {{> navbar/new-nav }}
 
         {{# switch_to }}

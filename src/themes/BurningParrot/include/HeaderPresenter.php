@@ -41,7 +41,7 @@ class HeaderPresenter
     /** @var string */
     public $imgroot;
 
-    /** @var Tuleap\Theme\BurningParrot\Navbar\Presenter */
+    /** @var \Tuleap\Theme\BurningParrot\Navbar\Presenter */
     public $navbar_presenter;
 
     /** @var array */

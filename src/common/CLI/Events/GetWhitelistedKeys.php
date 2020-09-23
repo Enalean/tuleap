@@ -28,6 +28,7 @@ use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
@@ -58,6 +59,7 @@ final class GetWhitelistedKeys implements Dispatchable
         MyProjects::class,
         BackendLogger::class,
         LogToGraylog2::class,
+        InviteBuddyConfiguration::class,
     ];
 
     /**
