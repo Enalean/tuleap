@@ -18,6 +18,9 @@
  */
 
 /* stylelint-disable selector-no-qualifying-type */
+
+$dropdown-width: 250px;
+
 header.pinned > .header-container {
     .tlp-button-outline {
         padding: 0 $tlp-small-spacing;
@@ -54,7 +57,7 @@ header.pinned > .header-container {
 }
 
 .nav-dropdown {
-    width: 250px;
+    width: $dropdown-width;
 
     > .tlp-popover-arrow {
         border-bottom-color: $tlp-theme-sidebar-background-color;
@@ -157,10 +160,14 @@ header.pinned > .header-container {
     text-transform: none;
 
     > .name {
+        // we substract the size of the tlp-avatar and the padding around and between the elements
+        max-width: $dropdown-width - ($tlp-small-spacing + 40px + $tlp-small-spacing + $tlp-small-spacing);
         margin: 0 0 4px;
+        overflow: hidden;
         color: $tlp-ui-white;
         font-size: .875rem;
         font-weight: 600;
+        text-overflow: ellipsis;
     }
 
     > .username {

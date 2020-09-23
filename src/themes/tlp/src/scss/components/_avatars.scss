@@ -19,6 +19,7 @@
 
 %tlp-avatar {
     display: inline-block;
+    flex: 0 0 auto;
     overflow: hidden;
     border-radius: 50%;
     background: $tlp-ui-border-normal url('../images/tlp-default-avatar.svg') no-repeat center center;

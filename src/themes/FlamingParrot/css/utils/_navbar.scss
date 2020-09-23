@@ -18,6 +18,7 @@
  */
 
 $nav-dropdown-content-border-radius: 4px;
+$dropdown-width: 250px;
 
 .motd {
     position: fixed;
@@ -208,7 +209,7 @@ header {
     > .dropdown-menu {
         display: flex !important;
         flex-direction: column;
-        width: 250px;
+        width: $dropdown-width;
         margin: 10px 0 0;
         padding: 0;
         transform: translateY(0);
@@ -332,6 +333,7 @@ header {
     }
 
     > .dropdown-menu > .dropdown-header > .user-avatar {
+        flex: 0 0 auto;
         width: 40px;
         height: 40px;
         margin: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing 0;
@@ -348,11 +350,16 @@ header {
     }
 
     .user-infos-real-name {
+        // we substract the size of the tlp-avatar and the padding around and between the elements
+        max-width: $dropdown-width - ($tlp-small-spacing + 40px + $tlp-small-spacing + $tlp-small-spacing);
         margin: 0 0 4px;
+        overflow: hidden;
         color: $white;
         font-size: .875rem;
         font-weight: 600;
         line-height: 1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .user-infos-login-name {
