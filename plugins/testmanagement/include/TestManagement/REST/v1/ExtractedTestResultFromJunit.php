@@ -21,38 +21,26 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 
-class ExtractedTestCaseFromJunit
+class ExtractedTestResultFromJunit
 {
     /**
      * @var int
      */
-    private $time;
+    private $time = 0;
 
     /**
      * @var string
      */
-    private $status;
+    private $status = "";
 
     /**
      * @var string
      */
-    private $result;
-
-    public function __construct(int $time, string $status, string $result)
-    {
-        $this->time   = $time;
-        $this->status = $status;
-        $this->result = $result;
-    }
+    private $result = "";
 
     public function setStatus(string $status): void
     {
         $this->status = $status;
-    }
-
-    public function setResult(string $result): void
-    {
-        $this->result = $result;
     }
 
     public function getTime(): int
@@ -75,8 +63,8 @@ class ExtractedTestCaseFromJunit
         return $this->result;
     }
 
-    public function addFailureOnResult(string $failure): void
+    public function addFeedbackOnResult(string $feedback): void
     {
-        $this->result .= $failure;
+        $this->result .= $feedback;
     }
 }

@@ -32,7 +32,7 @@ use Tuleap\TestManagement\REST\v1\ExecutionFromAutomatedTestsUpdater;
 use Tuleap\TestManagement\REST\v1\ExecutionStatusUpdater;
 use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
-use Tuleap\TestManagement\REST\v1\ExtractedTestCaseFromJunit;
+use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 
 class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
@@ -100,7 +100,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
 
     public function testUpdateExecutionFromAutomatedSuccessTestCase(): void
     {
-        $extracted_test = Mockery::mock(ExtractedTestCaseFromJunit::class);
+        $extracted_test = Mockery::mock(ExtractedTestResultFromJunit::class);
         $execution_1    = Mockery::mock(Tracker_Artifact::class);
 
         $extracted_test->shouldReceive('getTime')->andReturn(5);
@@ -132,7 +132,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsCaseFromJunit')
+            ->shouldReceive('getTestsResultsFromJunit')
             ->with($automated_tests_results)
             ->andReturn(['firsttest' => $extracted_test]);
 
@@ -164,8 +164,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
 
     public function testUpdateExecutionFromAutomatedWithFailureTestCase(): void
     {
-        $extracted_test_1 = Mockery::mock(ExtractedTestCaseFromJunit::class);
-        $extracted_test_2 = Mockery::mock(ExtractedTestCaseFromJunit::class);
+        $extracted_test_1 = Mockery::mock(ExtractedTestResultFromJunit::class);
+        $extracted_test_2 = Mockery::mock(ExtractedTestResultFromJunit::class);
         $execution_1      = Mockery::mock(Tracker_Artifact::class);
         $execution_2      = Mockery::mock(Tracker_Artifact::class);
 
@@ -213,7 +213,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsCaseFromJunit')
+            ->shouldReceive('getTestsResultsFromJunit')
             ->with($automated_tests_results)
             ->andReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
@@ -264,8 +264,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
 
     public function testUpdateExecutionFromAutomatedShouldNotUpdateIfNoMatchingAutomatedTests(): void
     {
-        $extracted_test_1 = Mockery::mock(ExtractedTestCaseFromJunit::class);
-        $extracted_test_2 = Mockery::mock(ExtractedTestCaseFromJunit::class);
+        $extracted_test_1 = Mockery::mock(ExtractedTestResultFromJunit::class);
+        $extracted_test_2 = Mockery::mock(ExtractedTestResultFromJunit::class);
 
         $execution_with_automated_test_1 = Mockery::mock(ExecutionWithAutomatedTestData::class);
         $execution_with_automated_test_1->shouldReceive('getAutomatedTest')->andReturn('notfirsttest');
@@ -295,7 +295,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
         ];
 
         $this->tests_data_extractor
-            ->shouldReceive('getTestsCaseFromJunit')
+            ->shouldReceive('getTestsResultsFromJunit')
             ->with($automated_tests_results)
             ->andReturn(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2]);
 
