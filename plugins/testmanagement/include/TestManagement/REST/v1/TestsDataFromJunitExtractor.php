@@ -49,6 +49,9 @@ class TestsDataFromJunitExtractor
         return $all_test_results;
     }
 
+    /**
+     * @param array<string, ExtractedTestResultFromJunit> $all_test_results
+     */
     private function extractTestExecutionData(
         SimpleXMLElement $junit_xml,
         array &$all_test_results,
@@ -59,6 +62,9 @@ class TestsDataFromJunitExtractor
         }
     }
 
+    /**
+     * @param array<string, ExtractedTestResultFromJunit> $all_test_results
+     */
     private function registerTestSuiteResults(
         SimpleXMLElement $test_suite,
         array &$all_test_results,
@@ -86,6 +92,9 @@ class TestsDataFromJunitExtractor
         }
     }
 
+    /**
+     * @param array<string, ExtractedTestResultFromJunit> $all_test_results
+     */
     private function extractTestCaseFromTestSuite(
         SimpleXMLElement $test_suite,
         array &$all_test_results,
