@@ -68,7 +68,7 @@ class PresenterBuilder
             $should_logo_be_displayed,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            (new InviteBuddyConfiguration())->canBuddiesBeInvited(),
+            (new InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
         );
     }
 

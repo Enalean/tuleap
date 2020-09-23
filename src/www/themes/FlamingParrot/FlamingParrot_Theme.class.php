@@ -301,7 +301,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            (new \Tuleap\InviteBuddy\InviteBuddyConfiguration())->canBuddiesBeInvited(),
+            (new \Tuleap\InviteBuddy\InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
         ));
 
         $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized, $is_svg_logo_customized);

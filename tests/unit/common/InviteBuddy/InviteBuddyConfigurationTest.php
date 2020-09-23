@@ -33,20 +33,32 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testByDefaultBuddiesCannotBeInvitedCanBuddiesBeInvited()
     {
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited());
+        $user = \Mockery::mock(\PFUser::class);
+
+        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfTheFeatureIsDisabled()
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 0);
+        $user = \Mockery::mock(\PFUser::class);
 
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited());
+        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
     }
 
-    public function testBuddiesCanBeInvitedIfTheFeatureIsEnabled()
+    public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButUserIsAnonymous()
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => false])->getMock();
 
-        self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited());
+        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+    }
+
+    public function testBuddiesCanBeInvitedIfTheFeatureIsEnabledAndUserIsLoggedIn()
+    {
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => true])->getMock();
+
+        self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
     }
 }
