@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ##
-## Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+## Copyright (c) Enalean, 2015-Present. All Rights Reserved.
 ## Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 ##
 ## Tuleap is free software; you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use warnings FATAL => 'all', NONFATAL => 'redefine';
 use Apache2::Module;
 use Apache2::Access;
 use Apache2::Connection;
+use Apache2::Log qw();
 use Apache2::ServerRec qw();
 use Apache2::RequestRec qw();
 use Apache2::RequestUtil qw();
@@ -185,6 +186,8 @@ sub TuleapRedisPassword {
     $self->{TuleapRedisPassword} = $arg;
     return;
 }
+
+my $has_grants_tables_authentication = 0;
 
 sub access_handler {
     my $r = shift;
@@ -423,6 +426,12 @@ sub user_authorization() {
 
 sub user_authentication() {
     my ($r, $cfg, $dbh, $username, $user_secret, $tuleap_username) = @_;
+    if (! $has_grants_tables_authentication) {
+        $has_grants_tables_authentication = has_grants_on_tables_for_authentication($r->log, $dbh);
+        if (! $has_grants_tables_authentication) {
+            return 0;
+        }
+    }
 
     my $is_user_authenticated = 0;
     my $token_id              = get_user_token($dbh, $tuleap_username, $user_secret);
@@ -430,6 +439,10 @@ sub user_authentication() {
     if ($token_id) {
         $is_user_authenticated = 1;
     } else {
+        if (does_user_have_oidc_account($dbh, $tuleap_username)) {
+            $r->log->notice("User $username has an OIDC account, only SVN tokens can be used");
+            return 0;
+        }
         if ($cfg->{TuleapLdapServers}) {
             $is_user_authenticated = is_valid_user_ldap($cfg, $username, $user_secret);
         } else {
@@ -524,6 +537,48 @@ EOF
     }
 
     return $can_access;
+}
+
+sub does_user_have_oidc_account {
+    my ($dbh, $username) = @_;
+
+    if (! does_oidc_table_mapping_exist($dbh)) {
+        return 0;
+    }
+
+    my $query = << 'EOF';
+    SELECT plugin_openidconnectclient_user_mapping.id
+    FROM plugin_openidconnectclient_user_mapping
+    JOIN user ON (user.user_id = plugin_openidconnectclient_user_mapping.user_id)
+    WHERE user.user_name=?;
+EOF
+
+    my $statement = $dbh->prepare($query);
+    $statement->bind_param(1, $username, SQL_VARCHAR);
+    $statement->execute();
+
+    my $has_oidc_account = defined($statement->fetchrow_hashref());
+
+    $statement->finish();
+    undef $statement;
+
+    return $has_oidc_account;
+}
+
+sub does_oidc_table_mapping_exist {
+    my ($dbh) = @_;
+
+    my $query_table_exists = "SHOW TABLES LIKE 'plugin_openidconnectclient_user_mapping'";
+
+    my $statement = $dbh->prepare($query_table_exists);
+    $statement->execute();
+
+    my $table_exist = defined($statement->fetchrow_hashref());
+
+    $statement->finish();
+    undef $statement;
+
+    return $table_exist;
 }
 
 sub is_valid_user_database {
@@ -690,6 +745,32 @@ sub compare_string_constant_time {
         $result |= ord(substr($string1, $_, 1)) ^ ord(substr($string2, $_, 1));
     }
     return $result == 0;
+}
+
+sub has_grants_on_tables_for_authentication {
+    my ($log, $dbh) = @_;
+
+    my $statement = $dbh->prepare("SHOW GRANTS");
+    $statement->execute();
+    my $all_grants = $statement->fetchall_arrayref([0]);
+
+    $statement->finish();
+    undef $statement;
+
+    my @tables = ("svn_token", "plugin_ldap_user", "plugin_openidconnectclient_user_mapping");
+    for my $table ( @tables ) {
+        my $has_grant_table = 0;
+        for my $grant ( @{ $all_grants } ) {
+            $has_grant_table = $has_grant_table || $grant->[0] =~ /\Q$table\E/
+        }
+
+        if (! $has_grant_table) {
+            $log->error("GRANT is missing on table $table");
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 Apache2::Module::add(__PACKAGE__, \@directives);
