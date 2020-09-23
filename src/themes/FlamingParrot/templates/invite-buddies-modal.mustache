@@ -1,0 +1,38 @@
+{{# can_buddies_be_invited }}
+    <form
+        class="modal hide fade"
+        tabindex="-1"
+        role="dialog"
+        id="invite-buddies-modal"
+        aria-labelledby="invite-buddies-modal-label"
+        aria-hidden="true"
+    >
+        <div class="modal-header">
+            <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+            >
+                &times;
+            </button>
+            <h3 id="invite-buddies-modal-label">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                {{# gettext }}Invite{{/ gettext }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <label for="invite-buddies-email">Email <i class="fa fa-asterisk" aria-hidden="true"></i></label>
+            <input type="email" id="invite-buddies-email" placeholder="john.doe@example.com" required>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal">
+                {{# gettext }}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" disabled class="btn btn-primary disabled">
+                <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
+                {{# gettext }}Send invitation{{/ gettext }}
+            </button>
+        </div>
+    </form>
+{{/ can_buddies_be_invited }}

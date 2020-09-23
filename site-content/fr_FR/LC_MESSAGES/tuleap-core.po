@@ -1786,6 +1786,9 @@ msgstr "Point virgule"
 msgid "Send an email when the project visibility changes"
 msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 
+msgid "Send invitation"
+msgstr "Envoyer l'invitation"
+
 msgid "Service is not allowed in project."
 msgstr "Le service n'est pas autorisé dans le projet."
 

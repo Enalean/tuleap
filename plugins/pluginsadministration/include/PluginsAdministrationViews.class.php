@@ -58,7 +58,7 @@ class PluginsAdministrationViews extends Views
     public function header()
     {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
-        $GLOBALS['HTML']->header(['title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => ['tlp-framed']]);
+        $GLOBALS['HTML']->header(['title' => $title, 'main_classes' => ['tlp-framed']]);
     }
 
     public function footer()

@@ -26,6 +26,7 @@ use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -134,6 +135,7 @@ class HeaderPresenterBuilder
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
+            (new InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
         );
     }
 
