@@ -66,16 +66,12 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             });
     }
 
-    async function putTestExecution(execution_id, new_status, time, results, uploaded_file_ids) {
+    async function putTestExecution(execution_id, new_status, results, uploaded_file_ids) {
         let param = {
             status: new_status,
             uploaded_file_ids: uploaded_file_ids,
             results: results,
         };
-
-        if (time) {
-            param.time = time;
-        }
 
         const body = JSON.stringify(param);
 

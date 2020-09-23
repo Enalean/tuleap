@@ -286,7 +286,6 @@ function ExecutionService(
 
         execution.previous_result.has_been_run_at_least_once = true;
 
-        execution.saving = false;
         execution.submitted_by = null;
         execution.error = "";
         execution.results = "";
@@ -507,12 +506,10 @@ function ExecutionService(
     }
 
     function displayError(execution, response) {
-        execution.saving = false;
         execution.error = response.status + ": " + response.data.error.message;
     }
 
     function displayErrorMessage(execution, message) {
-        execution.saving = false;
         execution.error = message;
     }
 
