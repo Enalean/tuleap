@@ -31,8 +31,9 @@ final class InviteBuddyConfiguration
      */
     public const CONFIG_BUDDIES_CAN_INVITED = 'enable_invite_buddies';
 
-    public function canBuddiesBeInvited(): bool
+    public function canBuddiesBeInvited(\PFUser $current_user): bool
     {
-        return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED);
+        return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
+            && $current_user->isLoggedIn();
     }
 }
