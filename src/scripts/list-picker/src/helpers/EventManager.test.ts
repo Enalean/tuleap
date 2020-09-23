@@ -17,28 +17,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { attachEvents } from "./list-picker-events-helper";
-import * as dropdown_toggler from "./dropdown-helper";
+import { EventManager } from "./EventManager";
+import { SelectionManager } from "./SelectionManager";
+import { DropdownToggler } from "./DropdownToggler";
 
-describe("list-picker-events-helper", () => {
+describe("event manager", () => {
     let doc: HTMLDocument,
         source_select_box: HTMLSelectElement,
         component_root: Element,
-        component_dropdown: Element;
+        component_dropdown: Element,
+        manager: EventManager,
+        toggler: DropdownToggler,
+        clickable_item: Element,
+        processSingleSelection: () => void;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-        source_select_box = document.createElement("select");
         component_root = document.createElement("span");
         component_dropdown = document.createElement("span");
+        source_select_box = document.createElement("select");
+        clickable_item = document.createElement("li");
+        clickable_item.classList.add("list-picker-dropdown-option-value");
+        component_dropdown.appendChild(clickable_item);
+
+        processSingleSelection = jest.fn();
+
+        toggler = new DropdownToggler(component_root, component_dropdown);
+        manager = new EventManager(
+            doc,
+            component_root,
+            component_dropdown,
+            source_select_box,
+            ({ processSingleSelection } as unknown) as SelectionManager,
+            toggler
+        );
     });
 
     describe("Dropdown opening", () => {
         it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
-            const openListPicker = jest.spyOn(dropdown_toggler, "openListPicker");
-            const closeListPicker = jest.spyOn(dropdown_toggler, "closeListPicker");
+            const openListPicker = jest.spyOn(toggler, "openListPicker");
+            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
 
-            attachEvents(doc, source_select_box, component_root, component_dropdown);
+            manager.attachEvents();
 
             component_root.dispatchEvent(new MouseEvent("click"));
             expect(openListPicker).toHaveBeenCalled();
@@ -48,10 +68,10 @@ describe("list-picker-events-helper", () => {
         });
 
         it("Does not open the dropdown when I click on the component root while the source <select> is disabled", () => {
-            const openListPicker = jest.spyOn(dropdown_toggler, "openListPicker");
+            const openListPicker = jest.spyOn(toggler, "openListPicker");
             source_select_box.setAttribute("disabled", "disabled");
 
-            attachEvents(doc, source_select_box, component_root, component_dropdown);
+            manager.attachEvents();
             component_root.dispatchEvent(new MouseEvent("click"));
 
             expect(openListPicker).not.toHaveBeenCalled();
@@ -60,9 +80,8 @@ describe("list-picker-events-helper", () => {
 
     describe("Dropdown closure", () => {
         it("should close the dropdown when the escape key has been pressed", () => {
-            const closeListPicker = jest.spyOn(dropdown_toggler, "closeListPicker");
-
-            attachEvents(doc, source_select_box, component_root, component_dropdown);
+            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
+            manager.attachEvents();
 
             [{ key: "Escape" }, { key: "Esc" }, { keyCode: 27 }].forEach(
                 (event_init: KeyboardEventInit) => {
@@ -74,13 +93,20 @@ describe("list-picker-events-helper", () => {
         });
 
         it("should close the dropdown when the user clicks outside the list-picker", () => {
-            const closeListPicker = jest.spyOn(dropdown_toggler, "closeListPicker");
-
-            attachEvents(doc, source_select_box, component_root, component_dropdown);
+            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
+            manager.attachEvents();
 
             doc.dispatchEvent(new MouseEvent("click"));
 
             expect(closeListPicker).toHaveBeenCalled();
+        });
+    });
+
+    describe("Item selection", () => {
+        it("processes the selection when an item is clicked in the dropdown list", () => {
+            manager.attachEvents();
+            clickable_item.dispatchEvent(new MouseEvent("click"));
+            expect(processSingleSelection).toHaveBeenCalled();
         });
     });
 });

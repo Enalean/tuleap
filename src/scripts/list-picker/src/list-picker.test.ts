@@ -40,7 +40,7 @@ describe("ListPicker", () => {
 
         createListPicker(select);
 
-        const list_picker = doc.body.querySelector(".list-picker");
+        const list_picker = doc.body.querySelector(".list-picker-wrapper");
         if (list_picker === null) {
             throw new Error("List picker not found in DOM");
         }

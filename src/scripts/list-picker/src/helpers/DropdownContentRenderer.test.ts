@@ -21,7 +21,7 @@ import {
     appendGroupedOptionsToSourceSelectBox,
     appendSimpleOptionsToSourceSelectBox,
 } from "../test-helpers/select-box-options-generator";
-import { renderListPickerDropdownContent } from "./dropdown-content-renderer";
+import { DropdownContentRenderer } from "./DropdownContentRenderer";
 
 describe("dropdown-content-renderer", () => {
     let select: HTMLSelectElement, dropdown: Element;
@@ -36,14 +36,15 @@ describe("dropdown-content-renderer", () => {
 
     it("renders grouped list items", () => {
         appendGroupedOptionsToSourceSelectBox(select);
-        renderListPickerDropdownContent(select, dropdown);
+
+        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
 
     it("renders simple list items", () => {
         appendSimpleOptionsToSourceSelectBox(select);
-        renderListPickerDropdownContent(select, dropdown);
+        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
@@ -55,7 +56,7 @@ describe("dropdown-content-renderer", () => {
 
         select.appendChild(disabled_option);
 
-        renderListPickerDropdownContent(select, dropdown);
+        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
 
         const disabled_list_item = dropdown.querySelector(
             ".list-picker-dropdown-option-value-disabled"

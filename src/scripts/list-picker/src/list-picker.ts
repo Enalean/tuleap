@@ -19,9 +19,11 @@
 
 import { render } from "mustache";
 import { sanitize } from "dompurify";
-import { renderListPickerDropdownContent } from "./helpers/dropdown-content-renderer";
 import { ListPickerOptions } from "./type";
-import { attachEvents } from "./helpers/list-picker-events-helper";
+import { DropdownContentRenderer } from "./helpers/DropdownContentRenderer";
+import { SelectionManager } from "./helpers/SelectionManager";
+import { EventManager } from "./helpers/EventManager";
+import { DropdownToggler } from "./helpers/DropdownToggler";
 
 export function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -38,37 +40,75 @@ export function createListPicker(
     source_select_box.insertAdjacentHTML("afterend", sanitize(rendered_list_picker));
 
     const parent_element = source_select_box.parentElement;
+    const component_wrapper = parent_element.querySelector(".list-picker-wrapper");
     const component_root = parent_element.querySelector(".list-picker");
     const component_dropdown = parent_element.querySelector(".list-picker-dropdown");
 
-    if (!isElement(component_root) || !isElement(component_dropdown)) {
+    if (
+        !isElement(component_root) ||
+        !isElement(component_dropdown) ||
+        !isElement(component_wrapper)
+    ) {
         throw new Error("List picker not found in DOM.");
     }
 
-    function isElement(element: Element | EventTarget | null): element is Element {
+    const placeholder_element = component_root.querySelector(".list-picker-placeholder");
+    const selection_element = component_root.querySelector(".list-picker-selection");
+
+    if (!isElement(placeholder_element) || !isElement(selection_element)) {
+        throw new Error("List picker not rendered properly.");
+    }
+
+    function isElement(element: Element | null): element is Element {
         return element !== null && element instanceof Element;
     }
 
-    attachEvents(document, source_select_box, component_root, component_dropdown);
-    renderListPickerDropdownContent(source_select_box, component_dropdown);
+    const dropdown_toggler = new DropdownToggler(component_root, component_dropdown);
+    const selection_manager = new SelectionManager(
+        source_select_box,
+        component_dropdown,
+        selection_element,
+        placeholder_element,
+        dropdown_toggler
+    );
+    const dropdown_content_renderer = new DropdownContentRenderer(
+        source_select_box,
+        component_dropdown
+    );
+
+    dropdown_content_renderer.renderListPickerDropdownContent();
+
+    const event_manager = new EventManager(
+        document,
+        component_wrapper,
+        component_dropdown,
+        source_select_box,
+        selection_manager,
+        dropdown_toggler
+    );
+
+    event_manager.attachEvents();
+    selection_manager.initSelection(placeholder_element);
 
     function getRenderedListPicker(parent_element: HTMLElement): string {
         const parent_element_width = parent_element.clientWidth;
 
         return render(
             `
-                <span class="list-picker{{# is_disabled }} list-picker-disabled {{/ is_disabled }}">
-                    <span class="list-picker-single" role="textbox" aria-readonly="true">
-                       <span class="list-picker-placeholder">{{ placeholder }}</span>
+                <span class="list-picker-wrapper">
+                    <span class="list-picker{{# is_disabled }} list-picker-disabled {{/ is_disabled }}">
+                        <span class="list-picker-selection list-picker-single" role="textbox" aria-readonly="true">
+                           <span class="list-picker-placeholder">{{ placeholder }}</span>
+                        </span>
                     </span>
-                </span>
-                <span class="list-picker-dropdown" style="width: {{ parent_element_width }}px">
-                    <ul
-                        class="list-picker-dropdown-values-list"
-                        role="listbox"
-                        aria-expanded="false"
-                        aria-hidden="false"
-                    ></ul>
+                    <span class="list-picker-dropdown" style="width: {{ parent_element_width }}px">
+                        <ul
+                            class="list-picker-dropdown-values-list"
+                            role="listbox"
+                            aria-expanded="false"
+                            aria-hidden="false"
+                        ></ul>
+                    </span>
                 </span>
             `,
             {

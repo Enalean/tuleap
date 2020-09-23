@@ -45,7 +45,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
             is_disabled: Boolean(option.hasAttribute("disabled")),
         };
         map.set(id, item);
-        option.id = id;
+        option.setAttribute("data-item-id", id);
         i++;
     }
     return map;
