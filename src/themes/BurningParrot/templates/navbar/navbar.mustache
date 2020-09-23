@@ -19,8 +19,9 @@
         {{# can_buddies_be_invited }}
             <button
                 type="button"
-                class="tlp-button-secondary tlp-button-outline tlp-button-disabled"
-                disabled
+                class="tlp-button-secondary tlp-button-outline"
+                id="invite-buddies-button"
+                data-target-modal-id="invite-buddies-modal"
             >
                 <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                 {{# gettext }}Invite{{/ gettext }}

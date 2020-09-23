@@ -1,0 +1,39 @@
+{{# can_buddies_be_invited }}
+    <form
+        class="tlp-modal"
+        role="dialog"
+        id="invite-buddies-modal"
+        aria-labelledby="invite-buddies-modal-label"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="invite-buddies-modal-label">
+                <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
+                {{# gettext }}Invite{{/ gettext }}
+            </h1>
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                aria-label="{{# gettext }}Close{{/ gettext }}"
+            >
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="invite-buddies-email">Email <i class="fa fa-asterisk" aria-hidden="true"></i></label>
+                <input type="email" class="tlp-input" id="invite-buddies-email" placeholder="john.doe@example.com" required>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# gettext }}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" disabled class="tlp-button-primary tlp-button-disabled tlp-modal-action">
+                <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
+                {{# gettext }}Send invitation{{/ gettext }}
+            </button>
+        </div>
+    </form>
+{{/ can_buddies_be_invited }}

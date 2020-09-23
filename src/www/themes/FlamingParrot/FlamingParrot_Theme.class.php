@@ -182,7 +182,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $current_user = UserManager::instance()->getCurrentUser();
         $project_manager = ProjectManager::instance();
 
-        $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
         $body_class       = isset($params['body_class']) ? $params['body_class'] : [];
         $has_sidebar      = isset($params['group']) ? 'has-sidebar' : '';
         $sidebar_state    = 'sidebar-expanded';
@@ -225,15 +224,19 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_user,
             $this->tuleap_version->version_number
         );
+        $can_buddies_be_invited = (new \Tuleap\InviteBuddy\InviteBuddyConfiguration())->canBuddiesBeInvited(
+            $current_user
+        );
 
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
             $this->getNotificationPlaceholder(),
             $help_dropdown_presenter,
-            $body_class
+            $body_class,
+            $can_buddies_be_invited,
         ));
 
-        $this->navbar($params, $current_user, $selected_top_tab, $project, $banner);
+        $this->navbar($params, $current_user, $project, $banner, $can_buddies_be_invited);
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -251,8 +254,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    private function navbar($params, PFUser $current_user, $selected_top_tab, ?Project $project, ?BannerDisplay $banner)
-    {
+    private function navbar(
+        $params,
+        PFUser $current_user,
+        ?Project $project,
+        ?BannerDisplay $banner,
+        bool $can_buddies_be_invited
+    ) {
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
         $url_redirect      = new URLRedirect($event_manager);
@@ -288,6 +296,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
         $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
+
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -301,7 +310,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            (new \Tuleap\InviteBuddy\InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
+            $can_buddies_be_invited,
         ));
 
         $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized, $is_svg_logo_customized);

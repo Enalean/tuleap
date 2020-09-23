@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#invite-buddies-modal {
+    label {
+        display: block;
+        position: relative;
+        margin: 0 0 $tlp-small-spacing;
+        color: darken($ui-dimmed, 3.5%);
+        font-size: .8125rem;
+        font-weight: 500;
+    }
+
+    .fa-asterisk {
+        position: absolute;
+        margin: 0 0 0 3px;
+        color: $ui-color-danger;
+        font-size: .6em;
+    }
+}
+
+#invite-buddies-email {
+    width: calc(100% - 30px);
+    height: 40px;
+    margin: 0;
+    padding: 0 12px;
+}

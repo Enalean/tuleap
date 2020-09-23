@@ -25,6 +25,7 @@ import { init as initScrollbar } from "./scrollbar.js";
 import { init as initProjectFlags } from "./project-flags.js";
 import { init as initProjectPrivacy } from "./project-privacy.js";
 import { initHelpDropdown } from "./help-dropdown";
+import { init as initInviteBuddies } from "./invite-buddies";
 import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -36,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollbar();
     initProjectFlags();
     initProjectPrivacy();
+    initInviteBuddies();
 });
 
 // tuleap.autocomplete* is still used by siteadmin scripts which may run without listening to DOMContentLoaded
