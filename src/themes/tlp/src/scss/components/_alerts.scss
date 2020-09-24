@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@
         position: absolute;
         top: $tlp-medium-spacing + 1px;
         left: $tlp-medium-spacing;
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 5 Free';
         font-size: 1.125rem;
     }
 
@@ -53,6 +53,7 @@
 
     &::before {
         content: '\f05a'; // fa-info-circle
+        font-weight: 900;
     }
 
     code {
@@ -68,7 +69,8 @@
     color: darken($tlp-ui-success, 20%);
 
     &::before {
-        content: '\f087'; // fa-thumbs-o-up
+        content: '\f164'; // fa-thumbs-up
+        font-weight: 400;
     }
 
     code {
@@ -85,6 +87,7 @@
 
     &::before {
         content: '\f071'; // fa-exclamation-triangle
+        font-weight: 900;
     }
 
     code {
@@ -101,6 +104,7 @@
 
     &::before {
         content: '\f06a'; // fa-exclamation-circle
+        font-weight: 900;
     }
 
     code {

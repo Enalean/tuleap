@@ -79,9 +79,10 @@
     font-size: 12px;
 
     &::before {
-        content: '\f017'; // fa-clock-o
+        content: '\f017'; // fa-clock
         margin: 0 3px 0 0;
-        font-family: 'FontAwesome';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 400;
     }
 }
 

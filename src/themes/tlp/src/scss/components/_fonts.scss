@@ -16,7 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-$fa-font-path: '../fonts/font-awesome-4.7.0/fonts';
-@import '../../fonts/font-awesome-4.7.0/scss/font-awesome';
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/shims';
 
 @import '../../fonts/tlp-font/tlp-font';

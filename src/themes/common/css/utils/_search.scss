@@ -276,7 +276,7 @@ body > .select2-drop {
                 top: 6px;
                 right: 2px;
                 left: 0;
-                font-family: 'tuleap-services', 'FontAwesome';
+                font-family: 'tuleap-services', 'Font Awesome 5 Free';
             }
 
             &::before {
@@ -284,7 +284,8 @@ body > .select2-drop {
                 position: absolute;
                 top: 6px;
                 left: 0;
-                font-family: 'FontAwesome';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
             }
 
             .title {

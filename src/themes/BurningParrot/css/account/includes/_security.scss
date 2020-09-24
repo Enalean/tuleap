@@ -77,15 +77,6 @@
         position: absolute;
         top: 3px;
         left: 0;
-        font-family: 'FontAwesome';
         font-style: normal;
-    }
-
-    > .fa-times::before {
-        content: '\f00d'; // fa-remove
-    }
-
-    > .fa-check::before {
-        content: '\f00c'; // fa-check
     }
 }

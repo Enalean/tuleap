@@ -216,7 +216,8 @@ $tlp-tabs-transition: 75ms ease-out;
     margin: 0 8px 0 0;
     font-size: 12px;
 
-    &.fa-external-link {
+    &.fa-external-link,
+    &.fa-external-link-alt {
         margin: 0 0 0 5px;
         font-size: 10px;
     }

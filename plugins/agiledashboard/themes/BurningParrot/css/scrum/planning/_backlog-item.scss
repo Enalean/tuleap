@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -113,8 +113,9 @@
         left: 50%;
         transform: translate(-50%, -50%);
         color: darken($tlp-ui-border-dark, 5%);
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 5 Free';
         font-size: 8px;
+        font-weight: 900;
     }
 
     &.closed::before {
