@@ -109,7 +109,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * Process the request
      * @param Request $request
      */
-    abstract public function processRequest(TrackerManager $tracker_manager, $request, $current_user);
+    abstract public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user);
 
     /**
      * Fetch content to be displayed in widget
@@ -163,7 +163,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
-    public function getOptionsMenuItems()
+    public function getOptionsMenuItems(PFUser $current_user): array
     {
         $items = [
             'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="' . TRACKER_BASE_URL . '/?' . http_build_query(
@@ -174,15 +174,14 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
                 ]
             ) . '"><i class="fa fa-print"></i> ' . $GLOBALS['Language']->getText('global', 'printer_version') . '</a></div>'
         ];
-        $this->addDashboardButtons($items);
+        $this->addDashboardButtons($current_user, $items);
 
         return $items;
     }
 
-    private function addDashboardButtons(array &$items)
+    private function addDashboardButtons(PFUser $current_user, array &$items): void
     {
-        $user = UserManager::instance()->getCurrentUser();
-        if (! $this->canAddToDashboard($user)) {
+        if (! $this->canAddToDashboard($current_user)) {
             return;
         }
 
@@ -203,7 +202,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 
         $html = $this->getTemplateRenderer()->renderToString(
             'add-to-dashboard-dropdown',
-            $presenter_builder->build($user, $project, $this)
+            $presenter_builder->build($current_user, $project, $this)
         );
 
         $items = ['add_to_dashboard' => $html] + $items;

@@ -946,7 +946,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 }
 
                 //  Options menu
-                if ($report_can_be_modified && ($options = $current_renderer->getOptionsMenuItems())) {
+                if ($report_can_be_modified && ($options = $current_renderer->getOptionsMenuItems($current_user))) {
                     $html .= '<div id="tracker_renderer_options">';
                     $html .= implode(' ', $options);
                     $html .= '</div>';

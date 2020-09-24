@@ -528,8 +528,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
-    public function getOptionsMenuItems()
+    public function getOptionsMenuItems(PFUser $current_user): array
     {
+        if ($current_user->isAnonymous()) {
+            return parent::getOptionsMenuItems($current_user);
+        }
         $my_items = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
@@ -557,7 +560,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= '</div>';
         $my_items['export'] .= $event->getAdditionalContentThatGoesOutsideOfTheMenu();
 
-        return $my_items + parent::getOptionsMenuItems();
+        return $my_items + parent::getOptionsMenuItems($current_user);
     }
 
     private function getExportResultURL($export_only_displayed_fields)
@@ -1744,7 +1747,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Process the request
      * @param Request $request
      */
-    public function processRequest(TrackerManager $tracker_manager, $request, $current_user)
+    public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {
         $ff = $this->getFieldFactory();
 
@@ -1999,8 +2002,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
 
             //export
-            if (isset($renderer_parameters['export'])) {
-                $event = new ProcessExportEvent($renderer_parameters, $this, $request->getCurrentUser(), $request->getServerUrl());
+            if (isset($renderer_parameters['export']) && ! $current_user->isAnonymous()) {
+                $event = new ProcessExportEvent($renderer_parameters, $this, $current_user, $request->getServerUrl());
                 EventManager::instance()->processEvent($event);
                 $only_columns = isset($renderer_parameters['export_only_displayed_fields']) && $renderer_parameters['export_only_displayed_fields'];
                 $this->exportToCSV($only_columns);
