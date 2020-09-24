@@ -58,6 +58,12 @@ msgid "%s has multiple corresponding users."
 msgstr "%s a plusieurs utilisateurs associés."
 
 #, php-format
+msgid "%s invited you to log on %s, you need to register first:"
+msgstr ""
+"%s vous a invité à vous connecter à %s, vous avez besoin d'abord de vous "
+"enregistrer :"
+
+#, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
 
@@ -331,6 +337,11 @@ msgstr "Une erreur est survenue lors de l'édition du label."
 
 msgid "An error occurred while trying to remove the label."
 msgstr "Une erreur est survenue lors de la suppression du label."
+
+msgid "An error occurred while trying to send invitation"
+msgid_plural "An error occurred while trying to send invitations"
+msgstr[0] "Une erreur est survenue lors de l'envoi de l'invitation"
+msgstr[1] "Une erreur est survenue lors de l'envoi des invitations"
 
 msgid "An error occurred while trying to update permissions delegations."
 msgstr ""
@@ -756,6 +767,10 @@ msgstr "Édition & CSV"
 msgid "Email"
 msgstr "E-mail"
 
+#, php-format
+msgid "Email %s is not valid"
+msgstr "L'email %s n'est valide"
+
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
 
@@ -984,6 +999,13 @@ msgstr ""
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
+
+#, php-format
+msgid "Invitation to register on %s"
+msgstr "Invitation pour vous enregistrer sur %s"
+
+msgid "Invitations are not enabled"
+msgstr "Les invitations ne sont pas activées"
 
 msgid "Invite"
 msgstr "Inviter"
@@ -2506,6 +2528,9 @@ msgstr "Impossible de trouver comment éditer le widget requis."
 
 msgid "We cannot find any widgets."
 msgstr "Impossible de trouver des widgets."
+
+msgid "We need at least one email to send an invitation"
+msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
 
 msgid "We will bother you later with the deprecation of IE < 11."
 msgstr ""

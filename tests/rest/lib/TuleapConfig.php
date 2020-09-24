@@ -69,6 +69,16 @@ class TuleapConfig
         $this->setConfig(self::FORGE_ACCESS, self::REGULAR);
     }
 
+    public function enableInviteBuddies(): void
+    {
+        $this->setConfig('enable_invite_buddies', "1");
+    }
+
+    public function disableInviteBuddies(): void
+    {
+        $this->setConfig('enable_invite_buddies', "0");
+    }
+
     private function connect()
     {
         include_once '/etc/tuleap/conf/database.inc';

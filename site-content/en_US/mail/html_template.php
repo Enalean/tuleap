@@ -538,7 +538,7 @@ display:inline;
                     </table>
                     <!-- // End Template Preheader \\ -->
                      <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateContainer">
-                        <tr>
+                         <tr>
                              <td align="center" valign="top">
                                 <!-- // Begin Template Body \\ -->
                                 <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateBody">
@@ -569,8 +569,9 @@ display:inline;
                                 </table>
                                 <!-- // End Template Body \\ -->
                             </td>
-                        </tr>
-                        <tr>
+                         </tr>
+                         <?php if (! isset($remove_footer) || (bool) $remove_footer === false) : ?>
+                         <tr>
                              <td align="center" valign="top">
                                     <!-- // Begin Template Footer \\ -->
                                  <table border="0" cellpadding="10" cellspacing="0" width="750" id="templateFooter">
@@ -589,14 +590,15 @@ display:inline;
                                                     </tr>
                                                 </table>
                                                 <!-- // End Module: Standard Footer \\ -->
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <!-- // End Template Footer \\ -->
-                                </td>
-                            </tr>
-                        </table>
-                        <br />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // End Template Footer \\ -->
+                            </td>
+                         </tr>
+                         <?php endif ?>
+                         </table>
+                         <br />
                     </td>
                 </tr>
             </table>

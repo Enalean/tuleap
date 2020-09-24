@@ -49,7 +49,7 @@ class InviteBuddyConfigurationTest extends TestCase
     public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButUserIsAnonymous(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => false])->getMock();
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
 
         self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
     }
@@ -57,7 +57,7 @@ class InviteBuddyConfigurationTest extends TestCase
     public function testBuddiesCanBeInvitedIfTheFeatureIsEnabledAndUserIsLoggedIn(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => true])->getMock();
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
 
         self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
     }
@@ -65,7 +65,7 @@ class InviteBuddyConfigurationTest extends TestCase
     public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButNbMaxIsLesserOrEqualThanZero(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => true])->getMock();
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 0);
         self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
@@ -78,5 +78,19 @@ class InviteBuddyConfigurationTest extends TestCase
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 1);
         self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+    }
+
+    public function itReturnsTheNbMax(): void
+    {
+        self::assertEquals(
+            InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,
+            (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay()
+        );
+
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, "invalid value");
+        self::assertEquals(0, (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay());
+
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 13);
+        self::assertEquals(13, (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay());
     }
 }

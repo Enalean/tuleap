@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\InviteBuddy\REST\v1\InvitationsResource;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\REST\v1\JWTResource;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -63,6 +64,7 @@ class ResourcesInjector
         $restler->addAPIClass(SystemEventResource::class, SystemEventRepresentation::ROUTE);
         $restler->addAPIClass(AccessKeyResource::class, AccessKeyResource::ROUTE);
         $restler->addAPIClass(ServiceResource::class, ServiceRepresentation::ROUTE);
+        $restler->addAPIClass(InvitationsResource::class, InvitationsResource::ROUTE);
     }
 
     public function declareProjectResources(array &$resources, Project $project)
