@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
-final class MilestoneTrackerCollection
+final class ContributorMilestoneTrackerCollection
 {
     /**
      * @var \Tracker[]
@@ -44,7 +44,12 @@ final class MilestoneTrackerCollection
      */
     public function getTrackerIds(): array
     {
-        return self::extractTrackerIDs($this->milestone_trackers);
+        return array_map(
+            static function (\Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $this->milestone_trackers
+        );
     }
 
     /**
@@ -56,18 +61,13 @@ final class MilestoneTrackerCollection
         return $this->milestone_trackers;
     }
 
-    /**
-     * @param \Tracker[] $trackers
-     * @return int[]
-     * @psalm-pure
-     */
-    private static function extractTrackerIDs(array $trackers): array
+    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
     {
-        return array_map(
-            static function (\Tracker $tracker) {
-                return $tracker->getId();
-            },
-            $trackers
-        );
+        foreach ($this->milestone_trackers as $milestone_tracker) {
+            if (! $milestone_tracker->userCanSubmitArtifact($user)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

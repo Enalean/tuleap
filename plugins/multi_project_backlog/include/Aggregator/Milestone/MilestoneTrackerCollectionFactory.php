@@ -24,7 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 
-class MilestoneTrackerCollectionBuilder
+class MilestoneTrackerCollectionFactory
 {
     /**
      * @var \PlanningFactory
@@ -49,16 +49,38 @@ class MilestoneTrackerCollectionBuilder
         );
         $trackers = [];
         foreach ($projects as $project) {
-            $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
-            if (! $root_planning) {
-                throw new MissingRootPlanningException((int) $project->getID());
-            }
-            $milestone_tracker = $root_planning->getPlanningTracker();
-            if (! $milestone_tracker || $milestone_tracker instanceof \NullTracker) {
-                throw new NoMilestoneTrackerException($root_planning->getId());
-            }
-            $trackers[] = $milestone_tracker;
+            $trackers[] = $this->getTopMilestoneTracker($user, $project);
         }
-        return new MilestoneTrackerCollection($aggregator_project, $trackers);
+        return new MilestoneTrackerCollection($trackers);
+    }
+
+    /**
+     * @throws MilestoneTrackerRetrievalException
+     */
+    public function buildFromContributorProjects(
+        ContributorProjectsCollection $contributor_projects_collection,
+        \PFUser $user
+    ): ContributorMilestoneTrackerCollection {
+        $trackers = [];
+        foreach ($contributor_projects_collection->getContributorProjects() as $contributor_project) {
+            $trackers[] = $this->getTopMilestoneTracker($user, $contributor_project);
+        }
+        return new ContributorMilestoneTrackerCollection($trackers);
+    }
+
+    /**
+     * @throws MilestoneTrackerRetrievalException
+     */
+    private function getTopMilestoneTracker(\PFUser $user, \Project $project): \Tracker
+    {
+        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
+        if (! $root_planning) {
+            throw new MissingRootPlanningException((int) $project->getID());
+        }
+        $milestone_tracker = $root_planning->getPlanningTracker();
+        if (! $milestone_tracker || $milestone_tracker instanceof \NullTracker) {
+            throw new NoMilestoneTrackerException($root_planning->getId());
+        }
+        return $milestone_tracker;
     }
 }

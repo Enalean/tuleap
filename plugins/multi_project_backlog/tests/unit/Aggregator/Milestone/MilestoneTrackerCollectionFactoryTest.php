@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class MilestoneTrackerCollectionBuilderTest extends TestCase
+final class MilestoneTrackerCollectionFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -35,14 +35,14 @@ final class MilestoneTrackerCollectionBuilderTest extends TestCase
      */
     private $planning_factory;
     /**
-     * @var MilestoneTrackerCollectionBuilder
+     * @var MilestoneTrackerCollectionFactory
      */
     private $builder;
 
     protected function setUp(): void
     {
         $this->planning_factory = M::mock(\PlanningFactory::class);
-        $this->builder          = new MilestoneTrackerCollectionBuilder($this->planning_factory);
+        $this->builder          = new MilestoneTrackerCollectionFactory($this->planning_factory);
     }
 
     public function testBuildFromAggregatorProjectAndItsContributors(): void
@@ -148,6 +148,26 @@ final class MilestoneTrackerCollectionBuilderTest extends TestCase
 
         $this->expectException(NoMilestoneTrackerException::class);
         $this->builder->buildFromAggregatorProjectAndItsContributors($aggregator_project, $contributors, $user);
+    }
+
+    public function testBuildFromContributorProjects(): void
+    {
+        $first_contributor_project  = new \Project(['group_id' => '103']);
+        $second_contributor_project = new \Project(['group_id' => '123']);
+        $contributors               = new ContributorProjectsCollection(
+            [$first_contributor_project, $second_contributor_project]
+        );
+        $user                       = UserTestBuilder::aUser()->build();
+
+        $first_tracker_id = 1024;
+        $this->mockRootPlanning($first_tracker_id, 103, $user);
+        $second_tracker_id = 2048;
+        $this->mockRootPlanning($second_tracker_id, 123, $user);
+
+        $trackers = $this->builder->buildFromContributorProjects($contributors, $user);
+        $ids      = $trackers->getTrackerIds();
+        $this->assertContains($first_tracker_id, $ids);
+        $this->assertContains($second_tracker_id, $ids);
     }
 
     private function mockRootPlanning(int $tracker_id, int $project_id, \PFUser $user): void

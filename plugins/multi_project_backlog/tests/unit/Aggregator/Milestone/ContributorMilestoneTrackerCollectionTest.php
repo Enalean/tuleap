@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,8 +23,9 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-final class MilestoneTrackerCollectionTest extends TestCase
+final class ContributorMilestoneTrackerCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,7 +38,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
         $second_tracker->shouldReceive('getId')->andReturn(57);
         $second_tracker->shouldReceive('getGroupId')->andReturn('104');
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $collection = new ContributorMilestoneTrackerCollection([$first_tracker, $second_tracker]);
         $ids        = $collection->getTrackerIds();
         $this->assertContains(78, $ids);
         $this->assertContains(57, $ids);
@@ -45,7 +46,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
 
     public function testGetTrackerIdsReturnsEmpty(): void
     {
-        $collection = new MilestoneTrackerCollection([]);
+        $collection = new ContributorMilestoneTrackerCollection([]);
         $this->assertEmpty($collection->getTrackerIds());
     }
 
@@ -56,7 +57,7 @@ final class MilestoneTrackerCollectionTest extends TestCase
         $second_tracker = M::mock(\Tracker::class);
         $second_tracker->shouldReceive('getGroupId')->andReturn('104');
 
-        $collection = new MilestoneTrackerCollection([$first_tracker, $second_tracker]);
+        $collection = new ContributorMilestoneTrackerCollection([$first_tracker, $second_tracker]);
         $trackers   = $collection->getMilestoneTrackers();
         $this->assertContains($first_tracker, $trackers);
         $this->assertContains($second_tracker, $trackers);
@@ -64,7 +65,41 @@ final class MilestoneTrackerCollectionTest extends TestCase
 
     public function testGetMilestoneTrackersReturnsEmpty(): void
     {
-        $collection = new MilestoneTrackerCollection([]);
+        $collection = new ContributorMilestoneTrackerCollection([]);
         $this->assertEmpty($collection->getMilestoneTrackers());
+    }
+
+    public function testCanUserSubmitAnArtifactInAllTrackersReturnsTrue(): void
+    {
+        $first_contributor_tracker = M::mock(\Tracker::class);
+        $first_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $first_contributor_tracker->shouldReceive('getGroupId')->andReturn('963');
+        $second_contributor_tracker = M::mock(\Tracker::class);
+        $second_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $second_contributor_tracker->shouldReceive('getGroupId')->andReturn('789');
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $collection = new ContributorMilestoneTrackerCollection(
+            [$first_contributor_tracker, $second_contributor_tracker]
+        );
+        $this->assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
+    }
+
+    public function testCanUserSubmitAnArtifactInAllTrackersReturnsFalse(): void
+    {
+        $first_contributor_tracker = M::mock(\Tracker::class);
+        $first_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
+        $first_contributor_tracker->shouldReceive('getGroupId')->andReturn('963');
+        $second_contributor_tracker = M::mock(\Tracker::class);
+        $second_contributor_tracker->shouldReceive('userCanSubmitArtifact')->andReturnFalse();
+        $second_contributor_tracker->shouldReceive('getGroupId')->andReturn('789');
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $collection = new ContributorMilestoneTrackerCollection(
+            [$first_contributor_tracker, $second_contributor_tracker]
+        );
+        $this->assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
     }
 }

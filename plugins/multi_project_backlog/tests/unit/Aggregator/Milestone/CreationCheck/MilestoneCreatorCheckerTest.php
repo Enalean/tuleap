@@ -30,8 +30,9 @@ use Project;
 use Psr\Log\NullLogger;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollection;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder;
@@ -51,7 +52,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
      */
     private $projects_builder;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneTrackerCollectionBuilder
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneTrackerCollectionFactory
      */
     private $trackers_builder;
     /**
@@ -80,7 +81,7 @@ final class MilestoneCreatorCheckerTest extends TestCase
         parent::setUp();
 
         $this->projects_builder         = Mockery::mock(ContributorProjectsCollectionBuilder::class);
-        $this->trackers_builder         = Mockery::mock(MilestoneTrackerCollectionBuilder::class);
+        $this->trackers_builder         = Mockery::mock(MilestoneTrackerCollectionFactory::class);
         $this->field_collection_builder = Mockery::mock(SynchronizedFieldCollectionBuilder::class);
         $this->semantic_checker         = Mockery::mock(SemanticChecker::class);
         $this->required_field_checker   = Mockery::mock(RequiredFieldChecker::class);
@@ -292,6 +293,9 @@ final class MilestoneCreatorCheckerTest extends TestCase
         $second_milestone_tracker->shouldReceive('getGroupId')->andReturn($second_contributor_project->getID());
         $this->trackers_builder->shouldReceive('buildFromAggregatorProjectAndItsContributors')
             ->once()
-            ->andReturn(new MilestoneTrackerCollection(Project::buildForTest(), [$first_milestone_tracker, $second_milestone_tracker]));
+            ->andReturn(new MilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
+        $this->trackers_builder->shouldReceive('buildFromContributorProjects')
+            ->once()
+            ->andReturn(new ContributorMilestoneTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
     }
 }

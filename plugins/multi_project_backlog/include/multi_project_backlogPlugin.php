@@ -291,7 +291,7 @@ final class multi_project_backlogPlugin extends Plugin
                 new AggregatorDao(),
                 ProjectManager::instance()
             ),
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionBuilder(
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory(
                 \PlanningFactory::build()
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
