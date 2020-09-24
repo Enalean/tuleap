@@ -55,9 +55,9 @@ class LFSObjectRemover
         $this->path_allocator       = $path_allocator;
     }
 
-    public function removeDanglingObjects()
+    public function removeDanglingObjects(int $deletion_delay)
     {
-        $this->dao->deleteUnusableReferences();
+        $this->dao->deleteUnusableReferences($deletion_delay);
         $this->transaction_executor->execute(function () {
             $unused_object_rows = $this->dao->searchUnusedObjects();
             foreach ($unused_object_rows as $unused_object_row) {

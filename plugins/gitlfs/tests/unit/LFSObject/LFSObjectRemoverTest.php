@@ -43,6 +43,7 @@ class LFSObjectRemoverTest extends TestCase
 
     public function testDanglingObjectsAreRemoved()
     {
+        $deletion_delay = 3;
         $lfs_object_remover = new LFSObjectRemover(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
@@ -56,15 +57,16 @@ class LFSObjectRemoverTest extends TestCase
         ]);
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 
-        $this->dao->shouldReceive('deleteUnusableReferences')->once();
+        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
         $this->filesystem->shouldReceive('delete')->andReturns(true)->twice();
         $this->dao->shouldReceive('deleteObjectByID')->twice();
 
-        $lfs_object_remover->removeDanglingObjects();
+        $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
 
     public function testRemovingADanglingObjectNotPresentOnTheFilesystemWorks()
     {
+        $deletion_delay = 3;
         $lfs_object_remover = new LFSObjectRemover(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
@@ -77,15 +79,16 @@ class LFSObjectRemoverTest extends TestCase
         ]);
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 
-        $this->dao->shouldReceive('deleteUnusableReferences')->once();
+        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
         $this->filesystem->shouldReceive('delete')->andThrows(FileNotFoundException::class);
         $this->dao->shouldReceive('deleteObjectByID')->once();
 
-        $lfs_object_remover->removeDanglingObjects();
+        $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
 
     public function testReferenceToTheDanglingObjectIsKeptWhenDeletionFails()
     {
+        $deletion_delay = 3;
         $lfs_object_remover = new LFSObjectRemover(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
@@ -98,10 +101,10 @@ class LFSObjectRemoverTest extends TestCase
         ]);
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 
-        $this->dao->shouldReceive('deleteUnusableReferences')->once();
+        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
         $this->filesystem->shouldReceive('delete')->andReturns(false);
         $this->dao->shouldReceive('deleteObjectByID')->never();
 
-        $lfs_object_remover->removeDanglingObjects();
+        $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
 }

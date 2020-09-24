@@ -413,7 +413,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             $filesystem,
             $path_allocator
         );
-        $lfs_object_remover->removeDanglingObjects();
+
+        $lfs_object_remover->removeDanglingObjects(ForgeConfig::getInt('sys_file_deletion_delay'));
         $action_authorization_remover = new ActionAuthorizationRemover(
             new ActionAuthorizationDAO(),
             $filesystem,

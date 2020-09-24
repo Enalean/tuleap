@@ -91,15 +91,18 @@ class LFSObjectDAO extends DataAccessObject
         $this->getDB()->run($sql, $to_repository_id, $from_repository_id);
     }
 
-    public function deleteUnusableReferences()
+    public function deleteUnusableReferences(int $deletion_delay)
     {
-        $this->getDB()->run("
+        $sql = '
             DELETE plugin_gitlfs_object_repository.*
             FROM plugin_gitlfs_object_repository
             LEFT JOIN plugin_git ON (plugin_git.repository_id = plugin_gitlfs_object_repository.repository_id)
             LEFT JOIN `groups` ON (`groups`.group_id = plugin_git.project_id)
-            WHERE `groups`.status = 'D' OR plugin_git.repository_id IS NULL OR `groups`.group_id IS NULL;
-        ");
+            WHERE `groups`.status = "D"
+               OR plugin_git.repository_id IS NULL
+               OR `groups`.group_id IS NULL
+               OR (plugin_git.repository_deletion_date <> "0000-00-00 00:00:00" AND TO_DAYS(NOW()) - TO_DAYS(plugin_git.repository_deletion_date) > ?)';
+        $this->getDB()->run($sql, $deletion_delay);
     }
 
     /**
