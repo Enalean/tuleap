@@ -19,13 +19,13 @@
 
 import { SelectionManager } from "./SelectionManager";
 import { DropdownToggler } from "./DropdownToggler";
+import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 
 describe("selection-manager", () => {
     let source_select_box: HTMLSelectElement,
-        component_root: Element,
-        component_dropdown: Element,
+        component_dropdown_list: Element,
         selection_container: Element,
-        placeholder_element: Element,
+        placeholder: Element,
         manager: SelectionManager,
         toggler: DropdownToggler;
 
@@ -59,20 +59,27 @@ describe("selection-manager", () => {
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
-        component_root = document.createElement("span");
-        component_dropdown = document.createElement("span");
-        selection_container = document.createElement("span");
-        placeholder_element = document.createElement("span");
-        placeholder_element.classList.add("list-picker-placeholder");
-        placeholder_element.appendChild(document.createTextNode("Please select a value"));
 
-        toggler = new DropdownToggler(component_root, component_dropdown);
+        const {
+            list_picker_element,
+            dropdown_element,
+            selection_element,
+            placeholder_element,
+            dropdown_list_element,
+        } = new BaseComponentRenderer(source_select_box, {
+            placeholder: "Please select a value",
+        }).renderBaseComponent();
 
+        selection_container = selection_element;
+        placeholder = placeholder_element;
+        component_dropdown_list = dropdown_list_element;
+
+        toggler = new DropdownToggler(list_picker_element, dropdown_element, dropdown_list_element);
         manager = new SelectionManager(
             source_select_box,
-            component_dropdown,
+            dropdown_element,
             selection_container,
-            placeholder_element,
+            placeholder,
             toggler
         );
     });
@@ -83,12 +90,12 @@ describe("selection-manager", () => {
             const item = createItem("item-1", "Value 1", true);
 
             source_select_box.appendChild(option);
-            selection_container.appendChild(placeholder_element);
-            component_dropdown.appendChild(item);
+            selection_container.appendChild(placeholder);
+            component_dropdown_list.appendChild(item);
 
-            manager.initSelection(placeholder_element);
+            manager.initSelection(placeholder);
 
-            expect(selection_container.contains(placeholder_element)).toBe(false);
+            expect(selection_container.contains(placeholder)).toBe(false);
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
             expect(item.getAttribute("aria-selected")).toEqual("true");
             expect(option.hasAttribute("selected")).toBe(true);
@@ -99,12 +106,12 @@ describe("selection-manager", () => {
             const item = createItem("item-1", "Value 1", false);
 
             source_select_box.appendChild(option);
-            component_dropdown.appendChild(item);
-            selection_container.appendChild(placeholder_element);
+            component_dropdown_list.appendChild(item);
+            selection_container.appendChild(placeholder);
 
-            manager.initSelection(placeholder_element);
+            manager.initSelection(placeholder);
 
-            expect(selection_container.contains(placeholder_element)).toBe(true);
+            expect(selection_container.contains(placeholder)).toBe(true);
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
             expect(item.getAttribute("aria-selected")).toEqual("false");
             expect(option.hasAttribute("selected")).toBe(false);
@@ -125,13 +132,13 @@ describe("selection-manager", () => {
             const selected_item = createItem("item-1", "Value 1", false);
 
             source_select_box.appendChild(new_option);
-            selection_container.appendChild(placeholder_element);
+            selection_container.appendChild(placeholder);
 
             manager.processSingleSelection(selected_item);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
 
-            expect(selection_container.contains(placeholder_element)).toBe(false);
+            expect(selection_container.contains(placeholder)).toBe(false);
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 1");
             expect(selected_item.getAttribute("aria-selected")).toEqual("true");
@@ -148,7 +155,7 @@ describe("selection-manager", () => {
             source_select_box.appendChild(old_option);
             source_select_box.appendChild(new_option);
 
-            component_dropdown.appendChild(old_value);
+            component_dropdown_list.appendChild(old_value);
             selection_container.appendChild(old_selection);
 
             manager.processSingleSelection(selected_item);
@@ -169,15 +176,15 @@ describe("selection-manager", () => {
             const option_to_select = createOption("Selected option", false, "selected-item");
             const item_to_select = createItem("selected-item", "Selected option", false);
 
-            component_dropdown.appendChild(item_to_select);
+            component_dropdown_list.appendChild(item_to_select);
             source_select_box.appendChild(option_to_select);
-            selection_container.appendChild(placeholder_element);
+            selection_container.appendChild(placeholder);
 
             // First select the item
             manager.processSingleSelection(item_to_select);
 
             expect(item_to_select.getAttribute("aria-selected")).toEqual("true");
-            expect(selection_container.contains(placeholder_element)).toBe(false);
+            expect(selection_container.contains(placeholder)).toBe(false);
 
             expect(option_to_select.hasAttribute("selected")).toBe(true);
             const remove_item_button = selection_container.querySelector(
@@ -191,7 +198,7 @@ describe("selection-manager", () => {
             remove_item_button.dispatchEvent(new MouseEvent("click"));
             expect(item_to_select.getAttribute("aria-selected")).toEqual("false");
             expect(option_to_select.hasAttribute("selected")).toBe(false);
-            expect(selection_container.contains(placeholder_element)).toBe(true);
+            expect(selection_container.contains(placeholder)).toBe(true);
             expect(openListPicker).toHaveBeenCalled();
         });
     });

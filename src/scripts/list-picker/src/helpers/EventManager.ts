@@ -22,8 +22,8 @@ import { SelectionManager } from "./SelectionManager";
 export class EventManager {
     constructor(
         private readonly doc: HTMLDocument,
-        private readonly component_root: Element,
-        private readonly component_dropdown: Element,
+        private readonly wrapper_element: Element,
+        private readonly dropdown_element: Element,
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: SelectionManager,
         private readonly dropdown_toggler: DropdownToggler
@@ -47,7 +47,7 @@ export class EventManager {
     }
 
     private attachClickEvent(): void {
-        this.component_root.addEventListener("click", (event: Event) => {
+        this.wrapper_element.addEventListener("click", (event: Event) => {
             if (this.source_select_box.disabled) {
                 return;
             }
@@ -58,7 +58,7 @@ export class EventManager {
                 return;
             }
 
-            if (this.component_dropdown.classList.contains("list-picker-dropdown-shown")) {
+            if (this.dropdown_element.classList.contains("list-picker-dropdown-shown")) {
                 this.dropdown_toggler.closeListPicker();
             } else {
                 this.dropdown_toggler.openListPicker();
@@ -72,7 +72,7 @@ export class EventManager {
                 return this.dropdown_toggler.closeListPicker();
             }
 
-            if (!this.component_root.contains(target_element)) {
+            if (!this.wrapper_element.contains(target_element)) {
                 return this.dropdown_toggler.closeListPicker();
             }
         });
@@ -87,9 +87,7 @@ export class EventManager {
     }
 
     private attachItemListEvent(): void {
-        const items = this.component_dropdown.querySelectorAll(
-            ".list-picker-dropdown-option-value"
-        );
+        const items = this.dropdown_element.querySelectorAll(".list-picker-dropdown-option-value");
 
         items.forEach((item) => {
             item.addEventListener("click", () => {

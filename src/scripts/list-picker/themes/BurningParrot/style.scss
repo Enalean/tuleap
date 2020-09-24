@@ -36,6 +36,7 @@
     position: absolute;
     z-index: 1000;
     flex-direction: column;
+    width: 100%;
     border-radius: 0 0 4px 4px;
     background-color: #ffffff;
 
@@ -86,4 +87,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.list-picker-component-wrapper {
+    display: inline-block;
+    position: relative;
+    width: 100%;
 }

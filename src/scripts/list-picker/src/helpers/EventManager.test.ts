@@ -20,33 +20,40 @@
 import { EventManager } from "./EventManager";
 import { SelectionManager } from "./SelectionManager";
 import { DropdownToggler } from "./DropdownToggler";
+import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 
 describe("event manager", () => {
     let doc: HTMLDocument,
         source_select_box: HTMLSelectElement,
-        component_root: Element,
-        component_dropdown: Element,
+        component_wrapper: Element,
         manager: EventManager,
         toggler: DropdownToggler,
         clickable_item: Element,
         processSingleSelection: () => void;
 
     beforeEach(() => {
-        doc = document.implementation.createHTMLDocument();
-        component_root = document.createElement("span");
-        component_dropdown = document.createElement("span");
         source_select_box = document.createElement("select");
+
+        const {
+            wrapper_element,
+            dropdown_element,
+            dropdown_list_element,
+        } = new BaseComponentRenderer(source_select_box).renderBaseComponent();
+
+        component_wrapper = wrapper_element;
         clickable_item = document.createElement("li");
+
+        doc = document.implementation.createHTMLDocument();
         clickable_item.classList.add("list-picker-dropdown-option-value");
-        component_dropdown.appendChild(clickable_item);
+        dropdown_list_element.appendChild(clickable_item);
 
         processSingleSelection = jest.fn();
 
-        toggler = new DropdownToggler(component_root, component_dropdown);
+        toggler = new DropdownToggler(component_wrapper, dropdown_element, dropdown_list_element);
         manager = new EventManager(
             doc,
-            component_root,
-            component_dropdown,
+            component_wrapper,
+            dropdown_element,
             source_select_box,
             ({ processSingleSelection } as unknown) as SelectionManager,
             toggler
@@ -60,10 +67,10 @@ describe("event manager", () => {
 
             manager.attachEvents();
 
-            component_root.dispatchEvent(new MouseEvent("click"));
+            component_wrapper.dispatchEvent(new MouseEvent("click"));
             expect(openListPicker).toHaveBeenCalled();
 
-            component_root.dispatchEvent(new MouseEvent("click"));
+            component_wrapper.dispatchEvent(new MouseEvent("click"));
             expect(closeListPicker).toHaveBeenCalled();
         });
 
@@ -72,7 +79,7 @@ describe("event manager", () => {
             source_select_box.setAttribute("disabled", "disabled");
 
             manager.attachEvents();
-            component_root.dispatchEvent(new MouseEvent("click"));
+            component_wrapper.dispatchEvent(new MouseEvent("click"));
 
             expect(openListPicker).not.toHaveBeenCalled();
         });

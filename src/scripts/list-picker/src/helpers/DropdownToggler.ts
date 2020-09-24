@@ -19,29 +19,20 @@
 
 export class DropdownToggler {
     constructor(
-        private readonly component_root: Element,
-        private readonly component_dropdown: Element
+        private readonly list_picker_element: Element,
+        private readonly dropdown_element: Element,
+        private readonly dropdown_list_element: Element
     ) {}
 
     public closeListPicker(): void {
-        this.component_dropdown.classList.remove("list-picker-dropdown-shown");
-        this.component_root.classList.remove("list-picker-with-open-dropdown");
-
-        const list = this.component_dropdown.querySelector(".list-picker-dropdown-values-list");
-
-        if (list) {
-            list.setAttribute("aria-expanded", "false");
-        }
+        this.dropdown_element.classList.remove("list-picker-dropdown-shown");
+        this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
+        this.dropdown_list_element.setAttribute("aria-expanded", "false");
     }
 
     public openListPicker(): void {
-        this.component_dropdown.classList.add("list-picker-dropdown-shown");
-        this.component_root.classList.add("list-picker-with-open-dropdown");
-
-        const list = this.component_dropdown.querySelector(".list-picker-dropdown-values-list");
-
-        if (list) {
-            list.setAttribute("aria-expanded", "true");
-        }
+        this.dropdown_element.classList.add("list-picker-dropdown-shown");
+        this.list_picker_element.classList.add("list-picker-with-open-dropdown");
+        this.dropdown_list_element.setAttribute("aria-expanded", "true");
     }
 }
