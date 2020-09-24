@@ -31,9 +31,24 @@ final class InviteBuddyConfiguration
      */
     public const CONFIG_BUDDIES_CAN_INVITED = 'enable_invite_buddies';
 
+    /**
+     * How many invitations a user can send? (default 20)
+     *
+     * @tlp-config-key
+     */
+    public const CONFIG_MAX_INVITATIONS_BY_DAY = 'max_invitations_by_day';
+
+    private const CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT = 20;
+
     public function canBuddiesBeInvited(\PFUser $current_user): bool
     {
+        $nb_max_per_day = \ForgeConfig::getInt(
+            self::CONFIG_MAX_INVITATIONS_BY_DAY,
+            self::CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT
+        );
+
         return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
-            && $current_user->isLoggedIn();
+            && $current_user->isLoggedIn()
+            && $nb_max_per_day > 0;
     }
 }
