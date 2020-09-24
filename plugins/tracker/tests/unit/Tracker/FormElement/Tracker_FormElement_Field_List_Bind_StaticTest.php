@@ -26,11 +26,13 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
+use UserXMLExporter;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
@@ -41,6 +43,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
      * @var Tracker_FormElement_Field_List_Bind_Static
      */
     private $bind;
+    private $bind_without_values;
 
     protected function setUp(): void
     {
@@ -76,6 +79,14 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
             $field,
             $is_rank_alpha,
             $values,
+            $default_values,
+            $decorators
+        );
+
+        $this->bind_without_values = new Tracker_FormElement_Field_List_Bind_Static(
+            $field,
+            $is_rank_alpha,
+            [],
             $default_values,
             $decorators
         );
@@ -190,5 +201,55 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
         return Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [$field, true, $values, [], []])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+    }
+
+    public function testItExportBindWithRankEvenIfNoValue()
+    {
+        $expected_result = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+                  <bind type="static" is_rank_alpha="0"/>'
+        );
+
+        $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
+        $root                   = new SimpleXMLElement('<bind type="static"/>');
+        $xml_mapping            = [1, 2, 3];
+        $project_export_context = "false";
+        $this->bind_without_values->exportToXml(
+            $root,
+            $xml_mapping,
+            $project_export_context,
+            $user_xml_exporter
+        );
+        $this->assertEquals($expected_result, $root);
+    }
+
+    public function testItExportBindWithValues()
+    {
+        $expected_result = new SimpleXMLElement(
+            '<?xml version="1.0"?>
+                 <bind type="static" is_rank_alpha="0">
+                     <items>
+                         <item ID="V431" label="10" is_hidden="0">
+                            <description><![CDATA[int value]]></description>
+                         </item>
+                         <item ID="V432" label="123abc" is_hidden="0">
+                             <description><![CDATA[string value]]></description>
+                         </item>
+                     </items>
+                 </bind>'
+        );
+
+        $user_xml_exporter      = Mockery::mock(UserXMLExporter::class);
+        $root                   = new SimpleXMLElement('<bind type="static"/>');
+        $xml_mapping            = [1, 2, 3];
+        $project_export_context = "false";
+        $this->bind->exportToXml(
+            $root,
+            $xml_mapping,
+            $project_export_context,
+            $user_xml_exporter
+        );
+
+        $this->assertEquals($expected_result, $root);
     }
 }

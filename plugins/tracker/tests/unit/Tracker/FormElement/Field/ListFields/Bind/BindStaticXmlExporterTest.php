@@ -42,10 +42,7 @@ final class BindStaticXmlExporterTest extends TestCase
      * @var array
      */
     private $default_values;
-    /**
-     * @var bool
-     */
-    private $is_rank_alpha;
+
     /**
      * @var \SimpleXMLElement
      */
@@ -54,7 +51,6 @@ final class BindStaticXmlExporterTest extends TestCase
     protected function setUp(): void
     {
         $this->xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $this->is_rank_alpha = true;
         $this->default_values = [1 => true];
 
         $this->exporter = new BindStaticXmlExporter(new \XML_SimpleXMLCDATAFactory());
@@ -74,10 +70,7 @@ final class BindStaticXmlExporterTest extends TestCase
         ];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $this->is_rank_alpha, $values, $decorators, $this->default_values, $xml_mapping);
-
-        $bind_attributes = $this->xml->attributes();
-        $this->assertEquals("1", (string) $bind_attributes->is_rank_alpha);
+        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);
@@ -107,10 +100,7 @@ final class BindStaticXmlExporterTest extends TestCase
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $this->is_rank_alpha, $values, $decorators, $this->default_values, $xml_mapping);
-
-        $bind_attributes = $this->xml->attributes();
-        $this->assertEquals("1", (string) $bind_attributes->is_rank_alpha);
+        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);
@@ -133,10 +123,7 @@ final class BindStaticXmlExporterTest extends TestCase
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, "123", "456", "789", null)];
 
         $xml_mapping = [];
-        $this->exporter->exportToXml($this->xml, $this->is_rank_alpha, $values, $decorators, $this->default_values, $xml_mapping);
-
-        $bind_attributes = $this->xml->attributes();
-        $this->assertEquals("1", (string) $bind_attributes->is_rank_alpha);
+        $this->exporter->exportToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
 
         $items_node = $this->xml->items;
         $this->assertNotNull($items_node);
