@@ -70,3 +70,20 @@
     list-style: none;
     user-select: none;
 }
+
+.list-picker-selected-value-remove-button {
+    float: right;
+    font-size: 18px;
+    line-height: 17px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.list-picker-selected-value {
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

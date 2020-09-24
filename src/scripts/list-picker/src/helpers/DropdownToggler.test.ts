@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openListPicker, closeListPicker } from "./dropdown-helper";
+import { DropdownToggler } from "./DropdownToggler";
 
-describe("dropdown-helper", () => {
-    let root: HTMLElement, dropdown: HTMLElement, list: HTMLElement;
+describe("dropdown-toggler", () => {
+    let root: HTMLElement, dropdown: HTMLElement, list: HTMLElement, toggler: DropdownToggler;
 
     beforeEach(() => {
         root = document.createElement("span");
@@ -28,10 +28,11 @@ describe("dropdown-helper", () => {
         list = document.createElement("span");
         list.setAttribute("class", "list-picker-dropdown-values-list");
         dropdown.appendChild(list);
+        toggler = new DropdownToggler(root, dropdown);
     });
 
     it("opens the dropdown by appending a 'shown' class to the dropdown element", () => {
-        openListPicker(root, dropdown);
+        toggler.openListPicker();
 
         expect(root.classList).toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).toContain("list-picker-dropdown-shown");
@@ -39,7 +40,7 @@ describe("dropdown-helper", () => {
     });
 
     it("closes the dropdown by removing the 'shown' class to the dropdown element", () => {
-        closeListPicker(root, dropdown);
+        toggler.closeListPicker();
 
         expect(root.classList).not.toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
