@@ -818,7 +818,10 @@ class RepositoryResource extends AuthenticatedResource
         $commits = [];
         foreach ($sliced_tags_refs as $tag) {
             try {
-                $commits[] = $tag->GetCommit();
+                $commit = $tag->GetCommit();
+                if ($commit) {
+                    $commits[] = $commit;
+                }
             } catch (GitRepoRefNotFoundException $e) {
                 // ignore the tag if by any chance it is invalid
             }
@@ -829,8 +832,13 @@ class RepositoryResource extends AuthenticatedResource
         $result = [];
         foreach ($sliced_tags_refs as $tag) {
             $name = $tag->GetName();
+            $commit = $tag->GetCommit();
+            if (! $commit) {
+                continue;
+            }
+
             try {
-                $commit_representation = $commit_representation_collection->getRepresentation($tag->GetCommit());
+                $commit_representation = $commit_representation_collection->getRepresentation($commit);
 
                 $tag_representation = new GitTagRepresentation();
                 $tag_representation->build($name, $commit_representation);

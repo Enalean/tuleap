@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2018-10-16 13:28+0200\n"
+"PO-Revision-Date: 2020-09-24 17:50+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 # Used to represent an age in days
 # %1$d: the number of days
@@ -117,6 +117,9 @@ msgstr "Fichiers binaires %1$s et %2$s diffèrent"
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 msgid "Blame"
 msgstr "Annoter"
+
+msgid "Blob"
+msgstr "Blob"
 
 msgid "Browse"
 msgstr "Naviguer"
@@ -283,6 +286,9 @@ msgstr "Le dossier temporaire spécifié %1$s n'est pas un dossier"
 msgid "Specified tmpdir %1$s is not writable"
 msgstr "Impossible d'écrire dans le dossier temporaire spécifié %1$s"
 
+msgid "Tag"
+msgstr "Étiquette"
+
 msgid "Terms"
 msgstr "Termes"
 
@@ -300,6 +306,9 @@ msgstr "Arborescence"
 
 msgid "Type"
 msgstr "Type"
+
+msgid "Unknown object"
+msgstr "Objet inconnu"
 
 # Error message when a user's search query is too short
 # %1$d: the minimum number of characters
@@ -360,6 +369,9 @@ msgstr "aperçu"
 # A type of filesystem object stored in a project
 msgid "symlink"
 msgstr "Lien symbolique"
+
+msgid "tag"
+msgstr "étiquette"
 
 # Used as title for and link to a list of files in a directory, which git calls a 'tree'
 msgid "tree"
