@@ -45,12 +45,12 @@ final class OAuth2App
      */
     private $use_pkce;
     /**
-     * @var \Project
+     * @var \Project|null
      * @psalm-readonly
      */
     private $project;
 
-    public function __construct(int $id, string $name, string $redirect_endpoint, bool $use_pkce, \Project $project)
+    public function __construct(int $id, string $name, string $redirect_endpoint, bool $use_pkce, ?\Project $project)
     {
         $this->id                = $id;
         $this->name              = $name;
@@ -117,7 +117,7 @@ final class OAuth2App
     /**
      * @psalm-mutation-free
      */
-    public function getProject(): \Project
+    public function getProject(): ?\Project
     {
         return $this->project;
     }

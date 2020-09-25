@@ -74,10 +74,15 @@ class AppsPresenterBuilder
         foreach ($scopes as $scope) {
             $scope_definition_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
         }
+        $project_public_name = null;
+        $project             = $app->getProject();
+        if ($project !== null) {
+            $project_public_name = $project->getPublicName();
+        }
         return new AccountAppPresenter(
             $app->getId(),
             $app->getName(),
-            $app->getProject()->getPublicName(),
+            $project_public_name,
             ...$scope_definition_presenters
         );
     }

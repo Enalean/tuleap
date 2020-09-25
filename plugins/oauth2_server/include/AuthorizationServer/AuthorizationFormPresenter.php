@@ -37,10 +37,10 @@ final class AuthorizationFormPresenter
      */
     public $app_name;
     /**
-     * @var string
+     * @var string|null
      * @psalm-readonly
      */
-    public $project_name;
+    public $project_name = null;
     /**
      * @var UriInterface
      * @psalm-readonly
@@ -96,7 +96,10 @@ final class AuthorizationFormPresenter
 
         $this->app_identifier              = ClientIdentifier::fromOAuth2App($app)->toString();
         $this->app_name                    = $app->getName();
-        $this->project_name                = $app->getProject()->getPublicName();
+        $project = $app->getProject();
+        if ($project !== null) {
+            $this->project_name = $project->getPublicName();
+        }
         $this->csrf_token                  = $data->getCSRFToken();
         $this->state                       = $data->getState();
         $pkce_code_challenge               = $data->getPKCECodeChallenge();

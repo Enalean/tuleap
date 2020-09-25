@@ -93,10 +93,17 @@ final class AppsPresenterBuilderTest extends TestCase
             true,
             new \Project(['group_id' => 102, 'group_name' => 'Private project'])
         );
+        $site_level_app = new OAuth2App(
+            3,
+            'Site level app',
+            'https://site-level.example.com',
+            true,
+            null
+        );
         $this->app_factory->shouldReceive('getAppsAuthorizedByUser')
             ->with($user)
             ->once()
-            ->andReturn([$jenkins_app, $custom_app]);
+            ->andReturn([$jenkins_app, $custom_app, $site_level_app]);
 
         $foobar_scope    = $this->buildFooBarScopeDefinition();
         $typevalue_scope = $this->buildTypeValueScopeDefinition();
@@ -108,6 +115,10 @@ final class AppsPresenterBuilderTest extends TestCase
             ->once()
             ->with($user, $custom_app)
             ->andReturn([$foobar_scope, $typevalue_scope]);
+        $this->authorized_scope_factory->shouldReceive('getAuthorizedScopes')
+            ->once()
+            ->with($user, $site_level_app)
+            ->andReturn([$foobar_scope]);
         $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
         $this->assertEquals(
@@ -126,7 +137,13 @@ final class AppsPresenterBuilderTest extends TestCase
                     'Private project',
                     new OAuth2ScopeDefinitionPresenter($foobar_scope->getDefinition()),
                     new OAuth2ScopeDefinitionPresenter($typevalue_scope->getDefinition())
-                )
+                ),
+                new AccountAppPresenter(
+                    3,
+                    'Site level app',
+                    null,
+                    new OAuth2ScopeDefinitionPresenter($foobar_scope->getDefinition()),
+                ),
             ),
             $this->builder->build($user, $csrf_presenter)
         );

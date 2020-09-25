@@ -19,7 +19,7 @@
 
 CREATE TABLE plugin_oauth2_server_app(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    project_id int(11) NOT NULL,
+    project_id INT(11),
     name VARCHAR(255) NOT NULL,
     redirect_endpoint TEXT NOT NULL,
     verifier VARCHAR(255) NOT NULL,

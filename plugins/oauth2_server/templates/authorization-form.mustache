@@ -1,11 +1,19 @@
 <div class="oauth2-server-authorization-form">
     <h1>{{# dgettext }}tuleap-oauth2_server | Authorize application{{/ dgettext }}</h1>
 
-    <h2>{{# dgettext }}tuleap-oauth2_server |
-        %s by project %s wants to connect to your Tuleap account. |
-        {{ app_name }} |
-        {{ project_name }}
-    {{/ dgettext }}</h2>
+    {{# project_name }}
+        <h2>{{# dgettext }}tuleap-oauth2_server |
+            %s by project %s wants to connect to your Tuleap account. |
+            {{ app_name }} |
+            {{ project_name }}
+        {{/ dgettext }}</h2>
+    {{/ project_name }}
+    {{^ project_name }}
+        <h2>{{# dgettext }}tuleap-oauth2_server |
+            %s wants to connect to your Tuleap account. |
+            {{ app_name }}
+        {{/ dgettext }}</h2>
+    {{/ project_name }}
 
     <p>{{# dgettext }}tuleap-oauth2_server | Please review the permissions you are about to give to %s: |
         {{ app_name }}

@@ -119,6 +119,19 @@ final class AppFactoryTest extends TestCase
         $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project), $result);
     }
 
+    public function testGetSiteLevelAppMatchingClientIdReturnsAnApp(): void
+    {
+        $this->app_dao->shouldReceive('searchByClientId')
+            ->once()
+            ->andReturn(
+                ['id' => 1, 'name' => 'Jenkins', 'project_id' => null, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
+            );
+        $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
+
+        $result = $this->app_factory->getAppMatchingClientId($client_id);
+        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, null), $result);
+    }
+
     public function testGetAppsAuthorizedByUserReturnsApps(): void
     {
         $rows = [
@@ -128,12 +141,20 @@ final class AppFactoryTest extends TestCase
                 'redirect_endpoint' => 'https://jenkins.example.com',
                 'project_id'        => 204,
                 'use_pkce'          => 1
-            ], [
+            ],
+            [
                 'id'                => 2,
                 'name'              => 'My custom REST client',
                 'redirect_endpoint' => 'https://my-custom-client.example.com',
                 'project_id'        => 205,
                 'use_pkce'          => 0
+            ],
+            [
+                'id'                => 3,
+                'name'              => 'A site level OAuth2 app',
+                'redirect_endpoint' => 'https://site-level-app.example.com',
+                'project_id'        => null,
+                'use_pkce'          => 1
             ]
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -150,7 +171,8 @@ final class AppFactoryTest extends TestCase
         $this->assertEquals(
             [
                 new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project_204),
-                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project_205)
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project_205),
+                new OAuth2App(3, 'A site level OAuth2 app', 'https://site-level-app.example.com', true, null),
             ],
             $result
         );

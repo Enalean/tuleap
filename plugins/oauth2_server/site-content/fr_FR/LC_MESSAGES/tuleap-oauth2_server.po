@@ -15,6 +15,9 @@ msgstr ""
 msgid "%s by project %s wants to connect to your Tuleap account."
 msgstr "%s du projet %s souhaite se connecter à votre compte Tuleap."
 
+msgid "%s wants to connect to your Tuleap account."
+msgstr "%s souhaite se connecter à votre compte Tuleap."
+
 msgid "Access has been revoked."
 msgstr "L'accès a été révoqué."
 
