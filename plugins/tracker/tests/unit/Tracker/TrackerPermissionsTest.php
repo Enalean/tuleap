@@ -42,6 +42,7 @@ use Tracker_ReportFactory;
 use Tracker_SemanticManager;
 use TrackerFactory;
 use TrackerManager;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use UserManager;
 use Workflow;
@@ -51,6 +52,7 @@ use WorkflowManager;
 class TrackerPermissionsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     private $all_trackers_admin_user;
     /**
@@ -383,7 +385,7 @@ class TrackerPermissionsTest extends TestCase
     {
         WorkflowFactory::clearInstance();
         UserManager::clearInstance();
-        unset($GLOBALS['Response']);
+        unset($GLOBALS['Response'], $GLOBALS['_SESSION']);
         parent::tearDown();
     }
 
@@ -535,64 +537,69 @@ class TrackerPermissionsTest extends TestCase
     }
 
     // Delete tracker permissions
-    public function testPermsDeleteTrackerSiteAdmin()
+    public function testPermsDeleteTrackerSiteAdmin(): void
     {
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
+        $request_delete_tracker->shouldReceive('isPost')->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->atLeast()->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->atLeast()->once();
         // site admin can delete trackers
         $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->site_admin_user);
     }
 
-    public function testPermsDeleteTrackerProjectAdmin()
+    public function testPermsDeleteTrackerProjectAdmin(): void
     {
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
+        $request_delete_tracker->shouldReceive('isPost')->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback');
-        $GLOBALS['Response']->shouldReceive('redirect');
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->atLeast()->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->atLeast()->once();
 
         // project admin can delete trackers
         $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_admin_user);
     }
 
-    public function testPermsDeleteTrackerTrackerAdmin()
+    public function testPermsDeleteTrackerTrackerAdmin(): void
     {
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
+        $request_delete_tracker->shouldReceive('isPost')->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
-        $GLOBALS['Response']->shouldReceive('redirect');
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->atLeast()->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->atLeast()->once();
 
         // tracker admin can NOT delete trackers if he's not project admin
         $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->all_trackers_admin_user);
     }
 
-    public function testPermsDeleteTrackerProjectMember()
+    public function testPermsDeleteTrackerProjectMember(): void
     {
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
+        $request_delete_tracker->shouldReceive('isPost')->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
-        $GLOBALS['Response']->shouldReceive('redirect');
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->atLeast()->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->atLeast()->once();
 
         // project member can NOT delete tracker
         $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_member_user);
     }
 
-    public function testPermsDeleteTrackerRegisteredUser()
+    public function testPermsDeleteTrackerRegisteredUser(): void
     {
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
+        $request_delete_tracker->shouldReceive('isPost')->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
-        $GLOBALS['Response']->shouldReceive('redirect');
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->atLeast()->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->atLeast()->once();
 
         // registered user can NOT delete trackers
         $this->tf->shouldReceive('markAsDeleted')->never();

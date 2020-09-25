@@ -599,7 +599,9 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
             case 'delete':
-                if ($this->userCanDeleteTracker($current_user)) {
+                if ($request->isPost() && $this->userCanDeleteTracker($current_user)) {
+                    $csrf_token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $this->getGroupId()));
+                    $csrf_token->check();
                     $service_usage_for_tracker = $this->getInformationsFromOtherServicesAboutUsage();
                     if ($service_usage_for_tracker['can_be_deleted'] === false) {
                         $GLOBALS['Response']->addFeedback(

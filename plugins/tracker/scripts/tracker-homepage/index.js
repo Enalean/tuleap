@@ -42,9 +42,12 @@ function handleTrackerDeletion() {
             event.preventDefault();
             event.stopPropagation();
 
-            // eslint-disable-next-line no-alert
-            if (trash.dataset.href && confirm("Do you want to delete this tracker?")) {
-                window.location = trash.dataset.href;
+            if (
+                trash instanceof HTMLFormElement &&
+                // eslint-disable-next-line no-alert
+                confirm("Do you want to delete this tracker?")
+            ) {
+                trash.submit();
             }
         });
     }
