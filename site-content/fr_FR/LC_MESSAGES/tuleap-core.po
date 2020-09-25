@@ -805,6 +805,9 @@ msgstr "Activer le mode experimental"
 msgid "Enabled?"
 msgstr "Activé ?"
 
+msgid "Enter comma separated list of emails"
+msgstr "Entrez une liste d'emails séparés par une virgule"
+
 msgid "Experimental"
 msgstr "Expérimental"
 
@@ -1005,6 +1008,12 @@ msgstr ""
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
+
+msgid "Invitation could not be sent to:"
+msgstr "L'invitation n'a pas pu être envoyée à :"
+
+msgid "Invitation has been successfully sent to:"
+msgstr "L'invitation a été envoyée à :"
 
 #, php-format
 msgid "Invitation to register on %s"

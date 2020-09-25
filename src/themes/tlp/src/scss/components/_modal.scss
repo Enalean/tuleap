@@ -136,6 +136,10 @@ $tlp-modal-transition: 100ms ease-out;
     padding: $tlp-modal-padding;
     border-bottom: 1px solid $tlp-ui-border-light;
     background: $tlp-ui-white;
+
+    &:empty {
+        display: none;
+    }
 }
 
 .tlp-modal-body {
