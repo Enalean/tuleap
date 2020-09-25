@@ -75,6 +75,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
+use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\News\NewsDao;
@@ -695,6 +697,16 @@ class RouteCollector
         );
     }
 
+    public function getAdminInvitationsController(): InviteBuddyAdminController
+    {
+        return InviteBuddyAdminController::buildSelf();
+    }
+
+    public function getAdminInvitationsUpdateController(): InviteBuddyAdminUpdateController
+    {
+        return InviteBuddyAdminUpdateController::buildSelf();
+    }
+
 
     private function getLegacyControllerHandler(string $path): array
     {
@@ -737,6 +749,9 @@ class RouteCollector
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
 
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
+            $r->get('/invitations/', [self::class, 'getAdminInvitationsController']);
+            $r->post('/invitations/', [self::class, 'getAdminInvitationsUpdateController']);
+
             $r->get('/release-note/', [self::class, 'getAdminHelpDropdownController']);
             $r->post('/release-note/', [self::class, 'postAdminHelpDropdownController']);
 

@@ -32,7 +32,7 @@ class InviteBuddyConfiguration
     public const CONFIG_BUDDIES_CAN_INVITED = 'enable_invite_buddies';
 
     /**
-     * How many invitations a user can send? (default 20)
+     * How many invitations a user can send per day? (default 20)
      *
      * @tlp-config-key
      */
