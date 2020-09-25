@@ -616,7 +616,9 @@ done
 
 #Install system tmpfiles
 %{__install} -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
+%{__install} src/utils/systemd/tmpfiles/tuleap.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
+%{__install} src/utils/systemd/tmpfiles/tuleap-forumml.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -1060,6 +1062,7 @@ fi
 
 # Run dir
 %attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap
+%attr(00644,root,root) %{_tmpfilesdir}/tuleap.conf
 
 # Unit files
 %attr(00644,root,root) %{_unitdir}/tuleap.service
@@ -1109,6 +1112,7 @@ fi
 %{APP_DIR}/plugins/forumml
 %{APP_DIR}/src/www/assets/forumml
 %attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+%attr(00644,root,root) %{_tmpfilesdir}/tuleap-forumml.conf
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 
 %files plugin-git
