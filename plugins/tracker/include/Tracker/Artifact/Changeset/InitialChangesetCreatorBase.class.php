@@ -118,16 +118,13 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
         $this->storeFieldsValues($artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
 
-        $this->saveArtifactAfterNewChangeset(
-            $artifact,
-            $fields_data,
-            $submitter,
-            $artifact->getChangeset($changeset_id)
-        );
+        $changeset = $artifact->getChangeset($changeset_id);
+        assert($changeset !== null);
+        $this->saveArtifactAfterNewChangeset($artifact, $fields_data, $submitter, $changeset);
 
         $artifact->clearChangesets();
 
-        $this->event_manager->processEvent(new ArtifactCreated($artifact));
+        $this->event_manager->processEvent(new ArtifactCreated($artifact, $changeset));
 
         return $changeset_id;
     }

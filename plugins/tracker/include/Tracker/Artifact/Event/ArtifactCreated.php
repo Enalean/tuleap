@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,41 @@
 
 namespace Tuleap\Tracker\Artifact\Event;
 
-use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;
 
-class ArtifactCreated implements Dispatchable
+final class ArtifactCreated implements Dispatchable
 {
     public const NAME = 'trackerArtifactCreated';
     /**
-     * @var Tracker_Artifact
+     * @var \Tracker_Artifact
+     * @psalm-readonly
      */
     private $artifact;
+    /**
+     * @var \Tracker_Artifact_Changeset
+     * @psalm-readonly
+     */
+    private $changeset;
 
-    public function __construct(Tracker_Artifact $artifact)
+    public function __construct(\Tracker_Artifact $artifact, \Tracker_Artifact_Changeset $changeset)
     {
-        $this->artifact = $artifact;
+        $this->artifact  = $artifact;
+        $this->changeset = $changeset;
     }
 
     /**
-     * @return Tracker_Artifact
+     * @psalm-mutation-free
      */
-    public function getArtifact()
+    public function getArtifact(): \Tracker_Artifact
     {
         return $this->artifact;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getChangeset(): \Tracker_Artifact_Changeset
+    {
+        return $this->changeset;
     }
 }

@@ -48,6 +48,7 @@ use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
 use Tuleap\MultiProjectBacklog\Contributor\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -77,6 +78,7 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
         $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
         $this->addHook(CanSubmitNewArtifact::NAME);
+        $this->addHook(ArtifactCreated::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -277,6 +279,66 @@ final class multi_project_backlogPlugin extends Plugin
         if (! $artifact_creator_checker->canCreateAnArtifact($can_submit_new_artifact->getUser(), $can_submit_new_artifact->getTracker())) {
             $can_submit_new_artifact->disableArtifactSubmission();
         }
+    }
+
+    public function trackerArtifactCreated(ArtifactCreated $event): void
+    {
+        $aggregator_dao         = new AggregatorDao();
+        $title_semantic_factory = new Tracker_Semantic_TitleFactory();
+        $planning_factory       = \PlanningFactory::build();
+        $formelement_factory    = Tracker_FormElementFactory::instance();
+        $fields_validator       = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
+        $transaction_executor   = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $visit_recorder         = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder(
+            new \Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao(),
+            $transaction_executor
+        );
+        $artifact_factory       = Tracker_ArtifactFactory::instance();
+        $logger                 = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+
+        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+            $fields_validator,
+            new \Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
+            new Tracker_Artifact_ChangesetDao(),
+            $artifact_factory,
+            EventManager::instance(),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            $logger,
+            \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver::build()
+        );
+
+        $artifact_creator = new Tracker_ArtifactCreator(
+            $artifact_factory,
+            $fields_validator,
+            $changeset_creator,
+            $visit_recorder,
+            $logger,
+            $transaction_executor
+        );
+
+        $mirror_creator = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator(
+            $transaction_executor,
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\TargetFieldsGatherer(
+                $title_semantic_factory
+            ),
+            $artifact_creator
+        );
+
+        $handler = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\ArtifactCreatedHandler(
+            $aggregator_dao,
+            UserManager::instance(),
+            $planning_factory,
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGatherer(
+                $title_semantic_factory
+            ),
+            new ContributorProjectsCollectionBuilder(
+                $aggregator_dao,
+                ProjectManager::instance()
+            ),
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory($planning_factory),
+            $mirror_creator
+        );
+        $handler->handle($event);
     }
 
     private function getMilestoneCreatorChecker(): MilestoneCreatorChecker
