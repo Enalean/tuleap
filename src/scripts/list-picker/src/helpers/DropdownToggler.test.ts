@@ -18,23 +18,28 @@
  */
 
 import { DropdownToggler } from "./DropdownToggler";
+import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 
 describe("dropdown-toggler", () => {
-    let root: HTMLElement, dropdown: HTMLElement, list: HTMLElement, toggler: DropdownToggler;
+    let list_picker: Element, dropdown: Element, list: Element, toggler: DropdownToggler;
 
     beforeEach(() => {
-        root = document.createElement("span");
-        dropdown = document.createElement("span");
-        list = document.createElement("span");
-        list.setAttribute("class", "list-picker-dropdown-values-list");
-        dropdown.appendChild(list);
-        toggler = new DropdownToggler(root, dropdown);
+        const {
+            list_picker_element,
+            dropdown_element,
+            dropdown_list_element,
+        } = new BaseComponentRenderer(document.createElement("select")).renderBaseComponent();
+
+        list_picker = list_picker_element;
+        dropdown = dropdown_element;
+        list = dropdown_list_element;
+        toggler = new DropdownToggler(list_picker, dropdown, list);
     });
 
     it("opens the dropdown by appending a 'shown' class to the dropdown element", () => {
         toggler.openListPicker();
 
-        expect(root.classList).toContain("list-picker-with-open-dropdown");
+        expect(list_picker.classList).toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("true");
     });
@@ -42,7 +47,7 @@ describe("dropdown-toggler", () => {
     it("closes the dropdown by removing the 'shown' class to the dropdown element", () => {
         toggler.closeListPicker();
 
-        expect(root.classList).not.toContain("list-picker-with-open-dropdown");
+        expect(list_picker.classList).not.toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("false");
     });

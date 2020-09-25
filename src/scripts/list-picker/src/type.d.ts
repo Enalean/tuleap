@@ -33,3 +33,12 @@ export interface ListPickerItemGroup {
     label: string;
     element: Element;
 }
+
+export interface ListPickerComponent {
+    wrapper_element: Element;
+    list_picker_element: Element;
+    dropdown_element: Element;
+    selection_element: Element;
+    placeholder_element: Element;
+    dropdown_list_element: Element;
+}

@@ -22,8 +22,8 @@ import { DropdownToggler } from "./DropdownToggler";
 export class SelectionManager {
     constructor(
         private readonly source_select_box: HTMLSelectElement,
-        private readonly component_dropdown: Element,
-        private readonly selection_container: Element,
+        private readonly dropdown_element: Element,
+        private readonly selection_element: Element,
         private readonly placeholder_element: Element,
         private readonly dropdown_toggler: DropdownToggler
     ) {}
@@ -35,13 +35,11 @@ export class SelectionManager {
             return;
         }
 
-        if (this.selection_container.contains(this.placeholder_element)) {
+        if (this.selection_element.contains(this.placeholder_element)) {
             this.replacePlaceholderWithCurrentSelection(item, this.placeholder_element);
         }
 
-        const selection_value = this.selection_container.querySelector(
-            ".list-picker-selected-value"
-        );
+        const selection_value = this.selection_element.querySelector(".list-picker-selected-value");
 
         if (selection_value instanceof HTMLElement) {
             const option_to_unselect = this.source_select_box.querySelector(
@@ -69,7 +67,7 @@ export class SelectionManager {
             return;
         }
 
-        const selected_item = this.component_dropdown.querySelector(
+        const selected_item = this.dropdown_element.querySelector(
             "#" + selected_option.dataset.itemId
         );
 
@@ -94,14 +92,12 @@ export class SelectionManager {
     private replacePlaceholderWithCurrentSelection(item: Element, placeholder: Element): void {
         const selected_value = this.createCurrentSelectionElement(item);
 
-        this.selection_container.appendChild(selected_value);
-        this.selection_container.removeChild(placeholder);
+        this.selection_element.appendChild(selected_value);
+        this.selection_element.removeChild(placeholder);
     }
 
     private replacePreviousSelectionWithCurrentOne(item: Element, selection_value: Element): void {
-        const currently_selected_item = this.component_dropdown.querySelector(
-            "[aria-selected=true]"
-        );
+        const currently_selected_item = this.dropdown_element.querySelector("[aria-selected=true]");
 
         if (!(currently_selected_item instanceof Element)) {
             return;
@@ -109,8 +105,8 @@ export class SelectionManager {
 
         currently_selected_item.setAttribute("aria-selected", "false");
 
-        this.selection_container.removeChild(selection_value);
-        this.selection_container.appendChild(this.createCurrentSelectionElement(item));
+        this.selection_element.removeChild(selection_value);
+        this.selection_element.appendChild(this.createCurrentSelectionElement(item));
     }
 
     private createRemoveCurrentSelectionButton(item: Element): Element {
@@ -130,8 +126,8 @@ export class SelectionManager {
     }
 
     private replaceCurrentValueWithPlaceholder(item_to_unselect: Element): void {
-        this.selection_container.innerHTML = "";
-        this.selection_container.appendChild(this.placeholder_element);
+        this.selection_element.innerHTML = "";
+        this.selection_element.appendChild(this.placeholder_element);
         item_to_unselect.setAttribute("aria-selected", "false");
 
         const option_to_unselect = this.source_select_box.querySelector(

@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`dropdown-content-renderer renders grouped list items 1`] = `
-<ul class="list-picker-dropdown-values-list">
-  <li class="list-picker-item-group"><strong class="list-picker-group-label"></strong>
+<ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
+  <li class="list-picker-item-group"><strong class="list-picker-group-label">Group 1</strong>
     <ul role="group" aria-label="Group 1" class="list-picker-dropdown-option-group">
       <li id="item-0" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 0</li>
       <li id="item-1" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 1</li>
       <li id="item-2" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 2</li>
     </ul>
   </li>
-  <li class="list-picker-item-group"><strong class="list-picker-group-label"></strong>
+  <li class="list-picker-item-group"><strong class="list-picker-group-label">Group 2</strong>
     <ul role="group" aria-label="Group 2" class="list-picker-dropdown-option-group">
       <li id="item-3" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 3</li>
       <li id="item-4" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 4</li>
@@ -20,7 +20,7 @@ exports[`dropdown-content-renderer renders grouped list items 1`] = `
 `;
 
 exports[`dropdown-content-renderer renders simple list items 1`] = `
-<ul class="list-picker-dropdown-values-list">
+<ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li id="item-0" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 0</li>
   <li id="item-1" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 1</li>
   <li id="item-2" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 2</li>

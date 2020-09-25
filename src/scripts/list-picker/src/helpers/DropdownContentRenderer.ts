@@ -22,24 +22,13 @@ import { ListPickerItem, ListPickerItemGroup } from "../type";
 import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
 
 export class DropdownContentRenderer {
-    private readonly item_map!: Map<string, ListPickerItem>;
-    private readonly dropdown_items_list: Element;
+    private readonly item_map: Map<string, ListPickerItem>;
 
     constructor(
         private readonly source_select_box: HTMLSelectElement,
-        private readonly component_dropdown: Element
+        private readonly dropdown_list_element: Element
     ) {
-        this.source_select_box = source_select_box;
-        this.component_dropdown = component_dropdown;
         this.item_map = generateItemMapBasedOnSourceSelectOptions(this.source_select_box);
-
-        const dropdown_items_list = this.component_dropdown.querySelector(
-            ".list-picker-dropdown-values-list"
-        );
-        if (!(dropdown_items_list instanceof Element)) {
-            throw new Error("List element not found in list-picker dropdown");
-        }
-        this.dropdown_items_list = dropdown_items_list;
     }
 
     public renderListPickerDropdownContent(): void {
@@ -51,7 +40,7 @@ export class DropdownContentRenderer {
         }
 
         Array.from(this.item_map.entries()).forEach(([item_id, current_item]) => {
-            this.dropdown_items_list.appendChild(this.getRenderedListItem(item_id, current_item));
+            this.dropdown_list_element.appendChild(this.getRenderedListItem(item_id, current_item));
         });
     }
 
@@ -95,7 +84,7 @@ export class DropdownContentRenderer {
         const group_label = document.createElement("strong");
 
         group.classList.add("list-picker-item-group");
-        group_label.innerText = label;
+        group_label.appendChild(document.createTextNode(label));
         group_label.classList.add("list-picker-group-label");
 
         const group_list = document.createElement("ul");
@@ -106,7 +95,7 @@ export class DropdownContentRenderer {
         group.appendChild(group_label);
         group.appendChild(group_list);
 
-        this.dropdown_items_list.appendChild(group);
+        this.dropdown_list_element.appendChild(group);
 
         return {
             id: label.replace(" ", "").toLowerCase(),

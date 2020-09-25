@@ -7,10 +7,7 @@
   "version": "0.0.0",
   "main": "dist/list-picker.js",
   "dependencies": {
-    "dompurify": "^2.1.0",
-    "mustache": "^4.0.1"
+    "dompurify": "^2.1.0"
   },
-  "devDependencies": {
-    "@types/mustache": "^4.0.1"
-  }
+  "devDependencies": {}
 }

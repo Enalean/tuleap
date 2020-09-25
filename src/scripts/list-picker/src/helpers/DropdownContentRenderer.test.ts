@@ -22,29 +22,33 @@ import {
     appendSimpleOptionsToSourceSelectBox,
 } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
+import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 
 describe("dropdown-content-renderer", () => {
-    let select: HTMLSelectElement, dropdown: Element;
+    let select: HTMLSelectElement, dropdown: Element, dropdown_list: Element;
 
     beforeEach(() => {
         select = document.createElement("select");
-        dropdown = document.createElement("span");
-        const list = document.createElement("ul");
-        list.classList.add("list-picker-dropdown-values-list");
-        dropdown.appendChild(list);
+
+        const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
+            select
+        ).renderBaseComponent();
+
+        dropdown = dropdown_element;
+        dropdown_list = dropdown_list_element;
     });
 
     it("renders grouped list items", () => {
         appendGroupedOptionsToSourceSelectBox(select);
 
-        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
+        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
 
     it("renders simple list items", () => {
         appendSimpleOptionsToSourceSelectBox(select);
-        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
+        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
@@ -56,7 +60,7 @@ describe("dropdown-content-renderer", () => {
 
         select.appendChild(disabled_option);
 
-        new DropdownContentRenderer(select, dropdown).renderListPickerDropdownContent();
+        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
 
         const disabled_list_item = dropdown.querySelector(
             ".list-picker-dropdown-option-value-disabled"
