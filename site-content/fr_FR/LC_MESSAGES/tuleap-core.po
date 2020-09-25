@@ -348,6 +348,9 @@ msgstr ""
 "Une erreur est survenue lors de la mise à jour des délégations de "
 "permissions."
 
+msgid "An error occurred while updating the settings."
+msgstr "Une erreur est survenue lors de sauvegarde de la configuration."
+
 msgid ""
 "An error occurred with your upload. Please try again or choose another image."
 msgstr ""
@@ -933,6 +936,9 @@ msgstr "Historique"
 msgid "Homepage"
 msgstr "Page d'accueil"
 
+msgid "How many invitations a user can send per day?"
+msgstr "Combien d'invitations un utilisateur peut-il envoyer par jour ?"
+
 msgid "I accept"
 msgstr "Je suis d'accord"
 
@@ -1004,8 +1010,17 @@ msgstr "La selection de catégories n'est pas valide"
 msgid "Invitation to register on %s"
 msgstr "Invitation pour vous enregistrer sur %s"
 
+msgid "Invitations"
+msgstr "Invitations"
+
 msgid "Invitations are not enabled"
 msgstr "Les invitations ne sont pas activées"
+
+msgid "Invitations settings"
+msgstr "Configuration des invitations"
+
+msgid "Invitations settings successfully updated."
+msgstr "La configuration des invitations a été sauvegardée avec succès."
 
 msgid "Invite"
 msgstr "Inviter"
@@ -2089,6 +2104,16 @@ msgstr "La langue requise n'est pas supportée."
 
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
+
+msgid ""
+"The users can send 0 invitations per day. Therefore the \"Invite\" button "
+"will not be displayed to users."
+msgstr ""
+"Les utilisateurs peuvent envoyer 0 invitation par jour. Du coup le bouton "
+"\"Inviter\" ne leur est pas affiché."
+
+msgid "The value cannot be negative."
+msgstr "La valeur ne peut pas être négative."
 
 msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"

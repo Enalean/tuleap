@@ -1,0 +1,50 @@
+<section class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# gettext }}Invitations{{/ gettext }}</h1>
+    <section class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <form action="/admin/invitations/" method="POST" class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="fa fa-paper-plane tlp-pane-title-icon" aria-hidden="true"></i>
+                        {{# gettext }}Invitations settings{{/ gettext }}
+                    </h1>
+                </div>
+
+                <section class="tlp-pane-section">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+
+                    {{^ max_invitations_by_day }}
+                        <div class="tlp-alert-warning">
+                            {{# gettext }}The users can send 0 invitations per day. Therefore the "Invite" button will not be displayed to users.{{/ gettext }}
+                        </div>
+                    {{/ max_invitations_by_day }}
+
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="max_invitations_by_day">
+                            {{# gettext }}How many invitations a user can send per day?{{/ gettext }}
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            class="tlp-input"
+                            id="max_invitations_by_day"
+                            name="max_invitations_by_day"
+                            value="{{ max_invitations_by_day }}"
+                            size="4"
+                            placeholder="20"
+                        >
+                    </div>
+                </section>
+
+                <div class="tlp-pane-section tlp-pane-section-submit">
+                    <button class="tlp-button-primary" type="submit">
+                        <i class="fa fa-save tlp-button-icon"></i>
+                        {{# gettext }}Save settings{{/ gettext }}
+                    </button>
+                </div>
+            </form>
+        </section>
+    </section>
+</section>
