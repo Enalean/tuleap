@@ -58,8 +58,8 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
             'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge, oidc_nonce
                        FROM plugin_oauth2_authorization_code
                        JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
-                       JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
-                       WHERE plugin_oauth2_authorization_code.id = ? AND `groups`.status = "A"',
+                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       WHERE plugin_oauth2_authorization_code.id = ? AND (`groups`.status = "A" OR plugin_oauth2_server_app.project_id IS NULL)',
             $authorization_code_id
         );
     }

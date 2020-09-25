@@ -38,7 +38,7 @@ final class AccountAppPresenter
      */
     public $name;
     /**
-     * @var string
+     * @var string|null
      */
     public $project_name;
     /**
@@ -49,7 +49,7 @@ final class AccountAppPresenter
     public function __construct(
         int $id,
         string $name,
-        string $project_name,
+        ?string $project_name,
         OAuth2ScopeDefinitionPresenter ...$scope_definition_presenters
     ) {
         $this->id           = $id;

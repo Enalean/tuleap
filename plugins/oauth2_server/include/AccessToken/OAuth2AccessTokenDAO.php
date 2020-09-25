@@ -48,8 +48,8 @@ class OAuth2AccessTokenDAO extends DataAccessObject
                        FROM plugin_oauth2_access_token
                        JOIN plugin_oauth2_authorization_code ON plugin_oauth2_access_token.authorization_code_id = plugin_oauth2_authorization_code.id
                        JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
-                       JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
-                       WHERE `groups`.status = "A" AND plugin_oauth2_access_token.id = ?',
+                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       WHERE (`groups`.status = "A" OR plugin_oauth2_server_app.project_id IS NULL) AND plugin_oauth2_access_token.id = ?',
             $access_token_id
         );
     }
@@ -64,8 +64,8 @@ class OAuth2AccessTokenDAO extends DataAccessObject
                        FROM plugin_oauth2_access_token AS token
                        JOIN plugin_oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
                        JOIN plugin_oauth2_server_app AS app ON app.id = auth_code.app_id
-                       JOIN `groups` ON app.project_id = `groups`.group_id
-                       WHERE `groups`.status = "A" AND token.id = ? AND app.id = ?',
+                       LEFT JOIN `groups` ON app.project_id = `groups`.group_id
+                       WHERE (`groups`.status = "A" OR app.project_id IS NULL) AND token.id = ? AND app.id = ?',
             $access_token_id,
             $app_id
         );

@@ -39,7 +39,7 @@
                                     {{# apps }}
                                         <tr>
                                             <td>{{ name }}</td>
-                                            <td>{{ project_name }}</td>
+                                            <td>{{# project_name}}{{ project_name }}{{/ project_name }}</td>
                                             <td class="oauth2-server-revoke-authorization-scopes">
                                                 {{# scopes }}
                                                     <span class="tlp-badge-secondary oauth2-server-revoke-authorization-scope tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ description }}">{{ name }}</span>

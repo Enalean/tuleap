@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 class AppDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}
+     * @psalm-return array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
@@ -47,7 +47,7 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
+     * @psalm-return array<array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */
     public function searchByProject(\Project $project): array
     {
@@ -57,7 +57,7 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint:string, use_pkce:0|1}>
+     * @psalm-return array<array{id:int, project_id:int|null, name:string, redirect_endpoint:string, use_pkce:0|1}>
      */
     public function searchAuthorizedAppsByUser(\PFUser $user): array
     {
@@ -116,7 +116,7 @@ class AppDao extends DataAccessObject
             'DELETE plugin_oauth2_server_app.*
             FROM plugin_oauth2_server_app
             LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
-            WHERE `groups`.status = "D" OR `groups`.group_id IS NULL'
+            WHERE `groups`.status = "D" OR (`groups`.group_id IS NULL AND plugin_oauth2_server_app.project_id IS NOT NULL)'
         );
     }
 }
