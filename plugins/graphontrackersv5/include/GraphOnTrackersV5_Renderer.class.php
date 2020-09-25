@@ -223,7 +223,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      * Process the request
      * @param Request $request
      */
-    public function processRequest(TrackerManager $tracker_manager, $request, $current_user)
+    public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {
         $renderer_parameters = $request->get('renderer_plugin_graphontrackersv5');
         if ($renderer_parameters && is_array($renderer_parameters)) {
