@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-final class InviteBuddyConfiguration
+class InviteBuddyConfiguration
 {
     /**
      * Can user invite their buddies (1) or not (0)
@@ -42,13 +42,16 @@ final class InviteBuddyConfiguration
 
     public function canBuddiesBeInvited(\PFUser $current_user): bool
     {
-        $nb_max_per_day = \ForgeConfig::getInt(
+        return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
+            && ! $current_user->isAnonymous()
+            && $this->getNbMaxInvitationsByDay() > 0;
+    }
+
+    public function getNbMaxInvitationsByDay(): int
+    {
+        return \ForgeConfig::getInt(
             self::CONFIG_MAX_INVITATIONS_BY_DAY,
             self::CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT
         );
-
-        return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
-            && $current_user->isLoggedIn()
-            && $nb_max_per_day > 0;
     }
 }
