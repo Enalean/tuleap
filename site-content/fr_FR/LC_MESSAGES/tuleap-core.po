@@ -1178,6 +1178,10 @@ msgstr "Appartenance aux groupes d'utilisateurs (lecture seule)"
 msgid "Membership management"
 msgstr "Gestion des membres"
 
+#, php-format
+msgid "Message from %s:"
+msgstr "Message de la part de %s :"
+
 msgid "Message sent to administrator should not be empty."
 msgstr "Le message envoyé à l'administrateur ne doit pas être vide."
 

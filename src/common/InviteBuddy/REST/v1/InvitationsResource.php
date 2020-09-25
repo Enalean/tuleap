@@ -54,6 +54,7 @@ class InvitationsResource extends AuthenticatedResource
      * <pre>
      * {<br/>
      *   "emails": ["john.doe@example.com", …],<br/>
+     *   "custom_message": "A custom message",<br/>
      * }<br/>
      * </pre>
      * <br/>
@@ -82,7 +83,7 @@ class InvitationsResource extends AuthenticatedResource
         );
 
         try {
-            $failures = $sender->send($current_user, array_filter($invitation->emails));
+            $failures = $sender->send($current_user, array_filter($invitation->emails), $invitation->custom_message);
 
             return new InvitationPOSTResultRepresentation($failures);
         } catch (InvitationSenderGateKeeperException $e) {

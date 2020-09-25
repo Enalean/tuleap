@@ -39,7 +39,7 @@ class InvitationEmailNotifier
         $this->instance_base_url_builder = $instance_base_url_builder;
     }
 
-    public function send(\PFUser $current_user, string $email): bool
+    public function send(\PFUser $current_user, string $email, ?string $custom_message): bool
     {
         $mail = new Codendi_Mail();
 
@@ -58,6 +58,11 @@ class InvitationEmailNotifier
             ForgeConfig::get('sys_name'),
         );
         $body .= "\r\n" . $this->instance_base_url_builder->build() . '/account/register.php';
+
+        if ($custom_message && trim($custom_message) !== "") {
+            $message_from = sprintf(_('Message from %s:'), $current_user->getRealName());
+            $body .= "\r\n\r\n" . $message_from . "\r\n" . $custom_message;
+        }
 
         $mail->setBodyHtml(Codendi_HTMLPurifier::instance()->purify($body, Codendi_HTMLPurifier::CONFIG_BASIC));
         $mail->setBodyText($body);

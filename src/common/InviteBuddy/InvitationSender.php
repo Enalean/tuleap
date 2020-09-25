@@ -49,14 +49,14 @@ class InvitationSender
      * @throws InvitationSenderGateKeeperException
      * @throws UnableToSendInvitationsException
      */
-    public function send(PFUser $current_user, array $emails): array
+    public function send(PFUser $current_user, array $emails, ?string $custom_message): array
     {
         $emails = array_filter($emails);
         $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
 
         $failures = [];
         foreach ($emails as $email) {
-            if (! $this->email_notifier->send($current_user, $email)) {
+            if (! $this->email_notifier->send($current_user, $email, $custom_message)) {
                 $failures[] = $email;
             }
         }
