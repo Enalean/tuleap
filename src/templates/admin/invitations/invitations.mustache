@@ -15,19 +15,13 @@
                         {{> csrf_token_input }}
                     {{/ csrf_token }}
 
-                    {{^ max_invitations_by_day }}
-                        <div class="tlp-alert-warning">
-                            {{# gettext }}The users can send 0 invitations per day. Therefore the "Invite" button will not be displayed to users.{{/ gettext }}
-                        </div>
-                    {{/ max_invitations_by_day }}
-
                     <div class="tlp-form-element">
                         <label class="tlp-label" for="max_invitations_by_day">
                             {{# gettext }}How many invitations a user can send per day?{{/ gettext }}
                         </label>
                         <input
                             type="number"
-                            min="0"
+                            min="1"
                             class="tlp-input"
                             id="max_invitations_by_day"
                             name="max_invitations_by_day"

@@ -123,6 +123,29 @@ class InviteBuddyAdminUpdateControllerTest extends TestCase
         );
     }
 
+    public function testItSavesNothingIfValueIsZero(): void
+    {
+        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+
+        $this->configuration
+            ->shouldReceive('getNbMaxInvitationsByDay')
+            ->andReturn(42);
+
+        $this->csrf_token
+            ->shouldReceive('check')
+            ->once();
+
+        $this->config_dao
+            ->shouldReceive('save')
+            ->never();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '0')->build(),
+            LayoutBuilder::build(),
+            []
+        );
+    }
+
     public function testItSavesTheNewValue(): void
     {
         $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();

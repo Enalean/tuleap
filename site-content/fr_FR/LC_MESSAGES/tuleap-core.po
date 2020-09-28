@@ -2109,16 +2109,6 @@ msgstr "La langue requise n'est pas supportée."
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
 
-msgid ""
-"The users can send 0 invitations per day. Therefore the \"Invite\" button "
-"will not be displayed to users."
-msgstr ""
-"Les utilisateurs peuvent envoyer 0 invitation par jour. Du coup le bouton "
-"\"Inviter\" ne leur est pas affiché."
-
-msgid "The value cannot be negative."
-msgstr "La valeur ne peut pas être négative."
-
 msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"
 
@@ -2537,6 +2527,9 @@ msgstr "Groupes d'utilisateurs"
 
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
+
+msgid "Users must be able to send at least one invitation by day."
+msgstr "Les utilisateurs doivent être en mesure d'envoyer au moins une invitation par jour."
 
 msgid "View members"
 msgstr "Voir les membres"

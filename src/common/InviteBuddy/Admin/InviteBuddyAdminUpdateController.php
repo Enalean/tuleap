@@ -82,10 +82,10 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
             return;
         }
 
-        if ($submitted_max_invitations_by_day < 0) {
+        if ($submitted_max_invitations_by_day <= 0) {
             $layout->addFeedback(
                 \Feedback::ERROR,
-                _("The value cannot be negative.")
+                _("Users must be able to send at least one invitation by day.")
             );
             $this->redirect($layout);
 
