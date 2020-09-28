@@ -36,8 +36,9 @@ describe(`Modal Opener`, () => {
 
     describe(`openTargetModalIdOnClick()`, () => {
         it(`does not crash when the button can't be found`, () => {
-            openTargetModalIdOnClick(doc, "unknown_button_id");
+            const modal = openTargetModalIdOnClick(doc, "unknown_button_id");
             expect(createModal).not.toHaveBeenCalled();
+            expect(modal).toBeNull();
         });
 
         it(`throws when the button does not have a data-target-modal-id attribute`, () => {
@@ -55,6 +56,15 @@ describe(`Modal Opener`, () => {
             expect(() => openTargetModalIdOnClick(doc, "button_id")).toThrow(
                 "Could not find the element referenced by data-target-modal-id"
             );
+        });
+
+        it(`returns the modal instance`, () => {
+            const button = createAndAppendElementById(doc, "button", "button_id");
+            button.dataset.targetModalId = "modal_id";
+            createAndAppendElementById(doc, "div", "modal_id");
+
+            const modal = openTargetModalIdOnClick(doc, "button_id");
+            expect(modal).not.toBe(null);
         });
 
         describe(`when I click on the button`, () => {

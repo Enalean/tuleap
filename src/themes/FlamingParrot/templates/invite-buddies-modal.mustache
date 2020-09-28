@@ -23,14 +23,14 @@
         </div>
         <div class="modal-body">
             <label for="invite-buddies-email">Email <i class="fa fa-asterisk" aria-hidden="true"></i></label>
-            <input type="email" id="invite-buddies-email" placeholder="john.doe@example.com" required>
+            <input type="email" multiple id="invite-buddies-email" name="invite_buddies_email"  placeholder="john.doe@example.com" required>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn" data-dismiss="modal">
+            <button type="reset" class="btn" data-dismiss="modal">
                 {{# gettext }}Cancel{{/ gettext }}
             </button>
             <button type="submit" disabled class="btn btn-primary disabled">
-                <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
+                <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                 {{# gettext }}Send invitation{{/ gettext }}
             </button>
         </div>

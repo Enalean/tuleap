@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openTargetModalIdOnClick } from "../../tuleap/modals/modal-opener";
-import { EVENT_TLP_MODAL_HIDDEN, EVENT_TLP_MODAL_SHOWN } from "../../../themes/tlp/src/js/modal";
-import { initFeedbacks } from "../../invite-buddies/feedback-display";
-import { initNotificationsOnFormSubmit } from "../../invite-buddies/send-notifications";
-
-export function init(): void {
-    const modal = openTargetModalIdOnClick(document, "invite-buddies-button");
-    if (!modal) {
+export function activateSpinner(icon: Element | null): void {
+    if (!icon) {
         return;
     }
 
-    modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, initFeedbacks);
-    modal.addEventListener(EVENT_TLP_MODAL_SHOWN, initFeedbacks);
+    icon.classList.add("fa-spin");
+    icon.classList.add("fa-circle-o-notch");
+    icon.classList.remove("fa-paper-plane");
+}
 
-    initNotificationsOnFormSubmit();
+export function deactivateSpinner(icon: Element | null): void {
+    if (!icon) {
+        return;
+    }
+
+    icon.classList.remove("fa-spin");
+    icon.classList.remove("fa-circle-o-notch");
+    icon.classList.add("fa-paper-plane");
 }

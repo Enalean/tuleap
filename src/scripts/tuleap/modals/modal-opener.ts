@@ -23,10 +23,10 @@ export function openTargetModalIdOnClick(
     doc: Document,
     button_id: string,
     beforeModalOpenCallback?: (clicked_button: HTMLElement) => void
-): void {
+): Modal | null {
     const button = doc.getElementById(button_id);
     if (!button || !(button instanceof HTMLElement)) {
-        return;
+        return null;
     }
     const modal = getTargetModal(doc, button);
     button.addEventListener("click", () => {
@@ -35,6 +35,8 @@ export function openTargetModalIdOnClick(
         }
         modal.show();
     });
+
+    return modal;
 }
 
 export function openAllTargetModalsOnClick(doc: Document, buttons_selector: string): void {

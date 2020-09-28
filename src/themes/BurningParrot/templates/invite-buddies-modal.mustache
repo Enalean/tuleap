@@ -20,18 +20,38 @@
                 &times;
             </div>
         </div>
-        <div class="tlp-modal-body">
+        <div
+            class="tlp-modal-feedback"
+            id="invite-buddies-modal-feedback"
+            data-success-feedback-message="{{# gettext }}Invitation has been successfully sent to:{{/ gettext }}"
+            data-failure-feedback-message="{{# gettext }}Invitation could not be sent to:{{/ gettext }}"
+        ></div>
+        <div class="tlp-modal-body invite-buddies-modal-body" id="invite-buddies-modal-body">
             <div class="tlp-form-element">
-                <label class="tlp-label" for="invite-buddies-email">Email <i class="fa fa-asterisk" aria-hidden="true"></i></label>
-                <input type="email" class="tlp-input" id="invite-buddies-email" placeholder="john.doe@example.com" required>
+                <label class="tlp-label" for="invite-buddies-email">
+                    {{# gettext }}Email{{/ gettext }}
+                    <i class="fa fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="email"
+                    multiple class="tlp-input"
+                    id="invite-buddies-email"
+                    name="invite_buddies_email"
+                    placeholder="peter@example.com, wendy@example.com, …"
+                    required
+                >
+                <p class="tlp-text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</p>
             </div>
         </div>
-        <div class="tlp-modal-footer">
-            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+        <div class="tlp-modal-footer" id="invite-buddies-modal-footer">
+            <button type="reset" class="tlp-button-primary tlp-modal-action invite-buddies-modal-close" data-dismiss="modal">
+                {{# gettext }}Close{{/ gettext }}
+            </button>
+            <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# gettext }}Cancel{{/ gettext }}
             </button>
-            <button type="submit" disabled class="tlp-button-primary tlp-button-disabled tlp-modal-action">
-                <i class="fa fa-paper-plane tlp-modal-title-icon" aria-hidden="true"></i>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                 {{# gettext }}Send invitation{{/ gettext }}
             </button>
         </div>

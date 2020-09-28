@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker, Modal } from "tlp";
 import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
 import "../tuleap/custom-elements/copy-to-clipboard";
 
@@ -29,12 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
-const addSSHKeyButton = (): void => openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
+const addSSHKeyButton = (): Modal | null =>
+    openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
 const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
-const addAccessKeyButton = (): void =>
+const addAccessKeyButton = (): Modal | null =>
     openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
 const GENERATE_SVN_TOKEN_BUTTON_ID = "generate-svn-token-button";
-const addSVNTokenButton = (): void =>
+const addSVNTokenButton = (): Modal | null =>
     openTargetModalIdOnClick(document, GENERATE_SVN_TOKEN_BUTTON_ID);
 
 function handleSSHKeys(): void {
