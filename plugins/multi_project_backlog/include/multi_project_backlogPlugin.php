@@ -294,7 +294,7 @@ final class multi_project_backlogPlugin extends Plugin
             $transaction_executor
         );
         $artifact_factory       = Tracker_ArtifactFactory::instance();
-        $logger                 = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+        $logger                  = BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
 
         $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
@@ -336,7 +336,8 @@ final class multi_project_backlogPlugin extends Plugin
                 ProjectManager::instance()
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory($planning_factory),
-            $mirror_creator
+            $mirror_creator,
+            $logger
         );
         $handler->handle($event);
     }
