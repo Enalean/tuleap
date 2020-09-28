@@ -59,8 +59,11 @@ class UserMappingManager
     /**
      * @throws UserMappingDataAccessException
      */
-    public function create($user_id, $provider_id, $identifier, $last_used): void
+    public function create(int $user_id, $provider_id, $identifier, $last_used): void
     {
+        if ($user_id < \UserManager::SPECIAL_USERS_LIMIT) {
+            throw new CannotCreateAMappingForASpecialUserException($user_id);
+        }
         $this->user_dao->storeLoginSuccess($user_id, $last_used);
         $is_saved  = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
         if (! $is_saved) {
