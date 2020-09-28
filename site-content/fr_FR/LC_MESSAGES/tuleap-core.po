@@ -64,6 +64,10 @@ msgstr ""
 "enregistrer :"
 
 #, php-format
+msgid "%s invited you to log on %s, your login is: %s"
+msgstr "%s vous a invité à vous connecter à %s, votre identifiant est : %s"
+
+#, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
 
@@ -1014,6 +1018,10 @@ msgstr "L'invitation n'a pas pu être envoyée à :"
 
 msgid "Invitation has been successfully sent to:"
 msgstr "L'invitation a été envoyée à :"
+
+#, php-format
+msgid "Invitation to log on %s"
+msgstr "Invitation pour vous connecter sur %s"
 
 #, php-format
 msgid "Invitation to register on %s"

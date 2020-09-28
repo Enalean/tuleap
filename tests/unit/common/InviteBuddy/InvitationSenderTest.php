@@ -25,6 +25,7 @@ namespace Tuleap\InviteBuddy;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use UserManager;
 
 class InvitationSenderTest extends TestCase
 {
@@ -46,6 +47,10 @@ class InvitationSenderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationEmailNotifier
      */
     private $email_notifier;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     */
+    private $user_manager;
 
     protected function setUp(): void
     {
@@ -53,12 +58,14 @@ class InvitationSenderTest extends TestCase
 
         $this->gate_keeper    = Mockery::mock(InvitationSenderGateKeeper::class);
         $this->email_notifier = Mockery::mock(InvitationEmailNotifier::class);
-        $this->sender         = new InvitationSender($this->gate_keeper, $this->email_notifier);
+        $this->user_manager   = Mockery::mock(UserManager::class);
+        $this->sender         = new InvitationSender($this->gate_keeper, $this->email_notifier, $this->user_manager);
     }
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
 
@@ -80,16 +87,38 @@ class InvitationSenderTest extends TestCase
 
     public function testItSendAnInvitationForEachEmail(): void
     {
+        $known_user = Mockery::mock(\PFUser::class);
+
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->user_manager
+            ->shouldReceive('getUserByEmail')
+            ->with("john@example.com")
+            ->andReturnNull();
+        $this->user_manager
+            ->shouldReceive('getUserByEmail')
+            ->with("doe@example.com")
+            ->andReturn($known_user);
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com", "A custom message")
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "john@example.com";
+                }),
+                "A custom message"
+            )
             ->once()
             ->andReturnTrue();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com", "A custom message")
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) use ($known_user) {
+                    return $recipient->user === $known_user && $recipient->email === "doe@example.com";
+                }),
+                "A custom message"
+            )
             ->once()
             ->andReturnTrue();
 
@@ -99,10 +128,17 @@ class InvitationSenderTest extends TestCase
     public function testItIgnoresEmptyEmails(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com", null)
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "doe@example.com";
+                }),
+                null
+            )
             ->once()
             ->andReturnTrue();
 
@@ -112,15 +148,28 @@ class InvitationSenderTest extends TestCase
     public function testItReturnsEmailsInFailure(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com", null)
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "john@example.com";
+                }),
+                null
+            )
             ->once()
             ->andReturnFalse();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com", null)
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "doe@example.com";
+                }),
+                null
+            )
             ->once()
             ->andReturnTrue();
 
@@ -133,15 +182,28 @@ class InvitationSenderTest extends TestCase
     public function testItRaisesAnExceptionIfEveryEmailsAreInFailure(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com", null)
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "john@example.com";
+                }),
+                null
+            )
             ->once()
             ->andReturnFalse();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com", null)
+            ->with(
+                $this->current_user,
+                Mockery::on(function (InvitationRecipient $recipient) {
+                    return $recipient->user === null && $recipient->email === "doe@example.com";
+                }),
+                null
+            )
             ->once()
             ->andReturnFalse();
 
