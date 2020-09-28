@@ -28,7 +28,12 @@ namespace Tuleap\InviteBuddy\REST\v1;
 class InvitationPOSTRepresentation
 {
     /**
-     * @var string[] {@required true} {@min 1}
+     * @var string[] {@type string} {@required true} {@min 1}
      */
     public $emails;
+
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $custom_message;
 }

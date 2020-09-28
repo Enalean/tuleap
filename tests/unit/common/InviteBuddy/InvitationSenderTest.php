@@ -62,7 +62,7 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
 
-        $this->sender->send($this->current_user, ["john@example.com"]);
+        $this->sender->send($this->current_user, ["john@example.com"], null);
     }
 
     public function testItDoesNothingIfAllConditionsAreNotOk(): void
@@ -75,7 +75,7 @@ class InvitationSenderTest extends TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com"]);
+        $this->sender->send($this->current_user, ["john@example.com"], null);
     }
 
     public function testItSendAnInvitationForEachEmail(): void
@@ -84,16 +84,16 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com")
+            ->with($this->current_user, "john@example.com", "A custom message")
             ->once()
             ->andReturnTrue();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com")
+            ->with($this->current_user, "doe@example.com", "A custom message")
             ->once()
             ->andReturnTrue();
 
-        self::assertEmpty($this->sender->send($this->current_user, ["john@example.com", "doe@example.com"]));
+        self::assertEmpty($this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message"));
     }
 
     public function testItIgnoresEmptyEmails(): void
@@ -102,11 +102,11 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com")
+            ->with($this->current_user, "doe@example.com", null)
             ->once()
             ->andReturnTrue();
 
-        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"]));
+        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
     }
 
     public function testItReturnsEmailsInFailure(): void
@@ -115,18 +115,18 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com")
+            ->with($this->current_user, "john@example.com", null)
             ->once()
             ->andReturnFalse();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com")
+            ->with($this->current_user, "doe@example.com", null)
             ->once()
             ->andReturnTrue();
 
         self::assertEquals(
             ["john@example.com"],
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"])
+            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null)
         );
     }
 
@@ -136,17 +136,17 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "john@example.com")
+            ->with($this->current_user, "john@example.com", null)
             ->once()
             ->andReturnFalse();
         $this->email_notifier
             ->shouldReceive("send")
-            ->with($this->current_user, "doe@example.com")
+            ->with($this->current_user, "doe@example.com", null)
             ->once()
             ->andReturnFalse();
 
         $this->expectException(UnableToSendInvitationsException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"]);
+        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null);
     }
 }
