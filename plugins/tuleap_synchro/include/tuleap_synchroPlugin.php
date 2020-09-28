@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TuleapSynchro\Dao\TuleapSynchroDao;
 use Tuleap\TuleapSynchro\Endpoint\EndpointBuilder;
@@ -59,7 +61,7 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -95,11 +97,13 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
         $event->getRouteCollector()->post('/admin/tuleap_synchro/delete_endpoint', $this->getRouteHandler('routePostDeleteEndpoint'));
     }
 
-    public function site_admin_option_hook(array $params) // @codingStandardsIgnoreLine
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-tuleap_synchro', 'Tuleap to Tuleap'),
-            'href'  => '/admin/' . self::NAME,
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-tuleap_synchro', 'Tuleap to Tuleap'),
+                '/admin/' . self::NAME
+            )
+        );
     }
 }

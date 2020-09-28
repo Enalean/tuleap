@@ -40,6 +40,8 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -50,7 +52,7 @@ class AdminDelegationPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
@@ -91,17 +93,11 @@ class AdminDelegationPlugin extends Plugin
         return false;
     }
 
-    /**
-     * Hook: admin link to plugin
-     *
-     * @param array $params
-     */
-    public function site_admin_option_hook($params) // @codingStandardsIgnoreLine
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => 'Admin delegation',
-            'href'  => $this->getPluginPath() . '/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build('Admin delegation', $this->getPluginPath() . '/')
+        );
     }
 
     /**

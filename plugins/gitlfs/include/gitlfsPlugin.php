@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
@@ -102,7 +104,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook(\Tuleap\Git\PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted');
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook('plugin_statistics_disk_usage_collect_project');
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
@@ -425,14 +427,16 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $user_authorization_remover->deleteExpired($current_time);
     }
 
-    public function site_admin_option_hook($params) //phpcs:ignore
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
         if ($config_should_be_displayed) {
-            $params['plugins'][] = [
-                'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
-                'href'  => '/plugins/git-lfs/config'
-            ];
+            $site_administration_add_option->addPluginOption(
+                SiteAdministrationPluginOption::build(
+                    dgettext('tuleap-gitlfs', 'Git LFS'),
+                    '/plugins/git-lfs/config'
+                )
+            );
         }
     }
 

@@ -20,6 +20,8 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\CrossReferenceCreator;
@@ -47,7 +49,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
 
         bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR . '/site-content');
 
-        $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
@@ -69,12 +71,11 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         return $this->pluginInfo;
     }
 
-    public function addSiteAdministrationOptionHook(array $params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
-            'href'  => BUGZILLA_REFERENCE_BASE_URL . '/admin/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build($this->getPluginInfo()->getPluginDescriptor()->getFullName(), BUGZILLA_REFERENCE_BASE_URL . '/admin/')
+        );
     }
 
     public function routeAdmin(): DispatchableWithRequest

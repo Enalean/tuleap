@@ -22,6 +22,8 @@ use FastRoute\RouteCollector;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
@@ -97,7 +99,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('javascript_file');
         $this->addHook('cssfile');
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_LOGIN_URL);
@@ -327,12 +329,14 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
     }
 
-    public function site_admin_option_hook($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
-            'href'  => $this->getPluginPath() . '/admin'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
+                $this->getPluginPath() . '/admin'
+            )
+        );
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

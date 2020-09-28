@@ -22,6 +22,8 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -207,7 +209,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         bindtextdomain('gitphp', __DIR__ . '/../site-content-gitphp');
 
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook('javascript_file', 'jsFile', false);
         $this->addHook(Event::JAVASCRIPT, 'javascript', false);
@@ -365,12 +367,11 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return self::SERVICE_SHORTNAME;
     }
 
-    public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-git', 'Git'),
-            'href'  => GIT_SITE_ADMIN_BASE_URL
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(dgettext('tuleap-git', 'Git'), GIT_SITE_ADMIN_BASE_URL)
+        );
     }
 
     public function getPluginInfo()

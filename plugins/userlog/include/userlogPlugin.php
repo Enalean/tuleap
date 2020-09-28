@@ -24,6 +24,8 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Event\Events\HitEvent;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -44,7 +46,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(HitEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
@@ -60,12 +62,14 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         return $this->pluginInfo;
     }
 
-    public function siteAdminHooks($params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
-            'href'  => $this->getPluginPath() . '/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
+                $this->getPluginPath() . '/'
+            )
+        );
     }
 
     public function hitEvent(HitEvent $event)
