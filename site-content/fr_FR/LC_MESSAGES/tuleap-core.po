@@ -64,6 +64,10 @@ msgstr ""
 "enregistrer :"
 
 #, php-format
+msgid "%s invited you to log on %s, your login is: %s"
+msgstr "%s vous a invité à vous connecter à %s, votre identifiant est : %s"
+
+#, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
 
@@ -1005,6 +1009,10 @@ msgstr ""
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
+
+#, php-format
+msgid "Invitation to log on %s"
+msgstr "Invitation pour vous connecter sur %s"
 
 #, php-format
 msgid "Invitation to register on %s"

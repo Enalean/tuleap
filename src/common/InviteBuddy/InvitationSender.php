@@ -34,11 +34,19 @@ class InvitationSender
      * @var InvitationEmailNotifier
      */
     private $email_notifier;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
 
-    public function __construct(InvitationSenderGateKeeper $gate_keeper, InvitationEmailNotifier $email_notifier)
-    {
+    public function __construct(
+        InvitationSenderGateKeeper $gate_keeper,
+        InvitationEmailNotifier $email_notifier,
+        \UserManager $user_manager
+    ) {
         $this->gate_keeper    = $gate_keeper;
         $this->email_notifier = $email_notifier;
+        $this->user_manager   = $user_manager;
     }
 
     /**
@@ -56,7 +64,11 @@ class InvitationSender
 
         $failures = [];
         foreach ($emails as $email) {
-            if (! $this->email_notifier->send($current_user, $email, $custom_message)) {
+            $recipient = new InvitationRecipient(
+                $this->user_manager->getUserByEmail($email),
+                $email,
+            );
+            if (! $this->email_notifier->send($current_user, $recipient, $custom_message)) {
                 $failures[] = $email;
             }
         }

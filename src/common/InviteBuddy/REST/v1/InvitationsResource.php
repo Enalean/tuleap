@@ -75,11 +75,13 @@ class InvitationsResource extends AuthenticatedResource
     {
         Header::allowOptionsPost();
 
-        $current_user = \UserManager::instance()->getCurrentUser();
+        $user_manager = \UserManager::instance();
+        $current_user = $user_manager->getCurrentUser();
 
         $sender = new InvitationSender(
             new InvitationSenderGateKeeper(new \Valid_Email(), new InviteBuddyConfiguration()),
             new InvitationEmailNotifier(new InstanceBaseURLBuilder()),
+            $user_manager,
         );
 
         try {
