@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -51,7 +53,7 @@ class StatisticsPlugin extends Plugin
     {
         parent::__construct($id);
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
@@ -130,12 +132,11 @@ class StatisticsPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => 'Statistics',
-            'href'  => $this->getPluginPath() . '/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build('Statistics', $this->getPluginPath() . '/')
+        );
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

@@ -21,6 +21,8 @@
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\DisplayUserActivities;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\WeeklySummaryController;
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
@@ -76,7 +78,7 @@ class create_test_envPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
 
         $this->addHook(UserAuthenticationSucceeded::NAME);
         $this->addHook(UserConnectionUpdateEvent::NAME);
@@ -159,13 +161,14 @@ class create_test_envPlugin extends Plugin
         });
     }
 
-    // @codingStandardsIgnoreLine
-    public function site_admin_option_hook(array &$params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-create_test_env', 'Create test environment'),
-            'href'  => $this->getPluginPath() . '/notification-bot'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-create_test_env', 'Create test environment'),
+                $this->getPluginPath() . '/notification-bot'
+            )
+        );
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event)

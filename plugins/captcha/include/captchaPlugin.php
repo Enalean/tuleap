@@ -20,6 +20,8 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Captcha\Administration\DisplayController;
 use Tuleap\Captcha\Administration\UpdateController;
@@ -54,7 +56,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
         $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
-        $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
     }
@@ -170,12 +172,11 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         return true;
     }
 
-    public function addSiteAdministrationOptionHook(array $params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
-            'href'  => CAPTCHA_BASE_URL . '/admin/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build($this->getPluginInfo()->getPluginDescriptor()->getFullName(), CAPTCHA_BASE_URL . '/admin/')
+        );
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

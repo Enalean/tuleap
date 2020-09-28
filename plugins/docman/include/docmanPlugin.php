@@ -27,6 +27,8 @@
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
@@ -202,7 +204,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -1547,13 +1549,14 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
     }
 
-    // @codingStandardsIgnoreLine
-    public function site_admin_option_hook(array &$params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-docman', 'Document'),
-            'href'  => self::ADMIN_BASE_URL . '/files-upload-limits'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-docman', 'Document'),
+                self::ADMIN_BASE_URL . '/files-upload-limits'
+            )
+        );
     }
 
     private function cleanUnusedVersionResources(): void

@@ -21,6 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
@@ -105,8 +107,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
 
-        // Site admin link
-        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
@@ -708,12 +709,14 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => 'Mediawiki',
-            'href'  => $this->getPluginPath() . '/forge_admin.php?action=site_index'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                'Mediawiki',
+                $this->getPluginPath() . '/forge_admin.php?action=site_index'
+            )
+        );
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

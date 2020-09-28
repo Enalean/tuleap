@@ -19,6 +19,8 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
@@ -270,7 +272,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
@@ -396,14 +398,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
     }
 
-    public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-tracker', 'Tracker'),
-            'href'  => $this->getPluginPath() . '/config.php',
-            'has_shortname' => true,
-            'shortname' => 'admin-tracker'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::withShortname(
+                dgettext('tuleap-tracker', 'Tracker'),
+                $this->getPluginPath() . '/config.php',
+                'admin-tracker'
+            )
+        );
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
