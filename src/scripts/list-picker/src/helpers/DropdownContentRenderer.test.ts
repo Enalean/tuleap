@@ -23,6 +23,7 @@ import {
 } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
+import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
 
 describe("dropdown-content-renderer", () => {
     let select: HTMLSelectElement, dropdown: Element, dropdown_list: Element;
@@ -41,14 +42,22 @@ describe("dropdown-content-renderer", () => {
     it("renders grouped list items", () => {
         appendGroupedOptionsToSourceSelectBox(select);
 
-        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
+        new DropdownContentRenderer(
+            select,
+            dropdown_list,
+            generateItemMapBasedOnSourceSelectOptions(select)
+        ).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
 
     it("renders simple list items", () => {
         appendSimpleOptionsToSourceSelectBox(select);
-        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
+        new DropdownContentRenderer(
+            select,
+            dropdown_list,
+            generateItemMapBasedOnSourceSelectOptions(select)
+        ).renderListPickerDropdownContent();
 
         expect(dropdown.innerHTML).toMatchSnapshot();
     });
@@ -60,7 +69,11 @@ describe("dropdown-content-renderer", () => {
 
         select.appendChild(disabled_option);
 
-        new DropdownContentRenderer(select, dropdown_list).renderListPickerDropdownContent();
+        new DropdownContentRenderer(
+            select,
+            dropdown_list,
+            generateItemMapBasedOnSourceSelectOptions(select)
+        ).renderListPickerDropdownContent();
 
         const disabled_list_item = dropdown.querySelector(
             ".list-picker-dropdown-option-value-disabled"

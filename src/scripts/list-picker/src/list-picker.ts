@@ -23,11 +23,13 @@ import { SelectionManager } from "./helpers/SelectionManager";
 import { EventManager } from "./helpers/EventManager";
 import { DropdownToggler } from "./helpers/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
+import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list-helper";
 
 export function createListPicker(
     source_select_box: HTMLSelectElement,
     options?: ListPickerOptions
 ): void {
+    const item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
     const base_renderer = new BaseComponentRenderer(source_select_box, options);
     const {
         wrapper_element,
@@ -48,12 +50,14 @@ export function createListPicker(
         dropdown_element,
         selection_element,
         placeholder_element,
-        dropdown_toggler
+        dropdown_toggler,
+        item_map
     );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         source_select_box,
-        dropdown_list_element
+        dropdown_list_element,
+        item_map
     );
 
     dropdown_content_renderer.renderListPickerDropdownContent();
