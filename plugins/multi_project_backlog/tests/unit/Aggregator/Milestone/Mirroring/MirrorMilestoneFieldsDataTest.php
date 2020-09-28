@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
 
 final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
 {
@@ -45,10 +46,21 @@ final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
             'text'
         );
         $copied_values         = new CopiedValues($title_changeset_value, 123456789, 112);
-        $target_fields         = new TargetFields(1001);
+
+        $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->shouldReceive('getId')->andReturn('1001');
+        $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field->shouldReceive('getId')->andReturn('1002');
+        $target_fields = new TargetFields($artifact_link_field, $title_field);
 
         $fields_data = MirrorMilestoneFieldsData::fromCopiedValuesAndTargetFields($copied_values, $target_fields);
 
-        $this->assertEquals([1001 => 'Aggregator Release'], $fields_data->toFieldsDataArray());
+        $this->assertEquals(
+            [
+                '1001' => ['new_values' => '112', 'natures' => ['112' => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]],
+                '1002' => 'Aggregator Release'
+            ],
+            $fields_data->toFieldsDataArray()
+        );
     }
 }

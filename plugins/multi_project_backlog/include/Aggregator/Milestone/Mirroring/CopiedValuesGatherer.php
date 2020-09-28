@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoTitleFieldException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 
 class CopiedValuesGatherer
 {
@@ -38,6 +39,7 @@ class CopiedValuesGatherer
 
     /**
      * @throws MilestoneMirroringException
+     * @throws SynchronizedFieldRetrievalException
      */
     public function gather(
         \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset,

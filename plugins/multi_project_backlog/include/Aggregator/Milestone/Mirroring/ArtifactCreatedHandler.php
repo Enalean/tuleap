@@ -27,6 +27,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 class ArtifactCreatedHandler
@@ -109,7 +110,7 @@ class ArtifactCreatedHandler
 
         try {
             $this->createMirrors($event->getChangeset(), $tracker, $project, $current_user);
-        } catch (MilestoneTrackerRetrievalException | MilestoneMirroringException $exception) {
+        } catch (MilestoneTrackerRetrievalException | MilestoneMirroringException | SynchronizedFieldRetrievalException $exception) {
             // Swallow the exception and let Aggregator Milestone be created
             $this->logger->error('Error during creation of mirror milestones', ['exception' => $exception]);
         }
@@ -118,6 +119,7 @@ class ArtifactCreatedHandler
     /**
      * @throws MilestoneMirroringException
      * @throws MilestoneTrackerRetrievalException
+     * @throws SynchronizedFieldRetrievalException
      */
     private function createMirrors(
         \Tracker_Artifact_Changeset $aggregator_top_milestone_last_changeset,

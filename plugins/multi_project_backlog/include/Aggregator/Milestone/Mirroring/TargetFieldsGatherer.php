@@ -22,31 +22,61 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoArtifactLinkFieldException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoTitleFieldException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 
 class TargetFieldsGatherer
 {
+    /**
+     * @var \Tracker_FormElementFactory
+     */
+    private $form_element_factory;
     /**
      * @var \Tracker_Semantic_TitleFactory
      */
     private $semantic_title_factory;
 
-    public function __construct(\Tracker_Semantic_TitleFactory $semantic_title_factory)
-    {
+    public function __construct(
+        \Tracker_FormElementFactory $form_element_factory,
+        \Tracker_Semantic_TitleFactory $semantic_title_factory
+    ) {
+        $this->form_element_factory   = $form_element_factory;
         $this->semantic_title_factory = $semantic_title_factory;
+    }
+
+    /**
+     * @throws SynchronizedFieldRetrievalException
+     */
+    public function gather(\Tracker $contributor_milestone_tracker): TargetFields
+    {
+        return new TargetFields(
+            $this->getArtifactLinkField($contributor_milestone_tracker),
+            $this->getTitleField($contributor_milestone_tracker)
+        );
+    }
+
+    /**
+     * @throws NoArtifactLinkFieldException
+     */
+    private function getArtifactLinkField(\Tracker $milestone_tracker): \Tracker_FormElement_Field_ArtifactLink
+    {
+        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($milestone_tracker);
+        if (count($artifact_link_fields) > 0) {
+            return $artifact_link_fields[0];
+        }
+        throw new NoArtifactLinkFieldException((int) $milestone_tracker->getId());
     }
 
     /**
      * @throws NoTitleFieldException
      */
-    public function gather(\Tracker $contributor_milestone_tracker): TargetFields
+    private function getTitleField(\Tracker $milestone_tracker): \Tracker_FormElement_Field_Text
     {
-        $semantic_title          = $this->semantic_title_factory->getByTracker($contributor_milestone_tracker);
-        $semantic_title_field_id = (int) $semantic_title->getFieldId();
-        if ($semantic_title_field_id === 0) {
-            throw new NoTitleFieldException((int) $contributor_milestone_tracker->getId());
+        $title_field = $this->semantic_title_factory->getByTracker($milestone_tracker)->getField();
+        if (! $title_field) {
+            throw new NoTitleFieldException((int) $milestone_tracker->getId());
         }
-
-        return new TargetFields($semantic_title_field_id);
+        return $title_field;
     }
 }
