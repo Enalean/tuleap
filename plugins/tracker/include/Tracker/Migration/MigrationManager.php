@@ -39,7 +39,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
-class Tracker_Migration_MigrationManager
+class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
@@ -165,9 +165,18 @@ class Tracker_Migration_MigrationManager
         $this->logger->info('<-- TV5 imported ' . PHP_EOL);
     }
 
-    private function getXMLImporter()
+    private function getXMLImporter(): Tracker_Artifact_XMLImport
     {
-        $fields_validator       = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($this->form_element_factory);
+        $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
+        $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
+            $this->artifact_factory,
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+                new NatureDao(),
+                $artifact_link_usage_dao
+            ),
+            $artifact_link_usage_dao
+        );
+        $fields_validator       = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($this->form_element_factory, $artifact_link_validator);
         $changeset_dao          = new Tracker_Artifact_ChangesetDao();
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
 

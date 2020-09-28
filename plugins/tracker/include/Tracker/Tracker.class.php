@@ -47,6 +47,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
@@ -2794,12 +2795,18 @@ class Tracker implements Tracker_Dispatchable_Interface
             if ($artifact) {
                 $is_new_artifact = $artifact->getId() == 0;
                 if ($is_new_artifact) {
-                    $fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory());
+                    $fields_validator = $this->getInitialChangesetValidator();
                 } else {
                     $fields_validator = $this->getNewChangesetFieldsValidator();
                 }
-                if (! $fields_validator->validate($artifact, $this->getUserManager()->getCurrentuser(), $data)) {
-                     $has_blocking_error = true;
+                $are_fields_valid = $fields_validator->validate(
+                    $artifact,
+                    $this->getUserManager()->getCurrentuser(),
+                    $data,
+                    new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                );
+                if (! $are_fields_valid) {
+                    $has_blocking_error = true;
                 }
                 try {
                     $this->getWorkflow()->checkGlobalRules($data);
@@ -3343,7 +3350,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getArtifactXMLImporterForArtifactCopy(Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger)
     {
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
-            $this->getFormElementFactory()
+            $this->getFormElementFactory(),
+            $this->getArtifactLinkValidator()
         );
 
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
@@ -3514,10 +3522,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
     }
 
-    /**
-     * @return Tracker_Artifact_Changeset_NewChangesetFieldsValidator
-     */
-    private function getNewChangesetFieldsValidator()
+    private function getNewChangesetFieldsValidator(): Tracker_Artifact_Changeset_NewChangesetFieldsValidator
     {
         $frozen_field_detector = new FrozenFieldDetector(
             new TransitionRetriever(
@@ -3541,6 +3546,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $workflow_update_checker = new WorkflowUpdateChecker($frozen_field_detector);
         return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
             $this->getFormElementFactory(),
+            $this->getArtifactLinkValidator(),
             $workflow_update_checker
         );
     }
@@ -3567,5 +3573,26 @@ class Tracker implements Tracker_Dispatchable_Interface
     public static function getTrackerGlobalAdministrationURL(Project $project): string
     {
         return TRACKER_BASE_URL . '/' . self::GLOBAL_ADMIN_URL . '/' . (int) $project->getID();
+    }
+
+    private function getInitialChangesetValidator(): Tracker_Artifact_Changeset_InitialChangesetFieldsValidator
+    {
+        return new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator(
+            $this->getFormElementFactory(),
+            $this->getArtifactLinkValidator()
+        );
+    }
+
+    private function getArtifactLinkValidator(): ArtifactLinkValidator
+    {
+        $artifact_links_usage_dao = new ArtifactLinksUsageDao();
+        return new ArtifactLinkValidator(
+            \Tracker_ArtifactFactory::instance(),
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+                new NatureDao(),
+                $artifact_links_usage_dao
+            ),
+            $artifact_links_usage_dao
+        );
     }
 }

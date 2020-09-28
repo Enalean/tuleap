@@ -1,11 +1,7 @@
 <?php
 /**
- * Copyright Enalean (c) 2016-2019. All rights reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
- * Tuleap and Enalean names and logos are registered trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +27,7 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactFactory
 {
 
@@ -357,30 +354,21 @@ class Tracker_ArtifactFactory
      */
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, bool $should_visit_be_recorded, $send_notification = true)
     {
-        $formelement_factory = Tracker_FormElementFactory::instance();
-        $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
-        $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
-
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
-
-        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
-            new Tracker_Artifact_ChangesetDao(),
-            $this,
-            EventManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
-            $logger,
-            ArtifactChangesetSaver::build()
-        );
-        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder, $logger, new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()));
-
+        $creator = $this->getArtifactCreator();
         if ($user->isAnonymous()) {
             $user->setEmail($email);
         }
 
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        return $creator->create($tracker, $fields_data, $user, $submitted_on, $send_notification, $should_visit_be_recorded);
+        return $creator->create(
+            $tracker,
+            $fields_data,
+            $user,
+            $submitted_on,
+            $send_notification,
+            $should_visit_be_recorded,
+            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+        );
     }
 
     public function save(Tracker_Artifact $artifact)
@@ -569,5 +557,46 @@ class Tracker_ArtifactFactory
         }
 
         return $row['title'];
+    }
+
+    private function getArtifactCreator(): Tracker_ArtifactCreator
+    {
+        $formelement_factory      = Tracker_FormElementFactory::instance();
+        $artifact_links_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
+        $artifact_link_validator  = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
+            $this,
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao(),
+                $artifact_links_usage_dao
+            ),
+            $artifact_links_usage_dao
+        );
+        $fields_validator         = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator(
+            $formelement_factory,
+            $artifact_link_validator
+        );
+        $visit_recorder           = new VisitRecorder(new RecentlyVisitedDao());
+
+        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+
+        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+            $fields_validator,
+            new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
+            new Tracker_Artifact_ChangesetDao(),
+            $this,
+            EventManager::instance(),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            $logger,
+            ArtifactChangesetSaver::build()
+        );
+        $creator           = new Tracker_ArtifactCreator(
+            $this,
+            $fields_validator,
+            $changeset_creator,
+            $visit_recorder,
+            $logger,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+        return $creator;
     }
 }

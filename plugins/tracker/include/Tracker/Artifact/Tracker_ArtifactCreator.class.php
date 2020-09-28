@@ -23,6 +23,8 @@ use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
+use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -99,7 +101,14 @@ class Tracker_ArtifactCreator //phpcs:ignore
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
-        if (! $this->fields_validator->validate($artifact, $user, $fields_data)) {
+        $validation_context = new NullChangesetValidationContext();
+        $are_fields_valid = $this->fields_validator->validate(
+            $artifact,
+            $user,
+            $fields_data,
+            $validation_context
+        );
+        if (! $are_fields_valid) {
             return null;
         }
 
@@ -110,13 +119,17 @@ class Tracker_ArtifactCreator //phpcs:ignore
             $submitted_on,
             $send_notification,
             $url_mapping,
-            $tracker_import_config
+            $tracker_import_config,
+            $validation_context
         );
     }
 
     /**
      * Creates the first changeset but do not check the fields because we
      * already have checked them. This function is private
+     * @param array  $fields_data
+     * @param        $submitted_on
+     * @param        $send_notification
      */
     private function createFirstChangesetNoValidation(
         Tracker_Artifact $artifact,
@@ -125,18 +138,30 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $submitted_on,
         $send_notification,
         CreatedFileURLMapping $url_mapping,
-        TrackerImportConfig $tracker_import_config
+        TrackerImportConfig $tracker_import_config,
+        ChangesetValidationContext $context
     ): ?Tracker_Artifact_Changeset {
-        $changeset_id = $this->db_transaction_executor->execute(function () use ($artifact, $fields_data, $user, $submitted_on, $url_mapping, $tracker_import_config) {
-            return $this->changeset_creator->create(
+        $changeset_id = $this->db_transaction_executor->execute(
+            function () use (
                 $artifact,
                 $fields_data,
                 $user,
-                (int) $submitted_on,
+                $submitted_on,
                 $url_mapping,
-                $tracker_import_config
-            );
-        });
+                $tracker_import_config,
+                $context
+            ) {
+                return $this->changeset_creator->create(
+                    $artifact,
+                    $fields_data,
+                    $user,
+                    (int) $submitted_on,
+                    $url_mapping,
+                    $tracker_import_config,
+                    $context
+                );
+            }
+        );
         if (! $changeset_id) {
             return null;
         }
@@ -167,11 +192,12 @@ class Tracker_ArtifactCreator //phpcs:ignore
         PFUser $user,
         $submitted_on,
         $send_notification,
-        bool $should_visit_be_recorded
+        bool $should_visit_be_recorded,
+        ChangesetValidationContext $context
     ) {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
-        if (! $this->fields_validator->validate($artifact, $user, $fields_data)) {
+        if (! $this->fields_validator->validate($artifact, $user, $fields_data, $context)) {
             $this->logger->debug(
                 sprintf('Creation of artifact in tracker #%d failed: fields are not valid', $tracker->getId())
             );
@@ -191,7 +217,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
                 $submitted_on,
                 $send_notification,
                 $url_mapping,
-                new TrackerNoXMLImportLoggedConfig()
+                new TrackerNoXMLImportLoggedConfig(),
+                $context
             )
         ) {
             $this->logger->debug(

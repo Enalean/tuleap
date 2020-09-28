@@ -25,6 +25,7 @@ use Tracker_Artifact;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
 
 class ArtifactLinkValidator
 {
@@ -51,9 +52,16 @@ class ArtifactLinkValidator
         $this->dao                      = $dao;
     }
 
-    public function isValid($value, \Tracker_Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field)
-    {
-        if ($this->isDataSent($value) === false) {
+    /**
+     * @param array|null $value
+     */
+    public function isValid(
+        $value,
+        \Tracker_Artifact $artifact,
+        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkValidationContext $context
+    ): bool {
+        if ($value === null || $this->isDataSent($value) === false) {
             return true;
         }
 
@@ -88,7 +96,7 @@ class ArtifactLinkValidator
             }
         }
 
-        if ($this->areTypesValid($artifact, $value, $field) === false) {
+        if ($this->areTypesValid($artifact, $value, $field, $context) === false) {
             $is_valid = false;
         }
 
@@ -190,8 +198,12 @@ class ArtifactLinkValidator
     /**
      * @param array $value
      */
-    private function areTypesValid(Tracker_Artifact $artifact, array $value, Tracker_FormElement_Field_ArtifactLink $field): bool
-    {
+    private function areTypesValid(
+        Tracker_Artifact $artifact,
+        array $value,
+        Tracker_FormElement_Field_ArtifactLink $field,
+        ArtifactLinkValidationContext $context
+    ): bool {
         if ($artifact->getTracker()->isProjectAllowedToUseNature() === false || ! isset($value['natures'])) {
             return true;
         }
@@ -229,7 +241,7 @@ class ArtifactLinkValidator
 
             $is_an_editable_link_type      = $nature_shortname === '' || isset($editable_link_types[$nature_shortname]);
             $is_an_unchanged_existing_link = isset($used_types_by_artifact_id[(int) $artifact_id]) && $used_types_by_artifact_id[(int) $artifact_id] === $nature_shortname;
-            if (! $is_an_editable_link_type && ! $is_an_unchanged_existing_link) {
+            if (! $context->isSystemAction() && ! $is_an_editable_link_type && ! $is_an_unchanged_existing_link) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
                     sprintf(

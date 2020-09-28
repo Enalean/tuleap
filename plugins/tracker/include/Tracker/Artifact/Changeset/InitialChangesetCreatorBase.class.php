@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
+use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -80,9 +81,16 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         PFUser $submitter,
         int $submitted_on,
         CreatedFileURLMapping $url_mapping,
-        TrackerImportConfig $import_config
+        TrackerImportConfig $import_config,
+        ChangesetValidationContext $changeset_validation_context
     ): ?int {
-        if (! $this->doesRequestAppearToBeValid($artifact, $fields_data, $submitter)) {
+        $are_fields_valid = $this->doesRequestAppearToBeValid(
+            $artifact,
+            $fields_data,
+            $submitter,
+            $changeset_validation_context
+        );
+        if (! $are_fields_valid) {
             $this->logger->debug(
                 sprintf(
                     'Creation of the first changeset of artifact #%d failed: request does not appear to be valid',
@@ -153,18 +161,15 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     private function doesRequestAppearToBeValid(
         Tracker_Artifact $artifact,
         array $fields_data,
-        PFUser $submitter
+        PFUser $submitter,
+        ChangesetValidationContext $changeset_validation_context
     ): bool {
         if ($submitter->isAnonymous() && ! trim($submitter->getEmail())) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You are not logged in.'));
             return false;
         }
 
-        if (! $this->fields_validator->validate($artifact, $submitter, $fields_data)) {
-            return false;
-        }
-
-        return true;
+        return $this->fields_validator->validate($artifact, $submitter, $fields_data, $changeset_validation_context);
     }
 
     private function askWorkflowToUpdateTheRequestAndCheckGlobalRules(

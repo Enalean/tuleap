@@ -24,6 +24,8 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
+use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
 class MirrorMilestonesCreator
 {
@@ -72,7 +74,8 @@ class MirrorMilestonesCreator
                         $current_user,
                         $copied_values->getSubmittedOn(),
                         false,
-                        false
+                        false,
+                        new ChangesetWithFieldsValidationContext(new SystemActionContext())
                     );
                     if ($result === false) {
                         throw new MirrorMilestoneCreationException($copied_values->getArtifactId());
