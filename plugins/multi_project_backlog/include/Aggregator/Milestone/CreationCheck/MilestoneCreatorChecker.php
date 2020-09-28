@@ -108,7 +108,7 @@ class MilestoneCreatorChecker
                 $user
             );
         } catch (MilestoneTrackerRetrievalException $exception) {
-            $this->logger->error("Cannot retrieve all the milestones", ["exception" => $exception->getMessage()]);
+            $this->logger->error("Cannot retrieve all the milestones", ['exception' => $exception]);
             return false;
         }
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($top_milestone, $milestone_tracker_collection)) {
@@ -123,7 +123,7 @@ class MilestoneCreatorChecker
         try {
             $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
         } catch (SynchronizedFieldRetrievalException $exception) {
-            $this->logger->error("Cannot retrieve all the synchronized fields", ["exception" => $exception->getMessage()]);
+            $this->logger->error("Cannot retrieve all the synchronized fields", ['exception' => $exception]);
             return false;
         }
         if (! $fields->canUserSubmitAndUpdateAllFields($user)) {

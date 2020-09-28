@@ -87,7 +87,8 @@ final class ArtifactCreatedHandlerTest extends TestCase
             $this->copied_values_gatherer,
             $this->project_collection_builder,
             $this->milestone_trackers_factory,
-            $this->mirror_creator
+            $this->mirror_creator,
+            new \Psr\Log\NullLogger()
         );
     }
 

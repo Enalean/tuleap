@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
 use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory;
@@ -58,6 +59,10 @@ class ArtifactCreatedHandler
      * @var MirrorMilestonesCreator
      */
     private $mirror_creator;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         AggregatorDao $aggregator_dao,
@@ -66,7 +71,8 @@ class ArtifactCreatedHandler
         CopiedValuesGatherer $copied_values_gatherer,
         ContributorProjectsCollectionBuilder $projects_collection_builder,
         MilestoneTrackerCollectionFactory $milestone_trackers_factory,
-        MirrorMilestonesCreator $mirror_creator
+        MirrorMilestonesCreator $mirror_creator,
+        LoggerInterface $logger
     ) {
         $this->aggregator_dao              = $aggregator_dao;
         $this->user_manager                = $user_manager;
@@ -75,6 +81,7 @@ class ArtifactCreatedHandler
         $this->projects_collection_builder = $projects_collection_builder;
         $this->milestone_trackers_factory  = $milestone_trackers_factory;
         $this->mirror_creator              = $mirror_creator;
+        $this->logger                      = $logger;
     }
 
     public function handle(ArtifactCreated $event): void
@@ -102,8 +109,9 @@ class ArtifactCreatedHandler
 
         try {
             $this->createMirrors($event->getChangeset(), $tracker, $project, $current_user);
-        } catch (MilestoneTrackerRetrievalException | MilestoneMirroringException $e) {
+        } catch (MilestoneTrackerRetrievalException | MilestoneMirroringException $exception) {
             // Swallow the exception and let Aggregator Milestone be created
+            $this->logger->error('Error during creation of mirror milestones', ['exception' => $exception]);
         }
     }
 
