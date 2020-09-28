@@ -62,7 +62,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
     {
         return new self(
             new AdminPageRenderer(),
-            new InviteBuddyConfiguration(),
+            new InviteBuddyConfiguration(\EventManager::instance()),
             self::getCSRFSynchronizerToken(),
         );
     }

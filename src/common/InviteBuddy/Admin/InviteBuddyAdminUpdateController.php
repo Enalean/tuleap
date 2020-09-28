@@ -58,7 +58,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
     {
         return new self(
             InviteBuddyAdminController::getCSRFSynchronizerToken(),
-            new InviteBuddyConfiguration(),
+            new InviteBuddyConfiguration(\EventManager::instance()),
             new ConfigDao(),
         );
     }

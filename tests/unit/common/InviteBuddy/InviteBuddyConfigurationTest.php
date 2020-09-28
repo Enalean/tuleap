@@ -24,7 +24,9 @@ namespace Tuleap\InviteBuddy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\User\Account\RegistrationGuardEvent;
 
 class InviteBuddyConfigurationTest extends TestCase
 {
@@ -34,63 +36,93 @@ class InviteBuddyConfigurationTest extends TestCase
     public function testByDefaultBuddiesCannotBeInvitedCanBuddiesBeInvited(): void
     {
         $user = \Mockery::mock(\PFUser::class);
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
 
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfTheFeatureIsDisabled(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 0);
         $user = \Mockery::mock(\PFUser::class);
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
 
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButUserIsAnonymous(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+        $event_manager
+            ->shouldReceive('dispatch')
+            ->andReturn(new RegistrationGuardEvent());
 
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCanBeInvitedIfTheFeatureIsEnabledAndUserIsLoggedIn(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+        $event_manager
+            ->shouldReceive('dispatch')
+            ->andReturn(new RegistrationGuardEvent());
 
-        self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertTrue((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
+    }
+
+    public function testBuddiesCannotBeInvitedIfThePlatformPreventsUsersToRegister(): void
+    {
+        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
+        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+        $guard_event = new RegistrationGuardEvent();
+        $guard_event->disableRegistration();
+        $event_manager
+            ->shouldReceive('dispatch')
+            ->andReturn($guard_event);
+
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButNbMaxIsLesserOrEqualThanZero(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+        $event_manager
+            ->shouldReceive('dispatch')
+            ->andReturn(new RegistrationGuardEvent());
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 0);
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, "invalid value");
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, -1);
-        self::assertFalse((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 1);
-        self::assertTrue((new InviteBuddyConfiguration())->canBuddiesBeInvited($user));
+        self::assertTrue((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function itReturnsTheNbMax(): void
     {
+        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+
         self::assertEquals(
             InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,
-            (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay()
+            (new InviteBuddyConfiguration($event_manager))->getNbMaxInvitationsByDay()
         );
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, "invalid value");
-        self::assertEquals(0, (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay());
+        self::assertEquals(0, (new InviteBuddyConfiguration($event_manager))->getNbMaxInvitationsByDay());
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 13);
-        self::assertEquals(13, (new InviteBuddyConfiguration())->getNbMaxInvitationsByDay());
+        self::assertEquals(13, (new InviteBuddyConfiguration($event_manager))->getNbMaxInvitationsByDay());
     }
 }

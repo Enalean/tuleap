@@ -135,7 +135,7 @@ class HeaderPresenterBuilder
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            (new InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
+            (new InviteBuddyConfiguration(EventManager::instance()))->canBuddiesBeInvited($current_user),
         );
     }
 
