@@ -4,6 +4,7 @@
         "module": "esnext"
     },
     "include": [
-        "scripts/tracker-creation/**/*"
+        "scripts/tracker-creation/**/*",
+        "scripts/tracker-homepage/**/*"
     ]
 }
