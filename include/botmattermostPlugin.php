@@ -19,6 +19,8 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Controller\AdminController;
@@ -39,7 +41,7 @@ class BotMattermostPlugin extends Plugin
 
         bindtextdomain('tuleap-botmattermost', __DIR__ . '/../site-content');
 
-        $this->addHook('site_admin_option_hook');
+        $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -57,12 +59,14 @@ class BotMattermostPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook(array $params)
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $params['plugins'][] = [
-            'label' => dgettext('tuleap-botmattermost', 'Bot Mattermost'),
-            'href'  => $this->getPluginPath() . '/admin/'
-        ];
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-botmattermost', 'Bot Mattermost'),
+                $this->getPluginPath() . '/admin/'
+            )
+        );
     }
 
     public function burning_parrot_get_javascript_files($params)
