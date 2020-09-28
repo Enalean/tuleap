@@ -553,6 +553,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-homepage.js'));
 
+        $csrf_token_delete_tracker = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()));
+
         foreach ($trackers as $tracker) {
             if ($this->trackerCanBeDisplayed($tracker, $user)) {
                 $html .= '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '" data-test="tracker-link-' . $tracker->getItemName() . '" ';
@@ -582,11 +584,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 if ($tracker->userCanDeleteTracker()) {
                     if ($used_in_other_services_infos['can_be_deleted']) {
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
-                                <span data-href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '&amp;func=delete"
-                                   class="trackers-homepage-tracker-trash tlp-tooltip tlp-tooltip-left"
-                                   data-tlp-tooltip=" ' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '">';
-                        $html .= '<i class="fa fa-trash-o"></i>';
-                        $html .= '</span>';
+                                  <form method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '"
+                                    class="trackers-homepage-tracker-trash tlp-tooltip tlp-tooltip-left"
+                                    data-tlp-tooltip="' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '"
+                                  >
+                                    <input type="hidden" name="func" value="delete"> ' . $csrf_token_delete_tracker->fetchHTMLInput() . '
+                                    <i class="fa fa-trash-o"></i>
+                                  </form>';
                     } else {
                         $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
