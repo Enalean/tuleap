@@ -126,6 +126,9 @@ msgstr "Apps OAuth2"
 msgid "OAuth2 Server"
 msgstr "Server OAuth2"
 
+msgid "OAuth2 apps common to the whole instance"
+msgstr "Apps OAuth2 communes à l'ensemble de la plateforme"
+
 msgid "Offline access"
 msgstr "Accès hors-ligne"
 

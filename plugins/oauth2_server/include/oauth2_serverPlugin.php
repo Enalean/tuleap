@@ -23,6 +23,9 @@ declare(strict_types=1);
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Psr\Log\LoggerInterface;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -84,6 +87,7 @@ use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefi
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
+use Tuleap\OAuth2Server\SiteAdmin\SiteAdminListAppsController;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
@@ -128,6 +132,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(PasswordUserPostUpdateEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
+        $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -191,6 +196,10 @@ final class oauth2_serverPlugin extends Plugin
                 );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
+                $r->get(
+                    '/admin',
+                    $this->getRouteHandler('routeGetSiteAdmin')
+                );
             }
         );
         $route_collector->addGroup(
@@ -217,6 +226,15 @@ final class oauth2_serverPlugin extends Plugin
     public function routeGetProjectAdmin(): DispatchableWithRequest
     {
         return ListAppsController::buildSelf();
+    }
+
+    public function routeGetSiteAdmin(): DispatchableWithRequest
+    {
+        return new SiteAdminListAppsController(
+            new AdminPageRenderer(),
+            UserManager::instance(),
+            new AppFactory(new AppDao(), ProjectManager::instance())
+        );
     }
 
     public function routePostProjectAdmin(): DispatchableWithRequest
@@ -719,5 +737,15 @@ final class oauth2_serverPlugin extends Plugin
     private function getLogger(): LoggerInterface
     {
         return \BackendLogger::getDefaultLogger('oauth2_server.log');
+    }
+
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
+    {
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-oauth2_server', 'OAuth2 Server'),
+                $this->getPluginPath() . '/admin'
+            )
+        );
     }
 }
