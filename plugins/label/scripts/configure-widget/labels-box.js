@@ -58,7 +58,7 @@ function initiateSelect2(container, selected_labels, labels_endpoint, placeholde
 
 function formatLabel(label, li_element) {
     if (label.color) {
-        const bullet_class = label.is_outline ? "fa fa-circle-o" : "fa fa-circle";
+        const bullet_class = label.is_outline ? "far fa-circle" : "fa fa-circle";
         li_element.classList.add(`select-item-label-color-${label.color}`);
 
         return render(

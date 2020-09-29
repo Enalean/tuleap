@@ -62,7 +62,7 @@
                         codendi.locales.tracker_artifact.disable_notifications_alternate_text
                     );
                     button.html(
-                        '<i class="fa fa-bell-slash-o"></i> ' +
+                        '<i class="far fa-bell-slash"></i> ' +
                             codendi.locales.tracker_artifact.disable_notifications
                     );
                 } else {
@@ -71,7 +71,7 @@
                         codendi.locales.tracker_artifact.enable_notifications_alternate_text
                     );
                     button.html(
-                        '<i class="fa fa-bell-o"></i> ' +
+                        '<i class="far fa-bell"></i> ' +
                             codendi.locales.tracker_artifact.enable_notifications
                     );
                 }
