@@ -22,8 +22,31 @@
             </h3>
         </div>
         <div class="modal-body">
-            <label for="invite-buddies-email">Email <i class="fa fa-asterisk" aria-hidden="true"></i></label>
-            <input type="email" multiple id="invite-buddies-email" name="invite_buddies_email"  placeholder="john.doe@example.com" required>
+            <p>
+                <label for="invite-buddies-email">
+                    {{# gettext }}Email{{/ gettext }}
+                    <i class="fa fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="email"
+                    multiple
+                    id="invite-buddies-email"
+                    name="invite_buddies_email"
+                    placeholder="john.doe@example.com"
+                    required
+                >
+                <span class="text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</span>
+            </p>
+            <p>
+                <label class="tlp-label" for="invite-buddies-message">
+                    {{# gettext }}Message{{/ gettext }}
+                </label>
+                <textarea
+                    id="invite-buddies-message"
+                    name="invite_buddies_message"
+                    placeholder="Optional message…"
+                ></textarea>
+            </p>
         </div>
         <div class="modal-footer">
             <button type="reset" class="btn" data-dismiss="modal">

@@ -35,21 +35,28 @@ export function initNotificationsOnFormSubmit(): void {
 }
 
 export async function sendNotifications(form: HTMLFormElement): Promise<void> {
-    const input = form.querySelector("input[name=invite_buddies_email]");
-    if (!(input instanceof HTMLInputElement)) {
-        throw Error("Unable to find input field");
+    const email_input = form.querySelector("input[name=invite_buddies_email]");
+    if (!(email_input instanceof HTMLInputElement)) {
+        throw Error("Unable to find email field");
+    }
+
+    const message_input = form.querySelector("textarea[name=invite_buddies_message]");
+    if (!(message_input instanceof HTMLTextAreaElement)) {
+        throw Error("Unable to find message field");
     }
 
     const icon = form.querySelector("button[type=submit] > .tlp-button-icon");
     try {
         activateSpinner(icon);
-        const emails = getEmails(input);
+        const emails = getEmails(email_input);
+        const custom_message = message_input.value;
         const response = await post(`/api/v1/invitations`, {
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 emails,
+                custom_message,
             }),
         });
 
