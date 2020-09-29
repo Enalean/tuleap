@@ -52,7 +52,7 @@
                 v-bind:data-tlp-tooltip="release_planning_link_label"
                 v-bind:aria-label="release_planning_link_label"
             >
-                <i class="release-description-link-icon fa fa-sign-in" aria-hidden="true"></i>
+                <i class="release-description-link-icon fas fa-sign-in-alt" aria-hidden="true"></i>
             </a>
         </release-buttons-description>
     </div>

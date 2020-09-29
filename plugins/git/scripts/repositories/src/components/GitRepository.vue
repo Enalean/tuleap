@@ -47,7 +47,7 @@
                         v-bind:repository-id="repository.id"
                     />
                     <div class="git-repository-card-last-update">
-                        <i class="fa fa-clock-o git-repository-card-last-update-icon"></i>
+                        <i class="far fa-clock git-repository-card-last-update-icon"></i>
                         <translate>Last update %{ formatted_last_update_date }</translate>
                     </div>
                     <a

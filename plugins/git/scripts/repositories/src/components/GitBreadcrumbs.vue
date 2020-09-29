@@ -57,7 +57,7 @@
                                 v-bind:href="repository_fork_url"
                                 v-bind:title="fork_title"
                             >
-                                <i class="fa fa-code-fork fa-fw"></i>
+                                <i class="fas fa-code-branch fa-fw"></i>
                                 <translate>Fork repositories</translate>
                             </a>
                         </span>

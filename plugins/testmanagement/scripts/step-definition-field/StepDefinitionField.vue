@@ -26,7 +26,7 @@
                 class="ttm-definition-reorder-steps-button btn btn-small"
                 v-on:click="toggleIsDragging()"
             >
-                <i class="fa fa-refresh fa-rotate-90"></i>
+                <i class="fas fa-sync fa-rotate-90"></i>
                 <translate v-if="is_dragging" key="stop-reordering">
                     Stop reordering steps
                 </translate>

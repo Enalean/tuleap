@@ -65,7 +65,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
     type="button"
   >
     <i
-      class="fa fa-refresh tlp-button-icon"
+      class="fas fa-sync tlp-button-icon"
     />
      
     <translate-stub

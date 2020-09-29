@@ -58,7 +58,7 @@
             >
                 <i
                     v-if="props.is_operation_running"
-                    class="tlp-button-icon fa fa-circle-o-notch fa-spin"
+                    class="tlp-button-icon fas fa-circle-notch fa-spin"
                 ></i>
                 <slot name="switch-button-label"></slot>
             </button>

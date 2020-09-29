@@ -26,7 +26,7 @@
             class="tlp-button-primary tlp-button-small document-quick-look-folder-action-new-folder-button"
             v-on:click.prevent="showNewFolderModal"
         >
-            <i class="fa fa-folder-open-o tlp-button-icon"></i>
+            <i class="far fa-folder-open tlp-button-icon"></i>
             <translate>New folder</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />

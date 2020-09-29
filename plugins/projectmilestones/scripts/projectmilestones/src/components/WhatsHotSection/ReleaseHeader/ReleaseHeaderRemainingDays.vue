@@ -23,7 +23,7 @@
         v-bind:data-tlp-tooltip="get_tooltip_effort_date"
     >
         <div class="release-remaining-header">
-            <i class="release-remaining-icon fa fa-calendar"></i>
+            <i class="release-remaining-icon fas fa-calendar-alt"></i>
             <span
                 class="release-remaining-value"
                 v-bind:class="{

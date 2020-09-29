@@ -26,7 +26,7 @@
             v-on:click="switchToEditMode"
             data-test="card-edit-button"
         >
-            <i class="fa fa-pencil"></i>
+            <i class="fas fa-pencil-alt"></i>
         </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />

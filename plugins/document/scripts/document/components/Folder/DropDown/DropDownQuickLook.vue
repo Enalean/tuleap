@@ -23,7 +23,7 @@
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
-                v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
+                v-bind:icon-classes="'fas fa-share tlp-button-icon'"
                 v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder(item)"
                 data-test="document-quicklook-action-button-new-version"
             />

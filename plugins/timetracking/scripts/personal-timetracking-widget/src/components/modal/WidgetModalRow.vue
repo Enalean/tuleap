@@ -37,7 +37,7 @@
                     v-on:click="swapEditMode()"
                     data-test="timetracking-edit-time"
                 >
-                    <i class="fa fa-pencil"></i>
+                    <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button
                     class="tlp-button-outline tlp-button-small tlp-button-danger"
@@ -46,7 +46,7 @@
                     data-trigger="click"
                     data-test="timetracking-delete-time"
                 >
-                    <i class="fa fa-trash"></i>
+                    <i class="fas fa-trash-alt"></i>
                 </button>
                 <widget-modal-delete-popover
                     v-on:createDeletePopover="createPopover()"

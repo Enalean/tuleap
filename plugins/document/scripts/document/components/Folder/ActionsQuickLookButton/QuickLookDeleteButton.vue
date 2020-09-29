@@ -25,7 +25,7 @@
         v-on:click="processDeletion"
         data-test="document-quick-look-delete-button"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i>
+        <i class="far fa-trash-alt tlp-button-icon"></i>
         <translate>Delete</translate>
     </button>
 </template>

@@ -58,7 +58,7 @@
                 </p>
             </div>
             <button type="button" class="tlp-button-primary" v-on:click="submit">
-                <i class="fa fa-envelope-o tlp-button-icon"></i>
+                <i class="far fa-envelope tlp-button-icon"></i>
                 <translate>Send mail</translate>
             </button>
         </form>

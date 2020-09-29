@@ -41,7 +41,7 @@
                     v-bind:disabled="is_operation_running"
                     data-test="change-or-remove-button"
                 >
-                    <i class="fa fa-refresh tlp-button-icon"></i>
+                    <i class="fas fa-sync tlp-button-icon"></i>
                     <span v-translate>Change or remove</span>
                 </button>
             </div>

@@ -24,7 +24,7 @@
         v-bind:title="button_title"
         v-on:click="showModal"
     >
-        <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
+        <i class="fas fa-code-branch fa-rotate-270 tlp-button-icon"></i>
         <translate>Create pull request</translate>
     </button>
 </template>

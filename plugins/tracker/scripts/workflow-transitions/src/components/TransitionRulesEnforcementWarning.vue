@@ -11,7 +11,7 @@
             </p>
             <button class="tlp-button-warning" v-on:click="deactivateLegacyTransitions()">
                 <span v-translate>Fully deactivate the workflow</span>
-                <i v-if="is_loading" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
+                <i v-if="is_loading" class="tlp-button-icon fas fa-circle-notch fa-spin"></i>
             </button>
         </div>
         <div

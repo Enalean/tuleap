@@ -38,7 +38,7 @@
             <div class="document-default-metadata">
                 <div class="document-metadata-container" v-if="is_item_status_metadata_used">
                     <div class="document-recursion-checkbox-container">
-                        <label class="tlp-label"><i class="fa fa-repeat"></i></label>
+                        <label class="tlp-label"><i class="fas fa-redo"></i></label>
                         <input
                             id="status"
                             type="checkbox"
@@ -57,7 +57,7 @@
                     class="document-metadata-container"
                 >
                     <div class="document-recursion-checkbox-container">
-                        <label class="tlp-label"><i class="fa fa-repeat"></i></label>
+                        <label class="tlp-label"><i class="fas fa-redo"></i></label>
                         <input
                             v-bind:id="custom.short_name"
                             type="checkbox"

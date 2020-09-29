@@ -33,7 +33,7 @@
             ></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
-            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+            <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
             <date-flat-picker
                 v-bind:id="`${currentlyUpdatedItemMetadata.short_name}`"
                 v-bind:required="currentlyUpdatedItemMetadata.is_required"

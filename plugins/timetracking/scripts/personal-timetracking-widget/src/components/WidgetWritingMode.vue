@@ -26,7 +26,7 @@
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
-                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                     <input
                         type="text"
                         class="tlp-input tlp-input-date"
@@ -45,7 +45,7 @@
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
-                    <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                    <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                     <input
                         type="text"
                         class="tlp-input tlp-input-date"

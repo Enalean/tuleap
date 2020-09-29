@@ -45,7 +45,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
     href="/path/to/admin"
   >
     <i
-      class="fa fa-long-arrow-right tlp-button-icon"
+      class="fas fa-long-arrow-alt-right tlp-button-icon"
     />
      
     <translate-stub

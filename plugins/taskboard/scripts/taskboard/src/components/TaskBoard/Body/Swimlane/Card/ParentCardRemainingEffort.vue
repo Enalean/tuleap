@@ -32,7 +32,7 @@
     >
         <edit-remaining-effort v-if="is_in_edit_mode" v-bind:card="card" />
         <template v-else>{{ card.remaining_effort.value }}</template>
-        <i class="fa fa-long-arrow-right"></i>
+        <i class="fas fa-long-arrow-alt-right"></i>
         <i class="fa" v-bind:class="icon"></i>
     </span>
 </template>

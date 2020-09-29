@@ -21,7 +21,7 @@
     <div class="tlp-modal tlp-modal-danger" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fa fa-frown-o tlp-modal-title-icon"></i>
+                <i class="far fa-frown tlp-modal-title-icon"></i>
                 <translate>Oops</translate>
             </h1>
             <div

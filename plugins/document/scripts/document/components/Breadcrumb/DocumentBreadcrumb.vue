@@ -36,7 +36,7 @@
                     class="breadcrumb-link"
                     v-bind:title="document_tree_title"
                 >
-                    <i class="breadcrumb-link-icon fa fa-folder-open"></i>
+                    <i class="breadcrumb-link-icon far fa-folderpen"></i>
                     <translate>Documents</translate>
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">

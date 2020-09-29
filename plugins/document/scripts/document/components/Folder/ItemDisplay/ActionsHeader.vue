@@ -24,7 +24,7 @@
                 <create-new-item-version-button
                     class="tlp-button-primary tlp-dropdown-split-button-main"
                     v-bind:item="item"
-                    v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
+                    v-bind:icon-classes="'fas fa-share tlp-button-icon'"
                     data-test="item-action-create-new-version-button"
                     v-if="item.user_can_write"
                 />

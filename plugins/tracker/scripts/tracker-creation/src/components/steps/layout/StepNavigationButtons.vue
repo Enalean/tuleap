@@ -30,7 +30,7 @@
                 class="tracker-creation-previous-step-button"
                 data-test="button-back"
             >
-                <i class="fa fa-long-arrow-left"></i>
+                <i class="fas fa-long-arrow-alt-left"></i>
                 <span class="tracker-creation-previous-step-button-text" v-translate>Back</span>
             </router-link>
 
