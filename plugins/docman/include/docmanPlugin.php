@@ -868,7 +868,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                             <input type="hidden" name="group_id" value="' . $hp->purify($groupId) . '">
                             <input type="hidden" name="func" value="confirm_restore_version">
                             <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                                <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                                <i class="fas fa-redo tlp-button-icon"></i> Restore
                             </button>
                         </form>
                     </td>
@@ -952,7 +952,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                         <input type="hidden" name="group_id" value="' . $hp->purify($groupId) . '">
                         <input type="hidden" name="func" value="confirm_restore_item">
                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                            <i class="fa fa-repeat tlp-button-icon"></i> Restore
+                            <i class="fas fa-redo tlp-button-icon"></i> Restore
                         </button>
                     </form>
                     </td>

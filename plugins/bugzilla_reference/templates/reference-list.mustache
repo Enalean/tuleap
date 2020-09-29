@@ -30,21 +30,21 @@
                     <td class="tlp-table-cell-actions">
                         {{^ hasApiKeyAlwaysBeenEncrypted }}
                             <span class="tlp-text-danger tlp-tooltip tlp-tooltip-left" data-tlp-tooltip="{{ api_key_stored_plaintext_warning }}">
-                                <i class="tlp-badge-icon fa fa-warning"></i>
+                                <i class="tlp-badge-icon fas fa-exclamation-triangle"></i>
                             </span>
                         {{/ hasApiKeyAlwaysBeenEncrypted }}
                         <button type="button"
                                 class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline bugzilla-edit-modal"
                                 data-edit-modal-id="edit-modal-{{ getId }}"
                         >
-                            <i class="fa fa-pencil tlp-button-icon"></i>
+                            <i class="fas fa-pencil-alt tlp-button-icon"></i>
                             {{ edit }}
                         </button>
 
                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline bugzilla-delete-modal"
                                 data-delete-modal-id="delete-modal-{{ getId }}"
                         >
-                            <i class="fa fa-trash-o"></i> {{ delete }}
+                            <i class="far fa-trash-alt"></i> {{ delete }}
                         </button>
                         {{> edit-reference }}
                         {{> delete-reference }}

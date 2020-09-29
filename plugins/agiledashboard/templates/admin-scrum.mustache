@@ -63,7 +63,7 @@
                                     <label for="activate-scrum-v2" class="tlp-switch-button" aria-hidden="true"></label>
                                 </div>
                                 <p class="tlp-text-warning">
-                                    <i class="fa fa-warning"></i> {{ warning_feature_under_construction }}
+                                    <i class="fas fa-exclamation-triangle"></i> {{ warning_feature_under_construction }}
                                 </p>
                             </div>
                         {{/ can_scrum_mono_milestone_be_enabled }}
@@ -141,7 +141,7 @@
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title"><i class="fa fa-sign-in"></i> {{ planning_section }}</h1>
+                    <h1 class="tlp-pane-title"><i class="fas fa-sign-in-alt"></i> {{ planning_section }}</h1>
                 </div>
                 <section class="tlp-pane-section">
                     <div class="tlp-table-actions">
@@ -203,13 +203,13 @@
                                         <td>
                                             {{# extra_message }}
                                                 <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ extra_message }}">
-                                                    <i class="fa fa-warning agiledashboard-administration-scrum-planning-warning"></i>
+                                                    <i class="fas fa-exclamation-triangle agiledashboard-administration-scrum-planning-warning"></i>
                                                 </span>
                                             {{/ extra_message }}
                                         </td>
                                         <td class="tlp-table-cell-actions">
                                             <a href="{{ edit_url }}" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_action_label }}
+                                                <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_action_label }}
                                             </a>
                                             {{> admin-scrum/admin-planning-deletion }}
                                         </td>
@@ -229,7 +229,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-exchange tlp-pane-title-icon"></i> {{ import_export_section }}
+                        <i class="fas fa-exchange-alt tlp-pane-title-icon"></i> {{ import_export_section }}
                     </h1>
                 </div>
                 <section class="tlp-pane-section">

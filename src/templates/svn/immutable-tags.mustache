@@ -59,7 +59,7 @@
                     <span class="empty-state">{{ impacted_svn_empty_state }}</span>
                 </h4>
                 <div id="immutable-tags-console" class="well">
-                    <div class="empty-state"><i class="fa fa-hand-o-left"></i> {{ select_tag }}</div>
+                    <div class="empty-state"><i class="far fa-hand-point-left"></i> {{ select_tag }}</div>
                     <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-check"></i></div>
                     <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="fa fa-times"></i></div>
                     <br>

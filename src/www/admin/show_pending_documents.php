@@ -217,7 +217,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
             $html .= '<input type="hidden" name="func" value="confirm_restore_frs_file">';
             $html .= '<input type="hidden" name="id" value="' . $purifier->purify($file['file_id']) . '">';
             $html .= '<button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_restore') . '</button>';
+                        <i class="fas fa-redo tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_restore') . '</button>';
             $html .= '</form></td>';
             $html .= '</tr>';
         }
@@ -390,14 +390,14 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"
                             data-tlp-tooltip="Non-restorable attachment"
                             disabled>
-                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '
+                        <i class="fas fa-redo tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '
                     </button>';
             } else {
                 $tabbed_content .= '<form method="POST" onsubmit="return confirm(\'Confirm restore of this attachment\');">
                         <input type="hidden" name="func" value="confirm_restore_wiki_attachment">
                         <input type="hidden" name="id" value="' . $purifier->purify($wiki_attachment['id']) . '">
                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                        <i class="fa fa-repeat tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '</button>';
+                        <i class="fas fa-redo tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'wiki_restore') . '</button>';
                 $tabbed_content .= $csrf_token->fetchHTMLInput();
                 $tabbed_content .= '</form>';
             }

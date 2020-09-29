@@ -617,7 +617,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     private function getExpertModeButton()
     {
         $html  = '<button id="tracker-report-expert-query-button" type="button" class="btn btn-mini tracker-report-query-button">';
-        $html .= '<i class="fa fa-random"></i> ';
+        $html .= '<i class="fas fa-random"></i> ';
         $html .= dgettext('tuleap-tracker', 'Expert mode');
         $html .= '</button>';
 

@@ -105,7 +105,7 @@ class UserNavPresenter
         return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'login'),
             $this->url_redirect->buildReturnToLogin($_SERVER),
-            'fa fa-sign-in',
+            'fas fa-sign-in-alt',
             '',
             []
         );

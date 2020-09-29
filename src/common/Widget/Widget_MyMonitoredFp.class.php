@@ -110,7 +110,7 @@ class Widget_MyMonitoredFp extends Widget
                             '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id=' .
                             db_result($result2, $i, 'filemodule_id') . '&group_id=' . $group_id .
                             '" onClick="return confirm(\'' . $GLOBALS['Language']->getText('my_index', 'stop_file') . '\')">' .
-                            '<i class="fa fa-trash-o" title="' . $GLOBALS['Language']->getText('my_index', 'stop_monitor') . '"></i></A></TD></TR>';
+                            '<i class="far fa-trash-alt" title="' . $GLOBALS['Language']->getText('my_index', 'stop_monitor') . '"></i></A></TD></TR>';
                     }
                 }
 

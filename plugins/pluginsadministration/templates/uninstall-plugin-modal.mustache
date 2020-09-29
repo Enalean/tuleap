@@ -5,7 +5,7 @@
         {{/ csrf_token }}
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="uninstall-plugin-{{ id }}-label">
-                <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ uninstall_modal_title }} {{ name }}
+                <i class="far fa-trash-alt tlp-modal-title-icon"></i> {{ uninstall_modal_title }} {{ name }}
             </h1>
             <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="Close">
                 &times;
@@ -46,7 +46,7 @@
             </button>
             {{^ is_there_unmet_dependencies }}
                 <button type="sumit" class="tlp-button-danger tlp-modal-action">
-                    <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_modal_submit }}
+                    <i class="far fa-trash-alt tlp-button-icon"></i> {{ uninstall_modal_submit }}
                 </button>
             {{/ is_there_unmet_dependencies }}
         </div>

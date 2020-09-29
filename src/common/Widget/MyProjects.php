@@ -157,7 +157,7 @@ class MyProjects extends \Widget
                 if ($disable_contact === false) {
                     // Mailing tool
                     $html .= '<td class="' . $tdClass . '">';
-                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $row['group_id'] . '" title="' . $GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])) . '" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
+                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $row['group_id'] . '" title="' . $GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])) . '" data-toggle="modal"><span class="far fa-envelope"></span></a>';
                     $html .= '</td>';
                 }
 
@@ -166,7 +166,7 @@ class MyProjects extends \Widget
                 if ($row['admin_flags'] != 'A') {
                     $link = 'rmproject.php?group_id=' . urlencode($row['group_id']);
                     $warn = $GLOBALS['Language']->getText('my_index', 'quit_proj');
-                    $html .= '<a href="' . $link . '" onClick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="fa fa-trash-o"></i></a>';
+                    $html .= '<a href="' . $link . '" onClick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="far fa-trash-alt"></i></a>';
                 } else {
                     $html .= '&nbsp;';
                 }

@@ -418,7 +418,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     public function getIcon()
     {
-        return 'fa fa-bar-chart-o';
+        return 'far fa-chart-bar';
     }
 
     public function getJavascriptDependencies(): array

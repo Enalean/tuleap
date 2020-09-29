@@ -22,7 +22,7 @@
                                             data-test="account-information-avatar-button"
                                             data-target-modal-id="account-information-avatar-modal"
                                     >
-                                        <i class="tlp-button-icon fa fa-pencil account-information-avatar-button-icon"></i>
+                                        <i class="tlp-button-icon fas fa-pencil-alt account-information-avatar-button-icon"></i>
                                     </button>
                                     {{# has_avatar }}
                                         <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
@@ -125,7 +125,7 @@
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
                         <button type="submit" class="tlp-button-primary" data-test="user-prefs-submit-button">
-                            <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
+                            <i class="far fa-save tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>
                 </form>
@@ -142,7 +142,7 @@
 >
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
-            <i class="fa fa-user-circle-o tlp-modal-title-icon"></i>
+            <i class="far fa-user-circle tlp-modal-title-icon"></i>
             <span id="account-information-avatar-modal-title">
                 {{# gettext }}New avatar{{/ gettext }}
             </span>
@@ -185,7 +185,7 @@
                             data-test="account-information-avatar-modal-use-default-button"
                             data-default-avatar-data-url="{{ default_avatar_data_url }}"
                     >
-                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                        <i class="far fa-trash-alt tlp-button-icon"></i>
                         {{# gettext }}Use default avatar{{/gettext}}
                     </button>
                     <input type="hidden"
@@ -199,7 +199,7 @@
         <div class="tlp-modal-footer">
             <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
             <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="user-prefs-save-avatar-button">
-                <i class="fa fa-floppy-o tlp-button-icon"></i>
+                <i class="far fa-save tlp-button-icon"></i>
                 {{# gettext }}Save new avatar{{/ gettext }}
             </button>
         </div>

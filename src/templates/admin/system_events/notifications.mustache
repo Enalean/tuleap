@@ -10,7 +10,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{ notifications_label }}
+                        <i class="far fa-envelope tlp-pane-title-icon"></i> {{ notifications_label }}
                     </h1>
                 </div>
                 <section class="tlp-pane-section">
@@ -45,13 +45,13 @@
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                                             data-modal-id="edit-notification-modal-{{ id }}"
                                         >
-                                            <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_label }}
+                                            <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_label }}
                                         </button>
                                         <button type="button"
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
                                             data-modal-id="delete-notification-modal-{{ id }}"
                                         >
-                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_label }}
+                                            <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_label }}
                                         </button>
                                         {{> notifications-edit-modal }}
                                         {{> notifications-delete-modal }}

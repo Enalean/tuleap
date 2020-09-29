@@ -3,7 +3,7 @@
         <div class="btn-group">
             {{# user_dashboards_presenter }}
                 <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
-                    <i class="fa fa-tachometer"></i> {{ my_dashboard }}
+                    <i class="fas fa-tachometer-alt"></i> {{ my_dashboard }}
                 </a>
             {{/ user_dashboards_presenter }}
         </div>
@@ -11,7 +11,7 @@
     {{^ has_only_one_user_dashboard }}
         <div class="btn-group">
             <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-tachometer"></i>
+                <i class="fas fa-tachometer-alt"></i>
                 {{ my_dashboard }}
                 <span class="caret"></span>
             </a>
@@ -29,7 +29,7 @@
             <div class="btn-group">
                 {{# project_dashboards_presenter }}
                     <a class="btn btn-mini" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
-                        <i class="fa fa-tachometer"></i> {{ project_dashboard }}
+                        <i class="fas fa-tachometer-alt"></i> {{ project_dashboard }}
                     </a>
                 {{/ project_dashboards_presenter }}
             </div>
@@ -37,7 +37,7 @@
         {{^ has_only_one_project_dashboard }}
             <div class="btn-group">
                 <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-tachometer"></i>
+                    <i class="fas fa-tachometer-alt"></i>
                     {{ project_dashboard }}
                     <span class="caret"></span>
                 </a>

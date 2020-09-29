@@ -4,7 +4,7 @@
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                <i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{ subtitle }}
+                <i class="far fa-envelope tlp-pane-title-icon"></i> {{ subtitle }}
             </h1>
         </div>
         <form action="massmail_execute.php" method="POST" class="tlp-pane-section">
@@ -71,7 +71,7 @@
                             class="tlp-append tlp-button-primary tlp-button-outline"
                             title="{{ send_preview_label }}"
                     >
-                        <i class="fa fa-paper-plane-o tlp-button-icon"></i> {{ send_preview_label }}
+                        <i class="far fa-paper-plane tlp-button-icon"></i> {{ send_preview_label }}
                     </button>
                 </div>
             </div>
@@ -80,7 +80,7 @@
 
             <div class="tlp-pane-section-submit">
                 <button type="submit" class="tlp-button-primary" id="massmail-submit">
-                    <i class="fa fa-paper-plane-o tlp-button-icon"></i> {{ send_email_label }}
+                    <i class="far fa-paper-plane tlp-button-icon"></i> {{ send_email_label }}
                 </button>
             </div>
 
@@ -91,7 +91,7 @@
             >
                 <div class="tlp-modal-header">
                     <h1 class="tlp-modal-title" id="massmail-modal-warning-label">
-                        <i class="fa fa-paper-plane-o tlp-modal-title-icon"></i> {{ confirmation_title }}
+                        <i class="far fa-paper-plane tlp-modal-title-icon"></i> {{ confirmation_title }}
                     </h1>
                     <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="Close">
                         ×
@@ -108,7 +108,7 @@
                         {{ cancel }}
                     </button>
                     <button type="button" class="tlp-button-warning tlp-modal-action" id="massmail-confirm-sending">
-                        <i class="fa fa-paper-plane-o tlp-button-icon"></i> {{ send_email_label }}
+                        <i class="far fa-paper-plane tlp-button-icon"></i> {{ send_email_label }}
                     </button>
                 </div>
             </div>

@@ -2,7 +2,7 @@
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-group"></i> {{# gettext }}Members{{/ gettext }} </h1>
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fas fa-users"></i> {{# gettext }}Members{{/ gettext }} </h1>
             </div>
             <section class="tlp-pane-section">
                 {{# is_synchronized_with_ugroups }}
@@ -117,7 +117,7 @@
                                         <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                                             href="/project/admin/editgenericmember.php?group_id={{ project_id }}"
                                         >
-                                            <i class="fa fa-pencil tlp-button-icon"></i>
+                                            <i class="fas fa-pencil-alt tlp-button-icon"></i>
                                             {{# gettext }}Edit settings{{/ gettext }}
                                         </a>
                                     {{/ is_generic }}
@@ -140,7 +140,7 @@
                                                 data-tlp-tooltip="{{# gettext }}Project admins can't be removed from project. You must remove them from Project administrators group first.{{/ gettext }}"
                                             {{/ is_project_admin }}
                                     >
-                                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                                        <i class="far fa-trash-alt tlp-button-icon"></i>
                                         {{# gettext }}Remove from project{{/ gettext }}
                                     </button>
                                 </td>
