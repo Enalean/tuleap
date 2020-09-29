@@ -34,13 +34,26 @@
                 </label>
                 <input
                     type="email"
-                    multiple class="tlp-input"
+                    multiple
+                    class="tlp-input"
                     id="invite-buddies-email"
                     name="invite_buddies_email"
                     placeholder="peter@example.com, wendy@example.com, …"
                     required
                 >
                 <p class="tlp-text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="invite-buddies-message">
+                    {{# gettext }}Message{{/ gettext }}
+                </label>
+                <textarea
+                    class="tlp-textarea"
+                    id="invite-buddies-message"
+                    name="invite_buddies_message"
+                    placeholder="Optional message…"
+                ></textarea>
             </div>
         </div>
         <div class="tlp-modal-footer" id="invite-buddies-modal-footer">

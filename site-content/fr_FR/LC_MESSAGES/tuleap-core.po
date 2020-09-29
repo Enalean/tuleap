@@ -1195,6 +1195,9 @@ msgstr "Appartenance aux groupes d'utilisateurs (lecture seule)"
 msgid "Membership management"
 msgstr "Gestion des membres"
 
+msgid "Message"
+msgstr "Message"
+
 #, php-format
 msgid "Message from %s:"
 msgstr "Message de la part de %s :"

@@ -34,6 +34,7 @@ describe("send-notifications", () => {
     describe("sendNotifactions", () => {
         let form: HTMLFormElement;
         let email_field: HTMLInputElement;
+        let message_field: HTMLTextAreaElement;
 
         beforeEach(() => {
             const doc = document.implementation.createHTMLDocument();
@@ -42,8 +43,12 @@ describe("send-notifications", () => {
             email_field.type = "email";
             email_field.name = "invite_buddies_email";
 
+            message_field = doc.createElement("textarea");
+            message_field.name = "invite_buddies_message";
+
             form = doc.createElement("form");
             form.appendChild(email_field);
+            form.appendChild(message_field);
 
             doc.body.appendChild(form);
 
@@ -52,6 +57,7 @@ describe("send-notifications", () => {
 
         it("Creates invitation and displays success feedback", async () => {
             email_field.value = "peter@example.com, wendy@example.com";
+            message_field.value = "Lorem ipsum doloret";
 
             const activateSpinner = jest.spyOn(spinner, "activateSpinner");
             const deactivateSpinner = jest.spyOn(spinner, "deactivateSpinner");
@@ -69,6 +75,7 @@ describe("send-notifications", () => {
                 },
                 body: JSON.stringify({
                     emails: ["peter@example.com", "wendy@example.com"],
+                    custom_message: "Lorem ipsum doloret",
                 }),
             });
 
@@ -83,6 +90,7 @@ describe("send-notifications", () => {
 
         it("Tries to create invitation and displays error", async () => {
             email_field.value = "peter@example.com, wendy@example.com";
+            message_field.value = "Lorem ipsum doloret";
 
             const activateSpinner = jest.spyOn(spinner, "activateSpinner");
             const deactivateSpinner = jest.spyOn(spinner, "deactivateSpinner");
@@ -106,6 +114,7 @@ describe("send-notifications", () => {
                 },
                 body: JSON.stringify({
                     emails: ["peter@example.com", "wendy@example.com"],
+                    custom_message: "Lorem ipsum doloret",
                 }),
             });
 
