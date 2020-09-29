@@ -43,7 +43,7 @@
             required
         />
         <p class="tlp-text-info tracker-shortname-input-helper">
-            <i class="fa fa-fw fa-life-saver"></i>
+            <i class="far fa-fw fa-life-ring"></i>
             <translate>Avoid spaces and punctuation</translate>
         </p>
         <p

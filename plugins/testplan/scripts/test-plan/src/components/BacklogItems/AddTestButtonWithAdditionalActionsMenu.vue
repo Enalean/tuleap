@@ -38,7 +38,7 @@
         </div>
         <div class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu" ref="dropdownMenu">
             <a v-bind:href="edit_backlog_item_href" class="tlp-dropdown-menu-item" role="menuitem">
-                <i class="fa fa-fw fa-pencil"></i>
+                <i class="fas fa-fw fa-pencil-alt"></i>
                 <translate
                     v-bind:translate-params="{
                         item_type: backlog_item.short_type,

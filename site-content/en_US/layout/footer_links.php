@@ -24,5 +24,5 @@
     <br>
     <a class="footer-link" href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-twitter"></i> @TuleapOpenALM</a>
     <br>
-    <a class="footer-link" href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-linkedin"></i> Tuleap Community</a>
+    <a class="footer-link" href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank" rel="noreferrer"><i class="fab fa-fw fa-linkedin-in"></i> Tuleap Community</a>
 </p>

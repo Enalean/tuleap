@@ -61,11 +61,11 @@ describe("TestDefinitionCardXrefTitle", () => {
               <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" class="test-plan-test-definition-xref">
                   test_def #123
                   <i class="fa fa-caret-down"></i></a>
-                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-fw fa-pencil"></i>
+                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fas fa-fw fa-pencil-alt"></i>
                     <translate-stub tag="span" translateparams="[object Object]">
                       Edit %{ item_type } #%{ item_id }
                     </translate-stub>
-                  </a> <span role="separator" class="tlp-dropdown-menu-separator"></span> <a href="/plugins/testmanagement/?group_id=102&amp;milestone_id=11#!/campaigns/41/123/123" role="menuitem" data-test="go-to-last-test-exec" class="tlp-dropdown-menu-item"><i class="fa fa-fw fa-long-arrow-right"></i>
+                  </a> <span role="separator" class="tlp-dropdown-menu-separator"></span> <a href="/plugins/testmanagement/?group_id=102&amp;milestone_id=11#!/campaigns/41/123/123" role="menuitem" data-test="go-to-last-test-exec" class="tlp-dropdown-menu-item"><i class="fas fa-fw fa-long-arrow-alt-right"></i>
                     <translate-stub tag="span" translateparams="[object Object]">
                       Go to the last execution in release %{ release_name }
                     </translate-stub>
