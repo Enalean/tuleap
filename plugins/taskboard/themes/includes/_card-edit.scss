@@ -218,7 +218,7 @@
     cursor: pointer;
 
     &::before {
-        content: '\f040'; // fa-pencil
+        content: '\f303'; // fa-pencil-alt
         display: flex;
         position: absolute;
         top: -2px;
@@ -228,9 +228,9 @@
         height: 26px;
         transition: opacity ease-in-out 100ms;
         opacity: 0;
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 5 Free';
         font-size: 14px;
-        font-weight: 300;
+        font-weight: 900;
 
         @if $tlp-density == $tlp-density-condensed {
             top: -3px;

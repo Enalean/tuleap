@@ -28,8 +28,12 @@ $tuleap-common-theme-basepath: '../../../www/themes/common/';
 @import '../../../common/css/utils/utils';
 @import './variables-common';
 
-$fa-font-path: '../../tlp/src/fonts/font-awesome-4.7.0/fonts';
-@import '../../../tlp/src/fonts/font-awesome-4.7.0/scss/font-awesome';
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/shims';
 
 $tlp-font-basepath: '../../tlp/src';
 @import '../../../tlp/src/fonts/tlp-font/tlp-font';

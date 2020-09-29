@@ -108,7 +108,8 @@
                     position: relative;
                     top: 2px;
                     color: #888888;
-                    font-family: 'FontAwesome';
+                    font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
                 }
 
                 &:not(:only-child) > .select2-search__field { //stylelint-disable-line selector-max-compound-selectors
@@ -121,7 +122,6 @@
                         content: '\f02c'; // fa-tags
                         right: 5px;
                         left: auto;
-                        font-family: 'FontAwesome';
                     }
 
                     > .select2-search__field { //stylelint-disable-line selector-max-compound-selectors, max-nesting-depth
@@ -141,7 +141,8 @@ span.select2 {
     > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice > .select2-selection__choice__remove { //stylelint-disable-line selector-max-compound-selectors
         &::before { //stylelint-disable-line selector-max-compound-selectors
             content: '\f02b'; // fa-tag
-            font-family: 'FontAwesome';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
         }
 
         &:hover::before { //stylelint-disable-line selector-max-compound-selectors
@@ -152,7 +153,8 @@ span.select2 {
     &:not(.select2-container--disabled) > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice {
         &:hover > .select2-selection__choice__remove::before { //stylelint-disable-line selector-max-compound-selectors
             content: '\f057'; // fa-times-circle
-            font-family: 'FontAwesome';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
         }
     }
 }

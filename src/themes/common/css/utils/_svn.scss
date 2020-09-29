@@ -135,7 +135,7 @@ textarea.not_resizable {
             transition: opacity linear .07s;
             opacity: 0;
             color: #222222;
-            font-family: FontAwesome;
+            font-family: 'Font Awesome 5 Free';
             font-size: 13px;
         }
 
@@ -216,8 +216,9 @@ textarea.not_resizable {
         position: absolute;
         top: 1px;
         right: 2px;
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 5 Free';
         font-size: 13px;
+        font-weight: 900;
     }
 
     > .label-important::before {

@@ -233,9 +233,10 @@
 .provider-icon-results,
 .provider-admin-modal-provider-button {
     .fa-circle-blank::before {
-        content: '\f10c'; // fa-circle-o
-        font-family: FontAwesome;
+        content: '\f111'; // fa-circle
+        font-family: 'Font Awesome 5 Free';
         font-style: normal;
+        font-weight: 400;
     }
 }
 
