@@ -66,7 +66,7 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             });
     }
 
-    async function putTestExecution(execution_id, new_status, results, uploaded_file_ids) {
+    function putTestExecution(execution_id, new_status, results, uploaded_file_ids) {
         let param = {
             status: new_status,
             uploaded_file_ids: uploaded_file_ids,
@@ -75,12 +75,14 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
 
         const body = JSON.stringify(param);
 
-        const response = await put(`/api/v1/testmanagement_executions/${execution_id}`, {
-            headers,
-            body,
-        });
-
-        return response.json();
+        return $q
+            .when(
+                put(`/api/v1/testmanagement_executions/${execution_id}`, {
+                    headers,
+                    body,
+                })
+            )
+            .then((response) => response.json());
     }
 
     function updateExecutionToUseLatestVersionOfDefinition(execution_id) {

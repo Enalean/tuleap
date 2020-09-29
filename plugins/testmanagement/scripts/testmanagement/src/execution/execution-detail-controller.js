@@ -333,9 +333,10 @@ function ExecutionDetailCtrl(
             })
             .catch(function (response) {
                 ExecutionService.displayError(execution, response);
+            })
+            .finally(function () {
+                execution.saving = false;
             });
-
-        execution.saving = false;
     }
 
     function getStatusLabel(status) {
