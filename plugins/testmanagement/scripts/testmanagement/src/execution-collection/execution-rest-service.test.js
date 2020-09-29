@@ -21,13 +21,12 @@ import execution_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
-import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 import * as tlp from "tlp";
 
 jest.mock("tlp");
 
 describe("ExecutionRestService", () => {
-    let mockBackend, wrapPromise, ExecutionRestService, SharedPropertiesService;
+    let mockBackend, wrapPromise, $q, ExecutionRestService, SharedPropertiesService;
     const UUID = "123";
 
     beforeEach(() => {
@@ -37,11 +36,13 @@ describe("ExecutionRestService", () => {
         angular.mock.inject(function (
             $httpBackend,
             _$rootScope_,
+            _$q_,
             _ExecutionRestService_,
             _SharedPropertiesService_
         ) {
             mockBackend = $httpBackend;
             $rootScope = _$rootScope_;
+            $q = _$q_;
             ExecutionRestService = _ExecutionRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -55,6 +56,15 @@ describe("ExecutionRestService", () => {
         mockBackend.verifyNoOutstandingExpectation();
         mockBackend.verifyNoOutstandingRequest();
     });
+
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
 
     it("getRemoteExecutions()", async () => {
         const response = [
@@ -99,7 +109,7 @@ describe("ExecutionRestService", () => {
         const tlpPutSpy = jest.spyOn(tlp, "put");
         mockFetchSuccess(tlpPutSpy);
 
-        await ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]);
+        await wrapPromise(ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]));
 
         expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/testmanagement_executions/4", {
             headers: {
