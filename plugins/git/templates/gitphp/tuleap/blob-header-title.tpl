@@ -19,7 +19,7 @@
  *}
 
 <h1 class="git-repository-blob-header-title">
-    <i class="tlp-pane-title-icon fa fa-file-text-o"></i>
+    <i class="tlp-pane-title-icon far fa-file-alt"></i>
     {assign var=blobcommit value=$blob->GetCommit()}
     {assign var=blobtree value=$blobcommit->GetTree()}
 

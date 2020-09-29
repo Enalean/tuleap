@@ -34,13 +34,13 @@
                         <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
-                            <i class="fa fa-files-o tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
+                            <i class="far fa-copy tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
                         </a>
                     </div>
                     <div class="tlp-button-bar-item">
                         <input type="radio" class="tlp-button-bar-checkbox" checked>
                         <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                            <i class="fa fa-file-o tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
+                            <i class="far fa-file tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
                         </label>
                     </div>
                 </div>

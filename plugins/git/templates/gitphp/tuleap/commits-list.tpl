@@ -77,7 +77,7 @@
                 </span>
 
                 <span class="git-repository-commit-card-info-metadata-date">
-                    <i class="fa fa-clock-o git-repository-commit-card-info-metadata-date-icon"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
+                    <i class="far fa-clock git-repository-commit-card-info-metadata-date-icon"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
                 </span>
 
                 {include file='tuleap/refs-badges.tpl' commit=$commit_presenter->commit}

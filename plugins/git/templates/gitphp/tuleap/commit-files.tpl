@@ -33,14 +33,14 @@
                 <a href="{$commit_presenter->getCommitDiffSideBySideLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    <i class="fa fa-files-o tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
+                    <i class="far fa-copy tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
                 </a>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    <i class="fa fa-file-o tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
+                    <i class="far fa-file tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
                 </a>
             </div>
         </div>
@@ -83,12 +83,12 @@
                     <a href="{$commit_presenter->getDiffLink($diffline)}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        <i class="fa fa-long-arrow-right tlp-button-icon"></i> {t domain="gitphp"}Go to diff{/t}
+                        <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i> {t domain="gitphp"}Go to diff{/t}
                     </a>
                     <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        <i class="fa fa-file-text-o tlp-button-icon"></i> {t}View file{/t}
+                        <i class="far fa-file-alt tlp-button-icon"></i> {t}View file{/t}
                     </a>
                 </td>
             </tr>
