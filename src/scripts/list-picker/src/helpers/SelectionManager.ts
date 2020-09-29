@@ -18,98 +18,119 @@
  */
 import { sanitize } from "dompurify";
 import { DropdownToggler } from "./DropdownToggler";
+import { ListPickerItem, ListPickerSelectionStateSingle } from "../type";
 
 export class SelectionManager {
+    private selection_state: ListPickerSelectionStateSingle | null;
+
     constructor(
         private readonly source_select_box: HTMLSelectElement,
         private readonly dropdown_element: Element,
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
-        private readonly dropdown_toggler: DropdownToggler
-    ) {}
+        private readonly dropdown_toggler: DropdownToggler,
+        private readonly item_map: Map<string, ListPickerItem>
+    ) {
+        this.selection_state = null;
+    }
 
     public processSingleSelection(item: Element): void {
-        const is_selected = item.getAttribute("aria-selected") === "true";
-        if (is_selected) {
+        const list_item = this.getListPickerItem(item.id);
+        if (list_item.is_selected) {
             // We won't unselect it
             return;
         }
 
         if (this.selection_element.contains(this.placeholder_element)) {
-            this.replacePlaceholderWithCurrentSelection(item, this.placeholder_element);
+            this.replacePlaceholderWithCurrentSelection(list_item, this.placeholder_element);
+            return;
         }
 
-        const selection_value = this.selection_element.querySelector(".list-picker-selected-value");
-
-        if (selection_value instanceof HTMLElement) {
-            const option_to_unselect = this.source_select_box.querySelector(
-                `[data-item-id=${selection_value.dataset.itemId}]`
-            );
-
-            if (option_to_unselect) {
-                option_to_unselect.removeAttribute("selected");
-            }
-
-            this.replacePreviousSelectionWithCurrentOne(item, selection_value);
+        if (this.selection_state !== null) {
+            this.replacePreviousSelectionWithCurrentOne(list_item, this.selection_state);
+            return;
         }
 
-        const option_to_select = this.source_select_box.querySelector(`[data-item-id=${item.id}]`);
-        if (option_to_select) {
-            item.setAttribute("aria-selected", "true");
-            option_to_select.setAttribute("selected", "selected");
+        throw new Error("Nothing has been selected");
+    }
+
+    private getListPickerItem(item_id: string): ListPickerItem {
+        const list_item = this.item_map.get(item_id);
+
+        if (!list_item) {
+            throw new Error(`Item with id ${item_id} not found in item map`);
         }
+
+        return list_item;
     }
 
     public initSelection(placeholder_element: Element): void {
         const selected_option = this.source_select_box.querySelector("option[selected]");
 
-        if (!(selected_option instanceof HTMLElement)) {
+        if (!(selected_option instanceof HTMLElement) || !selected_option.dataset.itemId) {
             return;
         }
 
-        const selected_item = this.dropdown_element.querySelector(
-            "#" + selected_option.dataset.itemId
+        this.replacePlaceholderWithCurrentSelection(
+            this.getListPickerItem(selected_option.dataset.itemId),
+            placeholder_element
         );
-
-        if (selected_item) {
-            this.replacePlaceholderWithCurrentSelection(selected_item, placeholder_element);
-            selected_item.setAttribute("aria-selected", "true");
-        }
     }
 
-    private createCurrentSelectionElement(item: Element): Element {
+    private createCurrentSelectionElement(item: ListPickerItem): Element {
         const selected_value = document.createElement("span");
         selected_value.classList.add("list-picker-selected-value");
         selected_value.setAttribute("data-item-id", item.id);
         selected_value.setAttribute("aria-readonly", "true");
 
-        selected_value.innerHTML = sanitize(item.innerHTML);
+        selected_value.appendChild(document.createTextNode(item.template));
         selected_value.appendChild(this.createRemoveCurrentSelectionButton(item));
 
         return selected_value;
     }
 
-    private replacePlaceholderWithCurrentSelection(item: Element, placeholder: Element): void {
+    private replacePlaceholderWithCurrentSelection(
+        item: ListPickerItem,
+        placeholder: Element
+    ): void {
         const selected_value = this.createCurrentSelectionElement(item);
 
         this.selection_element.appendChild(selected_value);
         this.selection_element.removeChild(placeholder);
+
+        item.is_selected = true;
+        item.element.setAttribute("aria-selected", "true");
+        item.target_option.setAttribute("selected", "selected");
+
+        this.selection_state = {
+            selected_item: item,
+            selected_value_element: selected_value,
+        };
     }
 
-    private replacePreviousSelectionWithCurrentOne(item: Element, selection_value: Element): void {
-        const currently_selected_item = this.dropdown_element.querySelector("[aria-selected=true]");
+    private replacePreviousSelectionWithCurrentOne(
+        newly_selected_item: ListPickerItem,
+        selection_state: ListPickerSelectionStateSingle
+    ): void {
+        const new_selected_value_element = this.createCurrentSelectionElement(newly_selected_item);
 
-        if (!(currently_selected_item instanceof Element)) {
-            return;
-        }
+        selection_state.selected_item.is_selected = false;
+        selection_state.selected_item.element.setAttribute("aria-selected", "false");
+        selection_state.selected_item.target_option.removeAttribute("selected");
 
-        currently_selected_item.setAttribute("aria-selected", "false");
+        newly_selected_item.is_selected = true;
+        newly_selected_item.element.setAttribute("aria-selected", "true");
+        newly_selected_item.target_option.setAttribute("selected", "selected");
 
-        this.selection_element.removeChild(selection_value);
-        this.selection_element.appendChild(this.createCurrentSelectionElement(item));
+        this.selection_element.removeChild(selection_state.selected_value_element);
+        this.selection_element.appendChild(new_selected_value_element);
+        this.selection_state = {
+            selected_item: newly_selected_item,
+            selected_value_element: new_selected_value_element,
+        };
     }
 
-    private createRemoveCurrentSelectionButton(item: Element): Element {
+    private createRemoveCurrentSelectionButton(item: ListPickerItem): Element {
         const remove_value_button = document.createElement("span");
         remove_value_button.classList.add("list-picker-selected-value-remove-button");
         remove_value_button.innerHTML = sanitize("&times");
@@ -125,17 +146,13 @@ export class SelectionManager {
         return remove_value_button;
     }
 
-    private replaceCurrentValueWithPlaceholder(item_to_unselect: Element): void {
+    private replaceCurrentValueWithPlaceholder(item_to_unselect: ListPickerItem): void {
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(this.placeholder_element);
-        item_to_unselect.setAttribute("aria-selected", "false");
+        item_to_unselect.element.setAttribute("aria-selected", "false");
+        item_to_unselect.target_option.removeAttribute("selected");
+        item_to_unselect.is_selected = false;
 
-        const option_to_unselect = this.source_select_box.querySelector(
-            `[data-item-id=${item_to_unselect.id}]`
-        );
-
-        if (option_to_unselect) {
-            option_to_unselect.removeAttribute("selected");
-        }
+        this.selection_state = null;
     }
 }

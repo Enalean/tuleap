@@ -17,19 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { sanitize } from "dompurify";
 import { ListPickerItem, ListPickerItemGroup } from "../type";
-import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
 
 export class DropdownContentRenderer {
-    private readonly item_map: Map<string, ListPickerItem>;
-
     constructor(
         private readonly source_select_box: HTMLSelectElement,
-        private readonly dropdown_list_element: Element
-    ) {
-        this.item_map = generateItemMapBasedOnSourceSelectOptions(this.source_select_box);
-    }
+        private readonly dropdown_list_element: Element,
+        private readonly item_map: Map<string, ListPickerItem>
+    ) {}
 
     public renderListPickerDropdownContent(): void {
         const select_box_option_groups = this.source_select_box.querySelectorAll("optgroup");
@@ -39,8 +34,8 @@ export class DropdownContentRenderer {
             return;
         }
 
-        Array.from(this.item_map.entries()).forEach(([item_id, current_item]) => {
-            this.dropdown_list_element.appendChild(this.getRenderedListItem(item_id, current_item));
+        Array.from(this.item_map.values()).forEach((current_item) => {
+            this.dropdown_list_element.appendChild(current_item.element);
         });
     }
 
@@ -52,25 +47,10 @@ export class DropdownContentRenderer {
                     return item.group_id === group.id;
                 })
                 .forEach((item) => {
-                    const rendered_item = this.getRenderedListItem(item.id, item);
+                    const rendered_item = item.element;
                     group.element.appendChild(rendered_item);
                 });
         });
-    }
-
-    private getRenderedListItem(option_id: string, current_item: ListPickerItem): Element {
-        const list_item = document.createElement("li");
-        list_item.id = option_id;
-        list_item.appendChild(document.createTextNode(sanitize(current_item.template)));
-        list_item.setAttribute("role", "option");
-        list_item.setAttribute("aria-selected", "false");
-
-        if (current_item.is_disabled) {
-            list_item.classList.add("list-picker-dropdown-option-value-disabled");
-        } else {
-            list_item.classList.add("list-picker-dropdown-option-value");
-        }
-        return list_item;
     }
 
     private getRenderedEmptyListItemGroup(optgroup: HTMLOptGroupElement): ListPickerItemGroup {

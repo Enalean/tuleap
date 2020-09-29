@@ -20,45 +20,31 @@
 import { SelectionManager } from "./SelectionManager";
 import { DropdownToggler } from "./DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
+import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
+import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
+import { ListPickerItem } from "../type";
 
 describe("selection-manager", () => {
     let source_select_box: HTMLSelectElement,
-        component_dropdown_list: Element,
         selection_container: Element,
         placeholder: Element,
         manager: SelectionManager,
-        toggler: DropdownToggler;
+        toggler: DropdownToggler,
+        item_map: Map<string, ListPickerItem>;
 
-    function createItem(id: string, label: string, is_selected: boolean): Element {
-        const item = document.createElement("li");
-        item.id = id;
-        item.setAttribute("aria-selected", is_selected.toString());
-        item.appendChild(document.createTextNode(label));
-        return item;
-    }
+    function getItem(item_id: string): ListPickerItem {
+        const item = item_map.get(item_id);
 
-    function createSelection(label: string, item_id: string): Element {
-        const selected_value = document.createElement("span");
-        selected_value.classList.add("list-picker-selected-value");
-        selected_value.setAttribute("data-item-id", item_id);
-        selected_value.appendChild(document.createTextNode(label));
-
-        return selected_value;
-    }
-
-    function createOption(label: string, is_selected: boolean, source_item_id: string): Element {
-        const option = document.createElement("option");
-        option.appendChild(document.createTextNode(label));
-        option.setAttribute("data-item-id", source_item_id);
-        if (is_selected) {
-            option.setAttribute("selected", "selected");
+        if (!item) {
+            throw new Error(`item with id ${item_id} not found`);
         }
 
-        return option;
+        return item;
     }
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
+        appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const {
             list_picker_element,
@@ -72,100 +58,98 @@ describe("selection-manager", () => {
 
         selection_container = selection_element;
         placeholder = placeholder_element;
-        component_dropdown_list = dropdown_list_element;
 
         toggler = new DropdownToggler(list_picker_element, dropdown_element, dropdown_list_element);
+        item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
         manager = new SelectionManager(
             source_select_box,
             dropdown_element,
             selection_container,
             placeholder,
-            toggler
+            toggler,
+            item_map
         );
     });
 
     describe("initSelection", () => {
         it("When a value is already selected in the source <select>, then it selects it in the list-picker", () => {
-            const option = createOption("Value 1", true, "item-1");
-            const item = createItem("item-1", "Value 1", true);
+            const item = getItem("item-1");
+            const option = item.target_option;
 
-            source_select_box.appendChild(option);
-            selection_container.appendChild(placeholder);
-            component_dropdown_list.appendChild(item);
-
+            option.setAttribute("selected", "selected");
             manager.initSelection(placeholder);
 
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
-            expect(item.getAttribute("aria-selected")).toEqual("true");
+            expect(item.element.getAttribute("aria-selected")).toEqual("true");
             expect(option.hasAttribute("selected")).toBe(true);
         });
 
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
-            const option = createOption("Value 1", false, "item-1");
-            const item = createItem("item-1", "Value 1", false);
+            const item = getItem("item-1");
+            const option = item.target_option;
 
-            source_select_box.appendChild(option);
-            component_dropdown_list.appendChild(item);
             selection_container.appendChild(placeholder);
 
             manager.initSelection(placeholder);
 
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
-            expect(item.getAttribute("aria-selected")).toEqual("false");
+            expect(item.element.getAttribute("aria-selected")).toEqual("false");
             expect(option.hasAttribute("selected")).toBe(false);
         });
     });
 
     describe("processSingleSelection", () => {
         it("does nothing if item is already selected", () => {
-            const item = createItem("item-1", "Value 1", true);
+            const item = getItem("item-1");
+            const option = item.target_option;
 
-            manager.processSingleSelection(item);
+            option.setAttribute("selected", "selected");
+            item.element.setAttribute("aria-selected", "true");
+            item.is_selected = true;
 
-            expect(item.getAttribute("aria-selected")).toEqual("true");
+            manager.processSingleSelection(item.element);
+
+            expect(item.element.getAttribute("aria-selected")).toEqual("true");
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
-            const new_option = createOption("new value", true, "item-1");
-            const selected_item = createItem("item-1", "Value 1", false);
+            const item = getItem("item-1");
+            const option = item.target_option;
 
-            source_select_box.appendChild(new_option);
-            selection_container.appendChild(placeholder);
-
-            manager.processSingleSelection(selected_item);
+            manager.processSingleSelection(item.element);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
 
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 1");
-            expect(selected_item.getAttribute("aria-selected")).toEqual("true");
-            expect(new_option.hasAttribute("selected")).toBe(true);
+            expect(item.is_selected).toBe(true);
+            expect(item.element.getAttribute("aria-selected")).toEqual("true");
+            expect(option.hasAttribute("selected")).toBe(true);
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
-            const old_value = createItem("old-value", "Old value", true);
-            const old_selection = createSelection("Old value", "old-value");
-            const selected_item = createItem("new-value", "New value", false);
-            const old_option = createOption("Old value", true, "old-value");
-            const new_option = createOption("new value", true, "new-value");
+            const old_item = getItem("item-1");
+            const old_option = old_item.target_option;
 
-            source_select_box.appendChild(old_option);
-            source_select_box.appendChild(new_option);
+            const new_item = getItem("item-2");
+            const new_option = new_item.target_option;
 
-            component_dropdown_list.appendChild(old_value);
-            selection_container.appendChild(old_selection);
-
-            manager.processSingleSelection(selected_item);
+            manager.processSingleSelection(old_item.element);
+            manager.processSingleSelection(new_item.element);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
             expect(selected_value).not.toBeNull();
-            expect(selected_value?.textContent).toContain("New value");
-            expect(old_value.getAttribute("aria-selected")).toEqual("false");
-            expect(selected_item.getAttribute("aria-selected")).toEqual("true");
+            expect(selected_value?.textContent).toContain("Value 2");
+
+            expect(old_item.element.getAttribute("aria-selected")).toEqual("false");
+            expect(old_item.is_selected).toBe(false);
             expect(old_option.hasAttribute("selected")).toBe(false);
+
+            expect(new_item.element.getAttribute("aria-selected")).toEqual("true");
+            expect(new_item.is_selected).toBe(true);
             expect(new_option.hasAttribute("selected")).toBe(true);
         });
     });
@@ -173,20 +157,19 @@ describe("selection-manager", () => {
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
         it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
             const openListPicker = jest.spyOn(toggler, "openListPicker");
-            const option_to_select = createOption("Selected option", false, "selected-item");
-            const item_to_select = createItem("selected-item", "Selected option", false);
+            const item = getItem("item-1");
+            const option = item.target_option;
 
-            component_dropdown_list.appendChild(item_to_select);
-            source_select_box.appendChild(option_to_select);
             selection_container.appendChild(placeholder);
 
             // First select the item
-            manager.processSingleSelection(item_to_select);
+            manager.processSingleSelection(item.element);
 
-            expect(item_to_select.getAttribute("aria-selected")).toEqual("true");
+            expect(item.is_selected).toBe(true);
+            expect(item.element.getAttribute("aria-selected")).toEqual("true");
             expect(selection_container.contains(placeholder)).toBe(false);
 
-            expect(option_to_select.hasAttribute("selected")).toBe(true);
+            expect(option.hasAttribute("selected")).toBe(true);
             const remove_item_button = selection_container.querySelector(
                 ".list-picker-selected-value-remove-button"
             );
@@ -196,8 +179,9 @@ describe("selection-manager", () => {
 
             // Now unselect the item
             remove_item_button.dispatchEvent(new MouseEvent("click"));
-            expect(item_to_select.getAttribute("aria-selected")).toEqual("false");
-            expect(option_to_select.hasAttribute("selected")).toBe(false);
+            expect(item.is_selected).toBe(false);
+            expect(item.element.getAttribute("aria-selected")).toEqual("false");
+            expect(option.hasAttribute("selected")).toBe(false);
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(openListPicker).toHaveBeenCalled();
         });

@@ -25,7 +25,10 @@ export interface ListPickerItem {
     id: string;
     template: string;
     is_disabled: boolean;
+    is_selected: boolean;
     group_id?: string;
+    element: Element;
+    target_option: Element;
 }
 
 export interface ListPickerItemGroup {
@@ -41,4 +44,9 @@ export interface ListPickerComponent {
     selection_element: Element;
     placeholder_element: Element;
     dropdown_list_element: Element;
+}
+
+export interface ListPickerSelectionStateSingle {
+    selected_item: ListPickerItem;
+    selected_value_element: Element;
 }

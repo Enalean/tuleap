@@ -40,15 +40,39 @@ describe("static-list-helper", () => {
         const iterator = map.entries();
         expect(iterator.next().value).toEqual([
             "item-0",
-            { id: "item-0", template: "Value 0", is_disabled: false, group_id: undefined },
+            {
+                id: "item-0",
+                template: "Value 0",
+                is_disabled: false,
+                group_id: undefined,
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
+            },
         ]);
         expect(iterator.next().value).toEqual([
             "item-1",
-            { id: "item-1", template: "Value 1", is_disabled: false, group_id: undefined },
+            {
+                id: "item-1",
+                template: "Value 1",
+                is_disabled: false,
+                group_id: undefined,
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
+            },
         ]);
         expect(iterator.next().value).toEqual([
             "item-2",
-            { id: "item-2", template: "Value 2", is_disabled: false, group_id: undefined },
+            {
+                id: "item-2",
+                template: "Value 2",
+                is_disabled: false,
+                group_id: undefined,
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
+            },
         ]);
     });
 
@@ -67,6 +91,9 @@ describe("static-list-helper", () => {
                 template: "Value 0",
                 is_disabled: false,
                 group_id: "group1",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
         expect(iterator.next().value).toEqual([
@@ -76,6 +103,9 @@ describe("static-list-helper", () => {
                 template: "Value 1",
                 is_disabled: false,
                 group_id: "group1",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
         expect(iterator.next().value).toEqual([
@@ -85,6 +115,9 @@ describe("static-list-helper", () => {
                 template: "Value 2",
                 is_disabled: false,
                 group_id: "group1",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
         expect(iterator.next().value).toEqual([
@@ -94,6 +127,9 @@ describe("static-list-helper", () => {
                 template: "Value 3",
                 is_disabled: false,
                 group_id: "group2",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
         expect(iterator.next().value).toEqual([
@@ -103,6 +139,9 @@ describe("static-list-helper", () => {
                 template: "Value 4",
                 is_disabled: false,
                 group_id: "group2",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
         expect(iterator.next().value).toEqual([
@@ -112,6 +151,9 @@ describe("static-list-helper", () => {
                 template: "Value 5",
                 is_disabled: true,
                 group_id: "group2",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
             },
         ]);
     });

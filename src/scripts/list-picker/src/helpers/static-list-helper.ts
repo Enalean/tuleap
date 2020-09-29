@@ -38,15 +38,35 @@ export function generateItemMapBasedOnSourceSelectOptions(
         }
 
         const id = `item-${i}`;
+        const template = option.innerText;
+        const is_disabled = Boolean(option.hasAttribute("disabled"));
         const item: ListPickerItem = {
             id,
             group_id,
-            template: option.innerText,
-            is_disabled: Boolean(option.hasAttribute("disabled")),
+            template,
+            is_disabled,
+            is_selected: false,
+            target_option: option,
+            element: getRenderedListItem(id, template, is_disabled),
         };
         map.set(id, item);
         option.setAttribute("data-item-id", id);
         i++;
     }
     return map;
+}
+
+function getRenderedListItem(option_id: string, template: string, is_disabled: boolean): Element {
+    const list_item = document.createElement("li");
+    list_item.id = option_id;
+    list_item.appendChild(document.createTextNode(template));
+    list_item.setAttribute("role", "option");
+    list_item.setAttribute("aria-selected", "false");
+
+    if (is_disabled) {
+        list_item.classList.add("list-picker-dropdown-option-value-disabled");
+    } else {
+        list_item.classList.add("list-picker-dropdown-option-value");
+    }
+    return list_item;
 }
