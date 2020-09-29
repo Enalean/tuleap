@@ -57,13 +57,11 @@ msgstr "Liste complète des projets %s"
 msgid "%s has multiple corresponding users."
 msgstr "%s a plusieurs utilisateurs associés."
 
-#, php-format
 msgid "%s invited you to log on %s, you need to register first:"
 msgstr ""
 "%s vous a invité à vous connecter à %s, vous avez besoin d'abord de vous "
 "enregistrer :"
 
-#, php-format
 msgid "%s invited you to log on %s, your login is: %s"
 msgstr "%s vous a invité à vous connecter à %s, votre identifiant est : %s"
 
@@ -1198,7 +1196,6 @@ msgstr "Gestion des membres"
 msgid "Message"
 msgstr "Message"
 
-#, php-format
 msgid "Message from %s:"
 msgstr "Message de la part de %s :"
 
@@ -2549,7 +2546,9 @@ msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
 
 msgid "Users must be able to send at least one invitation by day."
-msgstr "Les utilisateurs doivent être en mesure d'envoyer au moins une invitation par jour."
+msgstr ""
+"Les utilisateurs doivent être en mesure d'envoyer au moins une invitation "
+"par jour."
 
 msgid "View members"
 msgstr "Voir les membres"

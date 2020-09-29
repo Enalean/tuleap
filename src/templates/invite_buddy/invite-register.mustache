@@ -1,0 +1,21 @@
+<p>
+    {{# gettext }}
+        %s invited you to log on %s, you need to register first: |
+        {{ current_user_real_name }} |
+        {{ instance_name }}
+    {{/ gettext }}
+</p>
+
+<p>
+    <a href="{{ register_url }}">{{ register_url }}</a>
+</p>
+
+{{# has_custom_message }}
+    <p>
+        {{# gettext }}
+            Message from %s: |
+            {{ current_user_real_name }}
+        {{/ gettext }}
+    </p>
+    <blockquote>{{ custom_message }}</blockquote>
+{{/has_custom_message}}

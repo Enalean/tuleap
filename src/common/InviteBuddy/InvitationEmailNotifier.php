@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Codendi_HTMLPurifier;
 use Codendi_Mail;
 use ForgeConfig;
 use PFUser;
+use TemplateRenderer;
+use TemplateRendererFactory;
 use Tuleap\InstanceBaseURLBuilder;
 
 class InvitationEmailNotifier
@@ -34,10 +35,15 @@ class InvitationEmailNotifier
      * @var InstanceBaseURLBuilder
      */
     private $instance_base_url_builder;
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
 
     public function __construct(InstanceBaseURLBuilder $instance_base_url_builder)
     {
         $this->instance_base_url_builder = $instance_base_url_builder;
+        $this->template_renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
     }
 
     public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message): bool
@@ -69,21 +75,14 @@ class InvitationEmailNotifier
         $mail->setTo($recipient_user->getEmail());
         $mail->setSubject(sprintf(_('Invitation to log on %s'), ForgeConfig::get('sys_name')));
 
-        $body = sprintf(
-            _('%s invited you to log on %s, your login is: %s'),
-            $current_user->getRealName(),
-            ForgeConfig::get('sys_name'),
-            $recipient_user->getName(),
-        );
-        $body .= "\r\n" . $this->instance_base_url_builder->build() . '/account/login.php';
+        $login_url = $this->instance_base_url_builder->build() . '/account/login.php';
 
-        if ($custom_message && trim($custom_message) !== "") {
-            $message_from = sprintf(_('Message from %s:'), $current_user->getRealName());
-            $body         .= "\r\n\r\n" . $message_from . "\r\n" . $custom_message;
-        }
+        $presenter = new InvitationEmailLoginPresenter($current_user, $recipient_user, $login_url, $custom_message);
+        $body = $this->template_renderer->renderToString("invite-login", $presenter);
+        $body_text = $this->template_renderer->renderToString("invite-login-text", $presenter);
 
-        $mail->setBodyHtml(Codendi_HTMLPurifier::instance()->purify($body, Codendi_HTMLPurifier::CONFIG_BASIC));
-        $mail->setBodyText($body);
+        $mail->setBodyHtml($body);
+        $mail->setBodyText($body_text);
     }
 
     public function askToRegister(
@@ -95,19 +94,13 @@ class InvitationEmailNotifier
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register on %s'), ForgeConfig::get('sys_name')));
 
-        $body = sprintf(
-            _('%s invited you to log on %s, you need to register first:'),
-            $current_user->getRealName(),
-            ForgeConfig::get('sys_name'),
-        );
-        $body .= "\r\n" . $this->instance_base_url_builder->build() . '/account/register.php';
+        $register_url = $this->instance_base_url_builder->build() . '/account/register.php';
 
-        if ($custom_message && trim($custom_message) !== "") {
-            $message_from = sprintf(_('Message from %s:'), $current_user->getRealName());
-            $body         .= "\r\n\r\n" . $message_from . "\r\n" . $custom_message;
-        }
+        $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
+        $body = $this->template_renderer->renderToString("invite-register", $presenter);
+        $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
 
-        $mail->setBodyHtml(Codendi_HTMLPurifier::instance()->purify($body, Codendi_HTMLPurifier::CONFIG_BASIC));
-        $mail->setBodyText($body);
+        $mail->setBodyHtml($body);
+        $mail->setBodyText($body_text);
     }
 }
