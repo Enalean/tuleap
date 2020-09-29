@@ -23,11 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1;
 
 use SimpleXMLElement;
+use TemplateRenderer;
 
 class TestsDataFromJunitExtractor
 {
     private const STATUS_FAILURE = "failed";
     private const STATUS_SUCCESS = "passed";
+
+    /**
+     * @var \TemplateRenderer
+     */
+    private $renderer;
+
+    public function __construct(TemplateRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     /**
      * @return array<string, ExtractedTestResultFromJunit>
@@ -81,7 +92,12 @@ class TestsDataFromJunitExtractor
         $extracted_result = $all_test_results[$test_suite_name];
         $extracted_result->addTime($time);
         $this->changeResultStatusIfNeeded($extracted_result, $status);
-        $extracted_result->addFeedbackOnResult("<p>Executed '$test_suite_name' test suite. Checkout build results : <a href=$build_url>$build_url</a></p>");
+        $extracted_result->addFeedbackOnResult(
+            $this->renderer->renderToString(
+                'test-suite-execution',
+                new TestSuiteExecutionPresenter($test_suite_name, $build_url)
+            )
+        );
 
         if ($status === self::STATUS_FAILURE) {
             $this->collectFailuresForTestSuite($test_suite, $extracted_result);
@@ -112,7 +128,12 @@ class TestsDataFromJunitExtractor
             $extracted_result = $all_test_results[$testcase_name];
             $extracted_result->addTime($time);
             $this->changeResultStatusIfNeeded($extracted_result, $status);
-            $extracted_result->addFeedbackOnResult("<p>Executed '$testcase_name' test case. Checkout build results : <a href=$build_url>$build_url</a></p>");
+            $extracted_result->addFeedbackOnResult(
+                $this->renderer->renderToString(
+                    'test-case-execution',
+                    new TestCaseExecutionPresenter($testcase_name, $build_url)
+                )
+            );
 
             if ($status === self::STATUS_FAILURE) {
                 $this->addFailuresForTest($testcase, $extracted_result);
@@ -149,7 +170,12 @@ class TestsDataFromJunitExtractor
     private function addFailuresForTest(SimpleXMLElement $testcase, ExtractedTestResultFromJunit $extracted_test): void
     {
         foreach ($testcase->failure as $failure) {
-            $extracted_test->addFeedbackOnResult("<p>Got a failure: " . $failure . "</p>");
+            $extracted_test->addFeedbackOnResult(
+                $this->renderer->renderToString(
+                    'failure-feedback',
+                    $failure
+                )
+            );
         }
     }
 
