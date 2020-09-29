@@ -403,7 +403,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo '<div class="alert alert-error">';
         echo dgettext('tuleap-tracker', 'This page is deprecated and will be removed soon. You should switch to the new tracker creation flow.');
         echo '<a href="' . $route_to_new_ui . '" class="btn btn-primary tracker-creation-link">
-                <i class="fa fa-long-arrow-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
+                <i class="fas fa-long-arrow-alt-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
             '</a>';
         echo '</div>';
         echo '<h2>' . dgettext('tuleap-tracker', 'Create a new tracker') . '</h2>';
@@ -589,13 +589,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                     data-tlp-tooltip="' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '"
                                   >
                                     <input type="hidden" name="func" value="delete"> ' . $csrf_token_delete_tracker->fetchHTMLInput() . '
-                                    <i class="fa fa-trash-o"></i>
+                                    <i class="far fa-trash-alt"></i>
                                   </form>';
                     } else {
                         $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
                                 <span class="trackers-homepage-tracker-trash disabled tlp-tooltip tlp-tooltip-left" data-tlp-tooltip="' . $cannot_delete_message . '">';
-                        $html .= '<i class="fa fa-trash-o"></i>';
+                        $html .= '<i class="far fa-trash-alt"></i>';
                         $html .= '</span>';
                     }
                 }

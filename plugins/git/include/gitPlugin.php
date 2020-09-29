@@ -2150,7 +2150,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                                         <input type="hidden" name="group_id" value="' . $html_purifier->purify($group_id) . '">
                                         <input type="hidden" name="repo_id" value="' . $html_purifier->purify($archived_repository->getId()) . '">
                                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                                            <i class="fa fa-repeat tlp-button-icon"></i> ' . $html_purifier->purify(dgettext('tuleap-git', 'Restore')) . '
+                                            <i class="fas fa-redo tlp-button-icon"></i> ' . $html_purifier->purify(dgettext('tuleap-git', 'Restore')) . '
                                         </button>
                                     </form>
                                  </td>';

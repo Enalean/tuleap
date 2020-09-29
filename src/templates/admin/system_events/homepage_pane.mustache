@@ -22,7 +22,7 @@
                                 class="system-event-type-count tlp-badge-primary tlp-tooltip tlp-tooltip-top {{^ has_running }}tlp-badge-outline{{/ has_running}}"
                                 data-tlp-tooltip="{{ running_label_tooltip }}"
                             >
-                                <i class="tlp-badge-icon fa fa-refresh"></i> {{ running_count }}
+                                <i class="tlp-badge-icon fas fa-sync"></i> {{ running_count }}
                             </a>
                             <a href="/admin/system_events/?queue={{ name}}&filter_status[]=DONE"
                                 class="system-event-type-count tlp-badge-success tlp-badge-outline tlp-tooltip tlp-tooltip-top"
@@ -37,7 +37,7 @@
                                     class="system-event-type-count tlp-badge-warning tlp-tooltip tlp-tooltip-top {{^ has_warning }}tlp-badge-outline{{/ has_warning}}"
                                     data-tlp-tooltip="{{ warning_label_tooltip }}"
                                 >
-                                    <i class="tlp-badge-icon fa fa-warning"></i> {{ warning_count }} {{# has_warning_without_error }}{{ warning_label }}{{/ has_warning_without_error}}
+                                    <i class="tlp-badge-icon fas fa-exclamation-triangle"></i> {{ warning_count }} {{# has_warning_without_error }}{{ warning_label }}{{/ has_warning_without_error}}
                                 </a>
                                 <a href="/admin/system_events/?queue={{ name}}&filter_status[]=ERROR"
                                     class="system-event-type-count tlp-badge-danger tlp-tooltip tlp-tooltip-top {{^ has_error }}tlp-badge-outline{{/ has_error}}"

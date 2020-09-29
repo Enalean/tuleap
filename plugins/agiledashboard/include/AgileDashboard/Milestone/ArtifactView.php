@@ -44,7 +44,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     public function getTitle()
     {
         return dgettext('tuleap-agiledashboard', 'Milestone')
-            . ' <i class="fa fa-external-link"></i>';
+            . ' <i class="fas fa-external-link-alt"></i>';
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

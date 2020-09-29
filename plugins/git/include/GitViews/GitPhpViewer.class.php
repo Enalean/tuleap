@@ -57,7 +57,7 @@ class GitViews_GitPhpViewer
                 <section class="tlp-pane">
                     <div class="tlp-pane-container">
                         <div class="tlp-pane-header">
-                            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-files-o"></i> Files</h1>
+                            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon far fa-copy"></i> Files</h1>
                         </div>
                         <section class="tlp-pane-section">
                             <div id="gitphp" class="plugin_git_gitphp">';

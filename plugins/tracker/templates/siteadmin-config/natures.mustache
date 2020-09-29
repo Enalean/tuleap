@@ -47,14 +47,14 @@
                                                 data-tlp-tooltip="{{ edit_system_nature_title }}"
                                                 disabled
                                             >
-                                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_icon_label }}
+                                                <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_icon_label }}
                                             </button>
                                         {{/ is_system }}
                                         {{^ is_system }}
                                             <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small siteadmin-config-natures-modal-edit-button"
                                                 data-edit-modal-id="siteadmin-config-natures-modal-edit-{{ shortname }}"
                                             >
-                                                <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_icon_label }}
+                                                <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_icon_label }}
                                             </button>
                                         {{/ is_system }}
 
@@ -63,7 +63,7 @@
                                                 data-tlp-tooltip="{{ cannot_delete_title }}"
                                                 disabled
                                             >
-                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
+                                                <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_icon_label }}
                                             </button>
                                         {{/ can_be_deleted }}
                                         {{# can_be_deleted }}
@@ -71,7 +71,7 @@
                                                 class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small siteadmin-config-natures-modal-delete-button"
                                                 data-delete-modal-id="siteadmin-config-natures-modal-delete-{{ shortname }}"
                                             >
-                                                <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_icon_label }}
+                                                <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_icon_label }}
                                             </button>
                                         {{/ can_be_deleted }}
 

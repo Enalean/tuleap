@@ -358,7 +358,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $disabled = 'disabled="disabled"';
         }
         $html  = '<a class="btn btn-small auto-compute" ' . $disabled . ' data-test="switch-to-autocompute">
-                    <i class="fa fa-repeat fa-flip-horizontal"></i>';
+                    <i class="fas fa-redo fa-flip-horizontal"></i>';
         $html .= dgettext('tuleap-tracker', 'Auto-compute');
         $html .= '</a>';
 
@@ -889,7 +889,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                     </td>
                     <td class="autocomputed_override">' .
                         $this->fetchComputedValueWithLabel($computed_value) .
-                        '<a href="#" ' . $data_field_id . '><i class="fa fa-repeat fa-flip-horizontal"></i>' .
+                        '<a href="#" ' . $data_field_id . '><i class="fas fa-redo fa-flip-horizontal"></i>' .
                         dgettext('tuleap-tracker', 'Auto-compute')
                         . '</a>' .
                     '</td>

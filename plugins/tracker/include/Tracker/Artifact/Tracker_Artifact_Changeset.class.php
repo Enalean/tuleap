@@ -288,7 +288,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         $html  = '';
         $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-        $html .= '<button class="btn btn-mini"><i class="fa fa-pencil-square-o"></i> ' . dgettext('tuleap-tracker', 'Edit') . '</button>';
+        $html .= '<button class="btn btn-mini"><i class="far fa-edit"></i> ' . dgettext('tuleap-tracker', 'Edit') . '</button>';
         $html .= '</a>';
 
         return $html;

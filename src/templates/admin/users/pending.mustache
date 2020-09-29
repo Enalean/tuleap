@@ -49,7 +49,7 @@
                 <div class="tlp-form-element siteadmin-pending-user-actions-pending">
                     <label for="expiry-{{ id }}" class="tlp-label">{{ expiry_date_label }}</label>
                     <div class="tlp-form-element tlp-form-element-prepend">
-                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                        <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                         <input type="text"
                                id="expiry-{{ id }}"
                                class="tlp-input tlp-input-date"
@@ -76,7 +76,7 @@
                                     class="tlp-button-primary siteadmin-pending-user-actions-button"
                                     title="{{ validate_notice }}"
                             >
-                                <i class="fa fa-envelope-o tlp-button-icon"></i>
+                                <i class="far fa-envelope tlp-button-icon"></i>
                                 {{ validate_label }}
                             </button>
                         {{/ can_be_validated }}
@@ -107,7 +107,7 @@
                                 value="delete"
                                 class="tlp-button-danger siteadmin-pending-user-actions-button"
                         >
-                            <i class="fa fa-trash-o tlp-button-icon"></i>
+                            <i class="far fa-trash-alt tlp-button-icon"></i>
                             {{ delete_label }}
                         </button>
                     </div>
@@ -140,7 +140,7 @@
                         id="siteadmin-pending-users-actions-buttons-validateall"
                         title="{{ validate_notice }}"
                 >
-                    <i class="fa fa-envelope-o tlp-button-icon"></i>
+                    <i class="far fa-envelope tlp-button-icon"></i>
                     {{ validate_all_label }}
                 </button>
             {{/ can_be_validated }}

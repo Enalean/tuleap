@@ -28,7 +28,7 @@
 
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-address-card-o"></i> {{ account_details }}</h1>
+                    <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon far fa-address-card"></i> {{ account_details }}</h1>
                 </div>
                 <section class="tlp-pane-section">
                     <div class="siteadmin-user-details-row">
@@ -70,7 +70,7 @@
                             >
                                 <div class="tlp-modal-header">
                                     <h1 class="tlp-modal-title" id="modal-warning-removal-project-not-including-restricted-label">
-                                        <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{# gettext }}Removal from projects{{/ gettext }}
+                                        <i class="far fa-trash-alt tlp-modal-title-icon"></i> {{# gettext }}Removal from projects{{/ gettext }}
                                     </h1>
                                     <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
                                         &times;
@@ -89,7 +89,7 @@
                                         {{# gettext }}Cancel{{/ gettext }}
                                     </button>
                                     <button type="submit" class="tlp-button-primary tlp-modal-action tlp-button-danger" id="modal-warning-removal-project-not-including-restricted-confirm">
-                                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                                        <i class="far fa-trash-alt tlp-button-icon"></i>
                                         {{# gettext }}Confirm{{/ gettext }}
                                     </button>
                                 </div>
@@ -105,7 +105,7 @@
                         <div class="tlp-form-element siteadmin-user-details-row-field">
                             <label for="expiry" class="tlp-label">{{ expiry_date_label }}</label>
                             <div class="tlp-form-element tlp-form-element-prepend">
-                                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                                <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                                 <input type="text" id="expiry" class="tlp-input tlp-input-date" size="11" name="expiry_date" value="{{ expiry }}">
                             </div>
                         </div>

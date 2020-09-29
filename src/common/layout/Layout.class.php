@@ -646,7 +646,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                        value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">
                 </input>
                 <span class="add-on add-on-calendar">
-                  <i class="fa fa-calendar" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>
+                  <i class="fas fa-calendar-alt" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>
                 </span>
             </span>
         </div>';

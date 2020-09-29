@@ -65,9 +65,9 @@
                                     <table class="table">
                                         {{# milestones }}
                                         <tr>
-                                            <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                                            <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="far fa-edit"></i></a></td>
                                             <td class="actions">
-                                                <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning-v2" data-test="go-to-planning"><i class="fa fa-sign-in"></i> {{ planning }}</a>
+                                                <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning-v2" data-test="go-to-planning"><i class="fas fa-sign-in-alt"></i> {{ planning }}</a>
                                             </td>
                                         </tr>
                                         {{/ milestones }}
@@ -95,7 +95,7 @@
                                                         <a href="{{ edit_base_link }}{{ artifact_id }}"
                                                            class="backlog-item-link"
                                                            data-test="release-id"
-                                                           data-artifact-id="{{ artifact_id }}"><i class="fa fa-pencil-square-o"></i>
+                                                           data-artifact-id="{{ artifact_id }}"><i class="far fa-edit"></i>
                                                         </a></p>
                                                     <p class="hierarchy">
                                                     <i class="fa fa-angle-right"></i>
@@ -125,7 +125,7 @@
                                                     {{/ has_burndown }}
                                                 </div>
                                                 <div class="footer">
-                                                    <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=details"><i class="fa fa-bar-chart-o"></i> {{ content }}</a>
+                                                    <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=details"><i class="far fa-chart-bar"></i> {{ content }}</a>
                                                     {{# alternative_board_link }}
                                                         <a href="{{ url }}"><i class="fa {{ icon }}"></i> {{ label }}</a>
                                                     {{/ alternative_board_link }}

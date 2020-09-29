@@ -4,7 +4,7 @@
     <section class="tlp-pane siteadmin-pane-edit-information">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="fa fa-newspaper-o tlp-pane-title-icon"></i> {{ pane_news_title }}</h1>
+                <h1 class="tlp-pane-title"><i class="far fa-newspaper tlp-pane-title-icon"></i> {{ pane_news_title }}</h1>
             </div>
             <section class="tlp-pane-section">
                 <form action="/admin/news/?action=update" method="post">
@@ -39,7 +39,7 @@
                                 {{# reject_button_disabled }}data-tlp-tooltip="{{ news_already_rejected }}"{{/ reject_button_disabled }}
                                 {{# reject_button_disabled }}disabled{{/ reject_button_disabled }}
                         >
-                            <i class="fa fa-remove tlp-button-icon"></i> {{ reject_button }}
+                            <i class="fas fa-times tlp-button-icon"></i> {{ reject_button }}
                         </button>
                     </div>
                 </form>

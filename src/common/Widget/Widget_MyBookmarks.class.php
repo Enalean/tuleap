@@ -61,7 +61,7 @@ class Widget_MyBookmarks extends Widget
                 $html_my_bookmarks .= '<A HREF="' . $bookmark_url . '">' . $bookmark_title . '</A> ';
                 $html_my_bookmarks .= '<small><A HREF="/my/bookmark_edit.php?bookmark_id=' . db_result($result, $i, 'bookmark_id') . '">[' . $GLOBALS['Language']->getText('my_index', 'edit_link') . ']</A></SMALL></TD>';
                 $html_my_bookmarks .= '<td style="text-align:right"><A HREF="/my/bookmark_delete.php?bookmark_id=' . db_result($result, $i, 'bookmark_id') . '">';
-                $html_my_bookmarks .= '<i class=" fa fa-trash-o" title="' . _('Delete') . '"></A></td></tr>';
+                $html_my_bookmarks .= '<i class=" far fa-trash-alt" title="' . _('Delete') . '"></A></td></tr>';
             }
             $html_my_bookmarks .= '</table>';
         }

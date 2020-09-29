@@ -13,7 +13,7 @@
             <label>{{ label_subject_header }}</label>
             <div class="input-append">
                 <input type="text" name="form_mailing_header" value="{{ subject_header }}">
-                <button type="submit" name="submit" class="btn"><i class="fa fa-floppy-o"></i> {{ save_subject }}</button>
+                <button type="submit" name="submit" class="btn"><i class="far fa-save"></i> {{ save_subject }}</button>
             </div>
         </form>
 
@@ -111,7 +111,7 @@
                                     </div>
                                     <div class="svn-notifications-checkbox-cell-read">
                                         <a href="javascript:;" class="svn-notification-edit-show svn-notification-edit">
-                                            <i class="fa fa-pencil"></i>
+                                            <i class="fas fa-pencil-alt"></i>
                                             {{ edit }}
                                         </a>
                                         <a href="javascript:;"
@@ -122,7 +122,7 @@
                                            data-html="true"
                                            data-popover-id="svn-notification-delete-{{ notification_id }}-popover"
                                         >
-                                            <i class="fa fa-trash-o"></i>
+                                            <i class="far fa-trash-alt"></i>
                                             {{ delete }}
                                         </a>
                                         <div id="svn-notification-delete-{{ notification_id }}-popover"

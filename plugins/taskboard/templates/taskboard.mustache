@@ -28,13 +28,13 @@
             <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
                 {{ getTitle }}
                 {{# isExternalLink }}
-                    <i class="fa fa-external-link tlp-tab-icon"></i>
+                    <i class="fas fa-external-link-alt tlp-tab-icon"></i>
                 {{/ isExternalLink }}
             </a>
         {{/ getPaneInfoList }}
         <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
         {{ artifact }}
-        <i class="fa fa-external-link tlp-tab-icon"></i>
+        <i class="fas fa-external-link-alt tlp-tab-icon"></i>
         </a>
     </nav>
     {{/ milestone_presenter }}
