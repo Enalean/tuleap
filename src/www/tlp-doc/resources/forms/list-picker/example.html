@@ -1,5 +1,5 @@
 <div class="tlp-form-element">
-    <label class="tlp-label" for="list-picker-sb">ListPicker</label>
+    <label class="tlp-label" for="list-picker-sb">Filterable ListPicker</label>
     <select id="list-picker-sb" name="list-value">
         <option value=""></option>
         <option value="1">1</option>
@@ -10,13 +10,14 @@
         import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb'), {
-            placeholder: "Choose a value in the list"
+            placeholder: "Choose a value in the list",
+            is_filterable: true
         });
     </script>
 </div>
 
 <div class="tlp-form-element">
-    <label class="tlp-label" for="list-picker-sb">ListPicker with grouped options</label>
+    <label class="tlp-label" for="list-picker-sb">Filterable ListPicker with grouped options</label>
     <select id="list-picker-sb-with-optgroups" name="list-value">
         <option value=""></option>
         <optgroup label="4x areas">
@@ -36,7 +37,8 @@
         import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-with-optgroups'), {
-            placeholder: "Choose a value in the list"
+            placeholder: "Choose a value in the list",
+            is_filterable: true
         });
     </script>
 </div>
@@ -75,7 +77,7 @@
     <script type="text/javascript">
         import { createListPicker } from "@tuleap/list-picker";
 
-        createListPicker(document.querySelector('#list-picker-sb-disabled'), {
+        createListPicker(document.querySelector('#list-picker-sb-error'), {
             placeholder: "Choose a value in the list"
         });
     </script>

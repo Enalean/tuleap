@@ -18,19 +18,23 @@
  */
 
 import { ListPickerItem, ListPickerItemGroup } from "../type";
+import { GetText } from "../../../tuleap/gettext/gettext-init";
 
 export class DropdownContentRenderer {
+    private readonly groups_map: Map<string, ListPickerItemGroup>;
+
     constructor(
         private readonly source_select_box: HTMLSelectElement,
         private readonly dropdown_list_element: Element,
-        private readonly item_map: Map<string, ListPickerItem>
-    ) {}
+        private readonly item_map: Map<string, ListPickerItem>,
+        private readonly gettext_provider: GetText
+    ) {
+        this.groups_map = new Map();
+    }
 
     public renderListPickerDropdownContent(): void {
-        const select_box_option_groups = this.source_select_box.querySelectorAll("optgroup");
-
-        if (select_box_option_groups.length > 0) {
-            this.renderGroupedOptions(select_box_option_groups);
+        if (this.hasGroupedListItems()) {
+            this.renderGroupedOptions();
             return;
         }
 
@@ -39,16 +43,54 @@ export class DropdownContentRenderer {
         });
     }
 
-    private renderGroupedOptions(select_box_option_groups: NodeListOf<HTMLOptGroupElement>): void {
-        select_box_option_groups.forEach((optgroup) => {
+    public renderFilteredListPickerDropdownContent(filter_query: string): void {
+        this.dropdown_list_element.innerHTML = "";
+        if (filter_query.length === 0) {
+            this.renderListPickerDropdownContent();
+            return;
+        }
+
+        const lowercase_query = filter_query.toLowerCase();
+        const matching_items = Array.from(this.item_map.values()).filter((item) => {
+            return item.template.toLowerCase().includes(lowercase_query);
+        });
+
+        if (matching_items.length === 0) {
+            this.dropdown_list_element.appendChild(this.createEmptyDropdownState());
+            return;
+        }
+
+        const displayed_groups_ids: string[] = [];
+        matching_items.forEach((item) => {
+            const group = this.groups_map.get(item.group_id);
+            if (group && displayed_groups_ids.includes(item.group_id)) {
+                group.list_element.appendChild(item.element);
+            } else if (group) {
+                displayed_groups_ids.push(group.id);
+                group.list_element.innerHTML = "";
+                group.list_element.appendChild(item.element);
+                this.dropdown_list_element.appendChild(group.root_element);
+            } else {
+                this.dropdown_list_element.appendChild(item.element);
+            }
+        });
+    }
+
+    private hasGroupedListItems(): boolean {
+        return this.source_select_box.querySelectorAll("optgroup").length > 0;
+    }
+
+    private renderGroupedOptions(): void {
+        this.source_select_box.querySelectorAll("optgroup").forEach((optgroup) => {
             const group = this.getRenderedEmptyListItemGroup(optgroup);
+            this.groups_map.set(group.id, group);
+
             Array.from(this.item_map.values())
                 .filter((item) => {
                     return item.group_id === group.id;
                 })
                 .forEach((item) => {
-                    const rendered_item = item.element;
-                    group.element.appendChild(rendered_item);
+                    group.list_element.appendChild(item.element);
                 });
         });
     }
@@ -80,7 +122,20 @@ export class DropdownContentRenderer {
         return {
             id: label.replace(" ", "").toLowerCase(),
             label,
-            element: group_list,
+            root_element: group,
+            list_element: group_list,
         };
+    }
+
+    private createEmptyDropdownState(): Element {
+        const empty_state = document.createElement("li");
+        empty_state.classList.add("list-picker-empty-dropdown-state");
+        empty_state.setAttribute("role", "alert");
+        empty_state.setAttribute("aria-live", "assertive");
+        empty_state.appendChild(
+            document.createTextNode(this.gettext_provider.gettext("No results found"))
+        );
+
+        return empty_state;
     }
 }

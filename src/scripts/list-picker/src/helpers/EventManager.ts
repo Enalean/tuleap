@@ -18,21 +18,27 @@
  */
 import { DropdownToggler } from "./DropdownToggler";
 import { SelectionManager } from "./SelectionManager";
+import { DropdownContentRenderer } from "./DropdownContentRenderer";
 
 export class EventManager {
     constructor(
         private readonly doc: HTMLDocument,
         private readonly wrapper_element: Element,
         private readonly dropdown_element: Element,
+        private readonly search_field_element: HTMLInputElement | null,
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: SelectionManager,
-        private readonly dropdown_toggler: DropdownToggler
+        private readonly dropdown_toggler: DropdownToggler,
+        private readonly dropdown_content_renderer: DropdownContentRenderer
     ) {}
 
     public attachEvents(): void {
         this.attachClickEvent();
         this.attachEscapeKeyPressedEvent();
         this.attachItemListEvent();
+        if (this.search_field_element !== null) {
+            this.attachSearchEvent(this.search_field_element);
+        }
     }
 
     private attachEscapeKeyPressedEvent(): void {
@@ -82,17 +88,26 @@ export class EventManager {
         return (
             element.classList.contains("list-picker-dropdown-option-value-disabled") ||
             element.classList.contains("list-picker-group-label") ||
-            element.classList.contains("list-picker-item-group")
+            element.classList.contains("list-picker-item-group") ||
+            element.classList.contains("list-picker-search-field") ||
+            element.classList.contains("list-picker-dropdown-search-section")
         );
     }
 
     private attachItemListEvent(): void {
         const items = this.dropdown_element.querySelectorAll(".list-picker-dropdown-option-value");
-
         items.forEach((item) => {
             item.addEventListener("click", () => {
                 this.selection_manager.processSingleSelection(item);
             });
+        });
+    }
+
+    private attachSearchEvent(search_field_element: HTMLInputElement): void {
+        search_field_element.addEventListener("keyup", () => {
+            const filter_query = search_field_element.value;
+
+            this.dropdown_content_renderer.renderFilteredListPickerDropdownContent(filter_query);
         });
     }
 }

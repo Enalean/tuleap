@@ -162,10 +162,12 @@ import { createListPicker } from "../../../../scripts/list-picker/src/list-picke
             if (example.id === "example-list-picker-") {
                 createListPicker(document.querySelector("#list-picker-sb"), {
                     placeholder: "Choose a value",
+                    is_filterable: true,
                 });
 
                 createListPicker(document.querySelector("#list-picker-sb-with-optgroups"), {
                     placeholder: "Choose a value",
+                    is_filterable: true,
                 });
 
                 createListPicker(document.querySelector("#list-picker-sb-disabled"), {

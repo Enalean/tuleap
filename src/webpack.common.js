@@ -124,7 +124,10 @@ const webpack_config_for_tlp_doc = {
     },
     context,
     // This one does NOT go in www/assets/core because we do not deliver it in production, only in dev environment
-    output: webpack_configurator.configureOutput(path.resolve(__dirname, "./www/tlp-doc/dist/")),
+    output: webpack_configurator.configureOutput(
+        path.resolve(__dirname, "./www/tlp-doc/dist/"),
+        "/tlp-doc/dist/"
+    ),
     externals: {
         tlp: "tlp",
     },
@@ -138,6 +141,7 @@ const webpack_config_for_tlp_doc = {
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_scss_loader,
+            webpack_configurator.rule_po_files,
         ],
     },
     plugins: [
@@ -370,6 +374,7 @@ const webpack_config_list_picker = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
+            webpack_configurator.rule_po_files,
         ],
     },
     plugins: [

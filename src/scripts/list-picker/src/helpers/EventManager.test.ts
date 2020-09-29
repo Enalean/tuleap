@@ -21,6 +21,7 @@ import { EventManager } from "./EventManager";
 import { SelectionManager } from "./SelectionManager";
 import { DropdownToggler } from "./DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
+import { DropdownContentRenderer } from "./DropdownContentRenderer";
 
 describe("event manager", () => {
     let doc: HTMLDocument,
@@ -29,7 +30,16 @@ describe("event manager", () => {
         manager: EventManager,
         toggler: DropdownToggler,
         clickable_item: Element,
+        search_field: HTMLInputElement,
+        renderFilteredListPickerDropdownContent: (filter_query: string) => void,
         processSingleSelection: () => void;
+
+    function getSearchField(search_field_element: HTMLInputElement | null): HTMLInputElement {
+        if (search_field_element === null) {
+            throw new Error("search_field is null");
+        }
+        return search_field_element;
+    }
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -38,7 +48,10 @@ describe("event manager", () => {
             wrapper_element,
             dropdown_element,
             dropdown_list_element,
-        } = new BaseComponentRenderer(source_select_box).renderBaseComponent();
+            search_field_element,
+        } = new BaseComponentRenderer(source_select_box, {
+            is_filterable: true,
+        }).renderBaseComponent();
 
         component_wrapper = wrapper_element;
         clickable_item = document.createElement("li");
@@ -47,16 +60,26 @@ describe("event manager", () => {
         clickable_item.classList.add("list-picker-dropdown-option-value");
         dropdown_list_element.appendChild(clickable_item);
 
+        search_field = getSearchField(search_field_element);
+        renderFilteredListPickerDropdownContent = jest.fn();
         processSingleSelection = jest.fn();
 
-        toggler = new DropdownToggler(component_wrapper, dropdown_element, dropdown_list_element);
+        toggler = new DropdownToggler(
+            component_wrapper,
+            dropdown_element,
+            dropdown_list_element,
+            search_field_element
+        );
+
         manager = new EventManager(
             doc,
             component_wrapper,
             dropdown_element,
+            search_field_element,
             source_select_box,
             ({ processSingleSelection } as unknown) as SelectionManager,
-            toggler
+            toggler,
+            ({ renderFilteredListPickerDropdownContent } as unknown) as DropdownContentRenderer
         );
     });
 
@@ -115,5 +138,13 @@ describe("event manager", () => {
             clickable_item.dispatchEvent(new MouseEvent("click"));
             expect(processSingleSelection).toHaveBeenCalled();
         });
+    });
+
+    it("should filter the items when user types in the search input", () => {
+        manager.attachEvents();
+        search_field.value = "query";
+        search_field.dispatchEvent(new Event("keyup"));
+
+        expect(renderFilteredListPickerDropdownContent).toHaveBeenCalledWith("query");
     });
 });

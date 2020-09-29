@@ -21,18 +21,28 @@ export class DropdownToggler {
     constructor(
         private readonly list_picker_element: Element,
         private readonly dropdown_element: Element,
-        private readonly dropdown_list_element: Element
+        private readonly dropdown_list_element: Element,
+        private readonly search_field_element: HTMLInputElement | null
     ) {}
 
     public closeListPicker(): void {
         this.dropdown_element.classList.remove("list-picker-dropdown-shown");
         this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
         this.dropdown_list_element.setAttribute("aria-expanded", "false");
+
+        if (this.search_field_element && this.search_field_element.value.length > 0) {
+            this.search_field_element.value = "";
+            this.search_field_element.dispatchEvent(new Event("keyup"));
+        }
     }
 
     public openListPicker(): void {
         this.dropdown_element.classList.add("list-picker-dropdown-shown");
         this.list_picker_element.classList.add("list-picker-with-open-dropdown");
         this.dropdown_list_element.setAttribute("aria-expanded", "true");
+
+        if (this.search_field_element) {
+            this.search_field_element.focus();
+        }
     }
 }
