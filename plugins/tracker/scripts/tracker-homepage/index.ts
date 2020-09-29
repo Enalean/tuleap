@@ -17,26 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover } from "../../../../src/themes/tlp/src/js";
+import { createPopover } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleTrackerStatisticsPopovers();
     handleTrackerDeletion();
 });
 
-function handleTrackerStatisticsPopovers() {
+function handleTrackerStatisticsPopovers(): void {
     for (const trigger of document.querySelectorAll(".trackers-homepage-tracker")) {
-        createPopover(
-            trigger,
-            document.getElementById("tracker-statistics-popover-" + trigger.dataset.trackerId),
-            {
-                placement: "right",
-            }
+        if (!(trigger instanceof HTMLElement)) {
+            continue;
+        }
+
+        const popover_content = document.getElementById(
+            "tracker-statistics-popover-" + trigger.dataset.trackerId
         );
+        if (popover_content === null) {
+            throw new Error(
+                `Statistics popover not found for tracker #${trigger.dataset.trackerId}`
+            );
+        }
+
+        createPopover(trigger, popover_content, {
+            placement: "right",
+        });
     }
 }
 
-function handleTrackerDeletion() {
+function handleTrackerDeletion(): void {
     for (const trash of document.querySelectorAll(".trackers-homepage-tracker-trash")) {
         trash.addEventListener("click", (event) => {
             event.preventDefault();
