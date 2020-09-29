@@ -88,7 +88,7 @@ class InviteBuddyConfigurationTest extends TestCase
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
-    public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButNbMaxIsLesserOrEqualThanZero(): void
+    public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButNbMaxIsLesserOrEqualThanOne(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
