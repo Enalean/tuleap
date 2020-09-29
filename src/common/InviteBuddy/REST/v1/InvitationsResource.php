@@ -24,6 +24,7 @@ namespace Tuleap\InviteBuddy\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationEmailNotifier;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
@@ -82,6 +83,7 @@ class InvitationsResource extends AuthenticatedResource
             new InvitationSenderGateKeeper(new \Valid_Email(), new InviteBuddyConfiguration(\EventManager::instance())),
             new InvitationEmailNotifier(new InstanceBaseURLBuilder()),
             $user_manager,
+            new InvitationDao(),
         );
 
         try {

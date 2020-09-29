@@ -1690,7 +1690,19 @@ CREATE TABLE release_note_link (
     actual_link TEXT,
     tuleap_version TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS invitations;
+CREATE TABLE invitations(
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    created_on INT(11) NOT NULL,
+    from_user_id INT(11) NOT NULL,
+    to_email TEXT NOT NULL,
+    to_user_id INT(11) NULL,
+    custom_message TEXT NULL,
+    status VARCHAR(10),
+    INDEX idx(created_on, from_user_id)
+) ENGINE=InnoDB;
+
 #
 # EOF
 #
-
