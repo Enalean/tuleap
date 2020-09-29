@@ -29,6 +29,7 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\HelpDropdown\VersionNumberExtractor;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
@@ -224,7 +225,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_user,
             $this->tuleap_version->version_number
         );
-        $can_buddies_be_invited = (new \Tuleap\InviteBuddy\InviteBuddyConfiguration())->canBuddiesBeInvited(
+        $can_buddies_be_invited = (new InviteBuddyConfiguration(EventManager::instance()))->canBuddiesBeInvited(
             $current_user
         );
 

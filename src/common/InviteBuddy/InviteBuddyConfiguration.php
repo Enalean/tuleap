@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\User\Account\RegistrationGuardEvent;
+
 class InviteBuddyConfiguration
 {
     /**
@@ -40,9 +43,20 @@ class InviteBuddyConfiguration
 
     private const CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT = 20;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
+
+    public function __construct(EventDispatcherInterface $event_dispatcher)
+    {
+        $this->event_dispatcher = $event_dispatcher;
+    }
+
     public function canBuddiesBeInvited(\PFUser $current_user): bool
     {
         return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
+            && $this->isRegistrationPossible()
             && ! $current_user->isAnonymous()
             && $this->getNbMaxInvitationsByDay() > 0;
     }
@@ -53,5 +67,13 @@ class InviteBuddyConfiguration
             self::CONFIG_MAX_INVITATIONS_BY_DAY,
             self::CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT
         );
+    }
+
+    private function isRegistrationPossible(): bool
+    {
+        $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
+        assert($registration_guard instanceof RegistrationGuardEvent);
+
+        return $registration_guard->isRegistrationPossible();
     }
 }

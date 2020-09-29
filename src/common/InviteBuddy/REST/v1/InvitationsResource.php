@@ -79,7 +79,7 @@ class InvitationsResource extends AuthenticatedResource
         $current_user = $user_manager->getCurrentUser();
 
         $sender = new InvitationSender(
-            new InvitationSenderGateKeeper(new \Valid_Email(), new InviteBuddyConfiguration()),
+            new InvitationSenderGateKeeper(new \Valid_Email(), new InviteBuddyConfiguration(\EventManager::instance())),
             new InvitationEmailNotifier(new InstanceBaseURLBuilder()),
             $user_manager,
         );

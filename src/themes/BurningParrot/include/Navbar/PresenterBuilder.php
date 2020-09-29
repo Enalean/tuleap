@@ -49,10 +49,12 @@ class PresenterBuilder
     ) {
         $this->current_user    = $current_user;
 
+        $event_manager = EventManager::instance();
+
         $widget_factory = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
+            $event_manager
         );
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
@@ -68,7 +70,7 @@ class PresenterBuilder
             $should_logo_be_displayed,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            (new InviteBuddyConfiguration())->canBuddiesBeInvited($current_user),
+            (new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($current_user),
         );
     }
 
