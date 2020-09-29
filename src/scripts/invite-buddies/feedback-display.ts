@@ -36,6 +36,8 @@ export function displayError(message: string): void {
     clearFeedback();
     const alert = document.createElement("div");
     alert.classList.add("tlp-alert-danger");
+    alert.classList.add("alert-error");
+    alert.classList.add("alert");
     alert.innerText = message;
 
     feedback.appendChild(alert);
@@ -63,6 +65,8 @@ export function displaySuccess(emails: string[], response_body: { failures: stri
     if (successful_emails.length > 0) {
         const alert_success = document.createElement("div");
         alert_success.classList.add("tlp-alert-success");
+        alert_success.classList.add("alert-success");
+        alert_success.classList.add("alert");
         alert_success.appendChild(
             document.createTextNode(
                 feedback.dataset.successFeedbackMessage + " " + successful_emails.join(", ")
@@ -74,6 +78,8 @@ export function displaySuccess(emails: string[], response_body: { failures: stri
     if (response_body.failures.length > 0) {
         const alert_warning = document.createElement("div");
         alert_warning.classList.add("tlp-alert-warning");
+        alert_warning.classList.add("alert-warning");
+        alert_warning.classList.add("alert");
         alert_warning.appendChild(
             document.createTextNode(
                 feedback.dataset.failureFeedbackMessage + " " + response_body.failures.join(", ")
