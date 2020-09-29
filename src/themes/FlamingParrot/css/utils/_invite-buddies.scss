@@ -46,3 +46,32 @@
     margin: 0;
     padding: 0 12px;
 }
+
+#invite-buddies-modal-feedback {
+    padding: 16px;
+    border-bottom: 1px solid $ui-border-light;
+    background: $white;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.invite-buddies-modal-body.invite-buddies-email-sent {
+    display: none;
+}
+
+.invite-buddies-email-sent > .tlp-modal-action {
+    &:not(.invite-buddies-modal-close) {
+        display: none;
+    }
+
+
+    &.invite-buddies-modal-close {
+        display: inline-block;
+    }
+}
+
+.invite-buddies-modal-close {
+    display: none;
+}

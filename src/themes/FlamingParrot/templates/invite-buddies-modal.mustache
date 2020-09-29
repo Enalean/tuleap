@@ -21,7 +21,12 @@
                 {{# gettext }}Invite{{/ gettext }}
             </h3>
         </div>
-        <div class="modal-body">
+        <div
+            id="invite-buddies-modal-feedback"
+            data-success-feedback-message="{{# gettext }}Invitation has been successfully sent to:{{/ gettext }}"
+            data-failure-feedback-message="{{# gettext }}Invitation could not be sent to:{{/ gettext }}"
+        ></div>
+        <div class="modal-body invite-buddies-modal-body" id="invite-buddies-modal-body">
             <p>
                 <label for="invite-buddies-email">
                     {{# gettext }}Email{{/ gettext }}
@@ -48,11 +53,14 @@
                 ></textarea>
             </p>
         </div>
-        <div class="modal-footer">
-            <button type="reset" class="btn" data-dismiss="modal">
+        <div class="modal-footer" id="invite-buddies-modal-footer">
+            <button type="reset" class="btn btn-primary tlp-modal-action invite-buddies-modal-close" data-dismiss="modal">
+                {{# gettext }}Close{{/ gettext }}
+            </button>
+            <button type="reset" class="btn tlp-modal-action" data-dismiss="modal">
                 {{# gettext }}Cancel{{/ gettext }}
             </button>
-            <button type="submit" disabled class="btn btn-primary disabled">
+            <button type="submit" class="btn btn-primary tlp-modal-action">
                 <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                 {{# gettext }}Send invitation{{/ gettext }}
             </button>

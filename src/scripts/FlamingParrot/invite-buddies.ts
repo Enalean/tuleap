@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import { init as initNavbarPinned } from "../tuleap/navbar-pinned.js";
-import { init as initInviteBuddies } from "./invite-buddies";
+import $ from "jquery";
+import { initFeedbacks } from "../invite-buddies/feedback-display";
+import { initNotificationsOnFormSubmit } from "../invite-buddies/send-notifications";
 
-import "./sidebar.js";
-import "./motd.js";
-import "./project-flags.js";
-import "./project-privacy.js";
-import "./help-dropdown.ts";
+export function init(): void {
+    const form = document.getElementById("invite-buddies-modal");
+    if (!form) {
+        return;
+    }
 
-document.addEventListener("DOMContentLoaded", () => {
-    initNavbarPinned();
-    initInviteBuddies();
-});
+    $("#invite-buddies-modal").on("shown", initFeedbacks).on("hidden", initFeedbacks);
+
+    initNotificationsOnFormSubmit();
+}
