@@ -5,8 +5,8 @@
     >
         {{ ::refs_controller.pull_request.repository.name }}:
     </span>{{ ::refs_controller.pull_request.branch_src }}
-    <i class="fa fa-code-fork" ng-if="refs_controller.isRepositoryAFork()"></i>
-    <i class="fa fa-long-arrow-right"></i>
+    <i class="fas fa-code-branch" ng-if="refs_controller.isRepositoryAFork()"></i>
+    <i class="fas fa-long-arrow-alt-right"></i>
     <span
         class="repository"
         ng-if="! refs_controller.isCurrentRepository(refs_controller.pull_request.repository_dest)"

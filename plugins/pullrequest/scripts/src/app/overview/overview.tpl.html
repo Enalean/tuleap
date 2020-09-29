@@ -2,7 +2,7 @@
     <section id="pull-request-overview">
         <div class="pull-request-top-actions">
             <button class="tlp-button-primary tlp-button-outline tlp-button-small" ng-click="overview.showEditionForm()">
-                <i class="tlp-button-icon fa fa-pencil"></i> {{ ::'Edit message' | translate }}
+                <i class="tlp-button-icon fas fa-pencil-alt"></i> {{ ::'Edit message' | translate }}
             </button>
 
             <div class="tlp-dropdown pull-request-checkout-dropdown">
@@ -10,7 +10,7 @@
                     class="tlp-button-primary tlp-button-outline tlp-button-small"
                     type="button"
                 >
-                    <i class="tlp-button-icon fa fa-arrow-circle-o-down"></i> {{ ::'Checkout' | translate }}
+                    <i class="tlp-button-icon far fa-arrow-alt-circle-down"></i> {{ ::'Checkout' | translate }}
                     <i class="tlp-button-icon-right fa fa-caret-down"></i>
                 </button>
 
@@ -42,7 +42,7 @@
         <div class="pull-request-requester-date-changes">
             <tuleap-username username="overview.author"></tuleap-username>
             <span class="tlp-text-muted pull-request-date">
-                <i class="fa fa-clock-o"></i> {{ overview.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+                <i class="far fa-clock"></i> {{ overview.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
             </span>
             <div class="pull-request-changes">
                 <span class="tlp-text-success">+{{ overview.pull_request.short_stat.lines_added }}</span>
@@ -64,7 +64,7 @@
                     <i class="fa fa-check"></i> <span translate>Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
                 </p>
                 <p class="tlp-text-danger" ng-if="overview.buildStatusIs('fail')">
-                    <i class="fa fa-remove"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+                    <i class="fas fa-times"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
                 </p>
                 <p class="tlp-text-warning" ng-if="overview.buildStatusIs('unknown')">
                     <i class="fa fa-exclamation-triangle"></i> <span translate>Unknown</span>
@@ -77,10 +77,10 @@
 
             <div ng-if="overview.isNonFastForwardMerge() && overview.is_merge_commit_allowed">
                 <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
-                    <i class="tlp-button-icon fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
+                    <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
                 <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                    <i class="tlp-button-icon fa fa-trash-o"></i> {{ 'Abandon' | translate }}
+                    <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
                 </button>
             </div>
 
@@ -88,10 +88,10 @@
                 {{ "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request." | translate }}
                 <div>
                     <button class="tlp-button-warning" disabled="true">
-                        <i class="tlp-button-icon fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
+                        <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                     </button>
                     <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                        <i class="tlp-button-icon fa fa-trash-o"></i> {{ 'Abandon' | translate }}
+                        <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
                     </button>
                 </div>
             </div>
@@ -100,10 +100,10 @@
                 {{ 'Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.' | translate }}
                 <div>
                     <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" disabled="true">
-                        <i class="tlp-button-icon fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
+                        <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                     </button>
                     <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                        <i class="tlp-button-icon fa fa-trash-o"></i> {{ 'Abandon' | translate }}
+                        <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
                     </button>
                 </div>
             </div>
@@ -112,20 +112,20 @@
                 {{ 'Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.' | translate }}
                 <div>
                     <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" disabled="true">
-                        <i class="tlp-button-icon fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
+                        <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                     </button>
                     <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                        <i class="tlp-button-icon fa fa-trash-o"></i> {{ 'Abandon' | translate }}
+                        <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
                     </button>
                 </div>
             </div>
 
             <div ng-if="! overview.isConflictingMerge() && ! overview.isUnknownMerge() && ! overview.isNonFastForwardMerge()">
                 <button ng-if="overview.hasMergeRight()" class="tlp-button-success" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
-                    <i class="tlp-button-icon fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
+                    <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
                 <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                    <i class="tlp-button-icon fa fa-trash-o"></i> {{ 'Abandon' | translate }}
+                    <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
                 </button>
             </div>
 

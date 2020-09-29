@@ -6,7 +6,7 @@
         </a>
     </h4>
     <h1>
-        <i class="fa fa-level-up fa-rotate-90 frs-release-icon" aria-hidden="true"></i>
+        <i class="fas fa-level-up-alt fa-rotate-90 frs-release-icon" aria-hidden="true"></i>
         <span>{{ $ctrl.release.name }}</span>
     </h1>
 </div>
@@ -38,7 +38,7 @@
         ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
     >
         <span translate>Milestone</span>
-        <i class="tlp-tab-icon fa fa-external-link"></i>
+        <i class="tlp-tab-icon fas fa-external-link-alt"></i>
     </a>
     <a
         ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
@@ -46,7 +46,7 @@
         class="tlp-tab"
     >
         <span translate>Artifact</span>
-        <i class="tlp-tab-icon fa fa-external-link"></i>
+        <i class="tlp-tab-icon fas fa-external-link-alt"></i>
     </a>
 </nav>
 
