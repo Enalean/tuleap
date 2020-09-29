@@ -35,6 +35,7 @@ describe("send-notifications", () => {
         let form: HTMLFormElement;
         let email_field: HTMLInputElement;
         let message_field: HTMLTextAreaElement;
+        let button_field: HTMLButtonElement;
 
         beforeEach(() => {
             const doc = document.implementation.createHTMLDocument();
@@ -46,9 +47,13 @@ describe("send-notifications", () => {
             message_field = doc.createElement("textarea");
             message_field.name = "invite_buddies_message";
 
+            button_field = doc.createElement("button");
+            button_field.type = "submit";
+
             form = doc.createElement("form");
             form.appendChild(email_field);
             form.appendChild(message_field);
+            form.appendChild(button_field);
 
             doc.body.appendChild(form);
 

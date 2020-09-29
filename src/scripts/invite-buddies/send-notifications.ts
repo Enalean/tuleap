@@ -45,9 +45,15 @@ export async function sendNotifications(form: HTMLFormElement): Promise<void> {
         throw Error("Unable to find message field");
     }
 
+    const button = form.querySelector("button[type=submit]");
+    if (!(button instanceof HTMLButtonElement)) {
+        throw Error("Unable to find submit button");
+    }
+
     const icon = form.querySelector("button[type=submit] > .tlp-button-icon");
     try {
         activateSpinner(icon);
+        button.disabled = true;
         const emails = getEmails(email_input);
         const custom_message = message_input.value;
         const response = await post(`/api/v1/invitations`, {
@@ -66,6 +72,7 @@ export async function sendNotifications(form: HTMLFormElement): Promise<void> {
         await handleError(rest_error);
     } finally {
         deactivateSpinner(icon);
+        button.disabled = false;
     }
 }
 
