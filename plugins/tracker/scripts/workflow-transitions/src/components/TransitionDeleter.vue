@@ -28,7 +28,7 @@
             v-on:click="deleteTransitionIfNothingElseIsRunning()"
             data-test-action="delete-transition"
         >
-            ⤴
+            <i class="fas fa-level-up-alt"></i>
         </div>
         <template v-else>
             <div
@@ -42,7 +42,7 @@
                 data-trigger="click"
                 data-test-action="confirm-delete-transition"
             >
-                ⤴
+                <i class="fas fa-level-up-alt"></i>
             </div>
             <transition-delete-popover
                 v-bind:delete-transition="deleteTransitionIfNothingElseIsRunning"
