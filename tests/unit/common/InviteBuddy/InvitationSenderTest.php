@@ -25,6 +25,7 @@ namespace Tuleap\InviteBuddy;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use UserManager;
 
 class InvitationSenderTest extends TestCase
@@ -55,18 +56,35 @@ class InvitationSenderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
      */
     private $dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationInstrumentation
+     */
+    private $instrumentation;
 
     protected function setUp(): void
     {
         $this->current_user = Mockery::mock(\PFUser::class);
         $this->current_user->shouldReceive(['getId' => 123]);
 
-        $this->gate_keeper    = Mockery::mock(InvitationSenderGateKeeper::class);
-        $this->email_notifier = Mockery::mock(InvitationEmailNotifier::class);
-        $this->user_manager   = Mockery::mock(UserManager::class);
-        $this->dao            = Mockery::mock(InvitationDao::class);
+        $this->gate_keeper     = Mockery::mock(InvitationSenderGateKeeper::class);
+        $this->email_notifier  = Mockery::mock(InvitationEmailNotifier::class);
+        $this->user_manager    = Mockery::mock(UserManager::class);
+        $this->dao             = Mockery::mock(InvitationDao::class);
+        $this->logger          = Mockery::mock(LoggerInterface::class);
+        $this->instrumentation = Mockery::mock(InvitationInstrumentation::class);
 
-        $this->sender = new InvitationSender($this->gate_keeper, $this->email_notifier, $this->user_manager, $this->dao);
+        $this->sender = new InvitationSender(
+            $this->gate_keeper,
+            $this->email_notifier,
+            $this->user_manager,
+            $this->dao,
+            $this->logger,
+            $this->instrumentation,
+        );
     }
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
@@ -76,6 +94,7 @@ class InvitationSenderTest extends TestCase
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
         $this->dao->shouldReceive('save');
+        $this->instrumentation->shouldReceive('increment');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
     }
@@ -112,9 +131,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "john@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "john@example.com";
+                    }
+                ),
                 "A custom message"
             )
             ->once()
@@ -123,9 +144,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) use ($known_user) {
-                    return $recipient->user === $known_user && $recipient->email === "doe@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) use ($known_user) {
+                        return $recipient->user === $known_user && $recipient->email === "doe@example.com";
+                    }
+                ),
                 "A custom message"
             )
             ->once()
@@ -140,7 +163,13 @@ class InvitationSenderTest extends TestCase
             ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "sent")
             ->once();
 
-        self::assertEmpty($this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message"));
+        $this->instrumentation
+            ->shouldReceive('increment')
+            ->twice();
+
+        self::assertEmpty(
+            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message")
+        );
     }
 
     public function testItIgnoresEmptyEmails(): void
@@ -152,9 +181,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "doe@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "doe@example.com";
+                    }
+                ),
                 null
             )
             ->once()
@@ -163,6 +194,10 @@ class InvitationSenderTest extends TestCase
         $this->dao
             ->shouldReceive('save')
             ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->once();
+
+        $this->instrumentation
+            ->shouldReceive('increment')
             ->once();
 
         self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
@@ -177,9 +212,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "john@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "john@example.com";
+                    }
+                ),
                 null
             )
             ->once()
@@ -188,9 +225,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "doe@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "doe@example.com";
+                    }
+                ),
                 null
             )
             ->once()
@@ -203,6 +242,14 @@ class InvitationSenderTest extends TestCase
         $this->dao
             ->shouldReceive('save')
             ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->once();
+
+        $this->instrumentation
+            ->shouldReceive('increment')
+            ->once();
+        $this->logger
+            ->shouldReceive('error')
+            ->with("Unable to send invitation from user #123 to john@example.com")
             ->once();
 
         self::assertEquals(
@@ -220,9 +267,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "john@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "john@example.com";
+                    }
+                ),
                 null
             )
             ->once()
@@ -231,9 +280,11 @@ class InvitationSenderTest extends TestCase
             ->shouldReceive("send")
             ->with(
                 $this->current_user,
-                Mockery::on(function (InvitationRecipient $recipient) {
-                    return $recipient->user === null && $recipient->email === "doe@example.com";
-                }),
+                Mockery::on(
+                    function (InvitationRecipient $recipient) {
+                        return $recipient->user === null && $recipient->email === "doe@example.com";
+                    }
+                ),
                 null
             )
             ->once()
@@ -246,6 +297,15 @@ class InvitationSenderTest extends TestCase
         $this->dao
             ->shouldReceive('save')
             ->with(Mockery::any(), 123, "doe@example.com", null, null, "error")
+            ->once();
+
+        $this->logger
+            ->shouldReceive('error')
+            ->with("Unable to send invitation from user #123 to john@example.com")
+            ->once();
+        $this->logger
+            ->shouldReceive('error')
+            ->with("Unable to send invitation from user #123 to doe@example.com")
             ->once();
 
         $this->expectException(UnableToSendInvitationsException::class);
