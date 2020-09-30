@@ -194,6 +194,7 @@ kanban-item {
     color: $tlp-ui-dimmed;
     font-size: .65rem;
     text-decoration: none;
+    font-variant-numeric: tabular-nums;
 
     &:hover {
         opacity: .7;

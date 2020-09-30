@@ -173,6 +173,7 @@
     color: $tlp-ui-dimmed;
     font-size: 12px;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 
     &:hover {
         opacity: .7;
