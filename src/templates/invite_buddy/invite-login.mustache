@@ -1,0 +1,22 @@
+<p>
+    {{# gettext }}
+        %s invited you to log on %s, your login is: %s |
+        {{ current_user_real_name }} |
+        {{ instance_name }} |
+        {{ recipient_name }}
+    {{/ gettext }}
+</p>
+
+<p>
+    <a href="{{ login_url }}">{{ login_url }}</a>
+</p>
+
+{{# has_custom_message }}
+    <p>
+        {{# gettext }}
+            Message from %s: |
+            {{ current_user_real_name }}
+        {{/ gettext }}
+    </p>
+    <blockquote>{{ custom_message }}</blockquote>
+{{/has_custom_message}}
