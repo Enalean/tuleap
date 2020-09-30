@@ -51,15 +51,22 @@ class InvitationSenderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
      */
     private $user_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
+     */
+    private $dao;
 
     protected function setUp(): void
     {
         $this->current_user = Mockery::mock(\PFUser::class);
+        $this->current_user->shouldReceive(['getId' => 123]);
 
         $this->gate_keeper    = Mockery::mock(InvitationSenderGateKeeper::class);
         $this->email_notifier = Mockery::mock(InvitationEmailNotifier::class);
         $this->user_manager   = Mockery::mock(UserManager::class);
-        $this->sender         = new InvitationSender($this->gate_keeper, $this->email_notifier, $this->user_manager);
+        $this->dao            = Mockery::mock(InvitationDao::class);
+
+        $this->sender = new InvitationSender($this->gate_keeper, $this->email_notifier, $this->user_manager, $this->dao);
     }
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
@@ -68,6 +75,7 @@ class InvitationSenderTest extends TestCase
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
+        $this->dao->shouldReceive('save');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
     }
@@ -85,9 +93,10 @@ class InvitationSenderTest extends TestCase
         $this->sender->send($this->current_user, ["john@example.com"], null);
     }
 
-    public function testItSendAnInvitationForEachEmail(): void
+    public function testItSendAnInvitationForEachEmailAndLogStatus(): void
     {
         $known_user = Mockery::mock(\PFUser::class);
+        $known_user->shouldReceive(['getId' => 1001]);
 
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager
@@ -122,6 +131,15 @@ class InvitationSenderTest extends TestCase
             ->once()
             ->andReturnTrue();
 
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "john@example.com", null, "A custom message", "sent")
+            ->once();
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "sent")
+            ->once();
+
         self::assertEmpty($this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message"));
     }
 
@@ -142,10 +160,15 @@ class InvitationSenderTest extends TestCase
             ->once()
             ->andReturnTrue();
 
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->once();
+
         self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
     }
 
-    public function testItReturnsEmailsInFailure(): void
+    public function testItReturnsEmailsInFailureAndLogStatus(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
@@ -172,6 +195,15 @@ class InvitationSenderTest extends TestCase
             )
             ->once()
             ->andReturnTrue();
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
+            ->once();
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->once();
 
         self::assertEquals(
             ["john@example.com"],
@@ -206,6 +238,15 @@ class InvitationSenderTest extends TestCase
             )
             ->once()
             ->andReturnFalse();
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
+            ->once();
+        $this->dao
+            ->shouldReceive('save')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "error")
+            ->once();
 
         $this->expectException(UnableToSendInvitationsException::class);
 

@@ -26,6 +26,9 @@ use PFUser;
 
 class InvitationSender
 {
+    private const STATUS_SENT  = 'sent';
+    private const STATUS_ERROR = 'error';
+
     /**
      * @var InvitationSenderGateKeeper
      */
@@ -38,15 +41,21 @@ class InvitationSender
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var InvitationDao
+     */
+    private $dao;
 
     public function __construct(
         InvitationSenderGateKeeper $gate_keeper,
         InvitationEmailNotifier $email_notifier,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        InvitationDao $dao
     ) {
         $this->gate_keeper    = $gate_keeper;
         $this->email_notifier = $email_notifier;
         $this->user_manager   = $user_manager;
+        $this->dao            = $dao;
     }
 
     /**
@@ -63,15 +72,29 @@ class InvitationSender
         $emails = array_filter($emails);
         $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
 
+        $now = (new \DateTimeImmutable())->getTimestamp();
+
         $failures = [];
         foreach ($emails as $email) {
             $recipient = new InvitationRecipient(
                 $this->user_manager->getUserByEmail($email),
                 $email,
             );
+
+            $status = self::STATUS_SENT;
             if (! $this->email_notifier->send($current_user, $recipient, $custom_message)) {
+                $status     = self::STATUS_ERROR;
                 $failures[] = $email;
             }
+
+            $this->dao->save(
+                $now,
+                (int) $current_user->getId(),
+                $email,
+                $recipient->getUserId(),
+                $custom_message,
+                $status
+            );
         }
 
         if (count($failures) === count($emails)) {

@@ -22,29 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use PFUser;
+use Tuleap\DB\DataAccessObject;
 
-final class InvitationRecipient
+class InvitationDao extends DataAccessObject
 {
-    /**
-     * @var PFUser|null
-     * @psalm-readonly
-     */
-    public $user;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $email;
-
-    public function __construct(?PFUser $user, string $email)
-    {
-        $this->user  = $user;
-        $this->email = $email;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user ? (int) $this->user->getId() : null;
+    public function save(
+        int $created_on,
+        int $from_user_id,
+        string $to_email,
+        ?int $to_user_id,
+        ?string $custom_message,
+        string $status
+    ): void {
+        $this->getDB()->insert(
+            'invitations',
+            [
+                'created_on'     => $created_on,
+                'from_user_id'   => $from_user_id,
+                'to_email'       => $to_email,
+                'to_user_id'     => $to_user_id,
+                'custom_message' => $custom_message,
+                'status'         => $status
+            ]
+        );
     }
 }
