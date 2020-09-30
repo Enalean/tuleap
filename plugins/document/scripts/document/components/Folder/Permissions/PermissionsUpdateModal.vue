@@ -119,6 +119,7 @@ export default {
         this.modal = createModal(this.$el);
         EventBus.$on("show-update-permissions-modal", this.show);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
+        this.show();
     },
     beforeDestroy() {
         EventBus.$off("show-update-permissions-modal", this.show);

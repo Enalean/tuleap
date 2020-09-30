@@ -85,11 +85,7 @@ describe("PermissionsUpdateModal", () => {
             },
         };
         const wrapper = factory({ item: item_to_update });
-
-        expect(wrapper.vm.can_be_submitted).toBe(false);
-
-        EventBus.$emit("show-update-permissions-modal");
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find(".document-permissions-update-container").exists()).toBe(true);
         expect(wrapper.vm.can_be_submitted).toBe(true);
 
@@ -99,6 +95,30 @@ describe("PermissionsUpdateModal", () => {
             can_manage: wrapper.vm.updated_permissions.can_manage,
         };
         expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
+    });
+
+    it(`when the modal receives a "show" event, it will open again`, async () => {
+        store.dispatch.mockImplementation((name) => {
+            if (name === "loadProjectUserGroupsIfNeeded") {
+                store.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
+            }
+        });
+
+        const item_to_update = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: [{ id: "102_3" }],
+            },
+        };
+        const wrapper = factory({ item: item_to_update });
+        await wrapper.vm.$nextTick();
+        wrapper.vm.reset();
+        EventBus.$emit("show-update-permissions-modal");
+
+        expect(store.dispatch).toHaveBeenCalledTimes(2);
     });
 
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
@@ -118,9 +138,7 @@ describe("PermissionsUpdateModal", () => {
             },
         };
         const wrapper = factory({ item: item_to_update });
-
-        EventBus.$emit("show-update-permissions-modal");
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
     });
@@ -183,7 +201,7 @@ describe("PermissionsUpdateModal", () => {
             item_to_update,
             permissions_to_update,
         ]);
-        await wrapper.vm.$nextTick().then(() => {});
+        await wrapper.vm.$nextTick();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 
