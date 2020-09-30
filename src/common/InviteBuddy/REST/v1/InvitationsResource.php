@@ -28,6 +28,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationEmailNotifier;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
@@ -81,13 +82,19 @@ class InvitationsResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
 
+        $dao = new InvitationDao();
+        $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
         $sender = new InvitationSender(
-            new InvitationSenderGateKeeper(new \Valid_Email(), new InviteBuddyConfiguration(\EventManager::instance())),
+            new InvitationSenderGateKeeper(
+                new \Valid_Email(),
+                $invite_buddy_configuration,
+                new InvitationLimitChecker($dao, $invite_buddy_configuration)
+            ),
             new InvitationEmailNotifier(new InstanceBaseURLBuilder()),
             $user_manager,
-            new InvitationDao(),
+            $dao,
             \BackendLogger::getDefaultLogger(),
-            new InvitationInstrumentation(Prometheus::instance()),
+            new InvitationInstrumentation(Prometheus::instance())
         );
 
         try {

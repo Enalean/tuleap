@@ -51,4 +51,13 @@ class InvitationDao extends DataAccessObject
     {
         return $this->getDB()->run("SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ?", $to_email);
     }
+
+    public function getInvitationsSentByUserForToday(int $user_id): int
+    {
+        $sql = "SELECT count(*)
+                FROM invitations
+                WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()";
+
+        return (int) $this->getDB()->single($sql, [$user_id]);
+    }
 }

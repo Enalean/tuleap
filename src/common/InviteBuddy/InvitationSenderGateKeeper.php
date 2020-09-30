@@ -32,11 +32,16 @@ class InvitationSenderGateKeeper
      * @var InviteBuddyConfiguration
      */
     private $configuration;
+    /**
+     * @var InvitationLimitChecker
+     */
+    private $limit_checker;
 
-    public function __construct(\Valid_Email $valid_email, InviteBuddyConfiguration $configuration)
+    public function __construct(\Valid_Email $valid_email, InviteBuddyConfiguration $configuration, InvitationLimitChecker $limit_checker)
     {
         $this->valid_email = $valid_email;
         $this->configuration = $configuration;
+        $this->limit_checker = $limit_checker;
     }
 
     /**
@@ -58,5 +63,7 @@ class InvitationSenderGateKeeper
                 throw new InvitationSenderGateKeeperException(sprintf(_("Email %s is not valid"), $email));
             }
         }
+
+        $this->limit_checker->checkForNewInvitations(count($emails), $current_user);
     }
 }

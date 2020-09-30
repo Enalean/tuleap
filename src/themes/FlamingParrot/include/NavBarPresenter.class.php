@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -99,10 +100,9 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      */
     public $is_svg_logo_customized;
     /**
-     * @var bool
-     * @psalm-readonly
+     * @var InviteBuddiesPresenter
      */
-    public $can_buddies_be_invited;
+    public $invite_buddies_presenter;
 
     public function __construct(
         $imgroot,
@@ -117,7 +117,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         ?\Tuleap\User\SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        bool $can_buddies_be_invited
+        InviteBuddiesPresenter $invite_buddies_presenter
     ) {
         $this->imgroot                   = $imgroot;
         $this->user                      = $user;
@@ -134,8 +134,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->should_logo_be_displayed  = $should_logo_be_displayed;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
         $this->is_svg_logo_customized    = $is_svg_logo_customized;
-        $this->can_buddies_be_invited    = $can_buddies_be_invited;
-        $this->is_super_user             = $user->isSuperUser();
+        $this->is_super_user = $user->isSuperUser();
+        $this->invite_buddies_presenter = $invite_buddies_presenter;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');

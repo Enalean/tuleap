@@ -2077,6 +2077,10 @@ msgstr ""
 "L'e-mail n'a pas pu être envoyé. Veuillez contacter les administrateurs à "
 "l'adresse %s."
 
+#, php-format
+msgid "The maximum number of invitations per day is %s."
+msgstr "Le nombre maximal d'invitation par jour est de %s."
+
 msgid ""
 "The most complete project workspace to plan, build and ship quality "
 "products. Include Tuleap Test Management, Time Tracking and Cross-Tracker "
@@ -2752,6 +2756,18 @@ msgstr ""
 "Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
 "mail"
 
+#, php-format
+msgid "You are trying to send %s invitations, but the maximum is %s per day."
+msgstr ""
+"Vous êtes en train d'envoyer %s invitations, mais le maximum est de %s par "
+"jour."
+
+#, php-format
+msgid "You are trying to send one invitation."
+msgid_plural "You are trying to send %s invitations."
+msgstr[0] "Vous essayez d'envoyer une invitation."
+msgstr[1] "Vous essayez d'envoyer %s invitations."
+
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"
 msgstr[0] "Vous pouvez choisir au plus %s catégorie"
@@ -2791,11 +2807,24 @@ msgstr ""
 msgid "You can include empty lines in the import file."
 msgstr "Vous pouvez inclure des lignes vides dans le fichier d'import."
 
+msgid ""
+"You can no longer invite people to use %s you have reached the limit of %s "
+"invitations by day."
+msgstr ""
+"Vous ne pouvez plus inviter de nouvelles personnes sur %s, vous avez déjà "
+"atteints la limite de %s invitations par jour."
+
 msgid "You can not delete system user groups"
 msgstr "Vous ne pouvez pas supprimer un groupe utilisateurs système"
 
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
+
+#, php-format
+msgid "You can only send one more invitation."
+msgid_plural "You can only send %s more invitations."
+msgstr[0] "Vous ne pouvez envoyer plus qu'une seule invitation."
+msgstr[1] "Vous pouvez encore envoyer %s invitations."
 
 msgid ""
 "You can use SVN tokens as a replacement for your password on projects "

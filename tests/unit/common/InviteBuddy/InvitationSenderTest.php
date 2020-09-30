@@ -22,15 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
 class InvitationSenderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationSenderGateKeeper
@@ -83,14 +86,18 @@ class InvitationSenderTest extends TestCase
             $this->user_manager,
             $this->dao,
             $this->logger,
-            $this->instrumentation,
+            $this->instrumentation
         );
+
+        ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 5);
     }
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
         $this->dao->shouldReceive('save');
@@ -116,6 +123,8 @@ class InvitationSenderTest extends TestCase
     {
         $known_user = Mockery::mock(\PFUser::class);
         $known_user->shouldReceive(['getId' => 1001]);
+
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(3);
 
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager
@@ -177,6 +186,8 @@ class InvitationSenderTest extends TestCase
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
 
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+
         $this->email_notifier
             ->shouldReceive("send")
             ->with(
@@ -207,6 +218,8 @@ class InvitationSenderTest extends TestCase
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
 
         $this->email_notifier
             ->shouldReceive("send")
@@ -262,6 +275,8 @@ class InvitationSenderTest extends TestCase
     {
         $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
         $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
 
         $this->email_notifier
             ->shouldReceive("send")

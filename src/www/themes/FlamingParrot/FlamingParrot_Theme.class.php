@@ -29,6 +29,7 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\HelpDropdown\VersionNumberExtractor;
+use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -237,7 +238,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $can_buddies_be_invited,
         ));
 
-        $this->navbar($params, $current_user, $project, $banner, $can_buddies_be_invited);
+        $this->navbar($params, $current_user, $project, $banner);
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -259,8 +260,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $params,
         PFUser $current_user,
         ?Project $project,
-        ?BannerDisplay $banner,
-        bool $can_buddies_be_invited
+        ?BannerDisplay $banner
     ) {
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
@@ -311,7 +311,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            $can_buddies_be_invited,
+            InviteBuddiesPresenter::build($current_user)
         ));
 
         $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized, $is_svg_logo_customized);
