@@ -77,6 +77,9 @@ msgstr "Annonces site %s"
 msgid "%s project news highlights"
 msgstr "Annonces phares des projets %s"
 
+msgid "%s with email %s created an account on %s."
+msgstr "%s avec l'email %s a créé un compte sur %s."
+
 msgid "(day/month/year)"
 msgstr "(jour/mois/année)"
 
@@ -1010,6 +1013,10 @@ msgstr ""
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
+
+#, php-format
+msgid "Invitation complete!"
+msgstr "Invitation terminée !"
 
 msgid "Invitation could not be sent to:"
 msgstr "L'invitation n'a pas pu être envoyée à :"

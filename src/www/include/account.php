@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\InviteBuddy\AccountCreationFeedback;
 use Tuleap\User\Account\RedirectAfterLogin;
 
 // adduser.php - All the forms and functions to manage unix users
@@ -80,6 +81,14 @@ function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', 
 
     $u = $um->createAccount($user);
     if ($u) {
+        $account_creation_feedback = new AccountCreationFeedback(
+            new \Tuleap\InviteBuddy\InvitationDao(),
+            $um,
+            new \Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier(),
+            BackendLogger::getDefaultLogger(),
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($u);
+
         return $u->getId();
     } else {
         return $u;
