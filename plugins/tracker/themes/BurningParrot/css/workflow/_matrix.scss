@@ -135,6 +135,7 @@
 .tracker-workflow-transition-mark {
     transition: color ease-in-out 100ms;
     color: $tlp-theme-color;
+    font-size: 1rem;
     cursor: pointer;
 
     &.tracker-workflow-transition-action-updated {
