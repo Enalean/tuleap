@@ -29,22 +29,23 @@
         position: absolute;
         top: 2px;
         left: 0;
-        font-family: 'fontawesome';
+        font-family: 'Font Awesome 5 Free';
         font-size: 14px;
+        font-weight: 400;
     }
 }
 
 .toggler,
 .toggler-noajax {
     &::before {
-        content: '\f147'; // fa-minus-square-o
+        content: '\f146'; // fa-minus-square
     }
 }
 
 .toggler-hide,
 .toggler-hide-noajax {
     &::before {
-        content: '\f196'; // fa-minus-square-o
+        content: '\f0fe'; // fa-plus-square
     }
 
     ~ * {
