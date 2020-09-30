@@ -112,7 +112,7 @@
 
         <section ng-if="execution.definition.requirement && execution.is_automated === false" class="tlp-pane-section current-test-requirement">
             <div>
-                <i class="fa fa-long-arrow-right current-test-requirement-arrow"></i>
+                <i class="fas fa-long-arrow-alt-right current-test-requirement-arrow"></i>
                 <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
                     <span ng-class="['current-test-requirement-badge', 'tlp-badge-outline', 'tlp-badge-' + execution.definition.requirement.tracker.color_name]">
                         {{ execution.definition.requirement.xref }}

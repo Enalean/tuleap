@@ -25,7 +25,7 @@
                 ng-show="kanban.showEditbutton()"
                 data-test="kanban-header-edit-button"
         >
-            <i class="fa fa-pencil tlp-button-icon"
+            <i class="fas fa-pencil-alt tlp-button-icon"
                 ng-class="{ 'fa-spinner fa-spin': kanban.is_edit_loading }"
             ></i>
             <span translate>Edit this Kanban</span>
@@ -34,7 +34,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-report-button"
                 ng-click="kanban.openReportModal()"
         >
-            <i class="fa fa-bar-chart tlp-button-icon"
+            <i class="far fa-chart-bar tlp-button-icon"
                 ng-class="{ 'fa-spinner fa-spin': kanban.is_report_loading }"
             ></i>
             <span translate>Show reports</span>
@@ -95,10 +95,10 @@
 </div>
 <div class="kanban-filtered-info">
     <p class="tlp-text-info kanban-header-filter-text-info" ng-if="kanban.displayCardsAndWIPNotUpdated()">
-        <i class="fa fa-life-saver"></i> <span translate>Your kanban is filtered, there is no update of cards in real time or WIP.</span>
+        <i class="far fa-life-ring"></i> <span translate>Your kanban is filtered, there is no update of cards in real time or WIP.</span>
     </p>
     <p class="tlp-text-info kanban-header-filter-text-info" ng-if="kanban.displayWIPNotUpdated()">
-        <i class="fa fa-life-saver"></i> <span translate>Your kanban is filtered, there is no update of WIP.</span>
+        <i class="far fa-life-ring"></i> <span translate>Your kanban is filtered, there is no update of WIP.</span>
     </p>
 </div>
 <div class="kanban-board" resize>

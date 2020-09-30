@@ -10,13 +10,13 @@
             title="{{ ::'Edit campaign' | translate }}"
             data-test="edit-campaign-button"
     >
-        <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
+        <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>
     <button type="button"
         class="tlp-button-primary tlp-button-outline execution-header-button"
         ng-click="$ctrl.launchAutomatedTests()"
         ng-if="$ctrl.isAutomatedTestButtonShown()"
-    ><i class="fa fa-gears tlp-button-icon"
+    ><i class="fas fa-cogs tlp-button-icon"
         ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"
     ></i> {{ ::'Launch automated tests' | translate }}</button>
     <div class="test-campaign-header-spacer"></div>

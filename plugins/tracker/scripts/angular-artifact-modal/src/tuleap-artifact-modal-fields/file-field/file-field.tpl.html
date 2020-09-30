@@ -13,7 +13,7 @@
         ng-style="{ 'background-image': file.display_as_image ? 'url(\'{{ file.html_preview_url }}\')' : 'url(\'/plugins/tracker/scripts/angular-artifact-modal/src/assets/artifact_attachment_default.png\')' }"
     >
         <a class="tuleap-artifact-modal-field-file-preview-link" href="{{ file.html_url }}" target="_blank">
-            <i class="fa fa-external-link"></i>
+            <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
 
@@ -31,14 +31,14 @@
         class="tuleap-artifact-modal-field-file-preview-toggle tlp-button-danger tlp-button-outline tlp-button-small"
         ng-click="file_field.toggleMarkedForRemoval(file, $index)"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i> {{ 'Mark for removal' | translate }}
+        <i class="far fa-trash-alt tlp-button-icon"></i> {{ 'Mark for removal' | translate }}
     </button>
     <button type="button"
         ng-if="file.marked_for_removal"
         class="tuleap-artifact-modal-field-file-preview-toggle tlp-button-success tlp-button-outline tlp-button-small"
         ng-click="file_field.toggleMarkedForRemoval(file, $index)"
     >
-        <i class="fa fa-rotate-left tlp-button-icon"></i> {{ 'Keep the file' | translate }}
+        <i class="fas fa-undo tlp-button-icon"></i> {{ 'Keep the file' | translate }}
     </button>
 </div>
 
@@ -60,7 +60,7 @@
             class="tlp-button-secondary tlp-button-outline tlp-button-small"
             ng-click="file_field.resetTemporaryFileInput($index)"
         >
-            <i class="fa fa-trash-o tlp-button-icon"></i>
+            <i class="far fa-trash-alt tlp-button-icon"></i>
             {{ 'Reset' | translate }}
         </button>
     </div>

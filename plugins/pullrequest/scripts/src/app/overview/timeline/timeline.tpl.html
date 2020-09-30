@@ -2,7 +2,7 @@
     class="pull-request-no-comment"
 >
     <p class="empty-page-text">
-        <i class="empty-page-icon fa fa-comments-o"></i>
+        <i class="empty-page-icon far fa-comments"></i>
         {{ 'Discussion has not started yet' | translate }}
     </p>
 </div>
@@ -23,9 +23,9 @@
 
         <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
             <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline_controller.pull_request.id }} , file_path: '{{ event.file_path }}'})">
-                <i class="fa fa-file-text-o"></i> {{ event.file_path }}
+                <i class="far fa-file-alt"></i> {{ event.file_path }}
             </a>
-            <span ng-if="event.is_outdated"><i class="fa fa-file-text-o"></i> {{ event.file_path }}</span>
+            <span ng-if="event.is_outdated"><i class="far fa-file-alt"></i> {{ event.file_path }}</span>
         </span>
 
         <p ng-bind-html="event.content"></p>
@@ -42,6 +42,6 @@
         ></textarea>
     </div>
     <button type="submit" class="tlp-button-primary tlp-button-outline pull-request-add-comment-button" ng-disabled="timeline_controller.loading_timeline">
-        <i class="tlp-button-icon fa fa-comments-o"></i> {{ 'Comment' | translate }}
+        <i class="tlp-button-icon far fa-comments"></i> {{ 'Comment' | translate }}
     </button>
 </form>

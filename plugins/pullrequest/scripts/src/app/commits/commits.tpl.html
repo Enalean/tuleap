@@ -30,7 +30,7 @@
                         </span>
                     </span>
                     <span class="pull-request-commits-list-commit-metadata-authored-date">
-                        <i class="fa fa-calendar pull-request-commits-list-commit-metadata-authored-icon"></i>
+                        <i class="fas fa-calendar-alt pull-request-commits-list-commit-metadata-authored-icon"></i>
                         {{ ::commit.committed_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
                     </span>
                 </div>
@@ -47,7 +47,7 @@
              data-tlp-tooltip="{{ ::commit.getCommitStatusMessage() }}"
              ng-if="commit.isCommitStatusAFailure()"
         >
-            <span translate>CI</span> <i class="fa fa-remove pull-request-commits-list-commit-last-status-icon"></i>
+            <span translate>CI</span> <i class="fas fa-times pull-request-commits-list-commit-last-status-icon"></i>
         </div>
         <div
            class="tlp-badge-secondary tlp-badge-outline pull-request-commits-list-commit-badge"
