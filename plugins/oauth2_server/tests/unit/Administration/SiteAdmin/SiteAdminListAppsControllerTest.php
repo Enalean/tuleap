@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\SiteAdmin;
+namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

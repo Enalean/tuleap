@@ -20,15 +20,12 @@
 
 declare(strict_types=1);
 
-namespace ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
-use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenter;
-use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenterBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\SiteAdmin;
+namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
-use Tuleap\OAuth2Server\ProjectAdmin\AppPresenter;
+use Tuleap\OAuth2Server\Administration\AppPresenter;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -67,7 +67,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-oauth2_server', 'OAuth2 Server'),
-            __DIR__ . '/../../templates/',
+            __DIR__ . '/../../../templates/',
             'site-admin',
             [
                 'apps' => $this->getAppsPresenter()
