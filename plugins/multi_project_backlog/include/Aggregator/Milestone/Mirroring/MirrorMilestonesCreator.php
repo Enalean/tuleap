@@ -25,6 +25,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
@@ -35,9 +36,9 @@ class MirrorMilestonesCreator
      */
     private $transaction_executor;
     /**
-     * @var TargetFieldsGatherer
+     * @var SynchronizedFieldsGatherer
      */
-    private $target_fields_gatherer;
+    private $fields_gatherer;
     /**
      * @var \Tracker_ArtifactCreator
      */
@@ -45,12 +46,12 @@ class MirrorMilestonesCreator
 
     public function __construct(
         DBTransactionExecutor $transaction_executor,
-        TargetFieldsGatherer $target_fields_gatherer,
+        SynchronizedFieldsGatherer $fields_gatherer,
         \Tracker_ArtifactCreator $artifact_creator
     ) {
-        $this->transaction_executor   = $transaction_executor;
-        $this->target_fields_gatherer = $target_fields_gatherer;
-        $this->artifact_creator       = $artifact_creator;
+        $this->transaction_executor = $transaction_executor;
+        $this->fields_gatherer      = $fields_gatherer;
+        $this->artifact_creator     = $artifact_creator;
     }
 
     /**
@@ -65,12 +66,12 @@ class MirrorMilestonesCreator
         $this->transaction_executor->execute(
             function () use ($copied_values, $contributor_milestones, $current_user) {
                 foreach ($contributor_milestones->getMilestoneTrackers() as $milestone_tracker) {
-                    $target_fields = $this->target_fields_gatherer->gather($milestone_tracker);
-                    $fields_data   = MirrorMilestoneFieldsData::fromCopiedValuesAndTargetFields(
+                    $synchronized_fields = $this->fields_gatherer->gather($milestone_tracker);
+                    $fields_data         = MirrorMilestoneFieldsData::fromCopiedValuesAndSynchronizedFields(
                         $copied_values,
-                        $target_fields
+                        $synchronized_fields
                     );
-                    $result        = $this->artifact_creator->create(
+                    $result              = $this->artifact_creator->create(
                         $milestone_tracker,
                         $fields_data->toFieldsDataArray(),
                         $current_user,

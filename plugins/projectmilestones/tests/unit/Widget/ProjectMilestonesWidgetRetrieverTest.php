@@ -157,7 +157,9 @@ class ProjectMilestonesWidgetRetrieverTest extends TestCase
 
     public function testGetExceptionContentWhenThereIsNoProject(): void
     {
-        $this->presenter_builder->shouldReceive('getProjectMilestonePresenter')->andThrow(Mockery::mock(TimeframeBrokenConfigurationException::class));
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(110);
+        $this->presenter_builder->shouldReceive('getProjectMilestonePresenter')->andThrow(new TimeframeBrokenConfigurationException($tracker));
         $content = $this->retriever->getContent(null, null);
         $this->assertStringContainsString("Invalid Timeframe Semantic configuration.", $content);
     }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
 
 final class MirrorMilestoneFieldsData
@@ -46,28 +47,44 @@ final class MirrorMilestoneFieldsData
      * @psalm-readonly
      */
     private $title_changeset_value;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    private $description_field_id;
+    /**
+     * @var \Tracker_Artifact_ChangesetValue_Text
+     * @psalm-readonly
+     */
+    private $description_changeset_value;
 
     private function __construct(
         int $artifact_link_field_id,
         int $aggregator_milestone_id,
         int $title_field_id,
-        \Tracker_Artifact_ChangesetValue_String $title_changeset_value
+        \Tracker_Artifact_ChangesetValue_String $title_changeset_value,
+        int $description_field_id,
+        \Tracker_Artifact_ChangesetValue_Text $description_changeset_value
     ) {
-        $this->artifact_link_field_id  = $artifact_link_field_id;
-        $this->aggregator_milestone_id = $aggregator_milestone_id;
-        $this->title_field_id          = $title_field_id;
-        $this->title_changeset_value   = $title_changeset_value;
+        $this->artifact_link_field_id      = $artifact_link_field_id;
+        $this->aggregator_milestone_id     = $aggregator_milestone_id;
+        $this->title_field_id              = $title_field_id;
+        $this->title_changeset_value       = $title_changeset_value;
+        $this->description_field_id        = $description_field_id;
+        $this->description_changeset_value = $description_changeset_value;
     }
 
-    public static function fromCopiedValuesAndTargetFields(
+    public static function fromCopiedValuesAndSynchronizedFields(
         CopiedValues $copied_values,
-        TargetFields $target_fields
+        SynchronizedFields $target_fields
     ): self {
         return new self(
             (int) $target_fields->getArtifactLinkField()->getId(),
             $copied_values->getArtifactId(),
             (int) $target_fields->getTitleField()->getId(),
-            $copied_values->getTitleValue()
+            $copied_values->getTitleValue(),
+            (int) $target_fields->getDescriptionField()->getId(),
+            $copied_values->getDescriptionValue()
         );
     }
 
@@ -78,7 +95,8 @@ final class MirrorMilestoneFieldsData
     {
         return [
             $this->artifact_link_field_id => $this->toArtifactLinkFieldData(),
-            $this->title_field_id         => $this->title_changeset_value->getValue()
+            $this->title_field_id         => $this->title_changeset_value->getValue(),
+            $this->description_field_id   => $this->toTextFieldData($this->description_changeset_value),
         ];
     }
 
@@ -90,6 +108,17 @@ final class MirrorMilestoneFieldsData
         return [
             'new_values' => (string) $this->aggregator_milestone_id,
             'natures'    => [(string) $this->aggregator_milestone_id => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]
+        ];
+    }
+
+    /**
+     * @return array{content: string, format: string}
+     */
+    private function toTextFieldData(\Tracker_Artifact_ChangesetValue_Text $changeset_value_text): array
+    {
+        return [
+            'content' => $changeset_value_text->getValue(),
+            'format'  => $changeset_value_text->getFormat()
         ];
     }
 }

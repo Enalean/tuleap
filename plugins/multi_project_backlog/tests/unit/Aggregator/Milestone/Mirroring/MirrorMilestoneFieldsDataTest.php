@@ -24,6 +24,8 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
 use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
 
 final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
@@ -32,35 +34,75 @@ final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
-        $project = \Project::buildForTest();
-        $tracker = M::mock(\Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $field = M::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getTracker')->andReturn($tracker);
-        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(
-            12,
-            M::mock(\Tracker_Artifact_Changeset::class),
-            $field,
-            true,
-            'Aggregator Release',
-            'text'
-        );
-        $copied_values         = new CopiedValues($title_changeset_value, 123456789, 112);
+        $copied_values = $this->buildCopiedValues();
+        $target_fields = $this->buildSynchronizedFields();
 
-        $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->shouldReceive('getId')->andReturn('1001');
-        $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
-        $title_field->shouldReceive('getId')->andReturn('1002');
-        $target_fields = new TargetFields($artifact_link_field, $title_field);
+        $fields_data = MirrorMilestoneFieldsData::fromCopiedValuesAndSynchronizedFields($copied_values, $target_fields);
 
-        $fields_data = MirrorMilestoneFieldsData::fromCopiedValuesAndTargetFields($copied_values, $target_fields);
-
-        $this->assertEquals(
+        self::assertEquals(
             [
-                '1001' => ['new_values' => '112', 'natures' => ['112' => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]],
-                '1002' => 'Aggregator Release'
+                1001 => ['new_values' => '112', 'natures' => ['112' => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]],
+                1002 => 'Aggregator Release',
+                1003 => ['content' => '<p>Description</p>', 'format' => 'html'],
             ],
             $fields_data->toFieldsDataArray()
         );
+    }
+
+    private function buildCopiedValues(): CopiedValues
+    {
+        $project = \Project::buildForTest();
+        $tracker = $this->buildTestTracker(89, $project);
+        $title_field = M::mock(\Tracker_FormElement_Field::class);
+        $title_field->shouldReceive('getTracker')->andReturn($tracker);
+        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(10000, M::mock(\Tracker_Artifact_Changeset::class), $title_field, true, 'Aggregator Release', 'text');
+
+        $description_field = M::mock(\Tracker_FormElement_Field::class);
+        $description_field->shouldReceive('getTracker')->andReturn($tracker);
+        $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, '<p>Description</p>', 'html');
+
+        return new CopiedValues($title_changeset_value, $description_changeset_value, 123456789, 112);
+    }
+
+    private function buildSynchronizedFields(): SynchronizedFields
+    {
+        return new SynchronizedFields(
+            new \Tracker_FormElement_Field_ArtifactLink(1001, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
+            new \Tracker_FormElement_Field_String(1002, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
+            new \Tracker_FormElement_Field_Text(1003, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
+            new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
+            TimeframeFields::fromStartAndEndDates(
+                $this->buildTestDateField(1005),
+                $this->buildTestDateField(1006)
+            )
+        );
+    }
+
+    private function buildTestDateField(int $id): \Tracker_FormElement_Field_Date
+    {
+        return new \Tracker_FormElement_Field_Date($id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 1);
+    }
+
+    private function buildTestTracker(int $tracker_id, \Project $project): \Tracker
+    {
+        $tracker = new \Tracker(
+            $tracker_id,
+            $project->getID(),
+            'Irrelevant',
+            'Irrelevant',
+            'irrelevant',
+            false,
+            null,
+            null,
+            null,
+            null,
+            true,
+            false,
+            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            \Tuleap\Tracker\TrackerColor::default(),
+            false
+        );
+        $tracker->setProject($project);
+        return $tracker;
     }
 }

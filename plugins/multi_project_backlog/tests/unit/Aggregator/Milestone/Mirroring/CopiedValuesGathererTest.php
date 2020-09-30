@@ -25,7 +25,9 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoTitleFieldException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
 
 final class CopiedValuesGathererTest extends TestCase
 {
@@ -36,14 +38,14 @@ final class CopiedValuesGathererTest extends TestCase
      */
     private $gatherer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_TitleFactory
+     * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsGatherer
      */
-    private $semantic_title_factory;
+    private $fields_gatherer;
 
     protected function setUp(): void
     {
-        $this->semantic_title_factory = M::mock(\Tracker_Semantic_TitleFactory::class);
-        $this->gatherer               = new CopiedValuesGatherer($this->semantic_title_factory);
+        $this->fields_gatherer = M::mock(SynchronizedFieldsGatherer::class);
+        $this->gatherer        = new CopiedValuesGatherer($this->fields_gatherer);
     }
 
     public function testItReturnsCopiedValues(): void
@@ -53,39 +55,40 @@ final class CopiedValuesGathererTest extends TestCase
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 123456789, '');
         $tracker   = $this->buildTestTracker(89);
 
-        $title_field       = $this->buildTestStringField(1002, 89);
-        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(
-            10000,
-            $changeset,
-            $title_field,
-            true,
-            'My awesome title',
-            'text'
-        );
+        $synchronized_fields = $this->buildSynchronizedFields();
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(10000, $changeset, $title_field, true, 'My awesome title', 'text');
         $changeset->setFieldValue($title_field, $title_field_value);
-        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getField')->andReturn($title_field);
-        $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
+
+        $description_field       = $synchronized_fields->getDescriptionField();
+        $description_field_value = new \Tracker_Artifact_ChangesetValue_Text(10001, $changeset, $description_field, true, 'My awesome description', 'text');
+        $changeset->setFieldValue($description_field, $description_field_value);
+
+        $status_field       = $synchronized_fields->getStatusField();
+        $status_field_value = new \Tracker_Artifact_ChangesetValue_List(10002, $changeset, $status_field, true, ['Ongoing']);
+        $changeset->setFieldValue($status_field, $status_field_value);
+
+        $timeframe_fields = $synchronized_fields->getTimeframeFields();
+        $start_date_field       = $timeframe_fields->getStartDateField();
+        $start_date_field_value = new \Tracker_Artifact_ChangesetValue_Date(10003, $changeset, $start_date_field, true, 123456789);
+        $changeset->setFieldValue($start_date_field, $start_date_field_value);
+
+        $end_date_field       = $timeframe_fields->getEndPeriodField();
+        $end_date_field_value = new \Tracker_Artifact_ChangesetValue_Date(10004, $changeset, $end_date_field, true, 123543189);
+        $changeset->setFieldValue($end_date_field, $end_date_field_value);
+
+        $this->fields_gatherer->shouldReceive('gather')
+            ->once()
+            ->with($tracker)
+            ->andReturn($synchronized_fields);
 
         $values = $this->gatherer->gather($changeset, $tracker);
 
-        $this->assertSame($title_field_value, $values->getTitleValue());
-        $this->assertSame(123456789, $values->getSubmittedOn());
-        $this->assertEquals(104, $values->getArtifactId());
-    }
-
-    public function testItThrowsWhenTrackerHasNoTitleSemanticField(): void
-    {
-        $artifact  = M::mock(\Tracker_Artifact::class);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
-        $tracker   = $this->buildTestTracker(89);
-
-        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getField')->andReturnNull();
-        $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
-
-        $this->expectException(NoTitleFieldException::class);
-        $this->gatherer->gather($changeset, $tracker);
+        self::assertSame($title_field_value, $values->getTitleValue());
+        self::assertSame($description_field_value, $values->getDescriptionValue());
+        self::assertSame(123456789, $values->getSubmittedOn());
+        self::assertEquals(104, $values->getArtifactId());
     }
 
     public function testItThrowsWhenChangesetHasNoValueForTitleField(): void
@@ -94,11 +97,9 @@ final class CopiedValuesGathererTest extends TestCase
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
-        $title_field = $this->buildTestStringField(1002, 89);
-        $changeset->setNoFieldValue($title_field);
-        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getField')->andReturn($title_field);
-        $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+        $changeset->setNoFieldValue($synchronized_fields->getTitleField());
 
         $this->expectException(NoTitleChangesetValueException::class);
         $this->gatherer->gather($changeset, $tracker);
@@ -110,41 +111,53 @@ final class CopiedValuesGathererTest extends TestCase
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
-        $title_field = $this->buildTestStringField(1002, 89);
-        $changeset->setFieldValue(
-            $title_field,
-            new \Tracker_Artifact_ChangesetValue_Text(
-                10000,
-                $changeset,
-                $title_field,
-                true,
-                'My awesome title',
-                'text'
-            )
-        );
-        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getField')->andReturn($title_field);
-        $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_Text(10000, $changeset, $title_field, true, 'My awesome title', 'text');
+        $changeset->setFieldValue($title_field, $title_field_value);
 
         $this->expectException(UnsupportedTitleFieldException::class);
         $this->gatherer->gather($changeset, $tracker);
     }
 
-    private function buildTestStringField(int $id, int $tracker_id): \Tracker_FormElement_Field_String
+    public function testItThrowsWhenChangesetHasNoValueForDescriptionField(): void
     {
-        return new \Tracker_FormElement_Field_String(
-            $id,
-            $tracker_id,
-            1001,
-            'title',
-            'Title',
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
+        $artifact  = M::mock(\Tracker_Artifact::class);
+        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
+        $tracker   = $this->buildTestTracker(89);
+
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(10000, $changeset, $title_field, true, 'My awesome title', 'text');
+        $changeset->setFieldValue($title_field, $title_field_value);
+
+        $changeset->setNoFieldValue($synchronized_fields->getDescriptionField());
+
+        $this->expectException(NoDescriptionChangesetValueException::class);
+        $this->gatherer->gather($changeset, $tracker);
+    }
+
+    private function buildSynchronizedFields(): SynchronizedFields
+    {
+        return new SynchronizedFields(
+            new \Tracker_FormElement_Field_ArtifactLink(1001, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
+            new \Tracker_FormElement_Field_String(1002, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
+            new \Tracker_FormElement_Field_Text(1003, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
+            new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
+            TimeframeFields::fromStartAndEndDates(
+                $this->buildTestDateField(1005, 89),
+                $this->buildTestDateField(1006, 89)
+            )
         );
+    }
+
+    private function buildTestDateField(int $id, int $tracker_id): \Tracker_FormElement_Field_Date
+    {
+        return new \Tracker_FormElement_Field_Date($id, $tracker_id, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 1);
     }
 
     private function buildTestTracker(int $tracker_id): \Tracker

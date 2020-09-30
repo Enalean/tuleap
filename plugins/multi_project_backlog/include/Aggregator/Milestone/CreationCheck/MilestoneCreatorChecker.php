@@ -121,7 +121,7 @@ class MilestoneCreatorChecker
         }
 
         try {
-            $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection, $user);
+            $fields = $this->field_collection_builder->buildFromMilestoneTrackers($milestone_tracker_collection);
         } catch (SynchronizedFieldRetrievalException $exception) {
             $this->logger->error("Cannot retrieve all the synchronized fields", ['exception' => $exception]);
             return false;

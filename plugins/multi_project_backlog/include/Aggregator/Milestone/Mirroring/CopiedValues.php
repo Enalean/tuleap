@@ -30,6 +30,11 @@ final class CopiedValues
      */
     private $title_value;
     /**
+     * @var \Tracker_Artifact_ChangesetValue_Text
+     * @psalm-readonly
+     */
+    private $description_value;
+    /**
      * @var int
      * @psalm-readonly
      */
@@ -42,10 +47,12 @@ final class CopiedValues
 
     public function __construct(
         \Tracker_Artifact_ChangesetValue_String $title_value,
+        \Tracker_Artifact_ChangesetValue_Text $description_value,
         int $submitted_on,
         int $source_artifact_id
     ) {
         $this->title_value        = $title_value;
+        $this->description_value  = $description_value;
         $this->submitted_on       = $submitted_on;
         $this->source_artifact_id = $source_artifact_id;
     }
@@ -56,6 +63,14 @@ final class CopiedValues
     public function getTitleValue(): \Tracker_Artifact_ChangesetValue_String
     {
         return $this->title_value;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getDescriptionValue(): \Tracker_Artifact_ChangesetValue_Text
+    {
+        return $this->description_value;
     }
 
     /**
