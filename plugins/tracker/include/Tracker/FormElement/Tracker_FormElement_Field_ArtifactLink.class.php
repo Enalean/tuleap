@@ -20,7 +20,6 @@
 */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 {
     public const TYPE                    = 'art_link';
@@ -445,9 +445,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $possible_parents_getr = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory());
-        $html     = '';
-        $html    .= '<p>';
-        list($label, $paginated_possible_parents, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent_tracker, $user, 0, 0);
+        $html = '';
+        $html .= '<p>';
+        [$label, $paginated_possible_parents, $display_selector] = $possible_parents_getr->getPossibleArtifactParents(
+            $parent_tracker,
+            $user,
+            0,
+            0
+        );
         $possible_parents = $paginated_possible_parents->getArtifacts();
         if ($display_selector) {
             $html .= '<label>';
@@ -1533,15 +1538,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     /**
      * Validate a value
-     *
      * @param Tracker_Artifact $artifact The artifact
      * @param string           $value    data coming from the request. Should be artifact id separated by comma
      *
      * @return bool true if the value is considered ok
+     * @deprecated Use ArtifactLinkValidator instead
+     *
      */
     protected function validate(Tracker_Artifact $artifact, $value)
     {
-        return $this->getArtifactLinkValidator()->isValid($value, $artifact, $this);
+        return true;
     }
 
     public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory)
@@ -1918,18 +1924,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         } else {
             $result[$key] = [];
         }
-    }
-
-    /**
-     * @return ArtifactLinkValidator
-     */
-    private function getArtifactLinkValidator()
-    {
-        return new ArtifactLinkValidator(
-            $this->getArtifactFactory(),
-            $this->getNaturePresenterFactory(),
-            new ArtifactLinksUsageDao()
-        );
     }
 
     private function getFieldDataBuilder()

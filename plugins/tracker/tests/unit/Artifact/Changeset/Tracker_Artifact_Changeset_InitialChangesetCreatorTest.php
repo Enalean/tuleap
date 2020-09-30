@@ -22,8 +22,9 @@
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 
-class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -136,7 +137,15 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->workflow->shouldReceive('after')->with($this->fields_data, Mockery::any(), null)->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails(): void
@@ -148,7 +157,15 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->workflow->shouldReceive('after')->never();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails(): void
@@ -161,7 +178,15 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->workflow->shouldReceive('after')->never();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     public function testItDoesNotCreateTheChangesetIfTheWorkflowValidationFailed(): void
@@ -169,14 +194,24 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
         $this->setFields([]);
         $transition = \Mockery::spy(Transition::class);
 
-        $this->workflow->shouldReceive('validate')->andThrows(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
+        $this->workflow->shouldReceive('validate')->andThrows(
+            new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)
+        );
 
         $this->changeset_dao->shouldReceive('create')->never();
         $this->artifact_factory->shouldReceive('save')->never();
         $this->workflow->shouldReceive('after')->never();
         $this->changeset_saver->shouldReceive('saveChangeset')->never();
 
-        $creation = $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $creation = $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
 
         $this->assertEquals(null, $creation);
     }
@@ -192,9 +227,26 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), 'default value', \Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
+        $this->field->shouldReceive('saveNewChangeset')->with(
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            'default value',
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any()
+        )->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     public function testItIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit(): void
@@ -208,9 +260,26 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), 'value', \Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
+        $this->field->shouldReceive('saveNewChangeset')->with(
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            'value',
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any()
+        )->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     public function testItBypassPermsWhenWorkflowBypassPerms(): void
@@ -225,9 +294,26 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Fr
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), 'value', \Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
+        $this->field->shouldReceive('saveNewChangeset')->with(
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            'value',
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any(),
+            \Mockery::any()
+        )->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping, new TrackerNoXMLImportLoggedConfig());
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            $this->submitter,
+            $this->submitted_on,
+            $this->url_mapping,
+            new TrackerNoXMLImportLoggedConfig(),
+            new NullChangesetValidationContext()
+        );
     }
 
     private function setFields(array $fields): void

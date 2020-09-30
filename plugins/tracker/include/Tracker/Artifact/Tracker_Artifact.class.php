@@ -1127,7 +1127,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)
     {
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory(), $this->getWorkflowUpdateChecker());
+        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+            $this->getFormElementFactory(),
+            $this->getArtifactLinkValidator(),
+            $this->getWorkflowUpdateChecker()
+        );
         $creator      = $this->getNewChangesetCreator($validator);
 
         return $creator->create(
@@ -1151,7 +1155,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $comment_format
     ): ?Tracker_Artifact_Changeset {
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator($this->getFormElementFactory());
+        $validator = new NewChangesetFieldsWithoutRequiredValidationValidator(
+            $this->getFormElementFactory(),
+            $this->getArtifactLinkValidator()
+        );
         $creator      = $this->getNewChangesetCreator($validator);
 
         return $creator->create(
@@ -2275,5 +2282,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getChangesetSaver(): ArtifactChangesetSaver
     {
         return ArtifactChangesetSaver::build();
+    }
+
+    private function getArtifactLinkValidator(): \Tuleap\Tracker\FormElement\ArtifactLinkValidator
+    {
+        $usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
+        return new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
+            $this->getArtifactFactory(),
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
+                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao(),
+                $usage_dao
+            ),
+            $usage_dao
+        );
     }
 }

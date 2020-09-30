@@ -18,20 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 /**
  * I validate fields for new changeset (update of artifact)
  */
-class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
+class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $workflow_update_checker;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
+        ArtifactLinkValidator $artifact_link_validator,
         WorkflowUpdateChecker $workflow_update_checker
     ) {
-        parent::__construct($form_element_factory);
+        parent::__construct($form_element_factory, $artifact_link_validator);
         $this->workflow_update_checker = $workflow_update_checker;
     }
 

@@ -314,7 +314,13 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             throw new Tracker_Exception($message);
         }
 
-        if (! $this->fields_validator->validate($artifact, $submitter, $fields_data)) {
+        $are_fields_valid = $this->fields_validator->validate(
+            $artifact,
+            $submitter,
+            $fields_data,
+            new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+        );
+        if (! $are_fields_valid) {
             $errors_from_feedback = $GLOBALS['Response']->getFeedbackErrors();
             $GLOBALS['Response']->clearFeedbackErrors();
 

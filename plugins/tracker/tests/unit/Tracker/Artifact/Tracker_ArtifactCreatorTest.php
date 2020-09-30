@@ -31,12 +31,13 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactCreator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
+use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\TrackerColor;
 
-class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
+final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
 
@@ -71,10 +72,6 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
     private $fields_data       = [];
     private $submitted_on      = 1234567890;
     private $send_notification = true;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutor
-     */
-    private $db_transaction_executor;
 
     public function setUp(): void
     {
@@ -107,15 +104,13 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
         $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
         $this->bare_artifact = new Tracker_Artifact(0, 123, 101, 1234567890, 0);
 
-        $this->db_transaction_executor = new DBTransactionExecutorPassthrough();
-
         $this->creator = new Tracker_ArtifactCreator(
             $this->artifact_factory,
             $this->fields_validator,
             $this->changeset_creator,
             $this->visit_recorder,
             new \Psr\Log\NullLogger(),
-            $this->db_transaction_executor
+            new DBTransactionExecutorPassthrough()
         );
     }
 
@@ -124,17 +119,21 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function testItValidateFields()
+    public function testItValidateFields(): void
     {
+        $context = new NullChangesetValidationContext();
         $this->fields_validator->shouldReceive('validate')
             ->with(
-                Mockery::on(function ($artifact) {
-                    return $artifact->getId() === $this->bare_artifact->getId() &&
-                        $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
-                        $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
-                }),
+                Mockery::on(
+                    function ($artifact) {
+                        return $artifact->getId() === $this->bare_artifact->getId() &&
+                            $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
+                            $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
+                    }
+                ),
                 $this->user,
-                $this->fields_data
+                $this->fields_data,
+                $context
             )
             ->once();
 
@@ -144,11 +143,12 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            $context
         );
     }
 
-    public function testItReturnsFalseIfFIeldsAreNotValid()
+    public function testItReturnsFalseIfFIeldsAreNotValid(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(false);
 
@@ -161,13 +161,14 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            new NullChangesetValidationContext()
         );
 
         $this->assertFalse($result);
     }
 
-    public function testItCreateArtifactsInDbIfFieldsAreValid()
+    public function testItCreateArtifactsInDbIfFieldsAreValid(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
 
@@ -179,11 +180,12 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            new NullChangesetValidationContext()
         );
     }
 
-    public function testItReturnsFalseIfCreateArtifactsInDbFails()
+    public function testItReturnsFalseIfCreateArtifactsInDbFails(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(false);
@@ -196,7 +198,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            new NullChangesetValidationContext()
         );
 
         $this->assertFalse($result);
@@ -221,7 +224,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
                 $this->user,
                 $this->submitted_on,
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
+                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class),
+                Mockery::type(ChangesetValidationContext::class)
             )
             ->once();
 
@@ -231,11 +235,12 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            new NullChangesetValidationContext()
         );
     }
 
-    public function testItMarksTheArtifactAsVisitedWhenSuccessfullyCreated()
+    public function testItMarksTheArtifactAsVisitedWhenSuccessfullyCreated(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(1001);
@@ -252,11 +257,12 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            true
+            true,
+            new NullChangesetValidationContext()
         );
     }
 
-    public function testItDoesNotMarksTheArtifactAsVisitedWhenNotNeeded()
+    public function testItDoesNotMarksTheArtifactAsVisitedWhenNotNeeded(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(1001);
@@ -273,7 +279,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
             $this->user,
             $this->submitted_on,
             $this->send_notification,
-            false
+            false,
+            new NullChangesetValidationContext()
         );
     }
 }

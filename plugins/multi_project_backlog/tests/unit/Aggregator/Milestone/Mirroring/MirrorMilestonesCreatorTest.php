@@ -28,6 +28,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 
 final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -76,11 +77,11 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $this->target_fields_gatherer->shouldReceive('gather')->with($second_tracker)->andReturn($second_target_fields);
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($first_tracker, M::any(), $current_user, 123456789, false, false)
+            ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
             ->andReturnTrue();
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($second_tracker, M::any(), $current_user, 123456789, false, false)
+            ->with($second_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
             ->andReturnTrue();
 
         $this->mirrors_creator->createMirrors($copied_values, $trackers, $current_user);
