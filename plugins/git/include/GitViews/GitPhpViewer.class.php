@@ -37,6 +37,7 @@ class GitViews_GitPhpViewer
         'shortlog',
         'search',
         'tree',
+        'tag',
         false
     ];
 

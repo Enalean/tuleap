@@ -75,6 +75,9 @@ class Controller
             case 'snapshot':
                 $controller = new Controller_Snapshot();
                 break;
+            case 'tag':
+                $controller = new Controller_Tag();
+                break;
             case 'blame':
                 $controller = new Controller_Blame();
                 break;
