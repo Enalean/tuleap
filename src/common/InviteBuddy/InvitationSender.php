@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 
 class InvitationSender
 {
@@ -45,17 +46,29 @@ class InvitationSender
      * @var InvitationDao
      */
     private $dao;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var InvitationInstrumentation
+     */
+    private $instrumentation;
 
     public function __construct(
         InvitationSenderGateKeeper $gate_keeper,
         InvitationEmailNotifier $email_notifier,
         \UserManager $user_manager,
-        InvitationDao $dao
+        InvitationDao $dao,
+        LoggerInterface $logger,
+        InvitationInstrumentation $instrumentation
     ) {
-        $this->gate_keeper    = $gate_keeper;
-        $this->email_notifier = $email_notifier;
-        $this->user_manager   = $user_manager;
-        $this->dao            = $dao;
+        $this->gate_keeper     = $gate_keeper;
+        $this->email_notifier  = $email_notifier;
+        $this->user_manager    = $user_manager;
+        $this->dao             = $dao;
+        $this->logger          = $logger;
+        $this->instrumentation = $instrumentation;
     }
 
     /**
@@ -82,7 +95,10 @@ class InvitationSender
             );
 
             $status = self::STATUS_SENT;
-            if (! $this->email_notifier->send($current_user, $recipient, $custom_message)) {
+            if ($this->email_notifier->send($current_user, $recipient, $custom_message)) {
+                $this->instrumentation->increment();
+            } else {
+                $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
                 $status     = self::STATUS_ERROR;
                 $failures[] = $email;
             }
