@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoArtifactLinkFieldException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoTitleFieldException;
 
 final class TargetFieldsGathererTest extends \PHPUnit\Framework\TestCase
@@ -31,37 +32,60 @@ final class TargetFieldsGathererTest extends \PHPUnit\Framework\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_TitleFactory
-     */
-    private $semantic_title_factory;
-    /**
      * @var TargetFieldsGatherer
      */
     private $gatherer;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Semantic_TitleFactory
+     */
+    private $semantic_title_factory;
 
     protected function setUp(): void
     {
+        $this->form_element_factory   = M::mock(\Tracker_FormElementFactory::class);
         $this->semantic_title_factory = M::mock(\Tracker_Semantic_TitleFactory::class);
-        $this->gatherer               = new TargetFieldsGatherer($this->semantic_title_factory);
+        $this->gatherer               = new TargetFieldsGatherer(
+            $this->form_element_factory,
+            $this->semantic_title_factory
+        );
     }
 
     public function testItReturnsTargetFields(): void
     {
         $tracker        = $this->buildTestTracker(27);
+        $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([$artifact_link_field]);
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getFieldId')->andReturn(1001);
+        $title_field    = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_semantic->shouldReceive('getField')->andReturn($title_field);
         $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
 
         $fields = $this->gatherer->gather($tracker);
 
-        $this->assertEquals(1001, $fields->getTitleFieldId());
+        $this->assertEquals($artifact_link_field, $fields->getArtifactLinkField());
+        $this->assertEquals($title_field, $fields->getTitleField());
+    }
+
+    public function testItThrowsWhenTrackerHasNoArtifactLinkField(): void
+    {
+        $tracker = $this->buildTestTracker(27);
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([]);
+
+        $this->expectException(NoArtifactLinkFieldException::class);
+        $this->gatherer->gather($tracker);
     }
 
     public function testItThrowsWhenTrackerHasNoTitleSemanticField(): void
     {
         $tracker        = $this->buildTestTracker(27);
+        $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([$artifact_link_field]);
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
-        $title_semantic->shouldReceive('getFieldId')->andReturn(0);
+        $title_semantic->shouldReceive('getField')->andReturnNull();
         $this->semantic_title_factory->shouldReceive('getByTracker')->andReturn($title_semantic);
 
         $this->expectException(NoTitleFieldException::class);

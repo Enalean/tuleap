@@ -71,10 +71,12 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $trackers       = new ContributorMilestoneTrackerCollection([$first_tracker, $second_tracker]);
         $current_user   = UserTestBuilder::aUser()->build();
 
-        $first_target_fields  = new TargetFields(1001);
-        $second_target_fields = new TargetFields(1002);
-        $this->target_fields_gatherer->shouldReceive('gather')->with($first_tracker)->andReturn($first_target_fields);
-        $this->target_fields_gatherer->shouldReceive('gather')->with($second_tracker)->andReturn($second_target_fields);
+        $this->target_fields_gatherer->shouldReceive('gather')
+            ->with($first_tracker)
+            ->andReturn($this->buildTargetFields(1001, 1002));
+        $this->target_fields_gatherer->shouldReceive('gather')
+            ->with($second_tracker)
+            ->andReturn($this->buildTargetFields(1003, 1004));
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
@@ -94,8 +96,7 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $trackers      = new ContributorMilestoneTrackerCollection([$tracker]);
         $current_user  = UserTestBuilder::aUser()->build();
 
-        $target_fields = new TargetFields(1003);
-        $this->target_fields_gatherer->shouldReceive('gather')->andReturn($target_fields);
+        $this->target_fields_gatherer->shouldReceive('gather')->andReturn($this->buildTargetFields(1001, 1002));
         $this->artifact_creator->shouldReceive('create')->andReturnFalse();
 
         $this->expectException(MirrorMilestoneCreationException::class);
@@ -138,5 +139,14 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
             'Aggregator Release',
             'text'
         );
+    }
+
+    private function buildTargetFields(int $artifact_link_field_id, int $title_field_id): TargetFields
+    {
+        $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->shouldReceive('getId')->andReturn((string) $artifact_link_field_id);
+        $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field->shouldReceive('getId')->andReturn((string) $title_field_id);
+        return new TargetFields($artifact_link_field, $title_field);
     }
 }

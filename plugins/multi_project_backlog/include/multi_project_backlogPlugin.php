@@ -328,6 +328,7 @@ final class multi_project_backlogPlugin extends Plugin
         $mirror_creator = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator(
             $transaction_executor,
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\TargetFieldsGatherer(
+                $form_element_factory,
                 $title_semantic_factory
             ),
             $artifact_creator

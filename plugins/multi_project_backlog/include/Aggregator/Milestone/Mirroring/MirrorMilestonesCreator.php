@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
@@ -54,6 +55,7 @@ class MirrorMilestonesCreator
 
     /**
      * @throws MirrorMilestoneCreationException
+     * @throws SynchronizedFieldRetrievalException
      */
     public function createMirrors(
         CopiedValues $copied_values,

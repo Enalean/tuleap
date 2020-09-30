@@ -22,23 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-/**
- * @psalm-immutable
- */
 final class TargetFields
 {
     /**
-     * @var int
+     * @var \Tracker_FormElement_Field_ArtifactLink
+     * @psalm-readonly
      */
-    private $title_field_id;
+    private $artifact_link_field;
+    /**
+     * @var \Tracker_FormElement_Field_Text
+     * @psalm-readonly
+     */
+    private $title_field;
 
-    public function __construct(int $title_field_id)
-    {
-        $this->title_field_id = $title_field_id;
+    public function __construct(
+        \Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
+        \Tracker_FormElement_Field_Text $title_field
+    ) {
+        $this->artifact_link_field = $artifact_link_field;
+        $this->title_field         = $title_field;
     }
 
-    public function getTitleFieldId(): int
+    /**
+     * @psalm-mutation-free
+     */
+    public function getArtifactLinkField(): \Tracker_FormElement_Field_ArtifactLink
     {
-        return $this->title_field_id;
+        return $this->artifact_link_field;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getTitleField(): \Tracker_FormElement_Field_Text
+    {
+        return $this->title_field;
     }
 }
