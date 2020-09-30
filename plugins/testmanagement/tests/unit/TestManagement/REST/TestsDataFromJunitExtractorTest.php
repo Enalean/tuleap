@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
+use Mockery;
 use PHPUnit\Framework\TestCase;
+use TemplateRenderer;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsNotXmlException;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
 use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
@@ -30,15 +32,22 @@ use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 
 class TestsDataFromJunitExtractorTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var TestsDataFromJunitExtractor
      */
     private $tests_data_from_junit_extractor;
 
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
+
     protected function setUp(): void
     {
-        $this->tests_data_from_junit_extractor = new TestsDataFromJunitExtractor();
+        $this->template_renderer = Mockery::mock(TemplateRenderer::class);
+        $this->tests_data_from_junit_extractor = new TestsDataFromJunitExtractor($this->template_renderer);
     }
 
     public function testGetTestsCaseFromJunit(): void
@@ -46,17 +55,17 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_test_1 = new ExtractedTestResultFromJunit();
         $extracted_test_1->addTime(5);
         $extracted_test_1->setStatus("passed");
-        $extracted_test_1->addFeedbackOnResult("<p>Executed 'firsttest' test case. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>");
+        $extracted_test_1->addFeedbackOnResult("test case executed");
 
         $extracted_test_2 = new ExtractedTestResultFromJunit();
         $extracted_test_2->addTime(0);
         $extracted_test_2->setStatus("failed");
-        $extracted_test_2->addFeedbackOnResult("<p>Executed 'failtest' test case. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p><p>Got a failure: this is a failure</p>");
+        $extracted_test_2->addFeedbackOnResult("test case executedfailure feedback");
 
         $extracted_test_suite = new ExtractedTestResultFromJunit();
         $extracted_test_suite->addTime(6);
         $extracted_test_suite->setStatus("failed");
-        $extracted_test_suite->addFeedbackOnResult("<p>Executed 'testSuite' test suite. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p><p>Got a failure: this is a failure</p>");
+        $extracted_test_suite->addFeedbackOnResult("test suite executedfailure feedback");
 
         $automated_tests_results_representation                          = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url               = 'http://exemple/of/url';
@@ -71,6 +80,10 @@ class TestsDataFromJunitExtractorTest extends TestCase
              </testsuites>'
         ];
 
+        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(2);
+        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->once();
+        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(2);
+
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
         $this->assertEquals(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2, 'testSuite' => $extracted_test_suite], $result);
@@ -81,17 +94,17 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_test_1 = new ExtractedTestResultFromJunit();
         $extracted_test_1->addTime(5);
         $extracted_test_1->setStatus("passed");
-        $extracted_test_1->addFeedbackOnResult("<p>Executed 'firsttest' test case. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>");
+        $extracted_test_1->addFeedbackOnResult("test case executed");
 
         $extracted_test_2 = new ExtractedTestResultFromJunit();
         $extracted_test_2->addTime(15);
         $extracted_test_2->setStatus("failed");
-        $extracted_test_2->addFeedbackOnResult("<p>Executed 'failtest' test case. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p><p>Got a failure: this is a failure</p><p>Got a failure: this is another failure</p><p>Executed 'failtest' test case. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>");
+        $extracted_test_2->addFeedbackOnResult("test case executedfailure feedbackfailure feedbacktest case executed");
 
         $extracted_test_suite = new ExtractedTestResultFromJunit();
         $extracted_test_suite->addTime(25);
         $extracted_test_suite->setStatus("failed");
-        $extracted_test_suite->addFeedbackOnResult("<p>Executed 'testSuite' test suite. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p><p>Got a failure: this is a failure</p><p>Got a failure: this is another failure</p>");
+        $extracted_test_suite->addFeedbackOnResult("test suite executedfailure feedbackfailure feedback");
 
         $automated_tests_results_representation                          = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url               = 'http://exemple/of/url';
@@ -107,6 +120,10 @@ class TestsDataFromJunitExtractorTest extends TestCase
                 </testsuite>
              </testsuites>'
         ];
+
+        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(3);
+        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->once();
+        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(4);
 
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
@@ -131,12 +148,12 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_suite_1 = new ExtractedTestResultFromJunit();
         $extracted_suite_1->addTime(2);
         $extracted_suite_1->setStatus("passed");
-        $extracted_suite_1->addFeedbackOnResult("<p>Executed 'firstTestSuite' test suite. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p>");
+        $extracted_suite_1->addFeedbackOnResult("test suite executed");
 
         $extracted_suite_2 = new ExtractedTestResultFromJunit();
         $extracted_suite_2->addTime(4);
         $extracted_suite_2->setStatus("failed");
-        $extracted_suite_2->addFeedbackOnResult("<p>Executed 'secondTestSuite' test suite. Checkout build results : <a href=http://exemple/of/url>http://exemple/of/url</a></p><p>Got a failure: this is a failure</p>");
+        $extracted_suite_2->addFeedbackOnResult("test suite executedfailure feedback");
 
         $automated_tests_results_representation = new AutomatedTestsResultPATCHRepresentation();
         $automated_tests_results_representation->build_url = 'http://exemple/of/url';
@@ -153,9 +170,13 @@ class TestsDataFromJunitExtractorTest extends TestCase
              </testsuites>'
         ];
 
+        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(2);
+        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->times(2);
+        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(2);
+
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
-        $this->assertEquals($result['firstTestSuite'], $extracted_suite_1);
-        $this->assertEquals($result['secondTestSuite'], $extracted_suite_2);
+        $this->assertEquals($extracted_suite_1, $result['firstTestSuite']);
+        $this->assertEquals($extracted_suite_2, $result['secondTestSuite']);
     }
 }

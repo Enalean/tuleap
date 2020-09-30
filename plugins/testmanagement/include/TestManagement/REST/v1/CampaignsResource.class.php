@@ -29,6 +29,7 @@ use Jenkins_ClientUnableToLaunchBuildException;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
+use TemplateRenderer;
 use Tracker_AfterSaveException;
 use Tracker_Artifact;
 use Tracker_Artifact_PriorityDao;
@@ -836,8 +837,8 @@ class CampaignsResource
         return new ExecutionFromAutomatedTestsUpdater(
             $this->getExecutionStatusUpdater(),
             $this->getExecutionChangesExtractor(),
-            new TestsDataFromJunitExtractor(),
-            $this->getExecutionsWithAutomatedTestDataRetriever()
+            new TestsDataFromJunitExtractor($this->getRendererForJUnitExtraction()),
+            $this->getExecutionsWithAutomatedTestDataRetriever(),
         );
     }
 
@@ -880,5 +881,19 @@ class CampaignsResource
             new FormattedChangesetValueForTextFieldRetriever($this->formelement_factory),
             new FormattedChangesetValueForListFieldRetriever($this->formelement_factory)
         );
+    }
+
+    private function getRendererForJUnitExtraction(): TemplateRenderer
+    {
+        $templates_path = join(
+            '/',
+            [
+                TESTMANAGEMENT_BASE_DIR,
+                'templates',
+                'TestsDataJUnitExtraction'
+            ]
+        );
+
+        return \TemplateRendererFactory::build()->getRenderer($templates_path);
     }
 }
