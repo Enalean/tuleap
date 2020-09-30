@@ -3,38 +3,10 @@
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                <i class="fa fa-globe tlp-pane-title-icon"></i>
+                <i class="fas fa-globe tlp-pane-title-icon"></i>
                 {{# dgettext }}tuleap-oauth2_server | OAuth2 apps common to the whole instance{{/ dgettext }}
             </h1>
         </div>
-        <section class="tlp-pane-section">
-            <table class="tlp-table">
-                <thead>
-                <tr>
-                    <th>{{# dgettext }}tuleap-oauth2_server | App name{{/ dgettext }}</th>
-                    <th>{{# dgettext }}tuleap-oauth2_server | Application (client) ID{{/ dgettext }}</th>
-                    <th>{{# dgettext }}tuleap-oauth2_server | Redirect endpoint{{/ dgettext }}</th>
-                    <th>{{# dgettext }}tuleap-oauth2_server | Force PKCE usage?{{/ dgettext }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{# apps }}
-                    <tr data-test="oauth2-app-row">
-                        <td>{{ name }}</td>
-                        <td>{{ client_id }}</td>
-                        <td>{{ redirect_endpoint }}</td>
-                        <td>{{# use_pkce }}<i class="fa fa-check"></i>{{/ use_pkce }}</td>
-                    </tr>
-                {{/ apps }}
-                {{^ apps }}
-                    <tr>
-                        <td colspan="4" class="tlp-table-cell-empty">
-                            {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
-                        </td>
-                    </tr>
-                {{/apps}}
-                </tbody>
-            </table>
-        </section>
+        {{> app-admin }}
     </div>
 </section>

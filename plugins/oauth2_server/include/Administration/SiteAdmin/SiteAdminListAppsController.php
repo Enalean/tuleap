@@ -25,9 +25,9 @@ namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\ClientIdentifier;
-use Tuleap\OAuth2Server\Administration\AppPresenter;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -41,19 +41,34 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
      */
     private $admin_page_renderer;
     /**
-     * @var AppFactory
-     */
-    private $app_factory;
-    /**
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var AdminOAuth2AppsPresenterBuilder
+     */
+    private $presenter_builder;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
-    public function __construct(AdminPageRenderer $admin_page_renderer, UserManager $user_manager, AppFactory $app_factory)
-    {
+    public function __construct(
+        AdminPageRenderer $admin_page_renderer,
+        UserManager $user_manager,
+        AdminOAuth2AppsPresenterBuilder $presenter_builder,
+        IncludeAssets $assets,
+        \CSRFSynchronizerToken $csrf_token
+    ) {
         $this->admin_page_renderer = $admin_page_renderer;
-        $this->app_factory         = $app_factory;
         $this->user_manager        = $user_manager;
+        $this->presenter_builder   = $presenter_builder;
+        $this->assets              = $assets;
+        $this->csrf_token          = $csrf_token;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -65,33 +80,14 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
             throw new ForbiddenException();
         }
 
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('administration.js'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'administration-style'));
+
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-oauth2_server', 'OAuth2 Server'),
             __DIR__ . '/../../../templates/',
             'site-admin',
-            [
-                'apps' => $this->getAppsPresenter()
-            ]
+            $this->presenter_builder->buildSiteAdministration($this->csrf_token)
         );
-    }
-
-    /**
-     * @return AppPresenter[]
-     */
-    private function getAppsPresenter(): array
-    {
-        $apps       = $this->app_factory->getSiteLevelApps();
-        $presenters = [];
-        foreach ($apps as $app) {
-            $presenters[] = new AppPresenter(
-                $app->getId(),
-                $app->getName(),
-                $app->getRedirectEndpoint(),
-                ClientIdentifier::fromOAuth2App($app)->toString(),
-                $app->isUsingPKCE()
-            );
-        }
-
-        return $presenters;
     }
 }

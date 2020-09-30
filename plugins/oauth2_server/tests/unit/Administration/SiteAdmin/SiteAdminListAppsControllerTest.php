@@ -25,8 +25,9 @@ namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -45,9 +46,17 @@ final class SiteAdminListAppsControllerTest extends TestCase
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AppFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AdminOAuth2AppsPresenterBuilder
      */
-    private $app_factory;
+    private $presenter_builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|IncludeAssets
+     */
+    private $include_assets;
+    /**
+     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $csrf_token;
     /**
      * @var SiteAdminListAppsController
      */
@@ -57,11 +66,15 @@ final class SiteAdminListAppsControllerTest extends TestCase
     {
         $this->admin_page_renderer = \Mockery::mock(AdminPageRenderer::class);
         $this->user_manager        = \Mockery::mock(UserManager::class);
-        $this->app_factory         = \Mockery::mock(AppFactory::class);
+        $this->presenter_builder   = \Mockery::mock(AdminOAuth2AppsPresenterBuilder::class);
+        $this->include_assets      = \Mockery::mock(IncludeAssets::class);
+        $this->csrf_token          = \Mockery::mock(\CSRFSynchronizerToken::class);
         $this->controller = new SiteAdminListAppsController(
             $this->admin_page_renderer,
             $this->user_manager,
-            $this->app_factory
+            $this->presenter_builder,
+            $this->include_assets,
+            $this->csrf_token
         );
     }
 
@@ -73,9 +86,16 @@ final class SiteAdminListAppsControllerTest extends TestCase
         $user->shouldReceive('isSuperUser')->andReturn(true);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
-        $this->app_factory->shouldReceive('getSiteLevelApps')->andReturn(
-            [new OAuth2App(12, 'Site level app', 'https://example.com/redirect', true, null)]
-        );
+        $this->include_assets->shouldReceive('getFileURL')
+            ->once()
+            ->with('administration.js');
+        $this->include_assets->shouldReceive('getPath')
+            ->with('administration-style');
+
+        $this->presenter_builder->shouldReceive('buildSiteAdministration')
+            ->once()
+            ->with($this->csrf_token)
+            ->andReturn(AdminOAuth2AppsPresenter::forSiteAdministration([], $this->csrf_token, null));
 
         $this->controller->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), []);
     }

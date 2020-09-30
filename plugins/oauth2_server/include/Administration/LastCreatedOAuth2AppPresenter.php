@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\Cryptography\ConcealedString;
 
