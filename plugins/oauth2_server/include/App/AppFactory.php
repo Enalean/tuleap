@@ -75,6 +75,19 @@ class AppFactory
     /**
      * @return OAuth2App[]
      */
+    public function getSiteLevelApps(): array
+    {
+        $apps = [];
+        $rows = $this->app_dao->searchSiteLevelApps();
+        foreach ($rows as $row) {
+            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], null);
+        }
+        return $apps;
+    }
+
+    /**
+     * @return OAuth2App[]
+     */
     public function getAppsAuthorizedByUser(\PFUser $user): array
     {
         $apps = [];

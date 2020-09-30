@@ -73,6 +73,27 @@ final class AppFactoryTest extends TestCase
         );
     }
 
+    public function testGetSiteLevelApps(): void
+    {
+        $rows    = [
+            ['id' => 3, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
+            ['id' => 4, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
+        ];
+        $project = M::mock(\Project::class);
+        $this->app_dao->shouldReceive('searchSiteLevelApps')
+            ->once()
+            ->andReturn($rows);
+
+        $result = $this->app_factory->getSiteLevelApps();
+        $this->assertEquals(
+            [
+                new OAuth2App(3, 'Jenkins', 'https://jenkins.example.com', true, null),
+                new OAuth2App(4, 'My custom REST client', 'https://my-custom-client.example.com', false, null)
+            ],
+            $result
+        );
+    }
+
     public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
     {
         $this->app_dao->shouldReceive('searchByClientId')

@@ -47,13 +47,23 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}>
+     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */
     public function searchByProject(\Project $project): array
     {
         $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
             WHERE project_id = ?";
         return $this->getDB()->run($sql, $project->getID());
+    }
+
+    /**
+     * @psalm-return array<array{id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
+     */
+    public function searchSiteLevelApps(): array
+    {
+        return $this->getDB()->run(
+            'SELECT id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app WHERE project_id IS NULL'
+        );
     }
 
     /**
