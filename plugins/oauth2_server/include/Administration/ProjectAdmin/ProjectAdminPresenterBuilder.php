@@ -20,10 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\OAuth2Server\Administration\AppPresenter;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
 use HTTPRequest;
 use TemplateRenderer;
@@ -67,9 +67,9 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     {
         return new self(
             AdministrationLayoutHelper::buildSelf(),
-            \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
+            \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates'),
             ProjectAdminPresenterBuilder::buildSelf(),
-            new IncludeAssets(__DIR__ . '/../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+            new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
             new \CSRFSynchronizerToken(self::CSRF_TOKEN)
         );
     }

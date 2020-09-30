@@ -20,65 +20,57 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\AppDao;
-use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
-use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AddAppControllerTest extends TestCase
+final class EditAppControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var AddAppController
+     * @var EditAppController
      */
     private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
-     */
-    private $app_dao;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|LastGeneratedClientSecretStore
-     */
-    private $client_secret_store;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var M\LegacyMockInterface|M\MockInterface|AppDao
      */
-    private $csrf_token;
+    private $app_dao;
 
     protected function setUp(): void
     {
-        $this->app_dao             = M::mock(AppDao::class);
-        $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
-        $this->redirector          = M::mock(RedirectWithFeedbackFactory::class);
-        $this->csrf_token          = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller          = new AddAppController(
+        $this->redirector = M::mock(RedirectWithFeedbackFactory::class);
+        $this->app_dao    = M::mock(AppDao::class);
+        $csrf_token       = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller = new EditAppController(
             HTTPFactoryBuilder::responseFactory(),
-            $this->app_dao,
-            new SplitTokenVerificationStringHasher(),
-            $this->client_secret_store,
             $this->redirector,
-            $this->csrf_token,
+            $this->app_dao,
+            $csrf_token,
             M::mock(EmitterInterface::class)
         );
-        $this->csrf_token->shouldReceive('check');
+        $csrf_token->shouldReceive('check');
+    }
+
+    public function testGetUrl(): void
+    {
+        $project = new \Project(['group_id' => 102]);
+        $this->assertSame('/plugins/oauth2_server/project/102/admin/edit-app', EditAppController::getUrl($project));
     }
 
     /**
@@ -93,7 +85,7 @@ final class AddAppControllerTest extends TestCase
             ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
             ->once()
             ->andReturn($response);
-        $this->app_dao->shouldNotReceive('create');
+        $this->app_dao->shouldNotReceive('updateApp');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -101,25 +93,22 @@ final class AddAppControllerTest extends TestCase
     public function dataProviderInvalidBody(): array
     {
         return [
-            'No body'         => [null],
-            'No name'         => [['not_name' => 'Jenkins']],
-            'No redirect_uri' => [['name' => 'Jenkins']],
+            'No body'              => [null],
+            'Missing app id'       => [['not_app_id' => '12']],
+            'Missing app name'     => [['app_id' => '72']],
+            'Missing redirect URI' => [['app_id' => '72', 'name' => 'Jenkins']]
         ];
     }
 
     /**
      * @dataProvider dataProviderValidBody
      */
-    public function testHandleCreatesAppAndRedirects(array $body): void
+    public function testHandleUpdatesAppAndRedirects(array $parsed_body): void
     {
-        $request = $this->buildRequest()->withParsedBody($body);
-        $this->app_dao->shouldReceive('create')
+        $request = $this->buildRequest()->withParsedBody($parsed_body);
+        $this->app_dao->shouldReceive('updateApp')
             ->once()
-            ->with(M::type(NewOAuth2App::class))
-            ->andReturn(1);
-        $this->client_secret_store->shouldReceive('storeLastGeneratedClientSecret')
-            ->once()
-            ->with(1, M::type(SplitTokenVerificationString::class));
+            ->with(M::type(OAuth2App::class));
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -129,19 +118,13 @@ final class AddAppControllerTest extends TestCase
     public function dataProviderValidBody(): array
     {
         return [
-            'With "Use PKCE" checked'    => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com', 'use_pkce' => 'true']],
-            'Without "Use PKCE" checked' => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com']],
+            'Missing PKCE is assumed to be false' => [
+                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect']
+            ],
+            'Present PKCE is true'                => [
+                ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']
+            ],
         ];
-    }
-
-    public function testGetUrl(): void
-    {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
-
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getUrl($project));
     }
 
     private function buildRequest(): ServerRequestInterface

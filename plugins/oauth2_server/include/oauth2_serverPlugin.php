@@ -45,6 +45,8 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
+use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
@@ -76,7 +78,6 @@ use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
-use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenDAO;
@@ -87,7 +88,6 @@ use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefi
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
-use Tuleap\OAuth2Server\SiteAdmin\SiteAdminListAppsController;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
@@ -241,7 +241,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $storage =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        return new \Tuleap\OAuth2Server\ProjectAdmin\AddAppController(
+        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\AddAppController(
             $response_factory,
             new AppDao(),
             new SplitTokenVerificationStringHasher(),
@@ -267,7 +267,7 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeDeleteProjectAdmin(): DispatchableWithRequest
     {
-        return new \Tuleap\OAuth2Server\ProjectAdmin\DeleteAppController(
+        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\DeleteAppController(
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
@@ -293,7 +293,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $storage =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        return new \Tuleap\OAuth2Server\ProjectAdmin\NewClientSecretController(
+        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\NewClientSecretController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
@@ -322,7 +322,7 @@ final class oauth2_serverPlugin extends Plugin
     public function routeEditApp(): DispatchableWithRequest
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        return new \Tuleap\OAuth2Server\ProjectAdmin\EditAppController(
+        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\EditAppController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
