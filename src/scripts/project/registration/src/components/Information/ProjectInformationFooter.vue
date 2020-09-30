@@ -29,7 +29,7 @@
                     class="project-registration-back-button"
                     data-test="project-registration-back-button"
                 >
-                    <i class="fa fa-long-arrow-left"></i>
+                    <i class="fas fa-long-arrow-alt-left"></i>
                     <span class="project-registration-back-button-text" v-translate>Back</span>
                 </router-link>
                 <button

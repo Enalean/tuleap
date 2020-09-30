@@ -29,7 +29,7 @@
             ↳&nbsp;
             <span v-translate>Project shortname:</span>
             <div class="project-shortname-slugified">{{ slugified_project_name }}</div>
-            <i class="fa fa-pencil project-shortname-edit-icon"></i>
+            <i class="fas fa-pencil-alt project-shortname-edit-icon"></i>
         </div>
         <div
             class="tlp-form-element"

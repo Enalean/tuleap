@@ -27,7 +27,7 @@
             v-bind:data-tlp-tooltip="$gettext('Overview')"
             v-bind:aria-label="$gettext('Overview')"
         >
-            <i class="release-description-link-icon fa fa-bar-chart" aria-hidden="true"></i>
+            <i class="release-description-link-icon far fa-chart-bar" aria-hidden="true"></i>
         </a>
         <slot></slot>
         <a

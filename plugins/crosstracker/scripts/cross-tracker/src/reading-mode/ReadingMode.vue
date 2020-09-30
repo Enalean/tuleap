@@ -47,7 +47,7 @@
                 data-test="cross-tracker-save-report"
             >
                 <i v-if="!is_loading" class="tlp-button-icon fa fa-save"></i>
-                <i v-if="is_loading" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
+                <i v-if="is_loading" class="tlp-button-icon fas fa-circle-notch fa-spin"></i>
                 <translate>Save report</translate>
             </button>
         </div>

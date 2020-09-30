@@ -25,7 +25,7 @@
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
-                    <i class="fa fa-calendar"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </span>
                 <input
                     type="text"
@@ -44,7 +44,7 @@
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
-                    <i class="fa fa-calendar"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </span>
                 <input
                     type="text"

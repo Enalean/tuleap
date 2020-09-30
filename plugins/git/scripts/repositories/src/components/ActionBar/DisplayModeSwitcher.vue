@@ -35,8 +35,8 @@
                 v-bind:title="sort_by_last_update_title"
             >
                 <span class="fa-stack">
-                    <i class="fa fa-long-arrow-down"></i>
-                    <i class="fa fa-calendar"></i>
+                    <i class="fas fa-long-arrow-alt-down"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </span>
             </label>
         </div>

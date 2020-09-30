@@ -21,7 +21,7 @@
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fa fa-pencil tlp-modal-title-icon"></i>
+                <i class="fas fa-pencil-alt tlp-modal-title-icon"></i>
                 <translate>Detailed times</translate>
             </h1>
             <div

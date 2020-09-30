@@ -34,7 +34,7 @@
             </div>
         </div>
         <a class="tlp-button-primary tlp-button-large" v-bind:href="admin_url">
-            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+            <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
             <translate>Define columns</translate>
         </a>
     </div>

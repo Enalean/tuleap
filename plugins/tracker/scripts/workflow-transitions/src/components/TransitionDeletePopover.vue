@@ -49,7 +49,7 @@
                 v-on:click="props.deleteTransition()"
                 data-dismiss="popover"
             >
-                <i class="fa fa-trash-o tlp-button-icon"></i>
+                <i class="far fa-trash-alt tlp-button-icon"></i>
                 <translate>Delete transition</translate>
             </button>
         </div>

@@ -19,7 +19,7 @@
 
 <template functional>
     <button class="btn" type="button" v-on:click="props.markAsDeleted()">
-        <i class="fa fa-trash-o"></i>
+        <i class="far fa-trash-alt"></i>
         <translate key="delete">Delete</translate>
     </button>
 </template>

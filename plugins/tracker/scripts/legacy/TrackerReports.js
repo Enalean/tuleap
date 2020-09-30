@@ -662,7 +662,7 @@ document.observe("dom:loaded", function () {
                             Event.stop(evt);
                         })
                         .update(
-                            '<i class="fa fa-pencil"></i> ' +
+                            '<i class="fas fa-pencil-alt"></i> ' +
                                 codendi.locales.tracker_artifact.masschange
                         )
                 );

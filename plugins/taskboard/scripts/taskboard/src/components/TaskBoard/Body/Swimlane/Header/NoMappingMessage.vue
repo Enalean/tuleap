@@ -20,7 +20,7 @@
 
 <template>
     <p class="tlp-text-warning taskboard-no-mapping">
-        <i class="fa fa-warning"></i>
+        <i class="fas fa-exclamation-triangle"></i>
         <span v-dompurify-html="message"></span>
         <translate>
             Please edit the card to change the status, or add children if possible.

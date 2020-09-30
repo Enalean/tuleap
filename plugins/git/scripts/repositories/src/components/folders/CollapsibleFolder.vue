@@ -37,7 +37,7 @@
                 v-if="!isRootFolder"
                 data-test="git-repository-list-folder-label"
             >
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
                 {{ label }}
             </h2>
         </div>

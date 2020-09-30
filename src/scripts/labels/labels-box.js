@@ -104,7 +104,7 @@ const createOption = ({ id, text, color, is_outline }) => {
 
 function formatLabel(label, li_element) {
     if (label.color) {
-        const bullet_class = label.is_outline ? "fa fa-circle-o" : "fa fa-circle";
+        const bullet_class = label.is_outline ? "far fa-circle" : "fa fa-circle";
         li_element.classList.add(`select-item-label-color-${label.color}`);
 
         return render(

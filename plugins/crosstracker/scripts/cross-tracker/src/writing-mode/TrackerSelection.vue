@@ -82,7 +82,7 @@
                 >
                     <i
                         v-if="is_loader_shown"
-                        class="tlp-button-icon fa fa-circle-o-notch fa-spin"
+                        class="tlp-button-icon fas fa-circle-notch fa-spin"
                     ></i>
                     <i v-else class="tlp-button-icon fa fa-plus"></i>
                     <translate>Add</translate>

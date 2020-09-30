@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="tlp-modal-body" v-if="is_loading">
-            <i class="fa fa-circle-o-notch fa-spin"></i>
+            <i class="fas fa-circle-notch fa-spin"></i>
         </div>
         <div class="tlp-modal-body" v-dompurify-html="agreement_content" v-else></div>
         <div class="tlp-modal-footer">

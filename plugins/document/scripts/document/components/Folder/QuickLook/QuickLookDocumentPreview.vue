@@ -36,7 +36,7 @@
         v-else-if="is_an_image && currently_previewed_item.user_can_write"
     >
         <div class="document-quick-look-image-overlay">
-            <i class="fa fa-file-image-o document-quick-look-update-image-icon"></i>
+            <i class="far fa-file-image document-quick-look-update-image-icon"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
                 Drop to upload a new version
             </span>

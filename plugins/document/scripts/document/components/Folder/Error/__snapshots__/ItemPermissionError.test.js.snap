@@ -86,7 +86,7 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
       type="button"
     >
       <i
-        class="fa fa-envelope-o tlp-button-icon"
+        class="far fa-envelope tlp-button-icon"
       />
        
       <translate-stub

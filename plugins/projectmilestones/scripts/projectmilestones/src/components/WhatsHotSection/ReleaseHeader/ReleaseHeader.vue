@@ -25,7 +25,7 @@
         </h1>
         <span class="project-release-date" v-if="startDateExist()">
             {{ formatDate(release_data.start_date) }}
-            <i class="release-date-icon fa fa-long-arrow-right" data-test="display-arrow"></i>
+            <i class="release-date-icon fas fa-long-arrow-alt-right" data-test="display-arrow"></i>
             {{ formatDate(release_data.end_date) }}
         </span>
         <div class="release-spacer"></div>

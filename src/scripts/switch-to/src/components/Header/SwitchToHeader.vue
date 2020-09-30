@@ -44,7 +44,7 @@
                 data-test="legacy-search-button"
             >
                 <translate>Legacy search</translate>
-                <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
             </button>
         </template>
     </form>

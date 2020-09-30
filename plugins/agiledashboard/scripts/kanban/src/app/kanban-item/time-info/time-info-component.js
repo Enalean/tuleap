@@ -46,7 +46,7 @@ export default {
             class="kanban-item-content-clock"
             title="{{ ::$ctrl.getTimeInfo($ctrl.item) }}"
         >
-            <i class="fa fa-clock-o"></i>
+            <i class="far fa-clock"></i>
         </span>`,
     controller,
     bindings: {

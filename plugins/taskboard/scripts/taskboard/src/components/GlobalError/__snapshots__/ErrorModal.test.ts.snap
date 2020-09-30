@@ -14,7 +14,7 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       id="taskboard-error-modal-title"
     >
       <i
-        class="fa fa-warning tlp-modal-title-icon"
+        class="fas fa-exclamation-triangle tlp-modal-title-icon"
       />
        
       <translate-stub
@@ -85,7 +85,7 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       type="button"
     >
       <i
-        class="fa fa-refresh tlp-button-icon"
+        class="fas fa-sync tlp-button-icon"
       />
        
       <translate-stub

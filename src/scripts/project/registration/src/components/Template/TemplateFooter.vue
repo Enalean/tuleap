@@ -34,7 +34,7 @@
                 v-on:click.prevent="goToInformationPage"
             >
                 <span v-translate>Next</span>
-                <i class="fa fa-long-arrow-right tlp-button-icon-right"></i>
+                <i class="fas fa-long-arrow-alt-right tlp-button-icon-right"></i>
             </button>
         </div>
     </div>

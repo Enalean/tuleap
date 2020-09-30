@@ -38,7 +38,7 @@
         />
         <p v-if="has_xml_file_error" class="tlp-text-danger tracker-creation-xml-file-error">
             <translate>The provided file is not a valid XML file</translate>
-            <i class="fa fa-frown-o"></i>
+            <i class="far fa-frown"></i>
         </p>
     </div>
 </template>

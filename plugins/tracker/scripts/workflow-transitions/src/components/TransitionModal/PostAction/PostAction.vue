@@ -69,7 +69,7 @@
                 v-on:click.prevent="deletePostAction()"
                 v-bind:title="delete_title"
             >
-                <i class="fa fa-trash-o"></i>
+                <i class="far fa-trash-alt"></i>
             </a>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">

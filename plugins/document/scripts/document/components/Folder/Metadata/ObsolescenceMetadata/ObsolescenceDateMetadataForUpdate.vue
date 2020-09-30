@@ -45,7 +45,7 @@
                 <option name="today" value="today" v-translate>Obsolete today</option>
             </select>
             <div class="tlp-form-element-prepend">
-                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                 <date-flat-picker
                     v-bind:id="'document-obsolescence-date-update'"
                     v-bind:required="true"

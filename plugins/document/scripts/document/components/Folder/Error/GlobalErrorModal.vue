@@ -25,7 +25,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-error-modal-title">
-                <i class="fa fa-warning tlp-modal-title-icon"></i>
+                <i class="fas fa-exclamation-triangle tlp-modal-title-icon"></i>
                 <translate>Oops, there's an issue.</translate>
             </h1>
             <div
@@ -68,7 +68,7 @@
                 data-test="reload"
                 v-on:click="reloadPage"
             >
-                <i class="fa fa-refresh tlp-button-icon"></i>
+                <i class="fas fa-sync tlp-button-icon"></i>
                 <translate>Reload the page</translate>
             </button>
         </div>

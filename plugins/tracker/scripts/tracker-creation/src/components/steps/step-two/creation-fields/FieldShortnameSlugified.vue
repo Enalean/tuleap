@@ -29,7 +29,7 @@
             <span data-test="tracker-shortname-slugified" class="tracker-shortname-slugified">
                 {{ tracker_to_be_created.shortname }}
             </span>
-            <i class="fa fa-pencil"></i>
+            <i class="fas fa-pencil-alt"></i>
         </div>
         <input
             type="hidden"

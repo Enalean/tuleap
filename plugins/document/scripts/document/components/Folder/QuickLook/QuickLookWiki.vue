@@ -25,7 +25,7 @@
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
             v-on:click="wikiPageRedirect"
         >
-            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+            <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
             <translate>Go to the wiki page</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />

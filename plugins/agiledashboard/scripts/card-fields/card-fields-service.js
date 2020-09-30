@@ -144,7 +144,7 @@ function CardFieldsService($sce, $filter) {
                 getFileUrl(file) +
                 '" title="' +
                 file.description +
-                '"><i class="fa fa-file-text"></i> ' +
+                '"><i class="fas fa-file-alt"></i> ' +
                 file_name +
                 "</a>"
             );

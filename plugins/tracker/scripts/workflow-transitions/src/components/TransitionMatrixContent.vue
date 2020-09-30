@@ -31,7 +31,7 @@
         ></i>
         <i
             v-else-if="is_operation_running"
-            class="fa fa-circle-o-notch fa-spin tracker-workflow-transition-spinner"
+            class="fas fa-circle-notch fa-spin tracker-workflow-transition-spinner"
             data-test-type="spinner"
         ></i>
         <div

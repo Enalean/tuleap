@@ -63,7 +63,7 @@
             >
                 <i
                     v-if="props.is_operation_running"
-                    class="tlp-button-icon fa fa-circle-o-notch fa-spin"
+                    class="tlp-button-icon fas fa-circle-notch fa-spin"
                     data-test="confirm-button-spinner"
                 ></i>
                 <translate>Confirm</translate>

@@ -33,7 +33,7 @@
         <div class="document-clipboard-item-to-paste-container">
             <translate>Paste</translate>
             <span class="document-clipboard-item-to-paste">
-                <i class="fa fa-file-o"></i>
+                <i class="far fa-file"></i>
                 {{ item_title }}
             </span>
         </div>

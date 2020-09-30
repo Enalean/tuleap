@@ -21,7 +21,7 @@
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <i class="fa fa-code-fork fa-rotate-270 tlp-modal-title-icon"></i>
+                <i class="fas fa-code-branch fa-rotate-270 tlp-modal-title-icon"></i>
                 <translate>Create a pull request</translate>
             </h1>
             <div
@@ -133,7 +133,7 @@ export default {
         },
         is_creating_pullrequest_icon_class() {
             if (!this.is_creating_pullrequest) {
-                return "fa fa-code-fork fa-rotate-270 tlp-button-icon";
+                return "fas fa-code-branch fa-rotate-270 tlp-button-icon";
             }
 
             return "fa fa-spinner fa-spin tlp-button-icon";

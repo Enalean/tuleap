@@ -26,7 +26,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="testplan-export-error-modal-title">
-                <i class="fa fa-warning tlp-modal-title-icon"></i>
+                <i class="fas fa-exclamation-triangle tlp-modal-title-icon"></i>
                 <translate>Oops, there's an issue</translate>
             </h1>
             <div

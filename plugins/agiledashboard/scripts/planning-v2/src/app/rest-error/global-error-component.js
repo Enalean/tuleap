@@ -34,7 +34,7 @@ const template = `<div class="empty-page">
     </div>
 
     <button type="button" class="tlp-button-primary tlp-button-large" ng-click="$ctrl.reloadPage()">
-        <i class="fa fa-refresh tlp-button-icon"></i>
+        <i class="fas fa-sync tlp-button-icon"></i>
         <span translate>Reload the page</span>
     </button>
 </div>`;

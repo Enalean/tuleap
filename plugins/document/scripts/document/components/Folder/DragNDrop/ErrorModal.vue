@@ -25,7 +25,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
-                <i class="fa fa-frown-o tlp-modal-title-icon"></i>
+                <i class="far fa-frown tlp-modal-title-icon"></i>
                 <slot name="modal-title">
                     <translate>Oops…</translate>
                 </slot>

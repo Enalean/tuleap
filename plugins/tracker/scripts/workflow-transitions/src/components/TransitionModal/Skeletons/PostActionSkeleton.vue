@@ -22,7 +22,7 @@
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
             <select class="tlp-select tlp-skeleton-field" disabled></select>
             <span class="tracker-workflow-transition-modal-action-remove">
-                <i class="tlp-skeleton-icon fa fa-trash-o"></i>
+                <i class="tlp-skeleton-icon far fa-trash-alt"></i>
             </span>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">
