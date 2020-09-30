@@ -19,6 +19,7 @@
 
 export interface ListPickerOptions {
     placeholder?: string;
+    is_filterable?: boolean;
 }
 
 export interface ListPickerItem {
@@ -26,7 +27,7 @@ export interface ListPickerItem {
     template: string;
     is_disabled: boolean;
     is_selected: boolean;
-    group_id?: string;
+    group_id: string;
     element: Element;
     target_option: Element;
 }
@@ -34,7 +35,8 @@ export interface ListPickerItem {
 export interface ListPickerItemGroup {
     id: string;
     label: string;
-    element: Element;
+    root_element: Element;
+    list_element: Element;
 }
 
 export interface ListPickerComponent {
@@ -44,6 +46,7 @@ export interface ListPickerComponent {
     selection_element: Element;
     placeholder_element: Element;
     dropdown_list_element: Element;
+    search_field_element: HTMLInputElement | null;
 }
 
 export interface ListPickerSelectionStateSingle {

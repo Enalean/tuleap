@@ -24,11 +24,24 @@ import { EventManager } from "./helpers/EventManager";
 import { DropdownToggler } from "./helpers/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
 import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list-helper";
+import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
 
-export function createListPicker(
+export async function createListPicker(
     source_select_box: HTMLSelectElement,
     options?: ListPickerOptions
-): void {
+): Promise<void> {
+    let language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        language = "en_US";
+    }
+
+    const gettext_provider = await initGettext(
+        language,
+        "tuleap-list-picker",
+        (locale) =>
+            import(/* webpackChunkName: "list-picker-po-" */ "../po/" + getPOFileFromLocale(locale))
+    );
+
     const item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
     const base_renderer = new BaseComponentRenderer(source_select_box, options);
     const {
@@ -38,12 +51,14 @@ export function createListPicker(
         selection_element,
         placeholder_element,
         dropdown_list_element,
+        search_field_element,
     } = base_renderer.renderBaseComponent();
 
     const dropdown_toggler = new DropdownToggler(
         list_picker_element,
         dropdown_element,
-        dropdown_list_element
+        dropdown_list_element,
+        search_field_element
     );
     const selection_manager = new SelectionManager(
         source_select_box,
@@ -57,7 +72,8 @@ export function createListPicker(
     const dropdown_content_renderer = new DropdownContentRenderer(
         source_select_box,
         dropdown_list_element,
-        item_map
+        item_map,
+        gettext_provider
     );
 
     dropdown_content_renderer.renderListPickerDropdownContent();
@@ -66,9 +82,11 @@ export function createListPicker(
         document,
         wrapper_element,
         dropdown_element,
+        search_field_element,
         source_select_box,
         selection_manager,
-        dropdown_toggler
+        dropdown_toggler,
+        dropdown_content_renderer
     );
 
     event_manager.attachEvents();

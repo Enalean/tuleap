@@ -28,7 +28,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
             continue;
         }
 
-        let group_id;
+        let group_id = "";
         if (option.parentElement && option.parentElement.nodeName === "OPTGROUP") {
             const label = option.parentElement.getAttribute("label");
 

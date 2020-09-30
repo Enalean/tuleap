@@ -35,6 +35,14 @@ export class BaseComponentRenderer {
         const dropdown_element = this.createDropdownElement();
         const dropdown_list_element = this.createDropdownListElement();
 
+        let search_field_element = null;
+        if (this.options?.is_filterable) {
+            const search_section_element = this.createSearchSectionElement();
+            search_field_element = this.createSearchFieldElement();
+            search_section_element.appendChild(search_field_element);
+            dropdown_element.appendChild(search_section_element);
+        }
+
         selection_element.appendChild(placeholder_element);
         list_picker_element.appendChild(selection_element);
         dropdown_element.appendChild(dropdown_list_element);
@@ -50,6 +58,7 @@ export class BaseComponentRenderer {
             selection_element,
             placeholder_element,
             dropdown_list_element,
+            search_field_element,
         };
     }
 
@@ -97,5 +106,28 @@ export class BaseComponentRenderer {
             list_picker_element.classList.add("list-picker-disabled");
         }
         return list_picker_element;
+    }
+
+    private createSearchSectionElement(): Element {
+        const search_section = document.createElement("span");
+        search_section.classList.add("list-picker-dropdown-search-section");
+
+        return search_section;
+    }
+
+    private createSearchFieldElement(): HTMLInputElement {
+        const search_field_element = document.createElement("input");
+        search_field_element.classList.add("list-picker-search-field");
+        search_field_element.setAttribute("type", "search");
+        search_field_element.setAttribute("tabindex", "0");
+        search_field_element.setAttribute("autocomplete", "off");
+        search_field_element.setAttribute("autocorrect", "off");
+        search_field_element.setAttribute("autocapitalize", "none");
+        search_field_element.setAttribute("spellcheck", "none");
+        search_field_element.setAttribute("role", "searchbox");
+        search_field_element.setAttribute("aria-autocomplete", "list");
+        search_field_element.setAttribute("aria-controls", "list-picker-dropdown-values-list");
+
+        return search_field_element;
     }
 }

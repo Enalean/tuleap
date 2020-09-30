@@ -16,6 +16,10 @@
         "rich-text-editor": {
             "src": "src/scripts/tuleap/ckeditor",
             "po": "src/scripts/tuleap/ckeditor/po"
+        },
+        "list-picker": {
+            "src": "src/scripts/list-picker",
+            "po": "src/scripts/list-picker/po"
         }
     },
     "gettext-vue": {

@@ -353,7 +353,6 @@ $tlp-form-element-select-small-background-size: 6px;
     border-left: 1px solid $tlp-theme-color;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
-
     .list-picker-dropdown-option-value-disabled {
         color: $tlp-ui-dimmed;
     }
@@ -365,6 +364,25 @@ $tlp-form-element-select-small-background-size: 6px;
         font-weight: 600;
         line-height: 30px;
         text-transform: uppercase;
+    }
+
+    .list-picker-empty-dropdown-state {
+        padding: $tlp-form-element-padding-horizontal;
+        color: $tlp-ui-dimmed;
+        font-size: $tlp-form-element-small-font-size;
+        line-height: normal;
+    }
+}
+
+.list-picker-dropdown-search-section {
+    padding: $tlp-form-element-padding-horizontal;
+
+    .list-picker-search-field {
+        @extend %tlp-form-element;
+
+        height: $tlp-form-element-small-height;
+        padding: 0 4px;
+        font-size: $tlp-form-element-small-font-size;
     }
 }
 

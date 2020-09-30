@@ -52,6 +52,7 @@ describe("selection-manager", () => {
             selection_element,
             placeholder_element,
             dropdown_list_element,
+            search_field_element,
         } = new BaseComponentRenderer(source_select_box, {
             placeholder: "Please select a value",
         }).renderBaseComponent();
@@ -59,7 +60,12 @@ describe("selection-manager", () => {
         selection_container = selection_element;
         placeholder = placeholder_element;
 
-        toggler = new DropdownToggler(list_picker_element, dropdown_element, dropdown_list_element);
+        toggler = new DropdownToggler(
+            list_picker_element,
+            dropdown_element,
+            dropdown_list_element,
+            search_field_element
+        );
         item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
         manager = new SelectionManager(
             source_select_box,
