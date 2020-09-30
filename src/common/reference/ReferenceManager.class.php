@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -439,14 +439,16 @@ class ReferenceManager
     /**
      * update reference associated to the given service and group_id
      */
-    public function updateReferenceForService($group_id, $short_name, $is_active)
+    public function updateReferenceForService($group_id, $short_name, $is_active): void
     {
         $reference_dao = $this->_getReferenceDao();
-        $dar = $reference_dao->searchByServiceShortName($short_name);
+        $dar = $reference_dao->searchByServiceShortName((int) $group_id, $short_name);
+        if (! $dar || $dar->isError()) {
+            return;
+        }
         while ($row = $dar->getRow()) {
             $reference_dao->update_ref_group($row['id'], $is_active, $group_id);
         }
-        return true;
     }
 
     /**

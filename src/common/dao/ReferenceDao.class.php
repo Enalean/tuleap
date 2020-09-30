@@ -1,28 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
 
-/**
- *  Data Access Object for Reference
- */
 class ReferenceDao extends DataAccessObject
 {
     /**
@@ -166,20 +163,24 @@ class ReferenceDao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
-
     /**
-    * Searches Reference by service short name
-    * @return DataAccessResult
-    */
-    public function searchByServiceShortName($service)
+     * Searches Reference by service short name
+     *
+     * @return DataAccessResult|false
+     */
+    public function searchByServiceShortName(int $project_id, string $service)
     {
         $sql = sprintf(
-            "SELECT * FROM reference WHERE service_short_name = %s",
-            $this->da->quoteSmart($service)
+            "SELECT reference.*
+             FROM reference
+                JOIN reference_group rg ON (reference.id = rg.reference_id)
+             WHERE service_short_name = %s
+               AND rg.group_id = %d",
+            $this->da->quoteSmart($service),
+            $this->da->escapeInt($project_id),
         );
         return $this->retrieve($sql);
     }
-
 
     /**
     * Searches Reference by scope and service short name
