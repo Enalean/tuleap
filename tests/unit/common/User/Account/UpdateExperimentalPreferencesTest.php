@@ -144,32 +144,4 @@ class UpdateExperimentalPreferencesTest extends TestCase
         );
         $this->assertEquals('/account/experimental', $layout_inspector->getRedirectUrl());
     }
-
-    public function testItWarnsTheUserThatSomethingIsWrong(): void
-    {
-        $user = M::mock(\PFUser::class);
-        $user->shouldReceive(['isAnonymous' => false, 'useLabFeatures' => false]);
-        $user->shouldReceive('setLabFeatures')->with(true)->once()->andReturnFalse();
-
-        $this->csrf_token->shouldReceive('check')->once();
-
-        $request = HTTPRequestBuilder::get()
-                                     ->withUser($user)
-                                     ->withParam('lab_features', '1')
-                                     ->build();
-
-        $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
-
-        $this->assertEquals(
-            [['level'   => \Feedback::ERROR,
-              'message' => 'Unable to update user preferences']],
-            $layout_inspector->getFeedback()
-        );
-        $this->assertEquals('/account/experimental', $layout_inspector->getRedirectUrl());
-    }
 }

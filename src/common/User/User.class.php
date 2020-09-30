@@ -1323,19 +1323,15 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      *
      * @param  string $preference_name
      * @param  string $preference_value
-     * @return bool
      */
-    public function setPreference($preference_name, $preference_value)
+    public function setPreference($preference_name, $preference_value): void
     {
         $this->preferences[$preference_name] = false;
         if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
-            if ($dao->set($this->getId(), $preference_name, $preference_value)) {
-                $this->preferences[$preference_name] = $preference_value;
-                return true;
-            }
+            $dao->set($this->getId(), $preference_name, $preference_value);
+            $this->preferences[$preference_name] = $preference_value;
         }
-        return false;
     }
 
     /**
@@ -1381,18 +1377,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * delPreference
      *
      * @param  string $preference_name
-     * @return bool
      */
-    public function delPreference($preference_name)
+    public function delPreference($preference_name): void
     {
         $this->preferences[$preference_name] = false;
         if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
-            if (! $dao->delete($this->getId(), $preference_name)) {
-                return false;
-            }
+            $dao->delete($this->getId(), $preference_name);
         }
-        return true;
     }
 
     /**
@@ -1558,9 +1550,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return (bool) $this->getPreference(self::PREF_NAME_LAB_FEATURE);
     }
 
-    public function setLabFeatures(bool $is_enabled): bool
+    public function setLabFeatures(bool $is_enabled): void
     {
-        return $this->setPreference(self::PREF_NAME_LAB_FEATURE, $is_enabled ? '1' : '0');
+        $this->setPreference(self::PREF_NAME_LAB_FEATURE, $is_enabled ? '1' : '0');
     }
 
      /**

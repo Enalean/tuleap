@@ -776,9 +776,6 @@ msgstr "E-mail"
 msgid "Email %s is not valid"
 msgstr "L'email %s n'est valide"
 
-msgid "Email format preference successfully updated"
-msgstr "La préférence de format de courriel a été mise à jour"
-
 msgid "Email was not updated"
 msgstr "L'adresse de courriel n'a pas été mise à jour"
 
@@ -2400,39 +2397,12 @@ msgstr ""
 "efficacement et de meilleure qualité.\n"
 "Venez planifier, suivre, développer & collaborer sur vos projets logiciels."
 
-msgid "Unable to change CSV date format"
-msgstr "Impossible de changer le format de date CSV"
-
-msgid "Unable to change CSV separator"
-msgstr "Impossible de changer le séparateur CSV"
-
-msgid "Unable to change default text format"
-msgstr "Impossible de changer le format de texte"
-
-msgid "Unable to change the accessibility mode."
-msgstr "Impossible de changer le mode d'accessibilité."
-
-msgid "Unable to change the color."
-msgstr "Impossible de changer la couleur."
-
-msgid "Unable to change the display density."
-msgstr "Impossible de changer la densité d'affichage."
-
-msgid "Unable to change the relative dates display."
-msgstr "Impossible de changer l'affichage des dates relatives."
-
-msgid "Unable to change the username display."
-msgstr "Impossible de changer l'affichage des noms."
-
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
 #, php-format
 msgid "Unable to send email to user, please contact %s"
 msgstr "Impossible d'envoyer l'email à l'utilisateur, veuillez contacter %s"
-
-msgid "Unable to update email format preference"
-msgstr "La mise à jour des préférences de format de courriel a échoué"
 
 msgid "Unable to update user preferences"
 msgstr "La mise à jour des préférences utilisateur a échoué"

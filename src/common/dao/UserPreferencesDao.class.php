@@ -1,22 +1,22 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -35,9 +35,9 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
         return is_array($result) ? $result : [];
     }
 
-    public function set(int $user_id, string $preference_name, string $preference_value): bool
+    public function set(int $user_id, string $preference_name, string $preference_value): void
     {
-        return (bool) $this->getDB()->insertOnDuplicateKeyUpdate(
+        $this->getDB()->insertOnDuplicateKeyUpdate(
             'user_preferences',
             [
                 'user_id'          => $user_id,
@@ -50,9 +50,9 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
         );
     }
 
-    public function delete(int $user_id, string $preference_name): bool
+    public function delete(int $user_id, string $preference_name): void
     {
-        return (bool) $this->getDB()->delete(
+        $this->getDB()->delete(
             'user_preferences',
             [
                 'user_id'         => $user_id,
@@ -61,9 +61,9 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
         );
     }
 
-    public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): bool
+    public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): void
     {
-        return (bool) $this->getDB()->delete(
+        $this->getDB()->delete(
             'user_preferences',
             [
                 'preference_name' => $preference_name,

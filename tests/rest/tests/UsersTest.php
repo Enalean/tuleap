@@ -729,6 +729,22 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testPatchPreferencesMultipleTimes(): void
+    {
+        $preference = json_encode(
+            [
+                'key' => 'my_preference_multiple_times',
+                'value' => 'my_preference_value_1'
+            ],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response_1 = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $this->assertEquals(200, $response_1->getStatusCode());
+        $response_2 = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $this->assertEquals(200, $response_2->getStatusCode());
+    }
+
     public function testPatchPreferencesWithSelfKeyword(): void
     {
         $preference = json_encode(
