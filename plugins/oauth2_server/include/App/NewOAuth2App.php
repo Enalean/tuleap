@@ -48,7 +48,7 @@ final class NewOAuth2App
      */
     private $hashed_secret;
     /**
-     * @var \Project
+     * @var \Project|null
      * @psalm-readonly
      */
     private $project;
@@ -63,7 +63,7 @@ final class NewOAuth2App
         string $redirect_endpoint,
         SplitTokenVerificationString $secret,
         string $hashed_secret,
-        \Project $project,
+        ?\Project $project,
         bool $use_pkce
     ) {
         $this->name              = $name;
@@ -77,11 +77,36 @@ final class NewOAuth2App
     /**
      * @throws InvalidAppDataException
      */
-    public static function fromAppData(
+    public static function fromProjectAdministrationAppData(
         string $name,
         string $redirect_endpoint,
         bool $use_pkce,
         \Project $project,
+        SplitTokenVerificationStringHasher $hasher
+    ): self {
+        return self::fromAppData($name, $redirect_endpoint, $use_pkce, $project, $hasher);
+    }
+
+    /**
+     * @throws InvalidAppDataException
+     */
+    public static function fromSiteAdministrationAppData(
+        string $name,
+        string $redirect_endpoint,
+        bool $use_pkce,
+        SplitTokenVerificationStringHasher $hasher
+    ): self {
+        return self::fromAppData($name, $redirect_endpoint, $use_pkce, null, $hasher);
+    }
+
+    /**
+     * @throws InvalidAppDataException
+     */
+    private static function fromAppData(
+        string $name,
+        string $redirect_endpoint,
+        bool $use_pkce,
+        ?\Project $project,
         SplitTokenVerificationStringHasher $hasher
     ): self {
         $is_data_valid = self::isAppDataValid($name, $redirect_endpoint);
@@ -133,7 +158,7 @@ final class NewOAuth2App
     /**
      * @psalm-mutation-free
      */
-    public function getProject(): \Project
+    public function getProject(): ?\Project
     {
         return $this->project;
     }

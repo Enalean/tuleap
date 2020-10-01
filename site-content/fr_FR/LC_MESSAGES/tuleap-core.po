@@ -2831,6 +2831,10 @@ msgstr "Vous ne pouvez pas accéder à cette page."
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
 
+msgid "You do not have permission to access the site administration."
+msgstr ""
+"Vous n'avez pas la permission d'accéder à l'administration de cette instance."
+
 msgid "You don't have any SSH keys yet."
 msgstr "Vous n'avez pas de clef SSH."
 

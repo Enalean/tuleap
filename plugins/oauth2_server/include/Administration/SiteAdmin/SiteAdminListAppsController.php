@@ -36,6 +36,8 @@ use UserManager;
 
 final class SiteAdminListAppsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
+    public const URL = '/plugins/oauth2_server/admin';
+
     /**
      * @var AdminPageRenderer
      */

@@ -37,7 +37,7 @@ final class NewOAuth2AppTest extends TestCase
     public function testFromAppDataThrowsWhenDataIsInvalid(string $app_name, string $redirect_uri)
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData(
+        NewOAuth2App::fromProjectAdministrationAppData(
             $app_name,
             $redirect_uri,
             true,
@@ -59,13 +59,13 @@ final class NewOAuth2AppTest extends TestCase
     /**
      * @dataProvider dataProviderValidData
      */
-    public function testFromAppDataReturnsANewOauth2AppToBeSavedInDatabase(
+    public function testFromProjectAdminAppDataReturnsANewOauth2AppToBeSavedInDatabase(
         string $redirect_uri,
         bool $use_pkce
     ): void {
         $app_name = 'Jenkins';
         $project  = M::mock(\Project::class);
-        $new_app  = NewOAuth2App::fromAppData(
+        $new_app  = NewOAuth2App::fromProjectAdministrationAppData(
             $app_name,
             $redirect_uri,
             $use_pkce,
@@ -76,6 +76,26 @@ final class NewOAuth2AppTest extends TestCase
         $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
         $this->assertSame($use_pkce, $new_app->isUsingPKCE());
         $this->assertSame($project, $new_app->getProject());
+    }
+
+    /**
+     * @dataProvider dataProviderValidData
+     */
+    public function testFromSiteAdminAppDataReturnsANewOauth2AppToBeSavedInDatabase(
+        string $redirect_uri,
+        bool $use_pkce
+    ): void {
+        $app_name = 'Jenkins';
+        $new_app  = NewOAuth2App::fromSiteAdministrationAppData(
+            $app_name,
+            $redirect_uri,
+            $use_pkce,
+            new SplitTokenVerificationStringHasher()
+        );
+        $this->assertSame($app_name, $new_app->getName());
+        $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
+        $this->assertSame($use_pkce, $new_app->isUsingPKCE());
+        $this->assertNull($new_app->getProject());
     }
 
     public function dataProviderValidData(): array
@@ -89,7 +109,7 @@ final class NewOAuth2AppTest extends TestCase
     public function testNewAppSecretCanBeHashed(): void
     {
         $hasher  = new SplitTokenVerificationStringHasher();
-        $new_app = NewOAuth2App::fromAppData('App', 'https://example.com', true, M::mock(\Project::class), $hasher);
+        $new_app = NewOAuth2App::fromProjectAdministrationAppData('App', 'https://example.com', true, M::mock(\Project::class), $hasher);
 
         $this->assertEquals($hasher->computeHash($new_app->getSecret()), $new_app->getHashedSecret());
     }
@@ -97,8 +117,8 @@ final class NewOAuth2AppTest extends TestCase
     public function testEachNewAppIsAssignedADifferentSecret(): void
     {
         $hasher    = new SplitTokenVerificationStringHasher();
-        $new_app_1 = NewOAuth2App::fromAppData('App1', 'https://example.com', true, M::mock(\Project::class), $hasher);
-        $new_app_2 = NewOAuth2App::fromAppData('App2', 'https://example.com', true, M::mock(\Project::class), $hasher);
+        $new_app_1 = NewOAuth2App::fromProjectAdministrationAppData('App1', 'https://example.com', true, M::mock(\Project::class), $hasher);
+        $new_app_2 = NewOAuth2App::fromProjectAdministrationAppData('App2', 'https://example.com', true, M::mock(\Project::class), $hasher);
 
         $this->assertNotEquals($new_app_1->getSecret(), $new_app_2->getSecret());
         $this->assertNotEquals($new_app_1->getHashedSecret(), $new_app_2->getHashedSecret());

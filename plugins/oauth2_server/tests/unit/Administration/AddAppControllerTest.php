@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
@@ -87,7 +87,7 @@ final class AddAppControllerTest extends TestCase
      */
     public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
-        $request  = $this->buildRequest()->withParsedBody($parsed_body);
+        $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->redirector->shouldReceive('createResponseForUser')
             ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
@@ -110,9 +110,9 @@ final class AddAppControllerTest extends TestCase
     /**
      * @dataProvider dataProviderValidBody
      */
-    public function testHandleCreatesAppAndRedirects(array $body): void
+    public function testHandleCreatesProjectAppAndRedirects(array $body): void
     {
-        $request = $this->buildRequest()->withParsedBody($body);
+        $request = $this->buildProjectAdminRequest()->withParsedBody($body);
         $this->app_dao->shouldReceive('create')
             ->once()
             ->with(M::type(NewOAuth2App::class))
@@ -126,6 +126,25 @@ final class AddAppControllerTest extends TestCase
         $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
     }
 
+    /**
+     * @dataProvider dataProviderValidBody
+     */
+    public function testHandleCreatesSiteAppAndRedirects(array $body): void
+    {
+        $request = $this->buildSiteAdminRequest()->withParsedBody($body);
+        $this->app_dao->shouldReceive('create')
+            ->once()
+            ->with(M::type(NewOAuth2App::class))
+            ->andReturn(1);
+        $this->client_secret_store->shouldReceive('storeLastGeneratedClientSecret')
+            ->once()
+            ->with(1, M::type(SplitTokenVerificationString::class));
+
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/plugins/oauth2_server/admin', $response->getHeaderLine('Location'));
+    }
+
     public function dataProviderValidBody(): array
     {
         return [
@@ -134,19 +153,24 @@ final class AddAppControllerTest extends TestCase
         ];
     }
 
-    public function testGetUrl(): void
+    public function testProjectAdminGetUrl(): void
     {
         $project = M::mock(\Project::class)->shouldReceive('getID')
             ->once()
             ->andReturn(102)
             ->getMock();
 
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getUrl($project));
+        $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getProjectAdminURL($project));
     }
 
-    private function buildRequest(): ServerRequestInterface
+    private function buildProjectAdminRequest(): ServerRequestInterface
     {
         return (new NullServerRequest())->withAttribute(\Project::class, new \Project(['group_id' => 102]))
             ->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
+    }
+
+    private function buildSiteAdminRequest(): ServerRequestInterface
+    {
+        return (new NullServerRequest())->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
     }
 }
