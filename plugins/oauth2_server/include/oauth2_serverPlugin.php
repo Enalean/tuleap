@@ -41,6 +41,7 @@ use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
@@ -111,6 +112,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 final class oauth2_serverPlugin extends Plugin
 {
     public const SERVICE_NAME_INSTRUMENTATION  = 'oauth2_server';
+    public const CSRF_TOKEN_APP_EDITION        = 'oauth2_server_app_edition';
     private const ID_TOKEN_EXPIRATION_DELAY    = 'PT2M';
     private const SIGNING_KEY_EXPIRATION_DELAY = 'PT1H';
 
@@ -200,6 +202,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/admin',
                     $this->getRouteHandler('routeGetSiteAdmin')
                 );
+                $r->post(
+                    '/admin/not_yet_active',
+                    $this->getRouteHandler('routeSiteAdminActionNotYetActive')
+                );
             }
         );
         $route_collector->addGroup(
@@ -233,8 +239,15 @@ final class oauth2_serverPlugin extends Plugin
         return new SiteAdminListAppsController(
             new AdminPageRenderer(),
             UserManager::instance(),
-            new AppFactory(new AppDao(), ProjectManager::instance())
+            \Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder::buildSelf(),
+            new IncludeAssets(__DIR__ . '/../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
+            new CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION)
         );
+    }
+
+    public function routeSiteAdminActionNotYetActive(): DispatchableWithRequest
+    {
+        return new \Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminNotYetActiveActionController();
     }
 
     public function routePostProjectAdmin(): DispatchableWithRequest
@@ -254,7 +267,7 @@ final class oauth2_serverPlugin extends Plugin
                 $response_factory,
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
             ),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -278,7 +291,7 @@ final class oauth2_serverPlugin extends Plugin
                 new AuthorizationDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -308,7 +321,7 @@ final class oauth2_serverPlugin extends Plugin
                     $storage
                 )
             ),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
@@ -329,7 +342,7 @@ final class oauth2_serverPlugin extends Plugin
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
             ),
             new AppDao(),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),

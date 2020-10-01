@@ -26,6 +26,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,7 +43,7 @@ final class ListAppsControllerTest extends TestCase
     private $layout_helper;
     /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
     private $renderer;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdminPresenterBuilder */
+    /** @var M\LegacyMockInterface|M\MockInterface|AdminOAuth2AppsPresenterBuilder */
     private $presenter_builder;
     /** @var M\LegacyMockInterface|M\MockInterface|IncludeAssets */
     private $include_assets;
@@ -52,7 +54,7 @@ final class ListAppsControllerTest extends TestCase
     {
         $this->layout_helper     = new LayoutHelperPassthrough();
         $this->renderer          = M::mock(\TemplateRenderer::class);
-        $this->presenter_builder = M::mock(ProjectAdminPresenterBuilder::class);
+        $this->presenter_builder = M::mock(AdminOAuth2AppsPresenterBuilder::class);
         $this->include_assets    = M::mock(IncludeAssets::class);
         $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
         $this->controller        = new ListAppsController(
@@ -76,11 +78,11 @@ final class ListAppsControllerTest extends TestCase
         $layout  = LayoutBuilder::build();
         $this->include_assets->shouldReceive('getFileURL')
             ->once()
-            ->with('project-administration.js');
+            ->with('administration.js');
         $this->include_assets->shouldReceive('getPath')
-            ->with('project-administration-style');
-        $presenter = new ProjectAdminPresenter([], $this->csrf_token, $project, null);
-        $this->presenter_builder->shouldReceive('build')
+            ->with('administration-style');
+        $presenter = AdminOAuth2AppsPresenter::forProjectAdministration($project, [], $this->csrf_token, null);
+        $this->presenter_builder->shouldReceive('buildProjectAdministration')
             ->once()
             ->with($this->csrf_token, $project)
             ->andReturn($presenter);

@@ -20,18 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\OAuth2Server\Administration\AppPresenter;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 
-class ProjectAdminPresenterBuilder
+class AdminOAuth2AppsPresenterBuilder
 {
     /**
      * @var AppFactory
@@ -61,9 +61,36 @@ class ProjectAdminPresenterBuilder
         );
     }
 
-    public function build(\CSRFSynchronizerToken $csrf_token, \Project $project): ProjectAdminPresenter
+    public function buildProjectAdministration(
+        \CSRFSynchronizerToken $csrf_token,
+        \Project $project
+    ): AdminOAuth2AppsPresenter {
+        $apps = $this->app_factory->getAppsForProject($project);
+
+        return AdminOAuth2AppsPresenter::forProjectAdministration(
+            $project,
+            $this->transformAppsToPresenters(...$apps),
+            $csrf_token,
+            $this->getLastCreatedAppPresenter()
+        );
+    }
+
+    public function buildSiteAdministration(\CSRFSynchronizerToken $csrf_token): AdminOAuth2AppsPresenter
     {
-        $apps       = $this->app_factory->getAppsForProject($project);
+        $apps = $this->app_factory->getSiteLevelApps();
+
+        return AdminOAuth2AppsPresenter::forSiteAdministration(
+            $this->transformAppsToPresenters(...$apps),
+            $csrf_token,
+            $this->getLastCreatedAppPresenter()
+        );
+    }
+
+    /**
+     * @return AppPresenter[]
+     */
+    private function transformAppsToPresenters(OAuth2App ...$apps): array
+    {
         $presenters = [];
         foreach ($apps as $app) {
             $presenters[] = new AppPresenter(
@@ -75,7 +102,7 @@ class ProjectAdminPresenterBuilder
             );
         }
 
-        return new ProjectAdminPresenter($presenters, $csrf_token, $project, $this->getLastCreatedAppPresenter());
+        return $presenters;
     }
 
     private function getLastCreatedAppPresenter(): ?LastCreatedOAuth2AppPresenter

@@ -1,0 +1,109 @@
+<section class="tlp-pane-section">
+    {{# last_created_app }}
+        <div class="tlp-alert-success"
+             data-test="oauth2-new-secret-success"
+             data-oauth2-new-app-client-id="{{ client_id }}"
+             data-oauth2-new-app-client-secret="{{ client_secret }}"
+        >
+            <p>
+                {{# dgettext }}
+                    tuleap-oauth2_server |
+                    Here is the generated secret for your app %s. Make sure to copy it. You won't be able to see it again! |
+                    {{ client_id }}
+                {{/ dgettext }}
+            </p>
+            <p>
+                <code><strong>{{ client_secret }}</strong></code>
+                <copy-to-clipboard
+                        value="{{ client_secret }}"
+                        class="oauth2-server-copy-secret"
+                        aria-label="{{# dgettext }} tuleap-oauth2_server | Copy the client secret{{/ dgettext }}"
+                >
+                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }} tuleap-oauth2_server | Copy the client secret{{/ dgettext }}">
+                                    <i class="fas fa-fw fa-copy" aria-hidden="true"></i>
+                                </span>
+                    <span class="tlp-tooltip tlp-tooltip-right oauth2-server-copy-secret-hide" data-tlp-tooltip="{{# dgettext }} tuleap-oauth2_server | Client secret copied!{{/ dgettext }}">
+                                    <i class="fas fa-fw fa-check" aria-hidden="true"></i>
+                                </span>
+                </copy-to-clipboard>
+            </p>
+        </div>
+    {{/ last_created_app }}
+    <div class="tlp-table-actions">
+        <button
+                type="button"
+                class="tlp-button-primary tlp-table-actions-element"
+                data-target-modal-id="oauth2-server-add-client-modal"
+                id="oauth2-server-add-client-button"
+                data-test="oauth2-create-app-button"
+        >
+            <i class="fas fa-plus tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
+        </button>
+    </div>
+    <table class="tlp-table">
+        <thead>
+        <tr>
+            <th>{{# dgettext }}tuleap-oauth2_server | App name{{/ dgettext }}</th>
+            <th>{{# dgettext }}tuleap-oauth2_server | Application (client) ID{{/ dgettext }}</th>
+            <th>{{# dgettext }}tuleap-oauth2_server | Redirect endpoint{{/ dgettext }}</th>
+            <th>{{# dgettext }}tuleap-oauth2_server | Force PKCE usage?{{/ dgettext }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# apps }}
+            <tr data-test="oauth2-app-row">
+                <td>{{ name }}</td>
+                <td>{{ client_id }}</td>
+                <td>{{ redirect_endpoint }}</td>
+                <td>{{# use_pkce }}<i class="fas fa-check"></i>{{/ use_pkce }}</td>
+                <td class="tlp-table-cell-actions">
+                    <button
+                            class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                            data-edit-client-button
+                            data-target-modal-id="oauth2-server-edit-client-modal-{{ id }}"
+                            data-test="oauth2-edit-app-button"
+                    >
+                        <i class="fas fa-edit tlp-button-icon"></i>
+                        {{# dgettext }}tuleap-oauth2_server | Edit{{/ dgettext }}
+                    </button>
+                    <button
+                            class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                            data-new-client-secret-button
+                            data-app-id="{{ id }}"
+                            data-app-name="{{ name }}"
+                            data-test="oauth2-new-client-secret-button"
+                    >
+                        <i class="fas fa-key tlp-button-icon"></i>
+                        {{# dgettext }}tuleap-oauth2_server | Generate a new client secret{{/ dgettext }}
+                    </button>
+                    <button
+                            class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                            data-delete-client-button
+                            data-app-id="{{ id }}"
+                            data-app-name="{{ name }}"
+                            data-test="oauth2-delete-app-button"
+                    >
+                        <i class="far fa-trash-alt tlp-button-icon"></i>
+                        {{# dgettext }}tuleap-oauth2_server | Delete{{/ dgettext }}
+                    </button>
+                </td>
+            </tr>
+        {{/ apps }}
+        {{^ apps }}
+            <tr>
+                <td colspan="5" class="tlp-table-cell-empty">
+                    {{# dgettext }}tuleap-oauth2_server | No App have been defined yet. Start by adding one. {{/ dgettext }}
+                </td>
+            </tr>
+        {{/apps}}
+        </tbody>
+    </table>
+</section>
+{{> app-add-modal }}
+{{> app-delete-modal }}
+{{> new-secret-modal }}
+
+{{# apps }}
+    {{> app-edit-modal }}
+{{/ apps }}

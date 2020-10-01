@@ -27,8 +27,8 @@ const output = webpack_configurator.configureOutput(
 );
 
 const entry_points = {
-    "project-administration": "./scripts/src/project-administration.ts",
-    "project-administration-style": "./themes/project-administration.scss",
+    administration: "./scripts/src/administration.ts",
+    "administration-style": "./themes/administration.scss",
     "user-preferences": "./scripts/src/user-preferences.ts",
     "user-preferences-style": "./themes/user-preferences.scss",
 };

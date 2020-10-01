@@ -27,6 +27,7 @@ use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Project\ServiceInstrumentation;
@@ -36,13 +37,12 @@ use Tuleap\Request\DispatchableWithRequest;
 final class ListAppsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const  PANE_SHORTNAME = 'oauth2_clients';
-    public const  CSRF_TOKEN     = 'oauth2_server_list_clients';
 
     /** @var LayoutHelper */
     private $layout_helper;
     /** @var TemplateRenderer */
     private $renderer;
-    /** @var ProjectAdminPresenterBuilder */
+    /** @var AdminOAuth2AppsPresenterBuilder */
     private $presenter_builder;
     /** @var IncludeAssets */
     private $assets;
@@ -52,7 +52,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     public function __construct(
         LayoutHelper $layout_helper,
         TemplateRenderer $renderer,
-        ProjectAdminPresenterBuilder $presenter_builder,
+        AdminOAuth2AppsPresenterBuilder $presenter_builder,
         IncludeAssets $assets,
         \CSRFSynchronizerToken $csrf_token
     ) {
@@ -68,9 +68,9 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
         return new self(
             AdministrationLayoutHelper::buildSelf(),
             \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates'),
-            ProjectAdminPresenterBuilder::buildSelf(),
+            AdminOAuth2AppsPresenterBuilder::buildSelf(),
             new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
-            new \CSRFSynchronizerToken(self::CSRF_TOKEN)
+            new \CSRFSynchronizerToken(\oauth2_serverPlugin::CSRF_TOKEN_APP_EDITION)
         );
     }
 
@@ -82,12 +82,12 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-administration.js'));
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'project-administration-style'));
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('administration.js'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'administration-style'));
         $callback = function (\Project $project, \PFUser $user): void {
             $this->renderer->renderToPage(
                 'project-admin',
-                $this->presenter_builder->build($this->csrf_token, $project)
+                $this->presenter_builder->buildProjectAdministration($this->csrf_token, $project)
             );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(
