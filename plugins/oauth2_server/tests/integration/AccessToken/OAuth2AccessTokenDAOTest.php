@@ -74,7 +74,7 @@ final class OAuth2AccessTokenDAOTest extends TestCase
         );
         $app_dao = new AppDao();
         self::$active_project_app_id = $app_dao->create(
-            NewOAuth2App::fromAppData(
+            NewOAuth2App::fromProjectAdministrationAppData(
                 'Name',
                 'https://example.com',
                 true,
@@ -83,7 +83,7 @@ final class OAuth2AccessTokenDAOTest extends TestCase
             )
         );
         self::$deleted_project_app_id = $app_dao->create(
-            NewOAuth2App::fromAppData(
+            NewOAuth2App::fromProjectAdministrationAppData(
                 'Name',
                 'https://example.com',
                 true,

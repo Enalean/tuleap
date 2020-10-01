@@ -203,6 +203,10 @@ final class oauth2_serverPlugin extends Plugin
                     $this->getRouteHandler('routeGetSiteAdmin')
                 );
                 $r->post(
+                    '/admin/add-app',
+                    $this->getRouteHandler('routePostSiteAdmin')
+                );
+                $r->post(
                     '/admin/not_yet_active',
                     $this->getRouteHandler('routeSiteAdminActionNotYetActive')
                 );
@@ -254,7 +258,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $storage =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\AddAppController(
+        return new \Tuleap\OAuth2Server\Administration\AddAppController(
             $response_factory,
             new AppDao(),
             new SplitTokenVerificationStringHasher(),
@@ -275,6 +279,30 @@ final class oauth2_serverPlugin extends Plugin
                 UserManager::instance(),
                 new ProjectAdministratorChecker()
             )
+        );
+    }
+
+    public function routePostSiteAdmin(): DispatchableWithRequest
+    {
+        $storage =& $_SESSION ?? [];
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new \Tuleap\OAuth2Server\Administration\AddAppController(
+            $response_factory,
+            new AppDao(),
+            new SplitTokenVerificationStringHasher(),
+            new LastGeneratedClientSecretStore(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                (new KeyFactory())->getEncryptionKey(),
+                $storage
+            ),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance())
         );
     }
 

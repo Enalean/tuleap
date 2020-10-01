@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -30,6 +30,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
+use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\InvalidAppDataException;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
@@ -82,7 +84,7 @@ final class AddAppController extends DispatchablePSR15Compatible
         $this->csrf_token             = $csrf_token;
     }
 
-    public static function getUrl(\Project $project): string
+    public static function getProjectAdminURL(\Project $project): string
     {
         return sprintf('/plugins/oauth2_server/project/%d/admin/add-app', $project->getID());
     }
@@ -90,11 +92,15 @@ final class AddAppController extends DispatchablePSR15Compatible
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);
-        assert($project instanceof \Project);
+        assert($project instanceof \Project || $project === null);
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
 
-        $list_clients_url = ListAppsController::getUrl($project);
+        if ($this->isASiteAppCreation($project)) {
+            $list_clients_url = SiteAdminListAppsController::URL;
+        } else {
+            $list_clients_url = ListAppsController::getUrl($project);
+        }
         $this->csrf_token->check($list_clients_url);
 
         $parsed_body = $request->getParsedBody();
@@ -109,13 +115,22 @@ final class AddAppController extends DispatchablePSR15Compatible
         $raw_redirect_endpoint = $parsed_body['redirect_uri'];
         $use_pkce              = (bool) ($parsed_body['use_pkce'] ?? false);
         try {
-            $app_to_be_saved = NewOAuth2App::fromAppData(
-                $raw_app_name,
-                $raw_redirect_endpoint,
-                $use_pkce,
-                $project,
-                $this->hasher
-            );
+            if ($this->isASiteAppCreation($project)) {
+                $app_to_be_saved = NewOAuth2App::fromSiteAdministrationAppData(
+                    $raw_app_name,
+                    $raw_redirect_endpoint,
+                    $use_pkce,
+                    $this->hasher
+                );
+            } else {
+                $app_to_be_saved = NewOAuth2App::fromProjectAdministrationAppData(
+                    $raw_app_name,
+                    $raw_redirect_endpoint,
+                    $use_pkce,
+                    $project,
+                    $this->hasher
+                );
+            }
         } catch (InvalidAppDataException $e) {
             return $this->redirectWithError($user, $list_clients_url);
         }
@@ -136,5 +151,13 @@ final class AddAppController extends DispatchablePSR15Compatible
                 dgettext('tuleap-oauth2_server', 'The provided app data is not valid.')
             )
         );
+    }
+
+    /**
+     * @psalm-assert-if-false \Project $project
+     */
+    private function isASiteAppCreation(?\Project $project): bool
+    {
+        return $project === null;
     }
 }

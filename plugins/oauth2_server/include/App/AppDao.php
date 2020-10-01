@@ -80,10 +80,11 @@ class AppDao extends DataAccessObject
 
     public function create(NewOAuth2App $app): int
     {
+        $project = $app->getProject();
         $this->getDB()->insert(
             'plugin_oauth2_server_app',
             [
-                'project_id'        => $app->getProject()->getID(),
+                'project_id'        => $project !== null ? $project->getID() : null,
                 'name'              => $app->getName(),
                 'redirect_endpoint' => $app->getRedirectEndpoint(),
                 'verifier'          => $app->getHashedSecret(),

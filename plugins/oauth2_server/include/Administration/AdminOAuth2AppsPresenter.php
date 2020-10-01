@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration;
 
-use Tuleap\OAuth2Server\Administration\ProjectAdmin\AddAppController;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\DeleteAppController;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\EditAppController;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\NewClientSecretController;
@@ -101,7 +100,7 @@ final class AdminOAuth2AppsPresenter
         return new self(
             $apps,
             $csrf_token,
-            AddAppController::getUrl($project),
+            AddAppController::getProjectAdminURL($project),
             DeleteAppController::getUrl($project),
             NewClientSecretController::getUrl($project),
             EditAppController::getUrl($project),
@@ -120,7 +119,7 @@ final class AdminOAuth2AppsPresenter
         return new self(
             $apps,
             $csrf_token,
-            '/plugins/oauth2_server/admin/not_yet_active',
+            '/plugins/oauth2_server/admin/add-app',
             '/plugins/oauth2_server/admin/not_yet_active',
             '/plugins/oauth2_server/admin/not_yet_active',
             '/plugins/oauth2_server/admin/not_yet_active',
