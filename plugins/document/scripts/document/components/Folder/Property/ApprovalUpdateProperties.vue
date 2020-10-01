@@ -34,7 +34,7 @@
                         type="radio"
                         name="approval-update-action"
                         value="copy"
-                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                        v-on:change="$emit('approval-table-action-change', $event.target.value)"
                         required
                     />
                     <translate>Copy the previous approval table.</translate>
@@ -53,7 +53,7 @@
                         type="radio"
                         name="approval-update-action"
                         value="reset"
-                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                        v-on:change="$emit('approval-table-action-change', $event.target.value)"
                     />
                     <translate>Reset the approval cycle.</translate>
                 </label>
@@ -72,7 +72,7 @@
                         type="radio"
                         name="approval-update-action"
                         value="empty"
-                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                        v-on:change="$emit('approval-table-action-change', $event.target.value)"
                     />
                     <translate>Create a new empty approval table.</translate>
                 </label>

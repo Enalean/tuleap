@@ -35,7 +35,7 @@
             <item-update-properties
                 v-bind:version="version"
                 v-bind:item="item"
-                v-on:approvalTableActionChange="setApprovalUpdateAction"
+                v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <link-properties
                     v-if="link_model"

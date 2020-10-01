@@ -32,13 +32,13 @@
         <chart-displayer
             v-bind:class="{ 'only-one-chart': is_only_burndown || is_only_burnup }"
             v-bind:release_data="release_data"
-            v-on:burndownExists="burndown_exists"
-            v-on:burnupExists="burnup_exists"
+            v-on:burndown-exists="burndown_exists"
+            v-on:burnup-exists="burnup_exists"
         />
         <test-management-displayer
             v-if="is_testmanagement_available"
             v-bind:release_data="release_data"
-            v-on:ttmExists="ttm_chart_exists"
+            v-on:ttm-exists="ttm_chart_exists"
         />
     </div>
 </template>

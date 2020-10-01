@@ -145,7 +145,7 @@ function ExecutionService(
             var total_executions = data.total;
 
             groupExecutionsByCategory(campaign_id, data.results);
-            $rootScope.$emit("bunchOfExecutionsLoaded", data.results);
+            $rootScope.$emit("bunch-of-executions-loaded", data.results);
             remote_executions = remote_executions.concat(data.results);
 
             offset = offset + limit;

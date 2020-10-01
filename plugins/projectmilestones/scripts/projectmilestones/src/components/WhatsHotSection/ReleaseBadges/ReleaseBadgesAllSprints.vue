@@ -20,7 +20,7 @@
 <template>
     <div
         class="project-release-open-sprint-badges"
-        v-on:click="$emit('onClickOpenSprintsDetails')"
+        v-on:click="$emit('on-click-open-sprints-details')"
         v-if="display_sprint_badge"
     >
         <i class="project-release-open-sprint-badge-icon-toggle fa" />

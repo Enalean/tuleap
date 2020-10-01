@@ -18,6 +18,7 @@
   -
   -->
 
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <custom-metadata-text
         v-if="itemMetadata.type === 'text'"

@@ -33,13 +33,13 @@
             v-if="is_reading_mode_shown"
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            v-on:switchToWritingMode="switchToWritingMode"
+            v-on:switch-to-writing-mode="switchToWritingMode"
             v-on:saved="reportSaved"
         />
         <writing-mode
             v-if="!reading_mode"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-on:switchToReadingMode="switchToReadingMode"
+            v-on:switch-to-reading-mode="switchToReadingMode"
         />
         <artifact-table
             v-if="!is_loading"

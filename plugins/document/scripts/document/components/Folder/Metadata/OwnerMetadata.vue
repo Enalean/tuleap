@@ -32,6 +32,7 @@
     </div>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import PeoplePicker from "./PeoplePicker.vue";
 

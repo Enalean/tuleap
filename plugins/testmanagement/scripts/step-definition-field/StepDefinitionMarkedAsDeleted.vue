@@ -68,7 +68,7 @@ export default {
     },
     methods: {
         unmarkDeletion() {
-            this.$emit("unmarkDeletion");
+            this.$emit("unmark-deletion");
         },
     },
 };

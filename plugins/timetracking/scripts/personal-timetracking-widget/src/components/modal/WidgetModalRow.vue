@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -21,8 +21,8 @@
     <widget-modal-edit-time
         v-if="edit_mode"
         v-bind:time-data="timeData"
-        v-on:swapMode="swapEditMode"
-        v-on:validateTime="editTime"
+        v-on:swap-mode="swapEditMode"
+        v-on:validate-time="editTime"
     />
     <tr v-else>
         <td>{{ timeData.date }}</td>
@@ -49,7 +49,7 @@
                     <i class="fas fa-trash-alt"></i>
                 </button>
                 <widget-modal-delete-popover
-                    v-on:createDeletePopover="createPopover()"
+                    v-on:create-delete-popover="createPopover()"
                     v-bind:time-id="timeData.id"
                     ref="delete_popover"
                 />

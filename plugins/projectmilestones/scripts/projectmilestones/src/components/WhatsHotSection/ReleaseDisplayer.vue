@@ -27,7 +27,7 @@
         v-bind:data-tlp-tooltip="$gettext('Loading data...')"
     >
         <release-header
-            v-on:toggleReleaseDetails="toggleReleaseDetails()"
+            v-on:toggle-release-details="toggleReleaseDetails()"
             v-bind:release_data="displayed_release"
             v-bind:is-loading="is_loading"
             v-bind:class="{ 'project-release-toggle-closed': !is_open, disabled: is_loading }"

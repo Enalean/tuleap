@@ -17,6 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="cross-tracker-expert-content">
         <div class="cross-tracker-expert-content-query tlp-form-element">
@@ -61,6 +62,7 @@
         </div>
     </div>
 </template>
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import {
     TQL_cross_tracker_autocomplete_keywords,
@@ -134,7 +136,7 @@ export default {
             insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
         },
         search() {
-            this.$emit("triggerSearch");
+            this.$emit("trigger-search");
         },
     },
 };

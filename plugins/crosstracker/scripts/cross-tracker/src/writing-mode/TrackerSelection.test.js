@@ -160,7 +160,7 @@ describe("TrackerSelection", () => {
 
             wrapper.vm.addTrackerToSelection();
 
-            expect(wrapper.emitted("trackerAdded")[0][0]).toEqual({
+            expect(wrapper.emitted("tracker-added")[0][0]).toEqual({
                 selected_project,
                 selected_tracker,
             });

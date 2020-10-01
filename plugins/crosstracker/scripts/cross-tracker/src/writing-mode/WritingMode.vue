@@ -21,15 +21,15 @@
     <div class="cross-tracker-writing-mode">
         <tracker-selection
             v-bind:selected-trackers="selected_trackers"
-            v-on:trackerAdded="addTrackerToSelection"
+            v-on:tracker-added="addTrackerToSelection"
         />
         <tracker-list-writing-mode
             v-bind:trackers="selected_trackers"
-            v-on:trackerRemoved="removeTrackerFromSelection"
+            v-on:tracker-removed="removeTrackerFromSelection"
         />
         <query-editor
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-on:triggerSearch="search"
+            v-on:trigger-search="search"
         />
         <div class="writing-mode-actions">
             <button
@@ -76,10 +76,10 @@ export default {
     },
     methods: {
         cancel() {
-            this.$emit("switchToReadingMode", { saved_state: true });
+            this.$emit("switch-to-reading-mode", { saved_state: true });
         },
         search() {
-            this.$emit("switchToReadingMode", { saved_state: false });
+            this.$emit("switch-to-reading-mode", { saved_state: false });
         },
 
         addTrackerToSelection({ selected_project, selected_tracker }) {

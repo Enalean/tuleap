@@ -35,7 +35,7 @@
             <item-update-properties
                 v-bind:version="version"
                 v-bind:item="item"
-                v-on:approvalTableActionChange="setApprovalUpdateAction"
+                v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <file-properties
                     v-model="uploaded_item.file_properties"

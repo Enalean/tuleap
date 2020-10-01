@@ -80,7 +80,7 @@ describe("WritingMode", () => {
 
             wrapper.vm.cancel();
 
-            expect(wrapper.emitted("switchToReadingMode")[0][0]).toEqual({ saved_state: true });
+            expect(wrapper.emitted("switch-to-reading-mode")[0][0]).toEqual({ saved_state: true });
         });
     });
 
@@ -90,7 +90,7 @@ describe("WritingMode", () => {
 
             wrapper.vm.search();
 
-            expect(wrapper.emitted("switchToReadingMode")[0][0]).toEqual({ saved_state: false });
+            expect(wrapper.emitted("switch-to-reading-mode")[0][0]).toEqual({ saved_state: false });
         });
     });
 

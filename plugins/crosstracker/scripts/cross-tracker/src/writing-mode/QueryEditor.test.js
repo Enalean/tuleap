@@ -68,7 +68,7 @@ describe("QueryEditor", () => {
 
             wrapper.vm.search();
 
-            expect(wrapper.emitted("triggerSearch")).toBeTruthy();
+            expect(wrapper.emitted("trigger-search")).toBeTruthy();
         });
     });
 });

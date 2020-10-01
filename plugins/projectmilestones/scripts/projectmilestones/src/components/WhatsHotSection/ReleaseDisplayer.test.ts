@@ -130,7 +130,7 @@ describe("ReleaseDisplayer", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
 
-        wrapper.findComponent(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        wrapper.findComponent(ReleaseHeader).vm.$emit("toggle-release-details");
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });

@@ -34,7 +34,7 @@
             <item-update-properties
                 v-bind:version="version"
                 v-bind:item="item"
-                v-on:approvalTableActionChange="setApprovalUpdateAction"
+                v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <embedded-properties
                     v-if="embedded_file_model"
@@ -53,6 +53,7 @@
     </form>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";

@@ -25,6 +25,7 @@
     />
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import StatusMetadata from "../StatusMetadata.vue";

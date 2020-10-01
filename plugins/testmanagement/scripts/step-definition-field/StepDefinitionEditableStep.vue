@@ -17,6 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div>
         <input
@@ -87,6 +88,7 @@
     </div>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
@@ -141,11 +143,11 @@ export default {
     },
     mounted() {
         this.loadEditor();
-        this.$emit("removeDeletedStepsOnFormSubmission", this.$refs.description.form);
+        this.$emit("remove-deleted-steps-on-form-submission", this.$refs.description.form);
     },
     methods: {
         markAsDeleted() {
-            this.$emit("markAsDeleted");
+            this.$emit("mark-as-deleted");
         },
         getEditorsContent() {
             if (!this.is_text(this.step.description_format)) {

@@ -51,6 +51,7 @@
     </form>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";

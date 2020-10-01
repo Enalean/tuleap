@@ -39,6 +39,7 @@
     </div>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { TYPE_FILE } from "../../../constants.js";
 import { mapState } from "vuex";

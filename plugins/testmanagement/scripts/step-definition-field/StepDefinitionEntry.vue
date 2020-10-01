@@ -31,13 +31,13 @@
             <step-definition-marked-as-deleted
                 v-show="is_marked_as_deleted"
                 v-bind:step="step"
-                v-on:unmarkDeletion="unmarkDeletion"
+                v-on:unmark-deletion="unmarkDeletion"
             />
             <step-definition-editable-step
                 v-show="!is_marked_as_deleted"
                 v-bind:step="step"
-                v-on:markAsDeleted="markAsDeleted"
-                v-on:removeDeletedStepsOnFormSubmission="removeDeletedStepsOnFormSubmission"
+                v-on:mark-as-deleted="markAsDeleted"
+                v-on:remove-deleted-steps-on-form-submission="removeDeletedStepsOnFormSubmission"
             />
         </div>
     </div>

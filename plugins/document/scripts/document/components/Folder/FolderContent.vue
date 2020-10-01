@@ -61,7 +61,7 @@
                 v-bind:class="quick_look_dropzone_class"
                 v-bind:data-item-id="item_id"
             >
-                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" />
+                <quicklook-global v-on:close-quick-look-event="closeQuickLook" />
             </section>
         </div>
     </div>

@@ -32,7 +32,7 @@ describe("TrackerListWritingMode", () => {
 
             wrapper.vm.removeTracker(tracker);
 
-            expect(wrapper.emitted("trackerRemoved")[0][0]).toEqual(tracker);
+            expect(wrapper.emitted("tracker-removed")[0][0]).toEqual(tracker);
         });
     });
 });
