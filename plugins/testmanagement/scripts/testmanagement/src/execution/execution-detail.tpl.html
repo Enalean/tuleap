@@ -70,7 +70,7 @@
                 </a>
 
                 <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
-                    <i class="fa fa-fw fa-pencil"
+                    <i class="fas fa-fw fa-pencil-alt"
                        data-test="current-test-edit"
                        ng-click="showEditArtifactModal($event, execution.definition)"
                        title="{{ 'Edit this test' | translate }}"></i>
@@ -180,7 +180,7 @@
                 <button type="button"
                         class="tlp-button-warning tlp-button-outline current-test-should-be-reloaded-button"
                         ng-click="execution.userCanReloadTestBecauseDefinitionIsUpdated()">
-                    <i class="fa fa-fw fa-refresh tlp-button-icon"></i> <span translate>Reload the test</span>
+                    <i class="fas fa-fw fa-sync tlp-button-icon"></i> <span translate>Reload the test</span>
                 </button>
             </div>
         </section>

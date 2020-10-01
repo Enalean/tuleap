@@ -57,7 +57,7 @@
                 v-bind:title="sort_by_path_title"
                 data-test="git-repository-list-switch-path"
             >
-                <i class="fa fa-fw fa-sort-alpha-asc"></i>
+                <i class="fas fa-fw fa-sort-alpha-down"></i>
             </label>
         </div>
     </div>

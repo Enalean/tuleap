@@ -33,7 +33,7 @@
 
             <div class="tlp-dropdown-menu tlp-dropdown-menu-left" role="menu" ref="dropdownMenu">
                 <a v-bind:href="go_to_test_def_link" class="tlp-dropdown-menu-item" role="menuitem">
-                    <i class="fa fa-fw fa-pencil"></i>
+                    <i class="fas fa-fw fa-pencil-alt"></i>
                     <translate
                         v-bind:translate-params="{
                             item_type: test_definition.short_type,
@@ -55,7 +55,7 @@
                     v-if="go_to_last_test_exec_link !== null"
                     data-test="go-to-last-test-exec"
                 >
-                    <i class="fa fa-fw fa-long-arrow-right"></i>
+                    <i class="fas fa-fw fa-long-arrow-alt-right"></i>
                     <translate v-bind:translate-params="{ release_name: milestone_title }">
                         Go to the last execution in release %{ release_name }
                     </translate>

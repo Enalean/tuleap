@@ -40,7 +40,7 @@
             required
         />
         <p class="tlp-text-info">
-            <i class="fa fa-fw fa-life-saver"></i>
+            <i class="far fa-fw fa-life-ring"></i>
             <translate
                 v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
             >

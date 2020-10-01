@@ -57,7 +57,7 @@
                 data-test="new-project-shortname"
             />
             <p class="tlp-text-info">
-                <i class="fa fa-fw fa-life-saver"></i>
+                <i class="far fa-fw fa-life-ring"></i>
                 <span v-translate>Must start with a letter, without spaces nor punctuation.</span>
             </p>
             <p class="tlp-text-danger" v-if="has_slug_error">

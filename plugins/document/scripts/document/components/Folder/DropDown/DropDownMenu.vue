@@ -44,7 +44,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
         >
-            <i class="fa fa-fw fa-bell-o tlp-dropdown-menu-item-icon"></i>
+            <i class="far fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Notifications</span>
         </a>
         <a
@@ -63,7 +63,7 @@
             role="menuitem"
             data-test="document-dropdown-approval-tables"
         >
-            <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
+            <i class="far fa-fw fa-check-square tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Approval tables</span>
         </a>
 

@@ -24,5 +24,5 @@
     <br>
     <a class="footer-link" href="https://www.tuleap.org" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-users"></i> Communauté Tuleap</a>
     <br>
-    <a class="footer-link" href="https://www.tuleap.org/tuleap-community/professional-partners" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-ticket"></i> Support professionnel</a>
+    <a class="footer-link" href="https://www.tuleap.org/tuleap-community/professional-partners" target="_blank" rel="noreferrer"><i class="fas fa-fw fa-ticket-alt"></i> Support professionnel</a>
 </p>

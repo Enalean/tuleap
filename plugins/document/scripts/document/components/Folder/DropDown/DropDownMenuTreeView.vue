@@ -50,7 +50,7 @@
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="`tlp-dropdown-menu-item`"
-                v-bind:icon-classes="`fa fa-fw fa-mail-forward tlp-dropdown-menu-item-icon`"
+                v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
                 v-if="!is_item_a_folder(item)"
                 data-test="document-dropdown-create-new-version-button"
                 slot="new-item-version"
