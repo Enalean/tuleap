@@ -148,6 +148,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-email-copy-paste-fp.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
