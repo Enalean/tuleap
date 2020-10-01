@@ -18,11 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-/**
- *  Data Access Object for Tracker_FormElement_Field
- */
-class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_SpecificPropertiesDao
+class Tracker_FormElement_Field_MultiSelectboxDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct()
@@ -60,8 +58,8 @@ class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_Sp
         $to_field_id   = $this->da->escapeInt($to_field_id);
 
         $sql = "REPLACE INTO $this->table_name (field_id, size)
-                SELECT $to_field_id, size 
-                FROM $this->table_name 
+                SELECT $to_field_id, size
+                FROM $this->table_name
                 WHERE field_id = $from_field_id";
         return $this->update($sql);
     }

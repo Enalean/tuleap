@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015-present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 
 class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -49,7 +51,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_IntegerDao::class);
+        $value_dao = Mockery::mock(IntegerValueDao::class);
 
         $result = ['id' => 123, 'field_id' => 1, 'value' => '42'];
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar($result));
@@ -65,7 +67,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_IntegerDao::class);
+        $value_dao = Mockery::mock(IntegerValueDao::class);
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar([]));
 
         $integer_field = $this->getIntegerField();

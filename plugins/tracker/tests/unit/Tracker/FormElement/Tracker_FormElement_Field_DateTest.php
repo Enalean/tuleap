@@ -32,7 +32,7 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Value_DateDao;
+use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report;
 use Tracker_Report_Criteria;
@@ -122,7 +122,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_DateDao::class);
+        $value_dao = Mockery::mock(DateValueDao::class);
         $dar       = \TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1221221466']);
         $value_dao->shouldReceive('searchById')->andReturn($dar);
 
@@ -137,7 +137,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_DateDao::class);
+        $value_dao = Mockery::mock(DateValueDao::class);
         $dar       = \TestHelper::arrayToDar(false);
         $value_dao->shouldReceive('searchById')->andReturn($dar);
 

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\StringField\StringFieldDao;
 
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 {
@@ -41,9 +42,9 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         ],
     ];
 
-    protected function getDao(): Tracker_FormElement_Field_StringDao
+    protected function getDao(): StringFieldDao
     {
-        return new Tracker_FormElement_Field_StringDao();
+        return new StringFieldDao();
     }
 
     /**

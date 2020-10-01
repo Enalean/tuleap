@@ -153,11 +153,10 @@
     <MissingParamType occurrences="1">
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
       <code>getUserWidgetList</code>
-      <code>site_admin_option_hook</code>
       <code>uninstall</code>
       <code>widgetInstance</code>
     </MissingReturnType>
@@ -4219,8 +4218,7 @@
       <code>$cross_reference-&gt;targetKey</code>
       <code>$cross_reference-&gt;targetKey</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="9">
-      <code>addSiteAdministrationOptionHook</code>
+    <MissingReturnType occurrences="8">
       <code>can_user_create_reference_with_this_nature</code>
       <code>collectRoutesEvent</code>
       <code>getCrossReferenceCreator</code>
@@ -4289,10 +4287,9 @@
     <MissingParamType occurrences="1">
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>addAdditionalFieldUserRegistration</code>
       <code>addExternalScriptToTheWhitelist</code>
-      <code>addSiteAdministrationOptionHook</code>
       <code>burningParrotCompatiblePage</code>
       <code>checkCaptchaBeforeSubmission</code>
       <code>collectRoutesEvent</code>
@@ -5810,7 +5807,7 @@
       <code>$id</code>
       <code>$text</code>
     </MissingParamType>
-    <MissingReturnType occurrences="14">
+    <MissingReturnType occurrences="13">
       <code>burningParrotCompatiblePage</code>
       <code>codendi_daily_start</code>
       <code>collectRoutesEvent</code>
@@ -5820,7 +5817,6 @@
       <code>restResources</code>
       <code>serviceAccessEvent</code>
       <code>service_is_used</code>
-      <code>site_admin_option_hook</code>
       <code>trackerArtifactCreated</code>
       <code>trackerArtifactUpdated</code>
       <code>userAuthenticationSucceeded</code>
@@ -12378,7 +12374,7 @@
     <MissingPropertyType occurrences="1">
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="67">
+    <MissingReturnType occurrences="66">
       <code>cleanUnusedResources</code>
       <code>codendiDaily</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -12437,7 +12433,6 @@
       <code>showPendingItems</code>
       <code>showPendingVersions</code>
       <code>site_access_change</code>
-      <code>site_admin_option_hook</code>
       <code>soap</code>
       <code>uninstall</code>
       <code>userCanAccessWikiDocument</code>
@@ -18471,14 +18466,13 @@
       <code>$repository_admin_url</code>
       <code>$user_is_admin</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="8">
+    <MissingPropertyType occurrences="7">
       <code>$fork_url</code>
       <code>$is_migrated_to_gerrit</code>
       <code>$project_id</code>
       <code>$repository_admin_url</code>
       <code>$repository_id</code>
       <code>$repository_name</code>
-      <code>$repository_path</code>
       <code>$user_is_admin</code>
     </MissingPropertyType>
   </file>
@@ -21425,11 +21419,10 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/git/include/gitPlugin.php">
-    <MissingParamType occurrences="40">
+    <MissingParamType occurrences="39">
       <code>$error</code>
       <code>$id</code>
       <code>$newName</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -21471,7 +21464,7 @@
       <code>$FREQUENCIES_GIT_READ</code>
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="131">
+    <MissingReturnType occurrences="130">
       <code>changeProjectRepositoriesAccess</code>
       <code>codendi_daily_start</code>
       <code>collectGlyphLocations</code>
@@ -21591,7 +21584,6 @@
       <code>setLogger</code>
       <code>setUserAccountManager</code>
       <code>site_access_change</code>
-      <code>site_admin_option_hook</code>
       <code>statisticsCollectionCollector</code>
       <code>systemEventProjectRename</code>
       <code>system_event_get_custom_queues</code>
@@ -22099,15 +22091,14 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/gitlfsPlugin.php">
-    <MissingParamType occurrences="6">
+    <MissingParamType occurrences="5">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="20">
+    <MissingReturnType occurrences="19">
       <code>cleanUnusedResources</code>
       <code>collectGitRoutesEvent</code>
       <code>collectRoutesEvent</code>
@@ -22127,7 +22118,6 @@
       <code>postInitGitRepositoryWithDataEvent</code>
       <code>project_is_deleted</code>
       <code>pullRequestDiffRepresentationBuild</code>
-      <code>site_admin_option_hook</code>
     </MissingReturnType>
   </file>
   <file src="plugins/graphontrackersv5/include/Chart/D3CompatibleChartVisitor.php">
@@ -25909,11 +25899,10 @@
     </InvalidGlobal>
   </file>
   <file src="plugins/mediawiki/include/mediawikiPlugin.php">
-    <MissingParamType occurrences="37">
+    <MissingParamType occurrences="36">
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -25948,7 +25937,7 @@
       <code>$type_of_search</code>
       <code>$words</code>
     </MissingParamType>
-    <MissingReturnType occurrences="57">
+    <MissingReturnType occurrences="56">
       <code>burningParrotCompatiblePage</code>
       <code>clearMediawikiCache</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -26000,7 +25989,6 @@
       <code>service_replace_template_name_in_link</code>
       <code>showImage</code>
       <code>site_access_change</code>
-      <code>site_admin_option_hook</code>
       <code>system_event_get_types_for_default_queue</code>
       <code>systemevent_user_rename</code>
       <code>updateMediawikiDirectory</code>
@@ -26561,7 +26549,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/openidconnectclientPlugin.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="7">
       <code>$id</code>
       <code>$is_registration_confirmation</code>
       <code>$link_id</code>
@@ -26569,9 +26557,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="10">
+    <MissingReturnType occurrences="9">
       <code>after_user_registration</code>
       <code>anonymous_access_to_script_allowed</code>
       <code>before_register</code>
@@ -26581,7 +26568,6 @@
       <code>get_login_url</code>
       <code>javascript_file</code>
       <code>login_additional_connector</code>
-      <code>site_admin_option_hook</code>
     </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/AvailablePluginsPresenter.php">
@@ -30583,9 +30569,8 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/statistics/include/statisticsPlugin.php">
-    <MissingParamType occurrences="15">
+    <MissingParamType occurrences="14">
       <code>$id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -30600,7 +30585,7 @@
       <code>$uri</code>
       <code>$uri</code>
     </MissingParamType>
-    <MissingReturnType occurrences="26">
+    <MissingReturnType occurrences="25">
       <code>after_massmail_to_project_admins</code>
       <code>aggregate_statistics</code>
       <code>burningParrotCompatiblePage</code>
@@ -30622,7 +30607,6 @@
       <code>processSOAP</code>
       <code>renderWSDL</code>
       <code>rootDailyStart</code>
-      <code>site_admin_option_hook</code>
       <code>system_event_get_custom_queues</code>
       <code>system_event_get_types_for_custom_queue</code>
       <code>uninstall</code>
@@ -34670,9 +34654,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreatorBase.class.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$artifact-&gt;getChangeset($changeset_id)</code>
-    </PossiblyNullArgument>
     <PossiblyNullReference occurrences="1">
       <code>validate</code>
     </PossiblyNullReference>
@@ -37271,16 +37252,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ArtifactLinkValidator.php">
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="4">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
       <code>$artifact_id</code>
-      <code>$value</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>isValid</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownCacheDateRetriever.php">
     <MissingReturnType occurrences="6">
@@ -37991,6 +37968,29 @@
       <code>getCSVDateFormat</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/DateFieldDao.php">
+    <MissingParamType occurrences="2">
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/DateValueDao.php">
+    <MissingParamType occurrences="4">
+      <code>$changeset_value_id</code>
+      <code>$from</code>
+      <code>$to</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
+      <code>create</code>
+      <code>createNoneValue</code>
+      <code>getArtifactsByFieldAndValue</code>
+      <code>keep</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/FieldDataFromRESTBuilder.php">
     <MissingParamType occurrences="1">
       <code>$rest_value</code>
@@ -38009,10 +38009,58 @@
       <code>$new_value</code>
     </MissingParamType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/FloatFieldDao.php">
+    <MissingParamType occurrences="2">
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/FloatValueDao.php">
+    <MissingParamType occurrences="6">
+      <code>$changeset_value_id</code>
+      <code>$field_id</code>
+      <code>$from</code>
+      <code>$to</code>
+      <code>$tracker_id</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>create</code>
+      <code>createNoneValue</code>
+      <code>keep</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/ChangesChecker.php">
     <MissingParamType occurrences="1">
       <code>$new_value</code>
     </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/IntegerFieldDao.php">
+    <MissingParamType occurrences="2">
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/IntegerValueDao.php">
+    <MissingParamType occurrences="6">
+      <code>$changeset_value_id</code>
+      <code>$field_id</code>
+      <code>$from</code>
+      <code>$to</code>
+      <code>$tracker_id</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>create</code>
+      <code>createNoneValue</code>
+      <code>keep</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindDecoratorRetriever.php">
     <MissingReturnType occurrences="1">
@@ -38075,6 +38123,41 @@
       <code>propagateProperties</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/String/StringFieldDao.php">
+    <MissingParamType occurrences="2">
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextFieldDao.php">
+    <MissingParamType occurrences="2">
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextValueDao.php">
+    <MissingParamType occurrences="7">
+      <code>$body_format</code>
+      <code>$changeset_value_id</code>
+      <code>$changeset_value_id</code>
+      <code>$from</code>
+      <code>$to</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
+      <code>create</code>
+      <code>createNoneValue</code>
+      <code>createWithBodyFormat</code>
+      <code>keep</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/FieldCalculator.php">
     <MissingParamType occurrences="4">
       <code>$computed_field_id</code>
@@ -38115,6 +38198,19 @@
     <MissingParamType occurrences="1">
       <code>$value</code>
     </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/SpecificPropertiesDao.php">
+    <MissingParamType occurrences="4">
+      <code>$field_id</code>
+      <code>$field_id</code>
+      <code>$field_id</code>
+      <code>$row</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>delete</code>
+      <code>save</code>
+      <code>searchByFieldId</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
     <MissingReturnType occurrences="3">
@@ -40844,7 +40940,7 @@
       <code>displayFooter</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_FieldDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_FieldDao.php">
     <FalsableReturnStatement occurrences="3">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
@@ -40949,7 +41045,7 @@
       <code>updateOriginalFieldId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.php">
     <MissingParamType occurrences="2">
       <code>$field_id</code>
       <code>$row</code>
@@ -40958,7 +41054,7 @@
       <code>save</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ComputedDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ComputedDao.php">
     <FalsableReturnStatement occurrences="2">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
@@ -41002,7 +41098,7 @@
       <code>searchCachedDays</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ComputedDaoCache.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ComputedDaoCache.php">
     <MissingParamType occurrences="9">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -41022,34 +41118,7 @@
       <code>deleteArtifactCacheValue</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_DateDao.class.php">
-    <MissingParamType occurrences="2">
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_FloatDao.class.php">
-    <MissingParamType occurrences="2">
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_IntegerDao.class.php">
-    <MissingParamType occurrences="2">
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ListDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ListDao.php">
     <MissingParamType occurrences="5">
       <code>$bind_type</code>
       <code>$field_id</code>
@@ -41063,7 +41132,7 @@
       <code>searchByFieldId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_BindDecoratorDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_BindDecoratorDao.php">
     <MissingParamType occurrences="4">
       <code>$field_id</code>
       <code>$from_field_id</code>
@@ -41075,7 +41144,7 @@
       <code>searchByFieldId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_DefaultvalueDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_DefaultvalueDao.php">
     <MissingParamType occurrences="6">
       <code>$default_values</code>
       <code>$field_id</code>
@@ -41090,7 +41159,7 @@
       <code>searchByFieldId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_StaticDao.php">
     <MissingParamType occurrences="6">
       <code>$field_id</code>
       <code>$field_id</code>
@@ -41107,7 +41176,7 @@
       <code>updateChildrenAlphaRank</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.php">
     <MissingParamType occurrences="38">
       <code>$by_reference</code>
       <code>$changeset_id</code>
@@ -41177,7 +41246,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao.php">
     <MissingParamType occurrences="13">
       <code>$changeset_id</code>
       <code>$field_id</code>
@@ -41204,7 +41273,7 @@
       <code>toggleHidden</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_UsersDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_Bind_UsersDao.php">
     <MissingParamType occurrences="9">
       <code>$changeset_id</code>
       <code>$display_name_order</code>
@@ -41223,7 +41292,7 @@
       <code>searchChangesetValues</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_OpenValueDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_OpenValueDao.php">
     <MissingParamType occurrences="13">
       <code>$field_id</code>
       <code>$field_id</code>
@@ -41248,7 +41317,7 @@
       <code>searchByKeyword</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_MultiSelectboxDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_MultiSelectboxDao.php">
     <MissingParamType occurrences="2">
       <code>$field_id</code>
       <code>$row</code>
@@ -41257,7 +41326,7 @@
       <code>save</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_OpenListDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_OpenListDao.php">
     <MissingParamType occurrences="8">
       <code>$bindtable_from</code>
       <code>$bindtable_join_on_id</code>
@@ -41273,25 +41342,7 @@
       <code>searchChangesetValues</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_StringDao.class.php">
-    <MissingParamType occurrences="2">
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_TextDao.class.php">
-    <MissingParamType occurrences="2">
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ValueDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ValueDao.php">
     <MissingParamType occurrences="2">
       <code>$changeset_value_id</code>
       <code>$changeset_value_id</code>
@@ -41301,7 +41352,7 @@
       <code>searchById</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.php">
     <MissingParamType occurrences="15">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -41330,21 +41381,7 @@
       <code>updateItemName</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_DateDao.class.php">
-    <MissingParamType occurrences="4">
-      <code>$changeset_value_id</code>
-      <code>$from</code>
-      <code>$to</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>create</code>
-      <code>createNoneValue</code>
-      <code>getArtifactsByFieldAndValue</code>
-      <code>keep</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FileDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FileDao.php">
     <MissingParamType occurrences="6">
       <code>$changeset_value_id</code>
       <code>$field_id</code>
@@ -41359,37 +41396,7 @@
       <code>keep</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FloatDao.class.php">
-    <MissingParamType occurrences="6">
-      <code>$changeset_value_id</code>
-      <code>$field_id</code>
-      <code>$from</code>
-      <code>$to</code>
-      <code>$tracker_id</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>create</code>
-      <code>createNoneValue</code>
-      <code>keep</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_IntegerDao.class.php">
-    <MissingParamType occurrences="6">
-      <code>$changeset_value_id</code>
-      <code>$field_id</code>
-      <code>$from</code>
-      <code>$to</code>
-      <code>$tracker_id</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>create</code>
-      <code>createNoneValue</code>
-      <code>keep</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ListDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ListDao.php">
     <MissingParamType occurrences="6">
       <code>$changeset_value_id</code>
       <code>$field_id</code>
@@ -41404,7 +41411,7 @@
       <code>keep</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_NumericDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_NumericDao.php">
     <FalsableReturnStatement occurrences="2">
       <code>$this-&gt;retrieveFirstRow($sql)</code>
       <code>$this-&gt;retrieveFirstRow($sql)</code>
@@ -41414,7 +41421,7 @@
       <code>Array</code>
     </InvalidFalsableReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_OpenListDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_OpenListDao.php">
     <MissingParamType occurrences="7">
       <code>$changeset_value_id</code>
       <code>$changeset_value_id</code>
@@ -41431,7 +41438,7 @@
       <code>searchById</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_PermissionsOnArtifactDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_PermissionsOnArtifactDao.php">
     <MissingParamType occurrences="8">
       <code>$changeset_value_id</code>
       <code>$changeset_value_id</code>
@@ -41449,37 +41456,7 @@
       <code>searchByChangesetValueId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_TextDao.class.php">
-    <MissingParamType occurrences="7">
-      <code>$body_format</code>
-      <code>$changeset_value_id</code>
-      <code>$changeset_value_id</code>
-      <code>$from</code>
-      <code>$to</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>create</code>
-      <code>createNoneValue</code>
-      <code>createWithBodyFormat</code>
-      <code>keep</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_SpecificPropertiesDao.class.php">
-    <MissingParamType occurrences="4">
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$row</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>delete</code>
-      <code>save</code>
-      <code>searchByFieldId</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_StaticField_RichTextDao.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_StaticField_RichTextDao.php">
     <MissingParamType occurrences="2">
       <code>$field_id</code>
       <code>$row</code>
@@ -41716,14 +41693,13 @@
       <code>$username</code>
       <code>$xml_file_path</code>
     </MissingParamType>
-    <MissingReturnType occurrences="10">
+    <MissingReturnType occurrences="9">
       <code>createTrackerStructure</code>
       <code>exportTV3Data</code>
       <code>generateTemporaryPath</code>
       <code>getArtifactCreator</code>
       <code>getChangesetCreator</code>
       <code>getIndentXSLResourcePath</code>
-      <code>getXMLImporter</code>
       <code>isTrackerUnderMigration</code>
       <code>migrate</code>
       <code>thereAreMigrationsOngoingForProject</code>
@@ -42267,11 +42243,10 @@
     <InvalidReturnType occurrences="1">
       <code>array</code>
     </InvalidReturnType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>extractUserIdFromGlobalNotificationsRecipientList</code>
       <code>getAllRecipientsWhoHaveCustomSettingsForATracker</code>
       <code>removeRecipientsThatHaveUnsubcribedFromNotification</code>
-      <code>removeRecipientsThatMayReceiveAnEmptyNotification</code>
       <code>removeRecipientsWhenTheyAreInCreationOnlyMode</code>
       <code>removeRecipientsWhenTheyAreInStatusUpdateOnlyMode</code>
       <code>removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode</code>
@@ -45798,8 +45773,7 @@
       <code>$this-&gt;report-&gt;id</code>
       <code>$this-&gt;report-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
-      <code>addDashboardButtons</code>
+    <MissingReturnType occurrences="14">
       <code>afterProcessRequest</code>
       <code>afterSaveObject</code>
       <code>canAddToDashboard</code>
@@ -49940,13 +49914,12 @@
     <InvalidArgument occurrences="1">
       <code>$project_with_tracker_administration</code>
     </InvalidArgument>
-    <MissingParamType occurrences="41">
+    <MissingParamType occurrences="40">
       <code>$can_bypass_threshold</code>
       <code>$can_bypass_threshold</code>
       <code>$id</code>
       <code>$keyword</code>
       <code>$legacy</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -49988,7 +49961,7 @@
       <code>$t-&gt;id</code>
       <code>$t-&gt;name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="89">
+    <MissingReturnType occurrences="88">
       <code>addCustomNatures</code>
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
@@ -50066,7 +50039,6 @@
       <code>services_truncated_emails</code>
       <code>set_artifact_reference_group_id</code>
       <code>site_access_change</code>
-      <code>site_admin_option_hook</code>
       <code>statisticsCollectionCollector</code>
       <code>system_event_get_custom_queues</code>
       <code>system_event_get_types_for_custom_queue</code>
@@ -50746,11 +50718,10 @@
     <MissingParamType occurrences="1">
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>collectRoutesEvent</code>
       <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
-      <code>site_admin_option_hook</code>
     </MissingReturnType>
   </file>
   <file src="plugins/userlog/bin/clean_userlog_request.php">
@@ -50907,15 +50878,13 @@
     </MissingReturnType>
   </file>
   <file src="plugins/userlog/include/userlogPlugin.php">
-    <MissingParamType occurrences="2">
+    <MissingParamType occurrences="1">
       <code>$id</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
       <code>hitEvent</code>
-      <code>siteAdminHooks</code>
     </MissingReturnType>
   </file>
   <file src="plugins/velocity/include/Velocity/InvalidArtifactRepresentation.php">
@@ -60682,15 +60651,10 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/admin/AdminSidebarPresenterBuilder.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$plugin_a</code>
-      <code>$plugin_b</code>
-    </MissingClosureParamType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>allProjectsCount</code>
       <code>allUsersCount</code>
       <code>build</code>
-      <code>getPlugins</code>
       <code>pendingNewsCount</code>
       <code>pendingProjectsCount</code>
       <code>pendingUsersCount</code>
@@ -62665,8 +62629,7 @@
     </InvalidReturnType>
   </file>
   <file src="src/common/dao/ReferenceDao.class.php">
-    <FalsableReturnStatement occurrences="12">
-      <code>$this-&gt;retrieve($sql)</code>
+    <FalsableReturnStatement occurrences="11">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
@@ -62679,8 +62642,7 @@
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="12">
-      <code>DataAccessResult</code>
+    <InvalidFalsableReturnType occurrences="11">
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
@@ -62701,7 +62663,7 @@
       <code>true</code>
       <code>true</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="54">
+    <MissingParamType occurrences="53">
       <code>$desc</code>
       <code>$desc</code>
       <code>$description</code>
@@ -62751,7 +62713,6 @@
       <code>$scope</code>
       <code>$scope</code>
       <code>$scope</code>
-      <code>$service</code>
       <code>$service</code>
       <code>$service</code>
       <code>$service_short_name</code>
@@ -66630,7 +66591,7 @@
       <code>$referenceDao</code>
       <code>$tmpGroupIdForCallbackFunction</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="47">
+    <MissingReturnType occurrences="46">
       <code>_buildReference</code>
       <code>_extractMatches</code>
       <code>_getCrossReferenceDao</code>
@@ -66677,7 +66638,6 @@
       <code>updateIsActive</code>
       <code>updateProjectReferenceShortName</code>
       <code>updateReference</code>
-      <code>updateReferenceForService</code>
     </MissingReturnType>
     <NullableReturnStatement occurrences="2">
       <code>null</code>
@@ -78702,13 +78662,12 @@
     </UndefinedVariable>
   </file>
   <file src="src/www/themes/FlamingParrot/FlamingParrot_Theme.class.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="7">
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$presenter</code>
       <code>$root</code>
-      <code>$selected_top_tab</code>
       <code>$template_name</code>
       <code>$theme</code>
     </MissingParamType>

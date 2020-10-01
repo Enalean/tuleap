@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
+use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -242,11 +244,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     /**
      * Return the Field_Date_Dao
      *
-     * @return Tracker_FormElement_Field_DateDao The dao
+     * @return DateFieldDao The dao
      */
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_DateDao();
+        return new DateFieldDao();
     }
 
     /**
@@ -632,7 +634,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_DateDao();
+        return new DateValueDao();
     }
 
     /**
@@ -917,9 +919,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $second = '0';
 
         if ($user_preference == "day_month_year") {
-            list(,$day,$month,$year) = $match;
+            [, $day, $month, $year] = $match;
         } else {
-            list(,$month,$day,$year) = $match;
+            [, $month, $day, $year] = $match;
         }
 
         return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second);
@@ -928,9 +930,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     private function getCSVDateComponantsWithHours(array $match, $user_preference)
     {
         if ($user_preference == "day_month_year") {
-            list(, $day, $month, $year, $hour, $minute) = $match;
+            [, $day, $month, $year, $hour, $minute] = $match;
         } else {
-            list(, $month, $day, $year, $hour, $minute) = $match;
+            [, $month, $day, $year, $hour, $minute] = $match;
         }
 
         return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, '00');
@@ -1045,7 +1047,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
         $artifacts = [];
-        $dao = new Tracker_FormElement_Field_Value_DateDao();
+        $dao = new DateValueDao();
         $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
         if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();

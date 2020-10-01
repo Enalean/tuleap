@@ -32,7 +32,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_Value_FloatDao;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tracker_Report_Criteria;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use UserManager;
@@ -78,7 +78,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = \Mockery::mock(Tracker_FormElement_Field_Value_FloatDao::class);
+        $value_dao = \Mockery::mock(FloatValueDao::class);
         $value_dao->shouldReceive('searchById')->andReturn(
             \TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1.003'])
         );
@@ -94,7 +94,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testGetChangesetValueDoesNotExist(): void
     {
-        $value_dao = \Mockery::mock(Tracker_FormElement_Field_Value_FloatDao::class);
+        $value_dao = \Mockery::mock(FloatValueDao::class);
         $value_dao->shouldReceive('searchById')->andReturn(\TestHelper::emptyDar());
 
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();

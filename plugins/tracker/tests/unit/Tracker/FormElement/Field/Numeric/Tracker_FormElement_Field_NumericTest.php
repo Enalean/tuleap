@@ -25,7 +25,9 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
     public function testItDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven(): void
     {
         $user      = new PFUser(['language_id' => 'en']);
-        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FloatDao::class)
+        $value_dao = \Mockery::spy(
+            \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
+        )
             ->shouldReceive('getLastValue')->andReturns(['value' => '123.45'])->getMock();
         $artifact  = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
@@ -43,7 +45,9 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
         $artifact_id    = 123;
         $field_id       = 195;
         $user           = new PFUser(['language_id' => 'en']);
-        $value_dao      = \Mockery::mock(\Tracker_FormElement_Field_Value_FloatDao::class);
+        $value_dao      = \Mockery::mock(
+            \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
+        );
         $artifact       =  Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $field          = \Mockery::mock(\Tracker_FormElement_Field_Float::class)

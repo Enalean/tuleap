@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
+use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 {
@@ -164,11 +166,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_TextDao();
+        return new TextValueDao();
     }
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_TextDao();
+        return new TextFieldDao();
     }
 
     /**

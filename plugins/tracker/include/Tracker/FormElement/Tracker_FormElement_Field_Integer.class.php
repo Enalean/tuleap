@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
 {
@@ -95,11 +97,11 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_IntegerDao();
+        return new IntegerValueDao();
     }
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_IntegerDao();
+        return new IntegerFieldDao();
     }
 
     public static function getFactoryLabel()
