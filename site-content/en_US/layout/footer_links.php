@@ -20,9 +20,13 @@
 ?>
 <h3 class="footer-section-title">Contact</h3>
 <p class="footer-paragraph">
-    <a class="footer-link" href="/contact.php"><i class="fa fa-fw fa-envelope"></i> Contact us</a>
+    <a class="footer-link" href="/contact.php"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i> Contact us</a>
     <br>
-    <a class="footer-link" href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-twitter"></i> @TuleapOpenALM</a>
+    <a class="footer-link" href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer" title="Follow Tuleap on Twitter">
+        <i class="fab fa-fw fa-twitter" aria-hidden="true"></i> @TuleapOpenALM
+    </a>
     <br>
-    <a class="footer-link" href="https://www.linkedin.com/company/tuleap" target="_blank" rel="noreferrer"><i class="fab fa-fw fa-linkedin-in"></i> Tuleap Community</a>
+    <a class="footer-link" href="https://www.linkedin.com/company/tuleap" target="_blank" rel="noreferrer" title="Follow Tuleap on LinkedIn">
+        <i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> Follow Tuleap
+    </a>
 </p>
