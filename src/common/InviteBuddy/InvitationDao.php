@@ -49,6 +49,32 @@ class InvitationDao extends DataAccessObject
 
     public function searchByEmail(string $to_email): array
     {
-        return $this->getDB()->run("SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ?", $to_email);
+        return $this->getDB()->run(
+            "SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ? AND status = ?",
+            $to_email,
+            InvitationSender::STATUS_SENT,
+        );
+    }
+
+    public function saveJustCreatedUserThanksToInvitation(string $to_email, int $just_created_user_id): void
+    {
+        $this->getDB()->run(
+            "UPDATE invitations
+                SET created_user_id = ?
+                WHERE to_email = ?
+                  AND status = ?
+                  AND created_user_id IS NULL",
+            $just_created_user_id,
+            $to_email,
+            InvitationSender::STATUS_SENT,
+        );
+    }
+
+    public function searchUserIdThatInvitedUser(int $user_id): array
+    {
+        return $this->getDB()->run(
+            "SELECT DISTINCT from_user_id FROM invitations WHERE created_user_id = ?",
+            $user_id,
+        );
     }
 }

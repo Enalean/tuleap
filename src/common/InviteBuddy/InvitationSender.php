@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 
 class InvitationSender
 {
-    private const STATUS_SENT  = 'sent';
+    public const  STATUS_SENT  = 'sent';
     private const STATUS_ERROR = 'error';
 
     /**
@@ -81,7 +81,6 @@ class InvitationSender
      */
     public function send(PFUser $current_user, array $emails, ?string $custom_message): array
     {
-        sleep(1);
         $emails = array_filter($emails);
         $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
 

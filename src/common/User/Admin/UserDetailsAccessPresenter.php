@@ -24,6 +24,7 @@ namespace Tuleap\User\Admin;
 
 use DateHelper;
 use PFUser;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenter;
 
 class UserDetailsAccessPresenter
 {
@@ -57,8 +58,83 @@ class UserDetailsAccessPresenter
      * @psalm-readonly
      */
     public $purified_member_since_ago;
+    /**
+     * @var InvitedByPresenter|null
+     * @psalm-readonly
+     */
+    public $invited_by;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $last_access_date_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $last_access_date;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $last_pwd_update_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $last_pwd_update;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $auth_attempt_last_success_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $auth_attempt_last_success;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $auth_attempt_last_failure_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $auth_attempt_last_failure;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $auth_attempt_nb_failure_label;
+    /**
+     * @var mixed
+     * @psalm-readonly
+     */
+    public $auth_attempt_nb_failure;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $auth_attempt_prev_success_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $auth_attempt_prev_success;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $member_since_label;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $member_since;
 
-    public function __construct(PFUser $user, array $user_info)
+    public function __construct(PFUser $user, array $user_info, ?InvitedByPresenter $invited_by)
     {
         $this->last_access_date_label = $GLOBALS['Language']->getText('admin_usergroup', 'last_access_date');
         $this->purified_last_access_date_ago = $this->getDate((int) $user_info['last_access_date'], $user);
@@ -87,6 +163,7 @@ class UserDetailsAccessPresenter
         $this->member_since_label = $GLOBALS['Language']->getText('include_user_home', 'member_since');
         $this->purified_member_since_ago = $this->getDate((int) $user->getAddDate(), $user);
         $this->member_since       = date($GLOBALS['Language']->getText('system', 'datefmt'), (int) $user->getAddDate());
+        $this->invited_by = $invited_by;
     }
 
     private function getDate(int $date, PFUser $user): string

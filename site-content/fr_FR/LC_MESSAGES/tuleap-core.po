@@ -1047,6 +1047,9 @@ msgstr "La configuration des invitations a été sauvegardée avec succès."
 msgid "Invite"
 msgstr "Inviter"
 
+msgid "Invited by"
+msgstr "Invitation envoyée par"
+
 msgid "Is default?"
 msgstr "Par défaut ?"
 
@@ -1306,6 +1309,9 @@ msgstr "Il n'y a aucun label correspondant"
 
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
+
+msgid "Nobody"
+msgstr "Personne"
 
 msgid "Non active projects cannot be used to be project template"
 msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de projet"

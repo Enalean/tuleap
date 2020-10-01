@@ -68,10 +68,32 @@ class AccountCreationFeedbackTest extends TestCase
         );
     }
 
+    public function testItUpdatesInvitationsWithJustCreatedUser(): void
+    {
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation')
+            ->with('doe@example.com', 104)
+            ->once();
+
+        $this->dao
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn([]);
+
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+    }
+
     public function testItNotifiesNobodyIfUserWasNotInvited(): void
     {
         $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com']);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
             ->shouldReceive('searchByEmail')
@@ -94,7 +116,10 @@ class AccountCreationFeedbackTest extends TestCase
         $from_another_user->shouldReceive(['isAlive' => true]);
 
         $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com']);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
             ->shouldReceive('searchByEmail')
@@ -140,7 +165,10 @@ class AccountCreationFeedbackTest extends TestCase
     public function testItIgnoresUsersThatCannotBeFoundButLogsAnError(): void
     {
         $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com']);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
             ->shouldReceive('searchByEmail')
@@ -178,7 +206,10 @@ class AccountCreationFeedbackTest extends TestCase
         $from_user->shouldReceive(['isAlive' => false]);
 
         $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com']);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
             ->shouldReceive('searchByEmail')
@@ -217,6 +248,9 @@ class AccountCreationFeedbackTest extends TestCase
 
         $new_user = Mockery::mock(\PFUser::class);
         $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
             ->shouldReceive('searchByEmail')
