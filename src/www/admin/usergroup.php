@@ -25,6 +25,9 @@
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -329,6 +332,12 @@ $user_has_rest_read_only_administration_delegation = $forge_user_group_permissio
     new RestReadOnlyAdminPermission()
 );
 
+$invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
+$invited_by_builder = new InvitedByPresenterBuilder(new InvitationDao(), $um);
+$invited_by = $invite_buddy_configuration->isFeatureEnabled()
+    ? $invited_by_builder->getInvitedByPresenter($user)
+    : null;
+
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
@@ -336,7 +345,7 @@ $siteadmin->renderAPresenter(
     new UserDetailsPresenter(
         $user,
         $projects,
-        new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user)),
+        new UserDetailsAccessPresenter($user, $um->getUserAccessInfo($user), $invited_by),
         new UserChangePasswordPresenter(
             $user,
             $user_administration_csrf,

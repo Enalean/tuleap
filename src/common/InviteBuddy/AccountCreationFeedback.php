@@ -58,6 +58,8 @@ class AccountCreationFeedback
 
     public function accountHasJustBeenCreated(\PFUser $just_created_user): void
     {
+        $this->dao->saveJustCreatedUserThanksToInvitation((string) $just_created_user->getEmail(), (int) $just_created_user->getId());
+
         foreach ($this->dao->searchByEmail((string) $just_created_user->getEmail()) as $row) {
             $from_user = $this->user_manager->getUserById($row['from_user_id']);
             if (! $from_user) {

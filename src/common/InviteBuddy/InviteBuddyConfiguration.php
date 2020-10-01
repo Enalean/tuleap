@@ -55,9 +55,14 @@ class InviteBuddyConfiguration
 
     public function canBuddiesBeInvited(\PFUser $current_user): bool
     {
+        return ! $current_user->isAnonymous()
+            && $this->isFeatureEnabled();
+    }
+
+    public function isFeatureEnabled(): bool
+    {
         return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
             && $this->isRegistrationPossible()
-            && ! $current_user->isAnonymous()
             && $this->getNbMaxInvitationsByDay() > 0;
     }
 

@@ -33,23 +33,6 @@ class InviteBuddyConfigurationTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    public function testByDefaultBuddiesCannotBeInvitedCanBuddiesBeInvited(): void
-    {
-        $user = \Mockery::mock(\PFUser::class);
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-
-        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
-    }
-
-    public function testBuddiesCannotBeInvitedIfTheFeatureIsDisabled(): void
-    {
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 0);
-        $user = \Mockery::mock(\PFUser::class);
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-
-        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
-    }
-
     public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButUserIsAnonymous(): void
     {
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
