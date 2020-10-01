@@ -50,11 +50,34 @@ const webpack_config_for_burndown_chart = {
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
+const webpack_config_for_ts = {
+    entry: {
+        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
+    },
+    context,
+    output,
+    externals: {
+        tlp: "tlp",
+    },
+    resolve: {
+        extensions: [".js", ".ts"],
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11), // gettext-init.js needs Babel
+            webpack_configurator.rule_po_files,
+        ],
+    },
+    plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
+};
+
 const webpack_config_for_vue = {
     entry: {
         "admin-nature": "./scripts/admin-nature.js",
         "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
-        "tracker-homepage": "./scripts/tracker-homepage/index.ts",
         "tracker-admin": "./scripts/tracker-admin/index.js",
         "tracker-creation": "./scripts/tracker-creation/index.ts",
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
@@ -183,6 +206,7 @@ const config_for_themes = {
 
 module.exports = [
     webpack_config_for_burndown_chart,
+    webpack_config_for_ts,
     webpack_config_for_vue,
     config_for_legacy_scripts,
     config_for_themes,

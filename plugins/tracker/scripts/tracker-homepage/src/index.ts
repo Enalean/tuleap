@@ -18,11 +18,23 @@
  */
 
 import { createPopover } from "tlp";
+import { openModalAndReplacePlaceholders } from "../../../../../src/scripts/tuleap/modals/modal-opener";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../../src/scripts/tuleap/gettext/gettext-init";
+import {
+    buildDeletionDescriptionCallback,
+    replaceTrackerIDCallback,
+} from "./replacers-modal-delete";
 
-document.addEventListener("DOMContentLoaded", () => {
-    handleTrackerStatisticsPopovers();
-    handleTrackerDeletion();
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    async (): Promise<void> => {
+        handleTrackerStatisticsPopovers();
+        await handleTrackerDeletion();
+    }
+);
 
 function handleTrackerStatisticsPopovers(): void {
     for (const trigger of document.querySelectorAll(".trackers-homepage-tracker")) {
@@ -45,19 +57,40 @@ function handleTrackerStatisticsPopovers(): void {
     }
 }
 
-function handleTrackerDeletion(): void {
+async function handleTrackerDeletion(): Promise<void> {
     for (const trash of document.querySelectorAll(".trackers-homepage-tracker-trash")) {
         trash.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-
-            if (
-                trash instanceof HTMLFormElement &&
-                // eslint-disable-next-line no-alert
-                confirm("Do you want to delete this tracker?")
-            ) {
-                trash.submit();
-            }
         });
     }
+
+    const language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        throw new Error("Not able to find the user language.");
+    }
+
+    const gettext_provider = await initGettext(
+        language,
+        "tuleap-tracker",
+        (locale) =>
+            import(
+                /* webpackChunkName: "tracker-homepage-po-" */ "../po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
+
+    openModalAndReplacePlaceholders({
+        document: document,
+        buttons_selector: ".trackers-homepage-tracker-trash",
+        modal_element_id: "tracker-homepage-delete-modal",
+        hidden_input_replacement: {
+            input_id: "tracker-homepage-delete-modal-tracker-id",
+            hiddenInputReplaceCallback: replaceTrackerIDCallback,
+        },
+        paragraph_replacement: {
+            paragraph_id: "tracker-homepage-delete-modal-tracker-name",
+            paragraphReplaceCallback: buildDeletionDescriptionCallback(gettext_provider),
+        },
+    });
 }

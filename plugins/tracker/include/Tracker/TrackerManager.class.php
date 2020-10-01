@@ -553,8 +553,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-homepage.js'));
 
-        $csrf_token_delete_tracker = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()));
-
         foreach ($trackers as $tracker) {
             if ($this->trackerCanBeDisplayed($tracker, $user)) {
                 $html .= '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '" data-test="tracker-link-' . $tracker->getItemName() . '" ';
@@ -584,13 +582,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 if ($tracker->userCanDeleteTracker()) {
                     if ($used_in_other_services_infos['can_be_deleted']) {
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
-                                  <form method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()) . '"
+                                  <span
                                     class="trackers-homepage-tracker-trash tlp-tooltip tlp-tooltip-left"
                                     data-tlp-tooltip="' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '"
+                                    data-tracker-id="' . $hp->purify($tracker->getId()) . '"
+                                    data-tracker-name="' . $hp->purify($tracker->getName()) . '"
                                   >
-                                    <input type="hidden" name="func" value="delete"> ' . $csrf_token_delete_tracker->fetchHTMLInput() . '
                                     <i class="far fa-trash-alt"></i>
-                                  </form>';
+                                  </span>';
                     } else {
                         $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
@@ -608,6 +607,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $html .= $tracker->fetchStatsTooltip($user);
             }
         }
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/tracker-homepage/');
+        $html    .= $renderer->renderToString(
+            'tracker-delete-modal',
+            ['csrf_token' => new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()))]
+        );
 
         $html .= '</div>';
 

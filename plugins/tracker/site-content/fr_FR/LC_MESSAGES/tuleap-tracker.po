@@ -1182,6 +1182,12 @@ msgstr "Supprimer la valeur"
 msgid "Delete this Canned Response : %1$s ?"
 msgstr "Détruire cette réponse type&nbsp;: %1$s ?"
 
+msgid "Delete this tracker"
+msgstr "Supprimer cet outil de suivi"
+
+msgid "Delete tracker"
+msgstr "Supprimer l'outil de suivi"
+
 #, php-format
 msgid "Delete tracker %1$s"
 msgstr "Supprimer l'outil de suivi %1$s"

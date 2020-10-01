@@ -1,0 +1,37 @@
+<form
+    id="tracker-homepage-delete-modal"
+    class="tlp-modal tlp-modal-danger"
+    role="dialog"
+    aria-labelledby="tracker-homepage-delete-modal-title"
+    action="/plugins/tracker"
+    method="post"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-homepage-delete-modal-title">
+            <i class="far fa-trash-alt tlp-modal-title-icon"></i>
+            {{# dgettext }}tuleap-tracker | Delete this tracker{{/ dgettext }}
+        </h1>
+        <div class="tlp-modal-close"
+             tabindex="0"
+             role="button"
+             data-dismiss="modal"
+             aria-label="{{# dgettext }}tuleap-tracker | Cancel{{/dgettext}}"
+        >&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="tracker" id="tracker-homepage-delete-modal-tracker-id">
+        <input type="hidden" name="func" value="delete">
+        <p id="tracker-homepage-delete-modal-tracker-name"></p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-tracker | Cancel {{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="far fa-trash-alt tlp-button-icon"></i> {{# dgettext }}tuleap-tracker | Delete tracker{{/ dgettext }}
+        </button>
+    </div>
+</form>
