@@ -17,6 +17,8 @@
             "src": "src/scripts/tuleap/ckeditor",
             "po": "src/scripts/tuleap/ckeditor/po"
         },
+    },
+    "gettext-ts": {
         "list-picker": {
             "src": "src/scripts/list-picker",
             "po": "src/scripts/list-picker/po"
