@@ -28,6 +28,7 @@ use PFUser;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\mail\TemplateWithoutFooter;
 
 class InvitationEmailNotifier
 {
@@ -49,11 +50,7 @@ class InvitationEmailNotifier
     public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message): bool
     {
         $mail = new Codendi_Mail();
-
-        $template = new \Tuleap_Template_Mail();
-        $template->set('remove_footer', true);
-        $mail->setLookAndFeelTemplate($template);
-
+        $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->addAdditionalHeader('Reply-To', $current_user->getEmail());
 

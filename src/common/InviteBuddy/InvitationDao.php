@@ -46,4 +46,9 @@ class InvitationDao extends DataAccessObject
             ]
         );
     }
+
+    public function searchByEmail(string $to_email): array
+    {
+        return $this->getDB()->run("SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ?", $to_email);
+    }
 }
