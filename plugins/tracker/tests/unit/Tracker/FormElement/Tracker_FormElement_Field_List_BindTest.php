@@ -35,10 +35,16 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
      * @var \Mockery\Mock|Tracker_FormElement_Field_List_Bind
      */
     private $bind;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field
+     */
+    private $field;
 
     protected function setUp(): void
     {
-        $this->bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
+        $decorator   = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $this->field = Mockery::mock(Tracker_FormElement_Field::class);
+        $this->bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind::class, [$this->field, [], $decorator])
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
@@ -86,5 +92,58 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
 
         $this->assertTrue($this->bind->isExistingValue(101));
         $this->assertFalse($this->bind->isExistingValue(201));
+    }
+
+    public function testItFilterDefaultValuesReturnEmptyArrayIfNoDefaultValues(): void
+    {
+        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+
+        $this->bind->shouldReceive("filterDefaultValues")->never();
+        $this->field->shouldReceive("getId")->andReturn(42);
+
+        $this->bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
+        $default_value_dao->shouldReceive("save")->withArgs([42, []])->andReturn(true);
+
+        $params = [];
+        $this->bind->process($params, true);
+    }
+
+    public function testItExtractDefaultValues(): void
+    {
+        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $this->field->shouldReceive("getId")->andReturn(42);
+        $this->bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
+
+        $default_value_dao
+            ->shouldReceive("save")
+            ->withArgs([42, ["111", "112"]])
+            ->andReturn(true);
+
+        $params = ["default" => ["111", "112"]];
+        $this->bind->process($params, true);
+    }
+
+    public function testItExtractDefaultValuesFromOpenValue(): void
+    {
+        $field     = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
+        $decorator = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
+
+        $bind              = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
+            ->shouldAllowMockingProtectedMethods()
+            ->makePartial();
+
+        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $field->shouldReceive("getId")->andReturn(42);
+
+        $default_value_dao->shouldReceive("save")->andReturn(true);
+        $default_value_dao
+            ->shouldReceive("save")
+            ->withArgs([42, ["103", "111", "b117"]])
+            ->andReturn(true);
+
+        $bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
+
+        $params = ["default" => ["103,111,b117"]];
+        $bind->process($params, true);
     }
 }

@@ -479,28 +479,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return true;
     }
 
-    private function extractDefaultValues(array $params)
+    private function extractDefaultValues(array $params): array
     {
-        $default = [];
-        if (isset($params['default'])) {
-            if (isset($params['default'][0])) {
-                $bind_default = str_replace('b', '', $params['default'][0]);
-                $bind_default = explode(',', $bind_default);
-                $bind_default = $this->filterDefaultValues($bind_default);
-
-                return $bind_default;
-            }
-
-            $default = $params['default'];
+        if (! isset($params['default'])) {
+            return [];
         }
 
-        return $default;
+        return $this->filterDefaultValues($params['default']);
     }
 
-    /**
-     * @return array
-     */
-    protected function filterDefaultValues(array $bind_default)
+    protected function filterDefaultValues(array $bind_default): array
     {
         return $bind_default;
     }
