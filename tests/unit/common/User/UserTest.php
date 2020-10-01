@@ -112,9 +112,9 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($user->getPreference('unexisting_preference'), 'Unexisting preference, should return false');
         $this->assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123');
         $this->assertEquals('123', $user->getPreference('existing_preference'), 'Existing preference should return 123, should be cached');
-        $this->assertTrue($user->setPreference('existing_preference', '456'), 'Updating preference should return true. %s');
+        $user->setPreference('existing_preference', '456');
         $this->assertEquals('456', $user->getPreference('existing_preference'), 'Existing preference has been updated, should now return 456. No call to dao since cached during update');
-        $this->assertTrue($user->delPreference('existing_preference'), 'Deletion of preference should return true');
+        $user->delPreference('existing_preference');
         $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
 

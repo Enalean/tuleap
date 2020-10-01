@@ -454,9 +454,7 @@ class UserResource extends AuthenticatedResource
             throw new RestException(403, 'You can only set your own preferences');
         }
 
-        if (! $this->deleteUserPreference($id, $key)) {
-            throw new RestException(500, 'Unable to delete the user preference');
-        }
+        $this->deleteUserPreference($id, $key);
     }
 
     /**
@@ -497,9 +495,7 @@ class UserResource extends AuthenticatedResource
             throw new RestException(404, 'User not found');
         }
 
-        if (! $this->setUserPreference($id, $preference->key, $preference->value)) {
-            throw new RestException(500, 'Unable to set the user preference');
-        }
+        $this->setUserPreference($id, $preference->key, $preference->value);
     }
 
     private function getUserPreference($user_id, $key)
@@ -507,14 +503,14 @@ class UserResource extends AuthenticatedResource
         return $this->user_manager->getUserById($user_id)->getPreference($key);
     }
 
-    private function setUserPreference($user_id, $key, $value)
+    private function setUserPreference($user_id, $key, $value): void
     {
-        return $this->user_manager->getUserById($user_id)->setPreference($key, $value);
+        $this->user_manager->getUserById($user_id)->setPreference($key, $value);
     }
 
-    private function deleteUserPreference($user_id, $key)
+    private function deleteUserPreference($user_id, $key): void
     {
-        return $this->user_manager->getUserById($user_id)->delPreference($key);
+        $this->user_manager->getUserById($user_id)->delPreference($key);
     }
 
     private function checkUserCanSeeOtherUser(PFUser $watcher, PFUser $watchee)

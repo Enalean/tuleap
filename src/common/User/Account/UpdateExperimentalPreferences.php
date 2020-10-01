@@ -57,10 +57,9 @@ class UpdateExperimentalPreferences implements DispatchableWithRequest
         $user_wants_lab_features = $request->get('lab_features') === '1';
         if ($user_wants_lab_features === $user->useLabFeatures()) {
             $layout->addFeedback(Feedback::INFO, _('Nothing changed'));
-        } elseif ($user->setLabFeatures($user_wants_lab_features)) {
-            $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
         } else {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to update user preferences'));
+            $user->setLabFeatures($user_wants_lab_features);
+            $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
         }
 
         $layout->redirect(DisplayExperimentalController::URL);

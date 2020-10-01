@@ -79,12 +79,8 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
         if ($request->exist('email_format')) {
             $format_email = $request->get('email_format') === Codendi_Mail_Interface::FORMAT_HTML ? Codendi_Mail_Interface::FORMAT_HTML : Codendi_Mail_Interface::FORMAT_TEXT;
             if ($format_email !== $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT)) {
-                if (! $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, $format_email)) {
-                    $layout->addFeedback(Feedback::ERROR, _('Unable to update email format preference'));
-                } else {
-                    $layout->addFeedback(Feedback::INFO, _('Email format preference successfully updated'));
-                    $email_format_changed = true;
-                }
+                $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, $format_email);
+                $email_format_changed = true;
             }
         }
 

@@ -107,11 +107,7 @@ class UpdateEditionController implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, $wants_text_default_format)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change default text format'));
-
-            return false;
-        }
+        $user->setPreference(PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT, $wants_text_default_format);
 
         return true;
     }
@@ -125,11 +121,7 @@ class UpdateEditionController implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR, $wants_csv_separator)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change CSV separator'));
-
-            return false;
-        }
+        $user->setPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR, $wants_csv_separator);
 
         return true;
     }
@@ -143,11 +135,7 @@ class UpdateEditionController implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(PFUser::PREFERENCE_NAME_CSV_DATEFORMAT, $wants_csv_dateformat)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change CSV date format'));
-
-            return false;
-        }
+        $user->setPreference(PFUser::PREFERENCE_NAME_CSV_DATEFORMAT, $wants_csv_dateformat);
 
         return true;
     }

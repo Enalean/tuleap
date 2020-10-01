@@ -87,8 +87,8 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $this->csrf_token->check(DisplayAppearanceController::URL);
 
         $something_has_been_updated = $this->setNewColor($request, $layout, $user);
-        $something_has_been_updated = $this->setNewDisplayDensity($request, $layout, $user) || $something_has_been_updated;
-        $something_has_been_updated = $this->setNewAccessibilityMode($request, $layout, $user) || $something_has_been_updated;
+        $something_has_been_updated = $this->setNewDisplayDensity($request, $user) || $something_has_been_updated;
+        $something_has_been_updated = $this->setNewAccessibilityMode($request, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewUsernameDisplay($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewRelativeDatesDisplay($request, $layout, $user) || $something_has_been_updated;
 
@@ -110,7 +110,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $layout->redirect(DisplayAppearanceController::URL);
     }
 
-    private function setNewAccessibilityMode(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setNewAccessibilityMode(HTTPRequest $request, PFUser $user): bool
     {
         $has_accessibility   = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $wants_accessibility = (bool) $request->get('accessibility_mode');
@@ -119,12 +119,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(PFUser::ACCESSIBILITY_MODE, $wants_accessibility ? '1' : '0')) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the accessibility mode.'));
-
-            return false;
-        }
-
+        $user->setPreference(PFUser::ACCESSIBILITY_MODE, $wants_accessibility ? '1' : '0');
         return true;
     }
 
@@ -149,11 +144,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS, (string) $new_username_display)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the username display.'));
-
-            return false;
-        }
+        $user->setPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS, (string) $new_username_display);
 
         return true;
     }
@@ -175,16 +166,12 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(\DateHelper::PREFERENCE_NAME, $new_relative_dates_display)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the relative dates display.'));
-
-            return false;
-        }
+        $user->setPreference(\DateHelper::PREFERENCE_NAME, $new_relative_dates_display);
 
         return true;
     }
 
-    private function setNewDisplayDensity(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setNewDisplayDensity(HTTPRequest $request, PFUser $user): bool
     {
         $preference   = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
         $is_condensed = $preference === PFUser::DISPLAY_DENSITY_CONDENSED;
@@ -196,16 +183,12 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         if ($wants_condensed) {
-            $success = $user->setPreference(PFUser::PREFERENCE_DISPLAY_DENSITY, PFUser::DISPLAY_DENSITY_CONDENSED);
+            $user->setPreference(PFUser::PREFERENCE_DISPLAY_DENSITY, PFUser::DISPLAY_DENSITY_CONDENSED);
         } else {
-            $success = $user->delPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
+            $user->delPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
         }
 
-        if (! $success) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the display density.'));
-        }
-
-        return $success;
+        return true;
     }
 
     private function setNewColor(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
@@ -229,11 +212,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        if (! $user->setPreference(ThemeVariant::PREFERENCE_NAME, $new_variant)) {
-            $layout->addFeedback(Feedback::ERROR, _('Unable to change the color.'));
-
-            return false;
-        }
+        $user->setPreference(ThemeVariant::PREFERENCE_NAME, $new_variant);
 
         return true;
     }
