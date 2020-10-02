@@ -1343,6 +1343,9 @@ msgstr "Ouvre le menu déroulant \"+ Nouveau\""
 msgid "Open this window"
 msgstr "Ouvre cette fenêtre"
 
+msgid "Optional message…"
+msgstr "Message optionnel…"
+
 msgid "Orange"
 msgstr "Orange"
 
