@@ -23,6 +23,14 @@ import { initFeedbacks } from "../../invite-buddies/feedback-display";
 import { initNotificationsOnFormSubmit } from "../../invite-buddies/send-notifications";
 
 export function init(): void {
+    const button = document.getElementById("invite-buddies-button");
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("#invite-buddies-button not found or is not a button");
+    }
+    if (button.disabled) {
+        return;
+    }
+
     const modal = openTargetModalIdOnClick(document, "invite-buddies-button");
     if (!modal) {
         return;

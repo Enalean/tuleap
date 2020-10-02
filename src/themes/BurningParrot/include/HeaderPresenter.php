@@ -25,6 +25,7 @@ use Feedback;
 use PFUser;
 use ThemeVariantColor;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
+use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\ProjectContextPresenter;
@@ -170,10 +171,10 @@ class HeaderPresenter
      */
     public $is_svg_logo_customized;
     /**
-     * @var bool
+     * @var InviteBuddiesPresenter
      * @psalm-readonly
      */
-    public $can_buddies_be_invited;
+    public $invite_buddies_presenter;
 
     public function __construct(
         PFUser $user,
@@ -195,7 +196,7 @@ class HeaderPresenter
         ?SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        bool $can_buddies_be_invited
+        InviteBuddiesPresenter $invite_buddies_presenter
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -221,7 +222,6 @@ class HeaderPresenter
         $this->switch_to                   = $switch_to;
         $this->is_legacy_logo_customized   = $is_legacy_logo_customized;
         $this->is_svg_logo_customized      = $is_svg_logo_customized;
-        $this->can_buddies_be_invited      = $can_buddies_be_invited;
 
         $this->buildFeedbacks($feedback_logs);
 
@@ -229,6 +229,7 @@ class HeaderPresenter
         $this->has_feedbacks            = count($this->feedbacks) > 0;
         $this->has_breadcrumbs          = count($this->breadcrumbs) > 0;
         $this->has_only_one_breadcrumb  = count($this->breadcrumbs) === 1;
+        $this->invite_buddies_presenter = $invite_buddies_presenter;
     }
 
     private function buildFeedbacks($feedback_logs)

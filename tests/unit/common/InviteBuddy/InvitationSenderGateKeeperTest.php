@@ -32,6 +32,11 @@ class InvitationSenderGateKeeperTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var InvitationLimitChecker
+     */
+    private $limit_checker;
+
+    /**
      * @var InvitationSenderGateKeeper
      */
     private $gate_keeper;
@@ -47,7 +52,13 @@ class InvitationSenderGateKeeperTest extends TestCase
 
         $this->configuration = Mockery::mock(InviteBuddyConfiguration::class);
 
-        $this->gate_keeper = new InvitationSenderGateKeeper(new \Valid_Email(), $this->configuration);
+        $this->limit_checker = Mockery::mock(InvitationLimitChecker::class);
+
+        $this->gate_keeper = new InvitationSenderGateKeeper(
+            new \Valid_Email(),
+            $this->configuration,
+            $this->limit_checker
+        );
     }
 
     public function testItRaisesAnExceptionIfConfigurationDisablesTheFeature(): void
@@ -77,9 +88,22 @@ class InvitationSenderGateKeeperTest extends TestCase
         $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "whatever", "doe@example.com"]);
     }
 
+    public function testItRaisesAnExceptionIfUserReachedLimit(): void
+    {
+        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
+        $this->limit_checker->shouldReceive('checkForNewInvitations')->once()->andThrow(
+            InvitationSenderGateKeeperException::class
+        );
+
+        $this->expectException(InvitationSenderGateKeeperException::class);
+
+        $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
+    }
+
     public function testItDoesNotRaiseAnExceptionIfEverythingIsOk(): void
     {
         $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
+        $this->limit_checker->shouldReceive('checkForNewInvitations')->once();
 
         $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
     }

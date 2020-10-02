@@ -77,4 +77,13 @@ class InvitationDao extends DataAccessObject
             $user_id,
         );
     }
+
+    public function getInvitationsSentByUserForToday(int $user_id): int
+    {
+        $sql = "SELECT count(*)
+                FROM invitations
+                WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()";
+
+        return (int) $this->getDB()->single($sql, [$user_id]);
+    }
 }
