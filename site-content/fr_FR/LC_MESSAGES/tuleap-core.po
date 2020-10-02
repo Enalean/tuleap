@@ -779,6 +779,9 @@ msgstr "E-mail"
 msgid "Email %s is not valid"
 msgstr "L'email %s n'est valide"
 
+msgid "Email format preference successfully updated"
+msgstr "La préférence de format de courriel a été mise à jour"
+
 msgid "Email was not updated"
 msgstr "L'adresse de courriel n'a pas été mise à jour"
 
