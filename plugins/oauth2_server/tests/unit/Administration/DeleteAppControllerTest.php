@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
@@ -29,15 +31,18 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
-use Tuleap\OAuth2Server\App\ClientSecretUpdater;
+use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class NewClientSecretControllerTest extends TestCase
+final class DeleteAppControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var DeleteAppController
+     */
+    private $controller;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
      */
@@ -47,42 +52,28 @@ class NewClientSecretControllerTest extends TestCase
      */
     private $project_verifier;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ClientSecretUpdater
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppRemover
      */
-    private $client_secret_updater;
+    private $app_remover;
     /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
     private $csrf_token;
-    /**
-     * @var NewClientSecretController
-     */
-    private $controller;
 
     protected function setUp(): void
     {
-        $this->redirector            = M::mock(RedirectWithFeedbackFactory::class);
-        $this->project_verifier      = M::mock(OAuth2AppProjectVerifier::class);
-        $this->client_secret_updater = M::mock(ClientSecretUpdater::class);
-        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller            = new NewClientSecretController(
-            HTTPFactoryBuilder::responseFactory(),
+        $this->redirector       = M::mock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
+        $this->app_remover      = M::mock(OAuth2AppRemover::class);
+        $this->csrf_token       = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller       = new DeleteAppController(
             $this->redirector,
             $this->project_verifier,
-            $this->client_secret_updater,
+            $this->app_remover,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
         );
         $this->csrf_token->shouldReceive('check');
-    }
-
-    public function testGetUrl(): void
-    {
-        $project = new \Project(['group_id' => 102]);
-        $this->assertSame(
-            '/plugins/oauth2_server/project/102/admin/new-client-secret',
-            NewClientSecretController::getUrl($project)
-        );
     }
 
     /**
@@ -91,13 +82,13 @@ class NewClientSecretControllerTest extends TestCase
      */
     public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
-        $request  = $this->buildRequest()->withParsedBody($parsed_body);
+        $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->redirector->shouldReceive('createResponseForUser')
             ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
             ->once()
             ->andReturn($response);
-        $this->client_secret_updater->shouldNotReceive('updateClientSecret');
+        $this->app_remover->shouldNotReceive('deleteAppByID');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -105,37 +96,71 @@ class NewClientSecretControllerTest extends TestCase
     public function dataProviderInvalidBody(): array
     {
         return [
-            'No body'   => [null],
+            'No body' => [null],
             'No app id' => [['not_app_id' => '12']]
         ];
     }
 
-    public function testHandleGeneratesClientSecretAndRedirects(): void
+    public function testHandleDeletesProjectAppAndRedirects(): void
     {
-        $request = $this->buildRequest()->withParsedBody(['app_id' => '45']);
+        $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '12']);
         $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
-        $this->client_secret_updater->shouldReceive('updateClientSecret')
+        $this->app_remover->shouldReceive('deleteAppByID')
             ->once()
-            ->with(45);
+            ->with(12);
 
-        $response = $this->controller->handle($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->redirector->shouldReceive('createResponseForUser')
+            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
+            ->once()
+            ->andReturn($response);
+        $this->app_remover->shouldNotReceive('deleteAppByID');
+
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testRejectsGenerationOfNewSecretForAnAppOfAnotherProject(): void
+    public function testHandleDeletesSiteAppAndRedirects(): void
+    {
+        $request = $this->buildSiteAdminRequest()->withParsedBody(['app_id' => '12']);
+        $this->project_verifier->shouldReceive('isASiteLevelApp')->andReturn(true);
+        $this->app_remover->shouldReceive('deleteAppByID')
+            ->once()
+            ->with(12);
+
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->redirector->shouldReceive('createResponseForUser')
+            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/admin', M::type(NewFeedback::class))
+            ->once()
+            ->andReturn($response);
+        $this->app_remover->shouldNotReceive('deleteAppByID');
+
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
+    public function testRejectsDeletingAppOfAnotherProject(): void
     {
         $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
 
-        $request = $this->buildRequest()->withParsedBody(['app_id' => '45']);
+        $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '12']);
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
     }
 
-    private function buildRequest(): ServerRequestInterface
+    public function testGetProjectAdminUrl(): void
+    {
+        $project = new \Project(['group_id' => 102]);
+        $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getProjectAdminURL($project));
+    }
+
+    private function buildProjectAdminRequest(): ServerRequestInterface
     {
         return (new NullServerRequest())->withAttribute(\Project::class, new \Project(['group_id' => 102]))
             ->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
+    }
+
+    private function buildSiteAdminRequest(): ServerRequestInterface
+    {
+        return (new NullServerRequest())->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
     }
 }

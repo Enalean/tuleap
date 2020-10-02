@@ -191,11 +191,11 @@ final class oauth2_serverPlugin extends Plugin
                 );
                 $r->post(
                     '/project/{project_id:\d+}/admin/new-client-secret',
-                    $this->getRouteHandler('routeNewClientSecret')
+                    $this->getRouteHandler('routeNewClientSecretProjectAdmin')
                 );
                 $r->post(
                     '/project/{project_id:\d+}/admin/edit-app',
-                    $this->getRouteHandler('routeEditApp')
+                    $this->getRouteHandler('routeEditProjectApp')
                 );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
@@ -208,8 +208,16 @@ final class oauth2_serverPlugin extends Plugin
                     $this->getRouteHandler('routePostSiteAdmin')
                 );
                 $r->post(
-                    '/admin/not_yet_active',
-                    $this->getRouteHandler('routeSiteAdminActionNotYetActive')
+                    '/admin/delete-app',
+                    $this->getRouteHandler('routeDeleteSiteAdmin')
+                );
+                $r->post(
+                    '/admin/edit-app',
+                    $this->getRouteHandler('routeEditSiteApp')
+                );
+                $r->post(
+                    '/admin/new-client-secret',
+                    $this->getRouteHandler('routeNewClientSecretSiteAdmin')
                 );
             }
         );
@@ -248,11 +256,6 @@ final class oauth2_serverPlugin extends Plugin
             new IncludeAssets(__DIR__ . '/../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
             new CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION)
         );
-    }
-
-    public function routeSiteAdminActionNotYetActive(): DispatchableWithRequest
-    {
-        return new \Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminNotYetActiveActionController();
     }
 
     public function routePostProjectAdmin(): DispatchableWithRequest
@@ -310,7 +313,7 @@ final class oauth2_serverPlugin extends Plugin
     public function routeDeleteProjectAdmin(): DispatchableWithRequest
     {
         $app_dao = new AppDao();
-        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\DeleteAppController(
+        return new \Tuleap\OAuth2Server\Administration\DeleteAppController(
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
@@ -333,12 +336,34 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeNewClientSecret(): DispatchableWithRequest
+    public function routeDeleteSiteAdmin(): DispatchableWithRequest
+    {
+        $app_dao = new AppDao();
+        return new \Tuleap\OAuth2Server\Administration\DeleteAppController(
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new OAuth2AppProjectVerifier($app_dao),
+            new OAuth2AppRemover(
+                $app_dao,
+                new OAuth2AuthorizationCodeDAO(),
+                new AuthorizationDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance())
+        );
+    }
+
+    public function routeNewClientSecretProjectAdmin(): DispatchableWithRequest
     {
         $storage          =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $app_dao          = new AppDao();
-        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\NewClientSecretController(
+        return new \Tuleap\OAuth2Server\Administration\NewClientSecretController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
@@ -365,11 +390,39 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeEditApp(): DispatchableWithRequest
+    public function routeNewClientSecretSiteAdmin(): DispatchableWithRequest
+    {
+        $storage          =& $_SESSION ?? [];
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $app_dao          = new AppDao();
+        return new \Tuleap\OAuth2Server\Administration\NewClientSecretController(
+            $response_factory,
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new OAuth2AppProjectVerifier($app_dao),
+            new \Tuleap\OAuth2Server\App\ClientSecretUpdater(
+                new SplitTokenVerificationStringHasher(),
+                $app_dao,
+                new LastGeneratedClientSecretStore(
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                    (new KeyFactory())->getEncryptionKey(),
+                    $storage
+                )
+            ),
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance())
+        );
+    }
+
+    public function routeEditProjectApp(): DispatchableWithRequest
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $app_dao          = new AppDao();
-        return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\EditAppController(
+        return new \Tuleap\OAuth2Server\Administration\EditAppController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
@@ -385,6 +438,25 @@ final class oauth2_serverPlugin extends Plugin
                 UserManager::instance(),
                 new ProjectAdministratorChecker()
             )
+        );
+    }
+
+    public function routeEditSiteApp(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $app_dao          = new AppDao();
+        return new \Tuleap\OAuth2Server\Administration\EditAppController(
+            $response_factory,
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new OAuth2AppProjectVerifier($app_dao),
+            $app_dao,
+            new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance())
         );
     }
 

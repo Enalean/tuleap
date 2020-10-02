@@ -34,7 +34,7 @@ class OAuth2AppTest extends TestCase
     public function testFromAppDataThrowsWhenDataIsInvalid(string $app_id, string $app_name): void
     {
         $this->expectException(InvalidAppDataException::class);
-        OAuth2App::fromAppData($app_id, $app_name, '', true, M::mock(\Project::class));
+        OAuth2App::fromProjectAdministrationData($app_id, $app_name, '', true, M::mock(\Project::class));
     }
 
     public function dataProviderInvalidData(): array
@@ -52,19 +52,36 @@ class OAuth2AppTest extends TestCase
     /**
      * @dataProvider dataProviderValidData
      */
-    public function testFromAppDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
+    public function testFromProjectAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
         string $redirect_uri,
         bool $use_pkce
     ): void {
         $app_id      = '75';
         $app_name    = 'Jenkins';
         $project     = M::mock(\Project::class);
-        $updated_app = OAuth2App::fromAppData($app_id, $app_name, $redirect_uri, $use_pkce, $project);
+        $updated_app = OAuth2App::fromProjectAdministrationData($app_id, $app_name, $redirect_uri, $use_pkce, $project);
         $this->assertSame(75, $updated_app->getId());
         $this->assertSame($app_name, $updated_app->getName());
         $this->assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
         $this->assertSame($use_pkce, $updated_app->isUsingPKCE());
         $this->assertSame($project, $updated_app->getProject());
+    }
+
+    /**
+     * @dataProvider dataProviderValidData
+     */
+    public function testFromSiteAdministrationDataReturnsAnUpdatedOAuth2AppToBeSavedInDatabase(
+        string $redirect_uri,
+        bool $use_pkce
+    ): void {
+        $app_id      = '75';
+        $app_name    = 'Jenkins';
+        $updated_app = OAuth2App::fromSiteAdministrationData($app_id, $app_name, $redirect_uri, $use_pkce);
+        $this->assertSame(75, $updated_app->getId());
+        $this->assertSame($app_name, $updated_app->getName());
+        $this->assertSame($redirect_uri, $updated_app->getRedirectEndpoint());
+        $this->assertSame($use_pkce, $updated_app->isUsingPKCE());
+        $this->assertNull($updated_app->getProject());
     }
 
     public function dataProviderValidData(): array

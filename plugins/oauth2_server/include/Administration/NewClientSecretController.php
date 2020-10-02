@@ -20,21 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
-use Tuleap\OAuth2Server\App\OAuth2AppRemover;
+use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
+use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
+use Tuleap\OAuth2Server\App\ClientSecretUpdater;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 
-final class DeleteAppController extends DispatchablePSR15Compatible
+final class NewClientSecretController extends DispatchablePSR15Compatible
 {
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $response_factory;
     /**
      * @var RedirectWithFeedbackFactory
      */
@@ -44,42 +50,48 @@ final class DeleteAppController extends DispatchablePSR15Compatible
      */
     private $project_verifier;
     /**
-     * @var OAuth2AppRemover
+     * @var ClientSecretUpdater
      */
-    private $app_remover;
+    private $client_secret_updater;
     /**
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
 
     public function __construct(
+        ResponseFactoryInterface $response_factory,
         RedirectWithFeedbackFactory $redirector,
         OAuth2AppProjectVerifier $project_verifier,
-        OAuth2AppRemover $app_remover,
+        ClientSecretUpdater $client_secret_updater,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->redirector       = $redirector;
-        $this->project_verifier = $project_verifier;
-        $this->app_remover      = $app_remover;
-        $this->csrf_token       = $csrf_token;
+        $this->response_factory      = $response_factory;
+        $this->project_verifier      = $project_verifier;
+        $this->redirector            = $redirector;
+        $this->client_secret_updater = $client_secret_updater;
+        $this->csrf_token            = $csrf_token;
     }
 
-    public static function getUrl(\Project $project): string
+    public static function getProjectAdminURL(\Project $project): string
     {
-        return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
+        return sprintf('/plugins/oauth2_server/project/%d/admin/new-client-secret', $project->getID());
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);
-        assert($project instanceof \Project);
+        assert($project instanceof \Project || $project === null);
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
 
-        $list_clients_url = ListAppsController::getUrl($project);
+        if ($this->isASiteAppNewSecretGeneration($project)) {
+            $list_clients_url = SiteAdminListAppsController::URL;
+        } else {
+            $list_clients_url = ListAppsController::getUrl($project);
+        }
         $this->csrf_token->check($list_clients_url);
 
         $parsed_body = $request->getParsedBody();
@@ -93,16 +105,25 @@ final class DeleteAppController extends DispatchablePSR15Compatible
 
         $app_id = (int) $parsed_body['app_id'];
 
-        if (! $this->project_verifier->isAppPartOfTheExpectedProject($project, $app_id)) {
+        if ($this->isASiteAppNewSecretGeneration($project)) {
+            $is_app_attached_to_the_expected_administration = $this->project_verifier->isASiteLevelApp($app_id);
+        } else {
+            $is_app_attached_to_the_expected_administration = $this->project_verifier->isAppPartOfTheExpectedProject($project, $app_id);
+        }
+        if (! $is_app_attached_to_the_expected_administration) {
             throw new ForbiddenException();
         }
 
-        $this->app_remover->deleteAppByID($app_id);
+        $this->client_secret_updater->updateClientSecret($app_id);
 
-        return $this->redirector->createResponseForUser(
-            $user,
-            $list_clients_url,
-            new NewFeedback(\Feedback::INFO, dgettext('tuleap-oauth2_server', 'The App has been successfully deleted.'))
-        );
+        return $this->response_factory->createResponse(302)->withHeader('Location', $list_clients_url);
+    }
+
+    /**
+     * @psalm-assert-if-false \Project $project
+     */
+    private function isASiteAppNewSecretGeneration(?\Project $project): bool
+    {
+        return $project === null;
     }
 }
