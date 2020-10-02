@@ -25,7 +25,7 @@ import { initNotificationsOnFormSubmit } from "../../invite-buddies/send-notific
 export function init(): void {
     const button = document.getElementById("invite-buddies-button");
     if (!(button instanceof HTMLButtonElement)) {
-        throw new Error("#invite-buddies-button not found or is not a button");
+        return;
     }
     if (button.disabled) {
         return;
