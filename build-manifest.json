@@ -16,7 +16,7 @@
         "rich-text-editor": {
             "src": "src/scripts/tuleap/ckeditor",
             "po": "src/scripts/tuleap/ckeditor/po"
-        },
+        }
     },
     "gettext-ts": {
         "list-picker": {

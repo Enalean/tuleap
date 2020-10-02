@@ -58,6 +58,7 @@ function createParser(gettext_extractor) {
         JsExtractors.callExpression(
             [
                 "[this].$gettext",
+                "[this].gettext_provider.gettext",
                 "$gettext",
                 "gettext_provider.$gettext",
                 "gettext_provider.gettext",
