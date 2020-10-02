@@ -132,6 +132,7 @@ if (! $plugin) {
     $json          = json_decode(file_get_contents($core_manifest), true);
 
     gettextJS("core", $basedir, $json);
+    gettextTS("core", $basedir, $json);
     gettextVue("core", $basedir, $json);
 }
 
