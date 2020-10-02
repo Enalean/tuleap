@@ -29,10 +29,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\InvalidAppDataException;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\ForbiddenException;
 
 final class EditAppController extends DispatchablePSR15Compatible
 {
@@ -45,6 +47,10 @@ final class EditAppController extends DispatchablePSR15Compatible
      */
     private $redirector;
     /**
+     * @var OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
+    /**
      * @var AppDao
      */
     private $app_dao;
@@ -56,6 +62,7 @@ final class EditAppController extends DispatchablePSR15Compatible
     public function __construct(
         ResponseFactoryInterface $response_factory,
         RedirectWithFeedbackFactory $redirector,
+        OAuth2AppProjectVerifier $project_verifier,
         AppDao $app_dao,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
@@ -64,6 +71,7 @@ final class EditAppController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory = $response_factory;
         $this->redirector       = $redirector;
+        $this->project_verifier = $project_verifier;
         $this->app_dao          = $app_dao;
         $this->csrf_token       = $csrf_token;
     }
@@ -107,6 +115,11 @@ final class EditAppController extends DispatchablePSR15Compatible
         } catch (InvalidAppDataException $e) {
             return $this->redirectWithError($user, $list_clients_url);
         }
+
+        if (! $this->project_verifier->isAppPartOfTheExpectedProject($project, $app_to_be_saved->getId())) {
+            throw new ForbiddenException();
+        }
+
         $this->app_dao->updateApp($app_to_be_saved);
 
         return $this->response_factory->createResponse(302)->withHeader('Location', $list_clients_url);

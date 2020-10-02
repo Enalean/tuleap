@@ -31,7 +31,9 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DeleteAppControllerTest extends TestCase
@@ -47,6 +49,10 @@ final class DeleteAppControllerTest extends TestCase
      */
     private $redirector;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppRemover
      */
     private $app_remover;
@@ -57,11 +63,13 @@ final class DeleteAppControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->redirector  = M::mock(RedirectWithFeedbackFactory::class);
-        $this->app_remover = M::mock(OAuth2AppRemover::class);
-        $this->csrf_token  = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller  = new DeleteAppController(
+        $this->redirector       = M::mock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
+        $this->app_remover      = M::mock(OAuth2AppRemover::class);
+        $this->csrf_token       = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller       = new DeleteAppController(
             $this->redirector,
+            $this->project_verifier,
             $this->app_remover,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
@@ -97,6 +105,7 @@ final class DeleteAppControllerTest extends TestCase
     public function testHandleDeletesAppAndRedirects(): void
     {
         $request = $this->buildRequest()->withParsedBody(['app_id' => '12']);
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
         $this->app_remover->shouldReceive('deleteAppByID')
             ->once()
             ->with(12);
@@ -109,6 +118,16 @@ final class DeleteAppControllerTest extends TestCase
         $this->app_remover->shouldNotReceive('deleteAppByID');
 
         $this->assertSame($response, $this->controller->handle($request));
+    }
+
+    public function testRejectsDeletingAppOfAnotherProject(): void
+    {
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+
+        $request = $this->buildRequest()->withParsedBody(['app_id' => '12']);
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
     }
 
     public function testGetUrl(): void

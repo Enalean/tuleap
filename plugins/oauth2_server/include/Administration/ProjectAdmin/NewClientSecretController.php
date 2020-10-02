@@ -29,8 +29,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\ClientSecretUpdater;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\ForbiddenException;
 
 final class NewClientSecretController extends DispatchablePSR15Compatible
 {
@@ -43,6 +45,10 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
      */
     private $redirector;
     /**
+     * @var OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
+    /**
      * @var ClientSecretUpdater
      */
     private $client_secret_updater;
@@ -54,6 +60,7 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
     public function __construct(
         ResponseFactoryInterface $response_factory,
         RedirectWithFeedbackFactory $redirector,
+        OAuth2AppProjectVerifier $project_verifier,
         ClientSecretUpdater $client_secret_updater,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
@@ -61,6 +68,7 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->response_factory      = $response_factory;
+        $this->project_verifier      = $project_verifier;
         $this->redirector            = $redirector;
         $this->client_secret_updater = $client_secret_updater;
         $this->csrf_token            = $csrf_token;
@@ -89,7 +97,14 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
                 new NewFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', "The App's ID is required."))
             );
         }
-        $this->client_secret_updater->updateClientSecret((int) $parsed_body['app_id']);
+
+        $app_id = (int) $parsed_body['app_id'];
+
+        if (! $this->project_verifier->isAppPartOfTheExpectedProject($project, $app_id)) {
+            throw new ForbiddenException();
+        }
+
+        $this->client_secret_updater->updateClientSecret($app_id);
 
         return $this->response_factory->createResponse(302)->withHeader('Location', $list_clients_url);
     }

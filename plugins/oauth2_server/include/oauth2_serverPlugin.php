@@ -46,6 +46,7 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
 use Tuleap\OAuth2Server\App\AppDao;
@@ -308,13 +309,15 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeDeleteProjectAdmin(): DispatchableWithRequest
     {
+        $app_dao = new AppDao();
         return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\DeleteAppController(
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
             ),
+            new OAuth2AppProjectVerifier($app_dao),
             new OAuth2AppRemover(
-                new AppDao(),
+                $app_dao,
                 new OAuth2AuthorizationCodeDAO(),
                 new AuthorizationDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
@@ -332,17 +335,19 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeNewClientSecret(): DispatchableWithRequest
     {
-        $storage =& $_SESSION ?? [];
+        $storage          =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
+        $app_dao          = new AppDao();
         return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\NewClientSecretController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
             ),
+            new OAuth2AppProjectVerifier($app_dao),
             new \Tuleap\OAuth2Server\App\ClientSecretUpdater(
                 new SplitTokenVerificationStringHasher(),
-                new AppDao(),
+                $app_dao,
                 new LastGeneratedClientSecretStore(
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
                     (new KeyFactory())->getEncryptionKey(),
@@ -363,13 +368,15 @@ final class oauth2_serverPlugin extends Plugin
     public function routeEditApp(): DispatchableWithRequest
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
+        $app_dao          = new AppDao();
         return new \Tuleap\OAuth2Server\Administration\ProjectAdmin\EditAppController(
             $response_factory,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 $response_factory,
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
             ),
-            new AppDao(),
+            new OAuth2AppProjectVerifier($app_dao),
+            $app_dao,
             new \CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),

@@ -29,7 +29,9 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\ClientSecretUpdater;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 class NewClientSecretControllerTest extends TestCase
@@ -40,6 +42,10 @@ class NewClientSecretControllerTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
      */
     private $redirector;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ClientSecretUpdater
      */
@@ -56,11 +62,13 @@ class NewClientSecretControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->redirector            = M::mock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier      = M::mock(OAuth2AppProjectVerifier::class);
         $this->client_secret_updater = M::mock(ClientSecretUpdater::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
         $this->controller            = new NewClientSecretController(
             HTTPFactoryBuilder::responseFactory(),
             $this->redirector,
+            $this->project_verifier,
             $this->client_secret_updater,
             $this->csrf_token,
             M::mock(EmitterInterface::class)
@@ -105,6 +113,7 @@ class NewClientSecretControllerTest extends TestCase
     public function testHandleGeneratesClientSecretAndRedirects(): void
     {
         $request = $this->buildRequest()->withParsedBody(['app_id' => '45']);
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
         $this->client_secret_updater->shouldReceive('updateClientSecret')
             ->once()
             ->with(45);
@@ -112,6 +121,16 @@ class NewClientSecretControllerTest extends TestCase
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
+    }
+
+    public function testRejectsGenerationOfNewSecretForAnAppOfAnotherProject(): void
+    {
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+
+        $request = $this->buildRequest()->withParsedBody(['app_id' => '45']);
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
     }
 
     private function buildRequest(): ServerRequestInterface

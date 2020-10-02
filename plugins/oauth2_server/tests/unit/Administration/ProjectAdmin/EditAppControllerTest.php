@@ -31,8 +31,10 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class EditAppControllerTest extends TestCase
@@ -48,18 +50,24 @@ final class EditAppControllerTest extends TestCase
      */
     private $redirector;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|AppDao
      */
     private $app_dao;
 
     protected function setUp(): void
     {
-        $this->redirector = M::mock(RedirectWithFeedbackFactory::class);
-        $this->app_dao    = M::mock(AppDao::class);
-        $csrf_token       = M::mock(\CSRFSynchronizerToken::class);
+        $this->redirector       = M::mock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
+        $this->app_dao          = M::mock(AppDao::class);
+        $csrf_token             = M::mock(\CSRFSynchronizerToken::class);
         $this->controller = new EditAppController(
             HTTPFactoryBuilder::responseFactory(),
             $this->redirector,
+            $this->project_verifier,
             $this->app_dao,
             $csrf_token,
             M::mock(EmitterInterface::class)
@@ -106,6 +114,7 @@ final class EditAppControllerTest extends TestCase
     public function testHandleUpdatesAppAndRedirects(array $parsed_body): void
     {
         $request = $this->buildRequest()->withParsedBody($parsed_body);
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
         $this->app_dao->shouldReceive('updateApp')
             ->once()
             ->with(M::type(OAuth2App::class));
@@ -125,6 +134,18 @@ final class EditAppControllerTest extends TestCase
                 ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']
             ],
         ];
+    }
+
+    public function testRejectsUpdatingAppOfAnotherProject(): void
+    {
+        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+
+        $request = $this->buildRequest()->withParsedBody(
+            ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']
+        );
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
     }
 
     private function buildRequest(): ServerRequestInterface
