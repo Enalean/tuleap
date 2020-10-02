@@ -126,8 +126,13 @@ function createBurndownChart(
             return;
         }
 
+        let y_scale_effort = y_scale(last_point.remaining_effort);
+        if (!y_scale_effort) {
+            y_scale_effort = 0;
+        }
+
         addBadgeCaption(
-            y_scale(last_point.remaining_effort),
+            y_scale_effort,
             x_scale_last_date,
             last_point.remaining_effort,
             svg_burndown,

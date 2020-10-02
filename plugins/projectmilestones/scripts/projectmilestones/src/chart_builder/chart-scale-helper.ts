@@ -38,10 +38,20 @@ export function getCoordinatesScaleLines(
         return null;
     }
 
+    let y_scale_zero = y_scale(0);
+    if (!y_scale_zero) {
+        y_scale_zero = 0;
+    }
+
+    let y_scale_max = y_scale(y_axis_maximum);
+    if (!y_scale_max) {
+        y_scale_max = 0;
+    }
+
     return {
         x_coordinate_minimum: x_scale_minimum,
-        y_coordinate_minimum: y_scale(0),
+        y_coordinate_minimum: y_scale_zero,
         x_coordinate_maximum: x_scale_maximum,
-        y_coordinate_maximum: y_scale(y_axis_maximum),
+        y_coordinate_maximum: y_scale_max,
     };
 }
