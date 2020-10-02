@@ -118,6 +118,12 @@ final class UserMappingManagerTest extends TestCase
         $this->user_mapping_manager->create(102, 1, 'identifier', 10);
     }
 
+    public function testCannotCreateAMappingWithASpecialUser(): void
+    {
+        $this->expectException(CannotCreateAMappingForASpecialUserException::class);
+        $this->user_mapping_manager->create(10, 1, 'identifier', 10);
+    }
+
     public function testItDoesntHaveMappingWhenDBIsMad(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
