@@ -1005,6 +1005,20 @@ msgstr "Erreur interne : le mot de passe n'a pas été mis à jour"
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
+msgid ""
+"Internet Explorer in compatibility mode is not supported. Please upgrade to "
+"a modern, fully supported browser such as Firefox, Chrome or Edge."
+msgstr ""
+"Internet Explorer en mode de compatibilité n'est pas supporté. Veuillez "
+"utiliser un navigateur moderne tel que Firefox, Chrome ou Edge."
+
+msgid ""
+"Internet Explorer will be unsupported soon. Please upgrade to a modern, "
+"fully supported browser such as Firefox, Chrome or Edge."
+msgstr ""
+"Internet Explorer ne sere bientôt plus supporté. Veuillez utiliser un "
+"navigateur moderne tel que Firefox, Chrome ou Edge."
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -1330,6 +1344,9 @@ msgstr "Rien n'a changé"
 
 msgid "Notifications"
 msgstr "Notifications"
+
+msgid "Ok, got it. Remind me later."
+msgstr "Ok, j'ai compris. Me le rappeler plus tard."
 
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
@@ -2563,9 +2580,9 @@ msgstr "Impossible de trouver des widgets."
 msgid "We need at least one email to send an invitation"
 msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
 
-msgid "We will bother you later with the deprecation of IE < 11."
+msgid "We will bother you later with the end of support of Internet Explorer."
 msgstr ""
-"Nous vous importunerons plus tard à propos de la dépréciation de IE < 11."
+"Nous vous importunerons plus tard à propos de l'arrêt du support de Internet Explorer."
 
 msgid "Webhooks"
 msgstr "Webhooks"
