@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
+namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
@@ -31,7 +31,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Request\ForbiddenException;
@@ -75,10 +74,10 @@ final class EditAppControllerTest extends TestCase
         $csrf_token->shouldReceive('check');
     }
 
-    public function testGetUrl(): void
+    public function testGetProjectAdminUrl(): void
     {
         $project = new \Project(['group_id' => 102]);
-        $this->assertSame('/plugins/oauth2_server/project/102/admin/edit-app', EditAppController::getUrl($project));
+        $this->assertSame('/plugins/oauth2_server/project/102/admin/edit-app', EditAppController::getProjectAdminURL($project));
     }
 
     /**
@@ -87,7 +86,7 @@ final class EditAppControllerTest extends TestCase
      */
     public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
-        $request  = $this->buildRequest()->withParsedBody($parsed_body);
+        $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->redirector->shouldReceive('createResponseForUser')
             ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
@@ -111,9 +110,9 @@ final class EditAppControllerTest extends TestCase
     /**
      * @dataProvider dataProviderValidBody
      */
-    public function testHandleUpdatesAppAndRedirects(array $parsed_body): void
+    public function testHandleUpdatesProjectAppAndRedirects(array $parsed_body): void
     {
-        $request = $this->buildRequest()->withParsedBody($parsed_body);
+        $request = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
         $this->app_dao->shouldReceive('updateApp')
             ->once()
@@ -122,6 +121,22 @@ final class EditAppControllerTest extends TestCase
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
+    }
+
+    /**
+     * @dataProvider dataProviderValidBody
+     */
+    public function testHandleUpdatesSiteAppAndRedirects(array $parsed_body): void
+    {
+        $request = $this->buildSiteAdminRequest()->withParsedBody($parsed_body);
+        $this->project_verifier->shouldReceive('isASiteLevelApp')->andReturn(true);
+        $this->app_dao->shouldReceive('updateApp')
+            ->once()
+            ->with(M::type(OAuth2App::class));
+
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/plugins/oauth2_server/admin', $response->getHeaderLine('Location'));
     }
 
     public function dataProviderValidBody(): array
@@ -140,7 +155,7 @@ final class EditAppControllerTest extends TestCase
     {
         $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
 
-        $request = $this->buildRequest()->withParsedBody(
+        $request = $this->buildProjectAdminRequest()->withParsedBody(
             ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']
         );
 
@@ -148,9 +163,14 @@ final class EditAppControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    private function buildRequest(): ServerRequestInterface
+    private function buildProjectAdminRequest(): ServerRequestInterface
     {
         return (new NullServerRequest())->withAttribute(\Project::class, new \Project(['group_id' => 102]))
             ->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
+    }
+
+    private function buildSiteAdminRequest(): ServerRequestInterface
+    {
+        return (new NullServerRequest())->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
     }
 }

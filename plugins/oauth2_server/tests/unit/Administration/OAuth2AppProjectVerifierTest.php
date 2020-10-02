@@ -51,6 +51,14 @@ final class OAuth2AppProjectVerifierTest extends TestCase
         $this->app_dao->shouldReceive('searchProjectIDByClientID')->andReturn((int) $expected_project->getID());
 
         self::assertTrue($this->project_verifier->isAppPartOfTheExpectedProject($expected_project, 1));
+        self::assertFalse($this->project_verifier->isASiteLevelApp(1));
+    }
+
+    public function testAppIsASiteLevelApp(): void
+    {
+        $this->app_dao->shouldReceive('searchProjectIDByClientID')->andReturn(null);
+
+        self::assertTrue($this->project_verifier->isASiteLevelApp(1));
     }
 
     /**

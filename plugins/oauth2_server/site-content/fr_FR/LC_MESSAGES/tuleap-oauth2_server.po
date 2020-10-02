@@ -173,9 +173,6 @@ msgstr "L'ID de l'App est obligatoire."
 msgid "The provided app data is not valid."
 msgstr "Les informations fournies pour l'app ne sont pas valides."
 
-msgid "This action is not yet active."
-msgstr "Cette action n'est pas active pour le moment."
-
 msgid ""
 "This is a list of OAuth2 apps you have authorized access to Tuleap on your "
 "behalf."

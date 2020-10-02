@@ -40,4 +40,9 @@ class OAuth2AppProjectVerifier
     {
         return $this->app_dao->searchProjectIDByClientID($app_id) === (int) $project->getID();
     }
+
+    public function isASiteLevelApp(int $app_id): bool
+    {
+        return $this->app_dao->searchProjectIDByClientID($app_id) === null;
+    }
 }
