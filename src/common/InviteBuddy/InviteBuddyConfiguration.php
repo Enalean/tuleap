@@ -28,13 +28,6 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 class InviteBuddyConfiguration
 {
     /**
-     * Can user invite their buddies (1) or not (0)
-     *
-     * @tlp-config-key
-     */
-    public const CONFIG_BUDDIES_CAN_INVITED = 'enable_invite_buddies';
-
-    /**
      * How many invitations a user can send per day? (default 20)
      *
      * @tlp-config-key
@@ -61,8 +54,7 @@ class InviteBuddyConfiguration
 
     public function isFeatureEnabled(): bool
     {
-        return (bool) \ForgeConfig::get(self::CONFIG_BUDDIES_CAN_INVITED)
-            && $this->isRegistrationPossible()
+        return $this->isRegistrationPossible()
             && $this->getNbMaxInvitationsByDay() > 0;
     }
 

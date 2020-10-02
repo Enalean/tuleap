@@ -33,9 +33,8 @@ class InviteBuddyConfigurationTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButUserIsAnonymous(): void
+    public function testBuddiesCannotBeInvitedIfUserIsAnonymous(): void
     {
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
@@ -45,9 +44,8 @@ class InviteBuddyConfigurationTest extends TestCase
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
-    public function testBuddiesCanBeInvitedIfTheFeatureIsEnabledAndUserIsLoggedIn(): void
+    public function testBuddiesCanBeInvitedIfTheUserIsLoggedIn(): void
     {
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
@@ -59,7 +57,6 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testBuddiesCannotBeInvitedIfThePlatformPreventsUsersToRegister(): void
     {
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $guard_event = new RegistrationGuardEvent();
@@ -71,9 +68,8 @@ class InviteBuddyConfigurationTest extends TestCase
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
-    public function testBuddiesCannotBeInvitedIfTheFeatureIsEnabledButNbMaxIsLesserOrEqualThanOne(): void
+    public function testBuddiesCannotBeInvitedIfNbMaxIsLesserOrEqualThanOne(): void
     {
-        \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_BUDDIES_CAN_INVITED, 1);
         $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
