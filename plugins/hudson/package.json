@@ -7,7 +7,7 @@
   "dependencies": {
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",
-    "d3-transition": "^1.1.1"
+    "d3-transition": "^2.0.0"
   },
   "devDependencies": {},
   "config": {
