@@ -552,7 +552,7 @@ class AgileDashboardRouter
         array $header_options = []
     ) {
         $content = $this->executeAction($controller, $action_name, $args);
-        $header_options = array_merge($header_options, $controller->getHeaderOptions());
+        $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions());
 
         $this->displayHeader($controller, $request, $this->getHeaderTitle($request, $action_name), $header_options);
         echo $content;

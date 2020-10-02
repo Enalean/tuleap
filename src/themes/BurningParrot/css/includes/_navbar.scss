@@ -41,6 +41,20 @@ header.pinned > .header-container {
         box-shadow: none;
     }
 }
+
+.has-sidebar {
+    header.pinned {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: calc(100% - #{$sidebar-expanded-width});
+        height: $navbar-height;
+    }
+
+    &.sidebar-collapsed header.pinned {
+        width: calc(100% - #{$sidebar-collapsed-width});
+    }
+}
 /* stylelint-enable */
 
 .nav-link {
