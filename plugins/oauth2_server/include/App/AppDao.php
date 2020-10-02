@@ -46,6 +46,16 @@ class AppDao extends DataAccessObject
         return $row['verifier'] ?? null;
     }
 
+    public function searchProjectIDByClientID(int $client_id): ?int
+    {
+        $row = $this->getDB()->row(
+            'SELECT project_id FROM plugin_oauth2_server_app WHERE id = ?',
+            $client_id
+        );
+
+        return $row['project_id'] ?? null;
+    }
+
     /**
      * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */

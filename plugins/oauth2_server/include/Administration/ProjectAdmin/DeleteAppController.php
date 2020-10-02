@@ -28,8 +28,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\ForbiddenException;
 
 final class DeleteAppController extends DispatchablePSR15Compatible
 {
@@ -37,6 +39,10 @@ final class DeleteAppController extends DispatchablePSR15Compatible
      * @var RedirectWithFeedbackFactory
      */
     private $redirector;
+    /**
+     * @var OAuth2AppProjectVerifier
+     */
+    private $project_verifier;
     /**
      * @var OAuth2AppRemover
      */
@@ -48,15 +54,17 @@ final class DeleteAppController extends DispatchablePSR15Compatible
 
     public function __construct(
         RedirectWithFeedbackFactory $redirector,
+        OAuth2AppProjectVerifier $project_verifier,
         OAuth2AppRemover $app_remover,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->redirector  = $redirector;
-        $this->app_remover = $app_remover;
-        $this->csrf_token  = $csrf_token;
+        $this->redirector       = $redirector;
+        $this->project_verifier = $project_verifier;
+        $this->app_remover      = $app_remover;
+        $this->csrf_token       = $csrf_token;
     }
 
     public static function getUrl(\Project $project): string
@@ -83,7 +91,13 @@ final class DeleteAppController extends DispatchablePSR15Compatible
             );
         }
 
-        $this->app_remover->deleteAppByID((int) $parsed_body['app_id']);
+        $app_id = (int) $parsed_body['app_id'];
+
+        if (! $this->project_verifier->isAppPartOfTheExpectedProject($project, $app_id)) {
+            throw new ForbiddenException();
+        }
+
+        $this->app_remover->deleteAppByID($app_id);
 
         return $this->redirector->createResponseForUser(
             $user,
