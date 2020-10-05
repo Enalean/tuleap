@@ -20,12 +20,9 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Exception;
-use Tracker;
-
-class TimeframeBrokenConfigurationException extends Exception
+final class TimeframeBrokenConfigurationException extends \LogicException
 {
-    public function __construct(Tracker $tracker)
+    public function __construct(\Tracker $tracker)
     {
         parent::__construct(
             sprintf(

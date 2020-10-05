@@ -252,14 +252,16 @@ final class ArtifactCreatedHandlerTest extends TestCase
 
     private function buildCopiedValues(): CopiedValues
     {
-        $title_field_changeset = new \Tracker_Artifact_ChangesetValue_String(
-            122,
-            M::mock(\Tracker_Artifact_Changeset::class),
-            M::mock(\Tracker_FormElement_Field::class),
-            true,
-            'Aggregator Release',
-            'text'
-        );
-        return new CopiedValues($title_field_changeset, 123456789, 42);
+        $project = \Project::buildForTest();
+        $tracker = $this->buildTestTracker(89, $project);
+        $title_field = M::mock(\Tracker_FormElement_Field::class);
+        $title_field->shouldReceive('getTracker')->andReturn($tracker);
+        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(10000, M::mock(\Tracker_Artifact_Changeset::class), $title_field, true, 'Aggregator Release', 'text');
+
+        $description_field = M::mock(\Tracker_FormElement_Field::class);
+        $description_field->shouldReceive('getTracker')->andReturn($tracker);
+        $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, 'Description', 'text');
+
+        return new CopiedValues($title_changeset_value, $description_changeset_value, 123456789, 112);
     }
 }

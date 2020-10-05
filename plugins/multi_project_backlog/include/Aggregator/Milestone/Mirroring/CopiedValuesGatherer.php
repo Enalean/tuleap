@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\NoTitleFieldException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 
 class CopiedValuesGatherer
 {
     /**
-     * @var \Tracker_Semantic_TitleFactory
+     * @var SynchronizedFieldsGatherer
      */
-    private $semantic_title_factory;
+    private $fields_gatherer;
 
-    public function __construct(\Tracker_Semantic_TitleFactory $semantic_title_factory)
+    public function __construct(SynchronizedFieldsGatherer $fields_gatherer)
     {
-        $this->semantic_title_factory = $semantic_title_factory;
+        $this->fields_gatherer = $fields_gatherer;
     }
 
     /**
@@ -45,27 +46,55 @@ class CopiedValuesGatherer
         \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset,
         \Tracker $aggregator_top_milestone_tracker
     ): CopiedValues {
-        $semantic_title       = $this->semantic_title_factory->getByTracker($aggregator_top_milestone_tracker);
-        $semantic_title_field = $semantic_title->getField();
-        if (! $semantic_title_field) {
-            throw new NoTitleFieldException((int) $aggregator_top_milestone_tracker->getId());
-        }
-
-        $title_value = $aggregator_milestone_last_changeset->getValue($semantic_title_field);
-        if (! $title_value) {
-            throw new NoTitleChangesetValueException(
-                (int) $aggregator_milestone_last_changeset->getId(),
-                (int) $semantic_title_field->getId()
-            );
-        }
-        if (! ($title_value instanceof \Tracker_Artifact_ChangesetValue_String)) {
-            throw new UnsupportedTitleFieldException((int) $semantic_title_field->getId());
-        }
+        $fields            = $this->fields_gatherer->gather($aggregator_top_milestone_tracker);
+        $title_value       = $this->readTitle($fields, $aggregator_milestone_last_changeset);
+        $description_value = $this->readDesription($fields, $aggregator_milestone_last_changeset);
 
         return new CopiedValues(
             $title_value,
+            $description_value,
             (int) $aggregator_milestone_last_changeset->getSubmittedOn(),
             (int) $aggregator_milestone_last_changeset->getArtifact()->getId()
         );
+    }
+
+    /**
+     * @throws MilestoneMirroringException
+     */
+    private function readTitle(
+        SynchronizedFields $fields,
+        \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
+    ): \Tracker_Artifact_ChangesetValue_String {
+        $title_field = $fields->getTitleField();
+        $title_value = $aggregator_milestone_last_changeset->getValue($title_field);
+        if (! $title_value) {
+            throw new NoTitleChangesetValueException(
+                (int) $aggregator_milestone_last_changeset->getId(),
+                (int) $title_field->getId()
+            );
+        }
+        if (! ($title_value instanceof \Tracker_Artifact_ChangesetValue_String)) {
+            throw new UnsupportedTitleFieldException((int) $title_field->getId());
+        }
+        return $title_value;
+    }
+
+    /**
+     * @throws MilestoneMirroringException
+     */
+    private function readDesription(
+        SynchronizedFields $fields,
+        \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
+    ): \Tracker_Artifact_ChangesetValue_Text {
+        $description_field = $fields->getDescriptionField();
+        $description_value = $aggregator_milestone_last_changeset->getValue($description_field);
+        if (! $description_value) {
+            throw new NoDescriptionChangesetValueException(
+                (int) $aggregator_milestone_last_changeset->getId(),
+                (int) $description_field->getId()
+            );
+        }
+        assert($description_value instanceof \Tracker_Artifact_ChangesetValue_Text);
+        return $description_value;
     }
 }

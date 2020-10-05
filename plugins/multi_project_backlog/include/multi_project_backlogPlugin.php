@@ -283,11 +283,10 @@ final class multi_project_backlogPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $aggregator_dao         = new AggregatorDao();
-        $title_semantic_factory = new Tracker_Semantic_TitleFactory();
-        $planning_factory       = \PlanningFactory::build();
+        $aggregator_dao          = new AggregatorDao();
+        $planning_factory        = \PlanningFactory::build();
         $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $artifact_factory       = Tracker_ArtifactFactory::instance();
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
         $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
@@ -325,12 +324,20 @@ final class multi_project_backlogPlugin extends Plugin
             $transaction_executor
         );
 
+        $synchronized_fields_gatherer = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer(
+            $form_element_factory,
+            new Tracker_Semantic_TitleFactory(),
+            new Tracker_Semantic_DescriptionFactory(),
+            new Tracker_Semantic_StatusFactory(),
+            new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder(
+                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao(),
+                $form_element_factory
+            )
+        );
+
         $mirror_creator = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator(
             $transaction_executor,
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\TargetFieldsGatherer(
-                $form_element_factory,
-                $title_semantic_factory
-            ),
+            $synchronized_fields_gatherer,
             $artifact_creator
         );
 
@@ -339,7 +346,7 @@ final class multi_project_backlogPlugin extends Plugin
             UserManager::instance(),
             $planning_factory,
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGatherer(
-                $title_semantic_factory
+                $synchronized_fields_gatherer
             ),
             new ContributorProjectsCollectionBuilder(
                 $aggregator_dao,
@@ -368,11 +375,13 @@ final class multi_project_backlogPlugin extends Plugin
                 \PlanningFactory::build()
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldCollectionBuilder(
-                $form_element_factory,
-                new Tracker_Semantic_TitleFactory(),
-                new Tracker_Semantic_DescriptionFactory(),
-                $semantic_status_factory,
-                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
+                new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer(
+                    $form_element_factory,
+                    new Tracker_Semantic_TitleFactory(),
+                    new Tracker_Semantic_DescriptionFactory(),
+                    $semantic_status_factory,
+                    new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
+                )
             ),
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\SemanticChecker(
                 new \Tracker_Semantic_TitleDao(),
