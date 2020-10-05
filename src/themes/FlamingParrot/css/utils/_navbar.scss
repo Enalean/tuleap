@@ -183,19 +183,6 @@ header {
     }
 }
 
-.nav-link {
-    margin: 0 0 0 $tlp-large-spacing;
-    transition: opacity ease-in-out 75ms;
-    color: $ui-dimmed;
-    font-size: .875rem;
-    font-weight: 500;
-
-    &:hover {
-        color: $sidebar-background;
-        text-decoration: none;
-    }
-}
-
 .new-nav,
 .user-nav {
     position: relative;
@@ -204,6 +191,18 @@ header {
         transform: translateY(10px);
         opacity: 1;
         pointer-events: auto;
+    }
+
+    > .nav-link {
+        margin: 0 0 0 $tlp-large-spacing;
+        transition: opacity ease-in-out 75ms;
+        color: $ui-dimmed;
+        font-size: .875rem;
+
+        &:hover {
+            color: $sidebar-background;
+            text-decoration: none;
+        }
     }
 
     > .dropdown-menu {

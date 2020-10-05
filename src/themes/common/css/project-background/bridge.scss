@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.administration-title {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+// Photo by David Emrich
+// https://unsplash.com/@davidemrich?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+.project-with-background {
+    --project-background-image: url('../../images/project-background/bridge.webp');
+    --project-background-prominent-color: #757f16;
 }

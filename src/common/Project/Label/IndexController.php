@@ -29,6 +29,7 @@ use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Color\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 
 class IndexController
 {
@@ -118,7 +119,7 @@ class IndexController
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 
-        $navigation_displayer = new HeaderNavigationDisplayer();
+        $navigation_displayer = new HeaderNavigationDisplayer(new ProjectBackgroundDao());
         $navigation_displayer->displayBurningParrotNavigation($title, $project, 'labels');
     }
 

@@ -26,6 +26,7 @@
 
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 
 function project_admin_header($params, $current_pane_shortname)
 {
@@ -35,7 +36,7 @@ function project_admin_header($params, $current_pane_shortname)
     $params['group']  = $group_id;
     $title            = $params['title'];
 
-    $navigation_displayer = new HeaderNavigationDisplayer();
+    $navigation_displayer = new HeaderNavigationDisplayer(new ProjectBackgroundDao());
     $project              = ProjectManager::instance()->getProject($group_id);
     $navigation_displayer->displayFlamingParrotNavigation($title, $project, $current_pane_shortname);
 }
@@ -75,11 +76,11 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
         $filter     .= $user_helper->getUserFilter($by);
     }
     if (! empty($startDate)) {
-        list($timestamp,) = util_date_to_unixtime($startDate);
+        [$timestamp,] = util_date_to_unixtime($startDate);
         $filter .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
     }
     if (! empty($endDate)) {
-        list($timestamp,) = util_date_to_unixtime($endDate);
+        [$timestamp,] = util_date_to_unixtime($endDate);
         // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
         $filter .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
@@ -202,7 +203,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         // likely a legacy message (pre-localization version)
         $arr_args = '';
         if (strpos($field, " %% ") !== false) {
-            list($msg_key, $args) = explode(" %% ", $field);
+            [$msg_key, $args] = explode(" %% ", $field);
             if ($args) {
                 $arr_args = explode('||', $args);
             }

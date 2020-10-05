@@ -41,29 +41,32 @@ main {
     }
 }
 
+.main-project-tabs > .tlp-tabs {
+    margin: 0;
+}
 
 #feedback {
-    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 $tlp-medium-spacing;
 
     &:empty {
-        margin: 0;
+        padding: 0;
     }
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
-    margin: ($top-floating-buttons-space + $tlp-medium-spacing) $tlp-medium-spacing 0;
+    padding: ($top-floating-buttons-space + $tlp-medium-spacing) $tlp-medium-spacing 0;
 
     &:empty {
-        margin: 0;
+        padding: 0;
     }
 }
 
 main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
-    margin: ($top-floating-buttons-space - $breadcrumb-height + $tlp-medium-spacing) $tlp-medium-spacing 0;
+    padding: ($top-floating-buttons-space - $breadcrumb-height + $tlp-medium-spacing) $tlp-medium-spacing 0;
 }
 
 .full-width + #main-container > main[role=main]:not(.tlp-framed) > #feedback:not(:empty) {
-    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 %empty-container {

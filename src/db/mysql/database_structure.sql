@@ -1706,6 +1706,12 @@ CREATE TABLE invitations(
     INDEX idx_created(created_user_id, status, to_email(20))
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS project_background;
+CREATE TABLE project_background(
+    project_id INT(11) NOT NULL PRIMARY KEY,
+    background VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+
 #
 # EOF
 #

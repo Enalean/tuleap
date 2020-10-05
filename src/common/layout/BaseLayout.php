@@ -112,7 +112,8 @@ abstract class BaseLayout extends Response
         $this->include_asset  = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         $this->uri_sanitizer  = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $this->url_verification = new \URLVerification();
-        $this->css_assets     = new CssAssetCollection([]);
+
+        $this->css_assets = new CssAssetCollection([]);
     }
 
     abstract public function header(array $params);

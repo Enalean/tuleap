@@ -24,6 +24,7 @@ namespace Tuleap\Project\Admin\Routing;
 
 use Tuleap\Project\Admin\Navigation\FooterDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Request\ProjectRetriever;
 
 class AdministrationLayoutHelper implements LayoutHelper
@@ -54,7 +55,7 @@ class AdministrationLayoutHelper implements LayoutHelper
         return new self(
             ProjectRetriever::buildSelf(),
             new ProjectAdministratorChecker(),
-            new HeaderNavigationDisplayer(),
+            new HeaderNavigationDisplayer(new ProjectBackgroundDao()),
             new FooterDisplayer()
         );
     }

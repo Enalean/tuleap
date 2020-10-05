@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.administration-title {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+declare(strict_types=1);
+
+namespace Tuleap\Project\ProjectBackground;
+
+use Tuleap\DB\DataAccessObject;
+
+class ProjectBackgroundDao extends DataAccessObject
+{
+    public function getBackground(int $project_id): ?string
+    {
+        return $this->getDB()->cell(
+            "SELECT background FROM project_background WHERE project_id = ?",
+            $project_id
+        ) ?: null;
+    }
 }

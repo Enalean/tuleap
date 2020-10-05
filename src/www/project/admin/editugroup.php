@@ -32,6 +32,7 @@ use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\PermissionsDelegationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
@@ -74,7 +75,7 @@ $index_controller = new IndexController(
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
     new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core'),
-    new HeaderNavigationDisplayer()
+    new HeaderNavigationDisplayer(new ProjectBackgroundDao())
 );
 
 $details_controller = new DetailsController($request);
