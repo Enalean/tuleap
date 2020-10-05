@@ -994,6 +994,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $report = null;
 
+        $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
+
         //Does the user wants to change its report?
         if ($request->get('select_report')) {
             //Is the report id valid
@@ -1452,6 +1454,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         array $params = []
     ) {
         $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
+        $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
 
         $items = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
@@ -1554,10 +1557,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/trackers',
-            '/assets/trackers'
-        );
+        $assets = $this->getIncludeAssets();
 
         $GLOBALS['HTML']->addStylesheet($assets->getFileURL('colorpicker.css'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('TrackerAdminFields.js'));
@@ -3593,6 +3593,21 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $artifact_links_usage_dao
             ),
             $artifact_links_usage_dao
+        );
+    }
+
+    private function getIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+    }
+
+    private function IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot(): void
+    {
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $this->getIncludeAssets()->getFileURL('tracker-email-copy-paste-fp.js')
         );
     }
 }

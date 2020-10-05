@@ -86,7 +86,8 @@ const webpack_config_for_vue = {
         "tracker-semantic-timeframe-option-selector":
             "./scripts/semantic-timeframe-option-selector.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
-        "tracker-email-copy-paste": "./scripts/artifact/tracker-email-copy-paste-bp.js",
+        "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.js",
+        "tracker-email-copy-paste-fp": "./scripts/tracker-email-copy-paste-fp.js",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
         "text-follow-up": "./scripts/artifact/text-follow-up.ts",
@@ -135,7 +136,6 @@ const config_for_legacy_scripts = {
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
             "tracker.js": [
                 "./scripts/legacy/TrackerReports.js",
-                "./scripts/legacy/tracker-email-copy-paste-fp.js",
                 "./scripts/legacy/TrackerReportsSaveAsModal.js",
                 "./scripts/legacy/TrackerBinds.js",
                 "./scripts/legacy/ReorderColumns.js",
