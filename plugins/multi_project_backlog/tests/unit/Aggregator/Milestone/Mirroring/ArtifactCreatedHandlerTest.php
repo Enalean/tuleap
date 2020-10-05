@@ -254,14 +254,34 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project = \Project::buildForTest();
         $tracker = $this->buildTestTracker(89, $project);
-        $title_field = M::mock(\Tracker_FormElement_Field::class);
-        $title_field->shouldReceive('getTracker')->andReturn($tracker);
-        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(10000, M::mock(\Tracker_Artifact_Changeset::class), $title_field, true, 'Aggregator Release', 'text');
+        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(
+            10000,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field::class),
+            true,
+            'Aggregator Release',
+            'text'
+        );
 
         $description_field = M::mock(\Tracker_FormElement_Field::class);
         $description_field->shouldReceive('getTracker')->andReturn($tracker);
         $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, 'Description', 'text');
 
-        return new CopiedValues($title_changeset_value, $description_changeset_value, 123456789, 112);
+        $planned_value          = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
+        $status_changeset_value = new \Tracker_Artifact_ChangesetValue_List(
+            10002,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field::class),
+            true,
+            [$planned_value]
+        );
+
+        return new CopiedValues(
+            $title_changeset_value,
+            $description_changeset_value,
+            $status_changeset_value,
+            123456789,
+            112
+        );
     }
 }

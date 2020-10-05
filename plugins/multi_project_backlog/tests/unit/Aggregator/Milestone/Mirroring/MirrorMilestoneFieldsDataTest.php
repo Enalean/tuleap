@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\MappedStatusValue;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
 use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
@@ -34,46 +35,90 @@ final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
-        $copied_values = $this->buildCopiedValues();
-        $target_fields = $this->buildSynchronizedFields();
+        $copied_values       = $this->buildCopiedValues(
+            'Aggregator Release',
+            '<p>Description</p>',
+            'html',
+            [2001],
+            112
+        );
+        $mapped_status_value = new MappedStatusValue([3001]);
+        $target_fields       = $this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006);
 
-        $fields_data = MirrorMilestoneFieldsData::fromCopiedValuesAndSynchronizedFields($copied_values, $target_fields);
+        $fields_data = MirrorMilestoneFieldsData::fromCopiedValuesAndSynchronizedFields(
+            $copied_values,
+            $mapped_status_value,
+            $target_fields
+        );
 
         self::assertEquals(
             [
                 1001 => ['new_values' => '112', 'natures' => ['112' => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]],
                 1002 => 'Aggregator Release',
                 1003 => ['content' => '<p>Description</p>', 'format' => 'html'],
+                1004 => [3001]
             ],
             $fields_data->toFieldsDataArray()
         );
     }
 
-    private function buildCopiedValues(): CopiedValues
-    {
+    /**
+     * @param int[]  $status_value
+     */
+    private function buildCopiedValues(
+        string $title_value,
+        string $description_value,
+        string $description_format,
+        array $status_value,
+        int $aggregator_artifact_id
+    ): CopiedValues {
         $project = \Project::buildForTest();
         $tracker = $this->buildTestTracker(89, $project);
         $title_field = M::mock(\Tracker_FormElement_Field::class);
         $title_field->shouldReceive('getTracker')->andReturn($tracker);
-        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(10000, M::mock(\Tracker_Artifact_Changeset::class), $title_field, true, 'Aggregator Release', 'text');
+        $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(10000, M::mock(\Tracker_Artifact_Changeset::class), $title_field, true, $title_value, 'text');
 
         $description_field = M::mock(\Tracker_FormElement_Field::class);
         $description_field->shouldReceive('getTracker')->andReturn($tracker);
-        $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, '<p>Description</p>', 'html');
+        $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, $description_value, $description_format);
 
-        return new CopiedValues($title_changeset_value, $description_changeset_value, 123456789, 112);
+        $list_values = [];
+        foreach ($status_value as $bind_value_id) {
+            $list_values[] = new \Tracker_FormElement_Field_List_Bind_StaticValue($bind_value_id, 'Irrelevant', 'Irrelevant', 0, 0);
+        }
+        $status_changeset_value = new \Tracker_Artifact_ChangesetValue_List(
+            10002,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field::class),
+            true,
+            $list_values
+        );
+
+        return new CopiedValues(
+            $title_changeset_value,
+            $description_changeset_value,
+            $status_changeset_value,
+            123456789,
+            $aggregator_artifact_id
+        );
     }
 
-    private function buildSynchronizedFields(): SynchronizedFields
-    {
+    private function buildSynchronizedFields(
+        int $artifact_link_field_id,
+        int $title_field_id,
+        int $description_field_id,
+        int $status_field_id,
+        int $start_date_field_id,
+        int $end_date_field_id
+    ): SynchronizedFields {
         return new SynchronizedFields(
-            new \Tracker_FormElement_Field_ArtifactLink(1001, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
-            new \Tracker_FormElement_Field_String(1002, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
-            new \Tracker_FormElement_Field_Text(1003, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
-            new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
+            new \Tracker_FormElement_Field_ArtifactLink($artifact_link_field_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
+            new \Tracker_FormElement_Field_String($title_field_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
+            new \Tracker_FormElement_Field_Text($description_field_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
+            new \Tracker_FormElement_Field_Selectbox($status_field_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
             TimeframeFields::fromStartAndEndDates(
-                $this->buildTestDateField(1005),
-                $this->buildTestDateField(1006)
+                $this->buildTestDateField($start_date_field_id),
+                $this->buildTestDateField($end_date_field_id)
             )
         );
     }

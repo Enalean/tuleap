@@ -283,6 +283,7 @@ final class multi_project_backlogPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
+        $user_manager            = UserManager::instance();
         $aggregator_dao          = new AggregatorDao();
         $planning_factory        = \PlanningFactory::build();
         $form_element_factory    = \Tracker_FormElementFactory::instance();
@@ -338,12 +339,15 @@ final class multi_project_backlogPlugin extends Plugin
         $mirror_creator = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator(
             $transaction_executor,
             $synchronized_fields_gatherer,
+            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\StatusValueMapper(
+                new \Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher(new XMLImportHelper($user_manager))
+            ),
             $artifact_creator
         );
 
-        $handler = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\ArtifactCreatedHandler(
+        $handler      = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\ArtifactCreatedHandler(
             $aggregator_dao,
-            UserManager::instance(),
+            $user_manager,
             $planning_factory,
             new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGatherer(
                 $synchronized_fields_gatherer

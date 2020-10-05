@@ -24,6 +24,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\StatusValueMapper;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
@@ -40,6 +41,10 @@ class MirrorMilestonesCreator
      */
     private $fields_gatherer;
     /**
+     * @var Status\StatusValueMapper
+     */
+    private $status_mapper;
+    /**
      * @var \Tracker_ArtifactCreator
      */
     private $artifact_creator;
@@ -47,10 +52,12 @@ class MirrorMilestonesCreator
     public function __construct(
         DBTransactionExecutor $transaction_executor,
         SynchronizedFieldsGatherer $fields_gatherer,
+        StatusValueMapper $status_mapper,
         \Tracker_ArtifactCreator $artifact_creator
     ) {
         $this->transaction_executor = $transaction_executor;
         $this->fields_gatherer      = $fields_gatherer;
+        $this->status_mapper        = $status_mapper;
         $this->artifact_creator     = $artifact_creator;
     }
 
@@ -67,8 +74,10 @@ class MirrorMilestonesCreator
             function () use ($copied_values, $contributor_milestones, $current_user) {
                 foreach ($contributor_milestones->getMilestoneTrackers() as $milestone_tracker) {
                     $synchronized_fields = $this->fields_gatherer->gather($milestone_tracker);
+                    $mapped_status       = $this->status_mapper->mapStatusValueByDuckTyping($copied_values, $synchronized_fields);
                     $fields_data         = MirrorMilestoneFieldsData::fromCopiedValuesAndSynchronizedFields(
                         $copied_values,
+                        $mapped_status,
                         $synchronized_fields
                     );
                     $result              = $this->artifact_creator->create(

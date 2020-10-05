@@ -25,6 +25,7 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
@@ -87,6 +88,7 @@ final class CopiedValuesGathererTest extends TestCase
 
         self::assertSame($title_field_value, $values->getTitleValue());
         self::assertSame($description_field_value, $values->getDescriptionValue());
+        self::assertSame($status_field_value, $values->getStatusValue());
         self::assertSame(123456789, $values->getSubmittedOn());
         self::assertEquals(104, $values->getArtifactId());
     }
@@ -138,6 +140,29 @@ final class CopiedValuesGathererTest extends TestCase
         $changeset->setNoFieldValue($synchronized_fields->getDescriptionField());
 
         $this->expectException(NoDescriptionChangesetValueException::class);
+        $this->gatherer->gather($changeset, $tracker);
+    }
+
+    public function testItThrowsWhenChangesetHasNoValueForStatusField(): void
+    {
+        $artifact  = M::mock(\Tracker_Artifact::class);
+        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
+        $tracker   = $this->buildTestTracker(89);
+
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(10000, $changeset, $title_field, true, 'My awesome title', 'text');
+        $changeset->setFieldValue($title_field, $title_field_value);
+
+        $description_field       = $synchronized_fields->getDescriptionField();
+        $description_field_value = new \Tracker_Artifact_ChangesetValue_Text(10001, $changeset, $description_field, true, 'My awesome description', 'text');
+        $changeset->setFieldValue($description_field, $description_field_value);
+
+        $changeset->setNoFieldValue($synchronized_fields->getStatusField());
+
+        $this->expectException(NoStatusChangesetValueException::class);
         $this->gatherer->gather($changeset, $tracker);
     }
 

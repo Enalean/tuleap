@@ -54,14 +54,20 @@ class FieldValueMatcher
         if ($source_value === null || is_array($source_value)) {
             return null;
         }
-        $source_value_label = $source_value->getLabel();
+        $target_value = $this->getMatchingBindValueByDuckTyping($source_value, $target_field);
+        return ($target_value !== null) ? $target_value->getId() : null;
+    }
 
+    public function getMatchingBindValueByDuckTyping(
+        \Tracker_FormElement_Field_List_BindValue $source_value,
+        \Tracker_FormElement_Field_List $target_field
+    ): ?\Tracker_FormElement_Field_List_BindValue {
+        $source_value_label = strtolower($source_value->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {
-            if (strtolower($source_value_label) === strtolower($target_value->getLabel())) {
-                return $target_value->getId();
+            if ($source_value_label === strtolower($target_value->getLabel())) {
+                return $target_value;
             }
         }
-
         return null;
     }
 
