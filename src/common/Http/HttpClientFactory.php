@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Http;
 
+use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
-use Http\Adapter\Guzzle6\Client;
 
 class HttpClientFactory
 {
