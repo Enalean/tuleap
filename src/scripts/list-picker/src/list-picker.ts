@@ -26,11 +26,14 @@ import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list
 import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
 import { SingleSelectionManager } from "./selection/SingleSelectionManager";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
+import { hideSourceSelectBox } from "./helpers/hide-selectbox-helper";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
     options?: ListPickerOptions
 ): Promise<ListPicker> {
+    hideSourceSelectBox(source_select_box);
+
     let language = document.body.dataset.userLocale;
     if (language === undefined) {
         language = "en_US";
