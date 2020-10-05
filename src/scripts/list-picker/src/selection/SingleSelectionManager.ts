@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { sanitize } from "dompurify";
-import { DropdownToggler } from "./DropdownToggler";
-import { ListPickerItem, ListPickerSelectionStateSingle } from "../type";
+import { DropdownToggler } from "../helpers/DropdownToggler";
+import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
+import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 
-export class SelectionManager {
+export class SingleSelectionManager implements SelectionManager {
     private selection_state: ListPickerSelectionStateSingle | null;
 
     constructor(
@@ -34,8 +35,8 @@ export class SelectionManager {
         this.selection_state = null;
     }
 
-    public processSingleSelection(item: Element): void {
-        const list_item = this.getListPickerItem(item.id);
+    public processSelection(item: Element): void {
+        const list_item = findListPickerItemInItemMap(this.item_map, item.id);
         if (list_item.is_selected) {
             // We won't unselect it
             return;
@@ -54,17 +55,7 @@ export class SelectionManager {
         throw new Error("Nothing has been selected");
     }
 
-    private getListPickerItem(item_id: string): ListPickerItem {
-        const list_item = this.item_map.get(item_id);
-
-        if (!list_item) {
-            throw new Error(`Item with id ${item_id} not found in item map`);
-        }
-
-        return list_item;
-    }
-
-    public initSelection(placeholder_element: Element): void {
+    public initSelection(): void {
         const selected_option = this.source_select_box.querySelector("option[selected]");
 
         if (!(selected_option instanceof HTMLElement) || !selected_option.dataset.itemId) {
@@ -72,9 +63,14 @@ export class SelectionManager {
         }
 
         this.replacePlaceholderWithCurrentSelection(
-            this.getListPickerItem(selected_option.dataset.itemId),
-            placeholder_element
+            findListPickerItemInItemMap(this.item_map, selected_option.dataset.itemId),
+            this.placeholder_element
         );
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public handleBackspaceKey(event: KeyboardEvent): void {
+        // Do nothing, we are in single selection mode
     }
 
     private createCurrentSelectionElement(item: ListPickerItem): Element {

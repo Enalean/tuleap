@@ -22,13 +22,22 @@ export class DropdownToggler {
         private readonly list_picker_element: Element,
         private readonly dropdown_element: Element,
         private readonly dropdown_list_element: Element,
-        private readonly search_field_element: HTMLInputElement | null
+        private readonly search_field_element: HTMLInputElement | null,
+        private readonly selection_element: Element
     ) {}
 
     public closeListPicker(): void {
+        if (!this.dropdown_element.classList.contains("list-picker-dropdown-shown")) {
+            return;
+        }
+
         this.dropdown_element.classList.remove("list-picker-dropdown-shown");
         this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
-        this.dropdown_list_element.setAttribute("aria-expanded", "false");
+        this.setAriaExpandedAttribute(this.dropdown_list_element, false);
+
+        if (this.selection_element.hasAttribute("aria-expanded")) {
+            this.setAriaExpandedAttribute(this.selection_element, false);
+        }
 
         if (this.search_field_element && this.search_field_element.value.length > 0) {
             this.search_field_element.value = "";
@@ -37,12 +46,24 @@ export class DropdownToggler {
     }
 
     public openListPicker(): void {
+        if (this.dropdown_element.classList.contains("list-picker-dropdown-shown")) {
+            return;
+        }
+
         this.dropdown_element.classList.add("list-picker-dropdown-shown");
         this.list_picker_element.classList.add("list-picker-with-open-dropdown");
-        this.dropdown_list_element.setAttribute("aria-expanded", "true");
+        this.setAriaExpandedAttribute(this.dropdown_list_element, true);
+
+        if (this.selection_element.hasAttribute("aria-expanded")) {
+            this.setAriaExpandedAttribute(this.selection_element, true);
+        }
 
         if (this.search_field_element) {
             this.search_field_element.focus();
         }
+    }
+
+    private setAriaExpandedAttribute(element: Element, is_expanded: boolean): void {
+        element.setAttribute("aria-expanded", is_expanded.toString());
     }
 }

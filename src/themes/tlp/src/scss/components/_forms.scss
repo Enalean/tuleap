@@ -91,9 +91,16 @@ $tlp-form-element-select-small-background-size: 6px;
         .select2-container--tlp-select2 .select2-selection--multiple,
         .select2-container--tlp-select2-small .select2-selection--multiple,
         .select2-container--tlp-select2-large .select2-selection--multiple,
-        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
-        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:hover::before {
+        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:hover::before,
+        .list-picker-selection {
             border-color: $tlp-ui-danger;
+            color: $tlp-ui-danger;
+        }
+
+        .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
+        .list-picker-badge {
+            border-color: $tlp-ui-danger;
+            background-color: transparentize($tlp-ui-danger, .9);
             color: $tlp-ui-danger;
         }
         /* stylelint-enable */
@@ -314,30 +321,52 @@ $tlp-form-element-select-small-background-size: 6px;
     &.list-picker-disabled {
         border-color: $tlp-form-element-border-color;
 
-        .list-picker-single {
+        .list-picker-badge,
+        .list-picker-selection {
+            cursor: not-allowed;
+        }
+
+        .list-picker-multiple-search-section-disabled > .list-picker-search-field {
+            background: $tlp-ui-white;
             cursor: not-allowed;
         }
     }
 
-    &.list-picker-with-open-dropdown .list-picker-single {
+    &.list-picker-with-open-dropdown .list-picker-selection {
         border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
         border-color: $tlp-theme-color;
     }
 
-    .list-picker-single {
+    .list-picker-badge {
+        @extend %tlp-badge;
+        @extend .tlp-badge-primary, .tlp-badge-outline; //stylelint-disable-line scss/at-extend-no-missing-placeholder
+
+        flex: 0 0 auto;
+        margin: 6px 5px 0 0;
+        cursor: pointer;
+    }
+
+    .list-picker-selection {
         @extend %tlp-form-element;
 
         display: flex;
         align-items: center;
         width: 100%;
-        height: $tlp-form-element-height;
-        padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-        background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
-        background-position: right $tlp-form-element-padding-horizontal center;
         line-height: normal;
         cursor: default;
-
         user-select: none;
+
+        &.list-picker-single {
+            height: $tlp-form-element-height;
+            padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
+            background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
+            background-position: right $tlp-form-element-padding-horizontal center;
+        }
+
+        &.list-picker-multiple {
+            min-height: $tlp-form-element-height;
+            padding: 0 $tlp-form-element-padding-horizontal 5px 6px;
+        }
     }
 
     .list-picker-placeholder {
@@ -374,7 +403,7 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 }
 
-.list-picker-dropdown-search-section {
+.list-picker-single-dropdown-search-section {
     padding: $tlp-form-element-padding-horizontal;
 
     .list-picker-search-field {
@@ -412,7 +441,6 @@ $tlp-form-element-select-small-background-size: 6px;
         }
     }
 }
-
 
 %tlp-select2 {
     z-index: 2003;
@@ -482,7 +510,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
             .select2-selection__choice { //stylelint-disable-line selector-class-pattern
                 @extend %tlp-badge;
-                @extend .tlp-badge-primary, .tlp-badge-outline; //stylelint-disable scss/at-extend-no-missing-placeholder
+                @extend .tlp-badge-primary, .tlp-badge-outline; //stylelint-disable-line scss/at-extend-no-missing-placeholder
 
                 flex: 0 0 auto;
                 margin: 6px 5px 0 0;

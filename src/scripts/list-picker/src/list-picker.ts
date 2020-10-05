@@ -19,12 +19,13 @@
 
 import { ListPickerOptions } from "./type";
 import { DropdownContentRenderer } from "./helpers/DropdownContentRenderer";
-import { SelectionManager } from "./helpers/SelectionManager";
 import { EventManager } from "./helpers/EventManager";
 import { DropdownToggler } from "./helpers/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
 import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list-helper";
 import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
+import { SingleSelectionManager } from "./selection/SingleSelectionManager";
+import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -58,16 +59,31 @@ export async function createListPicker(
         list_picker_element,
         dropdown_element,
         dropdown_list_element,
-        search_field_element
+        search_field_element,
+        selection_element
     );
-    const selection_manager = new SelectionManager(
-        source_select_box,
-        dropdown_element,
-        selection_element,
-        placeholder_element,
-        dropdown_toggler,
-        item_map
-    );
+
+    let selection_manager;
+    if (source_select_box.multiple) {
+        selection_manager = new MultipleSelectionManager(
+            source_select_box,
+            selection_element,
+            search_field_element,
+            options?.placeholder ?? "",
+            dropdown_toggler,
+            item_map,
+            gettext_provider
+        );
+    } else {
+        selection_manager = new SingleSelectionManager(
+            source_select_box,
+            dropdown_element,
+            selection_element,
+            placeholder_element,
+            dropdown_toggler,
+            item_map
+        );
+    }
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         source_select_box,
@@ -90,5 +106,5 @@ export async function createListPicker(
     );
 
     event_manager.attachEvents();
-    selection_manager.initSelection(placeholder_element);
+    selection_manager.initSelection();
 }

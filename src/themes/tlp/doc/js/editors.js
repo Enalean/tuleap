@@ -179,6 +179,24 @@ import { createListPicker } from "../../../../scripts/list-picker/src/list-picke
                 });
             }
 
+            if (example.id === "example-multi-list-picker-") {
+                createListPicker(document.querySelector("#list-picker-msb"), {
+                    placeholder: "Choose some values in the list",
+                });
+
+                createListPicker(document.querySelector("#list-picker-msb-grouped"), {
+                    placeholder: "Choose some values in the list",
+                });
+
+                createListPicker(document.querySelector("#list-picker-msb-disabled"), {
+                    placeholder: "Choose some values in the list",
+                });
+
+                createListPicker(document.querySelector("#list-picker-msb-error"), {
+                    placeholder: "Choose some values in the list",
+                });
+            }
+
             const example_links = example.querySelectorAll('a[href="#"]');
             [].forEach.call(example_links, (link) => {
                 link.addEventListener(

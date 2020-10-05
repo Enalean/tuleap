@@ -26,24 +26,32 @@ export class BaseComponentRenderer {
 
     public renderBaseComponent(): ListPickerComponent {
         this.hideSourceSelectBox();
+
         const wrapper_element = document.createElement("span");
         wrapper_element.classList.add("list-picker-component-wrapper");
 
         const list_picker_element = this.createListPickerElement();
-        const selection_element = this.createSelectionElement();
-        const placeholder_element = this.createPlaceholderElement();
         const dropdown_element = this.createDropdownElement();
         const dropdown_list_element = this.createDropdownListElement();
+        const selection_element = this.createSelectionElement();
+        const placeholder_element = this.createPlaceholderElement();
+        const search_field_element = this.createSearchFieldElement();
 
-        let search_field_element = null;
-        if (this.options?.is_filterable) {
-            const search_section_element = this.createSearchSectionElement();
-            search_field_element = this.createSearchFieldElement();
-            search_section_element.appendChild(search_field_element);
-            dropdown_element.appendChild(search_section_element);
+        if (this.source_select_box.multiple) {
+            search_field_element.setAttribute("placeholder", this.options?.placeholder ?? "");
+            const search_section = this.createSearchSectionForMultipleListPicker();
+            search_section.appendChild(search_field_element);
+            selection_element.appendChild(search_section);
+        } else {
+            selection_element.appendChild(placeholder_element);
+
+            if (this.options?.is_filterable) {
+                const search_section_element = this.createSearchSectionElement();
+                search_section_element.appendChild(search_field_element);
+                dropdown_element.appendChild(search_section_element);
+            }
         }
 
-        selection_element.appendChild(placeholder_element);
         list_picker_element.appendChild(selection_element);
         dropdown_element.appendChild(dropdown_list_element);
         wrapper_element.appendChild(list_picker_element);
@@ -60,6 +68,16 @@ export class BaseComponentRenderer {
             dropdown_list_element,
             search_field_element,
         };
+    }
+
+    private createSearchSectionForMultipleListPicker(): Element {
+        const search_section = document.createElement("span");
+
+        if (this.source_select_box.disabled) {
+            search_section.classList.add("list-picker-multiple-search-section-disabled");
+        }
+        search_section.classList.add("list-picker-multiple-search-section");
+        return search_section;
     }
 
     private hideSourceSelectBox(): void {
@@ -92,9 +110,25 @@ export class BaseComponentRenderer {
 
     private createSelectionElement(): Element {
         const selection_element = document.createElement("span");
-        selection_element.classList.add("list-picker-selection", "list-picker-single");
-        selection_element.setAttribute("role", "textbox");
-        selection_element.setAttribute("aria-readonly", "true");
+        selection_element.classList.add("list-picker-selection");
+
+        if (this.source_select_box.multiple) {
+            selection_element.classList.add("list-picker-multiple");
+            selection_element.setAttribute("aria-haspopup", "true");
+            selection_element.setAttribute("aria-expanded", "false");
+            selection_element.setAttribute("role", "combobox");
+
+            if (this.source_select_box.disabled) {
+                selection_element.setAttribute("aria-disabled", "true");
+            } else {
+                selection_element.setAttribute("tabindex", "-1");
+                selection_element.setAttribute("aria-disabled", "false");
+            }
+        } else {
+            selection_element.classList.add("list-picker-single");
+            selection_element.setAttribute("role", "textbox");
+            selection_element.setAttribute("aria-readonly", "true");
+        }
         return selection_element;
     }
 
@@ -110,13 +144,18 @@ export class BaseComponentRenderer {
 
     private createSearchSectionElement(): Element {
         const search_section = document.createElement("span");
-        search_section.classList.add("list-picker-dropdown-search-section");
+        search_section.classList.add("list-picker-single-dropdown-search-section");
 
         return search_section;
     }
 
     private createSearchFieldElement(): HTMLInputElement {
         const search_field_element = document.createElement("input");
+
+        if (this.source_select_box.disabled) {
+            search_field_element.setAttribute("disabled", "disabled");
+        }
+
         search_field_element.classList.add("list-picker-search-field");
         search_field_element.setAttribute("type", "search");
         search_field_element.setAttribute("tabindex", "0");

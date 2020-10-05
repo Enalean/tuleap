@@ -46,10 +46,21 @@ export interface ListPickerComponent {
     selection_element: Element;
     placeholder_element: Element;
     dropdown_list_element: Element;
-    search_field_element: HTMLInputElement | null;
+    search_field_element: HTMLInputElement;
 }
 
 export interface ListPickerSelectionStateSingle {
     selected_item: ListPickerItem;
     selected_value_element: Element;
+}
+
+export interface ListPickerSelectionStateMultiple {
+    selected_items: Map<string, ListPickerItem>;
+    selected_value_elements: Map<string, Element>;
+}
+
+export interface SelectionManager {
+    readonly processSelection: (element: Element) => void;
+    readonly initSelection: () => void;
+    readonly handleBackspaceKey: (event: KeyboardEvent) => void;
 }

@@ -65,9 +65,10 @@ describe("base-component-renderer", () => {
     it("When the source <select> is disabled, then the list-picker should be disabled", () => {
         select.setAttribute("disabled", "disabled");
 
-        const { list_picker_element } = renderer.renderBaseComponent();
+        const { list_picker_element, search_field_element } = renderer.renderBaseComponent();
 
         expect(list_picker_element.classList.contains("list-picker-disabled")).toBe(true);
+        expect(search_field_element.hasAttribute("disabled")).toBe(true);
     });
 
     describe("placeholder element", () => {
@@ -79,6 +80,60 @@ describe("base-component-renderer", () => {
         it("Should display an empty string otherwise", () => {
             const { placeholder_element } = new BaseComponentRenderer(select).renderBaseComponent();
             expect(placeholder_element.textContent).toEqual("");
+        });
+    });
+
+    describe("multiple <select>", () => {
+        beforeEach(() => {
+            select.setAttribute("multiple", "multiple");
+        });
+
+        it("should append the search field to the selection_element", () => {
+            const { selection_element, search_field_element } = renderer.renderBaseComponent();
+
+            expect(selection_element.contains(search_field_element)).toBe(true);
+            expect(search_field_element.getAttribute("placeholder")).toEqual(
+                "Please select a value"
+            );
+
+            if (!search_field_element.parentElement) {
+                throw new Error("Search input has no parent");
+            }
+
+            expect(search_field_element.parentElement.classList).toContain(
+                "list-picker-multiple-search-section"
+            );
+        });
+
+        it("should add a 'disabled' class on the search field parent when the source <select> is disabled", () => {
+            select.setAttribute("disabled", "disabled");
+            const { search_field_element } = renderer.renderBaseComponent();
+
+            if (!search_field_element.parentElement) {
+                throw new Error("Search input has no parent");
+            }
+
+            expect(search_field_element.parentElement.classList).toContain(
+                "list-picker-multiple-search-section-disabled"
+            );
+        });
+
+        it("should create a selection element tailored to contain multiple values", () => {
+            const { selection_element } = renderer.renderBaseComponent();
+
+            expect(selection_element.getAttribute("aria-haspopup")).toEqual("true");
+            expect(selection_element.getAttribute("aria-expanded")).toEqual("false");
+            expect(selection_element.getAttribute("role")).toEqual("combobox");
+            expect(selection_element.getAttribute("tabindex")).toEqual("-1");
+            expect(selection_element.getAttribute("aria-disabled")).toEqual("false");
+        });
+
+        it("should disable the selection element when the source <select> is disabled", () => {
+            select.setAttribute("disabled", "disabled");
+            const { selection_element } = renderer.renderBaseComponent();
+
+            expect(selection_element.hasAttribute("tabindex")).toBe(false);
+            expect(selection_element.getAttribute("aria-disabled")).toEqual("true");
         });
     });
 });

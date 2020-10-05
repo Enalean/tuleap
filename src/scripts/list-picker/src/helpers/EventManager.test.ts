@@ -18,7 +18,7 @@
  */
 
 import { EventManager } from "./EventManager";
-import { SelectionManager } from "./SelectionManager";
+import { SingleSelectionManager } from "../selection/SingleSelectionManager";
 import { DropdownToggler } from "./DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
@@ -32,7 +32,8 @@ describe("event manager", () => {
         clickable_item: Element,
         search_field: HTMLInputElement,
         renderFilteredListPickerDropdownContent: (filter_query: string) => void,
-        processSingleSelection: () => void;
+        processSelection: () => void,
+        handleBackspaceKey: () => void;
 
     function getSearchField(search_field_element: HTMLInputElement | null): HTMLInputElement {
         if (search_field_element === null) {
@@ -49,6 +50,7 @@ describe("event manager", () => {
             dropdown_element,
             dropdown_list_element,
             search_field_element,
+            selection_element,
         } = new BaseComponentRenderer(source_select_box, {
             is_filterable: true,
         }).renderBaseComponent();
@@ -62,13 +64,15 @@ describe("event manager", () => {
 
         search_field = getSearchField(search_field_element);
         renderFilteredListPickerDropdownContent = jest.fn();
-        processSingleSelection = jest.fn();
+        processSelection = jest.fn();
+        handleBackspaceKey = jest.fn();
 
         toggler = new DropdownToggler(
             component_wrapper,
             dropdown_element,
             dropdown_list_element,
-            search_field_element
+            search_field_element,
+            selection_element
         );
 
         manager = new EventManager(
@@ -77,10 +81,26 @@ describe("event manager", () => {
             dropdown_element,
             search_field_element,
             source_select_box,
-            ({ processSingleSelection } as unknown) as SelectionManager,
+            ({ processSelection, handleBackspaceKey } as unknown) as SingleSelectionManager,
             toggler,
             ({ renderFilteredListPickerDropdownContent } as unknown) as DropdownContentRenderer
         );
+    });
+
+    it("When the source <select> is disabled, then it should not attach any event", () => {
+        jest.spyOn(doc, "addEventListener");
+        jest.spyOn(component_wrapper, "addEventListener");
+        jest.spyOn(search_field, "addEventListener");
+        jest.spyOn(clickable_item, "addEventListener");
+
+        source_select_box.setAttribute("disabled", "disabled");
+
+        manager.attachEvents();
+
+        expect(doc.addEventListener).not.toHaveBeenCalled();
+        expect(component_wrapper.addEventListener).not.toHaveBeenCalled();
+        expect(search_field.addEventListener).not.toHaveBeenCalled();
+        expect(clickable_item.addEventListener).not.toHaveBeenCalled();
     });
 
     describe("Dropdown opening", () => {
@@ -136,15 +156,36 @@ describe("event manager", () => {
         it("processes the selection when an item is clicked in the dropdown list", () => {
             manager.attachEvents();
             clickable_item.dispatchEvent(new MouseEvent("click"));
-            expect(processSingleSelection).toHaveBeenCalled();
+            expect(processSelection).toHaveBeenCalled();
         });
     });
 
-    it("should filter the items when user types in the search input", () => {
-        manager.attachEvents();
-        search_field.value = "query";
-        search_field.dispatchEvent(new Event("keyup"));
+    describe("Search input events", () => {
+        it("should filter the items when user types in the search input", () => {
+            manager.attachEvents();
+            search_field.value = "query";
+            search_field.dispatchEvent(new Event("keyup"));
 
-        expect(renderFilteredListPickerDropdownContent).toHaveBeenCalledWith("query");
+            expect(renderFilteredListPickerDropdownContent).toHaveBeenCalledWith("query");
+        });
+
+        it("should open the list picker when the search input has the focus", () => {
+            const openListPicker = jest.spyOn(toggler, "openListPicker");
+
+            manager.attachEvents();
+            search_field.dispatchEvent(new Event("focus"));
+
+            expect(openListPicker).toHaveBeenCalled();
+        });
+
+        it("should handle the backspace key when the user presses it", () => {
+            manager.attachEvents();
+
+            [{ key: "Backspace" }, { keyCode: 8 }].forEach((event_init: KeyboardEventInit) => {
+                search_field.dispatchEvent(new KeyboardEvent("keydown", event_init));
+
+                expect(handleBackspaceKey).toHaveBeenCalled();
+            });
+        });
     });
 });
