@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface ListPicker {
+    destroy: () => void;
+}
+
 export interface ListPickerOptions {
     placeholder?: string;
     is_filterable?: boolean;

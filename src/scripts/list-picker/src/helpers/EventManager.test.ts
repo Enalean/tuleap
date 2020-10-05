@@ -188,4 +188,22 @@ describe("event manager", () => {
             });
         });
     });
+
+    describe("removeEventsListenersOnDocument", () => {
+        it("should remove the keyup event on document", () => {
+            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
+            manager.attachEvents();
+            manager.removeEventsListenersOnDocument();
+            doc.dispatchEvent(new Event("keyup"));
+            expect(closeListPicker).not.toHaveBeenCalled();
+        });
+
+        it("should remove the click event on document", () => {
+            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
+            manager.attachEvents();
+            manager.removeEventsListenersOnDocument();
+            doc.dispatchEvent(new Event("click"));
+            expect(closeListPicker).not.toHaveBeenCalled();
+        });
+    });
 });

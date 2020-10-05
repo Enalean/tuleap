@@ -21,6 +21,9 @@ import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { SelectionManager } from "../type";
 
 export class EventManager {
+    private escape_key_handler!: (event: Event) => void;
+    private click_outside_handler!: (event: Event) => void;
+
     constructor(
         private readonly doc: HTMLDocument,
         private readonly wrapper_element: Element,
@@ -37,26 +40,41 @@ export class EventManager {
             return;
         }
 
-        this.attachClickEvent();
-        this.attachEscapeKeyPressedEvent();
+        this.attachOpenCloseEvent();
         this.attachItemListEvent();
+        this.escape_key_handler = this.attachEscapeKeyPressedEvent();
+        this.click_outside_handler = this.attachClickOutsideEvent();
+
         if (this.search_field_element !== null) {
             this.attachSearchEvent(this.search_field_element);
         }
     }
 
-    private attachEscapeKeyPressedEvent(): void {
-        this.doc.addEventListener("keyup", (event: Event): void => {
-            if (
-                event instanceof KeyboardEvent &&
-                (event.key === "Escape" || event.key === "Esc" || event.keyCode === 27)
-            ) {
-                this.dropdown_toggler.closeListPicker();
-            }
-        });
+    public removeEventsListenersOnDocument(): void {
+        this.doc.removeEventListener("keyup", this.escape_key_handler);
+        this.doc.removeEventListener("click", this.click_outside_handler);
     }
 
-    private attachClickEvent(): void {
+    private attachEscapeKeyPressedEvent(): (event: Event) => void {
+        const handler = (event: Event): void => {
+            this.handleEscapeKey(event);
+        };
+
+        this.doc.addEventListener("keyup", handler);
+
+        return handler;
+    }
+
+    private attachClickOutsideEvent(): (event: Event) => void {
+        const handler = (event: Event): void => {
+            this.handleClicksOutsideListPicker(event);
+        };
+        this.doc.addEventListener("click", handler);
+
+        return handler;
+    }
+
+    private attachOpenCloseEvent(): void {
         this.wrapper_element.addEventListener("click", (event: Event) => {
             if (
                 event.target instanceof Element &&
@@ -69,18 +87,6 @@ export class EventManager {
                 this.dropdown_toggler.closeListPicker();
             } else {
                 this.dropdown_toggler.openListPicker();
-            }
-        });
-
-        this.doc.addEventListener("click", (event: Event): void => {
-            const target_element = event.target;
-
-            if (!(target_element instanceof Element)) {
-                return this.dropdown_toggler.closeListPicker();
-            }
-
-            if (!this.wrapper_element.contains(target_element)) {
-                return this.dropdown_toggler.closeListPicker();
             }
         });
     }
@@ -124,5 +130,26 @@ export class EventManager {
                 this.selection_manager.handleBackspaceKey(event);
             }
         });
+    }
+
+    private handleClicksOutsideListPicker(event: Event): void {
+        const target_element = event.target;
+
+        if (!(target_element instanceof Element)) {
+            return this.dropdown_toggler.closeListPicker();
+        }
+
+        if (!this.wrapper_element.contains(target_element)) {
+            return this.dropdown_toggler.closeListPicker();
+        }
+    }
+
+    private handleEscapeKey(event: Event): void {
+        if (
+            event instanceof KeyboardEvent &&
+            (event.key === "Escape" || event.key === "Esc" || event.keyCode === 27)
+        ) {
+            this.dropdown_toggler.closeListPicker();
+        }
     }
 }
