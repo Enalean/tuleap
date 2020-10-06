@@ -16,24 +16,6 @@
             </a>
         {{/ is_super_user }}
 
-        {{# invite_buddies_presenter }}
-            {{# can_buddies_be_invited }}
-                <button
-                    type="button"
-                    class="btn"
-                    data-toggle="modal"
-                    data-target="#invite-buddies-modal"
-                    {{# is_limit_reached }}
-                        disabled
-                    title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"
-                    {{/ is_limit_reached }}
-                >
-                    <i class="fa fa-paper-plane btn-icon" aria-hidden="true"></i>
-                    {{# gettext }}Invite{{/ gettext }}
-                </button>
-            {{/ can_buddies_be_invited }}
-        {{/ invite_buddies_presenter }}
-
         {{> navbar-new-nav }}
 
         {{# switch_to }}
@@ -42,6 +24,24 @@
                 {{# gettext }}Projects...{{/ gettext }}
             </button>
         {{/ switch_to }}
+
+        {{# invite_buddies_presenter }}
+            {{# can_buddies_be_invited }}
+                <button
+                    type="button"
+                    class="btn"
+                    data-toggle="modal"
+                    data-target="#invite-buddies-modal"
+                    {{# is_limit_reached }}
+                    disabled
+                    title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"
+                    {{/ is_limit_reached }}
+                >
+                    <i class="fa fa-paper-plane btn-icon" aria-hidden="true"></i>
+                    {{# gettext }}Invite{{/ gettext }}
+                </button>
+            {{/ can_buddies_be_invited }}
+        {{/ invite_buddies_presenter }}
 
         {{> navbar-user-nav }}
     </div>
