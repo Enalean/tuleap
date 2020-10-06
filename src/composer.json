@@ -58,7 +58,7 @@
     "nikic/fast-route": "^1.2",
     "paragonie/easydb": "^2",
     "php-http/client-common": "^2.0",
-    "php-http/guzzle6-adapter": "^2.0",
+    "php-http/guzzle7-adapter": "^0.1.0",
     "php-http/message": "^1.7",
     "phpdocumentor/reflection-docblock": "^5.1",
     "psr/event-dispatcher": "^1.0",
