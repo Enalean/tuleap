@@ -891,7 +891,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $html;
     }
 
-    public function isCSVImportable()
+    public function isCSVImportable(): bool
     {
         return false;
     }

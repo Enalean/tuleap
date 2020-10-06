@@ -67,7 +67,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
     }
 
-    public function isCSVImportable()
+    public function isCSVImportable(): bool
     {
         return true;
     }

@@ -204,7 +204,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $form_element_data;
     }
 
-    public function isCSVImportable()
+    public function isCSVImportable(): bool
     {
         return false;
     }

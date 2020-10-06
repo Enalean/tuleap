@@ -105,7 +105,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $this->cache_specific_properties = null;
     }
 
-    public function isCSVImportable()
+    public function isCSVImportable(): bool
     {
         return false;
     }
