@@ -20,7 +20,7 @@
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label">Roadmap</span>
+        <translate class="project-release-label">Roadmap</translate>
         <div class="project-other-releases">
             <div class="project-release-time-stripe-icon">
                 <i class="fa fa-angle-double-up"></i>

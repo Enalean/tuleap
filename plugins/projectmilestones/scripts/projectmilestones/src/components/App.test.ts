@@ -20,8 +20,12 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { StoreOptions } from "../type";
+import { MilestoneData, StoreOptions } from "../type";
 import { createReleaseWidgetLocalVue } from "../helpers/local-vue-for-test";
+import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
+import PastSection from "./PastSection/PastSection.vue";
+import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
+import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 
 const project_id = 102;
 const component_options: ShallowMountOptions<App> = {};
@@ -46,6 +50,10 @@ describe("Given a release widget", () => {
         store_options = {
             state: {
                 is_loading: false,
+                current_milestones: [],
+                nb_backlog_items: 0,
+                nb_past_releases: 0,
+                nb_upcoming_releases: 0,
             },
             getters: {
                 has_rest_error: false,
@@ -88,5 +96,82 @@ describe("Given a release widget", () => {
         expect(wrapper.get("[data-test=show-error-message]").text()).toEqual(
             "Oops, an error occurred!"
         );
+    });
+
+    it("When there is an empty widget, Then only RoadmapEmptyStateSection component is renderer", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(true);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(false);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(false);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(false);
+    });
+
+    it("When there is at least one backlog item, Then RoadmapSection is displayed", async () => {
+        store_options.state.nb_backlog_items = 2;
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(true);
+    });
+
+    it("When there is at least one upcoming, Then RoadmapSection is displayed", async () => {
+        store_options.state.nb_upcoming_releases = 2;
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(true);
+    });
+
+    it("When there is at least one past release, Then RoadmapSection is displayed", async () => {
+        store_options.state.nb_past_releases = 2;
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(true);
+    });
+
+    it("When there is at least one current milestone, Then RoadmapSection is displayed", async () => {
+        store_options.state.current_milestones = [
+            {
+                id: 101,
+            } as MilestoneData,
+        ];
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(true);
+    });
+
+    it("When there are backlog items, upcoming releases, current milestones and past releases, Then RoadmapSection is displayed", async () => {
+        store_options.state.nb_backlog_items = 2;
+        store_options.state.nb_upcoming_releases = 2;
+        store_options.state.current_milestones = [
+            {
+                id: 101,
+            } as MilestoneData,
+        ];
+        store_options.state.nb_past_releases = 2;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapEmptyStateSection).exists()).toBe(false);
+        expect(wrapper.findComponent(WhatsHotSection).exists()).toBe(true);
+        expect(wrapper.findComponent(RoadmapSection).exists()).toBe(true);
+        expect(wrapper.findComponent(PastSection).exists()).toBe(true);
     });
 });

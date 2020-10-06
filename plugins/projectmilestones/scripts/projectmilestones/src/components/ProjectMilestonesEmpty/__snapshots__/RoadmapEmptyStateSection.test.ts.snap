@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to top planning of the project is rendered 1`] = `
+<div
+  class="project-release-timeframe"
+>
+  <translate-stub
+    class="project-release-label"
+    tag="span"
+  >
+    Roadmap
+  </translate-stub>
+   
+  <div
+    class="empty-state-container"
+  >
+    <s-v-g-project-milestones-empty-state-stub />
+     
+    <translate-stub
+      class="empty-state-text"
+      tag="span"
+      translateparams="[object Object]"
+    >
+      
+            There is no item nor milestone in the %{ name } backlog yet.
+        
+    </translate-stub>
+     
+    <a
+      class="button-backlog-link"
+      data-test="backlog-link"
+      href="/plugins/agiledashboard/?action=show-top&group_id=102&pane=topplanning-v2"
+    >
+      <button
+        class="tlp-button-primary empty-state-button"
+        type="button"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Start Planning
+        </translate-stub>
+         
+        <i
+          class="fas fa-long-arrow-alt-right empty-state-button-arrow-link"
+          data-test="display-arrow"
+        />
+      </button>
+    </a>
+  </div>
+</div>
+`;
