@@ -253,6 +253,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
     }
 
+    public function isCSVImportable(): bool
+    {
+        return false;
+    }
+
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the burnup chart for the artifact');
