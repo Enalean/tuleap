@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerOptions } from "./type";
+import { ListPicker, ListPickerOptions } from "./type";
 import { DropdownContentRenderer } from "./helpers/DropdownContentRenderer";
 import { EventManager } from "./helpers/EventManager";
 import { DropdownToggler } from "./helpers/DropdownToggler";
@@ -30,7 +30,7 @@ import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
     options?: ListPickerOptions
-): Promise<void> {
+): Promise<ListPicker> {
     let language = document.body.dataset.userLocale;
     if (language === undefined) {
         language = "en_US";
@@ -107,4 +107,8 @@ export async function createListPicker(
 
     event_manager.attachEvents();
     selection_manager.initSelection();
+
+    return {
+        destroy: (): void => event_manager.removeEventsListenersOnDocument(),
+    };
 }
