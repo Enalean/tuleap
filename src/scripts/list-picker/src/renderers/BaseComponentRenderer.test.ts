@@ -56,10 +56,6 @@ describe("base-component-renderer", () => {
         expect(base_component.contains(selection_element)).toBe(true);
         expect(base_component.contains(placeholder_element)).toBe(true);
         expect(base_component.contains(dropdown_list_element)).toBe(true);
-
-        expect(select.classList.contains("list-picker-hidden-accessible")).toBe(true);
-        expect(select.getAttribute("tabindex")).toEqual("-1");
-        expect(select.getAttribute("aria-hidden")).toEqual("true");
     });
 
     it("When the source <select> is disabled, then the list-picker should be disabled", () => {

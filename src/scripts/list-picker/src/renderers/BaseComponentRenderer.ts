@@ -25,8 +25,6 @@ export class BaseComponentRenderer {
     ) {}
 
     public renderBaseComponent(): ListPickerComponent {
-        this.hideSourceSelectBox();
-
         const wrapper_element = document.createElement("span");
         wrapper_element.classList.add("list-picker-component-wrapper");
 
@@ -78,12 +76,6 @@ export class BaseComponentRenderer {
         }
         search_section.classList.add("list-picker-multiple-search-section");
         return search_section;
-    }
-
-    private hideSourceSelectBox(): void {
-        this.source_select_box.classList.add("list-picker-hidden-accessible");
-        this.source_select_box.setAttribute("tabindex", "-1");
-        this.source_select_box.setAttribute("aria-hidden", "true");
     }
 
     private createDropdownListElement(): Element {
