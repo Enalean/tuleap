@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { DropdownToggler } from "./DropdownToggler";
-import { SelectionManager } from "./SelectionManager";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
+import { SelectionManager } from "../type";
 
 export class EventManager {
     constructor(
@@ -33,6 +33,10 @@ export class EventManager {
     ) {}
 
     public attachEvents(): void {
+        if (this.source_select_box.disabled) {
+            return;
+        }
+
         this.attachClickEvent();
         this.attachEscapeKeyPressedEvent();
         this.attachItemListEvent();
@@ -54,9 +58,6 @@ export class EventManager {
 
     private attachClickEvent(): void {
         this.wrapper_element.addEventListener("click", (event: Event) => {
-            if (this.source_select_box.disabled) {
-                return;
-            }
             if (
                 event.target instanceof Element &&
                 this.isElementOnWhichClickShouldNotCloseListPicker(event.target)
@@ -98,7 +99,7 @@ export class EventManager {
         const items = this.dropdown_element.querySelectorAll(".list-picker-dropdown-option-value");
         items.forEach((item) => {
             item.addEventListener("click", () => {
-                this.selection_manager.processSingleSelection(item);
+                this.selection_manager.processSelection(item);
             });
         });
     }
@@ -108,6 +109,20 @@ export class EventManager {
             const filter_query = search_field_element.value;
 
             this.dropdown_content_renderer.renderFilteredListPickerDropdownContent(filter_query);
+            this.dropdown_toggler.openListPicker();
+        });
+
+        search_field_element.addEventListener("focus", () => {
+            this.dropdown_toggler.openListPicker();
+        });
+
+        search_field_element.addEventListener("keydown", (event: Event) => {
+            if (
+                event instanceof KeyboardEvent &&
+                (event.key === "Backspace" || event.keyCode === 8)
+            ) {
+                this.selection_manager.handleBackspaceKey(event);
+            }
         });
     }
 }

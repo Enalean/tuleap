@@ -17,30 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SelectionManager } from "./SelectionManager";
-import { DropdownToggler } from "./DropdownToggler";
+import { SingleSelectionManager } from "./SingleSelectionManager";
+import { DropdownToggler } from "../helpers/DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
+import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListPickerItem } from "../type";
+import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
 
-describe("selection-manager", () => {
+describe("SingleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
         selection_container: Element,
         placeholder: Element,
-        manager: SelectionManager,
+        manager: SingleSelectionManager,
         toggler: DropdownToggler,
         item_map: Map<string, ListPickerItem>;
-
-    function getItem(item_id: string): ListPickerItem {
-        const item = item_map.get(item_id);
-
-        if (!item) {
-            throw new Error(`item with id ${item_id} not found`);
-        }
-
-        return item;
-    }
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -64,10 +55,11 @@ describe("selection-manager", () => {
             list_picker_element,
             dropdown_element,
             dropdown_list_element,
-            search_field_element
+            search_field_element,
+            selection_element
         );
         item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
-        manager = new SelectionManager(
+        manager = new SingleSelectionManager(
             source_select_box,
             dropdown_element,
             selection_container,
@@ -79,11 +71,11 @@ describe("selection-manager", () => {
 
     describe("initSelection", () => {
         it("When a value is already selected in the source <select>, then it selects it in the list-picker", () => {
-            const item = getItem("item-1");
+            const item = findListPickerItemInItemMap(item_map, "item-1");
             const option = item.target_option;
 
             option.setAttribute("selected", "selected");
-            manager.initSelection(placeholder);
+            manager.initSelection();
 
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
@@ -92,12 +84,12 @@ describe("selection-manager", () => {
         });
 
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
-            const item = getItem("item-1");
+            const item = findListPickerItemInItemMap(item_map, "item-1");
             const option = item.target_option;
 
             selection_container.appendChild(placeholder);
 
-            manager.initSelection(placeholder);
+            manager.initSelection();
 
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
@@ -106,25 +98,25 @@ describe("selection-manager", () => {
         });
     });
 
-    describe("processSingleSelection", () => {
+    describe("processSelection", () => {
         it("does nothing if item is already selected", () => {
-            const item = getItem("item-1");
+            const item = findListPickerItemInItemMap(item_map, "item-1");
             const option = item.target_option;
 
             option.setAttribute("selected", "selected");
             item.element.setAttribute("aria-selected", "true");
             item.is_selected = true;
 
-            manager.processSingleSelection(item.element);
+            manager.processSelection(item.element);
 
             expect(item.element.getAttribute("aria-selected")).toEqual("true");
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
-            const item = getItem("item-1");
+            const item = findListPickerItemInItemMap(item_map, "item-1");
             const option = item.target_option;
 
-            manager.processSingleSelection(item.element);
+            manager.processSelection(item.element);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
 
@@ -137,14 +129,14 @@ describe("selection-manager", () => {
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
-            const old_item = getItem("item-1");
+            const old_item = findListPickerItemInItemMap(item_map, "item-1");
             const old_option = old_item.target_option;
 
-            const new_item = getItem("item-2");
+            const new_item = findListPickerItemInItemMap(item_map, "item-2");
             const new_option = new_item.target_option;
 
-            manager.processSingleSelection(old_item.element);
-            manager.processSingleSelection(new_item.element);
+            manager.processSelection(old_item.element);
+            manager.processSelection(new_item.element);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
             expect(selected_value).not.toBeNull();
@@ -163,13 +155,13 @@ describe("selection-manager", () => {
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
         it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
             const openListPicker = jest.spyOn(toggler, "openListPicker");
-            const item = getItem("item-1");
+            const item = findListPickerItemInItemMap(item_map, "item-1");
             const option = item.target_option;
 
             selection_container.appendChild(placeholder);
 
             // First select the item
-            manager.processSingleSelection(item.element);
+            manager.processSelection(item.element);
 
             expect(item.is_selected).toBe(true);
             expect(item.element.getAttribute("aria-selected")).toEqual("true");

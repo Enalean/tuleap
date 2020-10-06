@@ -15,3 +15,6 @@ msgstr ""
 
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
+
+msgid "Remove all values"
+msgstr "Supprimer toutes les valeurs"
