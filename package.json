@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/core": "file:../../src",
-    "moment": "^2.27.0",
+    "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
     "node-htmldiff": "^0.9.3",
     "phptomoment": "0.0.2",
