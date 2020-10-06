@@ -96,6 +96,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Home;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundAdministrationController;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
@@ -656,6 +657,11 @@ class RouteCollector
         return BannerAdministrationController::buildSelf();
     }
 
+    public static function getGetProjectBackgroundAdministration(): DispatchableWithRequest
+    {
+        return ProjectBackgroundAdministrationController::buildSelf();
+    }
+
     public static function getProjectRegistrationController(): ProjectRegistrationController
     {
         $core_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
@@ -744,6 +750,7 @@ class RouteCollector
             $r->post('/services/edit', [self::class, 'getPostServicesEdit']);
             $r->post('/services/delete', [self::class, 'getPostServicesDelete']);
             $r->get('/banner', [self::class, 'getGetProjectBannerAdministration']);
+            $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);

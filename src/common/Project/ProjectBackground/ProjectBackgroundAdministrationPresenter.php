@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
@@ -17,8 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
+declare(strict_types=1);
 
-.project-with-background {
-    @include background.css-custom-properties('bridge');
+namespace Tuleap\Project\ProjectBackground;
+
+/**
+ * @psalm-immutable
+ */
+class ProjectBackgroundAdministrationPresenter
+{
+    /**
+     * @var array
+     */
+    public $backgrounds;
+
+    public function __construct(array $backgrounds)
+    {
+        $this->backgrounds = $backgrounds;
+        usort($this->backgrounds, static function (ProjectBackground $a, ProjectBackground $b) {
+            return strnatcasecmp($a->identifier, $b->identifier);
+        });
+    }
 }

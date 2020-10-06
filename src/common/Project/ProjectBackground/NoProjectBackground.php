@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
@@ -17,8 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
+declare(strict_types=1);
 
-.project-with-background {
-    @include background.css-custom-properties('bridge');
+namespace Tuleap\Project\ProjectBackground;
+
+/**
+ * @psalm-immutable
+ */
+class NoProjectBackground extends ProjectBackground
+{
+    public function __construct(bool $is_selected)
+    {
+        parent::__construct(self::NO_BACKGROUND_IDENTIFIER, '', $is_selected);
+    }
 }

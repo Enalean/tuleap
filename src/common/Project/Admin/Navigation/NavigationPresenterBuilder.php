@@ -182,6 +182,12 @@ class NavigationPresenterBuilder
             'banner',
             $current_pane_shortname
         );
+        $entries['background'] = new NavigationItemPresenter(
+            _('Background'),
+            '/project/' . urlencode((string) $project_id) . '/admin/background',
+            'background',
+            $current_pane_shortname
+        );
 
         return $entries;
     }
