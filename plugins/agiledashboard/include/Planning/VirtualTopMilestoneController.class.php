@@ -106,11 +106,19 @@ class Planning_VirtualTopMilestoneController extends BaseController
             $this->generateVirtualTopMilestone();
             $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
-            return [
-                Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
-                    $this->getActivePaneIdentifier()
-                )
+            $is_pane_a_planning_v2 = $pane_info_identifier->isPaneAPlanningV2(
+                $this->getActivePaneIdentifier()
+            );
+
+            $header_options = [
+                Layout::INCLUDE_FAT_COMBINED => ! $is_pane_a_planning_v2
             ];
+
+            if ($is_pane_a_planning_v2) {
+                $header_options['body_class'] = ['has-sidebar-with-pinned-header'];
+            }
+
+            return $header_options;
         } catch (Planning_NoPlanningsException $e) {
             return [];
         }
