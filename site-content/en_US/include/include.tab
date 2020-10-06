@@ -317,6 +317,3 @@ include_common_template	test_project	Test Project
 # Script: SF/common/mvc/View.class.php
 #
 common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
-
-include_browser	ie_deprecated	Please remove Internet Explorer compatibility mode, upgrade to a newer version (at least IE11) or use an alternative.
-include_browser	ie_deprecated_button	Ok, got it. Remind me later.

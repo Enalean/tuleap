@@ -33,12 +33,12 @@ final class DisableLegacyBrowsersWarningMessageController implements Dispatchabl
 {
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $csrf = new CSRFSynchronizerToken('/account/disable_legacy_browser_warning');
+        $csrf = new CSRFSynchronizerToken('disable_legacy_browser_warning');
         $csrf->check('/my/', $request);
 
-        $request->getCurrentUser()->setPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING, '1');
+        $request->getCurrentUser()->setPreference(PFUser::PREFERENCE_DISABLE_IE_WARNING, '1');
 
-        $layout->addFeedback(Feedback::INFO, _('We will bother you later with the deprecation of IE < 11.'));
+        $layout->addFeedback(Feedback::INFO, _('We will bother you later with the end of support of Internet Explorer.'));
         $layout->redirect('/my/');
     }
 }
