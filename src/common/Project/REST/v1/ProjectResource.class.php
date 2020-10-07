@@ -57,6 +57,11 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundPermissionsChecker;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundUpdater;
+use Tuleap\Project\ProjectBackground\UserCanModifyProjectBackgroundPermission;
 use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectStatusMapper;
@@ -897,6 +902,58 @@ class ProjectResource extends AuthenticatedResource
         }
 
         return new BannerRepresentation($banner);
+    }
+
+    /**
+     * Put a header background to the project
+     *
+     * @url PUT {id}/header_background
+     *
+     * @param int $id id of the project
+     * @param HeaderBackgroundRepresentation $header_background_representation Header background to be displayed {@from body}
+     * @throws RestException
+     */
+    protected function putBackgroundHeader(int $id, HeaderBackgroundRepresentation $header_background_representation): void
+    {
+        $this->checkAccess();
+
+        (new ProjectBackgroundUpdater(new ProjectBackgroundDao()))->updateProjectBackground(
+            $this->getModifyHeaderBackgroundPermission($id),
+            ProjectBackgroundName::fromIdentifier($header_background_representation->identifier)
+        );
+    }
+
+    /**
+     * Delete the header background
+     *
+     * @url DELETE {id}/header_background
+     *
+     * @param int $id id of the project
+     * @throws RestException
+     */
+    protected function deleteHeaderBackground(int $id): void
+    {
+        $this->checkAccess();
+
+        (new ProjectBackgroundUpdater(new ProjectBackgroundDao()))->deleteProjectBackground(
+            $this->getModifyHeaderBackgroundPermission($id),
+        );
+    }
+
+    private function getModifyHeaderBackgroundPermission(int $project_id): UserCanModifyProjectBackgroundPermission
+    {
+        $project = $this->getProjectForUser($project_id);
+
+        $update_permission = (new ProjectBackgroundPermissionsChecker())->getModifyProjectBackgroundPermission(
+            $project,
+            $this->user_manager->getCurrentUser()
+        );
+
+        if ($update_permission === null) {
+            throw new RestException(403);
+        }
+
+        return $update_permission;
     }
 
     private function getRepositoryNameFromQuery($query)

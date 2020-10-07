@@ -1311,4 +1311,32 @@ class ProjectTest extends ProjectBase
         $response_json = $response->json();
         $this->assertEquals('a banner message', $response_json['message']);
     }
+
+    public function testPUTHeaderBackground(): void
+    {
+        $payload = json_encode(['identifier' => 'beach'], JSON_THROW_ON_ERROR);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'projects/' . $this->project_public_member_id . '/header_background',
+                null,
+                $payload
+            )
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testDELETEHeaderBackground(): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete(
+                'projects/' . $this->project_public_member_id . '/header_background'
+            )
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
 }

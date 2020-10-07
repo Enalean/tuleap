@@ -33,4 +33,15 @@ class ProjectBackgroundDao extends DataAccessObject
             $project_id
         ) ?: null;
     }
+
+    public function setBackgroundByProjectID(int $project_id, string $background_identifier): void
+    {
+        $sql = 'INSERT INTO project_background(project_id, background) VALUES (?, ?) ON DUPLICATE KEY UPDATE background = ?';
+        $this->getDB()->run($sql, $project_id, $background_identifier, $background_identifier);
+    }
+
+    public function deleteBackgroundByProjectID(int $project_id): void
+    {
+        $this->getDB()->run('DELETE FROM project_background WHERE project_id = ?', $project_id);
+    }
 }
