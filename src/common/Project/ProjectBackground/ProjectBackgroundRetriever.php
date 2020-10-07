@@ -44,7 +44,7 @@ class ProjectBackgroundRetriever
         $current_background_identifier = $this->dao->getBackground((int) $project->getID());
 
         return [
-            new NoProjectBackground($current_background_identifier === null),
+            ProjectBackground::buildNoBackground($current_background_identifier === null),
             $this->instantiateBackground('bridge', 'David Emrich', $current_background_identifier),
             $this->instantiateBackground('beach', 'Joschko Hammermann', $current_background_identifier),
         ];
@@ -55,6 +55,6 @@ class ProjectBackgroundRetriever
         string $author,
         ?string $current_background_identifier
     ): ProjectBackground {
-        return new ProjectBackground($identifier, $author, $current_background_identifier === $identifier);
+        return ProjectBackground::buildFromIdentifier($identifier, $author, $current_background_identifier === $identifier);
     }
 }
