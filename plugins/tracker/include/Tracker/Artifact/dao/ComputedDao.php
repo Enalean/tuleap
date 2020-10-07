@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\DAO;
 
-use Tracker_FormElement_Field_Value_FloatDao;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 
-class ComputedDao extends Tracker_FormElement_Field_Value_FloatDao
+class ComputedDao extends FloatValueDao
 {
     public function __construct()
     {

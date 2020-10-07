@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *  Data Access Object for Tracker_FormElement_Field
- */
-class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_SpecificPropertiesDao
+use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
+
+class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct()

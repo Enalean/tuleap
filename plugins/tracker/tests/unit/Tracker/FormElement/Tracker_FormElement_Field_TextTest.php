@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 
 final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -33,7 +34,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
      */
     private $previous_value;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Value_TextDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TextValueDao
      */
     private $value_dao;
     /**
@@ -53,7 +54,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $this->text_field->shouldReceive('getCurrentUser')->andReturn($this->user);
 
-        $this->value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_TextDao::class);
+        $this->value_dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\Text\TextValueDao::class);
         $this->text_field->shouldReceive('getValueDao')->andReturns($this->value_dao);
 
         $this->previous_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class)

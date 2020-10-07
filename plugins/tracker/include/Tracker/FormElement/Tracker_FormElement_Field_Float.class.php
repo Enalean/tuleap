@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 {
@@ -115,11 +117,11 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_FloatDao();
+        return new FloatValueDao();
     }
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_FloatDao();
+        return new FloatFieldDao();
     }
 
     public static function getFactoryLabel()

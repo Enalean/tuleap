@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
@@ -27,7 +28,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
 
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_DateDao();
+        return new DateFieldDao();
     }
 
     /**

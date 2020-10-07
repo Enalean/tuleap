@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - Present. All rights reserved
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -17,9 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificPropertiesDao
+namespace Tuleap\Tracker\FormElement\Field\Text;
+
+use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
+
+class TextFieldDao extends SpecificPropertiesDao
 {
 
     public function __construct()
@@ -30,7 +35,7 @@ class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificProp
 
     public function save($field_id, $row)
     {
-        $field_id  = $this->da->escapeInt($field_id);
+        $field_id = $this->da->escapeInt($field_id);
 
         if (isset($row['rows']) && (int) $row['rows']) {
             $rows = $this->da->escapeInt($row['rows']);
@@ -65,8 +70,8 @@ class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificProp
      */
     public function duplicate($from_field_id, $to_field_id)
     {
-        $from_field_id  = $this->da->escapeInt($from_field_id);
-        $to_field_id  = $this->da->escapeInt($to_field_id);
+        $from_field_id = $this->da->escapeInt($from_field_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
 
         $sql = "REPLACE INTO tracker_field_text (field_id, `rows`, cols, default_value)
                 SELECT $to_field_id, `rows`, cols, default_value FROM tracker_field_text WHERE field_id = $from_field_id";
