@@ -813,6 +813,13 @@ msgstr "Activé ?"
 msgid "Enter comma separated list of emails"
 msgstr "Entrez une liste d'emails séparés par une virgule"
 
+msgid ""
+"Enter people to invite to %s. We will send an invitation email on your "
+"behalf."
+msgstr ""
+"Entrez les personnes à inviter sur %s. Nous leur enverrons un email "
+"d'invitation."
+
 msgid "Experimental"
 msgstr "Expérimental"
 
@@ -1060,6 +1067,9 @@ msgstr "La configuration des invitations a été sauvegardée avec succès."
 
 msgid "Invite"
 msgstr "Inviter"
+
+msgid "Invite someone to join %s"
+msgstr "Inviter quelqu'un à rejoindre %s"
 
 msgid "Invited by"
 msgstr "Invitation envoyée par"
@@ -2585,7 +2595,8 @@ msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
 
 msgid "We will bother you later with the end of support of Internet Explorer."
 msgstr ""
-"Nous vous importunerons plus tard à propos de l'arrêt du support de Internet Explorer."
+"Nous vous importunerons plus tard à propos de l'arrêt du support de Internet "
+"Explorer."
 
 msgid "Webhooks"
 msgstr "Webhooks"
