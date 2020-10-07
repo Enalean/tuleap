@@ -1,13 +1,16 @@
+<p>{{# gettext }}Hello,{{/ gettext }}</p>
+
 <p>
     {{# gettext }}
-        %s invited you to log on %s, your login is: %s |
+        %s invited you to %s.|
         {{ current_user_real_name }} |
-        {{ instance_name }} |
-        {{ recipient_name }}
+        {{ instance_name }}
     {{/ gettext }}
 </p>
 
 <p>
+    {{# gettext }}To sign in (your username is %s): | {{ recipient_name }}{{/ gettext }}
+    <br>
     <a href="{{ login_url }}">{{ login_url }}</a>
 </p>
 
@@ -20,3 +23,9 @@
     </p>
     <blockquote>{{ custom_message }}</blockquote>
 {{/has_custom_message}}
+
+<p>
+    {{# gettext }}Best regards,{{/ gettext }}
+    <br>
+    {{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}
+</p>

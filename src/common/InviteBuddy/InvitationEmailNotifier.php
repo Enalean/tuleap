@@ -70,7 +70,7 @@ class InvitationEmailNotifier
         ?string $custom_message
     ): void {
         $mail->setTo($recipient_user->getEmail());
-        $mail->setSubject(sprintf(_('Invitation to log on %s'), ForgeConfig::get('sys_name')));
+        $mail->setSubject(sprintf(_('Invitation to log on to %s'), ForgeConfig::get('sys_name')));
 
         $login_url = $this->instance_base_url_builder->build() . '/account/login.php';
 
@@ -89,7 +89,7 @@ class InvitationEmailNotifier
         ?string $custom_message
     ): void {
         $mail->setTo($external_email);
-        $mail->setSubject(sprintf(_('Invitation to register on %s'), ForgeConfig::get('sys_name')));
+        $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get('sys_name')));
 
         $register_url = $this->instance_base_url_builder->build() . '/account/register.php';
 

@@ -57,13 +57,11 @@ msgstr "Liste complète des projets %s"
 msgid "%s has multiple corresponding users."
 msgstr "%s a plusieurs utilisateurs associés."
 
-msgid "%s invited you to log on %s, you need to register first:"
-msgstr ""
-"%s vous a invité à vous connecter à %s, vous avez besoin d'abord de vous "
-"enregistrer :"
+msgid "%s invited you to %s."
+msgstr "%s vous a invité sur %s."
 
-msgid "%s invited you to log on %s, your login is: %s"
-msgstr "%s vous a invité à vous connecter à %s, votre identifiant est : %s"
+msgid "%s invited you to register to %s."
+msgstr "%s vous invite à vous enregistrer sur %s."
 
 #, php-format
 msgid "%s new projects"
@@ -405,6 +403,9 @@ msgid "Banner"
 msgstr "Bannière"
 
 msgid "Best Regards."
+msgstr "Cordialement."
+
+msgid "Best regards,"
 msgstr "Cordialement."
 
 msgid "Beyond 3 columns, each column<br>will have the same size."
@@ -937,6 +938,9 @@ msgstr "Image de fond de l'entête"
 msgid "Heartbeat"
 msgstr "Activité"
 
+msgid "Hello,"
+msgstr "Bonjour,"
+
 msgid "Help"
 msgstr "Aide"
 
@@ -1055,11 +1059,11 @@ msgid "Invitation has been successfully sent to:"
 msgstr "L'invitation a été envoyée à :"
 
 #, php-format
-msgid "Invitation to log on %s"
+msgid "Invitation to log on to %s"
 msgstr "Invitation pour vous connecter sur %s"
 
 #, php-format
-msgid "Invitation to register on %s"
+msgid "Invitation to register to %s"
 msgstr "Invitation pour vous enregistrer sur %s"
 
 msgid "Invitations"
@@ -2427,6 +2431,12 @@ msgstr ""
 "vous ne souhaitez pas télécharger le fichier cliquer sur '<b>Je refuse</b>' "
 "et <a href=\"mailto:%s\"><b>contactez-nous</b></a> si vous avez besoin de "
 "clarifications ou si vous souhaitez expliquer les raisons de votre refus."
+
+msgid "To sign in (your username is %s):"
+msgstr "Pour vous connecter (votre nom d'utilisateur est %s) :"
+
+msgid "To sign up:"
+msgstr "Pour vous enregistrer :"
 
 msgid "Today"
 msgstr "Aujourd'hui"
