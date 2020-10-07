@@ -32,7 +32,7 @@
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.10",
-    "vue-router": "^3.4.3",
+    "vue-router": "^3.4.5",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -47,8 +47,8 @@
     "gulp": "^4.0.2",
     "gulp-angular-gettext": "^2.3.0",
     "jquery": "^3.5.1",
-    "vue-class-component": "^7.2.5",
-    "vue-property-decorator": "^9.0.0",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.0.2",
     "vuex-class": "^0.3.2"
   },
   "config": {

@@ -20,8 +20,8 @@
     "@types/d3-shape": "^2.0.0",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.0",
-    "vue-class-component": "^7.2.5",
-    "vue-property-decorator": "^9.0.0",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.0.2",
     "vuex-class": "^0.3.2"
   },
   "config": {
