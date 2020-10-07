@@ -236,14 +236,12 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function fetchGraphAnchor($content)
     {
-        $not_d3_flag = $this->isGraphDrawnByD3() ? 'false' : 'true';
         $renderer_id = $this->renderer->getId();
         $report_id   = $this->renderer->report->getId();
         return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
                      data-graph-id="' . $this->getId() . '"
                      data-renderer-id="' . $renderer_id . '"
                      data-report-id="' . $report_id . '"
-                     data-does-not-use-d3="' . $not_d3_flag . '"
                 >' . $content . '</div>';
     }
 
