@@ -1,3 +1,4 @@
+{{# invite_buddies_presenter }}
 {{# can_buddies_be_invited }}
     <form
         class="modal hide fade"
@@ -18,7 +19,7 @@
             </button>
             <h3 id="invite-buddies-modal-label">
                 <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                {{# gettext }}Invite{{/ gettext }}
+                {{# gettext }}Invite someone to join %s | {{ instance_name }}{{/ gettext }}
             </h3>
         </div>
         <div
@@ -27,6 +28,12 @@
             data-failure-feedback-message="{{# gettext }}Invitation could not be sent to:{{/ gettext }}"
         ></div>
         <div class="modal-body invite-buddies-modal-body" id="invite-buddies-modal-body">
+            <p>
+                {{# gettext }}
+                    Enter people to invite to %s. We will send an invitation email on your behalf.
+                    | {{ instance_name }}
+                {{/ gettext }}
+            </p>
             <p>
                 <label for="invite-buddies-email">
                     {{# gettext }}Email{{/ gettext }}
@@ -67,3 +74,4 @@
         </div>
     </form>
 {{/ can_buddies_be_invited }}
+{{/ invite_buddies_presenter }}

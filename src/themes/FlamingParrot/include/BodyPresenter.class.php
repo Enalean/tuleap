@@ -19,6 +19,7 @@
  */
 
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
+use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_BodyPresenter
@@ -41,23 +42,23 @@ class FlamingParrot_BodyPresenter
      */
     public $user_id;
     /**
-     * @var bool
+     * @var InviteBuddiesPresenter
      * @psalm-readonly
      */
-    public $can_buddies_be_invited;
+    public $invite_buddies_presenter;
 
     public function __construct(
         PFUser $user,
         $notifications_placeholder,
         HelpDropdownPresenter $help_dropdown_presenter,
         $body_class,
-        bool $can_buddies_be_invited
+        InviteBuddiesPresenter $invite_buddies_presenter
     ) {
         $this->user_locale               = $user->getLocale();
         $this->user_id                   = $user->getId();
         $this->notifications_placeholder = $notifications_placeholder;
         $this->body_class                = $body_class;
         $this->help_dropdown             = $help_dropdown_presenter;
-        $this->can_buddies_be_invited    = $can_buddies_be_invited;
+        $this->invite_buddies_presenter  = $invite_buddies_presenter;
     }
 }
