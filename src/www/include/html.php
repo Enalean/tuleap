@@ -21,6 +21,7 @@
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
 function html_feedback_top($feedback)
 {
@@ -580,8 +581,7 @@ function site_project_header($params)
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
-    $dao        = new \Tuleap\Project\ProjectBackground\ProjectBackgroundDao();
-    $background = $dao->getBackground((int) $group_id);
+    $background = ProjectBackgroundConfiguration::buildSelf()->getBackgroundIgnoringFeatureFlag($project);
     if ($background) {
         $HTML->addCSSAsset(
             new CssAssetWithoutVariantDeclinaisons(

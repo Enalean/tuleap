@@ -42,7 +42,7 @@ use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -327,7 +327,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $layout->addCssAsset($additional_modal->getCssAsset());
         }
 
-        $header_displayer = new HeaderNavigationDisplayer(new ProjectBackgroundDao());
+        $header_displayer = new HeaderNavigationDisplayer(ProjectBackgroundConfiguration::buildSelf());
         $header_displayer->displayBurningParrotNavigation($title, $project, 'members');
     }
 

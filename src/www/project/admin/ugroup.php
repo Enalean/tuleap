@@ -24,7 +24,7 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
@@ -79,7 +79,7 @@ $title = $Language->getText('project_admin_ugroup', 'manage_ug');
 $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin-ugroups.js'));
 
-$navigation_displayer = new HeaderNavigationDisplayer(new ProjectBackgroundDao());
+$navigation_displayer = new HeaderNavigationDisplayer(ProjectBackgroundConfiguration::buildSelf());
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'groups');
 
 $presenter_builder = new UGroupListPresenterBuilder(
