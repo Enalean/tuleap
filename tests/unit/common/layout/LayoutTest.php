@@ -20,9 +20,10 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Layout\CssAsset;
 
 /**
- * For all tests we have to use partial mock because there are sessions related stuff in Respone class.
+ * For all tests we have to use partial mock because there are sessions related stuff in Response class.
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class LayoutTest extends TestCase
@@ -34,6 +35,18 @@ class LayoutTest extends TestCase
     {
         parent::setUp();
         ForgeConfig::set('sys_user_theme', 'stuff');
+
+        $user = Mockery::spy(PFUser::class);
+
+        $user_manager = \Mockery::mock(UserManager::class);
+        $user_manager->shouldReceive(['getCurrentUser' => $user]);
+
+        UserManager::setInstance($user_manager);
+    }
+
+    protected function tearDown(): void
+    {
+        UserManager::clearInstance();
     }
 
     public function testAddStyleSheet(): void
@@ -45,12 +58,30 @@ class LayoutTest extends TestCase
 
     public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
     {
-        $l = \Mockery::mock(\Layout::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $l->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $l = new class extends \Layout {
+            public function __construct()
+            {
+                parent::__construct('');
+            }
+
+            public function header(array $params)
+            {
+            }
+
+            protected function getEventManager()
+            {
+                return \Mockery::spy(EventManager::class);
+            }
+        };
 
         $css = '/vendor-css/styles.css';
 
         $l->addStylesheet($css);
+        $l->addCssAsset(
+            Mockery::mock(CssAsset::class)
+                ->shouldReceive(['getFileUrl' => 'css-assets.css', 'getPath' => '/path'])
+                ->getMock()
+        );
 
         ob_start();
         $l->displayStylesheetElements([]);
@@ -58,5 +89,6 @@ class LayoutTest extends TestCase
         ob_end_clean();
 
         $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="' . $css . '" />', $content);
+        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="css-assets.css" />', $content);
     }
 }

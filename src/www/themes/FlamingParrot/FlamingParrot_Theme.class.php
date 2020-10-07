@@ -265,6 +265,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
         $url_redirect      = new URLRedirect($event_manager);
+        $main_classes      = $params['main_classes'] ?? [];
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
 
@@ -314,7 +315,15 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             InviteBuddiesPresenter::build($current_user)
         ));
 
-        $this->container($params, $current_user, $banner, $switch_to, $is_legacy_logo_customized, $is_svg_logo_customized);
+        $this->container(
+            $params,
+            $current_user,
+            $banner,
+            $switch_to,
+            $is_legacy_logo_customized,
+            $is_svg_logo_customized,
+            $main_classes,
+        );
     }
 
     private function shouldLogoBeDisplayed(array $params, ?Project $project): bool
@@ -340,7 +349,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ?BannerDisplay $banner,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
-        bool $is_svg_logo_customized
+        bool $is_svg_logo_customized,
+        array $main_classes
     ): void {
         $project_tabs        = null;
         $project_name        = null;
@@ -376,7 +386,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
-
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $breadcrumbs,
             $this->toolbar,
@@ -392,6 +401,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
+            $main_classes,
         ));
     }
 

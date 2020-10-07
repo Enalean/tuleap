@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ThemeVariation;
 
 /**
  *
@@ -514,6 +515,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         // Display custom css
         foreach ($this->getAllStylesheets() as $css) {
             echo '<link rel="stylesheet" type="text/css" href="' . $css . '" />';
+        }
+
+        $current_user    = UserManager::instance()->getCurrentUser();
+        $theme_variant   = new ThemeVariant();
+        $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $theme_variation = new ThemeVariation($color, $current_user);
+        foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_asset->getFileURL($theme_variation) . '" />';
         }
 
         // Plugins css

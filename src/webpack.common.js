@@ -511,6 +511,13 @@ for (const color of colors) {
     ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}-condensed.scss`;
 }
 
+const project_background_themes = ["beach", "bridge"];
+for (const background of project_background_themes) {
+    theme_entry_points[
+        `project-background/${background}`
+    ] = `./themes/common/css/project-background/${background}.scss`;
+}
+
 const webpack_config_for_burning_parrot_css = {
     entry: theme_entry_points,
     context,

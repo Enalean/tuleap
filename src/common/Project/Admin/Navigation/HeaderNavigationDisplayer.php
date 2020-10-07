@@ -28,9 +28,20 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 
 class HeaderNavigationDisplayer
 {
+    /**
+     * @var ProjectBackgroundDao
+     */
+    private $dao;
+
+    public function __construct(ProjectBackgroundDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
     public function displayBurningParrotNavigation($title, Project $project, $current_pane_shortname)
     {
         $this->displayNavigation($title, $project, "navigation", $current_pane_shortname);
@@ -43,11 +54,17 @@ class HeaderNavigationDisplayer
 
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
+        $main_classes = [];
+        if ($this->dao->getBackground((int) $project->getID())) {
+            $main_classes[] = 'project-with-background';
+        }
+
         $params = [
-            'title'      => $title . ' - ' . $project->getPublicName(),
-            'toptab'     => 'admin',
-            'group'      => $project->getID(),
-            'body_class' => ['project-administration']
+            'title'        => $title . ' - ' . $project->getPublicName(),
+            'toptab'       => 'admin',
+            'group'        => $project->getID(),
+            'body_class'   => ['project-administration'],
+            'main_classes' => $main_classes,
         ];
 
         site_project_header($params);

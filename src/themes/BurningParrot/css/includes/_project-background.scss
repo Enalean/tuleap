@@ -1,0 +1,104 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+body {
+    @import '../../../common/css/project-background/project-background';
+}
+
+.project-with-background {
+    .project-administration-title {
+        margin: 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+        color: $tlp-ui-white;
+        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+    }
+
+    .dashboard-project-title {
+        color: $tlp-ui-white;
+        font-weight: 400;
+        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+    }
+
+    .dashboard-project-header-trovecat-icon {
+        color: $tlp-ui-white;
+    }
+
+    .dashboard-project-header-trovecat {
+        color: lighten($tlp-ui-dimmed, 30%);
+        text-shadow: 1px 1px $tlp-theme-sidebar-background-color;
+    }
+
+    .main-project-tabs > .tlp-tabs {
+        background: transparentize($tlp-theme-sidebar-background-color, .6);
+        box-shadow: none;
+
+        > .tlp-tab {
+            padding: ($tlp-medium-spacing - 2) $tlp-large-spacing $tlp-medium-spacing;
+            border: 0;
+            border-top: 2px solid transparent;
+            color: $tlp-ui-white;
+
+            &.tlp-tab-active {
+                border-top-color: $tlp-ui-white;
+            }
+        }
+    }
+
+    .breadcrumb,
+    .breadcrumb-link,
+    #dashboard-tabs-dropdown-trigger {
+        color: lighten($tlp-ui-dimmed, 30%);
+    }
+
+    .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
+        background: transparentize($tlp-ui-dimmed, .9);
+        color: $tlp-ui-white;
+    }
+
+    .breadcrumb-switchable:hover > .breadcrumb-link::after {
+        color: $tlp-ui-white;
+    }
+
+    .breadcrumb-project-privacy-icon-with-flags {
+        &[data-privacy-icon='fa-lock'],
+        &[data-privacy-icon='fa-tlp-lock-plus-r'] {
+            background: transparentize($tlp-ui-dimmed, .7);
+            color: darken($tlp-theme-color, 3%);
+
+            > .fa {
+                color: darken($tlp-theme-color, 3%);
+            }
+        }
+
+        &[data-privacy-icon='fa-unlock'],
+        &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
+            background: transparentize($tlp-ui-dimmed, .7);
+            color: lighten($tlp-ui-dimmed, 30%);
+
+            > .fa {
+                color: lighten($tlp-ui-dimmed, 30%);
+            }
+        }
+    }
+
+    .project-administration-content,
+    .dashboard-widgets-container {
+        background: $tlp-theme-background-color;
+    }
+}

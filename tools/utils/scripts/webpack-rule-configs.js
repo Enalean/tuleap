@@ -213,7 +213,7 @@ const rule_scss_loader = {
 };
 
 const rule_css_assets = {
-    test: /(\.(png|gif|eot|ttf|woff|woff2|svg))$/,
+    test: /(\.(webp|png|gif|eot|ttf|woff|woff2|svg))$/,
     use: [
         {
             loader: "file-loader",

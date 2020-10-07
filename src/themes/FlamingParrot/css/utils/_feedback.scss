@@ -16,19 +16,19 @@
 
 .feedback_error {
     border-left-color: $ui-color-danger;
-    background: transparentize($ui-color-danger, .9);
-    color: $ui-color-danger;
+    background: desaturate(lighten(mix($white, $ui-color-danger, 25%), 23%), 15%);
+    color: darken($ui-color-danger, 15%);
 }
 
 .feedback_warning {
     border-left-color: $ui-color-warning;
-    background: transparentize($ui-color-warning, .9);
-    color: darken($ui-color-warning, 10%);
+    background: desaturate(lighten(mix($white, $ui-color-warning, 20%), 23%), 15%);
+    color: saturate(darken($ui-color-warning, 30%), 10%);
 }
 
 .feedback_info {
     border-left-color: $ui-color-info;
-    background: transparentize($ui-color-info, .9);
+    background: desaturate(lighten(mix($white, $ui-color-info, 25%), 23%), 15%);
     color: darken($ui-color-info, 30%);
 }
 
