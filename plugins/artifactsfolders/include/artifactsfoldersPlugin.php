@@ -39,6 +39,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\XML\PHPCast;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -237,7 +238,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         return new NatureIsChildLinkRetriever(
             Tracker_ArtifactFactory::instance(),
-            new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+            new ArtifactLinkFieldValueDao()
         );
     }
 

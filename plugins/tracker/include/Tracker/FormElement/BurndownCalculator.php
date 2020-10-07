@@ -23,17 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use DateTime;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculation
 {
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_dao;
 
     public function __construct(
-        Tracker_FormElement_Field_ComputedDao $computed_dao
+        ComputedFieldDao $computed_dao
     ) {
         $this->computed_dao        = $computed_dao;
     }

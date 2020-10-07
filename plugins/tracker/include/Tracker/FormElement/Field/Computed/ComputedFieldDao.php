@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,11 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Computed;
+
+use DataAccessResult;
+use DateTime;
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class ComputedFieldDao extends SpecificPropertiesDao
 {
 
     public function __construct()
@@ -57,7 +62,7 @@ class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // php
      * Duplicate specific properties of field
      *
      * @param int $from_field_id the field id source
-     * @param int $to_field_id the field id target
+     * @param int $to_field_id   the field id target
      *
      * @return bool true if ok, false otherwise
      */
@@ -77,7 +82,7 @@ class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // php
      * $target_name field values (values can be either float, int or computed)
      * If it's computed, the caller must continue its journey and call getComputedValue
      *
-     * @param int[] $source_ids
+     * @param int[]  $source_ids
      * @param String $target_name
      * @return DataAccessResult
      */
@@ -122,7 +127,7 @@ class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // php
      * This method will fetch in 1 pass, for a given artifact all linked artifact
      * $target_name field values (values can be either float, int or computed or manual)
      *
-     * @param int[] $source_ids
+     * @param int[]  $source_ids
      * @param String $target_name
      * @return DataAccessResult
      */
@@ -225,8 +230,8 @@ class Tracker_FormElement_Field_ComputedDao extends SpecificPropertiesDao // php
 
     public function getBurndownManualValueAtGivenTimestamp($artifact_id, $timestamp)
     {
-        $artifact_id               = $this->da->escapeInt($artifact_id);
-        $timestamp                 = $this->da->escapeInt($timestamp);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $timestamp   = $this->da->escapeInt($timestamp);
 
         $sql = "SELECT
                     tracker_changeset.submitted_on           AS last_changeset_date,

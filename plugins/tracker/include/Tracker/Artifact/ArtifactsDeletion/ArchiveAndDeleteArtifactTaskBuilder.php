@@ -32,8 +32,8 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLExport;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ComputedDao;
-use Tracker_FormElement_Field_ComputedDaoCache;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesBuilderFactory;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -111,7 +111,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     $tracker_artifact_factory
                 ),
                 new Tracker_ArtifactDao(),
-                new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+                new ComputedFieldDaoCache(new ComputedFieldDao()),
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao()
             ),

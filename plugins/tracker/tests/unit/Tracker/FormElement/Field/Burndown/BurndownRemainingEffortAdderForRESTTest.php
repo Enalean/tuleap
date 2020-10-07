@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
 class BurndownRemainingEffortAdderForRESTTest extends TestCase
@@ -52,7 +52,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
      */
     private $field_retriever;
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_cache;
 
@@ -61,7 +61,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         parent::setUp();
 
         $this->field_retriever = Mockery::mock(ChartConfigurationFieldRetriever::class);
-        $this->computed_cache  = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $this->computed_cache  = Mockery::mock(ComputedFieldDao::class);
         $this->adder           = new BurndownRemainingEffortAdderForREST($this->field_retriever, $this->computed_cache);
 
         $this->artifact = Mockery::mock(Tracker_Artifact::class);

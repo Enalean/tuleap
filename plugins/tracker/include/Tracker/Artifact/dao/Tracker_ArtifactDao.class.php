@@ -20,6 +20,7 @@
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 class Tracker_ArtifactDao extends DataAccessObject
 {
@@ -508,7 +509,7 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function deleteArtifactLinkReference($id)
     {
-        $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        $dao = new ArtifactLinkFieldValueDao();
         return $dao->deleteReference($id);
     }
 

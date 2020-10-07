@@ -26,13 +26,13 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_Value_ArtifactLinkDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 class NatureIsChildLinkRetriever
 {
 
     /**
-     * @var Tracker_FormElement_Field_Value_ArtifactLinkDao
+     * @var ArtifactLinkFieldValueDao
      */
     private $artifact_link_dao;
 
@@ -43,7 +43,7 @@ class NatureIsChildLinkRetriever
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElement_Field_Value_ArtifactLinkDao $artifact_link_dao
+        ArtifactLinkFieldValueDao $artifact_link_dao
     ) {
         $this->factory           = $artifact_factory;
         $this->artifact_link_dao = $artifact_link_dao;

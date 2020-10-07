@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,10 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
+namespace Tuleap\Tracker\FormElement\Field\NumericField;
 
-abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormElement_Field_ValueDao
+use Tracker_FormElement_Field_ValueDao;
+
+abstract class NumericFieldValueDao extends Tracker_FormElement_Field_ValueDao
 {
 
     /**

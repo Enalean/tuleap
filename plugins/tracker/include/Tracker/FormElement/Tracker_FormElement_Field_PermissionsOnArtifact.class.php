@@ -22,6 +22,7 @@
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactFieldValueDao;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
@@ -123,11 +124,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
    /**
     * Returns the PermissionsOnArtifactDao
     *
-    * @return Tracker_FormElement_Field_Value_PermissionsOnArtifactDao The dao
+    * @return PermissionsOnArtifactFieldValueDao The dao
     */
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_PermissionsOnArtifactDao();
+        return new PermissionsOnArtifactFieldValueDao();
     }
 
     private function getPermissionsOnArtifactUsageRetriever()

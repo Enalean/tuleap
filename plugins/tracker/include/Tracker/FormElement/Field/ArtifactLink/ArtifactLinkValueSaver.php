@@ -24,7 +24,6 @@ use EventManager;
 use Tracker_Artifact;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_Value_ArtifactLinkDao;
 use Tracker_ReferenceManager;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker;
@@ -41,7 +40,7 @@ class ArtifactLinkValueSaver
     private $reference_manager;
 
     /**
-     * @var Tracker_FormElement_Field_Value_ArtifactLinkDao
+     * @var ArtifactLinkFieldValueDao
      */
     private $dao;
 
@@ -61,7 +60,7 @@ class ArtifactLinkValueSaver
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElement_Field_Value_ArtifactLinkDao $dao,
+        ArtifactLinkFieldValueDao $dao,
         Tracker_ReferenceManager $reference_manager,
         EventManager $event_manager,
         ArtifactLinksUsageDao $artifact_links_usage_dao

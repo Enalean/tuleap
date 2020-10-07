@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalculation
 {
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $dao;
 
     public function __construct(
-        Tracker_FormElement_Field_ComputedDao $dao
+        ComputedFieldDao $dao
     ) {
         $this->dao                 = $dao;
     }

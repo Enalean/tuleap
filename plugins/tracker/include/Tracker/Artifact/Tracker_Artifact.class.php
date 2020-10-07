@@ -61,9 +61,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
@@ -906,7 +908,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getArtifactlinkDao()
     {
-        return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return new ArtifactLinkFieldValueDao();
     }
 
     /**
@@ -2185,7 +2187,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $event_manager              = SystemEventManager::instance();
         $logger                     = \BackendLogger::getDefaultLogger(Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER);
-        $computed_dao               = new Tracker_FormElement_Field_ComputedDao();
+        $computed_dao               = new ComputedFieldDao();
         $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
         $field_retriever            = new ChartConfigurationFieldRetriever(

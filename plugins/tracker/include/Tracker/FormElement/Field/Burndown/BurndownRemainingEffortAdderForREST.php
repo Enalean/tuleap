@@ -24,7 +24,7 @@ use DateTime;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
 class BurndownRemainingEffortAdderForREST
@@ -35,13 +35,13 @@ class BurndownRemainingEffortAdderForREST
     private $field_retriever;
 
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_cache_dao;
 
     public function __construct(
         ChartConfigurationFieldRetriever $field_retriever,
-        Tracker_FormElement_Field_ComputedDao $computed_cache_dao
+        ComputedFieldDao $computed_cache_dao
     ) {
         $this->field_retriever    = $field_retriever;
         $this->computed_cache_dao = $computed_cache_dao;

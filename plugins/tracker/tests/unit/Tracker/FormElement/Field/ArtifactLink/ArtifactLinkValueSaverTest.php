@@ -61,7 +61,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     private $changeset_value_id = 56;
 
-    /** @var Tracker_FormElement_Field_Value_ArtifactLinkDao */
+    /** @var ArtifactLinkFieldValueDao */
     private $dao;
 
     protected function setUp(): void
@@ -71,7 +71,9 @@ class ArtifactLinkValueSaverTest extends TestCase
         $this->field             = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->reference_manager = \Mockery::spy(\Tracker_ReferenceManager::class);
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->dao               = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        $this->dao               = \Mockery::spy(
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao::class
+        );
 
         $project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
 

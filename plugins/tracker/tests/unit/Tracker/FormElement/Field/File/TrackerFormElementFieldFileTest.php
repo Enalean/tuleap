@@ -32,7 +32,6 @@ use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
 use Tracker_FileInfoFactory;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_Value_FileDao;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -70,7 +69,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testGetChangesetValue()
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $value_dao = Mockery::mock(FileFieldValueDao::class);
 
         $value_dao->shouldReceive('searchById')->andReturn(
             [
@@ -94,7 +93,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testGetChangesetValueDoesntExist()
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $value_dao = Mockery::mock(FileFieldValueDao::class);
         $dar       = Mockery::mock(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturn(false);
         $dar->shouldReceive('rewind');

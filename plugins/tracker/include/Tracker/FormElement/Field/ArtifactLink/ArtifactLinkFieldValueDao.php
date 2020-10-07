@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 — 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -17,9 +17,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ */
 
-class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElement_Field_ValueDao
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_FormElement_Field_ValueDao;
+
+class ArtifactLinkFieldValueDao extends Tracker_FormElement_Field_ValueDao
 {
     public function __construct()
     {
@@ -102,7 +108,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql = "INSERT INTO $this->table_name(changeset_value_id, nature, artifact_id, keyword, group_id)
+        $sql  = "INSERT INTO $this->table_name(changeset_value_id, nature, artifact_id, keyword, group_id)
                 SELECT $to, nature, artifact_id, keyword, group_id
                 FROM $this->table_name
                 WHERE changeset_value_id = $from";
@@ -121,10 +127,10 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
 
     public function updateItemName($group_id, $oldKeyword, $keyword)
     {
-        $group_id = $this->da->quoteSmart($group_id);
-        $keyword = $this->da->quoteSmart($keyword);
+        $group_id   = $this->da->quoteSmart($group_id);
+        $keyword    = $this->da->quoteSmart($keyword);
         $oldKeyword = $this->da->quoteSmart($oldKeyword);
-        $sql = "UPDATE $this->table_name SET 
+        $sql        = "UPDATE $this->table_name SET
 			keyword=$keyword
             WHERE keyword=$oldKeyword AND group_id=$group_id";
         return $this->update($sql);
@@ -133,7 +139,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     public function deleteReference($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "DELETE FROM $this->table_name
+        $sql         = "DELETE FROM $this->table_name
                 WHERE artifact_id = $artifact_id";
         return $this->update($sql);
     }

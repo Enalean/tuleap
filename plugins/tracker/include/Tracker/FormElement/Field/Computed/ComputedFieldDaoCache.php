@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,30 +16,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+namespace Tuleap\Tracker\FormElement\Field\Computed;
+
+use Tracker_Artifact;
 
 /**
  * Cache computation for better performances
  */
-class Tracker_FormElement_Field_ComputedDaoCache
+class ComputedFieldDaoCache
 {
     private static $instance;
 
     private $dao;
 
-    public function __construct(Tracker_FormElement_Field_ComputedDao $dao)
+    public function __construct(ComputedFieldDao $dao)
     {
         $this->dao = $dao;
     }
 
     /**
-     * @return Tracker_FormElement_Field_ComputedDaoCache
+     * @return ComputedFieldDaoCache
      */
     public static function instance()
     {
         if (! self::$instance) {
-            $class = self::class;
-            self::$instance = new $class(new Tracker_FormElement_Field_ComputedDao());
+            $class          = self::class;
+            self::$instance = new $class(new ComputedFieldDao());
         }
         return self::$instance;
     }

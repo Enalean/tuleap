@@ -53,6 +53,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
@@ -1757,7 +1758,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore
             $reference_manager->updateProjectReferenceShortName($this->group_id, $previous_shortname, $this->item_name);
 
-            $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+            $artifact_link_value_dao = new ArtifactLinkFieldValueDao();
             $artifact_link_value_dao->updateItemName($this->group_id, $previous_shortname, $this->item_name);
 
             $in_new_dropdown_dao = new \Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao();
@@ -3281,7 +3282,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $this->getTrackerArtifactFactory(),
             new NatureIsChildLinkRetriever(
                 $this->getTrackerArtifactFactory(),
-                new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+                new ArtifactLinkFieldValueDao()
             )
         );
     }
