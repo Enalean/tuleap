@@ -21,7 +21,7 @@
     margin: 0 0 $tlp-medium-spacing;
     padding: $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
-    border-radius: 3px;
+    border-radius: $tlp-card-radius;
     background: $tlp-ui-white;
 
     &:last-child {

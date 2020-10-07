@@ -17,8 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
-
-.project-with-background {
-    @include background.css-custom-properties('bridge');
-}
+$tlp-card-radius: 3px;

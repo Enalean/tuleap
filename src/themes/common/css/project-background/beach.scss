@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Photo by Joschko Hammermann
-// https://unsplash.com/@hmmrmnn?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+@use 'background';
+
 .project-with-background {
-    --project-background-image: url('../../images/project-background/beach.webp');
-    --project-background-prominent-color: #765730;
+    @include background.css-custom-properties('beach');
 }

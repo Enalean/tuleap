@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
@@ -17,8 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'background';
+declare(strict_types=1);
 
-.project-with-background {
-    @include background.css-custom-properties('bridge');
+namespace Tuleap\Project\ProjectBackground;
+
+/**
+ * @psalm-immutable
+ */
+class ProjectBackground
+{
+    protected const NO_BACKGROUND_IDENTIFIER = "0";
+
+    /**
+     * @var string
+     */
+    public $identifier;
+    /**
+     * @var string
+     */
+    public $author;
+    /**
+     * @var bool
+     */
+    public $is_selected;
+    /**
+     * @var bool
+     */
+    public $is_no_background;
+
+    public function __construct(string $identifier, string $author, bool $is_selected)
+    {
+        $this->identifier  = $identifier;
+        $this->author      = $author;
+        $this->is_selected = $is_selected;
+
+        $this->is_no_background = $identifier === self::NO_BACKGROUND_IDENTIFIER;
+    }
 }

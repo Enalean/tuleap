@@ -17,8 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../themes/common/css/project-background/background' with ($project-background-images-path: '../../common/images/project-background/');
+@use 'sass:map';
+
 body {
     @import '../../../common/css/project-background/project-background';
+
+    @each $identifier, $definition in background.$definitions {
+        .project-admin-background-preview-#{$identifier} {
+            background: linear-gradient($opacifier-color, $opacifier-color),
+                map-get($definition, 'image'),
+                linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
+            background-size: cover;
+        }
+    }
 }
 
 .project-with-background {
@@ -102,4 +114,77 @@ body {
     .dashboard-widgets-container {
         background: $tlp-theme-background-color;
     }
+}
+
+.project-admin-background-list {
+    display: grid;
+    grid-gap: $tlp-medium-spacing $tlp-medium-spacing;
+    grid-template-columns: 1fr 1fr;
+
+    @media screen and (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+
+    @media screen and (min-width: 1600px) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.project-admin-background {
+    position: relative;
+    height: 150px;
+
+    &:hover {
+        .project-admin-background-author {
+            opacity: 1;
+        }
+    }
+}
+
+.project-admin-background-radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+
+    &:focus + .project-admin-background-card,
+    &:checked + .project-admin-background-card {
+        border-color: $tlp-theme-color;
+    }
+}
+
+.project-admin-background-card {
+    display: flex;
+    flex-direction: column;
+    row-gap: $tlp-small-spacing;
+    height: 100%;
+}
+
+.project-admin-background-author {
+    position: absolute;
+    bottom: $tlp-medium-spacing;
+    width: calc(100% - #{2 * $tlp-medium-spacing + 2px});
+    padding: $tlp-small-spacing;
+    transition: opacity 300ms ease-in-out;
+    opacity: 0;
+    background: transparentize($tlp-theme-sidebar-background-color, .3);
+    color: $tlp-ui-white;
+    font-size: .75rem;
+}
+
+.project-admin-background-preview {
+    flex-grow: 1;
+    border-radius: $tlp-card-radius;
+}
+
+.project-admin-background-preview-0 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $tlp-theme-background-color;
+    color: $tlp-ui-dimmed;
+    font-size: .875rem;
 }

@@ -395,6 +395,9 @@ msgstr "Disponible ?"
 msgid "Back"
 msgstr "Retour"
 
+msgid "Background"
+msgstr "Fond"
+
 msgid "Bad"
 msgstr "Mauvaise"
 
@@ -412,6 +415,9 @@ msgstr "Bloquer l'utilisation des mots de passe connus comme compromis"
 
 msgid "Blue"
 msgstr "Bleu"
+
+msgid "By %s"
+msgstr "Par %s"
 
 msgid "By default, its content is available to all authenticated users."
 msgstr "Par défaut, son contenu est accessible à tout utilisateur authentifié."
@@ -925,6 +931,9 @@ msgstr "Groupes"
 msgid "HTML"
 msgstr "HTML"
 
+msgid "Header background"
+msgstr "Image de fond de l'entête"
+
 msgid "Heartbeat"
 msgstr "Activité"
 
@@ -1313,6 +1322,9 @@ msgstr "Annonces que {{ user_group_name }} peuvent voir"
 msgid "No"
 msgstr "Non"
 
+msgid "No background"
+msgstr "Pas d'image de fond"
+
 msgid "No children projects"
 msgstr "Aucun projet enfant"
 
@@ -1569,6 +1581,9 @@ msgid ""
 msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
+
+msgid "Project background"
+msgstr "Image de fond du projet"
 
 msgid "Project banner"
 msgstr "Bannière du projet"
@@ -1847,6 +1862,9 @@ msgstr "Sauvegarder les catégories"
 
 msgid "Save delegated permissions"
 msgstr "Sauvegarder les permissions déléguées"
+
+msgid "Save header background"
+msgstr "Sauvegarder l'image de fond"
 
 msgid "Save information"
 msgstr "Enregistrer les informations"

@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use 'sass:map';
+
+$project-background-images-path: '../../images/project-background/' !default;
+
+$definitions: (
+    beach:
+    (
+        // Photo by Joschko Hammermann
+        // https://unsplash.com/@hmmrmnn?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/beach.webp),
+        color: #765730
+    ),
+    bridge:
+    (
+        // Photo by David Emrich
+        // https://unsplash.com/@davidemrich?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/bridge.webp),
+        color: #757f16
+    )
+);
+
+@function get-image($background) {
+    $def: map-get($definitions, $background);
+    @return map-get($def, 'image');
+}
+
+@function get-color($background) {
+    $def: map-get($definitions, $background);
+    @return map-get($def, 'color');
+}
+
+@mixin css-custom-properties($background) {
+    --project-background-image: #{get-image($background)};
+    --project-background-prominent-color: #{get-color($background)};
+}

@@ -53,7 +53,8 @@ module.exports = {
             "turn",
             "ms",
             "s",
-            "%"
+            "%",
+            "fr"
         ],
         // Plugins
         "order/properties-alphabetical-order": null,
