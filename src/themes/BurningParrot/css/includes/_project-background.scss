@@ -54,6 +54,7 @@ body {
             border-top: 2px solid transparent;
             color: $tlp-ui-white;
 
+            &:hover,
             &.tlp-tab-active {
                 border-top-color: $tlp-ui-white;
             }
