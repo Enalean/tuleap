@@ -112,6 +112,24 @@ final class SynchronizedFieldsGathererTest extends \PHPUnit\Framework\TestCase
         $this->gatherer->gather($tracker);
     }
 
+    public function testItThrowsWhenTrackerHasATitleFieldWithIncorrectType(): void
+    {
+        $tracker        = $this->buildTestTracker(27);
+        $this->mockArtifactLinkField($tracker);
+
+        $title_field    = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field->shouldReceive('getId')->andReturn(10);
+        $title_semantic = M::mock(\Tracker_Semantic_Title::class);
+        $title_semantic->shouldReceive('getField')->andReturn($title_field);
+        $this->title_factory->shouldReceive('getByTracker')
+            ->once()
+            ->with($tracker)
+            ->andReturn($title_semantic);
+
+        $this->expectException(TitleFieldHasIncorrectTypeException::class);
+        $this->gatherer->gather($tracker);
+    }
+
     public function testItThrowsWhenTrackerHasNoDescriptionField(): void
     {
         $tracker        = $this->buildTestTracker(27);
@@ -201,7 +219,7 @@ final class SynchronizedFieldsGathererTest extends \PHPUnit\Framework\TestCase
 
     private function mockTitleField(\Tracker $tracker): \Tracker_FormElement_Field_Text
     {
-        $title_field    = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field    = M::mock(\Tracker_FormElement_Field_String::class);
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
         $title_semantic->shouldReceive('getField')->andReturn($title_field);
         $this->title_factory->shouldReceive('getByTracker')

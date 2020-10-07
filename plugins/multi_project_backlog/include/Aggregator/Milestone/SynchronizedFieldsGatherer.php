@@ -89,12 +89,17 @@ class SynchronizedFieldsGatherer
 
     /**
      * @throws NoTitleFieldException
+     * @throws TitleFieldHasIncorrectTypeException
      */
     private function getTitleField(\Tracker $milestone_tracker): \Tracker_FormElement_Field_Text
     {
         $title_field = $this->title_factory->getByTracker($milestone_tracker)->getField();
         if (! $title_field) {
             throw new NoTitleFieldException($milestone_tracker->getId());
+        }
+
+        if (! $title_field instanceof \Tracker_FormElement_Field_String) {
+            throw new TitleFieldHasIncorrectTypeException((int) $milestone_tracker->getId(), (int) $title_field->getId());
         }
         return $title_field;
     }

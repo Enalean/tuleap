@@ -254,7 +254,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
 
     private function mockTitleField(\Tracker $tracker): void
     {
-        $title_field    = M::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field    = M::mock(\Tracker_FormElement_Field_String::class);
         $title_field->shouldReceive('getId')->andReturn('742');
         $title_semantic = M::mock(\Tracker_Semantic_Title::class);
         $title_semantic->shouldReceive('getField')->andReturn($title_field);
