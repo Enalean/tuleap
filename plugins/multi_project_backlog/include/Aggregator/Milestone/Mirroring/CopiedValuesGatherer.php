@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
@@ -49,10 +50,12 @@ class CopiedValuesGatherer
         $fields            = $this->fields_gatherer->gather($aggregator_top_milestone_tracker);
         $title_value       = $this->readTitle($fields, $aggregator_milestone_last_changeset);
         $description_value = $this->readDesription($fields, $aggregator_milestone_last_changeset);
+        $status_value      = $this->readStatus($fields, $aggregator_milestone_last_changeset);
 
         return new CopiedValues(
             $title_value,
             $description_value,
+            $status_value,
             (int) $aggregator_milestone_last_changeset->getSubmittedOn(),
             (int) $aggregator_milestone_last_changeset->getArtifact()->getId()
         );
@@ -80,7 +83,7 @@ class CopiedValuesGatherer
     }
 
     /**
-     * @throws MilestoneMirroringException
+     * @throws NoDescriptionChangesetValueException
      */
     private function readDesription(
         SynchronizedFields $fields,
@@ -96,5 +99,24 @@ class CopiedValuesGatherer
         }
         assert($description_value instanceof \Tracker_Artifact_ChangesetValue_Text);
         return $description_value;
+    }
+
+    /**
+     * @throws NoStatusChangesetValueException
+     */
+    private function readStatus(
+        SynchronizedFields $fields,
+        \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
+    ): \Tracker_Artifact_ChangesetValue_List {
+        $status_field = $fields->getStatusField();
+        $status_value = $aggregator_milestone_last_changeset->getValue($status_field);
+        if (! $status_value) {
+            throw new NoStatusChangesetValueException(
+                (int) $aggregator_milestone_last_changeset->getId(),
+                (int) $status_field->getId()
+            );
+        }
+        assert($status_value instanceof \Tracker_Artifact_ChangesetValue_List);
+        return $status_value;
     }
 }

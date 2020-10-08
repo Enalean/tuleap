@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
 use Mockery;
@@ -27,12 +29,9 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use XMLImportHelper;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class FieldValueMatcherTest extends TestCase
+final class FieldValueMatcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -40,11 +39,41 @@ class FieldValueMatcherTest extends TestCase
      * @var FieldValueMatcher
      */
     private $matcher;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
+     */
+    private $source_field;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
+     */
+    private $target_field;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
+     */
+    private $source_field_bind;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
+     */
+    private $target_field_bind;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
+     */
+    private $target_user_field;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     */
+    private $user;
+    /**
+     * @var SimpleXMLElement
+     */
+    private $xml;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XMLImportHelper
+     */
+    private $user_finder;
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->source_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->target_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->source_field_bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
@@ -66,108 +95,101 @@ class FieldValueMatcherTest extends TestCase
         $this->matcher     = new FieldValueMatcher($this->user_finder);
     }
 
-    public function testItRetrievesMatchingValueByName()
-    {
-        $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', '', 0, 0);
+    /**
+     * @dataProvider dataProviderMatchingValue
+     */
+    public function testItMatchesValueByDuckTyping(
+        \Tracker_FormElement_Field_List_BindValue $source_value,
+        array $values,
+        ?int $expected_bind_value_id
+    ): void {
         $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-
-        $target_value_01 = new Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', '', 0, 0);
-        $target_value_02 = new Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', '', 1, 0);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn([
-            $target_value_01,
-            $target_value_02,
-        ]);
+        $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
 
         $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
 
-        $this->assertEquals($matching_value, 201);
+        self::assertEquals($expected_bind_value_id, $matching_value);
     }
 
-    public function testItRetrievesMatchingValueByNameWithDifferentCases()
-    {
-        $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'a', '', 0, 0);
-        $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-
-        $target_value_01 = new Tracker_FormElement_Field_List_Bind_StaticValue(200, 'A', '', 0, 0);
-        $target_value_02 = new Tracker_FormElement_Field_List_Bind_StaticValue(201, 'b', '', 1, 0);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn([
-            $target_value_01,
-            $target_value_02,
-        ]);
-
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
-
-        $this->assertEquals($matching_value, 200);
-    }
-
-    public function testItRetrievesMatchingValueByNameEvenIfTargerValueIsHidden()
-    {
-        $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', '', 0, 0);
-        $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-
-        $target_value_01 = new Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', '', 0, 0);
-        $target_value_02 = new Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', '', 1, 1);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn([
-            $target_value_01,
-            $target_value_02,
-        ]);
-
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
-
-        $this->assertEquals($matching_value, 201);
-    }
-
-    public function testItRetrievesFirstMatchingValueByNameIfMultipleValuesHaveTheSameLabel()
-    {
-        $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, '1', '', 0, 0);
-        $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-
-        $target_value_01 = new Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', '', 0, 0);
-        $target_value_02 = new Tracker_FormElement_Field_List_Bind_StaticValue(201, '1', '', 1, 0);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn([
-            $target_value_01,
-            $target_value_02,
-        ]);
-
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
-
-        $this->assertEquals($matching_value, 200);
-    }
-
-    public function testItReturnsNullIfNoMatchingValue()
-    {
-        $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, '3', '', 0, 0);
-        $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
-
-        $target_value_01 = new Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', '', 0, 0);
-        $target_value_02 = new Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', '', 1, 0);
-        $target_value_00 = new Tracker_FormElement_Field_List_Bind_StaticValue(202, '0', '', 1, 0);
-        $this->target_field_bind->shouldReceive('getAllValues')->andReturn([
-            $target_value_01,
-            $target_value_02,
-            $target_value_00,
-        ]);
-
-        $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
-
-        $this->assertEquals($matching_value, null);
-    }
-
-    public function testItReturnsNoneValueIfSourceValueIsAlsoNoneAndTargetValueNotRequired()
+    public function testItReturnsNoneValueIfSourceValueIsAlsoNoneAndTargetValueNotRequired(): void
     {
         $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 100);
 
-        $this->assertEquals($matching_value, 100);
+        $this->assertEquals(100, $matching_value);
     }
 
-    public function testItReturnsNoneValueIfSourceValueIsNotProvided()
+    public function testItReturnsNoneValueIfSourceValueIsNotProvided(): void
     {
         $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 0);
 
-        $this->assertEquals($matching_value, 100);
+        $this->assertEquals(100, $matching_value);
     }
 
-    public function testItReturnsTrueIfThereIsAMatchingUserValue()
+    public function dataProviderMatchingValue(): array
+    {
+        return [
+            'It retrieves matching value by label'                          => [
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', 'Irrelevant', 0, 0),
+                [
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
+                ],
+                201
+            ],
+            'It matches value label with different cases'                   => [
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, 'a', 'Irrelevant', 0, 0),
+                [
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, 'A', 'Irrelevant', 0, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, 'b', 'Irrelevant', 1, 0),
+                ],
+                200
+            ],
+            'It matches value even if it is hidden'                         => [
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '2', 'Irrelevant', 0, 0),
+                [
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 1),
+                ],
+                201
+            ],
+            'It matches first value if multiple values have the same label' => [
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '1', 'Irrelevant', 0, 0),
+                [
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '1', 'Irrelevant', 1, 0),
+                ],
+                200
+            ],
+            'It returns null if no matching value'                          => [
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(101, '3', 'Irrelevant', 0, 0),
+                [
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(200, '1', 'Irrelevant', 0, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '2', 'Irrelevant', 1, 0),
+                    new \Tracker_FormElement_Field_List_Bind_StaticValue(201, '0', 'Irrelevant', 1, 0),
+                ],
+                null
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderMatchingValue
+     */
+    public function testItMatchesBindValueByDuckTyping(
+        \Tracker_FormElement_Field_List_BindValue $source_value,
+        array $values,
+        ?int $expected_bind_value_id
+    ): void {
+        $this->target_field_bind->shouldReceive('getAllValues')->andReturn($values);
+
+        $matching_value = $this->matcher->getMatchingBindValueByDuckTyping($source_value, $this->target_field);
+        self::assertEquals(
+            $expected_bind_value_id,
+            ($matching_value !== null) ? $matching_value->getId() : $matching_value
+        );
+    }
+
+    public function testItReturnsTrueIfThereIsAMatchingUserValue(): void
     {
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
@@ -178,7 +200,7 @@ class FieldValueMatcherTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseIfUserIsAnonymous()
+    public function testItReturnsFalseIfUserIsAnonymous(): void
     {
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
@@ -188,7 +210,7 @@ class FieldValueMatcherTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseIfThereIsNoMatchingUserValue()
+    public function testItReturnsFalseIfThereIsNoMatchingUserValue(): void
     {
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->user_finder->shouldReceive('getUser')->andReturn($this->user);

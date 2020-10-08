@@ -26,6 +26,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerCollection;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\MappedStatusValue;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\StatusValueMapper;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
@@ -50,6 +52,10 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
      */
     private $target_fields_gatherer;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|StatusValueMapper
+     */
+    private $status_mapper;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|\Tracker_ArtifactCreator
      */
     private $artifact_creator;
@@ -59,9 +65,11 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $this->transaction_executor   = new DBTransactionExecutorPassthrough();
         $this->target_fields_gatherer = M::mock(SynchronizedFieldsGatherer::class);
         $this->artifact_creator       = M::mock(\Tracker_ArtifactCreator::class);
+        $this->status_mapper          = M::mock(StatusValueMapper::class);
         $this->mirrors_creator        = new MirrorMilestonesCreator(
             $this->transaction_executor,
             $this->target_fields_gatherer,
+            $this->status_mapper,
             $this->artifact_creator
         );
     }
@@ -82,6 +90,8 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $this->target_fields_gatherer->shouldReceive('gather')
             ->with($second_tracker)
             ->andReturn($this->buildSynchronizedFields(2001, 2002, 2003, 2004, 2005, 2006));
+        $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
+            ->andReturns($this->buildMappedValue(5000), $this->buildMappedValue(6000));
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
@@ -104,6 +114,8 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
 
         $this->target_fields_gatherer->shouldReceive('gather')
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
+        $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
+            ->andReturn($this->buildMappedValue(5000));
         $this->artifact_creator->shouldReceive('create')->andReturnFalse();
 
         $this->expectException(MirrorMilestoneCreationException::class);
@@ -122,7 +134,22 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $description_field->shouldReceive('getTracker')->andReturn($tracker);
         $description_changeset_value = new \Tracker_Artifact_ChangesetValue_Text(10001, M::mock(\Tracker_Artifact_Changeset::class), $description_field, true, 'Description', 'text');
 
-        return new CopiedValues($title_changeset_value, $description_changeset_value, 123456789, 112);
+        $planned_value          = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
+        $status_changeset_value = new \Tracker_Artifact_ChangesetValue_List(
+            10002,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field::class),
+            true,
+            [$planned_value]
+        );
+
+        return new CopiedValues(
+            $title_changeset_value,
+            $description_changeset_value,
+            $status_changeset_value,
+            123456789,
+            112
+        );
     }
 
     private function buildTestTracker(int $tracker_id, \Project $project): \Tracker
@@ -171,5 +198,10 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
     private function buildTestDateField(int $id, int $tracker_id): \Tracker_FormElement_Field_Date
     {
         return new \Tracker_FormElement_Field_Date($id, $tracker_id, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 1);
+    }
+
+    private function buildMappedValue(int $bind_value_id): MappedStatusValue
+    {
+        return new MappedStatusValue([$bind_value_id]);
     }
 }
