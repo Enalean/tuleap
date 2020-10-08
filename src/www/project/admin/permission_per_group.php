@@ -33,7 +33,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\UGroupLiteralizer;
 
 require_once __DIR__ . '/../../include/pre.php';
@@ -50,7 +50,7 @@ $event_manager = EventManager::instance();
 $event_manager->processEvent(new PermissionPerGroupDisplayEvent($GLOBALS['HTML']));
 
 $title = _('Permissions per group');
-$navigation_displayer = new HeaderNavigationDisplayer(new ProjectBackgroundDao());
+$navigation_displayer = new HeaderNavigationDisplayer(ProjectBackgroundConfiguration::buildSelf());
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 
 $ugroup_manager    = new UGroupManager();

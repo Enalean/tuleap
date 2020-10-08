@@ -42,7 +42,7 @@ use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -104,9 +104,9 @@ class ProjectDashboardController
      */
     private $css_asset;
     /**
-     * @var ProjectBackgroundDao
+     * @var ProjectBackgroundConfiguration
      */
-    private $background_dao;
+    private $background_configuration;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -122,7 +122,7 @@ class ProjectDashboardController
         BaseLayout $layout,
         IncludeAssets $core_assets,
         CssAsset $css_asset,
-        ProjectBackgroundDao $background_dao
+        ProjectBackgroundConfiguration $background_configuration
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -137,7 +137,7 @@ class ProjectDashboardController
         $this->layout                   = $layout;
         $this->javascript_assets        = $core_assets;
         $this->css_asset                = $css_asset;
-        $this->background_dao           = $background_dao;
+        $this->background_configuration = $background_configuration;
     }
 
     public function display(HTTPRequest $request)
@@ -182,7 +182,7 @@ class ProjectDashboardController
         $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
         $main_classes = [];
-        if ($this->background_dao->getBackground((int) $project->getID())) {
+        if ($this->background_configuration->getBackgroundIgnoringFeatureFlag($project)) {
             $main_classes[] = 'project-with-background';
         }
 

@@ -28,18 +28,18 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
 class HeaderNavigationDisplayer
 {
     /**
-     * @var ProjectBackgroundDao
+     * @var ProjectBackgroundConfiguration
      */
-    private $dao;
+    private $background_configuration;
 
-    public function __construct(ProjectBackgroundDao $dao)
+    public function __construct(ProjectBackgroundConfiguration $background_configuration)
     {
-        $this->dao = $dao;
+        $this->background_configuration = $background_configuration;
     }
 
     public function displayBurningParrotNavigation($title, Project $project, $current_pane_shortname)
@@ -55,7 +55,7 @@ class HeaderNavigationDisplayer
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
         $main_classes = [];
-        if ($this->dao->getBackground((int) $project->getID())) {
+        if ($this->background_configuration->getBackground($project)) {
             $main_classes[] = 'project-with-background';
         }
 
