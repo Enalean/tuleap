@@ -25,6 +25,8 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoEndPeriodChangesetValueException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStartDateChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
@@ -91,6 +93,8 @@ final class CopiedValuesGathererTest extends TestCase
         self::assertSame($status_field_value, $values->getStatusValue());
         self::assertSame(123456789, $values->getSubmittedOn());
         self::assertEquals(104, $values->getArtifactId());
+        self::assertSame($start_date_field_value, $values->getStartDateValue());
+        self::assertSame($end_date_field_value, $values->getEndPeriodValue());
     }
 
     public function testItThrowsWhenChangesetHasNoValueForTitleField(): void
@@ -163,6 +167,65 @@ final class CopiedValuesGathererTest extends TestCase
         $changeset->setNoFieldValue($synchronized_fields->getStatusField());
 
         $this->expectException(NoStatusChangesetValueException::class);
+        $this->gatherer->gather($changeset, $tracker);
+    }
+
+    public function testItThrowsWhenChangesetHasNoValueForStartDateField(): void
+    {
+        $artifact  = M::mock(\Tracker_Artifact::class);
+        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
+        $tracker   = $this->buildTestTracker(89);
+
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(10000, $changeset, $title_field, true, 'My awesome title', 'text');
+        $changeset->setFieldValue($title_field, $title_field_value);
+
+        $description_field       = $synchronized_fields->getDescriptionField();
+        $description_field_value = new \Tracker_Artifact_ChangesetValue_Text(10001, $changeset, $description_field, true, 'My awesome description', 'text');
+        $changeset->setFieldValue($description_field, $description_field_value);
+
+        $status_field       = $synchronized_fields->getStatusField();
+        $status_field_value = new \Tracker_Artifact_ChangesetValue_List(10002, $changeset, $status_field, true, ['Ongoing']);
+        $changeset->setFieldValue($status_field, $status_field_value);
+
+        $changeset->setNoFieldValue($synchronized_fields->getStartDateField());
+
+        $this->expectException(NoStartDateChangesetValueException::class);
+        $this->gatherer->gather($changeset, $tracker);
+    }
+
+    public function testItThrowsWhenChangesetHasNoValueForEndPeriodField(): void
+    {
+        $artifact  = M::mock(\Tracker_Artifact::class);
+        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
+        $tracker   = $this->buildTestTracker(89);
+
+        $synchronized_fields = $this->buildSynchronizedFields();
+        $this->fields_gatherer->shouldReceive('gather')->andReturn($synchronized_fields);
+
+        $title_field       = $synchronized_fields->getTitleField();
+        $title_field_value = new \Tracker_Artifact_ChangesetValue_String(10000, $changeset, $title_field, true, 'My awesome title', 'text');
+        $changeset->setFieldValue($title_field, $title_field_value);
+
+        $description_field       = $synchronized_fields->getDescriptionField();
+        $description_field_value = new \Tracker_Artifact_ChangesetValue_Text(10001, $changeset, $description_field, true, 'My awesome description', 'text');
+        $changeset->setFieldValue($description_field, $description_field_value);
+
+        $status_field       = $synchronized_fields->getStatusField();
+        $status_field_value = new \Tracker_Artifact_ChangesetValue_List(10002, $changeset, $status_field, true, ['Ongoing']);
+        $changeset->setFieldValue($status_field, $status_field_value);
+
+        $timeframe_fields = $synchronized_fields->getTimeframeFields();
+        $start_date_field       = $timeframe_fields->getStartDateField();
+        $start_date_field_value = new \Tracker_Artifact_ChangesetValue_Date(10003, $changeset, $start_date_field, true, 123456789);
+        $changeset->setFieldValue($start_date_field, $start_date_field_value);
+
+        $changeset->setNoFieldValue($timeframe_fields->getEndPeriodField());
+
+        $this->expectException(NoEndPeriodChangesetValueException::class);
         $this->gatherer->gather($changeset, $tracker);
     }
 

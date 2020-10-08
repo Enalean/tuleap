@@ -56,7 +56,9 @@ final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
                 1001 => ['new_values' => '112', 'natures' => ['112' => MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME]],
                 1002 => 'Aggregator Release',
                 1003 => ['content' => '<p>Description</p>', 'format' => 'html'],
-                1004 => [3001]
+                1004 => [3001],
+                1005 => '2020-10-01',
+                1006 => '2020-10-10'
             ],
             $fields_data->toFieldsDataArray()
         );
@@ -94,12 +96,34 @@ final class MirrorMilestoneFieldsDataTest extends \PHPUnit\Framework\TestCase
             $list_values
         );
 
+        $field_start_date                      = M::mock(\Tracker_FormElement_Field::class);
+        $field_start_date->shouldReceive('formatDateForDisplay')->andReturn('2020-10-01');
+        $start_date_changeset_value = new \Tracker_Artifact_ChangesetValue_Date(
+            100003,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            $field_start_date,
+            true,
+            1285891200
+        );
+
+        $field_end_period                      = M::mock(\Tracker_FormElement_Field_Date::class);
+        $field_end_period->shouldReceive('formatDateForDisplay')->andReturn('2020-10-10');
+        $end_period_changeset_value = new \Tracker_Artifact_ChangesetValue_Date(
+            100004,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            $field_end_period,
+            true,
+            1602288000
+        );
+
         return new CopiedValues(
             $title_changeset_value,
             $description_changeset_value,
             $status_changeset_value,
             123456789,
-            $aggregator_artifact_id
+            $aggregator_artifact_id,
+            $start_date_changeset_value,
+            $end_period_changeset_value
         );
     }
 

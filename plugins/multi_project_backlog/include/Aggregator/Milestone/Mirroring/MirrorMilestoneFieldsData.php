@@ -68,7 +68,26 @@ final class MirrorMilestoneFieldsData
      * @psalm-readonly
      */
     private $mapped_status_value;
+    /**
+     * @var \Tracker_Artifact_ChangesetValue_Date
+     */
+    private $start_date_value;
+    /**
+     * @var \Tracker_Artifact_ChangesetValue
+     */
+    private $end_period_value;
+    /**
+     * @var int
+     */
+    private $start_date_field_id;
+    /**
+     * @var int
+     */
+    private $end_period_field_id;
 
+    /**
+     * @param \Tracker_Artifact_ChangesetValue_Date | \Tracker_Artifact_ChangesetValue_Numeric $end_period_value
+     */
     private function __construct(
         int $artifact_link_field_id,
         int $aggregator_milestone_id,
@@ -77,7 +96,11 @@ final class MirrorMilestoneFieldsData
         int $description_field_id,
         \Tracker_Artifact_ChangesetValue_Text $description_changeset_value,
         int $status_field_id,
-        MappedStatusValue $mapped_status_value
+        MappedStatusValue $mapped_status_value,
+        int $start_date_field_id,
+        \Tracker_Artifact_ChangesetValue_Date $start_date_value,
+        int $end_period_field_id,
+        \Tracker_Artifact_ChangesetValue $end_period_value
     ) {
         $this->artifact_link_field_id      = $artifact_link_field_id;
         $this->aggregator_milestone_id     = $aggregator_milestone_id;
@@ -87,6 +110,10 @@ final class MirrorMilestoneFieldsData
         $this->description_changeset_value = $description_changeset_value;
         $this->status_field_id             = $status_field_id;
         $this->mapped_status_value         = $mapped_status_value;
+        $this->start_date_field_id         = $start_date_field_id;
+        $this->start_date_value            = $start_date_value;
+        $this->end_period_field_id         = $end_period_field_id;
+        $this->end_period_value            = $end_period_value;
     }
 
     public static function fromCopiedValuesAndSynchronizedFields(
@@ -102,7 +129,11 @@ final class MirrorMilestoneFieldsData
             (int) $target_fields->getDescriptionField()->getId(),
             $copied_values->getDescriptionValue(),
             (int) $target_fields->getStatusField()->getId(),
-            $mapped_status_value
+            $mapped_status_value,
+            (int) $target_fields->getTimeframeFields()->getStartDateField()->getId(),
+            $copied_values->getStartDateValue(),
+            (int) $target_fields->getTimeframeFields()->getEndPeriodField()->getId(),
+            $copied_values->getEndPeriodValue()
         );
     }
 
@@ -115,7 +146,9 @@ final class MirrorMilestoneFieldsData
             $this->artifact_link_field_id => $this->toArtifactLinkFieldData(),
             $this->title_field_id         => $this->title_changeset_value->getValue(),
             $this->description_field_id   => $this->toTextFieldData($this->description_changeset_value),
-            $this->status_field_id        => $this->mapped_status_value->getValues()
+            $this->status_field_id        => $this->mapped_status_value->getValues(),
+            $this->start_date_field_id        => $this->start_date_value->getValue(),
+            $this->end_period_field_id        => $this->end_period_value->getValue(),
         ];
     }
 

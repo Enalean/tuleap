@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,16 +24,12 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status;
 
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
 
-final class NoDuckTypedMatchingValueException extends \RuntimeException implements MilestoneMirroringException
+final class NoEndPeriodChangesetValueException extends \RuntimeException implements MilestoneMirroringException
 {
-    public function __construct(string $source_value_label, int $contributor_endperiod_field_id)
+    public function __construct(int $changeset_id, int $start_date_field_id)
     {
         parent::__construct(
-            sprintf(
-                'No matching value found for value %s in field #%d by duck typing.',
-                $source_value_label,
-                $contributor_endperiod_field_id
-            )
+            "Expected changeset #$changeset_id to have a value for End period field #$start_date_field_id, but this value was not found"
         );
     }
 }
