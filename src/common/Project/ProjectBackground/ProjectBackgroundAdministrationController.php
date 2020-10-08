@@ -24,6 +24,7 @@ namespace Tuleap\Project\ProjectBackground;
 
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
@@ -77,11 +78,11 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project/project-admin-banner.js'));
 
-        $callback = function (\Project $project, \PFUser $current_user): void {
+        $callback = function (\Project $project, \PFUser $current_user) use ($request): void {
             $backgrounds = $this->background_retriever->getBackgrounds($project);
             $this->renderer->renderToPage(
                 'administration',
-                new ProjectBackgroundAdministrationPresenter($backgrounds),
+                new ProjectBackgroundAdministrationPresenter($backgrounds, DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()),
             );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(

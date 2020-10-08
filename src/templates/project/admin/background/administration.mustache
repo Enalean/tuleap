@@ -1,42 +1,56 @@
-<div class="tlp-framed-horizontally">
-    <section class="tlp-pane">
-        <form class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    <i class="tlp-pane-title-icon far fa-image"></i>
-                    {{# gettext }}Header background{{/ gettext }}
-                </h1>
+{{# is_browser_unsupported }}
+    <section class="tlp-framed-horizontally">
+        <div class="empty-page">
+            <div class="empty-page-text-with-small-text">
+                {{# gettext }} Your browser is not supported.{{/ gettext }}
+                <div class="empty-page-small-text">
+                    {{# gettext }} We recommend the latest version of Firefox, Chrome, or Edge.{{/ gettext }}
+                </div>
             </div>
-            <section class="tlp-pane-section project-admin-background-list">
-                {{# backgrounds }}
-                    <div class="project-admin-background">
-                        <input
-                            type="radio"
-                            name="new-background"
-                            id="new-background-{{ identifier }}"
-                            class="project-admin-background-radio"
-                            {{# is_selected }}checked{{/ is_selected }}
-                            value="{{ identifier }}"
-                        >
-                        <label class="tlp-card tlp-card-selectable project-admin-background-card" for="new-background-{{ identifier }}">
-                            <div class="project-admin-background-preview project-admin-background-preview-{{ identifier }}">
-                                {{# is_no_background }}
-                                    {{# gettext }}No background{{/ gettext }}
-                                {{/ is_no_background }}
-                            </div>
-                            {{# author }}
-                                <div class="project-admin-background-author">{{# gettext }}By %s | {{ author }}{{/ gettext }}</div>
-                            {{/ author }}
-                        </label>
-                    </div>
-                {{/ backgrounds }}
-            </section>
-            <section class="tlp-pane-section tlp-pane-section-submit">
-                <button type="submit" class="tlp-button-primary tlp-button-disabled" disabled>
-                    <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
-                    {{# gettext }}Save header background{{/ gettext }}
-                </button>
-            </section>
-        </form>
+        </div>
     </section>
-</div>
+{{/ is_browser_unsupported }}
+{{^ is_browser_unsupported }}
+    <div class="tlp-framed-horizontally">
+        <section class="tlp-pane">
+            <form class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon far fa-image"></i>
+                        {{# gettext }}Header background{{/ gettext }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section project-admin-background-list">
+                    {{# backgrounds }}
+                        <div class="project-admin-background">
+                            <input
+                                type="radio"
+                                name="new-background"
+                                id="new-background-{{ identifier }}"
+                                class="project-admin-background-radio"
+                                {{# is_selected }}checked{{/ is_selected }}
+                                value="{{ identifier }}"
+                            >
+                            <label class="tlp-card tlp-card-selectable project-admin-background-card" for="new-background-{{ identifier }}">
+                                <div class="project-admin-background-preview project-admin-background-preview-{{ identifier }}">
+                                    {{# is_no_background }}
+                                        {{# gettext }}No background{{/ gettext }}
+                                    {{/ is_no_background }}
+                                </div>
+                                {{# author }}
+                                    <div class="project-admin-background-author">{{# gettext }}By %s | {{ author }}{{/ gettext }}</div>
+                                {{/ author }}
+                            </label>
+                        </div>
+                    {{/ backgrounds }}
+                </section>
+                <section class="tlp-pane-section tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary tlp-button-disabled" disabled>
+                        <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{# gettext }}Save header background{{/ gettext }}
+                    </button>
+                </section>
+            </form>
+        </section>
+    </div>
+{{/ is_browser_unsupported }}
