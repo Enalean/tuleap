@@ -24,6 +24,7 @@ import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-lis
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListPickerItem } from "../type";
 import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
+import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 
 describe("SingleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -67,6 +68,7 @@ describe("SingleSelectionManager", () => {
             toggler,
             item_map
         );
+        jest.spyOn(source_select_box, "dispatchEvent");
     });
 
     describe("initSelection", () => {
@@ -81,6 +83,7 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
             expect(item.element.getAttribute("aria-selected")).toEqual("true");
             expect(option.hasAttribute("selected")).toBe(true);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
@@ -95,6 +98,7 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
             expect(item.element.getAttribute("aria-selected")).toEqual("false");
             expect(option.hasAttribute("selected")).toBe(false);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
     });
 
@@ -110,6 +114,7 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item.element);
 
             expect(item.element.getAttribute("aria-selected")).toEqual("true");
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
@@ -126,6 +131,7 @@ describe("SingleSelectionManager", () => {
             expect(item.is_selected).toBe(true);
             expect(item.element.getAttribute("aria-selected")).toEqual("true");
             expect(option.hasAttribute("selected")).toBe(true);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
@@ -149,6 +155,8 @@ describe("SingleSelectionManager", () => {
             expect(new_item.element.getAttribute("aria-selected")).toEqual("true");
             expect(new_item.is_selected).toBe(true);
             expect(new_option.hasAttribute("selected")).toBe(true);
+
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
     });
 
@@ -182,6 +190,8 @@ describe("SingleSelectionManager", () => {
             expect(option.hasAttribute("selected")).toBe(false);
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(openListPicker).toHaveBeenCalled();
+
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
     });
 });

@@ -61,6 +61,7 @@ export class MultipleSelectionManager implements SelectionManager {
         list_item.is_selected = true;
         list_item.element.setAttribute("aria-selected", "true");
         list_item.target_option.setAttribute("selected", "selected");
+        this.source_select_box.dispatchEvent(new Event("change"));
 
         this.togglePlaceholder();
         this.toggleClearValuesButton();
@@ -184,7 +185,10 @@ export class MultipleSelectionManager implements SelectionManager {
         return badge;
     }
 
-    private removeListItemFromSelection(list_item: ListPickerItem): void {
+    private removeListItemFromSelection(
+        list_item: ListPickerItem,
+        is_clearing_selection = false
+    ): void {
         const badge = this.selection_state.selected_value_elements.get(list_item.id);
         const selected_item = this.selection_state.selected_items.get(list_item.id);
 
@@ -199,11 +203,16 @@ export class MultipleSelectionManager implements SelectionManager {
         list_item.is_selected = false;
         list_item.element.setAttribute("aria-selected", "false");
         list_item.target_option.removeAttribute("selected");
+
+        if (!is_clearing_selection) {
+            this.source_select_box.dispatchEvent(new Event("change"));
+        }
     }
 
     private clearSelectionState(): void {
         Array.from(this.selection_state.selected_items.values()).forEach((item) => {
-            this.removeListItemFromSelection(item);
+            this.removeListItemFromSelection(item, true);
         });
+        this.source_select_box.dispatchEvent(new Event("change"));
     }
 }

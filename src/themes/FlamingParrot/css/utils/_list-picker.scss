@@ -164,3 +164,16 @@ $form-element-height: 40px;
     font-size: .8125rem;
     line-height: normal;
 }
+
+.list-picker-error {
+    .list-picker-selection {
+        border-color: $ui-color-danger;
+        color: $ui-color-danger;
+    }
+
+    .list-picker-badge {
+        border-color: $ui-color-danger;
+        background-color: transparentize($ui-color-danger, .9);
+        color: $ui-color-danger;
+    }
+}

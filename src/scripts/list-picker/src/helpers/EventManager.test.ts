@@ -206,4 +206,22 @@ describe("event manager", () => {
             expect(closeListPicker).not.toHaveBeenCalled();
         });
     });
+
+    describe("attachSourceSelectBoxChangeEvent", () => {
+        it("should add an 'error' class on the component wrapper when the source <select> value has changed and is invalid", () => {
+            jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => false);
+            manager.attachEvents();
+
+            source_select_box.dispatchEvent(new Event("change"));
+            expect(component_wrapper.classList).toContain("list-picker-error");
+        });
+
+        it("should remove the 'error' class on the component wrapper when the source <select> value has changed and is valid", () => {
+            jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => true);
+            manager.attachEvents();
+
+            source_select_box.dispatchEvent(new Event("change"));
+            expect(component_wrapper.classList).not.toContain("list-picker-error");
+        });
+    });
 });
