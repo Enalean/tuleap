@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
+
 /**
  * @psalm-immutable
  */
@@ -31,9 +32,14 @@ class ProjectBackgroundAdministrationPresenter
      * @var array
      */
     public $backgrounds;
+    /**
+     * @var bool
+     */
+    public $is_browser_unsupported;
 
-    public function __construct(array $backgrounds)
+    public function __construct(array $backgrounds, bool $is_browser_unsupported)
     {
+        $this->is_browser_unsupported = $is_browser_unsupported;
         $this->backgrounds = $backgrounds;
         usort($this->backgrounds, static function (ProjectBackground $a, ProjectBackground $b) {
             return strnatcasecmp($a->identifier, $b->identifier);
