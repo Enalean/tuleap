@@ -1,4 +1,6 @@
 <h1 class="almost-tlp-title administration-title">{{# dgettext }}tuleap-tracker | %s administration | {{ tracker_name }}{{/ dgettext }}</h1>
+
+<div class="main-project-tabs">
 <ul class="nav nav-tabs">
     <li {{# is_fields_tab_active }}class="active"{{/ is_fields_tab_active }}>
         <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements">
@@ -124,4 +126,6 @@
         </ul>
     </li>
 </ul>
+</div>
+
 <div class="tracker-administration-content">

@@ -20,13 +20,15 @@
 @use '../../../../themes/common/css/project-background/background' with ($project-background-images-path: '../../common/images/project-background/');
 @use 'sass:map';
 
+$opacifier-color: background.opacifier-color($tlp-theme-sidebar-background-color);
+
 body {
     @import '../../../common/css/project-background/project-background';
 
     @each $identifier, $definition in background.$definitions {
         .project-admin-background-preview-#{$identifier} {
             background: linear-gradient($opacifier-color, $opacifier-color),
-                map-get($definition, 'image'),
+                map-get($definition, 'image') no-repeat,
                 linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
             background-size: cover;
         }
@@ -57,7 +59,7 @@ body {
     }
 
     .main-project-tabs > .tlp-tabs {
-        background: transparentize($tlp-theme-sidebar-background-color, .6);
+        background: rgba(0, 0, 0, .3);
         box-shadow: none;
 
         > .tlp-tab {

@@ -1,5 +1,5 @@
-<div class="tlp-framed-vertically" id="tracker-artifact-link-type-usages">
-    <h1 class="tlp-framed-horizontally">{{ title }}</h1>
+<h1 class="tlp-framed-horizontally tracker-administration-title">{{ title }}</h1>
+<div class="main-project-tabs">
     <nav class="tlp-tabs">
         <a href="{{ global_admin_url }}" class="tlp-tab tlp-tab-active">
             {{# dgettext }}
@@ -8,6 +8,8 @@
             {{/ dgettext }}
         </a>
     </nav>
+</div>
+<div class="tlp-framed-vertically" id="tracker-artifact-link-type-usages">
     <div class="tlp-framed-horizontally">
         {{^ are_artifact_link_types_enabled }}
         <section class="tlp-pane">

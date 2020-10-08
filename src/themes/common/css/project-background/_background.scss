@@ -48,7 +48,66 @@ $definitions: (
     @return map-get($def, 'color');
 }
 
+@function opacifier-color($sidebar-background) {
+    @return transparentize($sidebar-background, .7);
+}
+
 @mixin css-custom-properties($background) {
     --project-background-image: #{get-image($background)};
     --project-background-prominent-color: #{get-color($background)};
+}
+
+@mixin apply-background(
+    $element,
+    $sidebar-background,
+    $sidebar-expanded-width,
+    $sidebar-collapsed-width
+) {
+    $motd-minimum-height: 58px;
+    $project-banner-minimum-height: 56px;
+    $opacifier-color: opacifier-color($sidebar-background);
+
+    .project-with-background #{$element} {
+        background:
+            linear-gradient($opacifier-color, $opacifier-color),
+            var(--project-background-image) no-repeat,
+            linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
+        background-attachment: fixed;
+        background-position: $sidebar-expanded-width 0;
+        background-size: 100%;
+    }
+
+    .motd ~ #main-container .project-with-background #{$element} {
+        background-position: $sidebar-expanded-width $motd-minimum-height;
+    }
+
+    &.sidebar-collapsed {
+        .project-with-background #{$element} {
+            background-position: $sidebar-collapsed-width 0;
+        }
+
+        .motd ~ #main-container .project-with-background #{$element} {
+            background-position: $sidebar-collapsed-width $motd-minimum-height;
+        }
+    }
+
+    &.has-visible-project-banner {
+        .project-with-background #{$element} {
+            background-position: $sidebar-expanded-width $project-banner-minimum-height;
+        }
+
+        .motd ~ #main-container .project-with-background #{$element} {
+            background-position: $sidebar-expanded-width ($project-banner-minimum-height + $motd-minimum-height);
+        }
+
+        &.sidebar-collapsed {
+            .project-with-background #{$element} {
+                background-position: $sidebar-collapsed-width $project-banner-minimum-height;
+            }
+
+            .motd ~ #main-container .project-with-background #{$element} {
+                background-position: $sidebar-collapsed-width ($project-banner-minimum-height + $motd-minimum-height);
+            }
+        }
+    }
 }

@@ -74,7 +74,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     // stylelint-disable selector-no-qualifying-type,max-nesting-depth,selector-max-compound-selectors
     .main-project-tabs > .nav-tabs {
         margin: 0;
-        background: transparentize($tlp-theme-sidebar-background-color, .6);
+        background: rgba(0, 0, 0, .3);
         box-shadow: none;
 
         > li {
