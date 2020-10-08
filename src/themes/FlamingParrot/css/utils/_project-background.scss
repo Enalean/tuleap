@@ -74,7 +74,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     // stylelint-disable selector-no-qualifying-type,max-nesting-depth,selector-max-compound-selectors
     .main-project-tabs > .nav-tabs {
         margin: 0;
-        background: transparentize($tlp-theme-sidebar-background-color, .6);
+        background: rgba(0, 0, 0, .3);
         box-shadow: none;
 
         > li {
@@ -96,6 +96,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
                 &:hover {
                     border-bottom: 0;
                     border-top-color: $white;
+                    background: rgba(0, 0, 0, .3);
 
                     > .caret {
                         border-top-color: $white;
@@ -117,6 +118,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
                 > a {
                     border-bottom: 0;
                     border-top-color: $white;
+                    background: rgba(0, 0, 0, .3);
                 }
             }
 
