@@ -27,7 +27,7 @@ namespace Tuleap\Project\ProjectBackground;
  */
 class ProjectBackground
 {
-    protected const NO_BACKGROUND_IDENTIFIER = "0";
+    private const NO_BACKGROUND_IDENTIFIER = "0";
 
     /**
      * @var string
@@ -46,12 +46,22 @@ class ProjectBackground
      */
     public $is_no_background;
 
-    public function __construct(string $identifier, string $author, bool $is_selected)
+    private function __construct(string $identifier, string $author, bool $is_selected)
     {
         $this->identifier  = $identifier;
         $this->author      = $author;
         $this->is_selected = $is_selected;
 
         $this->is_no_background = $identifier === self::NO_BACKGROUND_IDENTIFIER;
+    }
+
+    public static function buildFromIdentifier(string $identifier, string $author, bool $is_selected): self
+    {
+        return new self($identifier, $author, $is_selected);
+    }
+
+    public static function buildNoBackground(bool $is_selected): self
+    {
+        return new self(self::NO_BACKGROUND_IDENTIFIER, '', $is_selected);
     }
 }
