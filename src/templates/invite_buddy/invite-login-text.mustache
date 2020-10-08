@@ -1,16 +1,25 @@
+{{# gettext }}Hello,{{/ gettext }}
+
 {{# gettext }}
-    %s invited you to log on %s, your login is: %s |
+    %s invited you to %s.|
     {{ current_user_real_name }} |
-    {{ instance_name }} |
-    {{ recipient_name }}
+    {{ instance_name }}
 {{/ gettext }}
+
+{{# gettext }}To sign in (your username is %s): | {{ recipient_name }}{{/ gettext }}
 
 {{ login_url }}
 
 {{# has_custom_message }}
-    {{# gettext }}
-        Message from %s: |
-        {{ current_user_real_name }}
-    {{/ gettext }}
-    {{ custom_message }}
+{{# gettext }}
+    Message from %s: |
+    {{ current_user_real_name }}
+{{/ gettext }}
+
+> {{ custom_message }}
 {{/has_custom_message}}
+
+
+{{# gettext }}Best regards,{{/ gettext }}
+
+{{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}

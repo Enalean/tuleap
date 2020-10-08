@@ -1,15 +1,25 @@
+{{# gettext }}Hello,{{/ gettext }}
+
 {{# gettext }}
-    %s invited you to log on %s, you need to register first: |
+    %s invited you to register to %s. |
     {{ current_user_real_name }} |
     {{ instance_name }}
 {{/ gettext }}
 
+
+To sign up:
 {{ register_url }}
 
 {{# has_custom_message }}
-    {{# gettext }}
-        Message from %s: |
-        {{ current_user_real_name }}
-    {{/ gettext }}
-    {{ custom_message }}
+{{# gettext }}
+    Message from %s: |
+    {{ current_user_real_name }}
+{{/ gettext }}
+
+> {{ custom_message }}
 {{/has_custom_message}}
+
+
+{{# gettext }}Best regards,{{/ gettext }}
+
+{{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}
