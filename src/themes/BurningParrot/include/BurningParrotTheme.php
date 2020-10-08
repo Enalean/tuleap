@@ -25,6 +25,8 @@ use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
+use Tuleap\BrowserDetection\BrowserDeprecationMessage;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\DB\DBFactory;
@@ -37,6 +39,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
@@ -286,9 +290,17 @@ class BurningParrotTheme extends BaseLayout
         }
         $this->includeFooterJavascriptSnippet($this->getFooterSiteJs());
 
+        $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
+            DetectedBrowser::detectFromTuleapHTTPRequest($this->request)
+        );
+        if ($browser_deprecation_message !== null) {
+            $this->addJavascriptAsset(new JavascriptAsset(new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'), 'browser-deprecation-bp.js'));
+        }
+
         $footer = new FooterPresenter(
             $this->javascript_in_footer,
             $this->javascript_assets,
+            $browser_deprecation_message,
             $this->canShowFooter($params),
             $this->version->getFullDescriptiveVersion()
         );

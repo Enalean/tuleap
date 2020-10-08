@@ -118,7 +118,6 @@ use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
 use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\ConfirmNewEmailController;
-use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayEditionController;
 use Tuleap\User\Account\DisplayExperimentalController;
@@ -472,11 +471,6 @@ class RouteCollector
         return new LogoutController(\UserManager::instance());
     }
 
-    public function postDisableLegacyBrowsersWarningMessage(): DisableLegacyBrowsersWarningMessageController
-    {
-        return new DisableLegacyBrowsersWarningMessageController();
-    }
-
     public static function getUsersName()
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -824,7 +818,6 @@ class RouteCollector
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
-            $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);
         });
         $r->get('/.well-known/change-password', [self::class, 'getWellKnownUrlChangePassword']);
 

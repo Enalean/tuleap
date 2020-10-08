@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\BrowserDeprecationMessage;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Dashboard\User\UserDashboardDao;
@@ -34,6 +36,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -408,11 +411,24 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function footer(array $params)
     {
+        $this->displayBrowserDeprecationMessage();
         if ($this->canShowFooter($params)) {
             $this->render('footer', []);
         }
 
         $this->endOfPage();
+    }
+
+    private function displayBrowserDeprecationMessage(): void
+    {
+        $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
+            DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
+        );
+        if ($browser_deprecation_message === null) {
+            return;
+        }
+        $this->addJavascriptAsset(new JavascriptAsset(new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'), 'browser-deprecation-fp.js'));
+        $this->render('browser-deprecation', $browser_deprecation_message);
     }
 
     /**

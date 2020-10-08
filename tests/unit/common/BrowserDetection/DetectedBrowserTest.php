@@ -30,6 +30,7 @@ final class DetectedBrowserTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     public const IE11_USER_AGENT_STRING        = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
+    public const OLD_IE_USER_AGENT_STRING      = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
     public const EDGE_LEGACY_USER_AGENT_STRING = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
 
     /**
@@ -60,7 +61,7 @@ final class DetectedBrowserTest extends TestCase
                 false,
             ],
             'Old IE' => [
-                'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)',
+                self::OLD_IE_USER_AGENT_STRING,
                 'Internet Explorer',
                 false,
                 true,

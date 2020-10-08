@@ -43,6 +43,7 @@
     "whatwg-fetch": "^3.4.0"
   },
   "devDependencies": {
+    "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
     "@types/d3-scale": "^3.0.0",
     "@types/d3-selection": "^2.0.0",

@@ -79,7 +79,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public const PREF_NAME_LAB_FEATURE = 'use_lab_features';
 
-    public const PREFERENCE_DISABLE_IE_WARNING  = 'disable_ie_warning';
     public const PREFERENCE_DISPLAY_DENSITY     = 'display_density';
     public const DISPLAY_DENSITY_CONDENSED      = 'condensed';
 
