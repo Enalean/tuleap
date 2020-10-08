@@ -13,12 +13,16 @@
 {{^ is_browser_unsupported }}
     <div class="tlp-framed-horizontally">
         <section class="tlp-pane">
-            <form class="tlp-pane-container">
+            <form class="tlp-pane-container" id="form-header-background">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
                         <i class="tlp-pane-title-icon far fa-image"></i>
                         {{# gettext }}Header background{{/ gettext }}
                     </h1>
+                </div>
+                <input type="hidden" name="project-id" value="{{ project_id }}" />
+                <div id="project-admin-background-error" class="project-admin-background-error-hidden">
+                    <div class="tlp-alert-danger">{{# gettext }}An error occurred, please retry{{/ gettext }}</div>
                 </div>
                 <section class="tlp-pane-section project-admin-background-list">
                     {{# backgrounds }}
@@ -45,8 +49,8 @@
                     {{/ backgrounds }}
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary tlp-button-disabled" disabled>
-                        <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                    <button type="submit" class="tlp-button-primary" id="project-admin-background-submit-button">
+                        <i class="far fa-save tlp-button-icon" aria-hidden="true" id="project-admin-background-submit-button-icon"></i>
                         {{# gettext }}Save header background{{/ gettext }}
                     </button>
                 </section>

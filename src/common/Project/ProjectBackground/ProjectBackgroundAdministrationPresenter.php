@@ -29,18 +29,23 @@ namespace Tuleap\Project\ProjectBackground;
 class ProjectBackgroundAdministrationPresenter
 {
     /**
-     * @var array
+     * @var ProjectBackground[]
      */
     public $backgrounds;
+    /**
+     * @var int
+     */
+    public $project_id;
     /**
      * @var bool
      */
     public $is_browser_unsupported;
 
-    public function __construct(array $backgrounds, bool $is_browser_unsupported)
+    public function __construct(array $backgrounds, int $project_id, bool $is_browser_unsupported)
     {
         $this->is_browser_unsupported = $is_browser_unsupported;
-        $this->backgrounds = $backgrounds;
+        $this->project_id             = $project_id;
+        $this->backgrounds            = $backgrounds;
         usort($this->backgrounds, static function (ProjectBackground $a, ProjectBackground $b) {
             return strnatcasecmp($a->identifier, $b->identifier);
         });

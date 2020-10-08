@@ -27,6 +27,7 @@ use TemplateRendererFactory;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -45,7 +46,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
     /**
      * @var IncludeAssets
      */
-    private $banner_assets;
+    private $assets;
     /**
      * @var ProjectBackgroundRetriever
      */
@@ -54,12 +55,12 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
     public function __construct(
         LayoutHelper $layout_helper,
         \TemplateRenderer $renderer,
-        IncludeAssets $banner_assets,
+        IncludeAssets $assets,
         ProjectBackgroundRetriever $background_retriever
     ) {
         $this->layout_helper        = $layout_helper;
         $this->renderer             = $renderer;
-        $this->banner_assets        = $banner_assets;
+        $this->assets               = $assets;
         $this->background_retriever = $background_retriever;
     }
 
@@ -73,16 +74,15 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         );
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project/project-admin-banner.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($this->assets, 'project/header-background-admin.js'));
 
         $callback = function (\Project $project, \PFUser $current_user) use ($request): void {
             $backgrounds = $this->background_retriever->getBackgrounds($project);
             $this->renderer->renderToPage(
                 'administration',
-                new ProjectBackgroundAdministrationPresenter($backgrounds, DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()),
+                new ProjectBackgroundAdministrationPresenter($backgrounds, (int) $project->getID(), DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()),
             );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(
