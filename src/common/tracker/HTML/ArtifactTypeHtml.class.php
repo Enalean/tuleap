@@ -184,6 +184,8 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         // Get the artfact type list
         $at_arr = $atf->getArtifactTypes();
 
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+
         if (! $at_arr || count($at_arr) < 1) {
             echo '<h2>' . $Language->getText('tracker_index', 'no_accessible_trackers_hdr') . '</h2>';
             echo '<p>' . $Language->getText('tracker_index', 'no_accessible_trackers_msg') . '</p>';
@@ -246,6 +248,8 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
     {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&func=browse">' . $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\'' . $Language->getText('tracker_include_type', 'administration') . '</H2>';
 
         if ($this->userIsAdmin()) {

@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactReportHtml extends ArtifactReport
+class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public $fields_per_line;
@@ -612,7 +612,10 @@ class ArtifactReportHtml extends ArtifactReport
                 $html_result .=  $hp->purify($ath->getBrowseInstructions(), CODENDI_PURIFIER_FULL);
         }
 
-            $html_result .= '
+        echo "<p><div class='alert alert-danger'> " . $Language->getText('tracker_index', 'feature_is_deprecated')  .  "</div></p>";
+
+
+        $html_result .= '
                           <FORM ACTION="" METHOD="GET" CLASS="form-inline" NAME="artifact_form">
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->group_artifact_id . '">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . (int) $group_id . '">';
