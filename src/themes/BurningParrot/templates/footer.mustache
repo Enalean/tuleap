@@ -1,5 +1,8 @@
             </main>
         </div>
+        {{# browser_deprecation_message }}
+            {{> browser-deprecation }}
+        {{/ browser_deprecation_message }}
         {{# is_footer_shown }}
             <footer class="footer">
                 {{{ footer }}}

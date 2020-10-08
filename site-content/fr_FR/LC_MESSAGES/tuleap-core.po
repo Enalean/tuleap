@@ -1026,18 +1026,22 @@ msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
 msgid ""
-"Internet Explorer in compatibility mode is not supported. Please upgrade to "
-"a modern, fully supported browser such as Firefox, Chrome or Edge."
+"Internet Explorer in compatibility mode is not supported, you will encounter "
+"issues if you continue. Please upgrade to a modern, fully supported browser "
+"such as Firefox, Chrome or Edge."
 msgstr ""
-"Internet Explorer en mode de compatibilité n'est pas supporté. Veuillez "
-"utiliser un navigateur moderne tel que Firefox, Chrome ou Edge."
+"Internet Explorer en mode de compatibilité n'est pas supporté, vous "
+"rencontrerez des problèmes si vous continuez. Veuillez utiliser un "
+"navigateur modern tel que tel que Firefox, Chrome ou Edge."
 
 msgid ""
-"Internet Explorer will be unsupported soon. Please upgrade to a modern, "
-"fully supported browser such as Firefox, Chrome or Edge."
+"Internet Explorer will be unsupported soon, some features are already not "
+"available to you. Please upgrade to a modern, fully supported browser such "
+"as Firefox, Chrome or Edge."
 msgstr ""
-"Internet Explorer ne sere bientôt plus supporté. Veuillez utiliser un "
-"navigateur moderne tel que Firefox, Chrome ou Edge."
+"Internet Explorer ne sere bientôt plus supporté, des fonctionnalités ne vous "
+"sont déjà pas disponibles. Veuillez utiliser un navigateur moderne tel que "
+"Firefox, Chrome ou Edge."
 
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
@@ -1371,8 +1375,8 @@ msgstr "Rien n'a changé"
 msgid "Notifications"
 msgstr "Notifications"
 
-msgid "Ok, got it. Remind me later."
-msgstr "Ok, j'ai compris. Me le rappeler plus tard."
+msgid "Ok, got it"
+msgstr "Ok, j'ai compris"
 
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
@@ -2625,11 +2629,6 @@ msgid "We recommend the latest version of Firefox, Chrome, or Edge."
 msgstr ""
 "Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
 
-msgid "We will bother you later with the end of support of Internet Explorer."
-msgstr ""
-"Nous vous importunerons plus tard à propos de l'arrêt du support de Internet "
-"Explorer."
-
 msgid "Webhooks"
 msgstr "Webhooks"
 
@@ -3061,6 +3060,12 @@ msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
 
 msgid "Your request is invalid"
 msgstr "Votre requête n'est pas valide"
+
+msgid "Your web browser is not supported"
+msgstr "Votre navigateur web n'est pas supporté"
+
+msgid "Your web browser will be unsupported soon"
+msgstr "Votre navigateur web ne sera bientôt plus pris en charge"
 
 #, php-format
 msgid "[%s] Email change confirmation"

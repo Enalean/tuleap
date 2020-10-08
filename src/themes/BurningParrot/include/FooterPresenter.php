@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,17 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\Layout\JavascriptAsset;
 
 class FooterPresenter
 {
     public $javascript_in_footer = [];
     public $tuleap_version;
+    /**
+     * @var BrowserDeprecationMessage|null
+     */
+    public $browser_deprecation_message;
     public $is_footer_shown;
     public $footer;
 
@@ -35,6 +40,7 @@ class FooterPresenter
     public function __construct(
         array $javascript_in_footer,
         array $javascript_assets,
+        ?BrowserDeprecationMessage $browser_deprecation_message,
         $is_footer_shown,
         $tuleap_version
     ) {
@@ -62,9 +68,10 @@ class FooterPresenter
             $this->javascript_in_footer[] = new JavascriptPresenter($javascript_asset->getFileURL(), false);
         }
 
-        $this->tuleap_version  = $tuleap_version;
-        $this->is_footer_shown = $is_footer_shown;
-        $this->footer          = $this->getFooter();
+        $this->tuleap_version              = $tuleap_version;
+        $this->browser_deprecation_message = $browser_deprecation_message;
+        $this->is_footer_shown             = $is_footer_shown;
+        $this->footer                      = $this->getFooter();
     }
 
     private function getFooter()

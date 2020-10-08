@@ -1,0 +1,16 @@
+<div class="tlp-modal tlp-modal-warning" role="dialog" aria-labelledby="browser-deprecation-modal-label" id="browser-deprecation-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="browser-deprecation-modal-label">
+            {{ title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{ message }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-warning tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Ok, got it{{/ gettext }}</button>
+    </div>
+</div>

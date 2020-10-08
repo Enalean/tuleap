@@ -21,15 +21,12 @@
 namespace Tuleap\Layout;
 
 use Codendi_HTMLPurifier;
-use CSRFSynchronizerToken;
 use EventManager;
-use HTTPRequest;
 use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use ProjectManager;
 use Response;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -175,41 +172,7 @@ abstract class BaseLayout extends Response
             $motd = ob_get_clean();
         }
 
-        $deprecated = $this->getBrowserDeprecatedMessage();
-        if ($motd && $deprecated) {
-            return $deprecated . '<br />' . $motd;
-        } else {
-            return $motd . $deprecated;
-        }
-    }
-
-    private function getBrowserDeprecatedMessage(): string
-    {
-        $http_request     = HTTPRequest::instance();
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($http_request);
-
-        $deprecation_message = null;
-        if ($detected_browser->isIEBefore11()) {
-            $deprecation_message = _('Internet Explorer in compatibility mode is not supported. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.');
-        } elseif ($detected_browser->isIE11()) {
-            $deprecation_message = _('Internet Explorer will be unsupported soon. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.');
-        }
-
-        $current_user = $http_request->getCurrentUser();
-
-        if ($deprecation_message === null || $current_user->getPreference(PFUser::PREFERENCE_DISABLE_IE_WARNING)) {
-            return '';
-        }
-
-        return \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common/')
-            ->renderToString(
-                'unsupported_browser',
-                [
-                    'deprecation_message' => $deprecation_message,
-                    'anonymous_user'      => $current_user->isAnonymous(),
-                    'csrf_token'          => new CSRFSynchronizerToken('disable_legacy_browser_warning')
-                ]
-            );
+        return $motd;
     }
 
     public function getImagePath($src)
