@@ -43,7 +43,6 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\DescriptionFieldsFactory;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -224,7 +223,7 @@ class ProjectDetailsController
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 
-        $header_displayer = new HeaderNavigationDisplayer(ProjectBackgroundConfiguration::buildSelf());
+        $header_displayer = new HeaderNavigationDisplayer();
         $header_displayer->displayBurningParrotNavigation($title, $project, 'details');
     }
 

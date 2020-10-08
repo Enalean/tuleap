@@ -26,7 +26,6 @@
 
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
 function project_admin_header($params, $current_pane_shortname)
 {
@@ -36,7 +35,7 @@ function project_admin_header($params, $current_pane_shortname)
     $params['group']  = $group_id;
     $title            = $params['title'];
 
-    $navigation_displayer = new HeaderNavigationDisplayer(ProjectBackgroundConfiguration::buildSelf());
+    $navigation_displayer = new HeaderNavigationDisplayer();
     $project              = ProjectManager::instance()->getProject($group_id);
     $navigation_displayer->displayFlamingParrotNavigation($title, $project, $current_pane_shortname);
 }

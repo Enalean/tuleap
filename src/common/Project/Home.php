@@ -49,7 +49,6 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Widget\WidgetFactory;
@@ -131,7 +130,6 @@ class Home implements DispatchableWithRequest
                         $layout,
                         $core_assets,
                         $project_registration_creation_css_assets,
-                        ProjectBackgroundConfiguration::buildSelf(),
                     ),
                     new WidgetDashboardController(
                         $csrf_token,

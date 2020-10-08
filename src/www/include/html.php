@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
-
 function html_feedback_top($feedback)
 {
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
@@ -579,16 +575,6 @@ function site_project_header($params)
     //for dead projects must be member of admin project
     if (! $project->isActive()) {
         HTTPRequest::instance()->checkUserIsSuperUser();
-    }
-
-    $background = ProjectBackgroundConfiguration::buildSelf()->getBackgroundIgnoringFeatureFlag($project);
-    if ($background) {
-        $HTML->addCSSAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
-                "project-background/$background"
-            )
-        );
     }
 
     if (isset($params['pv']) && $params['pv'] != 0) {
