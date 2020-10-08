@@ -1,0 +1,166 @@
+/**
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../../../../scripts/list-picker/themes/style';
+
+$form-element-border-color: darken($ui-border-dark, 5%);
+$form-element-padding-horizontal: 12px;
+$form-element-select-background-size: 8px;
+$form-element-height: 40px;
+
+.list-picker-component-wrapper {
+    line-height: normal;
+}
+
+.list-picker {
+    z-index: 2003;
+
+    &.list-picker-in-multiple-mode {
+        width: 100%;
+    }
+
+    &.list-picker-disabled {
+        border-color: $form-element-border-color;
+
+        .list-picker-badge,
+        .list-picker-selection {
+            cursor: not-allowed;
+        }
+
+        .list-picker-multiple-search-section-disabled > .list-picker-search-field {
+            background: $white;
+            cursor: not-allowed;
+        }
+    }
+
+    &.list-picker-with-open-dropdown .list-picker-selection {
+        border-radius: 4px 4px 0 0;
+        border-color: $main;
+    }
+
+    .list-picker-selection {
+        display: flex;
+        align-items: center;
+        padding: $form-element-padding-horizontal;
+        border: 1px solid $form-element-border-color;
+        border-radius: 4px;
+        background: $white;
+        font-size: .875rem;
+
+        &.list-picker-single {
+            height: $form-element-height;
+            padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size) 0 $form-element-padding-horizontal;
+            background: $white url('../images/list-picker-background.png') no-repeat;
+            background-position: right $form-element-padding-horizontal center;
+        }
+
+        &.list-picker-multiple {
+            min-height: $form-element-height;
+            padding: 0 $form-element-padding-horizontal 5px 6px;
+        }
+    }
+}
+
+.list-picker-dropdown {
+    z-index: 2002;
+    padding: 0;
+    border-right: 1px solid $main;
+    border-bottom: 1px solid $main;
+    border-left: 1px solid $main;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.list-picker-dropdown-option-value {
+    &:hover {
+        background-color: $main;
+        color: $white;
+    }
+
+    &[aria-selected='true']::before {
+        content: '\f00c'; // fa-check
+        position: absolute;
+        top: 9px;
+        left: 12px;
+        font-family: 'Font Awesome 5 Free';
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    &[aria-selected='true'] {
+        position: relative;
+        padding: 6px 12px 6px 32px;
+        color: $main;
+
+        &:hover {
+            color: $white;
+        }
+    }
+}
+
+.list-picker-badge {
+    flex: 0 0 auto;
+    margin: 6px 5px 0 0;
+    padding: 5px 8px;
+    border: 1px solid transparentize($main, .4);
+    border-radius: 15px;
+    background: transparentize($main, .9);
+    color: $main;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: .75rem;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.list-picker-search-field {
+    box-sizing: unset;
+    height: 32px;
+    padding: 0;
+    box-shadow: none;
+    font-size: .8125rem;
+    appearance: none;
+
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.list-picker-single-dropdown-search-section {
+    display: flex;
+    justify-content: space-around;
+    padding: $form-element-padding-horizontal;
+
+    > .list-picker-search-field {
+        width: 100%;
+        padding: 0 4px;
+
+        &:focus {
+            border-color: $main;
+        }
+    }
+}
+
+.list-picker-empty-dropdown-state {
+    padding: $form-element-padding-horizontal;
+    color: $ui-dimmed;
+    font-size: .8125rem;
+    line-height: normal;
+}

@@ -94,6 +94,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
@@ -2257,6 +2258,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
         $event->addConfigClass(JiraRunner::class);
+        $event->addConfigClass(ListPickerIncluder::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
