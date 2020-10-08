@@ -42,7 +42,6 @@ use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -103,10 +102,6 @@ class ProjectDashboardController
      * @var CssAsset
      */
     private $css_asset;
-    /**
-     * @var ProjectBackgroundConfiguration
-     */
-    private $background_configuration;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -121,8 +116,7 @@ class ProjectDashboardController
         EventManager $event_manager,
         BaseLayout $layout,
         IncludeAssets $core_assets,
-        CssAsset $css_asset,
-        ProjectBackgroundConfiguration $background_configuration
+        CssAsset $css_asset
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -137,7 +131,6 @@ class ProjectDashboardController
         $this->layout                   = $layout;
         $this->javascript_assets        = $core_assets;
         $this->css_asset                = $css_asset;
-        $this->background_configuration = $background_configuration;
     }
 
     public function display(HTTPRequest $request)
@@ -181,18 +174,12 @@ class ProjectDashboardController
         $purifier = Codendi_HTMLPurifier::instance();
         $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
-        $main_classes = [];
-        if ($this->background_configuration->getBackgroundIgnoringFeatureFlag($project)) {
-            $main_classes[] = 'project-with-background';
-        }
-
         site_project_header(
             [
                 'title'                          => $title,
                 'group'                          => $project->getID(),
                 'toptab'                         => 'summary',
                 'without-project-in-breadcrumbs' => true,
-                'main_classes'                   => $main_classes,
             ]
         );
         $renderer = TemplateRendererFactory::build()->getRenderer(

@@ -28,20 +28,9 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
 class HeaderNavigationDisplayer
 {
-    /**
-     * @var ProjectBackgroundConfiguration
-     */
-    private $background_configuration;
-
-    public function __construct(ProjectBackgroundConfiguration $background_configuration)
-    {
-        $this->background_configuration = $background_configuration;
-    }
-
     public function displayBurningParrotNavigation($title, Project $project, $current_pane_shortname)
     {
         $this->displayNavigation($title, $project, "navigation", $current_pane_shortname);
@@ -54,17 +43,11 @@ class HeaderNavigationDisplayer
 
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
-        $main_classes = [];
-        if ($this->background_configuration->getBackground($project)) {
-            $main_classes[] = 'project-with-background';
-        }
-
         $params = [
             'title'        => $title . ' - ' . $project->getPublicName(),
             'toptab'       => 'admin',
             'group'        => $project->getID(),
             'body_class'   => ['project-administration'],
-            'main_classes' => $main_classes,
         ];
 
         site_project_header($params);

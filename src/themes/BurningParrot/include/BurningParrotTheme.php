@@ -140,6 +140,8 @@ class BurningParrotTheme extends BaseLayout
                 $crumb->setAdditionalClassname("breadcrumb-project");
                 $this->breadcrumbs->addFirst($crumb);
             }
+
+            $this->injectProjectBackground($project, $params);
         }
 
 

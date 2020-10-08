@@ -41,6 +41,7 @@ use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -427,5 +428,30 @@ abstract class BaseLayout extends Response
         $section = $params['new_dropdown_current_context_section'];
 
         return $section instanceof NewDropdownLinkSectionPresenter ? $section : null;
+    }
+
+    protected function injectProjectBackground(Project $project, array &$params): void
+    {
+        $background_configuration = ProjectBackgroundConfiguration::buildSelf();
+        if (isset($params['toptab']) && $params['toptab'] === 'summary') {
+            $background = $background_configuration->getBackgroundIgnoringFeatureFlag($project);
+        } else {
+            $background = $background_configuration->getBackground($project);
+        }
+        if (! $background) {
+            return;
+        }
+
+        if (! isset($params['main_classes'])) {
+            $params['main_classes'] = [];
+        }
+
+        $params['main_classes'][] = 'project-with-background';
+        $this->addCSSAsset(
+            new CssAssetWithoutVariantDeclinaisons(
+                new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+                "project-background/$background"
+            )
+        );
     }
 }

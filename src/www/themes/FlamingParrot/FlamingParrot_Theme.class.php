@@ -135,6 +135,11 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->getColorOfCurrentTheme($current_variant)
         ));
 
+        if (! empty($params['group'])) {
+            $project = ProjectManager::instance()->getProject($params['group']);
+            $this->injectProjectBackground($project, $params);
+        }
+
         $this->displayJavascriptElements($params);
         $this->displayStylesheetElements($params);
         $this->displaySyndicationElements();
