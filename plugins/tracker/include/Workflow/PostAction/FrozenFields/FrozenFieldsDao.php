@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,25 @@ class FrozenFieldsDao extends DataAccessObject
         return $result !== false;
     }
 
+    /**
+     * @psalm-return list<array{transition_id: int, postaction_id: int, field_id: int}>
+     */
+    public function searchByWorkflow(\Workflow $workflow): array
+    {
+        $sql = <<<EOT
+            SELECT transition_id, paf.*
+            FROM plugin_tracker_workflow_postactions_frozen_fields_value AS paf
+                JOIN plugin_tracker_workflow_postactions_frozen_fields AS paro ON (paro.id = paf.postaction_id)
+                JOIN tracker_workflow_transition USING (transition_id)
+            WHERE workflow_id = ?
+            EOT;
+
+        return $this->getDB()->q($sql, $workflow->getId());
+    }
+
+    /**
+     * @psalm-return list<array{postaction_id: int, field_id: int}>
+     */
     public function searchByTransitionId(int $transition_id): array
     {
         $sql = 'SELECT paf.*

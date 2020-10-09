@@ -42,11 +42,21 @@ class HiddenFieldsetsRetrieverTest extends TestCase
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var string
+     */
+    private $workflow_id;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Workflow
+     */
+    private $workflow;
 
     protected function setUp(): void
     {
         $this->hidden_dao           = Mockery::mock(HiddenFieldsetsDao::class);
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->workflow_id          = '112';
+        $this->workflow             = Mockery::mock(\Workflow::class, ['getId' => $this->workflow_id]);
 
         $this->hidden_fieldsets_retriever = new HiddenFieldsetsRetriever(
             $this->hidden_dao,
@@ -56,10 +66,13 @@ class HiddenFieldsetsRetrieverTest extends TestCase
 
     public function testGetHiddenFieldsetsReturnsASinglePostAction()
     {
-        $this->hidden_dao->shouldReceive('searchByTransitionId')->andReturn(
+        $postaction_id = 72;
+        $transition_id = '97';
+
+        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn(
             [
-                ['postaction_id' => 72, 'fieldset_id' => 331],
-                ['postaction_id' => 72, 'fieldset_id' => 651],
+                ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 331],
+                ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 651],
             ]
         );
 
@@ -69,8 +82,9 @@ class HiddenFieldsetsRetrieverTest extends TestCase
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
         $this->form_element_factory->shouldReceive('getFieldsetById')->with(651)->andReturn($fieldset_02);
 
-        $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new HiddenFieldsets($transition, 72, [$fieldset_01, $fieldset_02]);
+        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
+        $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01, $fieldset_02]);
 
         $result = $this->hidden_fieldsets_retriever->getHiddenFieldsets($transition);
 
@@ -79,11 +93,37 @@ class HiddenFieldsetsRetrieverTest extends TestCase
 
     public function testGetHiddenFieldsetsThrowsWhenNoPostAction()
     {
-        $this->hidden_dao->shouldReceive('searchByTransitionId')->andReturn([]);
+        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
+        $transition = new \Transition('97', $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoHiddenFieldsetsPostActionException::class);
         $this->hidden_fieldsets_retriever->getHiddenFieldsets($transition);
+    }
+
+    public function testGetAllHiddenFieldsetsPostActionsOfAllTransitionsReturnsASinglePostAction()
+    {
+        $postaction_id = 72;
+        $transition_id = '97';
+
+        $this->hidden_dao->shouldReceive('searchByWorkflow')->andReturn(
+            [
+                ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'fieldset_id' => 331],
+                ['transition_id' => 101, 'postaction_id' => $postaction_id, 'fieldset_id' => 651],
+            ]
+        );
+
+        $fieldset_01 = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
+
+        $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
+
+        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
+        $expected_post_action = new HiddenFieldsets($transition, $postaction_id, [$fieldset_01]);
+
+        $result = $this->hidden_fieldsets_retriever->getHiddenFieldsets($transition);
+
+        $this->assertEquals($expected_post_action, $result);
     }
 }

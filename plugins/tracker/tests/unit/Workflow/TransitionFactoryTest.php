@@ -54,13 +54,14 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
             [
                 $this->condition_factory,
                 $this->event_manager,
-                new DBTransactionExecutorPassthrough()
+                new DBTransactionExecutorPassthrough(),
+                $this->postaction_factory,
+                Mockery::mock(Workflow_TransitionDao::class),
+
             ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-
-        $this->factory->shouldReceive('getPostActionFactory')->andReturns($this->postaction_factory);
 
         $this->a_field_not_used_in_transitions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $this->a_field_not_used_in_transitions->shouldReceive('getId')->andReturns(1002);
@@ -97,6 +98,8 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
 
     public function testDuplicate(): void
     {
+        $tpaf = \Mockery::spy(\Transition_PostActionFactory::class);
+
         $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_new->shouldReceive('getId')->andReturns(2066);
         $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
@@ -114,7 +117,9 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
             [
                 $this->condition_factory,
                 $this->event_manager,
-                new DBTransactionExecutorPassthrough()
+                new DBTransactionExecutorPassthrough(),
+                $tpaf,
+                Mockery::mock(Workflow_TransitionDao::class),
             ]
         )
             ->makePartial()
@@ -134,7 +139,6 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
         $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, [], false, false)->once();
         $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, [], false, false)->once();
 
-        $tpaf = \Mockery::spy(\Transition_PostActionFactory::class);
         $tpaf->shouldReceive('duplicate')->times(3);
         $tpaf->shouldReceive('duplicate')->with($t1, 101, [])->ordered();
         $tpaf->shouldReceive('duplicate')->with($t2, 102, [])->ordered();

@@ -32,11 +32,9 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     protected $field;
 
     /**
-     * Constructor
-     *
      * @param Transition                   $transition The transition the post action belongs to
      * @param int $id Id of the post action
-     * @param Tracker_FormElement_Field    $field      The field the post action should modify
+     * @param Tracker_FormElement_Field    $field      The field or field_id the post action should modify
      */
     public function __construct(Transition $transition, $id, $field)
     {

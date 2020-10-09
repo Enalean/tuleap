@@ -22,12 +22,14 @@ use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
@@ -66,16 +68,17 @@ class Transition_PostActionFactory
     /** @var HiddenFieldsetsFactory */
     private $hidden_fieldsets_factory;
 
+    public function warmUpCacheForWorkflow(Workflow $workflow): void
+    {
+        $this->getSubFactories()->warmUpCacheForWorkflow($workflow);
+    }
+
     /**
      * Load the post actions that belong to a transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return void
      */
-    public function loadPostActions(Transition $transition)
+    public function loadPostActions(Transition $transition): void
     {
-        return $this->getSubFactories()->loadPostActions($transition);
+        $this->getSubFactories()->loadPostActions($transition);
     }
 
     /**
@@ -230,7 +233,7 @@ class Transition_PostActionFactory
         if (! $this->frozen_fields_factory) {
             $this->frozen_fields_factory = new FrozenFieldsFactory(
                 new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
+                FrozenFieldsRetriever::instance(),
             );
         }
         return $this->frozen_fields_factory;
@@ -241,7 +244,7 @@ class Transition_PostActionFactory
         if (! $this->hidden_fieldsets_factory) {
             $this->hidden_fieldsets_factory = new HiddenFieldsetsFactory(
                 new HiddenFieldsetsDao(),
-                Tracker_FormElementFactory::instance()
+                HiddenFieldsetsRetriever::instance(),
             );
         }
         return $this->hidden_fieldsets_factory;

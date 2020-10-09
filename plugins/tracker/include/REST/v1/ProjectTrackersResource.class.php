@@ -29,8 +29,6 @@ use Tracker_REST_TrackerRestBuilder;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -54,7 +52,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
-use Workflow_Transition_ConditionFactory;
 
 class ProjectTrackersResource extends AuthenticatedResource
 {
@@ -208,13 +205,7 @@ class ProjectTrackersResource extends AuthenticatedResource
 
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
-                new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build(),
-                    EventManager::instance(),
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
-                    )
-                ),
+                TransitionFactory::instance(),
                 new SimpleWorkflowDao()
             ),
             new TransitionExtractor()

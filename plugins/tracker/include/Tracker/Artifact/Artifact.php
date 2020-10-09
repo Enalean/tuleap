@@ -24,7 +24,6 @@
  */
 
 namespace Tuleap\Tracker\Artifact;
-require_once __DIR__ . '/../../constants.php';
 
 use Codendi_HTMLPurifier;
 use Codendi_Request;
@@ -93,9 +92,7 @@ use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
 use Tuleap;
-use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
@@ -137,9 +134,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -149,7 +144,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use UserManager;
 use Workflow;
-use Workflow_Transition_ConditionFactory;
 
 class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface
 {
@@ -2429,21 +2423,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $frozen_field_detector = new FrozenFieldDetector(
             new TransitionRetriever(
                 new StateFactory(
-                    new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance(),
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
-                    ),
+                    TransitionFactory::instance(),
                     new SimpleWorkflowDao()
                 ),
                 new TransitionExtractor()
             ),
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                $this->getFormElementFactory()
-            )
+            FrozenFieldsRetriever::instance(),
         );
 
         return new WorkflowUpdateChecker($frozen_field_detector);
@@ -2454,21 +2439,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return new HiddenFieldsetsDetector(
             new TransitionRetriever(
                 new StateFactory(
-                    new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance(),
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
-                    ),
+                    TransitionFactory::instance(),
                     new SimpleWorkflowDao()
                 ),
                 new TransitionExtractor()
             ),
-            new HiddenFieldsetsRetriever(
-                new HiddenFieldsetsDao(),
-                Tracker_FormElementFactory::instance()
-            ),
+            HiddenFieldsetsRetriever::instance(),
             Tracker_FormElementFactory::instance()
         );
     }

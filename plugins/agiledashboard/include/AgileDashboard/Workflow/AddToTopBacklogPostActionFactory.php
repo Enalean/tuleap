@@ -28,6 +28,7 @@ use Transition_PostAction;
 use Transition_PostActionSubFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Workflow;
 
 class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
 {
@@ -46,6 +47,11 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
      */
     private $explicit_backlog_dao;
 
+    /**
+     * @var array<int, array<int, int>>
+     */
+    private $cache = [];
+
     public function __construct(
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
@@ -56,25 +62,60 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
     }
 
+    public function warmUpCacheForWorkflow(Workflow $workflow): void
+    {
+        $workflow_id = (int) $workflow->getId();
+        if (isset($this->cache[$workflow_id])) {
+            return;
+        }
+        $this->cache[$workflow_id] = [];
+        if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $workflow->getTracker()->getGroupId())) {
+            return;
+        }
+        foreach ($this->add_to_top_backlog_post_action_dao->searchByWorkflow($workflow) as $row) {
+            $this->cache[$workflow_id][$row['transition_id']] = $row['id'];
+        }
+    }
+
+    /**
+     * @return AddToTopBacklog[]
+     * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
+     */
     public function loadPostActions(Transition $transition): array
     {
-        $post_actions = [];
+        $workflow_id = (int) $transition->getWorkflow()->getId();
+        if (isset($this->cache[$workflow_id])) {
+            $transition_id = (int) $transition->getId();
+            if (isset($this->cache[$workflow_id][$transition_id])) {
+                return [
+                    new AddToTopBacklog(
+                        $transition,
+                        $this->cache[$workflow_id][$transition_id],
+                        $this->unplanned_artifacts_adder
+                    )
+                ];
+            }
+            return [];
+        }
+
 
         $project_id = (int) $transition->getGroupId();
         if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
-            return $post_actions;
+            return [];
         }
 
         $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
         if ($row !== null) {
-            $post_actions[] = new AddToTopBacklog(
-                $transition,
-                (int) $row['id'],
-                $this->unplanned_artifacts_adder
-            );
+            return [
+                new AddToTopBacklog(
+                    $transition,
+                    (int) $row['id'],
+                    $this->unplanned_artifacts_adder
+                )
+            ];
         }
 
-        return $post_actions;
+        return [];
     }
 
     public function saveObject(Transition_PostAction $post_action)

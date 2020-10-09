@@ -51,6 +51,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * @var StateFactory
      */
     private $state_factory;
+    /**
+     * @var array
+     */
+    private $cache;
 
     /**
      * Should use the singleton instance()
@@ -81,22 +85,17 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
-    public static function setInstance($instance)
+    public static function setInstance(self $instance): void
     {
         self::$_instance = $instance;
     }
 
-    public static function clearInstance()
+    public static function clearInstance(): void
     {
         self::$_instance = null;
     }
 
-    /**
-     * The singleton method
-     *
-     * @return WorkflowFactory
-     */
-    public static function instance()
+    public static function instance(): self
     {
         if (! isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
@@ -131,22 +130,12 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return self::$_instance;
     }
 
-    /**
-     * @return Tracker_Workflow_Trigger_RulesManager
-     */
-    public function getTriggerRulesManager()
+    public function getTriggerRulesManager(): Tracker_Workflow_Trigger_RulesManager
     {
         return $this->trigger_rules_manager;
     }
 
-    /**
-     * Build a Workflow instance
-     *
-     * @param array $row The data describing the workflow
-     *
-     * @return Workflow
-     */
-    public function getInstanceFromRow($row)
+    public function getInstanceFromRow(array $row): Workflow
     {
         $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
         if ($tracker === null) {
@@ -166,24 +155,22 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         );
     }
 
-    /**
-     * @param int $workflow_id
-     * @return null|Workflow
-     */
-    public function getWorkflow($workflow_id)
+    public function getWorkflow(int $workflow_id): ?Workflow
     {
-        $row = $this->getDao()->searchById($workflow_id);
-        if ($row !== null) {
-            return $this->getInstanceFromRow($row);
+        if (! isset($this->cache[$workflow_id])) {
+            $this->cache[$workflow_id] = false;
+            $row = $this->getDao()->searchById($workflow_id);
+            if ($row !== null) {
+                $this->cache[$workflow_id] = $this->getInstanceFromRow($row);
+            }
         }
-        return null;
+        if ($this->cache[$workflow_id] === false) {
+            return null;
+        }
+        return $this->cache[$workflow_id];
     }
 
-
-    /**
-     * @return WorkflowWithoutTransition
-     */
-    public function getWorkflowWithoutTransition(Tracker $tracker)
+    public function getWorkflowWithoutTransition(Tracker $tracker): WorkflowWithoutTransition
     {
         return new WorkflowWithoutTransition(
             $this->getGlobalRulesManager($tracker),
@@ -237,7 +224,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function deleteWorkflow($workflow_id)
     {
         $workflow = $this->getWorkflow($workflow_id);
-        if ($this->transition_factory->deleteWorkflow($workflow)) {
+        if ($workflow && $this->transition_factory->deleteWorkflow($workflow)) {
             return $this->delete($workflow_id);
         }
     }

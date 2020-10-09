@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
-use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_ArtifactFactory;
@@ -39,8 +38,6 @@ use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RealTime\NodeJSClient;
@@ -77,7 +74,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
-use Workflow_Transition_ConditionFactory;
 
 class ExecutionsResource
 {
@@ -706,13 +702,7 @@ class ExecutionsResource
         return new FrozenFieldDetector(
             new TransitionRetriever(
                 new StateFactory(
-                    new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance(),
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
-                    ),
+                    TransitionFactory::instance(),
                     new SimpleWorkflowDao()
                 ),
                 new TransitionExtractor()

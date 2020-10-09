@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -22,14 +22,14 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_TransitionDao extends DataAccessObject
 {
-    public function addTransition($workflow_id, $from, $to)
+    public function addTransition($workflow_id, $from, $to): int
     {
         $workflow_id = $this->da->escapeInt($workflow_id);
         $to   = $this->da->escapeInt($to);
         $from   = $this->da->escapeInt($from);
         $sql = "INSERT INTO tracker_workflow_transition (workflow_id, from_id, to_id)
                 VALUES ($workflow_id, $from, $to)";
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->updateAndGetLastId($sql);
     }
 
     public function deleteTransition($workflow_id, $from, $to)

@@ -40,11 +40,15 @@ final class FrozenFieldsRetrieverTest extends TestCase
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
+    private $workflow_id;
+    private $workflow;
 
     protected function setUp(): void
     {
         $this->frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->workflow_id          = '112';
+        $this->workflow             = Mockery::mock(\Workflow::class, ['getId' => $this->workflow_id]);
 
         $this->frozen_retriever = new FrozenFieldsRetriever(
             $this->frozen_dao,
@@ -54,13 +58,14 @@ final class FrozenFieldsRetrieverTest extends TestCase
 
     public function testGetFrozenFieldsReturnsASinglePostAction()
     {
-        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn(
-            [
-                ['postaction_id' => 72, 'field_id' => 331],
-                ['postaction_id' => 72, 'field_id' => 651],
-                ['postaction_id' => 72, 'field_id' => 987]
-            ]
-        );
+        $postaction_id = 72;
+        $transition_id = '97';
+
+        $this->frozen_dao->shouldReceive('searchByWorkflow')->with($this->workflow)->andReturn([
+            ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 331],
+            ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 651],
+            ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 987],
+        ]);
 
         $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $float_field  = Mockery::mock(\Tracker_FormElement_Field_Float::class);
@@ -70,8 +75,9 @@ final class FrozenFieldsRetrieverTest extends TestCase
         $this->form_element_factory->shouldReceive('getFieldById')->with(651)->andReturn($float_field);
         $this->form_element_factory->shouldReceive('getFieldById')->with(987)->andReturn($string_field);
 
-        $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new FrozenFields($transition, 72, [$int_field, $float_field, $string_field]);
+        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
+        $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field, $float_field, $string_field]);
 
         $result = $this->frozen_retriever->getFrozenFields($transition);
         $this->assertEquals($expected_post_action, $result);
@@ -79,11 +85,35 @@ final class FrozenFieldsRetrieverTest extends TestCase
 
     public function testGetFrozenFieldsThrowsWhenNoPostAction()
     {
-        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn([]);
+        $this->frozen_dao->shouldReceive('searchByWorkflow')->andReturn([]);
 
-        $transition = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
+        $transition = new \Transition('97', $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
 
         $this->expectException(NoFrozenFieldsPostActionException::class);
         $this->frozen_retriever->getFrozenFields($transition);
+    }
+
+    public function testGetFrozenFieldsFromSeveralTransitionsReturnsASinglePostAction()
+    {
+        $postaction_id = 72;
+        $transition_id = '97';
+
+        $this->frozen_dao->shouldReceive('searchByWorkflow')->with($this->workflow)->andReturn([
+            ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 331],
+            ['transition_id' => 98, 'postaction_id' => $postaction_id, 'field_id' => 651],
+            ['transition_id' => 99, 'postaction_id' => $postaction_id, 'field_id' => 987],
+        ]);
+
+        $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+
+        $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
+
+        $transition = new \Transition($transition_id, $this->workflow_id, null, null);
+        $transition->setWorkflow($this->workflow);
+        $expected_post_action = new FrozenFields($transition, $postaction_id, [$int_field]);
+
+        $result = $this->frozen_retriever->getFrozenFields($transition);
+        $this->assertEquals($expected_post_action, $result);
     }
 }

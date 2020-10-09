@@ -20,7 +20,6 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
-use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -88,7 +87,6 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
@@ -3519,21 +3517,12 @@ class Tracker implements Tracker_Dispatchable_Interface
         $frozen_field_detector = new FrozenFieldDetector(
             new TransitionRetriever(
                 new StateFactory(
-                    new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance(),
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
-                    ),
+                    TransitionFactory::instance(),
                     new SimpleWorkflowDao()
                 ),
                 new TransitionExtractor()
             ),
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                $this->getFormElementFactory()
-            )
+            FrozenFieldsRetriever::instance(),
         );
         $workflow_update_checker = new WorkflowUpdateChecker($frozen_field_detector);
         return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(

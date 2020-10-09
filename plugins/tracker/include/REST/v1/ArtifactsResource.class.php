@@ -112,7 +112,6 @@ use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
-use Workflow_Transition_ConditionFactory;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
@@ -217,13 +216,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
-                new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build(),
-                    $this->event_manager,
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
-                    )
-                ),
+                TransitionFactory::instance(),
                 new SimpleWorkflowDao()
             ),
             new TransitionExtractor()

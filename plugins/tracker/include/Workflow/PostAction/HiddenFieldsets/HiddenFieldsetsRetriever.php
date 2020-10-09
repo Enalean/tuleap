@@ -26,11 +26,18 @@ class HiddenFieldsetsRetriever
 {
     /** @var HiddenFieldsetsDao */
     private $dao;
-
     /**
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @psalm-var array<int, array<int, list<array{postaction_id: int, fieldset_id: int}>>>
+     */
+    private $cache = [];
+    /**
+     * @var self
+     */
+    private static $instance;
 
     public function __construct(HiddenFieldsetsDao $dao, \Tracker_FormElementFactory $form_element_factory)
     {
@@ -38,12 +45,20 @@ class HiddenFieldsetsRetriever
         $this->form_element_factory = $form_element_factory;
     }
 
+    public static function instance(): self
+    {
+        if (! self::$instance) {
+            self::$instance = new self(new HiddenFieldsetsDao(), \Tracker_FormElementFactory::instance());
+        }
+        return self::$instance;
+    }
+
     /**
      * @throws NoHiddenFieldsetsPostActionException
      */
     public function getHiddenFieldsets(\Transition $transition): HiddenFieldsets
     {
-        $rows = $this->dao->searchByTransitionId((int) $transition->getId());
+        $rows = $this->getPostActionRows($transition);
 
         $fieldset_ids   = [];
         $post_action_id = null;
@@ -65,5 +80,37 @@ class HiddenFieldsetsRetriever
         }
 
         return new HiddenFieldsets($transition, $post_action_id, $fieldsets);
+    }
+
+    /**
+     * @psalm-return list<array{postaction_id: int, fieldset_id: int}>
+     * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
+     */
+    private function getPostActionRows(\Transition $transition): array
+    {
+        $this->warmUpCacheForWorkflow($transition->getWorkflow());
+
+        $workflow_id = (int) $transition->getWorkflow()->getId();
+        if (isset($this->cache[$workflow_id])) {
+            $transition_id = (int) $transition->getId();
+            return $this->cache[$workflow_id][$transition_id] ?? [];
+        }
+
+        return $this->dao->searchByTransitionId((int) $transition->getId());
+    }
+
+    public function warmUpCacheForWorkflow(\Workflow $workflow): void
+    {
+        $workflow_id = (int) $workflow->getId();
+        if (isset($this->cache[$workflow_id])) {
+            return;
+        }
+        $this->cache[$workflow_id] = [];
+        foreach ($this->dao->searchByWorkflow($workflow) as $row) {
+            $this->cache[$workflow_id][$row['transition_id']][] = [
+                'postaction_id' => $row['postaction_id'],
+                'fieldset_id'   => $row['fieldset_id'],
+            ];
+        }
     }
 }

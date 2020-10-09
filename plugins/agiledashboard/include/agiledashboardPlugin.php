@@ -166,6 +166,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private $sequence_id_manager;
 
     /**
+     * @var AddToTopBacklogPostActionFactory
+     */
+    private $add_to_top_backlog_post_action_factory;
+
+    /**
      * Plugin constructor
      */
     public function __construct($id)
@@ -2024,11 +2029,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getAddToTopBacklogPostActionFactory(): AddToTopBacklogPostActionFactory
     {
-        return new AddToTopBacklogPostActionFactory(
-            new AddToTopBacklogPostActionDao(),
-            $this->getUnplannedArtifactsAdder(),
-            new ExplicitBacklogDao()
-        );
+        if (! $this->add_to_top_backlog_post_action_factory) {
+            $this->add_to_top_backlog_post_action_factory = new AddToTopBacklogPostActionFactory(
+                new AddToTopBacklogPostActionDao(),
+                $this->getUnplannedArtifactsAdder(),
+                new ExplicitBacklogDao()
+            );
+        }
+        return $this->add_to_top_backlog_post_action_factory;
     }
 
     /**

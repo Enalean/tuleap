@@ -45,6 +45,20 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
+    /**
+     * @return DataAccessResult|false
+     * @throws DataAccessQueryException
+     */
+    public function searchByWorkflow(Workflow $workflow)
+    {
+        $workflow_id = $this->da->escapeInt($workflow->getId());
+        $sql = "SELECT pa.*
+                FROM tracker_workflow_transition_postactions_cibuild pa
+                    JOIN tracker_workflow_transition USING (transition_id)
+                WHERE workflow_id = $workflow_id";
+        return $this->retrieve($sql);
+    }
+
     public function searchByTransitionId($transition_id)
     {
         $transition_id = $this->da->escapeInt($transition_id);

@@ -27,7 +27,6 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElementFactory;
 use SimpleXMLElement;
 
 final class FrozenFieldsFactoryTest extends TestCase
@@ -41,41 +40,28 @@ final class FrozenFieldsFactoryTest extends TestCase
     private $frozen_fields_factory;
 
     /**
-     * @var Tracker_FormElementFactory
+     * @var FrozenFieldsRetriever
      */
-    private $form_element_factory;
+    private $frozen_fields_retriever;
 
     protected function setUp(): void
     {
-        $this->frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->frozen_dao              = Mockery::mock(FrozenFieldsDao::class);
+        $this->frozen_fields_retriever = Mockery::mock(FrozenFieldsRetriever::class);
 
         $this->frozen_fields_factory = new FrozenFieldsFactory(
             $this->frozen_dao,
-            $this->form_element_factory
+            $this->frozen_fields_retriever
         );
     }
 
     public function testLoadPostActionsReturnsASinglePostAction()
     {
-        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn(
-            [
-                ['postaction_id' => 72, 'field_id' => 331],
-                ['postaction_id' => 72, 'field_id' => 651],
-                ['postaction_id' => 72, 'field_id' => 987]
-            ]
+        $transition  = new \Transition(null, null, null, null);
+        $expected_post_action = new FrozenFields($transition, 0, []);
+        $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
+            $expected_post_action
         );
-
-        $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $float_field  = Mockery::mock(\Tracker_FormElement_Field_Float::class);
-        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
-
-        $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(651)->andReturn($float_field);
-        $this->form_element_factory->shouldReceive('getFieldById')->with(987)->andReturn($string_field);
-
-        $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new FrozenFields($transition, 72, [$int_field, $float_field, $string_field]);
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);
         $this->assertEquals([$expected_post_action], $result);
@@ -83,11 +69,9 @@ final class FrozenFieldsFactoryTest extends TestCase
 
     public function testLoadPostActionsReturnsEmptyArray()
     {
-        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn(
-            []
-        );
+        $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->andThrow(new NoFrozenFieldsPostActionException());
 
-        $transition = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 18])->getMock();
+        $transition  = new \Transition(null, null, null, null);
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);
         $this->assertEquals([], $result);
