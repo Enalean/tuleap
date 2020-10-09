@@ -7,34 +7,7 @@
     <include-template-tracker path="trackers/sprint.xml"/>
     <include-template-tracker path="trackers/task.xml"/>
     <include-template-tracker path="trackers/story.xml"/>
-    <triggers>
-      <trigger_rule>
-        <triggers>
-          <trigger>
-            <field_id REF="F14406"/>
-            <field_value_id REF="V13843"/>
-          </trigger>
-        </triggers>
-        <condition>at_least_one</condition>
-        <target>
-          <field_id REF="F14463"/>
-          <field_value_id REF="V13861"/>
-        </target>
-      </trigger_rule>
-      <trigger_rule>
-        <triggers>
-          <trigger>
-            <field_id REF="F14406"/>
-            <field_value_id REF="V13845"/>
-          </trigger>
-        </triggers>
-        <condition>all_of</condition>
-        <target>
-          <field_id REF="F14463"/>
-          <field_value_id REF="V13863"/>
-        </target>
-      </trigger_rule>
-    </triggers>
+    <triggers />
   </trackers>
   <natures>
     <nature>_is_child</nature>
@@ -62,7 +35,7 @@
       <tracker id="T480">
         <columns>
           <column label="Todo" id="C282" tlp_color_name="daphne-blue"/>
-          <column label="On Going" id="C283" tlp_color_name="lake-placid-blue"/>
+          <column label="In Progress" id="C283" tlp_color_name="lake-placid-blue"/>
           <column label="Review" id="C284" tlp_color_name="deep-blue"/>
           <column label="Done" id="C285" tlp_color_name="neon-green"/>
         </columns>
@@ -91,7 +64,7 @@
       <tracker id="T481">
         <columns>
           <column label="Todo" id="C286" tlp_color_name="daphne-blue"/>
-          <column label="On Going" id="C287" tlp_color_name="lake-placid-blue"/>
+          <column label="In Progress" id="C287" tlp_color_name="lake-placid-blue"/>
           <column label="Review" id="C288" tlp_color_name="deep-blue"/>
           <column label="Done" id="C289" tlp_color_name="neon-green"/>
         </columns>

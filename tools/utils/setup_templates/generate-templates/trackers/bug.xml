@@ -98,7 +98,7 @@
                   <item ID="V13823" label="New" is_hidden="0">
                     <description><![CDATA[New entry, no progress done so far]]></description>
                   </item>
-                  <item ID="V13824" label="On going" is_hidden="0">
+                  <item ID="V13824" label="In Progress" is_hidden="0">
                     <description><![CDATA[The team is working on the subject]]></description>
                   </item>
                   <item ID="V13825" label="Invalid" is_hidden="0">
@@ -312,7 +312,6 @@
             <field REF="F14317"/>
             <field REF="F14318"/>
             <field REF="F14320"/>
-            <field REF="F14306"/>
             <field REF="F14305"/>
           </columns>
         </renderer>
@@ -333,13 +332,13 @@
             </chart>
           </charts>
         </renderer>
-        <renderer ID="R1736" type="plugin_cardwall" rank="2">
-          <name>CardWall</name>
+        <renderer ID="R1736" type="plugin_cardwall" rank="2" field_id="F14317">
+          <name>Cardwall</name>
         </renderer>
       </renderers>
     </report>
     <report is_default="0" is_in_expert_mode="1"
-            expert_query="assigned_to = MYSELF() and status IN (&quot;New&quot;, &quot;On going&quot;)">
+            expert_query="assigned_to = MYSELF() and status IN (&quot;New&quot;, &quot;In Progress&quot;)">
       <name>My Bugs</name>
       <description>Bugs Report</description>
       <criterias>
@@ -365,7 +364,6 @@
             <field REF="F14317"/>
             <field REF="F14318"/>
             <field REF="F14320"/>
-            <field REF="F14306"/>
             <field REF="F14305"/>
           </columns>
         </renderer>
@@ -386,8 +384,8 @@
             </chart>
           </charts>
         </renderer>
-        <renderer ID="R1739" type="plugin_cardwall" rank="2">
-          <name>CardWall</name>
+        <renderer ID="R1739" type="plugin_cardwall" rank="2" field_id="F14317">
+          <name>Cardwall</name>
         </renderer>
       </renderers>
     </report>
@@ -418,7 +416,6 @@
             <field REF="F14317"/>
             <field REF="F14318"/>
             <field REF="F14320"/>
-            <field REF="F14306"/>
             <field REF="F14305"/>
           </columns>
         </renderer>
@@ -429,18 +426,10 @@
             <chart type="pie" width="600" height="400" rank="0">
               <title>Status</title>
             </chart>
-            <chart type="pie" width="600" height="400" rank="0">
-              <title>Assignment</title>
-              <description>Number of Artifacts by Assignee</description>
-            </chart>
-            <chart type="bar" width="600" height="400" rank="0">
-              <title>Severity</title>
-              <description>Number of Artifacts by severity level</description>
-            </chart>
           </charts>
         </renderer>
-        <renderer ID="R1742" type="plugin_cardwall" rank="2">
-          <name>CardWall</name>
+        <renderer ID="R1742" type="plugin_cardwall" rank="2" field_id="F14317">
+          <name>Cardwall</name>
         </renderer>
       </renderers>
     </report>
