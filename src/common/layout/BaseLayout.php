@@ -396,7 +396,7 @@ abstract class BaseLayout extends Response
     protected function injectProjectBackground(Project $project, array &$params): void
     {
         $background_configuration = ProjectBackgroundConfiguration::buildSelf();
-        if (isset($params['toptab']) && $params['toptab'] === 'summary') {
+        if (isset($params['toptab']) && ($params['toptab'] === 'summary' || $params['toptab'] === 'admin')) {
             $background = $background_configuration->getBackgroundIgnoringFeatureFlag($project);
         } else {
             $background = $background_configuration->getBackground($project);
