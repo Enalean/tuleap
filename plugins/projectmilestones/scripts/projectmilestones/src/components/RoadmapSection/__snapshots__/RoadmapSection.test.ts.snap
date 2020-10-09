@@ -4,11 +4,12 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
 <div
   class="project-release-timeframe"
 >
-  <span
+  <translate-stub
     class="project-release-label"
+    tag="span"
   >
     Roadmap
-  </span>
+  </translate-stub>
    
   <div
     class="project-other-releases"

@@ -28,6 +28,7 @@ Vue.use(Vuex);
 
 export function createStore(
     project_id: number,
+    project_name: string,
     nb_upcoming_releases: number,
     nb_backlog_items: number,
     trackers_agile_dashboard: TrackerAgileDashboard[],
@@ -40,6 +41,7 @@ export function createStore(
 ): Store<State> {
     const state: State = {
         project_id,
+        project_name,
         nb_upcoming_releases,
         nb_backlog_items,
         trackers_agile_dashboard,

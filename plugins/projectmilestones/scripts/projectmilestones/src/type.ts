@@ -114,6 +114,9 @@ export interface StoreOptions {
         user_can_view_sub_milestones_planning?: boolean;
         burnup_mode?: string;
         last_release?: MilestoneData | null;
+        nb_backlog_items?: number;
+        nb_upcoming_releases?: number;
+        nb_past_releases?: number;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -122,6 +125,7 @@ export interface StoreOptions {
 
 export interface State {
     project_id: number | null;
+    project_name: string;
     nb_backlog_items: number;
     nb_upcoming_releases: number;
     error_message: string | null;

@@ -29,9 +29,14 @@
                 class="project-release-widget-content"
                 data-test="widget-content-project-milestones"
             >
-                <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
-                <whats-hot-section />
-                <past-section v-bind:label_tracker_planning="label_tracker_planning" />
+                <div v-if="display_empty_state">
+                    <roadmap-empty-state-section />
+                </div>
+                <div v-else>
+                    <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
+                    <whats-hot-section />
+                    <past-section v-bind:label_tracker_planning="label_tracker_planning" />
+                </div>
             </div>
         </div>
     </section>
@@ -43,11 +48,12 @@ import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Action, Getter, State } from "vuex-class";
-import { TrackerAgileDashboard } from "../type";
+import { MilestoneData, TrackerAgileDashboard } from "../type";
 import PastSection from "./PastSection/PastSection.vue";
+import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
 
 @Component({
-    components: { PastSection, WhatsHotSection, RoadmapSection },
+    components: { RoadmapEmptyStateSection, PastSection, WhatsHotSection, RoadmapSection },
 })
 export default class App extends Vue {
     @State
@@ -64,6 +70,10 @@ export default class App extends Vue {
     readonly is_loading!: boolean;
     @State
     readonly error_message!: string;
+    @State
+    readonly current_milestones!: MilestoneData[];
+    @State
+    readonly nb_past_releases!: number;
     @Getter
     has_rest_error!: boolean;
     @Action
@@ -77,6 +87,15 @@ export default class App extends Vue {
         return this.error_message === ""
             ? this.$gettext("Oops, an error occurred!")
             : this.error_message;
+    }
+
+    get display_empty_state(): boolean {
+        return (
+            this.nb_backlog_items === 0 &&
+            this.nb_upcoming_releases === 0 &&
+            this.current_milestones.length === 0 &&
+            this.nb_past_releases === 0
+        );
     }
 }
 </script>

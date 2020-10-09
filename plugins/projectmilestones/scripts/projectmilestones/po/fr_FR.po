@@ -116,8 +116,18 @@ msgstr "Passé"
 msgid "Recently closed"
 msgstr "Récemment fermé(e)"
 
+msgid "Roadmap"
+msgstr "Roadmap"
+
+msgid "Start Planning"
+msgstr "Démarrez la planification"
+
 msgid "Tests Results"
 msgstr "Résultats des tests"
+
+msgid "There is no item nor milestone in the %{ name } backlog yet."
+msgstr ""
+"Il n'y a pas encore d'éléments ou de jalons dans le backlog de %{ name }."
 
 msgid "What's hot"
 msgstr "En cours"

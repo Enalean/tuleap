@@ -31,6 +31,10 @@ class ProjectMilestonesPresenter
      */
     public $project_id;
     /**
+     * @var string
+     */
+    public $project_name;
+    /**
      * @var bool
      */
     public $is_IE11;
@@ -84,6 +88,7 @@ class ProjectMilestonesPresenter
         string $burnup_mode
     ) {
         $this->project_id                            = $project->getID();
+        $this->project_name                          = $project->getPublicName();
         $this->nb_upcoming_releases                  = $nb_upcoming_releases;
         $this->nb_backlog_items                      = $nb_backlog_items;
         $this->json_trackers_agile_dashboard         = (string) json_encode($trackers_id, JSON_THROW_ON_ERROR);

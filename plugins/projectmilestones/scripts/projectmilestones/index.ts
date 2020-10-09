@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     for (const widget of widgets) {
         const project_id_dataset = widget.dataset.projectId;
+        const project_name = widget.dataset.projectName;
         const nb_upcoming_releases_dataset = widget.dataset.nbUpcomingReleases;
         const nb_backlog_items_dataset = widget.dataset.nbBacklogItems;
         const trackers_agile_dashboard_dataset = widget.dataset.jsonTrackersAgileDashboard;
@@ -63,6 +64,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!project_id_dataset) {
             throw new Error("Project Id is missing.");
+        }
+
+        if (!project_name) {
+            throw new Error("Project Name is missing.");
         }
 
         if (!nb_upcoming_releases_dataset) {
@@ -109,6 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         new AppComponent({
             store: createStore(
                 project_id,
+                project_name,
                 nb_upcoming_releases,
                 nb_backlog_items,
                 trackers_agile_dashboard,

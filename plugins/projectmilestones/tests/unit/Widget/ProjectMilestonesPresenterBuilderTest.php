@@ -131,7 +131,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         parent::setUp();
         $this->http_request                                             = Mockery::mock(HTTPRequest::class);
         $this->planning_milestone_factory                               = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->project                                                  = Mockery::mock(Project::class, ['getID' => 101]);
+        $this->project                                                  = Mockery::mock(Project::class, ['getID' => 101, 'getPublicName' => 'My Project']);
         $this->john_doe                                                 = Mockery::mock(PFUser::class);
         $this->planning_virtual_top_milestone                           = Mockery::mock(Planning_VirtualTopMilestone::class);
         $this->agileDashboard_milestone_backlog_item_collection         = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItemCollection::class);
