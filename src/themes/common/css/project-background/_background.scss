@@ -26,15 +26,17 @@ $definitions: (
     (
         // Photo by Joschko Hammermann
         // https://unsplash.com/@hmmrmnn?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
-        image: url(#{$project-background-images-path}/beach.webp),
-        color: #765730
+        image: url(#{$project-background-images-path}/beach.webp) no-repeat,
+        color: #765730,
+        size: 100%
     ),
     bridge:
     (
         // Photo by David Emrich
         // https://unsplash.com/@davidemrich?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
-        image: url(#{$project-background-images-path}/bridge.webp),
-        color: #757f16
+        image: url(#{$project-background-images-path}/bridge.webp) no-repeat,
+        color: #757f16,
+        size: 100%
     )
 );
 
@@ -48,6 +50,11 @@ $definitions: (
     @return map-get($def, 'color');
 }
 
+@function get-size($background) {
+    $def: map-get($definitions, $background);
+    @return map-get($def, 'size');
+}
+
 @function opacifier-color($sidebar-background) {
     @return transparentize($sidebar-background, .7);
 }
@@ -55,6 +62,7 @@ $definitions: (
 @mixin css-custom-properties($background) {
     --project-background-image: #{get-image($background)};
     --project-background-prominent-color: #{get-color($background)};
+    --project-background-size: #{get-size($background)};
 }
 
 @mixin apply-background(
@@ -70,11 +78,11 @@ $definitions: (
     .project-with-background #{$element} {
         background:
             linear-gradient($opacifier-color, $opacifier-color),
-            var(--project-background-image) no-repeat,
+            var(--project-background-image),
             linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
         background-attachment: fixed;
         background-position: $sidebar-expanded-width 0;
-        background-size: 100%;
+        background-size: var(--project-background-size);
     }
 
     .motd ~ #main-container .project-with-background #{$element} {
