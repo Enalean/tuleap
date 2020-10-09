@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoEndPeriodChangesetValueException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStartDateChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
@@ -51,13 +53,17 @@ class CopiedValuesGatherer
         $title_value       = $this->readTitle($fields, $aggregator_milestone_last_changeset);
         $description_value = $this->readDesription($fields, $aggregator_milestone_last_changeset);
         $status_value      = $this->readStatus($fields, $aggregator_milestone_last_changeset);
+        $start_date_value  = $this->readStartDate($fields, $aggregator_milestone_last_changeset);
+        $end_period_value  = $this->readEndPeriod($fields, $aggregator_milestone_last_changeset);
 
         return new CopiedValues(
             $title_value,
             $description_value,
             $status_value,
             (int) $aggregator_milestone_last_changeset->getSubmittedOn(),
-            (int) $aggregator_milestone_last_changeset->getArtifact()->getId()
+            (int) $aggregator_milestone_last_changeset->getArtifact()->getId(),
+            $start_date_value,
+            $end_period_value
         );
     }
 
@@ -118,5 +124,44 @@ class CopiedValuesGatherer
         }
         assert($status_value instanceof \Tracker_Artifact_ChangesetValue_List);
         return $status_value;
+    }
+
+    private function readStartDate(
+        SynchronizedFields $fields,
+        \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
+    ): \Tracker_Artifact_ChangesetValue_Date {
+        $start_date_field = $fields->getStartDateField();
+        $start_date_value = $aggregator_milestone_last_changeset->getValue($start_date_field);
+
+        if (! $start_date_value) {
+            throw new NoStartDateChangesetValueException(
+                (int) $aggregator_milestone_last_changeset->getId(),
+                (int) $start_date_field->getId()
+            );
+        }
+        assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
+        return $start_date_value;
+    }
+
+    /**
+     * @return \Tracker_Artifact_ChangesetValue_Numeric|\Tracker_Artifact_ChangesetValue_Date
+     */
+    private function readEndPeriod(
+        SynchronizedFields $fields,
+        \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
+    ) {
+        $end_period_field = $fields->getTimeframeFields()->getEndPeriodField();
+        $end_period_value = $aggregator_milestone_last_changeset->getValue($end_period_field);
+
+        if (! $end_period_value) {
+            throw new NoEndPeriodChangesetValueException(
+                (int) $aggregator_milestone_last_changeset->getId(),
+                (int) $end_period_field->getId()
+            );
+        }
+
+        assert($end_period_value instanceof \Tracker_Artifact_ChangesetValue_Date ||
+               $end_period_value instanceof  \Tracker_Artifact_ChangesetValue_Numeric);
+        return $end_period_value;
     }
 }

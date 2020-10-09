@@ -276,12 +276,30 @@ final class ArtifactCreatedHandlerTest extends TestCase
             [$planned_value]
         );
 
+        $start_date_changeset_value = new \Tracker_Artifact_ChangesetValue_Date(
+            100003,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field::class),
+            true,
+            1285891200
+        );
+
+        $end_period_changeset_value = new \Tracker_Artifact_ChangesetValue_Date(
+            100004,
+            M::mock(\Tracker_Artifact_Changeset::class),
+            M::mock(\Tracker_FormElement_Field_Date::class),
+            true,
+            1602288000
+        );
+
         return new CopiedValues(
             $title_changeset_value,
             $description_changeset_value,
             $status_changeset_value,
             123456789,
-            112
+            112,
+            $start_date_changeset_value,
+            $end_period_changeset_value
         );
     }
 }

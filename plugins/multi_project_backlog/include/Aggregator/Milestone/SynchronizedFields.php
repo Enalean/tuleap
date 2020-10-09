@@ -119,4 +119,12 @@ final class SynchronizedFields
             $this->timeframe_fields->getEndPeriodField()
         ];
     }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getStartDateField(): \Tracker_FormElement_Field_Date
+    {
+        return $this->timeframe_fields->getStartDateField();
+    }
 }

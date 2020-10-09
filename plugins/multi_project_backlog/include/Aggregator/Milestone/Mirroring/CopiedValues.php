@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_Date;
+use Tracker_Artifact_ChangesetValue_Numeric;
+
 final class CopiedValues
 {
     /**
@@ -49,19 +53,34 @@ final class CopiedValues
      * @psalm-readonly
      */
     private $source_artifact_id;
+    /**
+     * @var Tracker_Artifact_ChangesetValue_Date
+     */
+    private $start_date_value;
+    /**
+     * @var Tracker_Artifact_ChangesetValue_Numeric| Tracker_Artifact_ChangesetValue_Date
+     */
+    private $end_period_value;
 
+    /**
+     * @param \Tracker_Artifact_ChangesetValue_Numeric| \Tracker_Artifact_ChangesetValue_Date $end_period_value
+     */
     public function __construct(
         \Tracker_Artifact_ChangesetValue_String $title_value,
         \Tracker_Artifact_ChangesetValue_Text $description_value,
         \Tracker_Artifact_ChangesetValue_List $status_value,
         int $submitted_on,
-        int $source_artifact_id
+        int $source_artifact_id,
+        Tracker_Artifact_ChangesetValue_Date $start_date_value,
+        Tracker_Artifact_ChangesetValue $end_period_value
     ) {
         $this->title_value        = $title_value;
         $this->description_value  = $description_value;
         $this->status_value       = $status_value;
         $this->submitted_on       = $submitted_on;
         $this->source_artifact_id = $source_artifact_id;
+        $this->start_date_value   = $start_date_value;
+        $this->end_period_value   = $end_period_value;
     }
 
     /**
@@ -103,5 +122,22 @@ final class CopiedValues
     public function getArtifactId(): int
     {
         return $this->source_artifact_id;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getStartDateValue(): Tracker_Artifact_ChangesetValue_Date
+    {
+        return $this->start_date_value;
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @return Tracker_Artifact_ChangesetValue_Numeric| Tracker_Artifact_ChangesetValue_Date
+     */
+    public function getEndPeriodValue(): Tracker_Artifact_ChangesetValue
+    {
+        return $this->end_period_value;
     }
 }
