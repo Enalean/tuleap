@@ -24,6 +24,7 @@ namespace Tuleap\Project\ProjectBackground;
 
 /**
  * @psalm-immutable
+ * @psalm-import-type ValidProjectBackgroundName from \Tuleap\Project\ProjectBackground\ProjectBackgroundName
  */
 class ProjectBackground
 {
@@ -31,6 +32,7 @@ class ProjectBackground
 
     /**
      * @var string
+     * @psalm-var ValidProjectBackgroundName|self::NO_BACKGROUND_IDENTIFIER
      */
     public $identifier;
     /**
@@ -46,6 +48,9 @@ class ProjectBackground
      */
     public $is_no_background;
 
+    /**
+     * @psalm-param ValidProjectBackgroundName|self::NO_BACKGROUND_IDENTIFIER $identifier
+     */
     private function __construct(string $identifier, string $author, bool $is_selected)
     {
         $this->identifier  = $identifier;
@@ -55,6 +60,9 @@ class ProjectBackground
         $this->is_no_background = $identifier === self::NO_BACKGROUND_IDENTIFIER;
     }
 
+    /**
+     * @psalm-param ValidProjectBackgroundName $identifier
+     */
     public static function buildFromIdentifier(string $identifier, string $author, bool $is_selected): self
     {
         return new self($identifier, $author, $is_selected);
