@@ -527,7 +527,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
 
         $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
-        $html .= '<div class="tlp-framed">';
         $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers');
 
         if ($this->userCanCreateTracker($project->group_id, $user)) {
@@ -539,6 +538,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         } else {
             $html .= '</h1>';
         }
+
+        $html .= '<div class="trackers-homepage">';
 
         if (! count($trackers)) {
             $html .= '<p>' . dgettext('tuleap-tracker', 'No trackers have been set up, or you are not allowed to view them.') . '</p>';

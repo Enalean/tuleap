@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../src/themes/common/css/project-background/background';
+@import '../../src/themes/BurningParrot/css/includes/global-variables';
+
+.project-with-background {
+    .trackers-homepage-title,
+    .tracker-administration-title {
+        margin: 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+        color: $tlp-ui-white;
+        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+    }
+
+    .trackers-homepage {
+        margin: $tlp-medium-spacing;
+    }
+
+    .main-project-tabs + h2 {
+        margin: $tlp-medium-spacing 0 0;
+    }
+}
+
+body {
+    @include background.apply-background(
+        '.tracker-administration-title',
+        $tlp-theme-sidebar-background-color,
+        $sidebar-expanded-width,
+        $sidebar-collapsed-width
+    );
+    @include background.apply-background(
+        '.trackers-homepage-title',
+        $tlp-theme-sidebar-background-color,
+        $sidebar-expanded-width,
+        $sidebar-collapsed-width
+    );
+}
