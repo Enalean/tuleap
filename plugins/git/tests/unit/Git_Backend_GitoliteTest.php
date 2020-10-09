@@ -239,6 +239,22 @@ class Git_Backend_GitoliteTest extends TestCase
         $backend->clonePermissions($old, $new);
     }
 
+    public function testIsNameValid(): void
+    {
+        $this->assertTrue($this->givenABackendGitolite()->isNameValid("lerepo"));
+        $this->assertTrue($this->givenABackendGitolite()->isNameValid("le_repo/repo"));
+        $this->assertTrue($this->givenABackendGitolite()->isNameValid("le_repo65"));
+        $this->assertTrue($this->givenABackendGitolite()->isNameValid("le_repo_git"));
+        $this->assertTrue($this->givenABackendGitolite()->isNameValid("lerepo.gitea"));
+    }
+
+    public function testIsNameValidReturnFalseIfARepositoryNameEndWithPointGit(): void
+    {
+        $this->assertFalse($this->givenABackendGitolite()->isNameValid("lerepo.git"));
+        $this->assertFalse($this->givenABackendGitolite()->isNameValid("le_repo.git/repo"));
+        $this->assertFalse($this->givenABackendGitolite()->isNameValid("le_repo65/repo.git"));
+    }
+
     public function testClonePermsCrossProjectFork(): void
     {
         $old_repo_id = 110;
