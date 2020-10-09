@@ -1463,6 +1463,13 @@ msgstr "Permissions par groupe"
 msgid "Personal access keys"
 msgstr "Clés personnelles d'accès"
 
+msgid ""
+"Personalize your project by adding a background image in the header of "
+"dashboard and administration pages."
+msgstr ""
+"Personnalisez votre projet en ajoutant une image de fond dans l'entête des "
+"tableaux de bord et de l'administration."
+
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
 
