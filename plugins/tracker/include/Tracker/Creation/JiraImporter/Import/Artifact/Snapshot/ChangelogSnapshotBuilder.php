@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
 class ChangelogSnapshotBuilder
 {
@@ -168,6 +169,16 @@ class ChangelogSnapshotBuilder
                 continue;
             }
 
+            if ($field_mapping->getJiraFieldId() === AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME) {
+                $fields_snapshot[] = $this->extractFieldSnapshotFromChangesetToString(
+                    $current_snapshot,
+                    $field_id,
+                    $changed_field_to_string,
+                    $field_mapping
+                );
+                continue;
+            }
+
             if ($changed_field_to !== null) {
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,
@@ -181,23 +192,12 @@ class ChangelogSnapshotBuilder
             }
 
             if ($changed_field_to_string !== null) {
-                $rendered_value = null;
-                $field_snapshot = $current_snapshot->getFieldInSnapshot($field_id);
-                if (
-                    $field_snapshot !== null &&
-                    $field_snapshot->getFieldMapping()->getType() === Tracker_FormElementFactory::FIELD_TEXT_TYPE &&
-                    $field_snapshot->getValue() === $changed_field_to_string
-                ) {
-                    $rendered_value = $field_snapshot->getRenderedValue();
-                }
-
-                $fields_snapshot[] = new FieldSnapshot(
-                    $field_mapping,
+                $fields_snapshot[] = $this->extractFieldSnapshotFromChangesetToString(
+                    $current_snapshot,
+                    $field_id,
                     $changed_field_to_string,
-                    $rendered_value
+                    $field_mapping
                 );
-
-                $this->logger->debug("  |_ Generate string value for " . $field_id);
                 continue;
             }
         }
@@ -208,5 +208,31 @@ class ChangelogSnapshotBuilder
             $fields_snapshot,
             null
         );
+    }
+
+    private function extractFieldSnapshotFromChangesetToString(
+        Snapshot $current_snapshot,
+        string $field_id,
+        string $changed_field_to_string,
+        FieldMapping $field_mapping
+    ): FieldSnapshot {
+        $rendered_value = null;
+        $field_snapshot = $current_snapshot->getFieldInSnapshot($field_id);
+        if (
+            $field_snapshot !== null &&
+            $field_snapshot->getFieldMapping()->getType() === Tracker_FormElementFactory::FIELD_TEXT_TYPE &&
+            $field_snapshot->getValue() === $changed_field_to_string
+        ) {
+            $rendered_value = $field_snapshot->getRenderedValue();
+        }
+
+        $field_snapshot = new FieldSnapshot(
+            $field_mapping,
+            $changed_field_to_string,
+            $rendered_value
+        );
+
+        $this->logger->debug("  |_ Generate string value for " . $field_id);
+        return $field_snapshot;
     }
 }
