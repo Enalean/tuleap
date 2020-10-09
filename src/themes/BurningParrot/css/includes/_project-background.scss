@@ -125,11 +125,12 @@ body {
     }
 }
 
-#project-admin-background-error {
-    padding: $tlp-medium-spacing;
+#project-admin-background-error,
+#project-admin-background-success {
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
-.project-admin-background-error-hidden {
+.project-admin-background-feedback-hidden {
     display: none;
 }
 

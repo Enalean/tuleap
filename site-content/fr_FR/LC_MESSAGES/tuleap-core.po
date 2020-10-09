@@ -2109,6 +2109,9 @@ msgstr "L'identifiant du groupe utilisateur est requis"
 msgid "The group name is missing"
 msgstr "Le nom du groupe utilisateur est requis"
 
+msgid "The header background has been successfully changed"
+msgstr "L'image de fond a été modifiée avec succès"
+
 msgid ""
 "The key will expire at the end of the selected date. Keep it empty if you "
 "don't want that this key will expire."

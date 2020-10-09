@@ -36,6 +36,7 @@ describe("admin-header-background", () => {
 
         await form.submit();
 
+        expect(location.hash).toBe("#header-background-change-success");
         expect(location.reload).toHaveBeenCalled();
     });
 
@@ -51,7 +52,22 @@ describe("admin-header-background", () => {
 
         await form.submit();
 
+        expect(location.hash).toBe("#header-background-change-success");
         expect(location.reload).toHaveBeenCalled();
+    });
+
+    it("shows a success message when it seems a background has been changed", () => {
+        const { mount_point, success_element } = createDocumentExpectedFormStructure("beach");
+
+        const class_hide_feedback = "project-admin-background-feedback-hidden";
+        success_element.classList.add(class_hide_feedback);
+
+        const location = window.location;
+        location.hash = "#header-background-change-success";
+
+        setupFormSubmission(mount_point, location);
+
+        expect(success_element.classList.contains(class_hide_feedback)).toBe(false);
     });
 
     it("throws an error if the form cannot be found", () => {
@@ -69,6 +85,18 @@ describe("admin-header-background", () => {
         expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
     });
 
+    it("throws an error the success message cannot be found", () => {
+        const mount_point = document.implementation.createHTMLDocument();
+        const form = mount_point.createElement("form");
+        form.setAttribute("id", "form-header-background");
+        const error_element = mount_point.createElement("div");
+        error_element.setAttribute("id", "project-admin-background-error");
+        form.appendChild(error_element);
+        mount_point.body.appendChild(form);
+
+        expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
+    });
+
     it("throws an error if the submit button cannot be found", () => {
         const mount_point = document.implementation.createHTMLDocument();
         const form = mount_point.createElement("form");
@@ -76,6 +104,9 @@ describe("admin-header-background", () => {
         const error_element = mount_point.createElement("div");
         error_element.setAttribute("id", "project-admin-background-error");
         form.appendChild(error_element);
+        const success_element = mount_point.createElement("div");
+        success_element.setAttribute("id", "project-admin-background-success");
+        form.appendChild(success_element);
         mount_point.body.appendChild(form);
 
         expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
@@ -88,6 +119,9 @@ describe("admin-header-background", () => {
         const error_element = mount_point.createElement("div");
         error_element.setAttribute("id", "project-admin-background-error");
         form.appendChild(error_element);
+        const success_element = mount_point.createElement("div");
+        success_element.setAttribute("id", "project-admin-background-success");
+        form.appendChild(success_element);
         const submit_button = mount_point.createElement("button");
         submit_button.setAttribute("id", "project-admin-background-submit-button");
         form.appendChild(submit_button);
@@ -101,6 +135,7 @@ describe("admin-header-background", () => {
     ): {
         mount_point: Document;
         form: HTMLFormElement;
+        success_element: HTMLElement;
     } {
         const mount_point = document.implementation.createHTMLDocument();
         const form = mount_point.createElement("form");
@@ -116,6 +151,9 @@ describe("admin-header-background", () => {
         const error_element = mount_point.createElement("div");
         error_element.setAttribute("id", "project-admin-background-error");
         form.appendChild(error_element);
+        const success_element = mount_point.createElement("div");
+        success_element.setAttribute("id", "project-admin-background-success");
+        form.appendChild(success_element);
         const submit_button = mount_point.createElement("button");
         submit_button.setAttribute("id", "project-admin-background-submit-button");
         const submit_button_icon = mount_point.createElement("i");
@@ -124,6 +162,6 @@ describe("admin-header-background", () => {
         form.appendChild(submit_button);
         mount_point.body.appendChild(form);
 
-        return { mount_point, form };
+        return { mount_point, form, success_element };
     }
 });
