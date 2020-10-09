@@ -745,6 +745,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      */
     public function overlay_header() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        $current_user    = UserManager::instance()->getCurrentUser();
+        $theme_variant   = new ThemeVariant();
+        $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $theme_color_variant = $color->getVariant();
+
         $this->includeCalendarScripts();
         echo '<!DOCTYPE html>
               <html>
@@ -753,10 +758,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo $this->displayJavascriptElements([]);
         echo $this->displayStylesheetElements([]);
         echo $this->displaySyndicationElements();
-        echo '    </head>
-                     <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
-                       <div class="main_body_row">
-                           <div class="contenttable">';
+        echo '</head>';
+        echo '<body class="' . $theme_color_variant . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">';
+        echo '<div class="main_body_row"><div class="contenttable">';
         echo $this->getNotificationPlaceholder();
     }
 

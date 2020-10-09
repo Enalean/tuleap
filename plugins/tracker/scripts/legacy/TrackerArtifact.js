@@ -370,6 +370,10 @@ document.observe("dom:loaded", function () {
 
     if ($("tracker_select_tracker")) {
         $("tracker_select_tracker").observe("change", function () {
+            if (this.ownerDocument.location.href.includes(this.value)) {
+                return;
+            }
+
             this.ownerDocument.location.href = this.ownerDocument.location.href.gsub(
                 /tracker=\d+/,
                 "tracker=" + this.value
