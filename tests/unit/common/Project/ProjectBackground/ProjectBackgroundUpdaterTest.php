@@ -50,7 +50,7 @@ final class ProjectBackgroundUpdaterTest extends TestCase
 
         $this->project_background_updater->updateProjectBackground(
             $this->buildPermission(),
-            ProjectBackgroundName::fromIdentifier('beach')
+            ProjectBackgroundName::fromIdentifier('beach-daytime')
         );
     }
 

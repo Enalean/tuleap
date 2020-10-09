@@ -515,7 +515,30 @@ for (const color of colors) {
     ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}-condensed.scss`;
 }
 
-const project_background_themes = ["beach", "bridge"];
+const project_background_themes = [
+    "aerial-water",
+    "asphalt-rock",
+    "beach-daytime",
+    "blue-rain",
+    "blue-sand",
+    "brown-desert",
+    "brown-grass",
+    "brown-textile",
+    "brush-daytime",
+    "green-grass",
+    "green-leaf",
+    "green-trees",
+    "led-light",
+    "ocean-waves",
+    "octopus-black",
+    "purple-building",
+    "purple-droplet",
+    "purple-textile",
+    "snow-mountain",
+    "tree-water",
+    "white-sheep",
+    "wooden-surface",
+];
 for (const background of project_background_themes) {
     theme_entry_points[
         `project-background/${background}`

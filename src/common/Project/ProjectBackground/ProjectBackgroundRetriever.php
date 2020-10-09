@@ -30,13 +30,13 @@ use Project;
 class ProjectBackgroundRetriever
 {
     /**
-     * @var ProjectBackgroundDao
+     * @var ProjectBackgroundConfiguration
      */
-    private $dao;
+    private $configuration;
 
-    public function __construct(ProjectBackgroundDao $dao)
+    public function __construct(ProjectBackgroundConfiguration $configuration)
     {
-        $this->dao = $dao;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -44,12 +44,32 @@ class ProjectBackgroundRetriever
      */
     public function getBackgrounds(Project $project): array
     {
-        $current_background_identifier = $this->dao->getBackground((int) $project->getID());
+        $current_background_identifier = $this->configuration->getBackgroundIgnoringFeatureFlag($project);
 
         return [
             ProjectBackground::buildNoBackground($current_background_identifier === null),
-            $this->instantiateBackground('bridge', 'David Emrich', $current_background_identifier),
-            $this->instantiateBackground('beach', 'Joschko Hammermann', $current_background_identifier),
+            $this->instantiateBackground('aerial-water', 'Chris', $current_background_identifier),
+            $this->instantiateBackground('asphalt-rock', 'Jake Blucker', $current_background_identifier),
+            $this->instantiateBackground('beach-daytime', 'Chris Stenger', $current_background_identifier),
+            $this->instantiateBackground('blue-rain', 'Jackson David', $current_background_identifier),
+            $this->instantiateBackground('blue-sand', 'Amy Humphries', $current_background_identifier),
+            $this->instantiateBackground('brown-desert', 'Wolfgang Hasselmann', $current_background_identifier),
+            $this->instantiateBackground('brown-grass', 'Hasan Almasi', $current_background_identifier),
+            $this->instantiateBackground('brown-textile', 'Noah Kroes', $current_background_identifier),
+            $this->instantiateBackground('brush-daytime', 'Darwin Vegher', $current_background_identifier),
+            $this->instantiateBackground('green-grass', 'Annelie Turner', $current_background_identifier),
+            $this->instantiateBackground('green-leaf', 'Adam Kring', $current_background_identifier),
+            $this->instantiateBackground('green-trees', 'Bruno Kelzer', $current_background_identifier),
+            $this->instantiateBackground('led-light', 'Lubo Minar', $current_background_identifier),
+            $this->instantiateBackground('ocean-waves', 'Taoh Nichols', $current_background_identifier),
+            $this->instantiateBackground('octopus-black', 'Isabel Galvez', $current_background_identifier),
+            $this->instantiateBackground('purple-building', 'David Becker', $current_background_identifier),
+            $this->instantiateBackground('purple-droplet', 'Mary Ray', $current_background_identifier),
+            $this->instantiateBackground('purple-textile', 'Delaney Van', $current_background_identifier),
+            $this->instantiateBackground('snow-mountain', 'Tomasz Smal', $current_background_identifier),
+            $this->instantiateBackground('tree-water', 'Andreas Gücklhorn', $current_background_identifier),
+            $this->instantiateBackground('wooden-surface', 'Ian Dziuk', $current_background_identifier),
+            $this->instantiateBackground('white-sheep', 'Will Bolding', $current_background_identifier),
         ];
     }
 

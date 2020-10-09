@@ -32,12 +32,12 @@ class ProjectBackgroundRetrieverTest extends TestCase
 
     public function testNoBackgroundIsSelectedIfProjectDidNotSelectOne()
     {
-        $project = Mockery::mock(\Project::class)->shouldReceive(['getID' => 123])->getMock();
+        $project = Mockery::mock(\Project::class);
 
-        $dao = Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive(['getBackground' => null]);
+        $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
+        $configuration->shouldReceive(['getBackgroundIgnoringFeatureFlag' => null]);
 
-        $retriever = new ProjectBackgroundRetriever($dao);
+        $retriever = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);
 
         self::assertTrue($backgrounds[0]->is_no_background);
@@ -49,19 +49,19 @@ class ProjectBackgroundRetrieverTest extends TestCase
     }
     public function testGetBackgrounds()
     {
-        $project = Mockery::mock(\Project::class)->shouldReceive(['getID' => 123])->getMock();
+        $project = Mockery::mock(\Project::class);
 
-        $dao = Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive(['getBackground' => 'beach']);
+        $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
+        $configuration->shouldReceive(['getBackgroundIgnoringFeatureFlag' => 'beach-daytime']);
 
-        $retriever = new ProjectBackgroundRetriever($dao);
+        $retriever = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);
 
         self::assertTrue($backgrounds[0]->is_no_background);
         self::assertFalse($backgrounds[0]->is_selected);
         for ($i = 1, $length = count($backgrounds); $i < $length; $i++) {
             self::assertFalse($backgrounds[$i]->is_no_background);
-            if ($backgrounds[$i]->identifier === 'beach') {
+            if ($backgrounds[$i]->identifier === 'beach-daytime') {
                 self::assertTrue($backgrounds[$i]->is_selected);
             } else {
                 self::assertFalse($backgrounds[$i]->is_selected);

@@ -28,7 +28,7 @@ final class ProjectBackgroundNameTest extends TestCase
 {
     public function testCanBeInstantiatedFromAnIdentifier(): void
     {
-        $identifier = 'beach';
+        $identifier = 'beach-daytime';
         $name       = ProjectBackgroundName::fromIdentifier($identifier);
 
         self::assertSame($identifier, $name->getIdentifier());
