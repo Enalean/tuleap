@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact;
+namespace Tuleap\Tracker\Artifact\Creation;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -28,7 +28,6 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
-use Tracker_ArtifactCreator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\TrackerColor;
 
-final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class TrackerArtifactCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -50,7 +49,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_ArtifactCreator */
+    /** @var TrackerArtifactCreator */
     private $creator;
 
     /** @var \Tracker */
@@ -104,7 +103,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
         $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
         $this->bare_artifact = new Tracker_Artifact(0, 123, 101, 1234567890, 0);
 
-        $this->creator = new Tracker_ArtifactCreator(
+        $this->creator = new TrackerArtifactCreator(
             $this->artifact_factory,
             $this->fields_validator,
             $this->changeset_creator,
@@ -148,7 +147,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
         );
     }
 
-    public function testItReturnsFalseIfFIeldsAreNotValid(): void
+    public function testItReturnsNullIfFieldsAreNotValid(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(false);
 
@@ -165,7 +164,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
             new NullChangesetValidationContext()
         );
 
-        $this->assertFalse($result);
+        $this->assertNull($result);
     }
 
     public function testItCreateArtifactsInDbIfFieldsAreValid(): void
@@ -185,7 +184,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
         );
     }
 
-    public function testItReturnsFalseIfCreateArtifactsInDbFails(): void
+    public function testItReturnsNullIfCreateArtifactsInDbFails(): void
     {
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
         $this->dao->shouldReceive('create')->andReturn(false);
@@ -202,7 +201,7 @@ final class Tracker_ArtifactCreatorTest extends TestCase //phpcs:ignore PSR1.Cla
             new NullChangesetValidationContext()
         );
 
-        $this->assertFalse($result);
+        $this->assertNull($result);
     }
 
     public function testItCreateChangesetIfCreateArtifactsInDbSucceeds(): void

@@ -27,6 +27,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\ContributorMilestoneTrackerC
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\StatusValueMapper;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
@@ -45,7 +46,7 @@ class MirrorMilestonesCreator
      */
     private $status_mapper;
     /**
-     * @var \Tracker_ArtifactCreator
+     * @var TrackerArtifactCreator
      */
     private $artifact_creator;
 
@@ -53,7 +54,7 @@ class MirrorMilestonesCreator
         DBTransactionExecutor $transaction_executor,
         SynchronizedFieldsGatherer $fields_gatherer,
         StatusValueMapper $status_mapper,
-        \Tracker_ArtifactCreator $artifact_creator
+        TrackerArtifactCreator $artifact_creator
     ) {
         $this->transaction_executor = $transaction_executor;
         $this->fields_gatherer      = $fields_gatherer;
@@ -89,7 +90,7 @@ class MirrorMilestonesCreator
                         false,
                         new ChangesetWithFieldsValidationContext(new SystemActionContext())
                     );
-                    if ($result === false) {
+                    if (! $result) {
                         throw new MirrorMilestoneCreationException($copied_values->getArtifactId());
                     }
                 }

@@ -38,7 +38,6 @@ use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreatorBase;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_XMLImport;
-use Tracker_ArtifactCreator;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
@@ -48,6 +47,7 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -84,7 +84,7 @@ class XmlImportTest extends TestCase
     private $tracker;
 
     /**
-     * @var Tracker_ArtifactCreator
+     * @var TrackerArtifactCreator
      */
     private $artifact_creator;
 
@@ -177,7 +177,7 @@ class XmlImportTest extends TestCase
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $this->tracker->shouldReceive('getWorkflow')->andReturn(Mockery::spy(Workflow::class));
 
-        $this->artifact_creator                       = Mockery::mock(Tracker_ArtifactCreator::class);
+        $this->artifact_creator                       = Mockery::mock(TrackerArtifactCreator::class);
         $this->new_changeset_creator                  = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
         $this->formelement_factory                    = Mockery::mock(Tracker_FormElementFactory::class);
         $this->tracker_artifact_factory               = Mockery::mock(Tracker_ArtifactFactory::class);

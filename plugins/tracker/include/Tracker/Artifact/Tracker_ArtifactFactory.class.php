@@ -19,11 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactFactory
@@ -358,7 +355,7 @@ class Tracker_ArtifactFactory
         }
 
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        return $creator->create(
+        $artifact     = $creator->create(
             $tracker,
             $fields_data,
             $user,
@@ -367,6 +364,12 @@ class Tracker_ArtifactFactory
             $should_visit_be_recorded,
             new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
         );
+
+        if ($artifact === null) {
+            return false;
+        }
+
+        return $artifact;
     }
 
     public function save(Tracker_Artifact $artifact)
@@ -557,22 +560,14 @@ class Tracker_ArtifactFactory
         return $row['title'];
     }
 
-    private function getArtifactCreator(): Tracker_ArtifactCreator
+    private function getArtifactCreator(): TrackerArtifactCreator
     {
-        $fields_validator         = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
-        $visit_recorder           = new VisitRecorder(new RecentlyVisitedDao());
+        $fields_validator = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
 
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
         $changeset_creator = Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger);
-        $creator           = new Tracker_ArtifactCreator(
-            $this,
-            $fields_validator,
-            $changeset_creator,
-            $visit_recorder,
-            $logger,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
-        return $creator;
+
+        return TrackerArtifactCreator::build($changeset_creator, $fields_validator, $logger);
     }
 }

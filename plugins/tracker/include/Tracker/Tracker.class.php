@@ -40,11 +40,11 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
@@ -1170,14 +1170,6 @@ class Tracker implements Tracker_Dispatchable_Interface
             );
         }
         $submit_renderer->display($request, $current_user);
-    }
-
-    /**
-     * @return VisitRecorder
-     */
-    private function getVisitRecorder()
-    {
-        return new VisitRecorder(new RecentlyVisitedDao());
     }
 
     /**
@@ -3358,9 +3350,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = true;
 
-        $artifact_creator = new Tracker_ArtifactCreator(
-            $this->getTrackerArtifactFactory(),
-            $fields_validator,
+        $artifact_creator = TrackerArtifactCreator::build(
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
                 new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
@@ -3371,9 +3361,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $logger,
                 ArtifactChangesetSaver::build()
             ),
-            $this->getVisitRecorder(),
-            $logger,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            $fields_validator,
+            $logger
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
