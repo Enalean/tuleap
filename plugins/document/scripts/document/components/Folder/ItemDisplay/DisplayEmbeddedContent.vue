@@ -64,7 +64,10 @@
             v-bind:item="currently_previewed_item"
             v-on:update-metadata-modal-closed="hideUpdateMetadataModal"
         />
-        <update-permissions-modal v-bind:item="currently_previewed_item" />
+        <permissions-update-modal
+            v-if="show_update_permissions_modal"
+            v-bind:item="currently_previewed_item"
+        />
     </div>
 </template>
 
@@ -74,7 +77,6 @@ import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
-import UpdatePermissionsModal from "../Permissions/PermissionsUpdateModal.vue";
 import { mapState } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
 
@@ -82,11 +84,14 @@ export default {
     name: "DisplayEmbeddedContent",
     components: {
         UpdateMetadataModal,
-        UpdatePermissionsModal,
         EmbeddedFileEditionSwitcher,
         ApprovalTableBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
+        "permissions-update-modal": () =>
+            import(
+                /* webpackChunkName: "document-permissions-update-modal" */ "../Permissions/PermissionsUpdateModal.vue"
+            ),
         "create-new-embedded-file-version-modal": () =>
             import(
                 /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
@@ -105,6 +110,7 @@ export default {
             is_modal_shown: false,
             show_confirm_deletion_modal: false,
             show_update_metadata_modal: false,
+            show_update_permissions_modal: false,
             is_in_large_view: false,
         };
     },
@@ -122,11 +128,13 @@ export default {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+        EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     methods: {
         showCreateNewItemVersionModal() {
@@ -146,6 +154,9 @@ export default {
         },
         hideUpdateMetadataModal() {
             this.show_update_metadata_modal = false;
+        },
+        showUpdateItemPermissionsModal() {
+            this.show_update_permissions_modal = true;
         },
     },
 };
