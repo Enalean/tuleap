@@ -5,6 +5,7 @@
     },
     "include": [
         "scripts/tracker-creation/**/*",
-        "scripts/tracker-homepage/**/*"
+        "scripts/tracker-homepage/**/*",
+        "scripts/artifact/**/*"
     ]
 }

@@ -86,8 +86,8 @@ const webpack_config_for_vue = {
         "tracker-semantic-timeframe-option-selector":
             "./scripts/semantic-timeframe-option-selector.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
-        "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.js",
-        "tracker-email-copy-paste-fp": "./scripts/tracker-email-copy-paste-fp.js",
+        "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
+        "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
         "text-follow-up": "./scripts/artifact/text-follow-up.ts",
