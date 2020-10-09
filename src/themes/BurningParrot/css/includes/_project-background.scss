@@ -125,6 +125,14 @@ body {
     }
 }
 
+#project-admin-background-error {
+    padding: $tlp-medium-spacing;
+}
+
+.project-admin-background-error-hidden {
+    display: none;
+}
+
 .project-admin-background-list {
     display: grid;
     grid-gap: $tlp-medium-spacing $tlp-medium-spacing;

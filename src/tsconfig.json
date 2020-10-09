@@ -8,6 +8,7 @@
         "scripts/browser-deprecation/**/*",
         "scripts/list-picker/src/**/*",
         "scripts/project/admin/banner/**/*",
+        "scripts/project/admin/header-background/**/*",
         "scripts/project/banner/**/*",
         "scripts/project/registration/**/*",
         "scripts/site-admin/project-widgets-configuration/**/*",

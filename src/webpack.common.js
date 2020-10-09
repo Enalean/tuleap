@@ -260,6 +260,8 @@ const webpack_config_for_burning_parrot_code = {
         "keyboard-navigation": "./scripts/keyboard-navigation/index.ts",
         "browser-deprecation-bp": "./scripts/browser-deprecation/browser-deprecation-modal-bp.ts",
         "browser-deprecation-fp": "./scripts/browser-deprecation/browser-deprecation-modal-fp.ts",
+        "project/header-background-admin":
+            "./scripts/project/admin/header-background/admin-index.ts",
     },
     context,
     output,
