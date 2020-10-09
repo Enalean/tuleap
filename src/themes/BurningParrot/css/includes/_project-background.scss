@@ -52,12 +52,12 @@ body {
     }
 
     .dashboard-project-header-trovecat {
-        color: lighten($tlp-ui-dimmed, 30%);
-        text-shadow: 1px 1px $tlp-theme-sidebar-background-color;
+        color: $tlp-ui-white;
+        font-weight: 500;
     }
 
     .main-project-tabs > .tlp-tabs {
-        background: transparentize($tlp-theme-sidebar-background-color, .6);
+        background: rgba(0, 0, 0, .3);
         box-shadow: none;
 
         > .tlp-tab {
@@ -69,6 +69,7 @@ body {
             &:hover,
             &.tlp-tab-active {
                 border-top-color: $tlp-ui-white;
+                background: rgba(0, 0, 0, .3);
             }
         }
     }
@@ -113,6 +114,12 @@ body {
     .project-administration-content,
     .dashboard-widgets-container {
         background: $tlp-theme-background-color;
+    }
+
+    .dashboard-project-header-members,
+    .dashboard-project-header-access {
+        border-color: $tlp-ui-white;
+        background: transparentize($tlp-ui-white, .85);
     }
 }
 
