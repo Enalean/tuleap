@@ -19,9 +19,13 @@
 
 const FORM_ID = "form-header-background";
 const FORM_ERROR_ID = "project-admin-background-error";
+const FORM_SUCCESS_ID = "project-admin-background-success";
 const FORM_SUBMIT_BUTTON_ID = "project-admin-background-submit-button";
 const FORM_SUBMIT_BUTTON_ICON_ID = "project-admin-background-submit-button-icon";
 const NO_BACKGROUND_IDENTIFIER = "0";
+const LOCATION_HASH_SUCCESS = "#header-background-change-success";
+const CLASS_HIDE_FEEDBACK = "project-admin-background-feedback-hidden";
+
 import { del, put } from "tlp";
 
 export function setupFormSubmission(mount_point: Document, location: Location): void {
@@ -35,6 +39,11 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
         throw new Error(`Error element #${FORM_ERROR_ID} is missing from the DOM`);
     }
 
+    const form_submission_success = mount_point.getElementById(FORM_SUCCESS_ID);
+    if (form_submission_success === null) {
+        throw new Error(`Success element #${FORM_SUCCESS_ID} is missing from the DOM`);
+    }
+
     const form_submit_button = mount_point.getElementById(FORM_SUBMIT_BUTTON_ID);
     if (!(form_submit_button instanceof HTMLButtonElement)) {
         throw new Error(`Submit button #${FORM_SUBMIT_BUTTON_ID} is missing from the DOM`);
@@ -45,6 +54,11 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
         throw new Error(
             `Submit button icon #${FORM_SUBMIT_BUTTON_ICON_ID} is missing from the DOM`
         );
+    }
+
+    if (location.hash === LOCATION_HASH_SUCCESS) {
+        form_submission_success.classList.remove(CLASS_HIDE_FEEDBACK);
+        location.hash = "";
     }
 
     form.addEventListener("submit", async (event: Event) => {
@@ -72,12 +86,14 @@ export function setupFormSubmission(mount_point: Document, location: Location): 
                 });
             }
         } catch (e) {
-            form_submission_error.classList.remove("project-admin-background-error-hidden");
+            form_submission_success.classList.add(CLASS_HIDE_FEEDBACK);
+            form_submission_error.classList.remove(CLASS_HIDE_FEEDBACK);
             form_submission_error.scrollIntoView();
             throw e;
         } finally {
             enableSubmitButton(form_submit_button, form_submit_button_icon);
         }
+        location.hash = LOCATION_HASH_SUCCESS;
         location.reload();
     });
 }

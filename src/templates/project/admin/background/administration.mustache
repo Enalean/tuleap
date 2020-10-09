@@ -21,8 +21,11 @@
                     </h1>
                 </div>
                 <input type="hidden" name="project-id" value="{{ project_id }}" />
-                <div id="project-admin-background-error" class="project-admin-background-error-hidden">
+                <div id="project-admin-background-error" class="project-admin-background-feedback-hidden">
                     <div class="tlp-alert-danger">{{# gettext }}An error occurred, please retry{{/ gettext }}</div>
+                </div>
+                <div id="project-admin-background-success" class="project-admin-background-feedback-hidden">
+                    <div class="tlp-alert-success">{{# gettext }}The header background has been successfully changed{{/ gettext }}</div>
                 </div>
                 <section class="tlp-pane-section project-admin-background-list">
                     {{# backgrounds }}
