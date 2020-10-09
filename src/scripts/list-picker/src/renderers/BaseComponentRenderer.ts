@@ -131,6 +131,11 @@ export class BaseComponentRenderer {
         if (this.source_select_box.disabled) {
             list_picker_element.classList.add("list-picker-disabled");
         }
+
+        if (this.source_select_box.multiple) {
+            list_picker_element.classList.add("list-picker-in-multiple-mode");
+        }
+
         return list_picker_element;
     }
 

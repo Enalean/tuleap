@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/list-picker": "file:../../src/scripts/list-picker",
     "angular": "^1.8.0",
     "angular-filter": "^0.5.16",
     "angular-gettext": "^2.4.1",
@@ -57,6 +58,7 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/trackers && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --config webpack.dev.js --watch'",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest"
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

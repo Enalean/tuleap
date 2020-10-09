@@ -26,6 +26,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
@@ -150,6 +151,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-email-copy-paste-fp.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
+        ListPickerIncluder::includeListPickerAssets();
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);

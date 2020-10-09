@@ -53,6 +53,7 @@ const webpack_config_for_burndown_chart = {
 const webpack_config_for_ts = {
     entry: {
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
+        "list-fields": "./scripts/artifact/list-fields.ts",
     },
     context,
     output,

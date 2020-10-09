@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+
 class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRenderer
 {
 
@@ -59,6 +61,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             [],
             ['body_class' => ['widgetable']]
         );
+
+        ListPickerIncluder::includeListPickerAssets();
 
         echo $this->fetchSubmitInstructions();
     }
