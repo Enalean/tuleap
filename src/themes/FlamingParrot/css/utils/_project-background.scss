@@ -28,7 +28,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         margin: 0;
         padding: 0 $tlp-medium-spacing 30px;
         color: $white;
-        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .breadcrumb-container {
@@ -37,11 +37,12 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     .breadcrumb,
     .breadcrumb-link {
-        color: lighten($ui-dimmed, 30%);
+        color: $white;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
-        background: transparentize($ui-dimmed, .9);
+        background: rgba(0, 0, 0, .3);
         color: $white;
     }
 
@@ -49,25 +50,27 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         color: $white;
     }
 
-    .breadcrumb-project-privacy-icon-with-flags {
-        &[data-privacy-icon='fa-lock'],
-        &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-            background: transparentize($ui-dimmed, .7);
-            color: darken($main, 3%);
-
-            > .fa {
-                color: darken($main, 3%);
-            }
+    .breadcrumb-project-privacy-icon {
+        &.fa-lock,
+        &.fa-tlp-lock-plus-r {
+            background: $white;
+            color: $sidebar-background;
         }
 
-        &[data-privacy-icon='fa-unlock'],
-        &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-            background: transparentize($ui-dimmed, .7);
-            color: lighten($ui-dimmed, 30%);
+        &.fa-unlock,
+        &.fa-tlp-unlock-plus-r {
+            background: rgba(0, 0, 0, .3);
+            color: $white;
+        }
+    }
 
-            > .fa {
-                color: lighten($ui-dimmed, 30%);
-            }
+    .breadcrumb-project-privacy-icon-with-flags {
+        background: rgba(0, 0, 0, .3);
+        color: $white;
+
+        > .fa {
+            background: none;
+            color: $white;
         }
     }
 

@@ -40,22 +40,23 @@ body {
         margin: 0;
         padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
         color: $tlp-ui-white;
-        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .dashboard-project-title {
         color: $tlp-ui-white;
-        font-weight: 400;
-        text-shadow: 1px 1px 2px $tlp-theme-sidebar-background-color;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .dashboard-project-header-trovecat-icon {
         color: $tlp-ui-white;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .dashboard-project-header-trovecat {
         color: $tlp-ui-white;
         font-weight: 500;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .main-project-tabs > .tlp-tabs {
@@ -79,11 +80,12 @@ body {
     .breadcrumb,
     .breadcrumb-link,
     #dashboard-tabs-dropdown-trigger {
-        color: lighten($tlp-ui-dimmed, 30%);
+        color: $tlp-ui-white;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
-        background: transparentize($tlp-ui-dimmed, .9);
+        background: rgba(0, 0, 0, .3);
         color: $tlp-ui-white;
     }
 
@@ -91,25 +93,27 @@ body {
         color: $tlp-ui-white;
     }
 
-    .breadcrumb-project-privacy-icon-with-flags {
-        &[data-privacy-icon='fa-lock'],
-        &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-            background: transparentize($tlp-ui-dimmed, .7);
-            color: darken($tlp-theme-color, 3%);
-
-            > .fa {
-                color: darken($tlp-theme-color, 3%);
-            }
+    .breadcrumb-project-privacy-icon {
+        &.fa-lock,
+        &.fa-tlp-lock-plus-r {
+            background: $tlp-ui-white;
+            color: $tlp-theme-sidebar-background-color;
         }
 
-        &[data-privacy-icon='fa-unlock'],
-        &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-            background: transparentize($tlp-ui-dimmed, .7);
-            color: lighten($tlp-ui-dimmed, 30%);
+        &.fa-unlock,
+        &.fa-tlp-unlock-plus-r {
+            background: rgba(0, 0, 0, .3);
+            color: $tlp-ui-white;
+        }
+    }
 
-            > .fa {
-                color: lighten($tlp-ui-dimmed, 30%);
-            }
+    .breadcrumb-project-privacy-icon-with-flags {
+        background: rgba(0, 0, 0, .3);
+        color: $tlp-ui-white;
+
+        > .fa {
+            background: none;
+            color: $tlp-ui-white;
         }
     }
 
@@ -121,7 +125,7 @@ body {
     .dashboard-project-header-members,
     .dashboard-project-header-access {
         border-color: $tlp-ui-white;
-        background: transparentize($tlp-ui-white, .85);
+        background: transparentize($tlp-ui-white, .8);
     }
 }
 
