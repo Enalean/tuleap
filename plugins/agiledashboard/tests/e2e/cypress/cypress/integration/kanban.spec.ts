@@ -120,13 +120,13 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=edit-kanban-column-label]").spread(
                 (first_column, second_column, third_column) => {
                     expect(first_column).to.contain("To be done");
-                    expect(second_column).to.contain("On going");
+                    expect(second_column).to.contain("In progress");
                     expect(third_column).to.contain("Review");
                 }
             );
             cy.dragAndDrop(
                 "[data-test=edit-kanban-column-review]",
-                "[data-test=edit-kanban-column-on_going]",
+                "[data-test=edit-kanban-column-in_progress]",
                 "top"
             );
             cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
@@ -134,7 +134,7 @@ describe("Kanban for the Agile Dashboard service", () => {
                 (first_column, second_column, third_column) => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
-                    expect(third_column).to.contain("On going");
+                    expect(third_column).to.contain("In progress");
                 }
             );
 
@@ -144,7 +144,7 @@ describe("Kanban for the Agile Dashboard service", () => {
                 (first_column, second_column, third_column) => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
-                    expect(third_column).to.contain("On going");
+                    expect(third_column).to.contain("In progress");
                 }
             );
             // The order of the columns should not change after reload
@@ -153,7 +153,7 @@ describe("Kanban for the Agile Dashboard service", () => {
                 (first_column, second_column, third_column) => {
                     expect(first_column).to.contain("To be done");
                     expect(second_column).to.contain("Review");
-                    expect(third_column).to.contain("On going");
+                    expect(third_column).to.contain("In progress");
                 }
             );
         });
