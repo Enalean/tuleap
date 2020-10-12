@@ -24,6 +24,9 @@ namespace Tuleap\Project\ProjectBackground;
 
 use Project;
 
+/**
+ * @psalm-import-type ValidProjectBackgroundName from \Tuleap\Project\ProjectBackground\ProjectBackgroundName
+ */
 class ProjectBackgroundRetriever
 {
     /**
@@ -50,6 +53,9 @@ class ProjectBackgroundRetriever
         ];
     }
 
+    /**
+     * @psalm-param ValidProjectBackgroundName $identifier
+     */
     private function instantiateBackground(
         string $identifier,
         string $author,
