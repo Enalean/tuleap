@@ -21,8 +21,6 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
-use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -561,34 +559,12 @@ class Tracker_ArtifactFactory
 
     private function getArtifactCreator(): Tracker_ArtifactCreator
     {
-        $formelement_factory      = Tracker_FormElementFactory::instance();
-        $artifact_links_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
-        $artifact_link_validator  = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
-            $this,
-            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(
-                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao(),
-                $artifact_links_usage_dao
-            ),
-            $artifact_links_usage_dao
-        );
-        $fields_validator         = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator(
-            $formelement_factory,
-            $artifact_link_validator
-        );
+        $fields_validator         = Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
         $visit_recorder           = new VisitRecorder(new RecentlyVisitedDao());
 
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
-        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            $fields_validator,
-            new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
-            new Tracker_Artifact_ChangesetDao(),
-            $this,
-            EventManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
-            $logger,
-            ArtifactChangesetSaver::build()
-        );
+        $changeset_creator = Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger);
         $creator           = new Tracker_ArtifactCreator(
             $this,
             $fields_validator,

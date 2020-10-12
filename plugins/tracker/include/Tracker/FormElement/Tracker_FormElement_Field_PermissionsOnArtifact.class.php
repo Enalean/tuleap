@@ -603,16 +603,15 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     /**
      * @param mixed $submitted_value
-     * @param bool $is_submission
      *
-     * @return bool
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
+        PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        $is_submission = null
-    ) {
+        ?bool $is_submission = null
+    ): bool {
         if ($last_changeset_value === null && $this->isRequired() == true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
             $this->addRequiredError();
 

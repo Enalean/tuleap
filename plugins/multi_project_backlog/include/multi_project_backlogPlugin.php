@@ -37,6 +37,9 @@ use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\MilestoneCreatorChecker;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\CreationCheck\StatusSemanticChecker;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\ArtifactCreatedHandler;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous\CreateMirrorsRunner;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous\PendingArtifactCreationDao;
 use Tuleap\MultiProjectBacklog\Aggregator\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\PlannableItems\PlannableItemsTrackersDao;
@@ -46,6 +49,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminURLBuilder;
 use Tuleap\MultiProjectBacklog\Aggregator\ReadOnlyAggregatorAdminViewController;
 use Tuleap\MultiProjectBacklog\Contributor\ContributorDao;
 use Tuleap\MultiProjectBacklog\Contributor\RootPlanning\RootPlanningEditionHandler;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -79,6 +83,7 @@ final class multi_project_backlogPlugin extends Plugin
         $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
         $this->addHook(CanSubmitNewArtifact::NAME);
         $this->addHook(ArtifactCreated::NAME);
+        $this->addHook(WorkerEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -281,84 +286,25 @@ final class multi_project_backlogPlugin extends Plugin
         }
     }
 
+    public function workerEvent(WorkerEvent $event): void
+    {
+        $create_mirrors_runner = CreateMirrorsRunner::build();
+        $create_mirrors_runner->addListener($event);
+    }
+
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $user_manager            = UserManager::instance();
         $aggregator_dao          = new AggregatorDao();
         $planning_factory        = \PlanningFactory::build();
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
-        $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
-        $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
-            $artifact_factory,
-            new NaturePresenterFactory(
-                new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao(),
-                $artifact_link_usage_dao
-            ),
-            $artifact_link_usage_dao
-        );
-        $fields_validator       = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($form_element_factory, $artifact_link_validator);
-        $transaction_executor   = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $visit_recorder         = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder(
-            new \Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao(),
-            $transaction_executor
-        );
-        $logger                  = BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
+        $logger = $this->getLogger();
 
-        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
-            $fields_validator,
-            new \Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever($form_element_factory),
-            new Tracker_Artifact_ChangesetDao(),
-            $artifact_factory,
-            EventManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-            $logger,
-            \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver::build()
-        );
+        $logger->debug(sprintf("Store aggregator create with #%d by user #%d", (int) $event->getArtifact()->getId(), (int) $event->getUser()->getId()));
 
-        $artifact_creator = new Tracker_ArtifactCreator(
-            $artifact_factory,
-            $fields_validator,
-            $changeset_creator,
-            $visit_recorder,
-            $logger,
-            $transaction_executor
-        );
-
-        $synchronized_fields_gatherer = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer(
-            $form_element_factory,
-            new Tracker_Semantic_TitleFactory(),
-            new Tracker_Semantic_DescriptionFactory(),
-            new Tracker_Semantic_StatusFactory(),
-            new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder(
-                new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao(),
-                $form_element_factory
-            )
-        );
-
-        $mirror_creator = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator(
-            $transaction_executor,
-            $synchronized_fields_gatherer,
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\StatusValueMapper(
-                new \Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher(new XMLImportHelper($user_manager))
-            ),
-            $artifact_creator
-        );
-
-        $handler      = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\ArtifactCreatedHandler(
+        $handler      = new ArtifactCreatedHandler(
             $aggregator_dao,
-            $user_manager,
             $planning_factory,
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGatherer(
-                $synchronized_fields_gatherer
-            ),
-            new ContributorProjectsCollectionBuilder(
-                $aggregator_dao,
-                ProjectManager::instance()
-            ),
-            new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory($planning_factory),
-            $mirror_creator,
-            $logger
+            CreateMirrorsRunner::build(),
+            new PendingArtifactCreationDao()
         );
         $handler->handle($event);
     }
@@ -368,7 +314,7 @@ final class multi_project_backlogPlugin extends Plugin
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger                  = BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
+        $logger                  = $this->getLogger();
 
         return new MilestoneCreatorChecker(
             new ContributorProjectsCollectionBuilder(
@@ -402,5 +348,10 @@ final class multi_project_backlogPlugin extends Plugin
             ),
             $logger
         );
+    }
+
+    private function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
     }
 }

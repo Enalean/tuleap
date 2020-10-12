@@ -31,8 +31,9 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
 {
     protected function canValidateField(
         Tracker_Artifact $artifact,
-        Tracker_FormElement_Field $field
-    ) {
+        Tracker_FormElement_Field $field,
+        \PFUser $user
+    ): bool {
         return true;
     }
 

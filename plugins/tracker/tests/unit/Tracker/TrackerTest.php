@@ -30,6 +30,9 @@ class TrackerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    /**
+     * @var Mockery\Mock | \Tracker
+     */
     private $tracker;
     private $formelement_factory;
     private $workflow_factory;
@@ -69,6 +72,8 @@ class TrackerTest extends TestCase
         $field2->shouldReceive('getId')->andReturns(2);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
         $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
@@ -100,7 +105,7 @@ class TrackerTest extends TestCase
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 
-    public function testHasBlockingErrorNoError()
+    public function testHasBlockingErrorNoError(): void
     {
         $header = ['summary', 'details'];
         $lines = [
@@ -118,6 +123,8 @@ class TrackerTest extends TestCase
         $field2->shouldReceive('getId')->andReturns(2);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
         $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
@@ -167,6 +174,8 @@ class TrackerTest extends TestCase
         $field2->shouldReceive('getId')->andReturns(2);
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
         $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);

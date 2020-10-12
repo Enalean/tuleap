@@ -1430,20 +1430,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return new Tracker_Artifact_ChangesetDao();
     }
 
-    /**
-     * @return Tracker_Artifact_ChangesetFactory
-     */
-    protected function getChangesetFactory()
+    protected function getChangesetFactory(): Tracker_Artifact_ChangesetFactory
     {
-        return new Tracker_Artifact_ChangesetFactory(
-            $this->getChangesetDao(),
-            new Tracker_Artifact_Changeset_ValueDao(),
-            $this->getChangesetCommentDao(),
-            new Tracker_Artifact_ChangesetJsonFormatter(
-                $this->getMustacheRenderer()
-            ),
-            $this->getFormElementFactory()
-        );
+        return Tracker_Artifact_ChangesetFactoryBuilder::build();
     }
 
     /**

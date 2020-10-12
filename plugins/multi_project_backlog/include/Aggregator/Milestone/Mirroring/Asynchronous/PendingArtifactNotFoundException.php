@@ -1,5 +1,6 @@
+<?php
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_multi_project_backlog_contributor_projects;
-DROP TABLE IF EXISTS plugin_multi_project_backlog_pending_mirrors;
+declare(strict_types=1);
+
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous;
+
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
+
+class PendingArtifactNotFoundException extends \RuntimeException implements MilestoneMirroringException
+{
+    public function __construct(int $artifact_id, int $user_id)
+    {
+        parent::__construct("Could not find Aggregator milestone #$artifact_id while creating mirror milestones for user #$user_id");
+    }
+}

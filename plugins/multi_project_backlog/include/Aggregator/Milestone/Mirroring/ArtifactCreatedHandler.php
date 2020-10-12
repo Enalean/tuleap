@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\MultiProjectBacklog\Aggregator\AggregatorDao;
-use Tuleap\MultiProjectBacklog\Aggregator\ContributorProjectsCollectionBuilder;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerCollectionFactory;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\MilestoneTrackerRetrievalException;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous\CreateMirrorsRunner;
+use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous\PendingArtifactCreationDao;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 class ArtifactCreatedHandler
@@ -37,65 +34,41 @@ class ArtifactCreatedHandler
      */
     private $aggregator_dao;
     /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
      * @var \PlanningFactory
      */
     private $planning_factory;
     /**
-     * @var CopiedValuesGatherer
+     * @var CreateMirrorsRunner
      */
-    private $copied_values_gatherer;
+    private $mirrors_runner;
     /**
-     * @var ContributorProjectsCollectionBuilder
+     * @var PendingArtifactCreationDao
      */
-    private $projects_collection_builder;
-    /**
-     * @var MilestoneTrackerCollectionFactory
-     */
-    private $milestone_trackers_factory;
-    /**
-     * @var MirrorMilestonesCreator
-     */
-    private $mirror_creator;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private $pending_artifact_creation_dao;
 
     public function __construct(
         AggregatorDao $aggregator_dao,
-        \UserManager $user_manager,
         \PlanningFactory $planning_factory,
-        CopiedValuesGatherer $copied_values_gatherer,
-        ContributorProjectsCollectionBuilder $projects_collection_builder,
-        MilestoneTrackerCollectionFactory $milestone_trackers_factory,
-        MirrorMilestonesCreator $mirror_creator,
-        LoggerInterface $logger
+        CreateMirrorsRunner $mirrors_runner,
+        PendingArtifactCreationDao $pending_artifact_creation_dao
     ) {
-        $this->aggregator_dao              = $aggregator_dao;
-        $this->user_manager                = $user_manager;
-        $this->planning_factory            = $planning_factory;
-        $this->copied_values_gatherer      = $copied_values_gatherer;
-        $this->projects_collection_builder = $projects_collection_builder;
-        $this->milestone_trackers_factory  = $milestone_trackers_factory;
-        $this->mirror_creator              = $mirror_creator;
-        $this->logger                      = $logger;
+        $this->aggregator_dao                = $aggregator_dao;
+        $this->planning_factory              = $planning_factory;
+        $this->mirrors_runner                = $mirrors_runner;
+        $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
     }
 
     public function handle(ArtifactCreated $event): void
     {
-        $artifact = $event->getArtifact();
-        $tracker  = $artifact->getTracker();
-        $project  = $tracker->getProject();
+        $artifact     = $event->getArtifact();
+        $tracker      = $artifact->getTracker();
+        $project      = $tracker->getProject();
+        $current_user = $event->getUser();
 
         if (! $this->aggregator_dao->isProjectAnAggregatorProject((int) $project->getID())) {
             return;
         }
 
-        $current_user = $this->user_manager->getCurrentUser();
         try {
             $root_planning = $this->planning_factory->getVirtualTopPlanning($current_user, (int) $project->getID());
         } catch (\Planning_NoPlanningsException $e) {
@@ -108,37 +81,12 @@ class ArtifactCreatedHandler
             return;
         }
 
-        try {
-            $this->createMirrors($event->getChangeset(), $tracker, $project, $current_user);
-        } catch (MilestoneTrackerRetrievalException | MilestoneMirroringException | SynchronizedFieldRetrievalException $exception) {
-            // Swallow the exception and let Aggregator Milestone be created
-            $this->logger->error('Error during creation of mirror milestones', ['exception' => $exception]);
-        }
-    }
-
-    /**
-     * @throws MilestoneMirroringException
-     * @throws MilestoneTrackerRetrievalException
-     * @throws SynchronizedFieldRetrievalException
-     */
-    private function createMirrors(
-        \Tracker_Artifact_Changeset $aggregator_top_milestone_last_changeset,
-        \Tracker $aggregator_top_milestone_tracker,
-        \Project $aggregator_project,
-        \PFUser $current_user
-    ): void {
-        $copied_values          = $this->copied_values_gatherer->gather(
-            $aggregator_top_milestone_last_changeset,
-            $aggregator_top_milestone_tracker
-        );
-        $contributor_projects   = $this->projects_collection_builder->getContributorProjectForAGivenAggregatorProject(
-            $aggregator_project
-        );
-        $contributor_milestones = $this->milestone_trackers_factory->buildFromContributorProjects(
-            $contributor_projects,
-            $current_user
+        $this->pending_artifact_creation_dao->addArtifactToPendingCreation(
+            (int) $event->getArtifact()->getId(),
+            (int) $event->getUser()->getId(),
+            (int) $event->getChangeset()->getId()
         );
 
-        $this->mirror_creator->createMirrors($copied_values, $contributor_milestones, $current_user);
+        $this->mirrors_runner->executeMirrorsCreation($artifact, $current_user, $event->getChangeset());
     }
 }

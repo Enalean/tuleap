@@ -308,12 +308,13 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
+        PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        $is_submission = null
-    ) {
+        ?bool $is_submission = null
+    ): bool {
         $is_valid = true;
 
-        if ($submitted_value !== null && ! $this->userCanUpdate()) {
+        if ($submitted_value !== null && ! $this->userCanUpdate($user)) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $this->getName()));
         }
