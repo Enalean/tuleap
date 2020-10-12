@@ -72,7 +72,7 @@
                     <i class="fa fa-info-circle"></i>
                     <translate>
                         Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the
-                        beginning or the end, it also must not finish with ".git".
+                        beginning or the end, and repositories names must not finish with ".git".
                     </translate>
                 </p>
             </div>
@@ -149,7 +149,7 @@ export default {
                 const error_code = Number.parseInt(error.code, 10);
                 if (error_code === 400) {
                     this.error = this.$gettext(
-                        'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, it also must not finish with ".git".'
+                        'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".'
                     );
                 } else if (error_code === 401) {
                     this.error = this.$gettext(
