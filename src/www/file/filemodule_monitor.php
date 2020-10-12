@@ -31,6 +31,9 @@ if (! user_isloggedin()) {
 if (! isset($group_id)) {
     $group_id = 0;
 }
+
+$request  = HTTPRequest::instance();
+
 $vFilemodule_id = new Valid_UInt('filemodule_id');
 $vFilemodule_id->required();
 if ($request->valid($vFilemodule_id)) {
@@ -65,9 +68,9 @@ if ($request->valid($vFilemodule_id)) {
             'error',
             $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_permission')
         );
-        $GLOBALS['Response']->redirect('showfiles.php?group_id=' . $group_id);
+        $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
     }
 } else {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'choose_p'));
-    $GLOBALS['Response']->redirect('showfiles.php?group_id=' . $GLOBALS['Language']);
+    $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
 }

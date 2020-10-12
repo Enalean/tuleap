@@ -487,11 +487,11 @@ class FileModuleMonitorFactory
      *
      * @return String
      */
-    public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId)
+    public function processSelfMonitoringAction(HTTPRequest $request, $currentUser, $groupId, $fileModuleId)
     {
         $anonymous     = true;
         $performAction = false;
-        if ($request->get('action') == 'monitor_package') {
+        if ($request->get('action') === 'monitor_package' && $request->isPost()) {
             if ($request->valid(new Valid_WhiteList('frs_monitoring', ['stop_monitoring', 'anonymous_monitoring', 'public_monitoring']))) {
                 $action = $request->get('frs_monitoring');
                 switch ($action) {
@@ -508,7 +508,7 @@ class FileModuleMonitorFactory
                         break;
                 }
                 if ($performAction) {
-                    $GLOBALS['Response']->redirect('showfiles.php?group_id=' . urlencode((string) $groupId));
+                    $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
                 }
             }
         }
@@ -586,7 +586,7 @@ class FileModuleMonitorFactory
         $package = $frspf->getFRSPackageFromDb($fileModuleId);
 
         if ($frspf->userCanAdmin($currentUser, $groupId)) {
-            if ($request->valid(new Valid_WhiteList('action', ['add_monitoring', 'delete_monitoring']))) {
+            if ($request->valid(new Valid_WhiteList('action', ['add_monitoring', 'delete_monitoring'])) && $request->isPost()) {
                 $action = $request->get('action');
                 switch ($action) {
                     case 'add_monitoring':
