@@ -206,3 +206,30 @@ body {
     color: $tlp-ui-dimmed;
     font-size: .875rem;
 }
+
+#project-admin-background-submit-section.pinned {
+    margin: 40px 0 0;
+
+    > .project-admin-background-submit-button-container {
+        @keyframes footerAppear {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        position: fixed;
+        bottom: 0;
+        left: $sidebar-expanded-width;
+        width: calc(100% - #{$sidebar-expanded-width});
+        padding: $tlp-large-spacing;
+        animation: footerAppear ease-out 150ms;
+        border-top: 0;
+        background: transparentize($tlp-ui-white, .1);
+        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
+        text-align: center;
+    }
+}
+
+.sidebar-collapsed #project-admin-background-submit-section.pinned > .project-admin-background-submit-button-container {
+    left: $sidebar-collapsed-width;
+    width: calc(100% - #{$sidebar-collapsed-width});
+}
