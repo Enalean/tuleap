@@ -66,7 +66,7 @@ export default class ChartDisplayer extends Vue {
 
     get burndown_exists(): boolean {
         if (this.release_data.resources.burndown !== null) {
-            this.$emit("burndownExists");
+            this.$emit("burndown-exists");
             return true;
         }
         return false;
@@ -74,7 +74,7 @@ export default class ChartDisplayer extends Vue {
 
     get burnup_exists(): boolean {
         if (this.release_data.burnup_data !== null) {
-            this.$emit("burnupExists");
+            this.$emit("burnup-exists");
             return true;
         }
         return false;

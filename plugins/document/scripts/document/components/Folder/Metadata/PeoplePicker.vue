@@ -34,6 +34,7 @@
     </select>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { autocomplete_users_for_select2 } from "../../../../../../../src/scripts/tuleap/autocomplete-for-select2.js";
 

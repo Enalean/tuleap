@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -128,7 +128,7 @@ export default {
     },
     methods: {
         swapMode() {
-            this.$emit("swapMode");
+            this.$emit("swap-mode");
         },
         validateNewTime() {
             if (TIME_REGEX.test(this.time)) {
@@ -139,7 +139,7 @@ export default {
 
                 const id =
                     this.timeData && this.timeData.id ? this.timeData.id : this.current_artifact.id;
-                this.$emit("validateTime", this.date, id, this.time, this.step);
+                this.$emit("validate-time", this.date, id, this.time, this.step);
             } else {
                 this.error_message = this.$gettext("Please check time's format (hh:mm)");
                 if (!this.time) {

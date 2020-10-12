@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -29,8 +29,8 @@
         <tbody v-if="has_times_on_artifact" data-test="table-body-with-row">
             <widget-modal-edit-time
                 v-if="is_add_mode"
-                v-on:swapMode="setAddMode"
-                v-on:validateTime="addNewTime"
+                v-on:swap-mode="setAddMode"
+                v-on:validate-time="addNewTime"
                 data-test="edit-time-with-row"
             />
             <widget-modal-row
@@ -42,8 +42,8 @@
         <tbody v-else data-test="table-body-without-row">
             <widget-modal-edit-time
                 v-if="is_add_mode"
-                v-on:swapMode="setAddMode"
-                v-on:validateTime="addNewTime"
+                v-on:swap-mode="setAddMode"
+                v-on:validate-time="addNewTime"
                 data-test="edit-time-without-row"
             />
             <tr>

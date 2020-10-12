@@ -101,7 +101,7 @@ export default class TestManagementDisplayer extends Vue {
             this.release_data.campaign.nb_of_passed > 0 ||
             this.release_data.campaign.nb_of_blocked > 0
         ) {
-            this.$emit("ttmExists");
+            this.$emit("ttm-exists");
             return true;
         }
 

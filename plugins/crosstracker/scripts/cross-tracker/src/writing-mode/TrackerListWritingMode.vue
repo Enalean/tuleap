@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         removeTracker(tracker) {
-            this.$emit("trackerRemoved", tracker);
+            this.$emit("tracker-removed", tracker);
         },
     },
 };

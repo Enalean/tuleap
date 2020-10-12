@@ -76,7 +76,7 @@ describe("Given a personal timetracking widget modal", () => {
         wrapper.find("[data-test=timetracking-submit-time]").trigger("click");
 
         expect(wrapper.vm.$emit).toHaveBeenCalledWith(
-            "validateTime",
+            "validate-time",
             "2020-04-03",
             10,
             "00:10",

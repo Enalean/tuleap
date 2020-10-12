@@ -55,7 +55,7 @@ describe("ReadingMode", () => {
 
             wrapper.vm.switchToWritingMode();
 
-            expect(wrapper.emitted("switchToWritingMode")).toBeTruthy();
+            expect(wrapper.emitted("switch-to-writing-mode")).toBeTruthy();
         });
 
         it(`Given I am browsing as project member,

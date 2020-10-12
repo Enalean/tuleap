@@ -21,7 +21,7 @@
     <div>
         <display-embedded-content v-if="has_loaded_without_error" data-test="embedded_content" />
         <display-embedded-spinner
-            v-else-if="has_loaded_without_error && is_loading"
+            v-else-if="!does_document_have_any_error && is_loading"
             data-test="embedded_spinner"
         />
     </div>

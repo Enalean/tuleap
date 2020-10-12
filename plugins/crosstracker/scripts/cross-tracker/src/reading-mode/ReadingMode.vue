@@ -84,7 +84,7 @@ export default {
                 return;
             }
 
-            this.$emit("switchToWritingMode");
+            this.$emit("switch-to-writing-mode");
         },
 
         async saveReport() {

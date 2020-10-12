@@ -41,7 +41,7 @@
                     v-if="!open_sprints_details && !only_one_open_sprint_and_no_closed_sprints"
                     v-bind:release_data="release_data"
                     v-bind:is-past-release="isPastRelease"
-                    v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
+                    v-on:on-click-open-sprints-details="on_click_open_sprints_details()"
                     data-test="badge-sprint"
                 />
                 <release-badges-open-sprint

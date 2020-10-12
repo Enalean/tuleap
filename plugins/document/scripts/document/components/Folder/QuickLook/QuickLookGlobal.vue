@@ -128,7 +128,7 @@ export default {
     },
     methods: {
         closeQuickLookEvent() {
-            this.$emit("closeQuickLookEvent");
+            this.$emit("close-quick-look-event");
         },
     },
 };

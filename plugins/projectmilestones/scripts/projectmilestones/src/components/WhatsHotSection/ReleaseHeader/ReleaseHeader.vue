@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="project-release-header" v-on:click="$emit('toggleReleaseDetails')">
+    <div class="project-release-header" v-on:click="$emit('toggle-release-details')">
         <i class="project-release-whats-hot-icon fa"></i>
         <h1 class="project-release-title" data-test="title-release">
             {{ release_data.label }}

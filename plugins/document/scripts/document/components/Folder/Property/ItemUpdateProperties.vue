@@ -18,6 +18,7 @@
   -
   -->
 
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="docman-item-update-property">
         <div class="docman-item-title-update-property">
@@ -36,12 +37,13 @@
         <slot></slot>
         <approval-update-properties
             v-if="item.has_approval_table && !isOpenAfterDnd"
-            v-on:approvalTableActionChange="emitApprovalUpdateAction"
+            v-on:approval-table-action-change="emitApprovalUpdateAction"
             data-test="update-approval-properties"
         />
     </div>
 </template>
 
+<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import VersionTitleProperty from "./VersionTitleProperty.vue";
 import ChangelogProperty from "./ChangelogProperty.vue";
@@ -65,7 +67,7 @@ export default {
     },
     methods: {
         emitApprovalUpdateAction(action) {
-            this.$emit("approvalTableActionChange", action);
+            this.$emit("approval-table-action-change", action);
         },
     },
 };

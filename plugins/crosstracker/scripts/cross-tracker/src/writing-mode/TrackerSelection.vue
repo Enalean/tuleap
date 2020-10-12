@@ -173,7 +173,7 @@ export default {
         },
 
         addTrackerToSelection() {
-            this.$emit("trackerAdded", {
+            this.$emit("tracker-added", {
                 selected_project: this.selected_project,
                 selected_tracker: this.selected_tracker,
             });

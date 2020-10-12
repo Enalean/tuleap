@@ -276,7 +276,7 @@ function ExecutionDetailCtrl(
     }
 
     function waitForExecutionToBeLoaded() {
-        var unbind = $rootScope.$on("bunchOfExecutionsLoaded", function () {
+        var unbind = $rootScope.$on("bunch-of-executions-loaded", function () {
             if (isCurrentExecutionLoaded()) {
                 retrieveCurrentExecution();
             }

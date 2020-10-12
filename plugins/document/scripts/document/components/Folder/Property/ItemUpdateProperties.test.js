@@ -51,9 +51,11 @@ describe("ItemUpdateProperties", () => {
             Then it resend the received event`, () => {
             const wrapper = getWrapper();
 
-            wrapper.vm.$emit("approvalTableActionChange", "MyUltraCoolEvent");
+            wrapper.vm.$emit("approval-table-action-change", "MyUltraCoolEvent");
 
-            expect(wrapper.emitted().approvalTableActionChange[0]).toEqual(["MyUltraCoolEvent"]);
+            expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual([
+                "MyUltraCoolEvent",
+            ]);
         });
 
         describe("When the parent modal is open after a DnD", () => {

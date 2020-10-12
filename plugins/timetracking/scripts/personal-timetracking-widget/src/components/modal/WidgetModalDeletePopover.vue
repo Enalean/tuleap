@@ -55,11 +55,11 @@ export default {
         timeId: Number,
     },
     mounted() {
-        this.$emit("createDeletePopover");
+        this.$emit("create-delete-popover");
     },
     methods: {
         removeTime() {
-            this.$store.dispatch("deleteTime", this.timeId);
+            this.$store.dispatch("delete-time", this.timeId);
         },
     },
 };

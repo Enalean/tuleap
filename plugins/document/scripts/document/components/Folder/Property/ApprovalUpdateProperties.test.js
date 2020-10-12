@@ -40,7 +40,7 @@ describe("ApprovalUpdateProperties", () => {
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted().approvalTableActionChange[0]).toEqual(["copy"]);
+        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["copy"]);
     });
     it(`Given the reset action of an approval table
         When the user updating an item
@@ -52,7 +52,7 @@ describe("ApprovalUpdateProperties", () => {
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted().approvalTableActionChange[0]).toEqual(["reset"]);
+        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["reset"]);
     });
     it(`Given the empty action of an approval table
         When the user updating an item
@@ -64,6 +64,6 @@ describe("ApprovalUpdateProperties", () => {
         );
         radio_input.setChecked();
 
-        expect(wrapper.emitted().approvalTableActionChange[0]).toEqual(["empty"]);
+        expect(wrapper.emitted()["approval-table-action-change"][0]).toEqual(["empty"]);
     });
 });
