@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status;
-
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
+namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
 final class NoEndPeriodChangesetValueException extends \RuntimeException implements MilestoneMirroringException
 {
-    public function __construct(int $changeset_id, int $start_date_field_id)
+    public function __construct(int $changeset_id, int $end_period_field_id)
     {
         parent::__construct(
-            "Expected changeset #$changeset_id to have a value for End period field #$start_date_field_id, but this value was not found"
+            "Expected changeset #$changeset_id to have a value for End period field #$end_period_field_id, but this value was not found"
         );
     }
 }
