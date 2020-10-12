@@ -41,7 +41,9 @@ function handleBreadcrumbPrivacyPopover() {
 }
 
 function handleSidebarPrivacyPopover() {
-    const project_privacy_element = document.querySelector(".project-sidebar-title > .fa");
+    const project_privacy_element = document.querySelector(
+        ".project-sidebar-title > .project-sidebar-title-icon"
+    );
     if (!project_privacy_element) {
         return;
     }

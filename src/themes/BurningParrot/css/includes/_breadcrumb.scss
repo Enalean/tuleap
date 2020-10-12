@@ -214,7 +214,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         background: $tlp-theme-color;
     }
 
-    &.fa-unlock,
+    &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
         background: transparentize($tlp-theme-sidebar-background-color, .9);
         color: transparentize($tlp-theme-sidebar-background-color, .2);
@@ -234,17 +234,17 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         background: transparentize($tlp-theme-color, .9);
         color: darken($tlp-theme-color, 3%);
 
-        > .fa {
+        > .fas {
             color: darken($tlp-theme-color, 3%);
         }
     }
 
-    &[data-privacy-icon='fa-unlock'],
+    &[data-privacy-icon='fa-lock-open'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
         background: transparentize($tlp-theme-sidebar-background-color, .9);
         color: transparentize($tlp-theme-sidebar-background-color, .2);
 
-        > .fa {
+        > .fas {
             color: transparentize($tlp-theme-sidebar-background-color, .2);
         }
     }

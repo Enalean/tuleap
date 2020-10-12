@@ -52,7 +52,7 @@ function handleBreadcrumbPrivacyPopover() {
     const content = render(
         `{{# has_project_flags }}
             <div class="current-project-nav-flag-popover-flag">
-                <i class="fa {{ privacy_icon}}"></i>
+                <i class="fas {{ privacy_icon}}"></i>
                 <h2 class="current-project-nav-flag-popover-content-title">
                     {{ privacy_title }}
                 </h2>
@@ -96,7 +96,9 @@ function handleBreadcrumbPrivacyPopover() {
 }
 
 function handleSidebarPrivacyPopover() {
-    const project_privacy_trigger = document.querySelector("#sidebar-dashboard > .fa");
+    const project_privacy_trigger = document.querySelector(
+        "#sidebar-dashboard > .sidebar-dashboard-privacy-icon"
+    );
     if (!project_privacy_trigger) {
         return;
     }

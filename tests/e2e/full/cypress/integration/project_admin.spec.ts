@@ -66,7 +66,7 @@ describe("Project admin", function () {
             cy.visitProjectService("project-admin-test", "Admin");
 
             cy.get("[data-test=project-icon]").then(($icon) => {
-                expect($icon[0].className).to.contains("fa-unlock");
+                expect($icon[0].className).to.contains("fa-lock-open");
             });
         });
 

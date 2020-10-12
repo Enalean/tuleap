@@ -9,36 +9,36 @@
             data-project-flags="{{ json_encoded_project_flags }}"
             {{# are_restricted_users_allowed }}
                 {{# project_is_public }}
-                        data-privacy-icon="fa-unlock"
+                        data-privacy-icon="fa-lock-open"
                     >
-                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-lock-open breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
                 {{# project_is_public_incl_restricted }}
                         data-privacy-icon="fa-tlp-unlock-plus-r"
                     >
-                        <i class="fa fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-tlp-unlock-plus-r breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public_incl_restricted }}
                 {{# project_is_private }}
                         data-privacy-icon="fa-lock"
                     >
-                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-lock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_private }}
                 {{# project_is_private_incl_restricted }}
                         data-privacy-icon="fa-tlp-lock-plus-r"
                     >
-                        <i class="fa fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-tlp-lock-plus-r breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_private_incl_restricted }}
             {{/ are_restricted_users_allowed }}
             {{^ are_restricted_users_allowed }}
                 {{# project_is_public }}
-                        data-privacy-icon="fa-unlock"
+                        data-privacy-icon="fa-lock-open"
                     >
-                        <i class="fa fa-unlock breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-lock-open breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
                 {{^ project_is_public }}
                         data-privacy-icon="fa-lock"
                     >
-                        <i class="fa fa-lock breadcrumb-project-privacy-icon"></i>
+                        <i class="fas fa-lock breadcrumb-project-privacy-icon"></i>
                 {{/ project_is_public }}
             {{/ are_restricted_users_allowed }}
 
@@ -67,24 +67,24 @@
                     <div class="current-project-nav-flag-popover-flag">
                         {{# are_restricted_users_allowed }}
                             {{# project_is_public }}
-                                <i class="fa fa-unlock"></i>
+                                <i class="fas fa-lock-open"></i>
                             {{/ project_is_public }}
                             {{# project_is_public_incl_restricted }}
-                                <i class="fa fa-tlp-unlock-plus-r"></i>
+                                <i class="fas fa-tlp-unlock-plus-r"></i>
                             {{/ project_is_public_incl_restricted }}
                             {{# project_is_private }}
-                                <i class="fa fa-lock"></i>
+                                <i class="fas fa-lock"></i>
                             {{/ project_is_private }}
                             {{# project_is_private_incl_restricted }}
-                                <i class="fa fa-tlp-lock-plus-r"></i>
+                                <i class="fas fa-tlp-lock-plus-r"></i>
                             {{/ project_is_private_incl_restricted }}
                         {{/ are_restricted_users_allowed }}
                         {{^ are_restricted_users_allowed }}
                             {{# project_is_public }}
-                                <i class="fa fa-unlock"></i>
+                                <i class="fas fa-lock-open"></i>
                             {{/ project_is_public }}
                             {{^ project_is_public }}
-                                <i class="fa fa-lock"></i>
+                                <i class="fas fa-lock"></i>
                             {{/ project_is_public }}
                         {{/ are_restricted_users_allowed }}
                         <h2 class="current-project-nav-flag-popover-content-title">

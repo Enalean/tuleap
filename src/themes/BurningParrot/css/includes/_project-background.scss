@@ -100,7 +100,7 @@ body {
             color: $tlp-theme-sidebar-background-color;
         }
 
-        &.fa-unlock,
+        &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             background: rgba(0, 0, 0, .3);
             color: $tlp-ui-white;
@@ -111,7 +111,7 @@ body {
         background: rgba(0, 0, 0, .3);
         color: $tlp-ui-white;
 
-        > .fa {
+        > .fas {
             background: none;
             color: $tlp-ui-white;
         }

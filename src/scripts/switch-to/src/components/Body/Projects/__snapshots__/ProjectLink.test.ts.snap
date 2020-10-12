@@ -10,7 +10,7 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     href="/pojects/gpig"
   >
     <i
-      class="fa fa-fw switch-to-projects-project-icon fa-unlock"
+      class="fas fa-fw switch-to-projects-project-icon fa-lock-open"
     />
      
     <span

@@ -223,7 +223,7 @@ $switch-menu-item-hover-color: $main;
         background: $main;
     }
 
-    &.fa-unlock,
+    &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
         background: transparentize($sidebar-background, .9);
         color: transparentize($sidebar-background, .2);
@@ -243,17 +243,17 @@ $switch-menu-item-hover-color: $main;
         background: transparentize($main, .9);
         color: darken($main, 3%);
 
-        > .fa {
+        > .fas {
             color: darken($main, 3%);
         }
     }
 
-    &[data-privacy-icon='fa-unlock'],
+    &[data-privacy-icon='fa-lock-open'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
         background: transparentize($sidebar-background, .9);
         color: transparentize($sidebar-background, .2);
 
-        > .fa {
+        > .fas {
             color: transparentize($sidebar-background, .2);
         }
     }

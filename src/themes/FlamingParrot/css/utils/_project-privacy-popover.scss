@@ -97,12 +97,14 @@
                 margin: 0;
             }
 
+            > .fas,
             > .fa,
             > .tuleap-svg-project-shield {
                 position: absolute;
                 left: 0;
             }
 
+            > .fas,
             > .fa {
                 top: 8px;
                 color: $ui-border-light;

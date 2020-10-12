@@ -247,7 +247,7 @@
         background: darken($sidebar-background, 5%);
     }
 
-    > .fa {
+    > .fas {
         display: inline-flex;
         flex: 0 0 auto;
         align-items: center;
@@ -266,7 +266,7 @@
             text-shadow: 0 0 1px rgba(0, 0, 0, .2);
         }
 
-        &.fa-unlock,
+        &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             background: darken($sidebar-background, 5%);
         }

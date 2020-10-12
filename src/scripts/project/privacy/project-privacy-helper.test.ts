@@ -29,7 +29,7 @@ describe("project-privacy-helper", () => {
                 project_is_private: false,
                 project_is_private_incl_restricted: false,
             } as ProjectPrivacy,
-            "fa-unlock",
+            "fa-lock-open",
         ],
         [
             {
@@ -69,7 +69,7 @@ describe("project-privacy-helper", () => {
                 project_is_private: false,
                 project_is_private_incl_restricted: false,
             } as ProjectPrivacy,
-            "fa-unlock",
+            "fa-lock-open",
         ],
         [
             {
