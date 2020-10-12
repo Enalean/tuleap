@@ -39,6 +39,7 @@
                                     class="project-admin-background-radio"
                                     {{# is_selected }}checked{{/ is_selected }}
                                     value="{{ identifier }}"
+                                    autocomplete="off"
                                 >
                                 <label class="tlp-card tlp-card-selectable project-admin-background-card" for="new-background-{{ identifier }}">
                                     <div class="project-admin-background-preview project-admin-background-preview-{{ identifier }}">
@@ -54,11 +55,13 @@
                         {{/ backgrounds }}
                     </div>
                 </section>
-                <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary" id="project-admin-background-submit-button">
-                        <i class="far fa-save tlp-button-icon" aria-hidden="true" id="project-admin-background-submit-button-icon"></i>
-                        {{# gettext }}Save header background{{/ gettext }}
-                    </button>
+                <section class="tlp-pane-section tlp-pane-section-submit" id="project-admin-background-submit-section">
+                    <div class="project-admin-background-submit-button-container">
+                        <button type="submit" class="tlp-button-primary" id="project-admin-background-submit-button">
+                            <i class="far fa-save tlp-button-icon" aria-hidden="true" id="project-admin-background-submit-button-icon"></i>
+                            {{# gettext }}Save header background{{/ gettext }}
+                        </button>
+                    </div>
                 </section>
             </form>
         </section>

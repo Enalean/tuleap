@@ -18,7 +18,9 @@
  */
 
 import { setupFormSubmission } from "./admin-header-background";
+import { setupPinnedButton } from "./pinned-button";
 
 document.addEventListener("DOMContentLoaded", () => {
     setupFormSubmission(document, window.location);
+    setupPinnedButton(document, window);
 });
