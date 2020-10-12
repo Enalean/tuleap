@@ -50,11 +50,11 @@ class ProjectBackgroundConfigurationTest extends TestCase
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach');
+        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
-        self::assertEquals('beach', $configuration->getBackground($project));
+        self::assertEquals('beach-daytime', $configuration->getBackground($project));
     }
 
     public function testItReturnsNullIfFeatureFlagIsDeactivated(): void
@@ -63,7 +63,7 @@ class ProjectBackgroundConfigurationTest extends TestCase
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach');
+        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
@@ -76,10 +76,10 @@ class ProjectBackgroundConfigurationTest extends TestCase
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach');
+        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
-        self::assertEquals('beach', $configuration->getBackgroundIgnoringFeatureFlag($project));
+        self::assertEquals('beach-daytime', $configuration->getBackgroundIgnoringFeatureFlag($project));
     }
 }

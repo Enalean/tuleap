@@ -1314,7 +1314,7 @@ class ProjectTest extends ProjectBase
 
     public function testPUTHeaderBackground(): void
     {
-        $payload = json_encode(['identifier' => 'beach'], JSON_THROW_ON_ERROR);
+        $payload = json_encode(['identifier' => 'beach-daytime'], JSON_THROW_ON_ERROR);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,

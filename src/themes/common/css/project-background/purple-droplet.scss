@@ -20,5 +20,5 @@
 @use 'background';
 
 .project-with-background {
-    @include background.css-custom-properties('beach');
+    @include background.css-custom-properties('purple-droplet');
 }

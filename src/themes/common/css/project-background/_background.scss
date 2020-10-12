@@ -22,22 +22,182 @@
 $project-background-images-path: '../../images/project-background/' !default;
 
 $definitions: (
-    beach:
+    aerial-water:
     (
-        // Photo by Joschko Hammermann
-        // https://unsplash.com/@hmmrmnn?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
-        image: url(#{$project-background-images-path}/beach.webp) no-repeat,
-        color: #765730,
+        // Photo by Chris
+        // https://unsplash.com/@blaichch?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/aerial-water.webp) no-repeat,
+        color: rgb(107, 165, 174),
         size: 100%
     ),
-    bridge:
+    asphalt-rock:
     (
-        // Photo by David Emrich
-        // https://unsplash.com/@davidemrich?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
-        image: url(#{$project-background-images-path}/bridge.webp) no-repeat,
-        color: #757f16,
+        // Photo by Jake Blucker
+        // https://unsplash.com/@jakeblucker?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/asphalt-rock.webp) no-repeat,
+        color: rgb(53, 37, 40),
         size: 100%
-    )
+    ),
+    beach-daytime:
+    (
+        // Photo by Chris Stenger
+        // https://unsplash.com/@chrisstenger?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/beach-daytime.webp) no-repeat,
+        color: rgb(144, 164, 168),
+        size: 100%
+    ),
+    blue-rain:
+    (
+        // Photo by Jackson David
+        // https://unsplash.com/@jacksondavid?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/blue-rain.webp) no-repeat,
+        color: rgb(6, 62, 90),
+        size: 100%
+    ),
+    blue-sand:
+    (
+        // Photo by Amy Humphries
+        // https://unsplash.com/@amyjoyhumphries?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/blue-sand.webp) no-repeat,
+        color: rgb(143, 177, 176),
+        size: 100%
+    ),
+    brown-desert:
+    (
+        // Photo by Wolfgang Hasselmann
+        // https://unsplash.com/@wolfgang_hasselmann?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/brown-desert.webp) no-repeat,
+        color: rgb(118, 90, 83),
+        size: 100%
+    ),
+    brown-grass:
+    (
+        // Photo by Hasan Almasi
+        // https://unsplash.com/@hasanalmasi?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/brown-grass.webp) no-repeat,
+        color: rgb(104, 66, 38),
+        size: 100%
+    ),
+    brown-textile:
+    (
+        // Photo by Noah Kroes
+        // https://unsplash.com/@noahkroes?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/brown-textile.webp) no-repeat,
+        color: rgb(123, 57, 28),
+        size: 100%
+    ),
+    brush-daytime:
+    (
+        // Photo by Darwin Vegher
+        // https://unsplash.com/@darwiiiin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/brush-daytime.webp) no-repeat,
+        color: rgb(101, 121, 119),
+        size: 100%
+    ),
+    green-grass:
+    (
+        // Photo by Annelie Turner
+        // https://unsplash.com/@ann3l13_t?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/green-grass.webp) no-repeat,
+        color: rgb(64, 82, 48),
+        size: 100%
+    ),
+    green-leaf:
+    (
+        // Photo by Adam Kring
+        // https://unsplash.com/@adamkring?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/green-leaf.webp) no-repeat,
+        color: rgb(23, 65, 41),
+        size: 100%
+    ),
+    green-trees:
+    (
+        // Photo by Bruno Kelzer
+        // https://unsplash.com/@bruno_kelzer?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/green-trees.webp) no-repeat,
+        color: rgb(34, 45, 62),
+        size: 100%
+    ),
+    led-light:
+    (
+        // Photo by Lubo Minar
+        // https://unsplash.com/@bubo?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/led-light.webp) no-repeat,
+        color: rgb(82, 22, 66),
+        size: 100%
+    ),
+    ocean-waves:
+    (
+        // Photo by Taoh Nichols
+        // https://unsplash.com/@cosmicblort?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/ocean-waves.webp) no-repeat,
+        color: rgb(159, 102, 105),
+        size: 100%
+    ),
+    octopus-black:
+    (
+        // Photo by Isabel Galvez
+        // https://unsplash.com/@isagalvezphoto?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/octopus-black.webp) no-repeat,
+        color: rgb(32, 42, 73),
+        size: 100%
+    ),
+    purple-building:
+    (
+        // Photo by David Becker
+        // https://unsplash.com/@beckerworks?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/purple-building.webp) no-repeat,
+        color: rgb(85, 11, 88),
+        size: 100%
+    ),
+    purple-droplet:
+    (
+        // Photo by Mary Ray
+        // https://unsplash.com/@mary_ray?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/purple-droplet.webp) no-repeat,
+        color: rgb(41, 29, 36),
+        size: 100%
+    ),
+    purple-textile:
+    (
+        // Photo by Delaney Van
+        // https://unsplash.com/@delaneyvan?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/purple-textile.webp) no-repeat,
+        color: rgb(186, 47, 158),
+        size: 100%
+    ),
+    snow-mountain:
+    (
+        // Photo by Tomasz Smal
+        // https://unsplash.com/@apphex?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/snow-mountain.webp) no-repeat,
+        color: rgb(80, 70, 120),
+        size: 100%
+    ),
+    tree-water:
+    (
+        // Photo by Andreas Gücklhorn
+        // https://unsplash.com/@draufsicht?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/tree-water.webp) no-repeat,
+        color: rgb(63, 139, 142),
+        size: 100%
+    ),
+    wooden-surface:
+    (
+        // Photo by Ian Dziuk
+        // https://unsplash.com/@idze3?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/wooden-surface.webp) no-repeat,
+        color: rgb(108, 86, 79),
+        size: 100%
+    ),
+    white-sheep:
+    (
+        // Photo by Will Bolding
+        // https://unsplash.com/@will_bolding_photography?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image: url(#{$project-background-images-path}/white-sheep.webp) no-repeat,
+        color: rgb(50, 38, 21),
+        size: 100%
+    ),
 );
 
 @function get-image($background) {
@@ -82,7 +242,7 @@ $definitions: (
             linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
         background-attachment: fixed;
         background-position: $sidebar-expanded-width 0;
-        background-size: var(--project-background-size);
+        background-size: calc(var(--project-background-size) - #{$sidebar-expanded-width});
     }
 
     .motd ~ #main-container .project-with-background #{$element} {
@@ -92,10 +252,12 @@ $definitions: (
     &.sidebar-collapsed {
         .project-with-background #{$element} {
             background-position: $sidebar-collapsed-width 0;
+            background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
 
         .motd ~ #main-container .project-with-background #{$element} {
             background-position: $sidebar-collapsed-width $motd-minimum-height;
+            background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
     }
 
@@ -111,10 +273,12 @@ $definitions: (
         &.sidebar-collapsed {
             .project-with-background #{$element} {
                 background-position: $sidebar-collapsed-width $project-banner-minimum-height;
+                background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
             }
 
             .motd ~ #main-container .project-with-background #{$element} {
                 background-position: $sidebar-collapsed-width ($project-banner-minimum-height + $motd-minimum-height);
+                background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
             }
         }
     }

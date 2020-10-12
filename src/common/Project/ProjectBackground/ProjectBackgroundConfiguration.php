@@ -57,6 +57,15 @@ class ProjectBackgroundConfiguration
 
     public function getBackgroundIgnoringFeatureFlag(\Project $project): ?string
     {
-        return $this->dao->getBackground((int) $project->getID());
+        $background = $this->dao->getBackground((int) $project->getID());
+        if (! $background) {
+            return null;
+        }
+
+        if (! in_array($background, ProjectBackgroundName::ALLOWED, true)) {
+            return null;
+        }
+
+        return $background;
     }
 }
