@@ -20,7 +20,7 @@
 .dashboard-project-header {
     display: flex;
     flex-direction: column;
-    padding: $tlp-medium-spacing 400px $tlp-medium-spacing $tlp-medium-spacing;
+    padding: $tlp-medium-spacing 400px $tlp-large-spacing $tlp-medium-spacing;
 }
 
 .dashboard-project-header-main {
@@ -30,16 +30,16 @@
 }
 
 .dashboard-project-header-access {
-    margin: 12px $tlp-small-spacing 0 0; // magix value
+    margin: 14px $tlp-small-spacing 0 0; // magix value
 }
 
 .dashboard-project-header-members {
-    margin: 12px 0 0; // magix value
+    margin: 14px 0 0; // magix value
 }
 
 .dashboard-project-header-trovecat {
     color: $tlp-ui-dimmed;
-    font-size: 14px;
+    font-size: .75rem;
 }
 
 .dashboard-project-header-trovecat-link {
@@ -55,15 +55,14 @@
 
 .dashboard-project-header-trovecat-icon {
     margin: 0 3px 0 0;
-    color: $tlp-theme-color;
+    font-size: .65rem;
 }
 
 .dashboard-project-title {
     margin: 0 $tlp-medium-spacing 0 0;
-    color: $tlp-theme-color;
-    font-size: 40px;
-    font-weight: 300;
-    text-transform: uppercase;
+    color: $tlp-theme-sidebar-background-color;
+    font-size: 2.75rem;
+    font-weight: 500;
 }
 
 .dashboard-project-title-parent {
