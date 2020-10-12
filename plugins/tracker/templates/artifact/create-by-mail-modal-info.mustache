@@ -10,7 +10,11 @@
     </div>
     <div class="tlp-modal-body modal-body">
         <p>{{# dgettext }}tuleap-tracker | You can send an email to the following email address in order to create an artifact:{{/ dgettext }}</p>
-        <div class="tlp-form-element tlp-form-element-append input-append">
+        <copy-to-clipboard
+            value="{{ email }}"
+            aria-label="{{# dgettext }} tuleap-tracker | Copy the email {{/ dgettext }}"
+            class="tlp-form-element tlp-form-element-append input-append tracker-email-copy-to-clipboard"
+        >
             <input
                 type="text"
                 value="{{ email }}"
@@ -19,8 +23,8 @@
             <button
                 class="btn tlp-append tlp-button-primary tlp-button-outline tracker-email-copy-to-clipboard-button"
                 title="{{# dgettext }}tuleap-tracker | Copy to clipboard{{/ dgettext }}"
-            ><i class="far fa-copy" aria-hidden=""></i></button>
-        </div>
+            ><i class="far fa-copy" aria-hidden="true"></i></button>
+        </copy-to-clipboard>
         <p class="text-info tlp-text-info tracker-email-copy-to-clipboard-info">
             {{# dgettext }}tuleap-tracker | The email has been copied to clipboard{{/ dgettext }}
         </p>

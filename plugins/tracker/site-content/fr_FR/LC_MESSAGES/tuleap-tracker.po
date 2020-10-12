@@ -1022,6 +1022,9 @@ msgstr "Copie de %1$s"
 msgid "Copy of %1$s #%2$s is finished."
 msgstr "La copie de %1$s #%2$s est terminée."
 
+msgid "Copy the email"
+msgstr "Copier l'adresse email"
+
 msgid "Copy to clipboard"
 msgstr "Copier dans le presse-papier"
 
