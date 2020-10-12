@@ -26,13 +26,13 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroring
 
 final class NoDuckTypedMatchingValueException extends \RuntimeException implements MilestoneMirroringException
 {
-    public function __construct(string $source_value_label, int $contributor_endperiod_field_id)
+    public function __construct(string $source_value_label, int $contributor_status_field_id)
     {
         parent::__construct(
             sprintf(
                 'No matching value found for value %s in field #%d by duck typing.',
                 $source_value_label,
-                $contributor_endperiod_field_id
+                $contributor_status_field_id
             )
         );
     }

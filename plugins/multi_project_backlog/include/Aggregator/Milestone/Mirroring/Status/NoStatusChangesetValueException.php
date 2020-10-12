@@ -26,8 +26,8 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroring
 
 final class NoStatusChangesetValueException extends \RuntimeException implements MilestoneMirroringException
 {
-    public function __construct(int $changeset_id, int $start_date_field_id)
+    public function __construct(int $changeset_id, int $status_field_id)
     {
-        parent::__construct("Expected changeset #$changeset_id to have a value for Status field #$start_date_field_id, but this value was not found");
+        parent::__construct("Expected changeset #$changeset_id to have a value for Status field #$status_field_id, but this value was not found");
     }
 }

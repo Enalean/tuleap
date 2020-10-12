@@ -25,8 +25,6 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoEndPeriodChangesetValueException;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStartDateChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
@@ -191,7 +189,8 @@ final class CopiedValuesGathererTest extends TestCase
         $status_field_value = new \Tracker_Artifact_ChangesetValue_List(10002, $changeset, $status_field, true, ['Ongoing']);
         $changeset->setFieldValue($status_field, $status_field_value);
 
-        $changeset->setNoFieldValue($synchronized_fields->getStartDateField());
+        $start_date_field = $synchronized_fields->getTimeframeFields()->getStartDateField();
+        $changeset->setNoFieldValue($start_date_field);
 
         $this->expectException(NoStartDateChangesetValueException::class);
         $this->gatherer->gather($changeset, $tracker);
@@ -218,7 +217,7 @@ final class CopiedValuesGathererTest extends TestCase
         $status_field_value = new \Tracker_Artifact_ChangesetValue_List(10002, $changeset, $status_field, true, ['Ongoing']);
         $changeset->setFieldValue($status_field, $status_field_value);
 
-        $timeframe_fields = $synchronized_fields->getTimeframeFields();
+        $timeframe_fields       = $synchronized_fields->getTimeframeFields();
         $start_date_field       = $timeframe_fields->getStartDateField();
         $start_date_field_value = new \Tracker_Artifact_ChangesetValue_Date(10003, $changeset, $start_date_field, true, 123456789);
         $changeset->setFieldValue($start_date_field, $start_date_field_value);

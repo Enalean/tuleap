@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring;
 
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoEndPeriodChangesetValueException;
-use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStartDateChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Status\NoStatusChangesetValueException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFields;
@@ -126,11 +124,14 @@ class CopiedValuesGatherer
         return $status_value;
     }
 
+    /**
+     * @throws NoStartDateChangesetValueException
+     */
     private function readStartDate(
         SynchronizedFields $fields,
         \Tracker_Artifact_Changeset $aggregator_milestone_last_changeset
     ): \Tracker_Artifact_ChangesetValue_Date {
-        $start_date_field = $fields->getStartDateField();
+        $start_date_field = $fields->getTimeframeFields()->getStartDateField();
         $start_date_value = $aggregator_milestone_last_changeset->getValue($start_date_field);
 
         if (! $start_date_value) {
@@ -144,6 +145,7 @@ class CopiedValuesGatherer
     }
 
     /**
+     * @throws NoEndPeriodChangesetValueException
      * @return \Tracker_Artifact_ChangesetValue_Numeric|\Tracker_Artifact_ChangesetValue_Date
      */
     private function readEndPeriod(
