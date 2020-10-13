@@ -23,7 +23,7 @@ describe("pinned-button", () => {
     describe("setupPinnedButton", () => {
         it("throws an error if submit section is not in the dom", () => {
             expect(() =>
-                setupPinnedButton(document.implementation.createHTMLDocument(), window)
+                setupPinnedButton(document.implementation.createHTMLDocument())
             ).toThrowError();
         });
 
@@ -33,77 +33,75 @@ describe("pinned-button", () => {
             section.id = "project-admin-background-submit-section";
             doc.body.appendChild(section);
 
-            expect(() => setupPinnedButton(doc, window)).toThrowError();
+            expect(() => setupPinnedButton(doc)).toThrowError();
         });
 
-        it("Marks the section as pinned if button is not in the viewport", () => {
-            const doc = document.implementation.createHTMLDocument();
-            const section = doc.createElement("section");
-            section.id = "project-admin-background-submit-section";
-            doc.body.appendChild(section);
-            const button = doc.createElement("button");
-            button.id = "project-admin-background-submit-button";
-            doc.body.appendChild(button);
-            const radio = doc.createElement("input");
-            radio.type = "radio";
-            radio.classList.add("project-admin-background-radio");
-            doc.body.appendChild(radio);
+        it("Observes the position of the submit button and does not mark the section as pinned if no background is selected", () => {
+            const { doc, section, button } = createDocumentExpectedFormStructure();
 
-            Object.defineProperty(window, "innerHeight", { get: () => 100 });
-            jest.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue({
-                top: 0,
-                right: 0,
-                bottom: 150,
-                left: 0,
-                height: 0,
-                width: 0,
-                x: 0,
-                y: 0,
-                toJSON: () => ({}),
+            const observe = jest.fn();
+            const unobserve = jest.fn();
+            const mockIntersectionObserver = jest.fn();
+            mockIntersectionObserver.mockReturnValue({
+                observe,
+                unobserve,
             });
+            window.IntersectionObserver = mockIntersectionObserver;
 
-            setupPinnedButton(doc, window);
+            setupPinnedButton(doc);
 
-            const evt = doc.createEvent("HTMLEvents");
-            evt.initEvent("change", false, true);
-            radio.dispatchEvent(evt);
-
-            expect(section.classList.contains("pinned")).toBe(true);
-        });
-
-        it("Does not mark the section as pinned if button is in the viewport", () => {
-            const doc = document.implementation.createHTMLDocument();
-            const section = doc.createElement("section");
-            section.id = "project-admin-background-submit-section";
-            doc.body.appendChild(section);
-            const button = doc.createElement("button");
-            button.id = "project-admin-background-submit-button";
-            doc.body.appendChild(button);
-            const radio = doc.createElement("input");
-            radio.type = "radio";
-            radio.classList.add("project-admin-background-radio");
-            doc.body.appendChild(radio);
-
-            Object.defineProperty(window, "innerHeight", { get: () => 100 });
-            jest.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue({
-                top: 0,
-                right: 0,
-                bottom: 50,
-                left: 0,
-                height: 0,
-                width: 0,
-                x: 0,
-                y: 0,
-                toJSON: () => ({}),
-            });
-
-            setupPinnedButton(doc, window);
-
-            const evt = doc.createEvent("HTMLEvents");
-            evt.initEvent("change", false, true);
-            radio.dispatchEvent(evt);
+            expect(observe).toHaveBeenCalledWith(button);
 
             expect(section.classList.contains("pinned")).toBe(false);
+            expect(unobserve).not.toHaveBeenCalled();
         });
+
+        it("Marks the section as pinned if button is not in the viewport, and stop observing the button as soon as it is pinned", () => {
+            const { doc, section, button, radio } = createDocumentExpectedFormStructure();
+
+            const observe = jest.fn();
+            const unobserve = jest.fn();
+            const mockIntersectionObserver = jest.fn();
+            mockIntersectionObserver.mockReturnValue({
+                observe,
+                unobserve,
+            });
+            window.IntersectionObserver = mockIntersectionObserver;
+
+            setupPinnedButton(doc);
+
+            expect(observe).toHaveBeenCalledWith(button);
+
+            simulateBackgroundSelection(doc, radio);
+
+            expect(section.classList.contains("pinned")).toBe(true);
+            expect(unobserve).toHaveBeenCalledWith(button);
+        });
+
+        function createDocumentExpectedFormStructure(): {
+            doc: Document;
+            section: HTMLElement;
+            button: HTMLButtonElement;
+            radio: HTMLInputElement;
+        } {
+            const doc = document.implementation.createHTMLDocument();
+            const section = doc.createElement("section");
+            section.id = "project-admin-background-submit-section";
+            doc.body.appendChild(section);
+            const button = doc.createElement("button");
+            button.id = "project-admin-background-submit-button";
+            doc.body.appendChild(button);
+            const radio = doc.createElement("input");
+            radio.type = "radio";
+            radio.classList.add("project-admin-background-radio");
+            doc.body.appendChild(radio);
+            return { doc, section, button, radio };
+        }
+
+        function simulateBackgroundSelection(doc: Document, radio: HTMLInputElement): void {
+            const evt = doc.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+            radio.dispatchEvent(evt);
+        }
     });
 });

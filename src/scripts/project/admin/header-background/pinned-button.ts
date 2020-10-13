@@ -21,9 +21,10 @@ const SUBMIT_SECTION_ID = "project-admin-background-submit-section";
 const FORM_SUBMIT_BUTTON_ID = "project-admin-background-submit-button";
 
 let is_submit_button_pinneable = false;
-let ticking = false;
+let is_submit_button_visible = false;
+let observer: IntersectionObserver | null = null;
 
-export function setupPinnedButton(document: Document, window: Window): void {
+export function setupPinnedButton(document: Document): void {
     const submit_section = document.getElementById(SUBMIT_SECTION_ID);
     if (!(submit_section instanceof HTMLElement)) {
         throw new Error(`Section #${SUBMIT_SECTION_ID} is missing from the DOM`);
@@ -34,8 +35,19 @@ export function setupPinnedButton(document: Document, window: Window): void {
         throw new Error(`Submit button #${FORM_SUBMIT_BUTTON_ID} is missing from the DOM`);
     }
 
-    document.addEventListener("scroll", () => observeSubmitButton(submit_button, submit_section));
-    window.addEventListener("resize", () => observeSubmitButton(submit_button, submit_section));
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.target.id !== FORM_SUBMIT_BUTTON_ID) {
+                return;
+            }
+
+            is_submit_button_visible = entry.isIntersecting;
+            if (is_submit_button_pinneable) {
+                markSubmitSectionAsPinned(submit_button, submit_section);
+            }
+        });
+    });
+    observer.observe(submit_button);
 
     for (const background of document.querySelectorAll(".project-admin-background-radio")) {
         background.addEventListener("change", () => {
@@ -45,28 +57,9 @@ export function setupPinnedButton(document: Document, window: Window): void {
     }
 }
 
-function observeSubmitButton(submit_button: HTMLButtonElement, submit_section: HTMLElement): void {
-    if (!ticking) {
-        window.requestAnimationFrame(() => {
-            if (is_submit_button_pinneable) {
-                markSubmitSectionAsPinned(submit_button, submit_section);
-            }
-            ticking = false;
-        });
-
-        ticking = true;
-    }
-}
-
-function isSubmitButtonInViewport(submit_button: HTMLButtonElement): boolean {
-    return submit_button.getBoundingClientRect().bottom < window.innerHeight;
-}
-
-function markSubmitSectionAsPinned(
-    submit_button: HTMLButtonElement,
-    submit_section: HTMLElement
-): void {
-    if (!isSubmitButtonInViewport(submit_button)) {
-        submit_section.classList.add("pinned");
+function markSubmitSectionAsPinned(button: HTMLButtonElement, section: HTMLElement): void {
+    if (!is_submit_button_visible) {
+        section.classList.add("pinned");
+        observer?.unobserve(button);
     }
 }

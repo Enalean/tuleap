@@ -22,5 +22,5 @@ import { setupPinnedButton } from "./pinned-button";
 
 document.addEventListener("DOMContentLoaded", () => {
     setupFormSubmission(document, window.location);
-    setupPinnedButton(document, window);
+    setupPinnedButton(document);
 });
