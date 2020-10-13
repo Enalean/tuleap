@@ -137,6 +137,17 @@ class IssueSnapshotCollectionBuilder
 
         $comments_collection = $this->comment_values_builder->buildCommentCollectionForIssue($jira_issue_key);
         foreach ($comments_collection as $comment) {
+            if (isset($snapshots_collection[$comment->getDate()->getTimestamp()])) {
+                $snapshots_collection[$comment->getDate()->getTimestamp()] = new Snapshot(
+                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getUser(),
+                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getDate(),
+                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getAllFieldsSnapshot(),
+                    $comment
+                );
+
+                continue;
+            }
+
             $commenter = $comment->getUpdateAuthor();
 
             $comment_snapshot = new Snapshot(

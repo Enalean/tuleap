@@ -249,6 +249,63 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         );
     }
 
+    public function testItBuildCollectionOfSnapshotWithFieldAndCommentIfSameTimestamp(): void
+    {
+        $this->logger->shouldReceive('debug');
+        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
+            $this->user
+        );
+        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+
+        $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
+            ->with('key01')
+            ->andReturn(
+                $this->buildChangelogEntriesCollection()
+            );
+
+        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
+            ->once()
+            ->andReturn(
+                $this->buildCurrentSnapshot($this->user)
+            );
+
+        $this->initial_snapshot_builder->shouldReceive('buildInitialSnapshot')
+            ->once()
+            ->andReturn(
+                $this->buildInitialSnapshot($this->user)
+            );
+
+        $this->changelog_snapshot_builder->shouldReceive('buildSnapshotFromChangelogEntry')->andReturn(
+            $this->buildFirstChangelogSnapshot($this->user),
+            $this->buildSecondChangelogSnapshot($this->user)
+        );
+
+        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
+            [
+                $this->buildCommentSnapshotWithSameTimestampOfInitialChangelog()
+            ]
+        );
+
+        $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
+            $this->jira_issue_api,
+            $this->attachment_collection,
+            $this->jira_field_mapping_collection,
+            $this->jira_base_url
+        );
+
+        $this->assertCount(3, $collection);
+        $this->assertSame(
+            [
+                1585141750,
+                1585141810,
+                1585141870
+            ],
+            array_keys($collection)
+        );
+        $this->assertEquals($this->buildCommentSnapshotWithSameTimestampOfInitialChangelog(), $collection[1585141750]->getCommentSnapshot());
+        $this->assertEquals($this->buildInitialSnapshot($this->user)->getAllFieldsSnapshot(), $collection[1585141750]->getAllFieldsSnapshot());
+    }
+
     private function buildInitialSnapshot($user): Snapshot
     {
         return new Snapshot(
@@ -399,6 +456,18 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                 'accountId' => 'e12ds5123sw'
             ]),
             new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
+            "Comment 01"
+        );
+    }
+
+    private function buildCommentSnapshotWithSameTimestampOfInitialChangelog(): Comment
+    {
+        return new Comment(
+            new JiraUser([
+                'displayName' => 'userO1',
+                'accountId' => 'e12ds5123sw'
+            ]),
+            new DateTimeImmutable("2020-03-25T14:09:10.823+0100"),
             "Comment 01"
         );
     }

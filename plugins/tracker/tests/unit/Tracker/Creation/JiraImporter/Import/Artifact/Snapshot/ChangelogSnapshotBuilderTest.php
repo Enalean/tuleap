@@ -250,7 +250,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "fieldId"    => "description",
                         "from"       => null,
                         "fromString" => "aaaaaaaaaaa",
-                        "to"         => null,
+                        "to"         => '{"id":"ari:cloud:jira:d63a8014-ba58-4b58-b22d-eb1d85d56f3d:issuefieldvalue/10006/description","version":"1"}',
                         "toString"   => "*aaaaaaaaa*"
                     ],
                     4 => [
