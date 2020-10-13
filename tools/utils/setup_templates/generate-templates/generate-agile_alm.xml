@@ -1,14 +1,34 @@
 <?xml-stylesheet type="text/xsl" href="style.xsl"?>
 <project>
   <dashboards>
-    <dashboard name="0 - Project Dashboard">
+    <dashboard name="0 - Main Dashboard">
       <line>
         <column>
-          <widget name="projectdescription"/>
           <widget name="dashboardprojectmilestone"/>
+          <widget name="projectmembers"/>
         </column>
         <column>
-          <widget name="projectmembers"/>
+          <widget name="projectnote">
+            <preference name="note">
+              <value name="title">Note from the Tuleap team</value>
+              <value name="content"><![CDATA[
+Welcome to your new project!
+
+It is based on Agile ALM template.
+
+You will find a complete workspace to plan, build and ship quality products.
+
+It includes a ready-to-use Scrum & Test environment
+to collect stories, plan releases, monitor sprints and test your features.
+
+It also includes a Git to create all repositories your team needs.
+
+In brief, all tools to reach end-to-end traceability.
+
+
+]]></value>
+            </preference>
+          </widget>
           <widget name="projectheartbeat"/>
         </column>
       </line>
@@ -123,7 +143,7 @@
       <tracker id="T480">
         <columns>
           <column label="Todo" id="C282" tlp_color_name="daphne-blue"/>
-          <column label="On Going" id="C283" tlp_color_name="lake-placid-blue"/>
+          <column label="In Progress" id="C283" tlp_color_name="lake-placid-blue"/>
           <column label="Review" id="C284" tlp_color_name="deep-blue"/>
           <column label="Done" id="C285" tlp_color_name="neon-green"/>
         </columns>
@@ -152,7 +172,7 @@
       <tracker id="T481">
         <columns>
           <column label="Todo" id="C286" tlp_color_name="daphne-blue"/>
-          <column label="On Going" id="C287" tlp_color_name="lake-placid-blue"/>
+          <column label="In Progress" id="C287" tlp_color_name="lake-placid-blue"/>
           <column label="Review" id="C288" tlp_color_name="deep-blue"/>
           <column label="Done" id="C289" tlp_color_name="neon-green"/>
         </columns>

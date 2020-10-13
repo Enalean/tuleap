@@ -15,14 +15,26 @@
     <service shortname="plugin_testmanagement" enabled="0"/>
   </services>
     <dashboards>
-        <dashboard name="0 - Project Dashboard">
+        <dashboard name="0 - Main Dashboard">
             <line>
               <column>
-                <widget name="projectdescription"/>
                 <widget name="dashboardprojectmilestone"/>
+                <widget name="projectmembers"/>
               </column>
               <column>
-                <widget name="projectmembers"/>
+                <widget name="projectnote">
+                  <preference name="note">
+                    <value name="title">Note from the Tuleap team</value>
+                    <value name="content"><![CDATA[
+Welcome to your new project!
+
+It is based on Scrum template.
+
+You will find a ready-to-use Scrum environment
+to collect stories, plan releases and monitor sprints.
+]]></value>
+                  </preference>
+                </widget>
                 <widget name="projectheartbeat"/>
               </column>
             </line>

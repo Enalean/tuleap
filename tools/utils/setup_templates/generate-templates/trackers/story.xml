@@ -77,7 +77,7 @@
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="V13860" label="Todo" is_hidden="0"/>
-                  <item ID="V13861" label="On Going" is_hidden="0"/>
+                  <item ID="V13861" label="In Progress" is_hidden="0"/>
                   <item ID="V13862" label="Review" is_hidden="0"/>
                   <item ID="V13863" label="Done" is_hidden="0"/>
                 </items>
@@ -226,7 +226,7 @@
             <field REF="F14465"/>
           </columns>
         </renderer>
-        <renderer ID="R1761" type="plugin_cardwall" rank="1">
+        <renderer ID="R1761" type="plugin_cardwall" rank="1" field_id="F14463">
           <name>Cardwall</name>
         </renderer>
       </renderers>
@@ -234,7 +234,7 @@
   </reports>
   <simple_workflow>
     <field_id REF="F14463"/>
-    <is_used>1</is_used>
+    <is_used>0</is_used>
     <states>
       <state>
         <to_id REF="V13861"/>
