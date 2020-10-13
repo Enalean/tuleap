@@ -94,7 +94,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
     {
         header('Content-Type: image/png');
         if ($this->never_expires) {
-            header('Cache-Control: max-age=' . self::ONE_YEAR_IN_SECONDS);
+            header('Cache-Control: max-age=' . self::ONE_YEAR_IN_SECONDS . ',immutable');
         } else {
             header('Cache-Control: max-age=60');
         }
