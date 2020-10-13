@@ -24,35 +24,10 @@ namespace Tuleap\Project\ProjectBackground;
 
 /**
  * @psalm-immutable
- * @psalm-type ValidProjectBackgroundName = value-of<ProjectBackgroundName::ALLOWED>
+ * @psalm-type ValidProjectBackgroundName = key-of<ProjectBackgroundSelection::ALLOWED>
  */
 final class ProjectBackgroundName
 {
-    public const ALLOWED = [
-        'aerial-water',
-        'asphalt-rock',
-        'beach-daytime',
-        'blue-rain',
-        'blue-sand',
-        'brown-desert',
-        'brown-grass',
-        'brown-textile',
-        'brush-daytime',
-        'green-grass',
-        'green-leaf',
-        'green-trees',
-        'led-light',
-        'ocean-waves',
-        'octopus-black',
-        'purple-building',
-        'purple-droplet',
-        'purple-textile',
-        'snow-mountain',
-        'tree-water',
-        'white-sheep',
-        'wooden-surface',
-    ];
-
     /**
      * @var string
      * @psalm-var ValidProjectBackgroundName

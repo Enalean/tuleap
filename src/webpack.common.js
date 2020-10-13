@@ -531,6 +531,7 @@ const project_background_themes = [
     "led-light",
     "ocean-waves",
     "octopus-black",
+    "orange-tulip",
     "purple-building",
     "purple-droplet",
     "purple-textile",
