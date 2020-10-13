@@ -88,26 +88,26 @@
         <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'details') }}"
             title="{{::'Overview' | translate }}"
             class="milestone-info-link"
-        ><i class="far fa-chart-bar"></i><span translate>Overview</span></a>
+        ><i class="milestone-info-link-icon far fa-chart-bar"></i><span translate>Overview</span></a>
 
         <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'planning-v2') }}"
             ng-if="milestoneController.milestone.resources.milestones.accept.trackers.length > 0"
             title="{{::'Planning' | translate }}"
             class="milestone-info-link"
             data-test="go-to-submilestone-planning"
-        ><i class="fas fa-sign-in-alt"></i><span translate>Planning</span></a>
+        ><i class="milestone-info-link-icon fas fa-sign-in-alt"></i><span translate>Planning</span></a>
 
         <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}"
            ng-if="milestoneController.milestone.resources.cardwall"
            title="{{::'Cardwall' | translate }}"
            class="milestone-info-link"
-        ><i class="fa fa-table"></i><span translate>Cardwall</span></a>
+        ><i class="milestone-info-link-icon fa fa-table"></i><span translate>Cardwall</span></a>
 
         <a ng-repeat="pane in milestoneController.additionalPanesToDisplay()"
            href="{{ pane.uri }}"
            title="{{ pane.title }}"
            class="milestone-info-link"
-        ><i class="fa {{ pane.icon_name }}"></i><span>{{ pane.title }}</span></a>
+        ><i class="milestone-info-link-icon fa {{ pane.icon_name }}"></i><span>{{ pane.title }}</span></a>
     </div>
 
     <section class="tlp-pane-section milestone-content"
