@@ -760,6 +760,14 @@ msgstr "Documentation"
 msgid "Download agreement"
 msgstr "Accord de téléchargement"
 
+msgid ""
+"Edge Legacy is not supported. Please upgrade to the latest version of Edge "
+"or use another modern alternative such as Firefox or Chrome."
+msgstr ""
+"Edge Legacy n'est pas supporté. Veuillez mettre à niveau vers la dernière "
+"version de Edge ou utiliser une alternative moderne tel que Firefox ou "
+"Chrome."
+
 msgid "Edit"
 msgstr "Éditer"
 

@@ -50,6 +50,13 @@ final class BrowserDeprecationMessageTest extends TestCase
         self::assertNotNull($detected_browser);
     }
 
+    public function testGetsDeprecationMessageForEdgeLegacy(): void
+    {
+        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING);
+
+        self::assertNotNull($detected_browser);
+    }
+
     private function buildDetectedBrowserFromUserAgent(string $user_agent): DetectedBrowser
     {
         $request = \Mockery::mock(\HTTPRequest::class);
