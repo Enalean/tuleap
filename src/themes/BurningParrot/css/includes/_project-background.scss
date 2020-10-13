@@ -28,7 +28,7 @@ body {
     @each $identifier, $definition in background.$definitions {
         .project-admin-background-preview-#{$identifier} {
             background: linear-gradient($opacifier-color, $opacifier-color),
-                map-get($definition, 'image'),
+                map-get($definition, 'image-1680px'),
                 linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
             background-size: map-get($definition, 'size');
         }
