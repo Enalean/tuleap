@@ -57,6 +57,15 @@ final class BrowserDeprecationMessage
                 _('Internet Explorer will be unsupported soon, some features are already not available to you. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.')
             );
         }
+
+
+        if ($detected_browser->isEdgeLegacy()) {
+            return new self(
+                _('Your web browser is not supported'),
+                _('Edge Legacy is not supported. Please upgrade to the latest version of Edge or use another modern alternative such as Firefox or Chrome.')
+            );
+        }
+
         return null;
     }
 }
