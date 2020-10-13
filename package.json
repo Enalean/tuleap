@@ -69,7 +69,7 @@
     "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.12",
     "webpack-fix-style-only-entries": "^0.4.0",
-    "webpack-merge": "^5.1.4",
+    "webpack-merge": "^5.2.0",
     "webpack-merge-and-include-globally": "^2.1.26"
   },
   "scripts": {
