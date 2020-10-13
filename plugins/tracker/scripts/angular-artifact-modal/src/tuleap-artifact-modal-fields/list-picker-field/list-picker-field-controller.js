@@ -19,7 +19,7 @@
  */
 
 import { get } from "tlp";
-import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 export default ListPickerController;
 
@@ -50,7 +50,10 @@ function ListPickerController($element, $timeout) {
     }
 
     function getOptions() {
-        let options = { is_filterable: true };
+        let options = {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+        };
         if (self.field.bindings.type === "users") {
             options.items_template_formatter = async (value_id, label) => {
                 const value = value_id.split(":")[1];

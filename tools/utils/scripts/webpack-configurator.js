@@ -144,7 +144,7 @@ function extendProdConfiguration(webpack_configs) {
                 errorDetails: true,
                 performance: true,
                 timings: true,
-                excludeAssets: [/polyfill-/],
+                excludeAssets: [/polyfill-/, /\.d\.ts(\.map)?$/],
             },
         })
     );

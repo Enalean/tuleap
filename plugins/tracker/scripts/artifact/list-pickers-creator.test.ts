@@ -21,11 +21,12 @@ import {
     initListPickersInArtifactCreationView,
     initListPickersPostUpdateErrorView,
     listenToggleEditionEvents,
-} from "./list-fields";
-import * as list_picker from "@tuleap/list-picker/src/list-picker";
+    ListPickerCreator,
+} from "./list-pickers-creator";
 
-describe("list-fields", () => {
+describe("list-pickers-creator", () => {
     let doc: HTMLDocument;
+    let createListPicker: ListPickerCreator;
 
     function createArtifactFormElementFieldInReadModeOfType(
         type: string
@@ -84,17 +85,17 @@ describe("list-fields", () => {
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-        jest.spyOn(list_picker, "createListPicker").mockImplementation();
+        createListPicker = jest.fn();
     });
 
     it("should listen for clicks on fields labels to create a list picker when the <select> is shown", () => {
         ["sb", "msb"].forEach((type) => {
             const { button, select } = createArtifactFormElementFieldInReadModeOfType(type);
 
-            listenToggleEditionEvents(doc);
+            listenToggleEditionEvents(doc, createListPicker);
             button.dispatchEvent(new Event("click"));
 
-            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+            expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
             });
         });
@@ -103,9 +104,9 @@ describe("list-fields", () => {
     it("should init list-pickers when the artifact view is in creation mode", () => {
         ["sb", "msb"].forEach((type) => {
             const select = createArtifactFormElementFieldInEditionModeOfType(type);
-            initListPickersInArtifactCreationView(doc);
+            initListPickersInArtifactCreationView(doc, createListPicker);
 
-            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+            expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
             });
         });
@@ -114,9 +115,9 @@ describe("list-fields", () => {
     it("should init list-pickers when list fields are in edition mode", () => {
         ["sb", "msb"].forEach((type) => {
             const select = createArtifactFormElementFieldInEditionModeOfType(type, true);
-            initListPickersPostUpdateErrorView(doc);
+            initListPickersPostUpdateErrorView(doc, createListPicker);
 
-            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+            expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
             });
         });
@@ -137,16 +138,16 @@ describe("list-fields", () => {
         select_1.setAttribute("data-target-fields-ids", JSON.stringify(["10"]));
         select_2.setAttribute("data-target-fields-ids", JSON.stringify(["25"]));
 
-        listenToggleEditionEvents(doc);
+        listenToggleEditionEvents(doc, createListPicker);
         button_1.dispatchEvent(new Event("click"));
 
-        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_1, {
+        expect(createListPicker).toHaveBeenCalledWith(select_1, {
             is_filterable: true,
         });
-        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_2, {
+        expect(createListPicker).toHaveBeenCalledWith(select_2, {
             is_filterable: true,
         });
-        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_3, {
+        expect(createListPicker).toHaveBeenCalledWith(select_3, {
             is_filterable: true,
         });
     });

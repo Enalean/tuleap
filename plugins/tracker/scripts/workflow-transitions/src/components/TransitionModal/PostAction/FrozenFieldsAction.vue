@@ -80,7 +80,7 @@ import { mapGetters, mapState } from "vuex";
 import MultiSelect from "../MultiSelect.vue";
 import { READ_ONLY_FIELDS, STRUCTURAL_FIELDS } from "../../../../../constants/fields-constants.js";
 import { compare } from "../../../support/string.js";
-import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
 
@@ -125,6 +125,7 @@ export default {
             this.list_picker = await createListPicker(
                 this.$refs.workflow_transition_modal_frozen_fields,
                 {
+                    locale: document.body.dataset.userLocale,
                     is_filterable: true,
                     placeholder: this.$gettext("Choose a field"),
                 }

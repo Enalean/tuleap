@@ -20,7 +20,7 @@
 @import 'workflow/header';
 @import 'workflow/matrix';
 @import 'workflow/transition-modal';
-@import '../../src/scripts/list-picker/themes/style';
+@import '~@tuleap/list-picker';
 
 
 .tracker-workflow-loader {

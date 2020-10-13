@@ -22,6 +22,7 @@ export interface ListPicker {
 }
 
 export interface ListPickerOptions {
+    readonly locale?: string;
     placeholder?: string;
     is_filterable?: boolean;
     items_template_formatter?: (value_id: string, item_label: string) => Promise<string>;

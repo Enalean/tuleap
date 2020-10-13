@@ -20,8 +20,8 @@
 import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
 import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { sanitize } from "dompurify";
-import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ItemsMapManager } from "../items/ItemsMapManager";
+import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
 
 export class MultipleSelectionManager implements SelectionManager {
     private readonly selection_state: ListPickerSelectionStateMultiple;
@@ -36,7 +36,7 @@ export class MultipleSelectionManager implements SelectionManager {
         private readonly placeholder_text: string,
         private readonly dropdown_toggler: DropdownToggler,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly gettext_provider: GetText
+        private readonly gettext_provider: GettextProvider
     ) {
         this.selection_state = {
             selected_items: new Map(),

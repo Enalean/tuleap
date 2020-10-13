@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/list-picker": "file://./scripts/list-picker",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@juggle/resize-observer": "^3.2.0",
     "@webcomponents/custom-elements": "^1.4.1",
@@ -72,6 +73,7 @@
   "scripts": {
     "build": "rm -rf ./www/assets/core && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest"
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

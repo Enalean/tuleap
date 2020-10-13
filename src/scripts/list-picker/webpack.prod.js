@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { POFile } from "./vue-gettext-init";
-import GetText from "node-gettext";
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-export { GetText };
-
-export function getPOFileFromLocale(locale: string): string;
-
-export function initGettext(
-    locale: string,
-    domain: string,
-    load_translations_callback: (locale: string) => Promise<POFile>
-): Promise<GetText>;
+module.exports = webpack_configurator.extendProdConfiguration(common);

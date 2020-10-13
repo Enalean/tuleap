@@ -123,6 +123,28 @@ function configureTypescriptRules(babel_options) {
     ];
 }
 
+function configureTypescriptLibraryRules(babel_options) {
+    return [
+        {
+            test: /\.ts(x?)$/,
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: "babel-loader",
+                    options: babel_options,
+                },
+                {
+                    loader: "ts-loader",
+                    options: {
+                        appendTsSuffixTo: ["\\.vue$"],
+                        // No transpileOnly, otherwise it does not generate .d.ts definitions
+                    },
+                },
+            ],
+        },
+    ];
+}
+
 const rule_vue_loader = {
     test: /\.vue$/,
     exclude: /node_modules/,
@@ -227,6 +249,7 @@ const rule_css_assets = {
 module.exports = {
     configureBabelRule,
     configureTypescriptRules,
+    configureTypescriptLibraryRules,
     configureBabelToTranspileNodeModuleForIE11,
     babel_options_ie11,
     babel_options_chrome_firefox,

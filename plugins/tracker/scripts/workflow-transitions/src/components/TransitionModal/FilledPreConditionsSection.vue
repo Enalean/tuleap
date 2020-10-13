@@ -110,16 +110,16 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import {
-    STRUCTURAL_FIELDS,
-    READ_ONLY_FIELDS,
     COMPUTED_FIELD,
+    READ_ONLY_FIELDS,
+    STRUCTURAL_FIELDS,
 } from "../../../../constants/fields-constants.js";
 import MultiSelect from "./MultiSelect.vue";
 import PreConditionsSection from "./PreConditionsSection.vue";
 import { compare } from "../../support/string.js";
-import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS, COMPUTED_FIELD];
 
@@ -172,11 +172,18 @@ export default {
         if (this.is_list_picker_enabled) {
             this.configuration_permission_list_picker = await createListPicker(
                 this.$refs.workflow_configuration_permission,
-                { is_filterable: true }
+                {
+                    locale: document.body.dataset.userLocale,
+                    is_filterable: true,
+                }
             );
             this.not_empty_fields_list_picker = await createListPicker(
                 this.$refs.workflow_configuration_not_empty_fields,
-                { is_filterable: true, placeholder: this.$gettext("Choose a field") }
+                {
+                    locale: document.body.dataset.userLocale,
+                    is_filterable: true,
+                    placeholder: this.$gettext("Choose a field"),
+                }
             );
         }
     },
