@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "luxon": "^1.24.1",
+    "luxon": "^1.25.0",
     "vue": "^2.6.12",
     "vue-gettext": "^2.1.10",
     "vuex": "^3.5.1"
