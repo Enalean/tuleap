@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
+<files psalm-version="3.17.1@8f211792d813e4dc89f04ed372785ce93b902fd1">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <MissingReturnType occurrences="4">
       <code>buildServices</code>
@@ -3276,6 +3276,9 @@
     <InvalidReturnType occurrences="1">
       <code>Planning</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$key + 1</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="13">
       <code>$group_id</code>
       <code>$group_id</code>
@@ -6622,6 +6625,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/bin/DocmanExport/XMLExport.class.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>'no'</code>
+    </InvalidPropertyAssignmentValue>
     <MissingParamType occurrences="5">
       <code>$directoryPath</code>
       <code>$doc</code>
@@ -9250,6 +9256,9 @@
   </file>
   <file src="plugins/docman/include/Docman_ItemFactory.class.php">
     <DeprecatedFunction occurrences="2"/>
+    <FalseOperand occurrences="1">
+      <code>$oneRestored</code>
+    </FalseOperand>
     <InvalidArgument occurrences="1">
       <code>new Docman_Version($version)</code>
     </InvalidArgument>
@@ -9418,6 +9427,9 @@
       <code>$orphans</code>
       <code>$stats</code>
     </PossiblyUndefinedVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$oneRestored</code>
+    </TypeDoesNotContainType>
     <UndefinedMethod occurrences="1">
       <code>addItem</code>
     </UndefinedMethod>
@@ -10347,6 +10359,9 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager.class.php">
+    <InvalidOperand occurrences="1">
+      <code>$success</code>
+    </InvalidOperand>
     <MissingParamType occurrences="48">
       <code>$event</code>
       <code>$event</code>
@@ -19494,10 +19509,20 @@
       <code>array</code>
       <code>array</code>
     </InvalidNullableReturnType>
-    <InvalidOperand occurrences="2">
+    <InvalidOperand occurrences="4">
+      <code>$epoch</code>
+      <code>$epoch</code>
       <code>$regs[2]</code>
       <code>$regs[2]</code>
     </InvalidOperand>
+    <InvalidReturnStatement occurrences="2">
+      <code>$local</code>
+      <code>$local</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>string</code>
+      <code>string</code>
+    </InvalidReturnType>
     <MissingParamType occurrences="1">
       <code>$tree</code>
     </MissingParamType>
@@ -19797,9 +19822,16 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPHP/git/Tag.php">
-    <InvalidOperand occurrences="1">
+    <InvalidOperand occurrences="2">
+      <code>$epoch</code>
       <code>$regs[2]</code>
     </InvalidOperand>
+    <InvalidReturnStatement occurrences="1">
+      <code>$local</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
     <MissingPropertyType occurrences="10">
       <code>$comment</code>
       <code>$commit</code>
@@ -24387,6 +24419,9 @@
       <code>$peopleDn</code>
       <code>$peopleDn</code>
     </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>bool</code>
+    </InvalidNullableReturnType>
     <MissingClosureParamType occurrences="2">
       <code>$errno</code>
       <code>$errstr</code>
@@ -25132,6 +25167,10 @@
     <MissingReturnType occurrences="1">
       <code>mysymlink</code>
     </MissingReturnType>
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $ignore_file[$file]</code>
+      <code>! $ignore_file[$file]</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="plugins/mediawiki/include/Maintenance/CleanUnused.php">
     <MissingParamType occurrences="8">
@@ -26055,6 +26094,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/mfa/include/OTP/TOTPValidator.php">
+    <FalseOperand occurrences="1">
+      <code>$is_valid</code>
+    </FalseOperand>
     <MissingParamType occurrences="1">
       <code>$code</code>
     </MissingParamType>
@@ -26071,6 +26113,11 @@
       <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/oauth2_server/include/Grant/TokenRevocationController.php">
+    <InvalidReturnType occurrences="1">
+      <code>ResponseInterface</code>
+    </InvalidReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/AccountLinker/Controller.php">
     <MissingParamType occurrences="5">
@@ -26513,13 +26560,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/UserMapping/UserMappingManager.php">
-    <MissingParamType occurrences="6">
+    <MissingParamType occurrences="5">
       <code>$id</code>
       <code>$identifier</code>
       <code>$identifier</code>
       <code>$last_used</code>
       <code>$provider_id</code>
-      <code>$user_id</code>
     </MissingParamType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/UserMapping/UserMappingUsage.php">
@@ -28364,6 +28410,10 @@
       <code>checkIfPullRequestAlreadyExists</code>
       <code>generatePullRequest</code>
     </MissingReturnType>
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $repository_dest</code>
+      <code>! $repository_src</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestMerger.php">
     <MissingParamType occurrences="7">
@@ -29781,7 +29831,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/Frequencies/GraphDataBuilders/SampleGraph.php">
-    <MissingPropertyType occurrences="31">
+    <MissingPropertyType occurrences="33">
       <code>$advsrch</code>
       <code>$color</code>
       <code>$end</code>
@@ -29805,6 +29855,8 @@
       <code>$this-&gt;maxday</code>
       <code>$this-&gt;maxmonth</code>
       <code>$this-&gt;maxmonth</code>
+      <code>$this-&gt;maxyear</code>
+      <code>$this-&gt;maxyear</code>
       <code>$this-&gt;minday</code>
       <code>$this-&gt;minmonth</code>
       <code>$this-&gt;minmonth</code>
@@ -32231,6 +32283,9 @@
       <code>purgeArchivedRepositories</code>
       <code>restoreRepository</code>
     </MissingReturnType>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! $project instanceof Project</code>
+    </TypeDoesNotContainType>
     <UndefinedMethod occurrences="1">
       <code>updateCustomSVNAccessForRepository</code>
     </UndefinedMethod>
@@ -32636,6 +32691,12 @@
       <code>$id</code>
     </MissingParamType>
   </file>
+  <file src="plugins/testmanagement/include/TestManagement/REST/v1/ExecutionsResource.class.php">
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $execution_artifact</code>
+      <code>! $issue_artifact</code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="plugins/testmanagement/include/TestManagement/Router.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getService('plugin_testmanagement')</code>
@@ -32992,8 +33053,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimeUpdater.php">
-    <InvalidOperand occurrences="1">
+    <InvalidOperand occurrences="2">
       <code>$time_parts[0]</code>
+      <code>$time_parts[1]</code>
     </InvalidOperand>
     <MissingParamType occurrences="7">
       <code>$added_date</code>
@@ -33096,7 +33158,10 @@
     <PossiblyFalseOperand occurrences="1">
       <code>$sys_user</code>
     </PossiblyFalseOperand>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="4">
+      <code>! $tv3</code>
+      <code>! $tv3 || ! is_object($tv3)</code>
+      <code>! is_object($tv3)</code>
       <code>is_object($tv3)</code>
     </TypeDoesNotContainType>
   </file>
@@ -36016,9 +36081,8 @@
     <MissingPropertyType occurrences="1">
       <code>$MAX_LENGTH_FOR_DIFF</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>getContentAsText</code>
-      <code>getFormat</code>
       <code>getFullRESTRepresentation</code>
     </MissingReturnType>
     <PossiblyNullReference occurrences="2">
@@ -38283,7 +38347,7 @@
       <code>$use_it</code>
       <code>$user_can_read</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="25">
+    <MissingReturnType occurrences="24">
       <code>exportCurrentUserPermissionsToREST</code>
       <code>exportPermissionsToXML</code>
       <code>exportToXml</code>
@@ -38303,7 +38367,6 @@
       <code>getScope</code>
       <code>getTriggerManager</code>
       <code>getXMLId</code>
-      <code>isCSVImportable</code>
       <code>isUsedInTrigger</code>
       <code>setCacheSpecificProperties</code>
       <code>setCriteriaValueFromREST</code>
@@ -38706,7 +38769,7 @@
       <code>$criteria_value</code>
       <code>$has_errors</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="32">
+    <MissingReturnType occurrences="31">
       <code>addRequiredError</code>
       <code>buildReportCriteria</code>
       <code>canBeUsedAsReportColumn</code>
@@ -38731,7 +38794,6 @@
       <code>getQueryOrderby</code>
       <code>getRestFieldData</code>
       <code>getValueDao</code>
-      <code>isCSVImportable</code>
       <code>isEmpty</code>
       <code>postSaveNewChangeset</code>
       <code>saveCriteriaValueFromXML</code>
@@ -39065,7 +39127,7 @@
     <MissingPropertyType occurrences="1">
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="29">
+    <MissingReturnType occurrences="28">
       <code>accept</code>
       <code>buildFieldForSubmission</code>
       <code>canBeUsedAsReportCriterion</code>
@@ -39093,7 +39155,6 @@
       <code>isAnEmptyArray</code>
       <code>isAnEmptyValue</code>
       <code>isArtifactValueAutocomputed</code>
-      <code>isCSVImportable</code>
       <code>retrieveValueFromJson</code>
     </MissingReturnType>
     <ParamNameMismatch occurrences="4">
@@ -39627,10 +39688,9 @@
       <code>$this-&gt;field-&gt;id</code>
       <code>$this-&gt;field-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="18">
       <code>addValue</code>
       <code>exportToXml</code>
-      <code>extractDefaultValues</code>
       <code>fetchDecoratorsAsJavascript</code>
       <code>getBindValues</code>
       <code>getDao</code>
@@ -40279,10 +40339,9 @@
       <code>$artifact-&gt;id</code>
       <code>$artifact-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>accept</code>
       <code>getQueryGroupby</code>
-      <code>isCSVImportable</code>
     </MissingReturnType>
     <ParamNameMismatch occurrences="1">
       <code>$report</code>
@@ -40324,7 +40383,7 @@
       <code>$criteria-&gt;report</code>
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
+    <MissingReturnType occurrences="14">
       <code>accept</code>
       <code>exportCriteriaValueToXML</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
@@ -40338,7 +40397,6 @@
       <code>getPermissionsOnArtifactUsageRetriever</code>
       <code>getPermissionsValidator</code>
       <code>isAtLeastOneUGroupSelected</code>
-      <code>isCSVImportable</code>
       <code>isSelectBoxChecked</code>
     </MissingReturnType>
     <MoreSpecificImplementedParamType occurrences="1">
@@ -43061,8 +43119,10 @@
       <code>'\\x'</code>
       <code>'\\x0'</code>
     </InvalidOperand>
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="3">
       <code>$old_regex_encoding</code>
+      <code>function($ch) use($hex) { return '\\x'  + $hex($ch[0]); }</code>
+      <code>function($ch) use($hex) { return '\\x0' + $hex($ch[0]); }</code>
     </InvalidScalarArgument>
     <MissingClosureParamType occurrences="57">
       <code>$a</code>
@@ -43123,12 +43183,10 @@
       <code>$value_wrapper</code>
       <code>$value_wrappers</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="37">
+    <MissingClosureReturnType occurrences="35">
       <code>function ($expected, $found) {</code>
       <code>function ($s) {</code>
       <code>function (&amp;$expected){</code>
-      <code>function($ch) use($hex) { return '\\x'  + $hex($ch[0]); }</code>
-      <code>function($ch) use($hex) { return '\\x0' + $hex($ch[0]); }</code>
       <code>function($ch) { return $ch; }</code>
       <code>function($ch) { return strtoupper(dechex(ord($ch[0])));}</code>
       <code>function($chars) {</code>
@@ -46948,6 +47006,9 @@
     <InvalidOperand occurrences="1">
       <code>$index</code>
     </InvalidOperand>
+    <InvalidScalarArgument occurrences="1">
+      <code>$position</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$semantic_shortname</code>
     </MissingParamType>
@@ -53383,6 +53444,10 @@
       <code>$permission_manager</code>
       <code>$processor_dao</code>
     </PossiblyNullPropertyAssignmentValue>
+    <TypeDoesNotContainType occurrences="2">
+      <code>$hidden == '1'</code>
+      <code>$hidden == 'true'</code>
+    </TypeDoesNotContainType>
     <UndefinedMethod occurrences="1">
       <code>UGroupManager::instance()</code>
     </UndefinedMethod>
@@ -53758,6 +53823,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/ForgeAccess/AdminController.php">
+    <FalseOperand occurrences="3">
+      <code>$updated</code>
+      <code>$updated</code>
+      <code>$updated</code>
+    </FalseOperand>
     <MissingParamType occurrences="3">
       <code>$key</code>
       <code>$new_access_value</code>
@@ -58117,6 +58187,16 @@
       <code>$session_update_url</code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/User/Account/UpdateAccountInformationController.php">
+    <TypeDoesNotContainType occurrences="1">
+      <code>$something_changed</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/common/User/Account/UpdateEditionController.php">
+    <TypeDoesNotContainType occurrences="1">
+      <code>$success</code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="src/common/User/Account/UserAvatarSaver.php">
     <InvalidScalarArgument occurrences="1">
       <code>IMAGETYPE_PNG</code>
@@ -58247,24 +58327,6 @@
       <code>$password_field_label</code>
       <code>$user_id</code>
     </MissingPropertyType>
-  </file>
-  <file src="src/common/User/Admin/UserDetailsAccessPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="14">
-      <code>$this-&gt;auth_attempt_last_failure</code>
-      <code>$this-&gt;auth_attempt_last_failure_label</code>
-      <code>$this-&gt;auth_attempt_last_success</code>
-      <code>$this-&gt;auth_attempt_last_success_label</code>
-      <code>$this-&gt;auth_attempt_nb_failure</code>
-      <code>$this-&gt;auth_attempt_nb_failure_label</code>
-      <code>$this-&gt;auth_attempt_prev_success</code>
-      <code>$this-&gt;auth_attempt_prev_success_label</code>
-      <code>$this-&gt;last_access_date</code>
-      <code>$this-&gt;last_access_date_label</code>
-      <code>$this-&gt;last_pwd_update</code>
-      <code>$this-&gt;last_pwd_update_label</code>
-      <code>$this-&gt;member_since</code>
-      <code>$this-&gt;member_since_label</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/User/Admin/UserDetailsFormatter.php">
     <MissingReturnType occurrences="4">
@@ -58950,11 +59012,10 @@
       <code>$user_id</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="17">
       <code>checkUserCanAccessToTheHistory</code>
       <code>checkUserCanSeeOtherUser</code>
       <code>deletePreferences</code>
-      <code>deleteUserPreference</code>
       <code>getUserById</code>
       <code>getUserFromExactSearch</code>
       <code>getUserPreference</code>
@@ -58969,7 +59030,6 @@
       <code>putHistory</code>
       <code>sendAllowHeaders</code>
       <code>sendAllowHeadersForHistory</code>
-      <code>setUserPreference</code>
     </MissingReturnType>
     <PossiblyNullReference occurrences="3">
       <code>delPreference</code>
@@ -63338,6 +63398,9 @@
     </MissingParamType>
   </file>
   <file src="src/common/docmanv1/XMLExport.class.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>'no'</code>
+    </InvalidPropertyAssignmentValue>
     <MissingParamType occurrences="2">
       <code>$admin_name</code>
       <code>$archive_name</code>
@@ -66962,7 +67025,9 @@
       <code>getTrackersv3ForProject</code>
       <code>search</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $ath</code>
+      <code>! is_object($ath)</code>
       <code>is_object($ath)</code>
     </TypeDoesNotContainType>
   </file>
@@ -69470,7 +69535,9 @@
       <code>getArtifactsFromReport</code>
       <code>setError</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $report</code>
+      <code>! is_object($report)</code>
       <code>is_object($report)</code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
@@ -69965,6 +70032,9 @@
     <NullableReturnStatement occurrences="1">
       <code>isset($this-&gt;USAGE_BY_ID[$field_id]) ? $this-&gt;USAGE_BY_ID[$field_id] : null</code>
     </NullableReturnStatement>
+    <ParadoxicalCondition occurrences="1">
+      <code>empty($ugroup_mapping)</code>
+    </ParadoxicalCondition>
     <TooManyArguments occurrences="1">
       <code>new ArtifactField($this-&gt;ArtifactType-&gt;getID(), "")</code>
     </TooManyArguments>
@@ -70196,6 +70266,10 @@
     <TooManyArguments occurrences="1">
       <code>db_insertid($res, 'artifact_file', 'id')</code>
     </TooManyArguments>
+    <TypeDoesNotContainType occurrences="2">
+      <code>! $filename || ! $filetype</code>
+      <code>! $filetype</code>
+    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
       <code>id</code>
     </UndefinedDocblockClass>
@@ -70408,7 +70482,11 @@
       <code>$vfl</code>
       <code>$vfl</code>
     </PossiblyUndefinedVariable>
-    <TypeDoesNotContainType occurrences="2">
+    <TypeDoesNotContainType occurrences="6">
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
       <code>is_object($ah)</code>
       <code>is_object($ah)</code>
     </TypeDoesNotContainType>
@@ -70671,6 +70749,9 @@
       <code>db_insertid($res, 'artifact_report', 'report_id')</code>
       <code>fetchData</code>
     </TooManyArguments>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! isset($mdir)</code>
+    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
       <code>id</code>
     </UndefinedDocblockClass>
@@ -71284,6 +71365,10 @@
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
+    <InvalidOperand occurrences="2">
+      <code>$ok</code>
+      <code>$ok</code>
+    </InvalidOperand>
     <InvalidParamDefault occurrences="1">
       <code>int</code>
     </InvalidParamDefault>
@@ -71459,7 +71544,9 @@
       <code>cutExportQuery</code>
       <code>db_error($res)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $afh</code>
+      <code>! is_object($afh)</code>
       <code>is_object($afh)</code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="3">
@@ -72121,6 +72208,9 @@
       <code>$values</code>
       <code>$values</code>
     </PossiblyUndefinedVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! isset($mdir)</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="src/common/tracker/HTML/ArtifactRuleValueJavascript.class.php">
     <MissingParamType occurrences="1">
@@ -72503,8 +72593,8 @@
       <code>retrieveFullHierarchy</code>
     </MissingReturnType>
     <TypeDoesNotContainType occurrences="5">
-      <code>! is_array($last_parent) &amp;&amp; $retrieve_only_direct_child === false</code>
-      <code>! is_array($last_parent) &amp;&amp; $retrieve_only_direct_child === true</code>
+      <code>! is_array($last_parent)</code>
+      <code>! is_array($last_parent)</code>
       <code>is_array($last_parent)</code>
       <code>is_array($last_parent)</code>
       <code>is_array($last_parent)</code>
@@ -74378,6 +74468,9 @@
       <code>$arr_text</code>
       <code>$rev_text</code>
     </PossiblyUndefinedVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! isset($mdir)</code>
+    </TypeDoesNotContainType>
     <UndefinedVariable occurrences="4">
       <code>$offset</code>
       <code>$pref_stg</code>
@@ -75353,7 +75446,9 @@
       <code>$attrs</code>
       <code>$attrs</code>
     </InvalidIterator>
-    <InvalidOperand occurrences="3">
+    <InvalidOperand occurrences="5">
+      <code>$m</code>
+      <code>$m</code>
       <code>$parser-&gt;getDebug()</code>
       <code>$regs[4]</code>
       <code>$regs[4]</code>
@@ -75746,8 +75841,10 @@
       <code>$value</code>
       <code>$value</code>
     </PossiblyInvalidCast>
-    <PossiblyInvalidOperand occurrences="1">
+    <PossiblyInvalidOperand occurrences="3">
       <code>$content_length</code>
+      <code>$regs[5]</code>
+      <code>$regs[5]</code>
     </PossiblyInvalidOperand>
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>substr($v, 6)</code>
@@ -75853,8 +75950,7 @@
     </UndefinedVariable>
   </file>
   <file src="src/www/include/pre.php">
-    <InvalidScalarArgument occurrences="3">
-      <code>$_REQUEST</code>
+    <InvalidScalarArgument occurrences="2">
       <code>-1</code>
       <code>0</code>
     </InvalidScalarArgument>
@@ -75904,6 +76000,9 @@
       <code>session_redirect</code>
       <code>session_require</code>
     </MissingReturnType>
+    <ParadoxicalCondition occurrences="1">
+      <code>! $req['group']</code>
+    </ParadoxicalCondition>
   </file>
   <file src="src/www/include/timezones.php">
     <MissingParamType occurrences="1">
@@ -77061,7 +77160,9 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $at</code>
+      <code>! is_object($at)</code>
       <code>is_object($at)</code>
     </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="1">
@@ -77081,7 +77182,11 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="2">
+    <TypeDoesNotContainType occurrences="6">
+      <code>! $at</code>
+      <code>! $ath</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($ath)</code>
       <code>is_object($at)</code>
       <code>is_object($ath)</code>
     </TypeDoesNotContainType>
@@ -77105,7 +77210,9 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="1">
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $at</code>
+      <code>! is_object($at)</code>
       <code>is_object($at)</code>
     </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="1">
@@ -78103,7 +78210,167 @@
     <TooManyArguments occurrences="1">
       <code>updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="81">
+    <TypeDoesNotContainType occurrences="241">
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $a</code>
+      <code>! $af</code>
+      <code>! $af</code>
+      <code>! $af</code>
+      <code>! $af</code>
+      <code>! $ar</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_field_fact</code>
+      <code>! $art_fieldset_fact</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $at</code>
+      <code>! $atf</code>
+      <code>! $atf</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! $report_fact</code>
+      <code>! $report_fact</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($a)</code>
+      <code>! is_object($af)</code>
+      <code>! is_object($af)</code>
+      <code>! is_object($af)</code>
+      <code>! is_object($af)</code>
+      <code>! is_object($ar)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_field_fact)</code>
+      <code>! is_object($art_fieldset_fact)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($at)</code>
+      <code>! is_object($atf)</code>
+      <code>! is_object($atf)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($report_fact)</code>
+      <code>! is_object($report_fact)</code>
       <code>is_object($a)</code>
       <code>is_object($a)</code>
       <code>is_object($a)</code>
@@ -78657,6 +78924,9 @@
       <code>$path</code>
       <code>$viewtype_url</code>
     </PossiblyUndefinedVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! isset($mdir)</code>
+    </TypeDoesNotContainType>
     <UndefinedVariable occurrences="1">
       <code>$pref_stg</code>
     </UndefinedVariable>
@@ -78848,7 +79118,13 @@
     <TooManyArguments occurrences="1">
       <code>getText</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="4">
+    <TypeDoesNotContainType occurrences="10">
+      <code>! $ach</code>
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! is_object($ach)</code>
+      <code>! is_object($ath)</code>
+      <code>! is_object($ath)</code>
       <code>$arh</code>
       <code>is_object($ach)</code>
       <code>is_object($ath)</code>
@@ -79167,7 +79443,45 @@
       <code>$data</code>
       <code>$params</code>
     </PossiblyUndefinedGlobalVariable>
-    <TypeDoesNotContainType occurrences="19">
+    <TypeDoesNotContainType occurrences="57">
+      <code>! $afh</code>
+      <code>! $afh</code>
+      <code>! $afh</code>
+      <code>! $afh</code>
+      <code>! $afh</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ah</code>
+      <code>! $ath</code>
+      <code>! is_object($afh)</code>
+      <code>! is_object($afh)</code>
+      <code>! is_object($afh)</code>
+      <code>! is_object($afh)</code>
+      <code>! is_object($afh)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ah)</code>
+      <code>! is_object($ath)</code>
       <code>is_object($afh)</code>
       <code>is_object($afh)</code>
       <code>is_object($afh)</code>
