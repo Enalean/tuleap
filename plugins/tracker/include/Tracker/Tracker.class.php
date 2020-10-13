@@ -3577,10 +3577,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function getInitialChangesetValidator(): Tracker_Artifact_Changeset_InitialChangesetFieldsValidator
     {
-        return new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator(
-            $this->getFormElementFactory(),
-            $this->getArtifactLinkValidator()
-        );
+        return Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build();
     }
 
     private function getArtifactLinkValidator(): ArtifactLinkValidator

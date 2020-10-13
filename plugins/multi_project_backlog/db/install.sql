@@ -22,3 +22,10 @@ CREATE TABLE plugin_multi_project_backlog_contributor_projects(
     contributor_project_id INT(11) NOT NULL,
     PRIMARY KEY (aggregator_project_id, contributor_project_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_multi_project_backlog_pending_mirrors(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    aggregator_artifact_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    changeset_id INT(11) NOT NULL
+) ENGINE=InnoDB;

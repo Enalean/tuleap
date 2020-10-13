@@ -39,12 +39,13 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
 
     protected function canValidateField(
         Tracker_Artifact $artifact,
-        Tracker_FormElement_Field $field
-    ) {
+        Tracker_FormElement_Field $field,
+        PFUser $user
+    ): bool {
         $last_changeset = $artifact->getLastChangeset();
 
         //we do not validate if we are in submission mode, the field is required and we can't submit the field
-        return ! (! $last_changeset && $field->isRequired() && ! $field->userCanSubmit());
+        return ! (! $last_changeset && $field->isRequired() && ! $field->userCanSubmit($user));
     }
 
     protected function validateField(
@@ -67,6 +68,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
             && $field->validateFieldWithPermissionsAndRequiredStatus(
                 $artifact,
                 $submitted_value,
+                $user,
                 $last_changeset_value,
                 $is_submission
             );

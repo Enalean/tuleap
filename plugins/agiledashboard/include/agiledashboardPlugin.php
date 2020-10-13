@@ -1342,15 +1342,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
         $realtime_artifact_message_builder = new KanbanArtifactMessageBuilder(
             $kanban_item_dao,
-            new Tracker_Artifact_ChangesetFactory(
-                new Tracker_Artifact_ChangesetDao(),
-                new Tracker_Artifact_Changeset_ValueDao(),
-                new Tracker_Artifact_Changeset_CommentDao(),
-                new Tracker_Artifact_ChangesetJsonFormatter(
-                    TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')
-                ),
-                Tracker_FormElementFactory::instance()
-            )
+            Tracker_Artifact_ChangesetFactoryBuilder::build()
         );
         $backend_logger                    = BackendLogger::getDefaultLogger('realtime_syslog');
         $realtime_artifact_message_sender  = new RealTimeArtifactMessageSender($node_js_client, $permissions_serializer);

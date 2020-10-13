@@ -1030,19 +1030,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Validate a field and check perms and if it has a value if it is required
      *
-     * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
-     * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      * @param bool $is_submission true if artifact submission, false if artifact update
      *
      * @return bool true on success or false on failure
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null)
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, PFUser $user, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, ?bool $is_submission = null)
     {
         $is_valid = true;
-        $hasPermission = $this->userCanUpdate();
+        $hasPermission = $this->userCanUpdate($user);
         if ($is_submission) {
-            $hasPermission = $this->userCanSubmit();
+            $hasPermission = $this->userCanSubmit($user);
         }
         if ($last_changeset_value === null && ((! is_array($submitted_value) && $submitted_value === null) || (is_array($submitted_value) && empty($submitted_value))) && $hasPermission && $this->isRequired()) {
             $is_valid = false;

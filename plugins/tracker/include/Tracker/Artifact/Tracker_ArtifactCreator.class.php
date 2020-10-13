@@ -82,7 +82,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     public function createBare(Tracker $tracker, PFUser $user, $submitted_on)
     {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
-        $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
+        $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on);
         if (! $success) {
             return false;
         }
@@ -204,7 +204,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
             return false;
         }
 
-        if (! $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0)) {
+        if (! $this->insertArtifact($tracker, $user, $artifact, $submitted_on)) {
             return false;
         }
 
@@ -248,8 +248,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
         Tracker $tracker,
         PFUser $user,
         Tracker_Artifact $artifact,
-        $submitted_on,
-        $use_artifact_permissions
+        $submitted_on
     ) {
         $use_artifact_permissions = 0;
         $id = $this->artifact_dao->create($tracker->id, $user->getId(), $submitted_on, $use_artifact_permissions);

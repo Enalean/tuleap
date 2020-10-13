@@ -211,7 +211,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 
@@ -228,7 +228,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 
@@ -245,7 +245,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 
@@ -261,7 +261,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertFalse(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 
@@ -277,7 +277,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertFalse(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 
@@ -292,7 +292,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
         ];
 
         $this->assertTrue(
-            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value)
+            $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, Mockery::mock(\PFUser::class))
         );
     }
 

@@ -1064,9 +1064,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
+        PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
-        $is_submission = null
-    ) {
+        ?bool $is_submission = null
+    ): bool {
         $hasPermission = $this->userCanUpdate();
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit();

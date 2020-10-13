@@ -25,8 +25,9 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
 {
     protected function canValidateField(
         Tracker_Artifact $artifact,
-        Tracker_FormElement_Field $field
-    ) {
+        Tracker_FormElement_Field $field,
+        PFUser $user
+    ): bool {
         return true;
     }
 

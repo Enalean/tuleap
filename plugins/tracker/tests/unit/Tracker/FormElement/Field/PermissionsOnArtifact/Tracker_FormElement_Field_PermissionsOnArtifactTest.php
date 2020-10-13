@@ -28,7 +28,7 @@ use Tracker_Artifact;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\GlobalResponseMock;
 
-class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
+class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
@@ -68,7 +68,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
             'u_groups'                 => [ForgeAccess::ANONYMOUS]
         ];
         $this->assertTrue(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 
@@ -79,7 +83,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
             'use_artifact_permissions' => false
         ];
         $this->assertTrue(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 
@@ -88,7 +96,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
         $this->field->shouldReceive('isRequired')->andReturn(false);
         $submitted_values = [];
         $this->assertTrue(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 
@@ -101,7 +113,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
         ];
 
         $this->assertFalse(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 
@@ -110,7 +126,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
         $this->field->shouldReceive('isRequired')->andReturn(true);
         $submitted_values = [];
         $this->assertFalse(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 
@@ -122,7 +142,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
             'u_groups'                 => []
         ];
         $this->assertFalse(
-            $this->field->validateFieldWithPermissionsAndRequiredStatus($this->artifact, $submitted_values)
+            $this->field->validateFieldWithPermissionsAndRequiredStatus(
+                $this->artifact,
+                $submitted_values,
+                Mockery::mock(\PFUser::class)
+            )
         );
     }
 }

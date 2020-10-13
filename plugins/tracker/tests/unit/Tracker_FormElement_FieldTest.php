@@ -132,6 +132,7 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
             $result = $field->validateFieldWithPermissionsAndRequiredStatus(
                 $artifact_update,
                 $submitted_value,
+                Mockery::mock(PFUser::class),
                 $last_changeset_value
             );
             $this->assertEquals($is_valid, $result);

@@ -262,14 +262,15 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      /**
      * Validate a field
      *
-     * @param Tracker_Artifact                $artifact             The artifact to check
-     * @param mixed                           $submitted_value      The submitted value
-     * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
-     *
-     * @return bool true on success or false on failure
+     * @param mixed $submitted_value      The submitted value
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null)
-    {
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Tracker_Artifact $artifact,
+        $submitted_value,
+        PFUser $user,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?bool $is_submission = null
+    ): bool {
         $is_valid = true;
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;

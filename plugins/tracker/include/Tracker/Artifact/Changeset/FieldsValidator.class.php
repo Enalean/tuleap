@@ -58,8 +58,8 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         $is_valid    = true;
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
         foreach ($used_fields as $field) {
-            $submitted_value = $this->getSubmittedValue($field, $fields_data);
-            if ($this->canValidateField($artifact, $field)) {
+            if ($this->canValidateField($artifact, $field, $user)) {
+                $submitted_value = $this->getSubmittedValue($field, $fields_data);
                 $is_one_field_valid = $this->validateOneField(
                     $artifact,
                     $user,
@@ -99,13 +99,11 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         return $this->validateField($artifact, $field, $user, $submitted_value);
     }
 
-    /**
-     * @return bool
-     */
     abstract protected function canValidateField(
         Tracker_Artifact $artifact,
-        Tracker_FormElement_Field $field
-    );
+        Tracker_FormElement_Field $field,
+        PFUser $user
+    ): bool;
 
     /**
      * @return bool
