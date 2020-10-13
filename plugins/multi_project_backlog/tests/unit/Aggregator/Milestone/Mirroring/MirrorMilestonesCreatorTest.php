@@ -33,6 +33,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\TimeframeFields;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 
 final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
@@ -56,7 +57,7 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
      */
     private $status_mapper;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_ArtifactCreator
+     * @var M\LegacyMockInterface|M\MockInterface|TrackerArtifactCreator
      */
     private $artifact_creator;
 
@@ -64,7 +65,7 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $this->transaction_executor   = new DBTransactionExecutorPassthrough();
         $this->target_fields_gatherer = M::mock(SynchronizedFieldsGatherer::class);
-        $this->artifact_creator       = M::mock(\Tracker_ArtifactCreator::class);
+        $this->artifact_creator       = M::mock(TrackerArtifactCreator::class);
         $this->status_mapper          = M::mock(StatusValueMapper::class);
         $this->mirrors_creator        = new MirrorMilestonesCreator(
             $this->transaction_executor,
@@ -95,11 +96,11 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
-            ->andReturnTrue();
+            ->andReturn(\Mockery::mock(\Tracker_Artifact::class));
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($second_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
-            ->andReturnTrue();
+            ->andReturn(\Mockery::mock(\Tracker_Artifact::class));
 
         $this->mirrors_creator->createMirrors($copied_values, $trackers, $current_user);
     }
@@ -116,7 +117,7 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
         $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
             ->andReturn($this->buildMappedValue(5000));
-        $this->artifact_creator->shouldReceive('create')->andReturnFalse();
+        $this->artifact_creator->shouldReceive('create')->andReturnNull();
 
         $this->expectException(MirrorMilestoneCreationException::class);
         $this->mirrors_creator->createMirrors($copied_values, $trackers, $current_user);

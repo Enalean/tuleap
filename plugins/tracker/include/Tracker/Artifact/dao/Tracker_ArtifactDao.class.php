@@ -480,7 +480,7 @@ class Tracker_ArtifactDao extends DataAccessObject
                 (id, tracker_id, per_tracker_artifact_id, submitted_by, submitted_on, use_artifact_permissions)
                 VALUES ($artifact_id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
             if ($this->update($sql)) {
-                return $artifact_id;
+                return (int) $artifact_id;
             }
         }
 

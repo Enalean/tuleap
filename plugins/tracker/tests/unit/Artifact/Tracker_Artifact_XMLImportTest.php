@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -49,7 +50,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
     /** @var Tracker_Artifact_XMLImport */
     protected $importer;
 
-    /** @var Tracker_ArtifactCreator */
+    /** @var TrackerArtifactCreator */
     protected $artifact_creator;
 
     /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
@@ -101,7 +102,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->tracker_xml_config = Mockery::mock(\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
 
-        $this->artifact_creator      = \Mockery::spy(\Tracker_ArtifactCreator::class);
+        $this->artifact_creator      = \Mockery::spy(TrackerArtifactCreator::class);
         $this->new_changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator::class);
 
         $this->summary_field_id = 50;
@@ -2205,7 +2206,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
     {
         $user_finder           = Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
         $new_changeset_creator = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
-        $artifact_creator      = Mockery::mock(Tracker_ArtifactCreator::class);
+        $artifact_creator      = Mockery::mock(TrackerArtifactCreator::class);
 
         $importer = new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),

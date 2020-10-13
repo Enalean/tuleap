@@ -29,8 +29,6 @@ use Psr\Log\LoggerInterface;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
-use Tracker_ArtifactCreator;
-use Tracker_ArtifactFactory;
 use Tracker_Semantic_DescriptionFactory;
 use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleFactory;
@@ -44,8 +42,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGather
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use UserManager;
 use XMLImportHelper;
 
@@ -140,22 +137,13 @@ class CreateMirrorsTask
         $planning_factory = \PlanningFactory::build();
 
         $form_element_factory = \Tracker_FormElementFactory::instance();
-        $artifact_factory     = Tracker_ArtifactFactory::instance();
-
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $visit_recorder       = new VisitRecorder(
-            new RecentlyVisitedDao(),
-            $transaction_executor
-        );
         $logger               = BackendLogger::getDefaultLogger("multi_project_backlog_syslog");
 
-        $artifact_creator = new Tracker_ArtifactCreator(
-            $artifact_factory,
-            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+        $artifact_creator = TrackerArtifactCreator::build(
             Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
-            $visit_recorder,
-            $logger,
-            $transaction_executor
+            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+            $logger
         );
 
         $synchronized_fields_gatherer = new \Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldsGatherer(

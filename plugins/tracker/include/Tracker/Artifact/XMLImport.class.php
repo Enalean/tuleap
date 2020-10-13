@@ -21,6 +21,7 @@
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
@@ -38,7 +39,7 @@ class Tracker_Artifact_XMLImport
     /** @var XML_RNGValidator */
     private $rng_validator;
 
-    /** @var Tracker_ArtifactCreator */
+    /** @var TrackerArtifactCreator */
     private $artifact_creator;
 
     /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
@@ -91,7 +92,7 @@ class Tracker_Artifact_XMLImport
 
     public function __construct(
         XML_RNGValidator $rng_validator,
-        Tracker_ArtifactCreator $artifact_creator,
+        TrackerArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
@@ -389,7 +390,7 @@ class Tracker_Artifact_XMLImport
             $this->getSubmittedOn($first_changeset)
         );
 
-        if ($artifact === false) {
+        if (! $artifact) {
             return null;
         }
 
