@@ -28,5 +28,8 @@ msgstr "Aucune bannière définie"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "The banner has been successfully modified"
+msgstr "La bannière a été modifiée avec succès"
+
 msgid "Your message will be condensed to one line"
 msgstr "Votre message sera condensé en une ligne"

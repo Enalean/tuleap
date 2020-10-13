@@ -67,3 +67,25 @@ exports[`App displays something when no banner is set 1`] = `
   </div>
 </div>
 `;
+
+exports[`App displays success message when the banner has been successfully modified 1`] = `
+<div>
+  <div
+    class="tlp-alert-success"
+    data-current-language="en_US"
+    data-msgid="
+        The banner has been successfully modified
+    "
+  >
+    
+        The banner has been successfully modified
+    
+  </div>
+   
+  <div>
+    <banner-presenter-stub
+      message=""
+    />
+  </div>
+</div>
+`;

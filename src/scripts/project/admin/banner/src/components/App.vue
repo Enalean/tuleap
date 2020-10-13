@@ -27,6 +27,9 @@
         >
             An error occurred: %{ error_message }
         </div>
+        <div v-else-if="has_banner_been_modified" class="tlp-alert-success" v-translate>
+            The banner has been successfully modified
+        </div>
         <div>
             <banner-presenter
                 v-bind:message="message"
@@ -45,6 +48,8 @@ import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForProject, saveBannerForProject } from "../api/rest-querier";
 import { BannerState } from "../type";
 
+const LOCATION_HASH_SUCCESS = "#banner-change-success";
+
 @Component({
     components: {
         BannerPresenter,
@@ -61,7 +66,15 @@ export default class App extends Vue {
     readonly location!: Location;
 
     error_message: string | null = null;
+    has_banner_been_modified = false;
     banner_presenter_is_loading = false;
+
+    public mounted(): void {
+        if (this.location.hash === LOCATION_HASH_SUCCESS) {
+            this.location.hash = "";
+            this.has_banner_been_modified = true;
+        }
+    }
 
     public saveBanner(bannerState: BannerState): void {
         this.banner_presenter_is_loading = true;
@@ -77,7 +90,7 @@ export default class App extends Vue {
     private saveBannerMessage(message: string): void {
         saveBannerForProject(this.project_id, message)
             .then(() => {
-                this.location.reload();
+                this.refreshOnSuccessChange();
             })
             .catch((error) => {
                 this.error_message = error.message;
@@ -88,7 +101,7 @@ export default class App extends Vue {
     private deleteBanner(): void {
         deleteBannerForProject(this.project_id)
             .then(() => {
-                this.location.reload();
+                this.refreshOnSuccessChange();
             })
             .catch((error) => {
                 this.error_message = error.message;
@@ -98,6 +111,11 @@ export default class App extends Vue {
 
     get shouldDisplayErrorBanner(): boolean {
         return this.error_message !== null;
+    }
+
+    private refreshOnSuccessChange(): void {
+        this.location.hash = LOCATION_HASH_SUCCESS;
+        this.location.reload();
     }
 }
 </script>

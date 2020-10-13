@@ -52,6 +52,22 @@ describe("App", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
+    it("displays success message when the banner has been successfully modified", async () => {
+        location.hash = "#banner-change-success";
+        const wrapper = shallowMount(App, {
+            localVue: await createProjectAdminBannerLocalVue(),
+            propsData: {
+                message: "",
+                project_id: 108,
+                location: window.location,
+            },
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.element).toMatchSnapshot();
+        location.hash = "";
+    });
+
     it("Should be able to send the deletion request", async () => {
         const location = { ...window.location, reload: jest.fn() };
         const wrapper = shallowMount(App, {
@@ -77,6 +93,7 @@ describe("App", () => {
 
         expect(delete_banner).toHaveBeenCalledTimes(1);
         expect(location.reload).toHaveBeenCalledTimes(1);
+        expect(location.hash).toBe("#banner-change-success");
     });
 
     it("Should display an error if banner deletion fails", async () => {
@@ -129,6 +146,7 @@ describe("App", () => {
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
         expect(location.reload).toHaveBeenCalledTimes(1);
+        expect(location.hash).toBe("#banner-change-success");
     });
 
     it("Should display an error if banner update fails", async () => {
