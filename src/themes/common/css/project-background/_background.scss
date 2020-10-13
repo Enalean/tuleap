@@ -157,6 +157,15 @@ $definitions: (
         color: rgb(32, 42, 73),
         size: 100%
     ),
+    orange-tulip:
+    (
+        // Photo by 𝓴𝓘𝓡𝓚 𝕝𝔸𝕀
+        // https://unsplash.com/@laimannung?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText
+        image-2400px: url(#{$project-background-images-path}/orange-tulip-2400px.webp) no-repeat,
+        image-1680px: url(#{$project-background-images-path}/orange-tulip-1680px.webp) no-repeat,
+        color: rgb(50, 38, 21),
+        size: 100%
+    ),
     purple-building:
     (
         // Photo by David Becker

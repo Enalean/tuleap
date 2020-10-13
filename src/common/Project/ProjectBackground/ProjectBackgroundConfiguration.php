@@ -62,7 +62,7 @@ class ProjectBackgroundConfiguration
             return null;
         }
 
-        if (! in_array($background, ProjectBackgroundName::ALLOWED, true)) {
+        if (! ProjectBackgroundSelection::isAllowed($background)) {
             return null;
         }
 
