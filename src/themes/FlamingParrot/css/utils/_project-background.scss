@@ -57,7 +57,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
             color: $sidebar-background;
         }
 
-        &.fa-unlock,
+        &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             background: rgba(0, 0, 0, .3);
             color: $white;
@@ -68,7 +68,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         background: rgba(0, 0, 0, .3);
         color: $white;
 
-        > .fa {
+        > .fas {
             background: none;
             color: $white;
         }

@@ -26,7 +26,7 @@
             ref="project_link"
             data-test="project-link"
         >
-            <i class="fa fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
+            <i class="fas fa-fw switch-to-projects-project-icon" v-bind:class="project_icon"></i>
             <span class="switch-to-projects-project-label">{{ project.project_name }}</span>
         </a>
         <a

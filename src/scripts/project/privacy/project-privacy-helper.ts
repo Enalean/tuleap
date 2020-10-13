@@ -30,7 +30,7 @@ export interface ProjectPrivacy {
 export function getProjectPrivacyIcon(privacy: ProjectPrivacy): string {
     if (privacy.are_restricted_users_allowed) {
         if (privacy.project_is_public) {
-            return "fa-unlock";
+            return "fa-lock-open";
         }
         if (privacy.project_is_public_incl_restricted) {
             return "fa-tlp-unlock-plus-r";
@@ -43,7 +43,7 @@ export function getProjectPrivacyIcon(privacy: ProjectPrivacy): string {
     }
 
     if (privacy.project_is_public) {
-        return "fa-unlock";
+        return "fa-lock-open";
     }
 
     return "fa-lock";
