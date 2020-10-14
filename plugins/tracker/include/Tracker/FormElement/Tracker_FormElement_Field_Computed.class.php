@@ -836,10 +836,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value . ' (' .
         dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
-        $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
+        $html .= '<div class="input-append add-field auto-computed-for-modal-append" data-field-id="' . $this->getId() . '">';
+        $html .= '<div>';
         $html .= $this->fetchArtifactValue($artifact, $changeset, $submitted_values);
         $html .= $this->fetchBackToAutocomputedButton(false);
+        $html .= '</div>';
+        $html .= '<div>';
         $html .= $this->fetchComputedValueWithLabel($computed_value);
+        $html .= '</div>';
 
         $html .= '</div></div>';
 

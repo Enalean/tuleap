@@ -2895,6 +2895,11 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
         display: block;
     }
 
+    .auto-computed-for-modal-append {
+        display: flex;
+        flex-direction: column;
+    }
+
     .tracker-formelement-edit-for-modal {
         font-size: .95em;
     }
