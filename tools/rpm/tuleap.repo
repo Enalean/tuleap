@@ -1,0 +1,6 @@
+[Tuleap]
+name=Tuleap
+baseurl=https://ci.tuleap.net/yum/tuleap/rhel/7/dev/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
