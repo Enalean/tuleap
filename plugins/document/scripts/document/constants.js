@@ -32,8 +32,6 @@ export const ICON_FOLDER_ICON = "fa-folder-open-o document-folder-icon";
 
 export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;
 
-export const ITEM_TITLE_SUBSTRING_LENGTH = 15;
-
 export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";
 
 export const APPROVAL_NOT_YET = "Not yet";
