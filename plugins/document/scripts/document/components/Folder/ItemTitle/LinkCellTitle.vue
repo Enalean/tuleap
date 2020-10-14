@@ -24,7 +24,7 @@
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link">
-            {{ title }}
+            {{ item.title }}
         </a>
     </div>
 </template>
@@ -33,7 +33,6 @@
 import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_LINK } from "../../../constants.js";
-import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
     name: "LinkCellTitle",
@@ -48,9 +47,6 @@ export default {
         },
         icon() {
             return ICON_LINK;
-        },
-        title() {
-            return getTitleWithElipsisIfNeeded(this.item);
         },
     },
 };
