@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,6 +40,21 @@ class TrackerWorkflowsTest extends TrackerBase
         $status_field_index = array_search('status_id', array_column($tracker['fields'], 'name'));
 
         return (int) $tracker['fields'][$status_field_index]['field_id'];
+    }
+
+    public function testGetIsUsedFieldIsString(): void
+    {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('trackers/' . $this->tracker_workflow_transitions_tracker_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tracker = $response->json();
+
+        $this->assertIsString($tracker['workflow']['is_used']);
+        $this->assertEquals("1", $tracker['workflow']['is_used']);
     }
 
     /**

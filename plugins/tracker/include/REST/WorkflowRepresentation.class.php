@@ -35,7 +35,7 @@ class WorkflowRepresentation
     public $field_id;
 
     /**
-     * @var bool
+     * @var string
      */
     public $is_used;
 
@@ -62,7 +62,7 @@ class WorkflowRepresentation
     public function __construct(Workflow $workflow, WorkflowRulesRepresentation $rules, array $transitions)
     {
         $this->field_id    = JsonCast::toInt($workflow->getFieldId());
-        $this->is_used     = $workflow->is_used;
+        $this->is_used     = (string) $workflow->is_used;
         $this->is_legacy   = JsonCast::toBoolean($workflow->isLegacy());
         $this->is_advanced = JsonCast::toBoolean($workflow->isAdvanced());
         $this->rules       = $rules;
