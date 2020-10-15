@@ -28,7 +28,6 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_Value_FileDao;
 use Tuleap\ForgeConfigSandbox;
 
 class ChangesetValueFileSaverTest extends TestCase
@@ -39,7 +38,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testReturnsTrueWhenThereIsNothingToSaveForANewArtifact(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -72,7 +71,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testItDuplicatesPreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -119,7 +118,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testItReturnsFalseIfItCannotDuplicatePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -166,7 +165,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testItDeletePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -216,7 +215,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testSavesNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -278,7 +277,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testReturnsFalseIfItCannotSaveNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
@@ -340,7 +339,7 @@ class ChangesetValueFileSaverTest extends TestCase
     public function testIgnoresFilesThatHaveNotBeenCreated(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
-        $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
+        $dao                = \Mockery::mock(FileFieldValueDao::class);
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);

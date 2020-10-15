@@ -34,6 +34,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -586,20 +588,20 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * @return Tracker_FormElement_Field_BurndownDao The dao
+     * @return BurndownFieldDao The dao
      */
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_BurndownDao();
+        return new BurndownFieldDao();
     }
     /**
      * Return the Field_Date_Dao
      *
-     * @return Tracker_FormElement_Field_ComputedDao The dao
+     * @return ComputedFieldDao The dao
      */
     protected function getComputedDao()
     {
-        return new Tracker_FormElement_Field_ComputedDao();
+        return new ComputedFieldDao();
     }
 
     public function canBeUsedAsReportCriterion()

@@ -24,7 +24,7 @@ use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -53,7 +53,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
      */
     private $burndown_data_builder_for_d3;
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_cache;
     /**
@@ -89,7 +89,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $cache_checker = Mockery::mock(BurndownCacheGenerationChecker::class);
         $cache_checker->shouldReceive('isBurndownUnderCalculationBasedOnServerTimezone')->andReturn(false);
 
-        $this->computed_cache = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $this->computed_cache = Mockery::mock(ComputedFieldDao::class);
         $this->common_data_builder = new BurndownCommonDataBuilder(
             $logger,
             $field_retriever,

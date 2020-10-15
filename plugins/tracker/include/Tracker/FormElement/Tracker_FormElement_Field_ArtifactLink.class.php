@@ -35,6 +35,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -1219,11 +1220,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * @return Tracker_FormElement_Field_Value_ArtifactLinkDao
+     * @return ArtifactLinkFieldValueDao
      */
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return new ArtifactLinkFieldValueDao();
     }
 
     /**

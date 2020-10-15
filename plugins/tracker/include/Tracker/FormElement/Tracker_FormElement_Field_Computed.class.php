@@ -21,6 +21,8 @@
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
@@ -290,7 +292,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     protected function getCalculator()
     {
-        return new FieldCalculator(new ComputedFieldCalculator(new Tracker_FormElement_Field_ComputedDao()));
+        return new FieldCalculator(new ComputedFieldCalculator(new ComputedFieldDao()));
     }
 
 
@@ -603,9 +605,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
-    protected function getDao(): Tracker_FormElement_Field_ComputedDao
+    protected function getDao(): ComputedFieldDao
     {
-        return new Tracker_FormElement_Field_ComputedDao();
+        return new ComputedFieldDao();
     }
 
     public function getCriteriaFrom($criteria)
@@ -1042,7 +1044,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
     {
-        $dao   = Tracker_FormElement_Field_ComputedDaoCache::instance();
+        $dao   = ComputedFieldDaoCache::instance();
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
 
         if ($value === false) {

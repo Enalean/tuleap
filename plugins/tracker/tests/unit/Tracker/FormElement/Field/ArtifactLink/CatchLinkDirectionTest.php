@@ -129,7 +129,9 @@ final class CatchLinkDirectionTest extends TestCase
 
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        $value_dao = \Mockery::spy(
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao::class
+        );
         $this->field->shouldReceive('getValueDao')->andReturn($value_dao);
         $changeset_value_dao = \Mockery::spy(Tracker_Artifact_Changeset_ValueDao::class);
         $changeset_value_dao->shouldReceive('save')->andReturn($this->new_changeset_value_id);

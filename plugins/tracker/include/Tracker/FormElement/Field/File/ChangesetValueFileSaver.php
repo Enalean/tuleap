@@ -27,12 +27,11 @@ use ForgeConfig;
 use PFUser;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_Value_FileDao;
 
 class ChangesetValueFileSaver
 {
     /**
-     * @var Tracker_FormElement_Field_Value_FileDao
+     * @var FileFieldValueDao
      */
     private $dao;
     /**
@@ -41,7 +40,7 @@ class ChangesetValueFileSaver
     private $attachment_creator;
 
     public function __construct(
-        Tracker_FormElement_Field_Value_FileDao $dao,
+        FileFieldValueDao $dao,
         AttachmentCreator $attachment_creator
     ) {
         $this->dao                = $dao;

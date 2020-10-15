@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -35,13 +35,13 @@ final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
      */
     private $burndown_calculator;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_ComputedDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ComputedFieldDao
      */
     private $computed_dao;
 
     protected function setUp(): void
     {
-        $this->computed_dao = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $this->computed_dao = Mockery::mock(ComputedFieldDao::class);
         $this->burndown_calculator = new BurndownCalculator($this->computed_dao);
     }
 

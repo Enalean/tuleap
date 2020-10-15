@@ -25,7 +25,7 @@ use PermissionsManager;
 use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
-use Tracker_FormElement_Field_ComputedDaoCache;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 
 class ArtifactDependenciesDeletor
@@ -47,7 +47,7 @@ class ArtifactDependenciesDeletor
      */
     private $dao;
     /**
-     * @var Tracker_FormElement_Field_ComputedDaoCache
+     * @var ComputedFieldDaoCache
      */
     private $computed_dao_cache;
     /**
@@ -64,7 +64,7 @@ class ArtifactDependenciesDeletor
         CrossReferenceManager $cross_reference_manager,
         Tracker_Artifact_PriorityManager $tracker_artifact_priority_manager,
         Tracker_ArtifactDao $dao,
-        Tracker_FormElement_Field_ComputedDaoCache $computed_dao_cache,
+        ComputedFieldDaoCache $computed_dao_cache,
         RecentlyVisitedDao $recently_visited_dao,
         PendingArtifactRemovalDao $artifact_removal
     ) {

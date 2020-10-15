@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,9 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\StaticField\RichText;
+
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-class Tracker_FormElement_StaticField_RichTextDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class RichTextFieldDao extends SpecificPropertiesDao
 {
 
     public function __construct()
@@ -32,7 +34,7 @@ class Tracker_FormElement_StaticField_RichTextDao extends SpecificPropertiesDao 
 
     public function save($field_id, $row)
     {
-        $field_id  = $this->da->escapeInt($field_id);
+        $field_id = $this->da->escapeInt($field_id);
 
         if (isset($row['static_value'])) {
             $static_value = $this->da->quoteSmart($row['static_value']);
@@ -55,8 +57,8 @@ class Tracker_FormElement_StaticField_RichTextDao extends SpecificPropertiesDao 
      */
     public function duplicate($from_field_id, $to_field_id)
     {
-        $from_field_id  = $this->da->escapeInt($from_field_id);
-        $to_field_id  = $this->da->escapeInt($to_field_id);
+        $from_field_id = $this->da->escapeInt($from_field_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
 
         $sql = "REPLACE INTO $this->table_name (field_id, static_value)
                 SELECT $to_field_id, static_value

@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FieldDataFromRESTBuilder;
 use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAttachedProvider;
+use Tuleap\Tracker\FormElement\Field\File\FileFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
@@ -155,7 +156,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_FileDao();
+        return new FileFieldValueDao();
     }
 
 

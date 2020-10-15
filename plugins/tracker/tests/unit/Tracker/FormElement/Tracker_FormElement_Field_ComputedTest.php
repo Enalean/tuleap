@@ -32,7 +32,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_FormElement_Field_Computed;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -298,7 +298,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItDisplaysEmptyWhenFieldsAreAutocomputedAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -321,7 +321,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItDisplaysComputedValuesWhenComputedChildrenAreSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -343,7 +343,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItCallsStandardCalculWhenFieldsAreIntAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -365,7 +365,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItCallsStandardCalculWhenFieldsAreComputedAndNoValuesAreSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -387,7 +387,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItCallsStandardCalculWhenAComputedValueIsSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -410,7 +410,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItCallsStandardCalculWhenIntFieldsAreSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -432,7 +432,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItReturnsNullWhenNoManualValueIsSetAndNoChildrenExists(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -453,7 +453,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItCalculatesAutocomputedAndintFieldsEvenIfAParentIsSet(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();
@@ -477,7 +477,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItReturnsComputedValuesAndIntValuesWhenBothAreOneSameChildrenLevel(): void
     {
-        $dao       = \Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $dao       = \Mockery::mock(ComputedFieldDao::class);
         $value_dao = \Mockery::mock(ComputedDao::class);
 
         $artifact = $this->getArtifactWithChangeset();

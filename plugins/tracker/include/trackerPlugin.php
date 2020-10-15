@@ -132,6 +132,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureUsagePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentController;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileUploadCleaner;
@@ -495,9 +498,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME:
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
                 $params['dependencies'] = [
-                    new Tracker_FormElement_Field_BurndownDao(),
-                    new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
-                    new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+                    new BurndownFieldDao(),
+                    new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
+                    new ComputedFieldDaoCache(new ComputedFieldDao()),
                     BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
                 ];
@@ -507,9 +510,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
                     new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
-                    new Tracker_FormElement_Field_BurndownDao(),
-                    new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
-                    new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
+                    new BurndownFieldDao(),
+                    new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
+                    new ComputedFieldDaoCache(new ComputedFieldDao()),
                     BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
                 ];

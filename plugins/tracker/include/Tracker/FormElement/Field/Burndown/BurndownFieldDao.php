@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean SAS 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Burndown;
+
+use DataAccessResult;
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-class Tracker_FormElement_Field_BurndownDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class BurndownFieldDao extends SpecificPropertiesDao
 {
     public function __construct()
     {
@@ -41,7 +47,7 @@ class Tracker_FormElement_Field_BurndownDao extends SpecificPropertiesDao // php
      * Duplicate specific properties of field
      *
      * @param int $from_field_id the field id source
-     * @param int $to_field_id the field id target
+     * @param int $to_field_id   the field id target
      *
      * @return bool true if ok, false otherwise
      */
@@ -145,8 +151,11 @@ class Tracker_FormElement_Field_BurndownDao extends SpecificPropertiesDao // php
      *
      * @return array|false
      */
-    public function getBurndownInformationBasedOnDuration(int $artifact_id, int $start_date_field_id, int $duration_field_id)
-    {
+    public function getBurndownInformationBasedOnDuration(
+        int $artifact_id,
+        int $start_date_field_id,
+        int $duration_field_id
+    ) {
         $artifact_id         = $this->da->escapeInt($artifact_id);
         $start_date_field_id = $this->da->escapeInt($start_date_field_id);
         $duration_field_id   = $this->da->escapeInt($duration_field_id);
@@ -208,8 +217,11 @@ class Tracker_FormElement_Field_BurndownDao extends SpecificPropertiesDao // php
      *
      * @return array|false
      */
-    public function getBurndownInformationBasedOnEndDate(int $artifact_id, int $start_date_field_id, int $end_date_field_id)
-    {
+    public function getBurndownInformationBasedOnEndDate(
+        int $artifact_id,
+        int $start_date_field_id,
+        int $end_date_field_id
+    ) {
         $artifact_id         = $this->da->escapeInt($artifact_id);
         $start_date_field_id = $this->da->escapeInt($start_date_field_id);
         $end_date_field_id   = $this->da->escapeInt($end_date_field_id);

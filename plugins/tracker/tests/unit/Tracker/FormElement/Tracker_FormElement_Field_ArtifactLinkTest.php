@@ -48,7 +48,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
 
     public function testGetChangesetValue(): void
     {
-        $value_dao = Mockery::mock(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        $value_dao = Mockery::mock(
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao::class
+        );
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar([
             'id' => 123,
             'field_id' => 1,
@@ -69,7 +71,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
+        $value_dao = Mockery::mock(
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao::class
+        );
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::emptyDar());
         $value_dao->shouldReceive('searchReverseLinksById')->andReturn(TestHelper::emptyDar());
 

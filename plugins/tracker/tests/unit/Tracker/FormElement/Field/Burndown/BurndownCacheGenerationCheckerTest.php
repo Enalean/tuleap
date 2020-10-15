@@ -24,7 +24,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -54,7 +54,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
      */
     private $cached_days_comparator;
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_dao;
     /**
@@ -85,7 +85,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $this->event_manager          = Mockery::mock(\SystemEventManager::class);
         $this->field_retriever        = Mockery::mock(ChartConfigurationFieldRetriever::class);
         $this->value_checker          = Mockery::mock(ChartConfigurationValueChecker::class);
-        $this->computed_dao           = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $this->computed_dao           = Mockery::mock(ComputedFieldDao::class);
         $this->cached_days_comparator = Mockery::mock(ChartCachedDaysComparator::class);
         $this->remaining_effort_adder = Mockery::mock(BurndownRemainingEffortAdderForREST::class);
         $this->cache_checker          = new BurndownCacheGenerationChecker(

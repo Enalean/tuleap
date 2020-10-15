@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
-use Tracker_FormElement_Field_BurndownDao;
-use Tracker_FormElement_Field_ComputedDaoCache;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
@@ -33,7 +33,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     public const NAME = 'SystemEvent_BURNDOWN_DAILY';
 
     /**
-     * @var Tracker_FormElement_Field_BurndownDao
+     * @var BurndownFieldDao
      */
     private $burndown_dao;
 
@@ -48,7 +48,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     private $field_calculator;
 
     /**
-     * @var Tracker_FormElement_Field_ComputedDaoCache
+     * @var ComputedFieldDaoCache
      */
     private $cache_dao;
 
@@ -63,9 +63,9 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
     }
 
     public function injectDependencies(
-        Tracker_FormElement_Field_BurndownDao $burndown_dao,
+        BurndownFieldDao $burndown_dao,
         FieldCalculator $field_calculator,
-        Tracker_FormElement_Field_ComputedDaoCache $cache_dao,
+        ComputedFieldDaoCache $cache_dao,
         LoggerInterface $logger,
         BurndownCacheDateRetriever $date_retriever
     ) {

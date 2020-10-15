@@ -26,7 +26,7 @@ use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tracker_FormElement_Field_ComputedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -39,7 +39,7 @@ class BurndownCacheGenerationChecker
      */
     private $cached_days_comparator;
     /**
-     * @var Tracker_FormElement_Field_ComputedDao
+     * @var ComputedFieldDao
      */
     private $computed_dao;
     /**
@@ -73,7 +73,7 @@ class BurndownCacheGenerationChecker
         \SystemEventManager $event_manager,
         ChartConfigurationFieldRetriever $field_retriever,
         ChartConfigurationValueChecker $value_checker,
-        Tracker_FormElement_Field_ComputedDao $computed_dao,
+        ComputedFieldDao $computed_dao,
         ChartCachedDaysComparator $cached_days_comparator,
         BurndownRemainingEffortAdderForREST $remaining_effort_adder
     ) {

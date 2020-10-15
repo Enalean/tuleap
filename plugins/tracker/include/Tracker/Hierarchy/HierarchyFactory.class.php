@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class Tracker_HierarchyFactory
@@ -88,7 +89,7 @@ class Tracker_HierarchyFactory
                 Tracker_ArtifactFactory::instance(),
                 new NatureIsChildLinkRetriever(
                     Tracker_ArtifactFactory::instance(),
-                    new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+                    new ArtifactLinkFieldValueDao()
                 )
             );
         }

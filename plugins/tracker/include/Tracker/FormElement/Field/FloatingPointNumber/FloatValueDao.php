@@ -22,9 +22,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\FloatingPointNumber;
 
-use Tracker_FormElement_Field_Value_NumericDao;
+use Tuleap\Tracker\FormElement\Field\NumericField\NumericFieldValueDao;
 
-class FloatValueDao extends Tracker_FormElement_Field_Value_NumericDao
+class FloatValueDao extends NumericFieldValueDao
 {
 
     public function __construct()
