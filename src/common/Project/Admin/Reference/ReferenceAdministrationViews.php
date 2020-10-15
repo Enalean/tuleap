@@ -28,6 +28,7 @@ use HTTPRequest;
 use ProjectManager;
 use Reference;
 use ReferenceManager;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Views;
 
 class ReferenceAdministrationViews extends Views
@@ -49,7 +50,7 @@ class ReferenceAdministrationViews extends Views
                 'group' => $GLOBALS['group_id'],
                 'help'  => 'project-admin.html#reference-pattern-configuration'
             ],
-            'references'
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME
         );
     }
 

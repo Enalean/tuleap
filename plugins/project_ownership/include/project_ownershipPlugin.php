@@ -20,8 +20,9 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
@@ -100,12 +101,11 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     {
         $project_id = $presenter->getProjectId();
         $html_url = $this->getPluginPath() . '/project/' . urlencode($project_id) . '/admin';
-        $presenter->addItem(
-            new NavigationItemPresenter(
+        $presenter->addDropdownItem(
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
+            new NavigationDropdownItemPresenter(
                 dgettext('tuleap-project_ownership', 'Project ownership'),
-                $html_url,
-                IndexController::PANE_SHORTNAME,
-                $presenter->getCurrentPaneShortname()
+                $html_url
             )
         );
     }

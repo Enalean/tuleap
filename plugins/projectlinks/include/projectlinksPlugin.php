@@ -22,12 +22,14 @@
  */
 
 use FastRoute\RouteCollector;
-use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 {
     public $pluginInfo;
@@ -64,7 +66,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _adminURI()
+    public function _adminURI() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->getPluginPath() . "/projectlinks_admin.php";
     }
@@ -150,7 +152,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    private function adminPageUpdate_Service(HTTPRequest $request)
+    private function adminPageUpdate_Service(HTTPRequest $request) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         global $Language, $feedback;
         $group_id = (int) $request->get('group_id');
@@ -324,7 +326,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _icon($icon, $params = null)
+    public function _icon($icon, $params = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // returns the HTML to display the named icon
         global $Language;
@@ -377,7 +379,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _getLinks($group_id)
+    public function _getLinks($group_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // returns a record set of project link types belonging to
         //the passed group
@@ -389,7 +391,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _adminPage_Default($group_id, $project)
+    public function _adminPage_Default($group_id, $project) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // show the default configuration page
         global $HTML, $Language;
@@ -475,7 +477,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _adminPage_UpdateLinkType($group_id, $link_type_id)
+    public function _adminPage_UpdateLinkType($group_id, $link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         global $HTML, $Language;
 
@@ -603,7 +605,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _adminPage_ResyncTemplate($group_id, $template_id)
+    public function _adminPage_ResyncTemplate($group_id, $template_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp = Codendi_HTMLPurifier::instance();
         // re-synchronise project links and types with originating template
@@ -829,7 +831,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     }
 
     //========================================================================
-    public function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null)
+    public function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // update link, but check the change would not create a duplicate
         // (same target project and link type)
@@ -880,7 +882,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
      *
      * @return string
      */
-    public function _admin_links_table($link_type_id)
+    public function _admin_links_table($link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -1038,14 +1040,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     {
         $project_id = $presenter->getProjectId();
         if (PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
-            $presenter->addItem(
-                new NavigationItemPresenter(
+            $presenter->addDropdownItem(
+                NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
+                new NavigationDropdownItemPresenter(
                     dgettext('tuleap-projectlinks', 'Project Links Configuration'),
                     $this->_adminURI() . '?' . http_build_query(
                         ['group_id' => $project_id, 'pane' => 'project_links']
-                    ),
-                    'project_links',
-                    $presenter->getCurrentPaneShortname()
+                    )
                 )
             );
         }

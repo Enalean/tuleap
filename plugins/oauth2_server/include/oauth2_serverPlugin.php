@@ -92,8 +92,9 @@ use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
-use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -161,12 +162,11 @@ final class oauth2_serverPlugin extends Plugin
     {
         $project_id = urlencode((string) $presenter->getProjectId());
         $html_url   = $this->getPluginPath() . "/project/$project_id/admin";
-        $presenter->addItem(
-            new NavigationItemPresenter(
+        $presenter->addDropdownItem(
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
+            new NavigationDropdownItemPresenter(
                 dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
-                $html_url,
-                ListAppsController::PANE_SHORTNAME,
-                $presenter->getCurrentPaneShortname()
+                $html_url
             )
         );
     }

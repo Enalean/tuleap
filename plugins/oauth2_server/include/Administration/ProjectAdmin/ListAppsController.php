@@ -28,6 +28,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Project\ServiceInstrumentation;
@@ -36,8 +37,6 @@ use Tuleap\Request\DispatchableWithRequest;
 
 final class ListAppsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const  PANE_SHORTNAME = 'oauth2_clients';
-
     /** @var LayoutHelper */
     private $layout_helper;
     /** @var TemplateRenderer */
@@ -94,7 +93,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
             $request,
             $variables['project_id'],
             dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
-            self::PANE_SHORTNAME,
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback
         );
     }

@@ -26,6 +26,7 @@ use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -91,7 +92,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
             $request,
             $variables['id'],
             _('Project banner'),
-            'banner',
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback
         );
     }

@@ -5,7 +5,13 @@
         {{# getEntries }}
             {{# hasSubItems }}
                 <div class="tlp-tab{{# is_active }} tlp-tab-active{{/ is_active }}">
-                    {{ label }} <i class="fa fa-caret-down"></i>
+                    {{# label }}
+                        {{ label }}
+                    {{/label}}
+                    {{^ label }}
+                        <i class="fas fa-bars"></i>
+                    {{/ label }}
+                    <i class="fa fa-caret-down"></i>
                     <nav class="tlp-tab-menu">
                         {{# menu_items }}
                             {{# isMenuTitle }}

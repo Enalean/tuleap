@@ -41,17 +41,11 @@ class NavigationPresenter implements Dispatchable
     /** @var Project */
     private $project;
 
-    private $current_pane_shortname;
-
-    public function __construct(
-        array $entries,
-        Project $project,
-        $current_pane_shortname
-    ) {
+    public function __construct(array $entries, Project $project)
+    {
         $this->admin_section_title    = _("Project administration");
         $this->entries                = $entries;
         $this->project                = $project;
-        $this->current_pane_shortname = $current_pane_shortname;
     }
 
     public function addDropdownItem($entry_shortname, NavigationDropdownItemPresenter $dropdown_item)
@@ -77,10 +71,5 @@ class NavigationPresenter implements Dispatchable
     public function getProjectId()
     {
         return $this->project->getID();
-    }
-
-    public function getCurrentPaneShortname()
-    {
-        return $this->current_pane_shortname;
     }
 }
