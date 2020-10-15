@@ -1,0 +1,69 @@
+#!/usr/bin/env groovy
+
+def actions
+
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                dir ('results') {
+                    deleteDir()
+                }
+                script {
+                    actions = load 'sources/tests/actions.groovy'
+                    actions.prepareSources('nexus.enalean.com_readonly', 'github-token-composer')
+                }
+            }
+        }
+
+        stage('Psalm taint analysis') {
+            agent {
+                dockerfile {
+                    dir 'sources/tests/psalm/'
+                    reuseNode true
+                    args '--network none'
+                }
+            }
+            steps {
+                script {
+                    actions.runPsalmTaintAnalysis('tests/psalm/psalm.xml')
+                }
+            }
+            post {
+                always {
+                    recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
+        }
+        failure {
+            withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                mail to: email,
+                subject: "${currentBuild.fullDisplayName} is broken",
+                body: "See ${env.BUILD_URL}"
+            }
+        }
+        unstable {
+            withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                mail to: email,
+                subject: "${currentBuild.fullDisplayName} is unstable",
+                body: "See ${env.BUILD_URL}"
+            }
+        }
+    }
+}
