@@ -33,7 +33,6 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Baseline\Support\CurrentUserContext;
@@ -82,7 +81,7 @@ class ArtifactLinkRepositoryTest extends TestCase
             ]
         );
 
-        $artifact = Mockery::mock(Tracker_Artifact::class)
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
             ->shouldReceive('getAnArtifactLinkField')
             ->with($this->current_user)
             ->andReturn($artifact_link)
@@ -99,7 +98,7 @@ class ArtifactLinkRepositoryTest extends TestCase
 
     public function testFindLinkedArtifactIdsReturnsEmptyArrayWhenNoLinkField()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class, ['getAnArtifactLinkField' => null]);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class, ['getAnArtifactLinkField' => null]);
         $this->changeset
             ->shouldReceive('getArtifact')
             ->andReturn($artifact);
@@ -138,7 +137,7 @@ class ArtifactLinkRepositoryTest extends TestCase
             ]
         );
 
-        $artifact = Mockery::mock(Tracker_Artifact::class)
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
             ->shouldReceive('getAnArtifactLinkField')
             ->with($this->current_user)
             ->andReturn($artifact_link)
@@ -154,19 +153,19 @@ class ArtifactLinkRepositoryTest extends TestCase
     }
 
     /**
-     * @return Tracker_Artifact|MockInterface
+     * @return \Tuleap\Tracker\Artifact\Artifact|MockInterface
      */
-    private function mockArtifactWithId(int $id): Tracker_Artifact
+    private function mockArtifactWithId(int $id): \Tuleap\Tracker\Artifact\Artifact
     {
         return $this->mockArtifactWithIdAndTrackerId($id, 10);
     }
 
     /**
-     * @return Tracker_Artifact|MockInterface
+     * @return \Tuleap\Tracker\Artifact\Artifact|MockInterface
      */
-    private function mockArtifactWithIdAndTrackerId(int $id, int $tracker_id): Tracker_Artifact
+    private function mockArtifactWithIdAndTrackerId(int $id, int $tracker_id): \Tuleap\Tracker\Artifact\Artifact
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->allows(['getId' => $id, 'getTrackerId' => $tracker_id]);
         return $artifact;
     }

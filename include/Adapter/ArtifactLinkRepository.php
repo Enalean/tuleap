@@ -26,7 +26,6 @@ namespace Tuleap\Baseline\Adapter;
 use PFUser;
 use Planning;
 use PlanningFactory;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 
 class ArtifactLinkRepository
@@ -60,14 +59,14 @@ class ArtifactLinkRepository
 
         $backlog_artifacts = array_filter(
             $tracker_artifacts,
-            static function (Tracker_Artifact $tracker_artifact) use ($milestone_tracker_ids) {
+            static function (\Tuleap\Tracker\Artifact\Artifact $tracker_artifact) use ($milestone_tracker_ids) {
                 return ! in_array($tracker_artifact->getTrackerId(), $milestone_tracker_ids, true);
             }
         );
 
         return array_values(
             array_map(
-                static function (Tracker_Artifact $tracker_artifact) {
+                static function (\Tuleap\Tracker\Artifact\Artifact $tracker_artifact) {
                     return $tracker_artifact->getId();
                 },
                 $backlog_artifacts

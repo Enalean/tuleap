@@ -29,7 +29,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
@@ -76,7 +75,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
 
     public function testFindById()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
 
         $this->artifact_factory
@@ -125,7 +124,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     public function testFindByIdAt()
     {
         $date     = DateTimeFactory::one();
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
 
         $this->artifact_factory
