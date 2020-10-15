@@ -209,7 +209,7 @@ class ArtifactLinkDiffTest extends TestCase
         $tracker = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => 888]);
         $changeset = M::mock(\Tracker_Artifact_Changeset::class, ['getId' => '*']);
         $artifact = M::mock(
-            \Tracker_Artifact::class,
+            \Tuleap\Tracker\Artifact\Artifact::class,
             [
                 'getId' => $artifact_id,
                 'userCanView' => true,

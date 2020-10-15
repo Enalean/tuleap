@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
@@ -71,7 +72,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         $new_values     = $this->extractArtifactLinkFromXml($field_change, $artifact);
         $last_changeset = $artifact->getLastChangeset();
@@ -90,7 +91,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         ];
     }
 
-    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Tracker_Artifact $artifact)
+    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Artifact $artifact)
     {
         $artifact_links = [];
         $natures        = [];
@@ -127,7 +128,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     }
 
     private function getNatureFromMappedArtifact(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_element,
         $mapped_artifact_id
     ) {
@@ -172,7 +173,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return $removed_artifacts;
     }
 
-    private function isLinkValid($tracker_id, Tracker_Artifact $artifact, $children_id, $nature)
+    private function isLinkValid($tracker_id, Artifact $artifact, $children_id, $nature)
     {
         $error                 = "";
         $params['error']       = &$error;

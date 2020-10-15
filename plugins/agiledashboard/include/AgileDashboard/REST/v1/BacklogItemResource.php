@@ -25,7 +25,6 @@ use AgileDashBoard_Semantic_InitialEffort;
 use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -44,6 +43,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -147,7 +147,7 @@ class BacklogItemResource extends AuthenticatedResource
         return $backlog_item_representation;
     }
 
-    private function getBacklogItem(PFUser $current_user, Tracker_Artifact $artifact)
+    private function getBacklogItem(PFUser $current_user, Artifact $artifact)
     {
         $semantic_manager = new Tracker_SemanticManager($artifact->getTracker());
         $semantics        = $semantic_manager->getSemantics();
@@ -171,7 +171,7 @@ class BacklogItemResource extends AuthenticatedResource
         return $backlog_item;
     }
 
-    private function updateArtifactTitleSemantic(PFUser $current_user, Tracker_Artifact $artifact, Tracker_SemanticCollection $semantics)
+    private function updateArtifactTitleSemantic(PFUser $current_user, Artifact $artifact, Tracker_SemanticCollection $semantics)
     {
         $semantic_title = $semantics[Tracker_Semantic_Title::NAME];
         $title_field    = $semantic_title->getField();
@@ -185,7 +185,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function updateBacklogItemStatusSemantic(
         PFUser $current_user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
         Tracker_SemanticCollection $semantics
     ) {
@@ -376,7 +376,7 @@ class BacklogItemResource extends AuthenticatedResource
         return $artifact;
     }
 
-    private function getChildrenArtifactIds(PFUser $user, Tracker_Artifact $artifact)
+    private function getChildrenArtifactIds(PFUser $user, Artifact $artifact)
     {
         $linked_artifacts_index = [];
         foreach ($artifact->getChildrenForUser($user) as $artifact) {

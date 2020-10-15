@@ -19,6 +19,8 @@
  *
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -38,14 +40,14 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \P
     private $initializator;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
 
     protected function setUp(): void
     {
         $this->tracker        = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->formelement_factory = \Mockery::mock(Tracker_FormElementFactory::class);

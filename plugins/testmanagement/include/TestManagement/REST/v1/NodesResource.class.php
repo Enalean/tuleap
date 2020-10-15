@@ -25,8 +25,8 @@ use PFUser;
 use Tracker_Exception;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\Header;
-use Tracker_Artifact;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class NodeResource
@@ -89,7 +89,7 @@ class NodeResource
     }
 
 
-    private function sendAllowHeaders(Tracker_Artifact $artifact): void
+    private function sendAllowHeaders(Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsGet();

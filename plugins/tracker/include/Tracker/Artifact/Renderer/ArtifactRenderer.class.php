@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 
 /**
@@ -85,12 +86,12 @@ abstract class Tracker_Artifact_ArtifactRenderer
     /**
      * @return string The HTML code for artifact fields
      */
-    public function fetchFields(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchFields(Artifact $artifact, array $submitted_values)
     {
         return $artifact->getTracker()->fetchFormElements($artifact, $submitted_values);
     }
 
-    public function fetchFieldsForCopy(Tracker_Artifact $artifact)
+    public function fetchFieldsForCopy(Artifact $artifact)
     {
         return $artifact->getTracker()->fetchFormElementsForCopy($artifact, []);
     }

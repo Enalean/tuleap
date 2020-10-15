@@ -23,12 +23,12 @@ namespace Tuleap\TestManagement\REST;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionWithAutomatedTestDataProviderTest extends TestCase
 {
@@ -60,12 +60,12 @@ class ExecutionWithAutomatedTestDataProviderTest extends TestCase
     public function testGetExecutionWithAutomatedTestData(): void
     {
         $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $execution = Mockery::mock(Tracker_Artifact::class);
+        $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $automated_test->shouldReceive('getText')->andReturn("automated test");
 
-        $definition = Mockery::mock(Tracker_Artifact::class);
+        $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
         $definition->shouldReceive('getChangeset')->andReturn($changeset);
         $definition->shouldReceive('getValue')->andReturn($automated_test);
@@ -89,12 +89,12 @@ class ExecutionWithAutomatedTestDataProviderTest extends TestCase
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoChangesetId(): void
     {
-        $execution = Mockery::mock(Tracker_Artifact::class);
+        $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $automated_test->shouldReceive('getText')->andReturn("automated test");
 
-        $definition = Mockery::mock(Tracker_Artifact::class);
+        $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
         $definition->shouldReceive('getChangeset')->never();
         $definition->shouldReceive('getValue')->andReturn($automated_test);
@@ -116,12 +116,12 @@ class ExecutionWithAutomatedTestDataProviderTest extends TestCase
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoField(): void
     {
-        $execution = Mockery::mock(Tracker_Artifact::class);
+        $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $automated_test->shouldReceive('getText')->andReturn("automated test");
 
-        $definition = Mockery::mock(Tracker_Artifact::class);
+        $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
         $definition->shouldReceive('getChangeset')->never();
         $definition->shouldReceive('getValue')->andReturn($automated_test);
@@ -142,12 +142,12 @@ class ExecutionWithAutomatedTestDataProviderTest extends TestCase
 
     public function testGetExecutionWithAutomatedTestDataReturnNullIfNoChangeset(): void
     {
-        $execution = Mockery::mock(Tracker_Artifact::class);
+        $execution = Mockery::mock(Artifact::class);
         $execution->shouldReceive('getId')->andReturn(12);
         $automated_test = Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $automated_test->shouldReceive('getText')->andReturn("automated test");
 
-        $definition = Mockery::mock(Tracker_Artifact::class);
+        $definition = Mockery::mock(Artifact::class);
         $definition->shouldReceive('getTrackerId')->andReturn(112);
         $definition->shouldReceive('getChangeset')->andReturn(null);
         $definition->shouldReceive('getValue')->andReturn($automated_test);

@@ -69,7 +69,7 @@ class BurnupFieldPresenter
     public function __construct(
         CountElementsModeChecker $mode_checker,
         BurnupRepresentation $burnup_representation,
-        \Tracker_Artifact $artifact,
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
         $can_burnup_be_regenerated,
         $css_url,
         $user_locale,

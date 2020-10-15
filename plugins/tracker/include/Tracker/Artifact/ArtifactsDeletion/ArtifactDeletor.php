@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use EventManager;
 use PFUser;
 use ProjectHistoryDao;
-use Tracker_Artifact;
 use Tracker_ArtifactDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 
 class ArtifactDeletor
@@ -67,7 +67,7 @@ class ArtifactDeletor
         $this->event_manager                = $event_manager;
     }
 
-    public function delete(Tracker_Artifact $artifact, PFUser $user)
+    public function delete(Artifact $artifact, PFUser $user)
     {
         $this->dao->startTransaction();
         $this->processDelete($artifact, $user);
@@ -77,14 +77,14 @@ class ArtifactDeletor
         $this->processEvent($artifact);
     }
 
-    public function deleteWithoutTransaction(Tracker_Artifact $artifact, PFUser $user)
+    public function deleteWithoutTransaction(Artifact $artifact, PFUser $user)
     {
         $this->processDelete($artifact, $user);
         $this->addProjectHistory($artifact);
         $this->processEvent($artifact);
     }
 
-    private function processDelete(Tracker_Artifact $artifact, PFUser $user)
+    private function processDelete(Artifact $artifact, PFUser $user)
     {
         $this->pending_artifact_removal_dao->addArtifactToPendingRemoval($artifact->getId());
 
@@ -93,7 +93,7 @@ class ArtifactDeletor
         $this->dao->delete($artifact->getId());
     }
 
-    private function addProjectHistory(Tracker_Artifact $artifact)
+    private function addProjectHistory(Artifact $artifact)
     {
         $this->project_history_dao->groupAddHistory(
             self::PROJECT_HISTORY_ARTIFACT_DELETED,
@@ -102,7 +102,7 @@ class ArtifactDeletor
         );
     }
 
-    private function processEvent(Tracker_Artifact $artifact)
+    private function processEvent(Artifact $artifact)
     {
         $this->event_manager->processEvent(
             TRACKER_EVENT_ARTIFACT_DELETE,

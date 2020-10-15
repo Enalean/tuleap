@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerFactory;
@@ -29,6 +28,7 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\InformationNeededToRetrieveTestStatusOfACampaign;
 use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -158,7 +158,7 @@ class CampaignRepresentation
         );
     }
 
-    private static function getFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
+    private static function getFieldValue(Artifact $artifact, Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
     {
         return $artifact->getValue($field);
     }
@@ -169,7 +169,7 @@ class CampaignRepresentation
      * @psalm-return array{notrun: int, blocked: int, passed: int, failed: int}
      */
     private static function getExecutionsStatus(
-        \Tracker_Artifact $campaign_artifact,
+        \Tuleap\Tracker\Artifact\Artifact $campaign_artifact,
         \PFUser $user,
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
@@ -198,7 +198,7 @@ class CampaignRepresentation
 
     private static function isUserAllowedToUpdateLabelField(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $label_field
     ): bool {
         return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);

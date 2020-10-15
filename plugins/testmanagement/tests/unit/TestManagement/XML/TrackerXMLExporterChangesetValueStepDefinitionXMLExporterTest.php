@@ -26,10 +26,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\Tracker\Artifact\Artifact;
 use XML_SimpleXMLCDATAFactory;
 
 final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extends TestCase
@@ -74,7 +74,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $changeset_value->shouldReceive('getValue')->andReturn($values)->once();
         $changeset_value->shouldReceive('getField')->andReturn($field)->once();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
         $this->assertXmlStringEqualsXmlString($this->getXmlResult()->asXML(), $changeset_xml->asXML());
     }
@@ -101,7 +101,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $changeset_value->shouldReceive('getValue')->andReturn($values)->once();
         $changeset_value->shouldReceive('getField')->andReturn($field)->once();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
         $this->assertXmlStringEqualsXmlString($expected_xml->asXML(), $changeset_xml->asXML());
     }

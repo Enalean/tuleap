@@ -21,7 +21,7 @@
 
 namespace Tuleap\FRS\Link;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Retriever
 {
@@ -47,7 +47,7 @@ class Retriever
         return null;
     }
 
-    public function getLinkedReleaseId(Tracker_Artifact $artifact)
+    public function getLinkedReleaseId(Artifact $artifact)
     {
         $row = $this->dao->searchLinkedReleaseForArtifact($artifact->getId());
 

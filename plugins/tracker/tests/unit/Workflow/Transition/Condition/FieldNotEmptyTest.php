@@ -49,7 +49,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
         $this->dao        = \Mockery::spy(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
         $this->transition = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(42)->getMock();
         $this->condition  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
-        $this->artifact   = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact   = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);
@@ -136,7 +136,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsFalseWhenFieldNotPresentInRequestAndThereIsNoLastChangeset(): void
     {
         $this->condition->addField($this->field);
-        $artifact_without_changeset = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_without_changeset = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset, '', $this->current_user);
         $this->assertFalse($is_valid);

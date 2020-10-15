@@ -21,10 +21,10 @@
 namespace Tuleap\Tracker\RealTime;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Permission_PermissionsSerializer;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class RealTimeArtifactMessageSender
 {
@@ -47,7 +47,7 @@ class RealTimeArtifactMessageSender
 
     public function sendMessage(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $data,
         $event_name,
         $room_id

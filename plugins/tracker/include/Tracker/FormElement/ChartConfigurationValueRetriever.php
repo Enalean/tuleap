@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Psr\Log\LoggerInterface;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_FormElement_Chart_Field_Exception;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class ChartConfigurationValueRetriever
@@ -56,7 +56,7 @@ class ChartConfigurationValueRetriever
      *
      * @return null|int
      */
-    public function getCapacity(Tracker_Artifact $artifact, PFUser $user)
+    public function getCapacity(Artifact $artifact, PFUser $user)
     {
         try {
             $field = $this->configuration_field_retriever->getCapacityField($artifact->getTracker());
@@ -75,7 +75,7 @@ class ChartConfigurationValueRetriever
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getTimePeriod(Tracker_Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
+    public function getTimePeriod(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
             $artifact,

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class Planning_MilestoneSelectorControllerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -52,7 +53,7 @@ final class Planning_MilestoneSelectorControllerTest extends \PHPUnit\Framework\
 
         $this->current_milestone_artifact_id = 444;
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($this->current_milestone_artifact_id);
         $milestone = Mockery::mock(Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getArtifact')->andReturn($artifact);

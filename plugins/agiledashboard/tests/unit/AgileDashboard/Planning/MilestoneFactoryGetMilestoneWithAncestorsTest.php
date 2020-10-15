@@ -32,7 +32,7 @@ use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_NoMilestone;
 use Project;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 {
@@ -43,7 +43,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
      */
     private $sprint_milestone;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $sprint_artifact;
     /**
@@ -61,7 +61,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
         $this->milestone_factory = Mockery::mock(Planning_MilestoneFactory::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->sprint_artifact  = Mockery::spy(Tracker_Artifact::class);
+        $this->sprint_artifact  = Mockery::spy(Artifact::class);
         $this->sprint_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
         $this->sprint_milestone->shouldReceive('getArtifact')->andReturn($this->sprint_artifact);
     }
@@ -84,7 +84,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 
     public function testItBuildTheMilestoneForOneParent(): void
     {
-        $release_artifact = Mockery::mock(Tracker_Artifact::class);
+        $release_artifact = Mockery::mock(Artifact::class);
         $this->sprint_artifact->shouldReceive('getAllAncestors')
             ->with($this->current_user)
             ->andReturn([$release_artifact]);
@@ -100,8 +100,8 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 
     public function testItBuildTheMilestoneForSeveralParents(): void
     {
-        $release_artifact = Mockery::mock(Tracker_Artifact::class);
-        $product_artifact = Mockery::mock(Tracker_Artifact::class);
+        $release_artifact = Mockery::mock(Artifact::class);
+        $product_artifact = Mockery::mock(Artifact::class);
         $this->sprint_artifact->shouldReceive('getAllAncestors')
             ->with($this->current_user)
             ->andReturn([$release_artifact, $product_artifact]);
@@ -123,7 +123,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 
     public function testItFiltersOutTheEmptyMilestones(): void
     {
-        $release_artifact = Mockery::mock(Tracker_Artifact::class);
+        $release_artifact = Mockery::mock(Artifact::class);
         $this->sprint_artifact->shouldReceive('getAllAncestors')
             ->with($this->current_user)
             ->andReturn([$release_artifact]);

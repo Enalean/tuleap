@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use Tracker_Artifact;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
@@ -33,7 +33,7 @@ class BindDecoratorRetriever
      * @throws NoChangesetException
      * @throws NoChangesetValueException
      */
-    public function getDecoratorForFirstValue(Tracker_FormElement_Field_List $field, Tracker_Artifact $artifact): Tracker_FormElement_Field_List_BindDecorator
+    public function getDecoratorForFirstValue(Tracker_FormElement_Field_List $field, Artifact $artifact): Tracker_FormElement_Field_List_BindDecorator
     {
         $changeset = $artifact->getLastChangeset();
         if (! $changeset) {

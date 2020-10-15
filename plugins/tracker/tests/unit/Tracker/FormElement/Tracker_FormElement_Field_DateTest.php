@@ -32,13 +32,13 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Field_Date;
-use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tracker_Report_REST;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_Security;
@@ -152,7 +152,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
         $field = $this->getDateField();
         $field->shouldReceive('isRequired')->andReturn(true);
         $field->shouldReceive('getProperty')->withArgs(['display_time']);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue($field->isValid($artifact, '2009-08-31'));
         $this->assertFalse($field->isValid($artifact, '2009-08-45'));
         $this->assertFalse($field->isValid($artifact, '2009-13-06'));
@@ -170,7 +170,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
         $field = $this->getDateField();
         $field->shouldReceive('isRequired')->andReturn(false);
         $field->shouldReceive('getProperty')->withArgs(['display_time']);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue($field->isValid($artifact, ''));
         $this->assertTrue($field->isValid($artifact, null));
     }
@@ -557,7 +557,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty(): void
     {
         $user     = Mockery::mock(\PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $date     = $this->getDateField();
         $this->assertEquals('-', $date->fetchMailArtifactValue($artifact, $user, false, null, null));
     }
@@ -569,7 +569,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage')->andReturn('en_US');
 
         $user     = Mockery::mock(\PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $date     = $this->getDateField();
         $date->shouldReceive('formatDateForDisplay')->with('2011-12-01')->andReturn(1322752769);
         $date->shouldReceive('isTimeDisplayed')->andReturnFalse();
@@ -591,7 +591,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
         $GLOBALS['Language']->shouldReceive('getLanguageFromAcceptLanguage')->andReturn('fr_FR');
 
         $user     = Mockery::mock(\PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $date     = $this->getDateField();
         $date->shouldReceive('formatDateForDisplay')->with('2011-12-01')->andReturn(1322752769);
         $date->shouldReceive('isTimeDisplayed')->andReturnFalse();
@@ -609,7 +609,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined(): void
     {
         $user     = Mockery::mock(\PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $date     = $this->getDateField();
 
         $value = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);

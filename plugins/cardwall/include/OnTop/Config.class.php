@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Manage configuration of a cardwall on top of a tracker
  */
@@ -142,7 +144,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     }
 
     public function isInColumn(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
         Cardwall_Column $column
     ) {

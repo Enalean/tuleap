@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -33,7 +34,7 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
 {
     protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,

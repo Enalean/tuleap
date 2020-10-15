@@ -29,14 +29,14 @@ final class Tracker_FormElement_Field_SubmittedOnTest extends \PHPUnit\Framework
         $f = \Mockery::mock(\Tracker_FormElement_Field_SubmittedOn::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $v = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
-        $this->assertFalse($f->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $v, null));
+        $this->assertFalse($f->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $v, null));
     }
 
     public function testisValid(): void
     {
         $f = \Mockery::mock(\Tracker_FormElement_Field_SubmittedOn::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
-        $a = \Mockery::spy(\Tracker_Artifact::class);
+        $a = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue($f->isValid($a, null));
     }
 }

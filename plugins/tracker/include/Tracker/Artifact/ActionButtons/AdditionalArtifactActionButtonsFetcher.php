@@ -21,15 +21,15 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class AdditionalArtifactActionButtonsFetcher implements Dispatchable
 {
     public const NAME = "additionalArtifactActionButtonsFetcher";
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -48,13 +48,13 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
      */
     private $user;
 
-    public function __construct(Tracker_Artifact $artifact, PFUser $user)
+    public function __construct(Artifact $artifact, PFUser $user)
     {
         $this->artifact = $artifact;
         $this->user = $user;
     }
 
-    public function getArtifact(): Tracker_Artifact
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }

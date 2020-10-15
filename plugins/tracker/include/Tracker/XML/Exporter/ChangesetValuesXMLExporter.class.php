@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_XML_Exporter_ChangesetValuesXMLExporter
 {
 
@@ -54,7 +56,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     public function exportSnapshot(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $changeset_values
     ) {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_SNAPSHOT);
@@ -63,7 +65,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     public function exportChangedFields(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $changeset_values
     ) {
         $this->exportValues($artifact_xml, $changeset_xml, $artifact, $changeset_values, self::EXPORT_CHANGES);
@@ -72,7 +74,7 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
     private function exportValues(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $changeset_values,
         $export_mode
     ) {

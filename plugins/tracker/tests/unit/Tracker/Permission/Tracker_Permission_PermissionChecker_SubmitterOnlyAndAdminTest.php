@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -40,7 +41,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
      */
     private $submitter;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -52,7 +53,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
      */
     private $not_member;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact2;
     /**
@@ -117,7 +118,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
         $user_manager->shouldReceive('getUserById')->with(120)->andReturns($this->user);
         $user_manager->shouldReceive('getUserById')->with(250)->andReturns($this->submitter);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
         $this->artifact->shouldReceive('useArtifactPermissions')->andReturnFalse();
         $this->artifact->shouldReceive('permission_db_authorized_ugroups')->andReturnFalse();
@@ -188,7 +189,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
 
         $project_access_checker->shouldReceive('checkUserCanAccessProject');
 
-        $this->artifact2 = Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact2 = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact2->shouldReceive('getTracker')->andReturns($tracker_in_private_project);
     }
 

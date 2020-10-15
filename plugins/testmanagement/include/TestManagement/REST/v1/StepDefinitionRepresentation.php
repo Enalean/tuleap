@@ -69,7 +69,7 @@ class StepDefinitionRepresentation
         $this->rank                    = $rank;
     }
 
-    public static function build(Step $step, \Codendi_HTMLPurifier $purifier, \Tracker_Artifact $artifact): self
+    public static function build(Step $step, \Codendi_HTMLPurifier $purifier, \Tuleap\Tracker\Artifact\Artifact $artifact): self
     {
         $project_id = $artifact->getTracker()->getGroupId();
         return new self(

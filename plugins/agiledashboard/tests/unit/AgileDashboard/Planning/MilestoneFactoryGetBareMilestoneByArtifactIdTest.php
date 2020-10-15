@@ -35,10 +35,10 @@ use PlanningPermissionsManager;
 use Project;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
@@ -106,7 +106,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
 
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($planning_tracker)->andReturn(Mockery::mock(Planning::class));
 
-        $artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact = Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
         $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
@@ -126,7 +126,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
         $planning_tracker = Mockery::mock(Tracker::class);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with()->andReturn(false);
 
-        $artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact = Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
         $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
@@ -140,7 +140,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
     {
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn(Mockery::mock(Planning::class));
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('userCanView')->with($this->user)->andReturn(false);
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
 

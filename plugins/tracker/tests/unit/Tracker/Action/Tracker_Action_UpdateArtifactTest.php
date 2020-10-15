@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
@@ -27,10 +28,10 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     protected $task;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     protected $user_story;
 
     /** @var int */
@@ -91,7 +92,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->hierarchy_factory   = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->computed_field      = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
         $this->us_computed_field   = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
-        $this->user_story          = \Mockery::spy(\Tracker_Artifact::class);
+        $this->user_story          = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker_user_story        = Mockery::spy(Tracker::class);
         $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
 
@@ -99,7 +100,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
         $this->user_story->shouldReceive('getId')->andReturns($user_story_id);
 
-        $this->task = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->task = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->task->setHierarchyFactory($this->hierarchy_factory);
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
@@ -173,7 +174,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker_user_story    = Mockery::spy(Tracker::class);
         $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
         $user_story_id         = 111;
-        $user_story            = \Mockery::spy(\Tracker_Artifact::class);
+        $user_story            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
         $user_story->shouldReceive('getId')->andReturns($user_story_id);
@@ -191,7 +192,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
         $tracker        = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $task           = Mockery::spy(Tracker_Artifact::class);
+        $task           = Mockery::spy(Artifact::class);
         $task->shouldReceive('getId')->andReturn($this->artifact_id);
         $task->shouldReceive('getTracker')->andReturn($tracker);
         $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
@@ -259,7 +260,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker_user_story    = Mockery::spy(Tracker::class);
         $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
         $user_story_id         = 111;
-        $user_story            = \Mockery::spy(\Tracker_Artifact::class);
+        $user_story            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
         $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);

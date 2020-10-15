@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Ensure consistency of backlogs.
  *
@@ -50,19 +52,19 @@ class Planning_ArtifactLinker
      *
      * This method returns the last milestone artifact we linked $artifact with
      *
-     * @param Codendi_Request  $request  The comment about the request parameter
-     * @param Tracker_Artifact $artifact The just created artifact
+     * @param Codendi_Request $request  The comment about the request parameter
+     * @param Artifact        $artifact The just created artifact
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
-    public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact)
+    public function linkBacklogWithPlanningItems(Codendi_Request $request, Artifact $artifact)
     {
         $user               = $request->getCurrentUser();
         $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);
         return $this->linkWithMilestoneArtifact($user, $artifact, $milestone_artifact);
     }
 
-    private function getMilestoneArtifact(PFUser $user, Codendi_Request $request, Tracker_Artifact $artifact)
+    private function getMilestoneArtifact(PFUser $user, Codendi_Request $request, Artifact $artifact)
     {
         $source_artifact = null;
         if ($request->exist('link-artifact-id')) {
@@ -82,7 +84,7 @@ class Planning_ArtifactLinker
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
-    private function linkWithMilestoneArtifact(PFUser $user, Tracker_Artifact $artifact, ?Tracker_Artifact $source_artifact = null)
+    private function linkWithMilestoneArtifact(PFUser $user, Artifact $artifact, ?Artifact $source_artifact = null)
     {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {

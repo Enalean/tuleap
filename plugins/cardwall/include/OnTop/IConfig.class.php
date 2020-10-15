@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */
@@ -45,7 +47,7 @@ interface Cardwall_OnTop_IConfig
     public function getMappingFor(Tracker $mapping_tracker);
 
     public function isInColumn(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
         Cardwall_Column $column
     );

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 /**
@@ -48,13 +49,13 @@ class Tracker_ArtifactChildPresenter
     public $has_children;
 
     /**
-     * @param Tracker_Artifact        $artifact The child
-     * @param Tracker_Artifact        $parent   The parent
+     * @param Artifact                $artifact The child
+     * @param Artifact                $parent   The parent
      * @param Tracker_Semantic_Status $semantic The status semantic used by the corresponding tracker
      */
     public function __construct(
-        Tracker_Artifact $artifact,
-        Tracker_Artifact $parent,
+        Artifact $artifact,
+        Artifact $parent,
         Tracker_Semantic_Status $semantic,
         NatureIsChildLinkRetriever $retriever
     ) {
@@ -69,7 +70,7 @@ class Tracker_ArtifactChildPresenter
         $this->has_children = $this->hasChildren($artifact, $retriever);
     }
 
-    private function hasChildren(Tracker_Artifact $artifact, $retriever)
+    private function hasChildren(Artifact $artifact, $retriever)
     {
         if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
             $artifact_links = $retriever->getChildren($artifact);

@@ -19,25 +19,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_FormElement_Container_Column_Group
 {
 
-    public function fetchArtifact($columns, Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifact($columns, Artifact $artifact, array $submitted_values)
     {
         return $this->fetchGroup($columns, 'fetchArtifactInGroup', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactForOverlay($columns, Tracker_Artifact $artifact)
+    public function fetchArtifactForOverlay($columns, Artifact $artifact)
     {
         return $this->fetchGroupNoColumns($columns, 'fetchArtifactInGroup', [$artifact]);
     }
 
-    public function fetchArtifactReadOnly($columns, Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactReadOnly($columns, Artifact $artifact, array $submitted_values)
     {
         return $this->fetchGroup($columns, 'fetchArtifactReadOnlyInGroup', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactCopyMode($columns, Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode($columns, Artifact $artifact, array $submitted_values)
     {
         return $this->fetchGroup($columns, 'fetchArtifactCopyModeInGroup', [$artifact, $submitted_values]);
     }
@@ -62,7 +64,7 @@ class Tracker_FormElement_Container_Column_Group
         return $this->fetchGroup($columns, 'fetchAdminInGroup', [$tracker]);
     }
 
-    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
+    public function fetchMailArtifact($columns, $recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', [$recipient, $artifact, $format, $ignore_perms], $format);
     }

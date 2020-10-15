@@ -32,7 +32,7 @@ final class PostSaveNewChangesetTest extends TestCase
 
     public function testExecutesProcessChildrenTriggersCommand(): void
     {
-        $artifact           = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact           = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $user               = \Mockery::mock(\PFUser::class);
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $previous_changeset = null;

@@ -21,6 +21,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_DateReminderManager
 {
@@ -145,11 +146,11 @@ class Tracker_DateReminderManager
      * Send reminder
      *
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
-     * @param Tracker_Artifact     $artifact Artifact for which reminders will be sent
+     * @param Artifact             $artifact Artifact for which reminders will be sent
      *
      * @return Void
      */
-    protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact)
+    protected function sendReminderNotification(Tracker_DateReminder $reminder, Artifact $artifact)
     {
         $tracker    = $this->getTracker();
 
@@ -175,13 +176,13 @@ class Tracker_DateReminderManager
      * Build the reminder messages
      *
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
-     * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
-     * @param Array            $messages Messages
-     * @param PFUser             $user     Receipient
+     * @param Artifact             $artifact Artifact for which reminders will be sent
+     * @param Array                $messages Messages
+     * @param PFUser               $user     Receipient
      *
      * return Array
      */
-    protected function buildMessage(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, &$messages, $user)
+    protected function buildMessage(Tracker_DateReminder $reminder, Artifact $artifact, &$messages, $user)
     {
         $mailManager = new MailManager();
 
@@ -223,7 +224,7 @@ class Tracker_DateReminderManager
      *
      * @return Void
      */
-    protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody)
+    protected function sendReminder(Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody)
     {
         $hp             = Codendi_HTMLPurifier::instance();
         $breadcrumbs    = [];
@@ -289,14 +290,14 @@ class Tracker_DateReminderManager
     /**
      * Get the text body for notification
      *
-     * @param Tracker_DateReminder $reminder     Reminder that will send notifications
-     * @param Tracker_Artifact     $artifact     ???
-     * @param PFUser               $recipient    The recipient who will receive the notification
-     * @param BaseLanguage         $language     The language of the message
+     * @param Tracker_DateReminder $reminder  Reminder that will send notifications
+     * @param Artifact             $artifact  ???
+     * @param PFUser               $recipient The recipient who will receive the notification
+     * @param BaseLanguage         $language  The language of the message
      *
      * @return String
      */
-    protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
+    protected function getBodyText(Tracker_DateReminder $reminder, Artifact $artifact, $recipient, BaseLanguage $language)
     {
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = ' <' . $protocol . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $artifact->getId() . '>';
@@ -320,7 +321,7 @@ class Tracker_DateReminderManager
      *
      * @return String
      */
-    protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
+    protected function getBodyHtml(Tracker_DateReminder $reminder, Artifact $artifact, $recipient, BaseLanguage $language)
     {
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();

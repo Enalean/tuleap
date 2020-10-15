@@ -24,10 +24,10 @@ namespace Tuleap\TestManagement\Campaign;
 
 use PFUser;
 use Project;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -57,7 +57,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
      * @psalm-param non-empty-array<string|int> $current_user_ugroup_ids
      */
     private function __construct(
-        Tracker_Artifact $campaign,
+        Artifact $campaign,
         array $current_user_ugroup_ids,
         int $test_exec_status_field_id,
         int $test_campaign_art_link_field_id
@@ -69,7 +69,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
     }
 
     public static function fromCampaign(
-        Tracker_Artifact $campaign,
+        Artifact $campaign,
         PFUser $user,
         Config $testmanagement_config,
         TrackerFactory $tracker_factory,
@@ -126,7 +126,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaign
 
     private static function getReadableByTheUserTestCampaignArtLinkFieldID(
         Tracker_FormElementFactory $form_element_factory,
-        Tracker_Artifact $campaign,
+        Artifact $campaign,
         PFUser $user
     ): ?int {
         $test_campaign_tracker = $campaign->getTracker();

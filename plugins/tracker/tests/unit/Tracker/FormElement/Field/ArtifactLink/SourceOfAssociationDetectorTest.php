@@ -32,25 +32,25 @@ final class SourceOfAssociationDetectorTest extends TestCase
      */
     private $detector;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $release;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $sprint;
 
     protected function setUp(): void
     {
-        $release_tracker = \Mockery::mock(\Tracker_Artifact::class);
+        $release_tracker = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $release_tracker->shouldReceive('getId')->andReturn(123);
-        $sprint_tracker  = \Mockery::mock(\Tracker_Artifact::class);
+        $sprint_tracker  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $sprint_tracker->shouldReceive('getId')->andReturn(565);
 
-        $this->release = \Mockery::mock(\Tracker_Artifact::class);
+        $this->release = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->release->shouldReceive('getTracker')->andReturn($release_tracker);
         $this->release->shouldReceive('getTrackerId')->andReturn(123);
-        $this->sprint  = \Mockery::mock(\Tracker_Artifact::class);
+        $this->sprint  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->sprint->shouldReceive('getTracker')->andReturn($sprint_tracker);
         $this->sprint->shouldReceive('getTrackerId')->andReturn(565);
 

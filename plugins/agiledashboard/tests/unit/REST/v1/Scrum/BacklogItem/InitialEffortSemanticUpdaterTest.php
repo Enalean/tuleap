@@ -26,11 +26,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
 final class InitialEffortSemanticUpdaterTest extends TestCase
@@ -48,7 +48,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
     private $user;
 
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -74,7 +74,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
         $this->updater = new InitialEffortSemanticUpdater();
 
         $this->user                    = Mockery::mock(PFUser::class);
-        $this->artifact                = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact                = Mockery::mock(Artifact::class);
         $this->backlog_item            = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
         $this->semantic_initial_effort = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
         $this->last_changeset          = Mockery::mock(Tracker_Artifact_Changeset::class);

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\TrackerEncryption\ChangesetValue;
@@ -82,7 +83,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         $last_changeset_value = $this->getLastChangesetValue($artifact);
         if (
@@ -211,7 +212,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      * @return string
      */
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
@@ -236,7 +237,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      * @return string
      */
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         if (isset($value) === false || $value->getValue() === '') {
@@ -249,7 +250,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     protected function getHiddenArtifactValueForEdition(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -277,7 +278,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     }
 
     protected function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
@@ -296,7 +297,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     /**
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '';
     }
@@ -346,7 +347,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $value;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
     }
 
@@ -355,7 +356,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return false;
     }
 
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return $old_value->getValue() !== $new_value;
     }

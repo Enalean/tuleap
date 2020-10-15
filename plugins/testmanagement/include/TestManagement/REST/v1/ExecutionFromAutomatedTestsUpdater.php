@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\TestManagement\REST\ExecutionChangesExtractor;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionFromAutomatedTestsUpdater
 {
@@ -65,7 +65,7 @@ class ExecutionFromAutomatedTestsUpdater
      */
     public function updateExecutionFromAutomatedTests(
         AutomatedTestsResultPATCHRepresentation $automated_tests_results,
-        Tracker_Artifact $campaign_artifact,
+        Artifact $campaign_artifact,
         PFUser $user
     ): void {
         if (! empty($automated_tests_results->junit_contents)) {

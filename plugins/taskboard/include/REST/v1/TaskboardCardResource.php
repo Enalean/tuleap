@@ -260,7 +260,7 @@ class TaskboardCardResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getArtifact(PFUser $user, int $id): \Tracker_Artifact
+    private function getArtifact(PFUser $user, int $id): \Tuleap\Tracker\Artifact\Artifact
     {
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
         if (! $artifact) {

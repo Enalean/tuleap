@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tracker_Artifact;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
@@ -73,7 +73,7 @@ class MyArtifactsRepresentation
         $this->tracker  = $tracker;
     }
 
-    public static function build(Tracker_Artifact $artifact, MinimalTrackerRepresentation $tracker_representation): self
+    public static function build(Artifact $artifact, MinimalTrackerRepresentation $tracker_representation): self
     {
         return new self(
             JsonCast::toInt($artifact->getId()),

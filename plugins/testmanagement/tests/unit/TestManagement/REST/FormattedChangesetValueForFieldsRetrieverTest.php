@@ -28,9 +28,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 
@@ -47,7 +47,7 @@ class FormattedChangesetValueForFieldsRetrieverTest extends TestCase
      */
     private $formatted_changeset_value_for_field_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -62,7 +62,7 @@ class FormattedChangesetValueForFieldsRetrieverTest extends TestCase
     protected function setUp(): void
     {
         $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->user                                          = Mockery::mock(PFUser::class);

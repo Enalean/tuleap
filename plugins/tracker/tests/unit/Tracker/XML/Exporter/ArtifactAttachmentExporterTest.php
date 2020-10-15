@@ -60,7 +60,7 @@ final class ArtifactAttachmentExporterTest extends \PHPUnit\Framework\TestCase
         $file_value = new Tracker_Artifact_ChangesetValue_File(1, $changeset, $file_field, 1, $files);
         $changeset->shouldReceive('getValue')->with($file_field)->andReturns($file_value);
 
-        $artifact = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($tracker)->getMock();
+        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns($tracker)->getMock();
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
         $form_element_factory = Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFileFields')->with($tracker)->andReturns([$file_field])->getMock();

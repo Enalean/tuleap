@@ -23,11 +23,11 @@ namespace Tuleap\Velocity;
 use Mockery;
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
@@ -62,7 +62,7 @@ class VelocityPluginComputationTest extends \PHPUnit\Framework\TestCase
      */
     private $semantic_velocity;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
     /**
@@ -86,7 +86,7 @@ class VelocityPluginComputationTest extends \PHPUnit\Framework\TestCase
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
 
         $this->semantic_status   = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_done     = Mockery::mock(SemanticDone::class);

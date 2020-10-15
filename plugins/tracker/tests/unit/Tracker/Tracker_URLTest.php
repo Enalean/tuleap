@@ -21,6 +21,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_URLTest extends TestCase
@@ -33,7 +34,7 @@ class Tracker_URLTest extends TestCase
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturns(666);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
 
@@ -71,7 +72,7 @@ class Tracker_URLTest extends TestCase
         $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
         $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
         $this->assertInstanceOf(
-            Tracker_Artifact::class,
+            Artifact::class,
             $this->url->getDispatchableFromRequest($request_artifact, $this->user),
         );
     }

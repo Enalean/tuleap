@@ -22,10 +22,10 @@ namespace Tuleap\Velocity;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_IComputeValues;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class VelocityCalculator
 {
@@ -58,7 +58,7 @@ class VelocityCalculator
         $this->dao                    = $dao;
     }
 
-    public function calculate(Tracker_Artifact $artifact, PFUser $user)
+    public function calculate(Artifact $artifact, PFUser $user)
     {
         $backlog_items = $this->getPlanningLinkedArtifact($artifact);
 
@@ -72,12 +72,12 @@ class VelocityCalculator
         return $initial_effort;
     }
 
-    private function getPlanningLinkedArtifact(Tracker_Artifact $artifact)
+    private function getPlanningLinkedArtifact(Artifact $artifact)
     {
         return $this->dao->searchPlanningLinkedArtifact($artifact->getId());
     }
 
-    private function getEffort(Tracker_Artifact $artifact, PFUser $user)
+    private function getEffort(Artifact $artifact, PFUser $user)
     {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
         if ($semantic_initial_effort === null) {

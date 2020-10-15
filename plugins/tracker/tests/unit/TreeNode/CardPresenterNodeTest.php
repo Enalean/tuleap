@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_TreeNode_CardPresenterNodeTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -27,7 +29,7 @@ class Tracker_TreeNode_CardPresenterNodeTest extends \PHPUnit\Framework\TestCase
         $node_1 = new TreeNode([], 1);
         $node_2 = new TreeNode([], 2);
 
-        $data['artifact'] = Mockery::mock(Tracker_Artifact::class);
+        $data['artifact'] = Mockery::mock(Artifact::class);
         $tree_node  = new TreeNode($data, 3);
         $tree_node->setChildren([$node_1, $node_2]);
         $tree_node->setObject($data['artifact']);

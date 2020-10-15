@@ -21,25 +21,26 @@
 use Tuleap\ArtifactsFolders\ArtifactsFoldersPluginInfo;
 use Tuleap\ArtifactsFolders\Folder\ArtifactLinkInformationPrepender;
 use Tuleap\ArtifactsFolders\Folder\ArtifactPresenterBuilder;
+use Tuleap\ArtifactsFolders\Folder\ArtifactView;
+use Tuleap\ArtifactsFolders\Folder\Controller;
+use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\DataFromRequestAugmentor;
 use Tuleap\ArtifactsFolders\Folder\FolderHierarchicalRepresentationCollectionBuilder;
+use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
-use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\ArtifactsFolders\Folder\FolderUsageRetriever;
-use Tuleap\ArtifactsFolders\Folder\Dao;
-use Tuleap\ArtifactsFolders\Folder\ArtifactView;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\XML\PHPCast;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -70,7 +71,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
-            $this->addHook(Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT);
+            $this->addHook(Artifact::DISPLAY_COPY_OF_ARTIFACT);
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
@@ -149,7 +150,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         }
     }
 
-    private function canAddOurView(NatureDao $dao, Tracker_Artifact $artifact, Project $project, PFUser $user)
+    private function canAddOurView(NatureDao $dao, Artifact $artifact, Project $project, PFUser $user)
     {
         $folder_usage_retriever = $this->getFolderUsageRetriever();
 
@@ -157,7 +158,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
             && $this->isViewAddableForArtifact($dao, $artifact);
     }
 
-    private function isViewAddableForArtifact(NatureDao $dao, Tracker_Artifact $artifact)
+    private function isViewAddableForArtifact(NatureDao $dao, Artifact $artifact)
     {
         $linked_artifacts_ids = $dao->getReverseLinkedArtifactIds(
             $artifact->getId(),
@@ -352,7 +353,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         return $this->getDao()->isTrackerConfiguredToContainFolders($tracker_id);
     }
 
-    /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
+    /** @see Artifact::DISPLAY_COPY_OF_ARTIFACT */
     public function display_copy_of_artifact($params) // phpcs:ignore
     {
         $folder_hierarchy = $this->getHierarchyOfFolderBuilder()->getHierarchyOfFolderForArtifact(

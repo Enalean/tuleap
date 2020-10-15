@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact;
-use Tracker_ArtifactLinkInfo;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
+use Tracker_ArtifactLinkInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * I convert submitted value into something that can be given to ArtifactLinkValueSaver.
@@ -85,7 +85,7 @@ class SubmittedValueConvertor
     public function convert(
         array $submitted_value,
         SourceOfAssociationCollection $source_of_association_collection,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
         $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
@@ -101,7 +101,7 @@ class SubmittedValueConvertor
     /** @return Tracker_ArtifactLinkInfo[] */
     private function getListOfArtifactLinkInfo(
         SourceOfAssociationCollection $source_of_association_collection,
-        Tracker_Artifact $from_artifact,
+        Artifact $from_artifact,
         array $submitted_value,
         ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
@@ -123,7 +123,7 @@ class SubmittedValueConvertor
 
     private function removeAlreadyLinkedParentArtifacts(
         SourceOfAssociationCollection $source_of_association_collection,
-        Tracker_Artifact $from_artifact,
+        Artifact $from_artifact,
         array &$list_of_artifactlinkinfo
     ) {
         foreach ($list_of_artifactlinkinfo as $id => $artifactinfo) {

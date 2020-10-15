@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ListOfExecutionsWithAutomatedTestDataRetriever
 {
@@ -74,7 +74,7 @@ class ListOfExecutionsWithAutomatedTestDataRetriever
     /**
      * @return ExecutionWithAutomatedTestData[]
      */
-    public function getExecutionsWithAutomatedTestData(Tracker_Artifact $campaign_artifact, PFUser $user): array
+    public function getExecutionsWithAutomatedTestData(Artifact $campaign_artifact, PFUser $user): array
     {
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($campaign_artifact->getTracker()->getProject());
 
@@ -89,7 +89,7 @@ class ListOfExecutionsWithAutomatedTestDataRetriever
      * @return ExecutionWithAutomatedTestData[]
      */
     private function getExecutionWithAutomatedTest(
-        Tracker_Artifact $campaign_artifact,
+        Artifact $campaign_artifact,
         PFUser $user,
         int $execution_tracker_id
     ): array {

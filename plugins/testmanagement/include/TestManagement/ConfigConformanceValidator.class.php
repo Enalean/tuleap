@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ConfigConformanceValidator
 {
@@ -38,7 +38,7 @@ class ConfigConformanceValidator
     /**
      * @return bool
      */
-    public function isArtifactACampaign(Tracker_Artifact $artifact)
+    public function isArtifactACampaign(Artifact $artifact)
     {
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();
@@ -51,7 +51,7 @@ class ConfigConformanceValidator
     /**
      * @return bool
      */
-    public function isArtifactAnExecution(Tracker_Artifact $artifact)
+    public function isArtifactAnExecution(Artifact $artifact)
     {
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();
@@ -64,7 +64,7 @@ class ConfigConformanceValidator
     /**
      * @return bool
      */
-    public function isArtifactADefinition(Tracker_Artifact $artifact)
+    public function isArtifactADefinition(Artifact $artifact)
     {
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();
@@ -77,7 +77,7 @@ class ConfigConformanceValidator
     /**
      * @return bool
      */
-    public function isArtifactAnExecutionOfDefinition(Tracker_Artifact $execution, Tracker_Artifact $definition)
+    public function isArtifactAnExecutionOfDefinition(Artifact $execution, Artifact $definition)
     {
         if (! $this->isArtifactADefinition($definition)) {
             return false;
@@ -96,7 +96,7 @@ class ConfigConformanceValidator
     /**
      * @return bool
      */
-    public function isArtifactABug(Tracker_Artifact $artifact)
+    public function isArtifactABug(Artifact $artifact)
     {
         $tracker = $artifact->getTracker();
         $project = $tracker->getProject();

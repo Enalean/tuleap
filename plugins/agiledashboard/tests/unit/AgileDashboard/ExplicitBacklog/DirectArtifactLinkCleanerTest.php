@@ -29,10 +29,10 @@ use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class DirectArtifactLinkCleanerTest extends TestCase
 {
@@ -59,7 +59,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
     private $artifacts_in_explicit_backlog_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -84,7 +84,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
 
         $tracker = Mockery::mock(Tracker::class)->shouldReceive('getGroupId')->andReturn('101')->getMock();
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->user     = Mockery::mock(PFUser::class);
 
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);

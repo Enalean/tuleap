@@ -28,7 +28,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
@@ -36,6 +35,7 @@ use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardPatcherTest extends TestCase
@@ -59,7 +59,7 @@ class CardPatcherTest extends TestCase
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -74,7 +74,7 @@ class CardPatcherTest extends TestCase
     protected function setUp(): void
     {
         $this->user     = Mockery::mock(PFUser::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->tracker  = Mockery::mock(Tracker::class);
 
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);

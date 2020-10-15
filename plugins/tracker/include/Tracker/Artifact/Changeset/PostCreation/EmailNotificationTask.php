@@ -296,7 +296,7 @@ final class EmailNotificationTask implements PostCreationTask
         return $recipient->getEmail();
     }
 
-    private function getCustomReplyToHeader(\Tracker_Artifact $artifact)
+    private function getCustomReplyToHeader(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
         $artifactbymail = new \Tracker_ArtifactByEmailStatus($this->mail_gateway_config);
 
@@ -482,7 +482,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getTextAssignedToFilter(\Tracker_Artifact $artifact, \PFUser $recipient)
+    private function getTextAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
     {
         $filter = '';
 
@@ -502,7 +502,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getHTMLAssignedToFilter(\Tracker_Artifact $artifact, \PFUser $recipient)
+    private function getHTMLAssignedToFilter(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
     {
         $filter = '';
 
@@ -523,7 +523,7 @@ final class EmailNotificationTask implements PostCreationTask
      *
      * @return string
      */
-    private function getSubject(\Tracker_Artifact $artifact, \PFUser $recipient, $ignore_perms = false)
+    private function getSubject(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient, $ignore_perms = false)
     {
         $subject  = '[' . $artifact->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ';
         $subject .= $this->getSubjectAssignedTo($artifact, $recipient);
@@ -534,7 +534,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string
      */
-    private function getSubjectAssignedTo(\Tracker_Artifact $artifact, \PFUser $recipient)
+    private function getSubjectAssignedTo(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $recipient)
     {
         if ($this->isNotificationAssignedToEnabled($artifact->getTracker())) {
             $assigned_to_users = $artifact->getAssignedTo($recipient);

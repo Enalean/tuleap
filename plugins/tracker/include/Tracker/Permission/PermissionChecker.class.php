@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Permission_PermissionChecker
 {
@@ -45,7 +46,7 @@ class Tracker_Permission_PermissionChecker
      *
      * @return bool
      */
-    public function userCanView(PFUser $user, Tracker_Artifact $artifact)
+    public function userCanView(PFUser $user, Artifact $artifact)
     {
         $project = $artifact->getTracker()->getProject();
         try {
@@ -69,10 +70,10 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userCanViewArtifact(PFUser $user, Tracker_Artifact $artifact)
+    private function userCanViewArtifact(PFUser $user, Artifact $artifact)
     {
         if ($artifact->useArtifactPermissions()) {
-            $rows = $artifact->permission_db_authorized_ugroups(Tracker_Artifact::PERMISSION_ACCESS);
+            $rows = $artifact->permission_db_authorized_ugroups(Artifact::PERMISSION_ACCESS);
 
             if ($rows !== false) {
                 foreach ($rows as $row) {
@@ -108,7 +109,7 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userHavePermissionOnTracker(PFUser $user, Tracker_Artifact $artifact)
+    private function userHavePermissionOnTracker(PFUser $user, Artifact $artifact)
     {
         $permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
 
@@ -162,7 +163,7 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userBelongsToGroup(PFUser $user, Tracker_Artifact $artifact, $ugroup_id)
+    private function userBelongsToGroup(PFUser $user, Artifact $artifact, $ugroup_id)
     {
         return $user->isMemberOfUGroup($ugroup_id, $artifact->getTracker()->getGroupId());
     }

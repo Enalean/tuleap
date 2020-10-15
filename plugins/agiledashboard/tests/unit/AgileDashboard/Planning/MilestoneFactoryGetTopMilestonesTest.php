@@ -37,11 +37,11 @@ use PlanningPermissionsManager;
 use Project;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryGetTopMilestonesTest extends TestCase
@@ -158,7 +158,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
         // Some artifacts have no changeset on Tuleap.net (because of anonymous that can create
         // artifacts but artifact creation fails because they have to write access to fields
         // the artifact creation is stopped half the way hence without changeset
-        $artifact_1 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(Artifact::class);
         $artifact_1->shouldReceive('getLastChangeset')->andReturn(null);
         $artifact_1->shouldReceive('getTracker')->andReturn($this->tracker);
 
@@ -186,11 +186,11 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
     }
 
     /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     protected function mockAnArtifactWithoutAncestor()
     {
-        $artifact_1 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(Artifact::class);
         $artifact_1->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $artifact_1->shouldReceive('userCanView')->andReturn(true);
         $artifact_1->shouldReceive('getTracker')->andReturn($this->tracker);

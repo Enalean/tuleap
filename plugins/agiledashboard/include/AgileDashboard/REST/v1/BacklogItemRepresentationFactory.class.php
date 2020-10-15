@@ -23,8 +23,8 @@ use AgileDashboard_Milestone_Backlog_IBacklogItem;
 use Cardwall_Semantic_CardFields;
 use EventManager;
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class BacklogItemRepresentationFactory
@@ -75,7 +75,7 @@ class BacklogItemRepresentationFactory
      */
     private function getCardFields(
         Cardwall_Semantic_CardFields $card_fields_semantic,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $current_user
     ) {
         $card_fields = [];
@@ -96,7 +96,7 @@ class BacklogItemRepresentationFactory
     /**
      * @return Cardwall_Semantic_CardFields
      */
-    private function getCardFieldsSemantic(Tracker_Artifact $artifact)
+    private function getCardFieldsSemantic(Artifact $artifact)
     {
         $card_fields_semantic = null;
 

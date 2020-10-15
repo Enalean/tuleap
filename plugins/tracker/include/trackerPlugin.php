@@ -75,6 +75,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
@@ -384,7 +385,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getUriFromCrossReference(GetUriFromCrossReference $event): void
     {
-        if ($event->getTargetType() === Tracker_Artifact::REFERENCE_NATURE) {
+        if ($event->getTargetType() === Artifact::REFERENCE_NATURE) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($event->getSourceId());
             if ($artifact) {
                 $event->setUri($artifact->getUri());
@@ -763,8 +764,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function get_available_reference_natures($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $natures = [Tracker_Artifact::REFERENCE_NATURE => ['keyword' => 'artifact',
-                                                                     'label'   => 'Artifact Tracker v5']];
+        $natures = [Artifact::REFERENCE_NATURE => ['keyword' => 'artifact',
+                                                   'label'   => 'Artifact Tracker v5']];
         $params['natures'] = array_merge($params['natures'], $natures);
     }
 
@@ -804,7 +805,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $row['link'],
             $row['scope'],
             $this->getServiceShortname(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $row['is_active'],
             $row['group_id']
         );
@@ -812,7 +813,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
-        if ($event->getReference()->getServiceShortName() === self::SERVICE_SHORTNAME && $event->getReference()->getNature() === Tracker_Artifact::REFERENCE_NATURE) {
+        if ($event->getReference()->getServiceShortName() === self::SERVICE_SHORTNAME && $event->getReference()->getNature() === Artifact::REFERENCE_NATURE) {
             $aid = (int) $event->getValue();
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid)) {
                 if ($artifact && $artifact->getTracker()->isActive()) {

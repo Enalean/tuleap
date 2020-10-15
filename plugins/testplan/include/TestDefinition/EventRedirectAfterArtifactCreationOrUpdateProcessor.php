@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\TestDefinition;
 
 use Codendi_Request;
-use Tracker_Artifact;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tuleap\TestPlan\TestPlanPaneInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class EventRedirectAfterArtifactCreationOrUpdateProcessor
@@ -57,7 +57,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
     public function process(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ): void {
         $ttm_backlog_item_id = $request->get(RedirectParameterInjector::TTM_BACKLOG_ITEM_ID_KEY);
         $ttm_milestone_id    = $request->get(RedirectParameterInjector::TTM_MILESTONE_ID_KEY);

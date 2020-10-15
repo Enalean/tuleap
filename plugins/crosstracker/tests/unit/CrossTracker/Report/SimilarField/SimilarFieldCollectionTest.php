@@ -41,7 +41,7 @@ class SimilarFieldCollectionTest extends TestCase
         $this->assertSame(['alternator', 'acroscleriasis'], $collection->getFieldNames());
         $this->assertCount(2, $collection->getFieldIdentifiers());
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTrackerId')->andReturns(91);
         $identifier = new SimilarFieldIdentifier('alternator', null);
         $this->assertSame($candidates[0]->getField(), $collection->getField($artifact, $identifier));
@@ -88,7 +88,7 @@ class SimilarFieldCollectionTest extends TestCase
     {
         $collection = new SimilarFieldCollection();
         $this->assertCount(0, $collection);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTrackerId')->andReturns(101);
         $not_a_candidate = new SimilarFieldIdentifier('name', null);
         $this->assertNull($collection->getField($artifact, $not_a_candidate));

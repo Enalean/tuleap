@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Exporter;
 
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_FileInfo;
 use Tracker_XML_Exporter_FilePathXMLExporter;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 use XML_SimpleXMLCDATAFactory;
 
@@ -46,7 +46,7 @@ class FileInfoXMLExporter
         $this->path_exporter = $path_exporter;
     }
 
-    public function export(SimpleXMLElement $artifact_xml, Tracker_Artifact $artifact): void
+    public function export(SimpleXMLElement $artifact_xml, Artifact $artifact): void
     {
         if (! isset($this->file_infos_by_artifact_id[(int) $artifact->getId()])) {
             return;
@@ -57,7 +57,7 @@ class FileInfoXMLExporter
         }
     }
 
-    public function add(Tracker_Artifact $artifact, Tracker_FileInfo $file): void
+    public function add(Artifact $artifact, Tracker_FileInfo $file): void
     {
         if (! isset($this->file_infos_by_artifact_id[(int) $artifact->getId()])) {
             $this->file_infos_by_artifact_id[(int) $artifact->getId()] = [];

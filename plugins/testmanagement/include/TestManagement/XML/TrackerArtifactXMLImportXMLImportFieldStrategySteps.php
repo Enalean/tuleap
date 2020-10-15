@@ -24,9 +24,9 @@ namespace Tuleap\TestManagement\XML;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategy;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TrackerArtifactXMLImportXMLImportFieldStrategySteps implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
@@ -34,7 +34,7 @@ class TrackerArtifactXMLImportXMLImportFieldStrategySteps implements Tracker_Art
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ): array {
         $data = [];
         foreach ($field_change->step as $step) {

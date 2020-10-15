@@ -25,10 +25,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_UserWithReadAllPermission;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
@@ -66,7 +66,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
@@ -135,7 +135,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
@@ -166,7 +166,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')

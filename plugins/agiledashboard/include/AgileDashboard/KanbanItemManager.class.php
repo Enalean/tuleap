@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class AgileDashboard_KanbanItemManager
 {
 
@@ -30,7 +32,7 @@ class AgileDashboard_KanbanItemManager
         $this->item_dao = $item_dao;
     }
 
-    public function isKanbanItemInBacklog(Tracker_Artifact $artifact)
+    public function isKanbanItemInBacklog(Artifact $artifact)
     {
         $row = $this->item_dao->isKanbanItemInBacklog($artifact->getTrackerId(), $artifact->getId())->getRow();
 
@@ -41,7 +43,7 @@ class AgileDashboard_KanbanItemManager
         return true;
     }
 
-    public function isKanbanItemInArchive(Tracker_Artifact $artifact)
+    public function isKanbanItemInArchive(Artifact $artifact)
     {
         $row = $this->item_dao->isKanbanItemInArchive($artifact->getTrackerId(), $artifact->getId())->getRow();
 
@@ -52,7 +54,7 @@ class AgileDashboard_KanbanItemManager
         return true;
     }
 
-    public function getColumnIdOfKanbanItem(Tracker_Artifact $artifact)
+    public function getColumnIdOfKanbanItem(Artifact $artifact)
     {
         $row = $this->item_dao->getColumnIdOfKanbanItem($artifact->getTrackerId(), $artifact->getId())->getRow();
 
@@ -63,7 +65,7 @@ class AgileDashboard_KanbanItemManager
         return (int) $row['bindvalue_id'];
     }
 
-    public function getKanbanItemIndexInBacklog(Tracker_Artifact $artifact)
+    public function getKanbanItemIndexInBacklog(Artifact $artifact)
     {
         $column_item_ids = [];
         foreach ($this->item_dao->getKanbanBacklogItemIds($artifact->getTrackerId()) as $row) {
@@ -72,7 +74,7 @@ class AgileDashboard_KanbanItemManager
         return array_search($artifact->getId(), $column_item_ids);
     }
 
-    public function getKanbanItemIndexInArchive(Tracker_Artifact $artifact)
+    public function getKanbanItemIndexInArchive(Artifact $artifact)
     {
         $column_item_ids = [];
         foreach ($this->item_dao->getKanbanArchiveItemIds($artifact->getTrackerId()) as $row) {
@@ -81,7 +83,7 @@ class AgileDashboard_KanbanItemManager
         return array_search($artifact->getId(), $column_item_ids);
     }
 
-    public function getKanbanItemIndexInColumn(Tracker_Artifact $artifact, $column)
+    public function getKanbanItemIndexInColumn(Artifact $artifact, $column)
     {
         $column_item_ids = [];
         foreach ($this->item_dao->getItemsInColumn($artifact->getTrackerId(), $column) as $row) {
@@ -90,7 +92,7 @@ class AgileDashboard_KanbanItemManager
         return array_search($artifact->getId(), $column_item_ids);
     }
 
-    public function getIndexOfKanbanItem(Tracker_Artifact $artifact, $column)
+    public function getIndexOfKanbanItem(Artifact $artifact, $column)
     {
         if ($column === 'backlog') {
             return $this->getKanbanItemIndexInBacklog($artifact);

@@ -23,10 +23,10 @@ namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
+use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field;
 use Tuleap\ForgeConfigSandbox;
-use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
@@ -60,7 +60,7 @@ class HiddenFieldsetCheckerTest extends TestCase
         );
 
         $this->fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
     }
 
     public function testFieldsetIsHiddenIfConfiguredInState()

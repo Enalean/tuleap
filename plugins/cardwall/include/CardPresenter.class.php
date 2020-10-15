@@ -20,16 +20,18 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
+use Tuleap\Tracker\Artifact\Artifact;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_CardPresenter implements Tracker_CardPresenter
 {
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $parent;
 
@@ -62,14 +64,14 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
 
     public function __construct(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_CardFields $card_fields,
         AccentColor $accent_color,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         $swimline_id,
         array $allowed_children,
         BackgroundColor $background_color,
-        ?Tracker_Artifact $parent = null
+        ?Artifact $parent = null
     ) {
         $this->artifact                    = $artifact;
         $this->parent                      = $parent;

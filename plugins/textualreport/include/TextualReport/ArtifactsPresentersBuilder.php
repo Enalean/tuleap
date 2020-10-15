@@ -66,7 +66,7 @@ class ArtifactsPresentersBuilder
         return $artifacts;
     }
 
-    private function getPurifiedDescription(\Tracker_Artifact $artifact)
+    private function getPurifiedDescription(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
         $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
         if (! $description_field) {

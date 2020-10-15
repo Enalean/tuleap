@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use ForgeConfig;
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Event\Events\ArchiveDeletedItemProvider;
-use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Project\XML\Export\ZipArchive;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
 class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
 {
@@ -37,7 +37,7 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
      */
     private $artifact_with_tracker_structure_exporter;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
     /**
@@ -47,7 +47,7 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
 
     private $archive_path;
 
-    public function __construct(ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter, Tracker_Artifact $artifact, PFUser $user)
+    public function __construct(ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter, Artifact $artifact, PFUser $user)
     {
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
         $this->artifact = $artifact;

@@ -51,7 +51,7 @@ class ArtifactPayloadTest extends TestCase
         $user->shouldReceive('getLdapId')->andReturns(null);
         $user->shouldReceive('getAvatarUrl')->andReturns('');
         $user->shouldReceive('hasAvatar')->andReturns(false);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getPreviousChangeset')->andReturns(null);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId')->andReturns(1);

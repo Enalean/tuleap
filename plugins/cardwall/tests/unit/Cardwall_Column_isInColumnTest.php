@@ -20,13 +20,15 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -47,7 +49,7 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(33);
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $changset = new Tracker_Artifact_Changeset_Null();
         $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changset);

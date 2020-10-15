@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_XML_Exporter_ArtifactAttachmentExporter
 {
@@ -35,7 +36,7 @@ class Tracker_XML_Exporter_ArtifactAttachmentExporter
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function exportAttachmentsInArchive(Tracker_Artifact $artifact, ArchiveInterface $archive)
+    public function exportAttachmentsInArchive(Artifact $artifact, ArchiveInterface $archive)
     {
         $file_fields    = $this->form_element_factory->getUsedFileFields($artifact->getTracker());
         $last_changeset = $artifact->getLastChangeset();

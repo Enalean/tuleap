@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Reference extends Reference
 {
 
@@ -37,7 +39,7 @@ class Tracker_Reference extends Reference
             TRACKER_BASE_URL . '/?aid=$1&group_id=$group_id',
             $visibility,
             trackerPlugin::SERVICE_SHORTNAME,
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $is_used,
             $tracker->getGroupId()
         );

@@ -20,13 +20,15 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -60,7 +62,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
 
         $changset = new Tracker_Artifact_Changeset_Null();
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(Tracker::class));
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changset);
     }

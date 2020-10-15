@@ -21,15 +21,15 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use EventManager;
-use Tracker_Artifact;
-use Tracker_ArtifactLinkInfo;
-use Tracker_ArtifactFactory;
-use Tracker_ReferenceManager;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tracker;
 use Feedback;
 use PFUser;
+use Tracker;
+use Tracker_ArtifactFactory;
+use Tracker_ArtifactLinkInfo;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_ReferenceManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactLinkValueSaver
 {
@@ -77,14 +77,14 @@ class ArtifactLinkValueSaver
      *
      * @param Tracker_FormElement_Field_ArtifactLink $field              The field in which we save the value
      * @param PFUser                                 $user               The current user
-     * @param Tracker_Artifact                       $artifact           The artifact
+     * @param Artifact                               $artifact           The artifact
      * @param int                                    $changeset_value_id The id of the changeset_value
      * @param mixed                                  $submitted_value    The value submitted by the user
      */
     public function saveValue(
         Tracker_FormElement_Field_ArtifactLink $field,
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $changeset_value_id,
         array $submitted_value
     ) {
@@ -111,7 +111,7 @@ class ArtifactLinkValueSaver
     }
 
     private function getNature(
-        Tracker_Artifact $from_artifact,
+        Artifact $from_artifact,
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
@@ -226,8 +226,8 @@ class ArtifactLinkValueSaver
 
     private function getNatureDefinedByPlugin(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
-        Tracker_Artifact $from_artifact,
-        Tracker_Artifact $to_artifact,
+        Artifact $from_artifact,
+        Artifact $to_artifact,
         $existing_nature,
         array $submitted_value
     ) {
@@ -267,12 +267,12 @@ class ArtifactLinkValueSaver
     /**
      * Update cross references of this field
      *
-     * @param Tracker_Artifact $artifact the artifact that is currently updated
-     * @param array            $submitted_value   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
+     * @param Artifact $artifact        the artifact that is currently updated
+     * @param array    $submitted_value the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
      *
      * @return boolean
      */
-    private function updateCrossReferences(PFUser $user, Tracker_Artifact $artifact, array $submitted_value)
+    private function updateCrossReferences(PFUser $user, Artifact $artifact, array $submitted_value)
     {
         $update_ok = true;
 
@@ -286,7 +286,7 @@ class ArtifactLinkValueSaver
         return $update_ok;
     }
 
-    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link)
+    private function canLinkArtifacts(Artifact $src_artifact, Artifact $artifact_to_link)
     {
         return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
     }
@@ -309,7 +309,7 @@ class ArtifactLinkValueSaver
         return [];
     }
 
-    private function insertCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id)
+    private function insertCrossReference(PFUser $user, Artifact $source_artifact, $target_artifact_id)
     {
         return $this->reference_manager->insertBetweenTwoArtifacts(
             $source_artifact,
@@ -318,7 +318,7 @@ class ArtifactLinkValueSaver
         );
     }
 
-    private function removeCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id)
+    private function removeCrossReference(PFUser $user, Artifact $source_artifact, $target_artifact_id)
     {
         return $this->reference_manager->removeBetweenTwoArtifacts(
             $source_artifact,
@@ -329,7 +329,7 @@ class ArtifactLinkValueSaver
 
     private function getArtifactIdsToLink(
         Tracker $from_tracker,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_value
     ) {
         $all_artifact_to_be_linked = [];

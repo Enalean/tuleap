@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,7 +40,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
      */
     private $current_user;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $new_artifact;
     /**
@@ -75,7 +77,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
             $this->formelement_factory
         ) extends Tracker_Action_CreateArtifact
         {
-            public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
+            public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
             {
                 parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
             }
@@ -88,7 +90,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
         $this->tracker_id   = 999;
         $this->current_user = new PFUser(['language_id' => 'en']);
-        $this->new_artifact = Mockery::spy(Tracker_Artifact::class);
+        $this->new_artifact = Mockery::spy(Artifact::class);
         $this->new_artifact->shouldReceive('getId')->andReturn(123);
 
         $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
@@ -171,7 +173,7 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
 
     public function testItDoesntRedirectWhenNewArtifactAlreadyHasAParent(): void
     {
-        $this->new_artifact->shouldReceive('getAllAncestors')->andReturns([Mockery::spy(Tracker_Artifact::class)]);
+        $this->new_artifact->shouldReceive('getAllAncestors')->andReturns([Mockery::spy(Artifact::class)]);
 
         $this->tracker->shouldReceive('getParent')->andReturns($this->parent_tracker);
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->andReturns($this->parent_art_link_field);

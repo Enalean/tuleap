@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ElementsCount
 {
@@ -61,7 +61,7 @@ class ElementsCount
         return $this->already_seen_artifacts;
     }
 
-    public function isArtifactAlreadyParsed(Tracker_Artifact $artifact): bool
+    public function isArtifactAlreadyParsed(Artifact $artifact): bool
     {
         return in_array((int) $artifact->getId(), $this->already_seen_artifacts, true);
     }

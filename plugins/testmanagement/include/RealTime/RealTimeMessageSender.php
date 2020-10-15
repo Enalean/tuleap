@@ -21,11 +21,11 @@
 namespace Tuleap\TestManagement\RealTime;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Permission_PermissionsSerializer;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\TestManagement\REST\v1\BugRepresentation;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\ArtifactRightsPresenter;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -64,8 +64,8 @@ class RealTimeMessageSender
 
     public function sendExecutionCreated(
         PFUser $user,
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $artifact
+        Artifact $campaign,
+        Artifact $artifact
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -81,8 +81,8 @@ class RealTimeMessageSender
 
     public function sendExecutionDeleted(
         PFUser $user,
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $artifact
+        Artifact $campaign,
+        Artifact $artifact
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -98,8 +98,8 @@ class RealTimeMessageSender
 
     public function sendExecutionUpdated(
         PFUser $user,
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $artifact,
+        Artifact $campaign,
+        Artifact $artifact,
         ?string $status,
         ?string $previous_status,
         ?UserRepresentation $previous_user
@@ -117,9 +117,9 @@ class RealTimeMessageSender
 
     public function sendArtifactLinkAdded(
         PFUser $user,
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $execution_artifact,
-        Tracker_Artifact $linked_artifact
+        Artifact $campaign,
+        Artifact $execution_artifact,
+        Artifact $linked_artifact
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -141,7 +141,7 @@ class RealTimeMessageSender
 
     public function sendCampaignUpdated(
         PFUser $user,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
@@ -162,8 +162,8 @@ class RealTimeMessageSender
     }
 
     public function sendPresences(
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $artifact,
+        Artifact $campaign,
+        Artifact $artifact,
         PFUser $user,
         string $uuid,
         string $remove_from
@@ -194,7 +194,7 @@ class RealTimeMessageSender
         $this->node_js_client->sendMessage($message);
     }
 
-    private function buildArtifactLinkRepresentation(Tracker_Artifact $artifact_link): BugRepresentation
+    private function buildArtifactLinkRepresentation(Artifact $artifact_link): BugRepresentation
     {
         $tracker_representation = MinimalTrackerRepresentation::build($artifact_link->getTracker());
 
@@ -206,8 +206,8 @@ class RealTimeMessageSender
 
     private function sendExecution(
         PFUser $user,
-        Tracker_Artifact $campaign,
-        Tracker_Artifact $artifact,
+        Artifact $campaign,
+        Artifact $artifact,
         string $event_name,
         array $data
     ): void {

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Builds instances of Tracker_Artifact_MailGateway_Recipient
  */
@@ -120,7 +122,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
 
     private function getEmail(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Artifact_Changeset $changeset
     ) {
         return $artifact->getId() . "-" .
@@ -152,7 +154,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
 
     private function checkHash(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $submitted_hash
     ) {
         if ($this->getHash($user, $artifact) != $submitted_hash) {
@@ -162,7 +164,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory
 
     private function getHash(
         PFUser $user,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         return md5($user->getId() . "-" . $artifact->getId() . "-" . $this->salt);
     }

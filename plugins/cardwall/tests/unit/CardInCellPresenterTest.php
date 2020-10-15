@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class CardInCellPresenterTest extends TestCase
@@ -32,7 +33,7 @@ final class CardInCellPresenterTest extends TestCase
     private const CARD_ID       = 56789;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -49,7 +50,7 @@ final class CardInCellPresenterTest extends TestCase
         parent::setUp();
         $swimline_field_values   = [100, 221];
         $swimline_id             = 3;
-        $this->artifact          = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact          = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->card_presenter    = \Mockery::mock(\Cardwall_CardPresenter::class)->shouldReceive('getArtifact')->andReturns($this->artifact)->getMock();
         $this->card_presenter->shouldReceive('getId')->andReturns(self::CARD_ID);
         $this->presenter         = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);

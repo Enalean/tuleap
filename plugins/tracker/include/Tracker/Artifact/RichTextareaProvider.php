@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
-use Tracker_Artifact;
 
 class RichTextareaProvider
 {
@@ -48,7 +47,7 @@ class RichTextareaProvider
 
     public function getTextarea(
         Tracker $tracker,
-        ?Tracker_Artifact $artifact,
+        ?Artifact $artifact,
         PFUser $user,
         string $id,
         string $name,

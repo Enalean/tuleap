@@ -27,8 +27,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class StatusValueForChangesetProviderTest extends TestCase
 {
@@ -56,7 +56,7 @@ class StatusValueForChangesetProviderTest extends TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);

@@ -25,7 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 
@@ -48,7 +48,7 @@ class BurnupCacheCheckerTest extends TestCase
      */
     private $user;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -81,7 +81,7 @@ class BurnupCacheCheckerTest extends TestCase
             $this->cache_days_comparator
         );
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
 
         $start_date        = new \DateTime();

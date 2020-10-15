@@ -18,18 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Verify that all of siblings artifacts meet rule trigger conditions
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy
 {
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var Tracker_Workflow_Trigger_TriggerRule */
     private $rule;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
+    public function __construct(Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
     {
         $this->artifact = $artifact;
         $this->rule     = $rule;
@@ -57,7 +60,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
         return $update_parent;
     }
 
-    private function artifactMatchRulesValue(Tracker_Artifact $sibling)
+    private function artifactMatchRulesValue(Artifact $sibling)
     {
         $update_parent = true;
         foreach ($this->rule->getTriggers() as $trigger) {
@@ -66,7 +69,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
         return $update_parent;
     }
 
-    private function artifactMatchTriggerValue(Tracker_Artifact $sibling, Tracker_Workflow_Trigger_FieldValue $trigger)
+    private function artifactMatchTriggerValue(Artifact $sibling, Tracker_Workflow_Trigger_FieldValue $trigger)
     {
         if ($trigger->getField()->getTracker() == $sibling->getTracker()) {
             return $trigger->isSetForArtifact($sibling);

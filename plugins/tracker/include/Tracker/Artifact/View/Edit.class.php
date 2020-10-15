@@ -20,6 +20,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -44,7 +45,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     protected $renderer;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
         Tracker_Artifact_ArtifactRenderer $renderer

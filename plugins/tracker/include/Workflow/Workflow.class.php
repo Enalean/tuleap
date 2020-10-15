@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
@@ -42,7 +43,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $is_used;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     protected $artifact = null;
 
@@ -109,14 +110,14 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Set artifact
      *
-     * @param Tracker_Artifact $artifact artifact the workflow control
+     * @param Artifact $artifact artifact the workflow control
      */
-    public function setArtifact(Tracker_Artifact $artifact)
+    public function setArtifact(Artifact $artifact)
     {
         $this->artifact = $artifact;
     }
 
-    /** @return Tracker_Artifact */
+    /** @return Artifact */
     public function getArtifact()
     {
         return $this->artifact;
@@ -319,13 +320,13 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Execute actions before transition happens (if there is one)
      *
-     * @param array $fields_data  Request field data (array[field_id] => data)
-     * @param PFUser  $current_user The user who are performing the update
-     * @param Tracker_Artifact  $artifact The artifact
+     * @param array    $fields_data  Request field data (array[field_id] => data)
+     * @param PFUser   $current_user The user who are performing the update
+     * @param Artifact $artifact     The artifact
      *
      * @return void
      */
-    public function before(array &$fields_data, PFUser $current_user, Tracker_Artifact $artifact)
+    public function before(array &$fields_data, PFUser $current_user, Artifact $artifact)
     {
         $artifact_id = $artifact->getId();
         if (! $this->is_used && ! $this->is_legacy) {
@@ -381,7 +382,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * @throws Tracker_Workflow_Transition_InvalidConditionForTransitionException
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): void
+    public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): void
     {
         if (! $this->is_used) {
             return;

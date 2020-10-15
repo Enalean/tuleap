@@ -47,11 +47,11 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
     }
 
     /**
-     * @param \Tracker_Artifact[] $test_definitions
+     * @param \Tuleap\Tracker\Artifact\Artifact[] $test_definitions
      */
     public function getInformationNeededToRetrieveTestStatusPerTestDefinition(
         \PFUser $user,
-        \Tracker_Artifact $milestone,
+        \Tuleap\Tracker\Artifact\Artifact $milestone,
         array $test_definitions
     ): ?TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition {
         if (empty($test_definitions)) {

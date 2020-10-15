@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -72,27 +73,27 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
      */
     private $epic2_milestone;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $faq;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $corp;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $product;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $release;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $sprint;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $epic;
     /**
@@ -332,7 +333,7 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
     {
         reset($ancestors);
         $parent   = current($ancestors);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getParent')->andReturn($parent);
@@ -348,7 +349,7 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
     private function assertPossibleParentsEqual(
         array $expected,
         Tracker $parent_tracker,
-        Tracker_Artifact $source_artifact
+        Artifact $source_artifact
     ) {
         $this->assertEquals(
             $expected,

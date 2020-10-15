@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_MailGateway_IncomingMessage
 {
 
@@ -33,7 +35,7 @@ class Tracker_Artifact_MailGateway_IncomingMessage
     /** @var Tracker */
     private $tracker;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     public function __construct(
@@ -41,7 +43,7 @@ class Tracker_Artifact_MailGateway_IncomingMessage
         $body,
         PFUser $user,
         Tracker $tracker,
-        ?Tracker_Artifact $artifact = null
+        ?Artifact $artifact = null
     ) {
         $this->subject = $subject;
         $this->body = $body;
@@ -83,7 +85,7 @@ class Tracker_Artifact_MailGateway_IncomingMessage
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact()
     {

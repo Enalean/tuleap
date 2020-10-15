@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tuleap\User\REST\UserRepresentation;
-use Tracker_Artifact;
 use PFUser;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
 class AssignedToRepresentationBuilder
@@ -48,7 +48,7 @@ class AssignedToRepresentationBuilder
     /**
      * @return \Tuleap\User\REST\UserRepresentation|null
      */
-    public function getAssignedToRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
+    public function getAssignedToRepresentationForExecution(PFUser $user, Artifact $execution)
     {
         $field_value  = $this->getExecutionAssignedTo($user, $execution);
         $user_id      = array_pop($field_value);
@@ -67,7 +67,7 @@ class AssignedToRepresentationBuilder
     /**
      * @return array|mixed
      */
-    private function getExecutionAssignedTo(PFUser $user, Tracker_Artifact $execution)
+    private function getExecutionAssignedTo(PFUser $user, Artifact $execution)
     {
         $assigned_to_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(
             $execution->getTrackerId(),

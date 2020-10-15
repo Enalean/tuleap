@@ -26,7 +26,7 @@ final class ArtifactCreated implements Dispatchable
 {
     public const NAME = 'trackerArtifactCreated';
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      * @psalm-readonly
      */
     private $artifact;
@@ -41,7 +41,7 @@ final class ArtifactCreated implements Dispatchable
      */
     private $user;
 
-    public function __construct(\Tracker_Artifact $artifact, \Tracker_Artifact_Changeset $changeset, \PFUser $user)
+    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact, \Tracker_Artifact_Changeset $changeset, \PFUser $user)
     {
         $this->artifact  = $artifact;
         $this->changeset = $changeset;
@@ -51,7 +51,7 @@ final class ArtifactCreated implements Dispatchable
     /**
      * @psalm-mutation-free
      */
-    public function getArtifact(): \Tracker_Artifact
+    public function getArtifact(): \Tuleap\Tracker\Artifact\Artifact
     {
         return $this->artifact;
     }

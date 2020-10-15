@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_ArtifactFactory;
@@ -37,6 +36,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class VelocityCalculatorTest extends TestCase
 {
@@ -71,7 +71,7 @@ final class VelocityCalculatorTest extends TestCase
             $this->velocity_dao
         );
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->tracker  = Mockery::mock(Tracker::class);
         $this->user     = Mockery::mock(PFUser::class);
 
@@ -249,7 +249,7 @@ final class VelocityCalculatorTest extends TestCase
     }
 
     private function mockSemanticInitialEffort(
-        Tracker_Artifact $linked_artifact,
+        Artifact $linked_artifact,
         Tracker_FormElement_Field $initial_effort_field
     ) {
         $initial_effort_field->shouldReceive('getComputedValue')
@@ -265,7 +265,7 @@ final class VelocityCalculatorTest extends TestCase
     }
 
     private function mockSemanticInitialEffortWithListValueNotInteger(
-        Tracker_Artifact $linked_artifact,
+        Artifact $linked_artifact,
         Tracker_FormElement_Field $initial_effort_field
     ) {
         $initial_effort_field->shouldReceive('getComputedValue')
@@ -311,7 +311,7 @@ final class VelocityCalculatorTest extends TestCase
     }
 
     /**
-     * @return Mockery\MockInterface|Tracker_Artifact
+     * @return Mockery\MockInterface|Artifact
      */
     private function mockLinkedArtifact()
     {
@@ -322,7 +322,7 @@ final class VelocityCalculatorTest extends TestCase
                 ['id' => 201]
             ]);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->artifact_factory->shouldReceive('getArtifactById')

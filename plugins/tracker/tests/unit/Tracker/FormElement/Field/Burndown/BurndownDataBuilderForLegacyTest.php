@@ -43,7 +43,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
      */
     private $user;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -81,7 +81,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
             new BurndownRemainingEffortAdderForLegacy($field_retriever, new UserWithReadAllPermissionBuilder())
         );
 
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
         $this->user     = Mockery::mock(\PFUser::class);

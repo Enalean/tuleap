@@ -26,9 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
@@ -69,7 +69,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
 
         $this->assertFalse(
             $this->hidden_fieldsets_detector->isFieldsetHidden(
-                Mockery::mock(Tracker_Artifact::class),
+                Mockery::mock(Artifact::class),
                 Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
             )
         );
@@ -77,7 +77,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
 
     public function testIsFieldsetHiddenReturnsFalseWhenNoHiddenFieldsetsPostAction(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
 
         $transition = Mockery::mock(\Transition::class);
@@ -97,7 +97,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
     public function testIsFieldsetHiddenReturnsFalseWhenGivenFieldsetIsNotAmongHiddenFieldsets(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Tracker_Artifact::class);
+        $artifact                     = Mockery::mock(Artifact::class);
         $transition                   = Mockery::mock(\Transition::class);
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
@@ -125,7 +125,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
     public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Tracker_Artifact::class);
+        $artifact                     = Mockery::mock(Artifact::class);
         $transition                   = Mockery::mock(\Transition::class);
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
@@ -153,7 +153,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnTrueIfThereAny(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Tracker_Artifact::class);
+        $artifact                     = Mockery::mock(Artifact::class);
         $transition                   = Mockery::mock(\Transition::class);
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
@@ -188,7 +188,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
 
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoFieldsets(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $tracker  = Mockery::mock(Tracker::class);
         $workflow = Mockery::mock(\Workflow::class);
 
@@ -206,7 +206,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
     public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoHiddenFieldsets(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
-        $artifact                     = Mockery::mock(Tracker_Artifact::class);
+        $artifact                     = Mockery::mock(Artifact::class);
         $transition                   = Mockery::mock(\Transition::class);
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $tracker                      = Mockery::mock(Tracker::class);

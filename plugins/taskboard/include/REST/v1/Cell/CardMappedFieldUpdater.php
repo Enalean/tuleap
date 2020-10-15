@@ -28,7 +28,6 @@ use Cardwall_OnTop_Config_ColumnFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Exception;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_InvalidFieldException;
@@ -42,6 +41,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardMappedFieldUpdater
@@ -93,9 +93,9 @@ class CardMappedFieldUpdater
      * @throws RestException
      */
     public function updateCardMappedField(
-        Tracker_Artifact $swimlane_artifact,
+        Artifact $swimlane_artifact,
         int $column_id,
-        Tracker_Artifact $artifact_to_add,
+        Artifact $artifact_to_add,
         PFUser $current_user
     ) {
         $column            = $this->getColumn($column_id);

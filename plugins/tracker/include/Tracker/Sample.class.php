@@ -29,7 +29,7 @@ class Tracker_Sample extends Sample
     public function __construct()
     {
         $this->field = 'submitted_on';
-        $this->table = 'tracker_artifact';
+        $this->table = 'Tuleap\Artifact\Artifact';
         parent::__construct();
     }
 }

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
@@ -33,7 +34,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public $form_elements;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     public $artifact_id;
@@ -50,7 +51,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
         $follow_ups,
         $artifact_links,
         $form_elements,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {

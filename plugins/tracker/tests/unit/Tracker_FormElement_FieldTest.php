@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -65,7 +67,7 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
             [1, 1, 1, 1, 'V', 1, 1],
         ];
 
-        $artifact_update = Mockery::mock(Tracker_Artifact::class);
+        $artifact_update = Mockery::mock(Artifact::class);
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
 
         foreach ($matrix as $case) {
@@ -141,7 +143,7 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
 
     public function testIsValidNotRequired(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $field    = Mockery::mock(Tracker_FormElement_Field::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getLabel')->andReturn('Status');
@@ -160,7 +162,7 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
 
     public function testIsValidRequired(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $field    = Mockery::mock(Tracker_FormElement_Field::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getLabel')->andReturn('Status');

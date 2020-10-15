@@ -19,10 +19,10 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
-use Luracast\Restler\RestException;
-use Tracker_Artifact;
 use Cardwall_SingleCard;
+use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class CardUpdater
 {
@@ -37,7 +37,7 @@ class CardUpdater
         $artifact->createNewChangeset($fields_data, '', $user);
     }
 
-    private function checkArtifact(PFUser $user, Tracker_Artifact $artifact)
+    private function checkArtifact(PFUser $user, Artifact $artifact)
     {
         if (! $artifact) {
             throw new RestException(404, 'Artifact not found');

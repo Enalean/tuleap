@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
@@ -42,7 +43,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
      */
     private $user;
     /**
-     * @var \Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -57,7 +58,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
     protected function setUp(): void
     {
         $this->artifact_id = 123;
-        $this->artifact    = Mockery::spy(Tracker_Artifact::class);
+        $this->artifact    = Mockery::spy(Artifact::class);
         $tracker              = Mockery::mock(Tracker::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
@@ -80,7 +81,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
     {
         $artifact_id  = 345;
         $artifact_row = ['id' => $artifact_id];
-        $artifact         = Mockery::mock(Tracker_Artifact::class);
+        $artifact         = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artifact_row)->andReturn(
@@ -107,9 +108,9 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
         $this->dao->shouldReceive('getParentsInHierarchy')->with($this->artifact_id)->andReturn([$artifact_345_row, $artifact_346_row]);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
-            ->with($artifact_345_row)->andReturn(Mockery::spy(Tracker_Artifact::class));
+            ->with($artifact_345_row)->andReturn(Mockery::spy(Artifact::class));
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
-            ->with($artifact_346_row)->andReturn(Mockery::spy(Tracker_Artifact::class));
+            ->with($artifact_346_row)->andReturn(Mockery::spy(Artifact::class));
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::WARN, Mockery::any(), Mockery::any())->once();
 

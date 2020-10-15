@@ -280,7 +280,7 @@ final class TextDiffRetrieverTest extends TestCase
 
     private function getAnArtifact(int $artifact_id, \PFUser $user, bool $user_can_view): void
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with($artifact_id)

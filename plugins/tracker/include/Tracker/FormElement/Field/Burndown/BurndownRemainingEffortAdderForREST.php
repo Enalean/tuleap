@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use DateTime;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class BurndownRemainingEffortAdderForREST
 {
@@ -49,7 +49,7 @@ class BurndownRemainingEffortAdderForREST
 
     public function addRemainingEffortDataForREST(
         Tracker_Chart_Data_Burndown $burndown_data,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ) {
         $field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);

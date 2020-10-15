@@ -22,8 +22,8 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use SystemEvent;
 use SystemEventManager;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class BurnupCacheGenerator
 {
@@ -37,7 +37,7 @@ class BurnupCacheGenerator
         $this->system_event_manager = $system_event_manager;
     }
 
-    public function isCacheBurnupAlreadyAsked(Tracker_Artifact $artifact)
+    public function isCacheBurnupAlreadyAsked(Artifact $artifact)
     {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
             SystemEvent_BURNUP_GENERATE::class,
@@ -45,7 +45,7 @@ class BurnupCacheGenerator
         );
     }
 
-    public function forceBurnupCacheGeneration(Tracker_Artifact $artifact)
+    public function forceBurnupCacheGeneration(Artifact $artifact)
     {
         if ($this->isCacheBurnupAlreadyAsked($artifact)) {
             return;

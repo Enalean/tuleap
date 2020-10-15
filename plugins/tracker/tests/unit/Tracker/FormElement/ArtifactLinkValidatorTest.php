@@ -52,7 +52,7 @@ final class ArtifactLinkValidatorTest extends TestCase
     private $artifact_link_validator;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -62,7 +62,7 @@ final class ArtifactLinkValidatorTest extends TestCase
     private $field;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $linked_artifact;
 
@@ -98,11 +98,11 @@ final class ArtifactLinkValidatorTest extends TestCase
 
         $this->tracker = \Mockery::spy(\Tracker::class);
 
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->linked_artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->linked_artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->linked_artifact->shouldReceive('getId')->andReturn(105);
         $this->linked_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 

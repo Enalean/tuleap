@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Permission_PermissionChecker;
 use Tracker_UserWithReadAllPermission;
 
@@ -33,7 +32,7 @@ class PermissionsCache
     private static $can_view_cache = [];
 
     public static function userCanView(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         Tracker_Permission_PermissionChecker $permission_checker
     ) {

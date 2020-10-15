@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_CardControllerTest extends TestCase
@@ -52,7 +53,7 @@ final class Cardwall_CardControllerTest extends TestCase
         $swimline_id    = 215;
         $drop_into      = ['5', '7'];
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $card_fields = \Mockery::spy(\Cardwall_CardFields::class);

@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class CountElementsCalculator
 {
@@ -85,7 +85,7 @@ class CountElementsCalculator
     }
 
     private function countChildren(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Artifact_Changeset $changeset,
         int $timestamp,
         ElementsCount $initial_accumulator
@@ -124,7 +124,7 @@ class CountElementsCalculator
 
     private function countElements(
         ElementsCount $accumulator,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         int $timestamp
     ): ElementsCount {
         if ($accumulator->isArtifactAlreadyParsed($artifact)) {
@@ -152,7 +152,7 @@ class CountElementsCalculator
         );
     }
 
-    private function isLinkedArtifactChildOfGivenArtifact(Tracker_Artifact $linked_artifact, Tracker_Artifact $artifact): bool
+    private function isLinkedArtifactChildOfGivenArtifact(Artifact $linked_artifact, Artifact $artifact): bool
     {
         $parent_linked_artifact = $linked_artifact->getParentWithoutPermissionChecking();
 

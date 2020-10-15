@@ -37,7 +37,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
     /** @var RemainingEffortValueRetriever */
     private $remaining_effort_retriever;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $artifact;
 
     /** @var \Tracker */
@@ -54,7 +54,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
         $this->user                       = Mockery::mock(\PFUser::class);
 
         $this->tracker  = Mockery::mock(\Tracker::class);
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
     }
 

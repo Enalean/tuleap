@@ -26,9 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class FormattedChangesetValueForIntFieldRetrieverTest extends TestCase
 {
@@ -39,7 +39,7 @@ class FormattedChangesetValueForIntFieldRetrieverTest extends TestCase
      */
     private $formatted_changeset_value_for_int_field_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -53,7 +53,7 @@ class FormattedChangesetValueForIntFieldRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturn(42);
 
         $this->user                                              = Mockery::mock(PFUser::class);

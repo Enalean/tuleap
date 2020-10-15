@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * The base class for static fields in trackers.
  * Static Fields are not real fields, as they don't have a specific value for each artifact.
@@ -53,7 +55,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      * @return string html
      */
     public function fetchArtifact(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_values,
         array $additional_classes
     ) {
@@ -64,7 +66,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifact($artifact, $submitted_values, []);
     }
@@ -80,7 +82,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchReadOnly();
     }
@@ -157,7 +159,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }

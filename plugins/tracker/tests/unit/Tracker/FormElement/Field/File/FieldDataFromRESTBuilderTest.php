@@ -27,13 +27,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_FileInfoFactory;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class FieldDataFromRESTBuilderTest extends TestCase
@@ -61,7 +61,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
      */
     private $builder;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -94,7 +94,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
         );
 
         $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->artifact->shouldReceive('getId')->andReturn(42);
 
@@ -186,7 +186,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testExceptionWhenNoArtifactAndFileIsLinkedToAnotherOne(): void
     {
-        $another_artifact = Mockery::mock(Tracker_Artifact::class);
+        $another_artifact = Mockery::mock(Artifact::class);
         $another_artifact->shouldReceive('getId')->andReturn(666);
 
         $this->file_info_factory
@@ -201,7 +201,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testExceptionWhenArtifactAndFileIsLinkedToAnotherOne(): void
     {
-        $another_artifact = Mockery::mock(Tracker_Artifact::class);
+        $another_artifact = Mockery::mock(Artifact::class);
         $another_artifact->shouldReceive('getId')->andReturn(666);
 
         $this->file_info_factory

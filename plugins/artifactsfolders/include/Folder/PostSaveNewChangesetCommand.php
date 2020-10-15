@@ -22,11 +22,11 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_Request;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
@@ -53,7 +53,7 @@ class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactL
     }
 
     public function execute(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null

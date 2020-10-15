@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_DateReminder
 {
 
@@ -239,11 +241,11 @@ class Tracker_DateReminder
     /**
      * Retrieve the recipient list for all ugroup_id and tracker roles
      *
-     * @param Tracker_Artifact $artifact  Artifact
+     * @param Artifact $artifact Artifact
      *
      * @return Array
      */
-    public function getRecipients(Tracker_Artifact $artifact)
+    public function getRecipients(Artifact $artifact)
     {
         $recipients    = [];
         $ugroups       = $this->getUgroups(true);
@@ -290,11 +292,11 @@ class Tracker_DateReminder
     /**
      * Retrieve the recipient list for Tracker Roles
      *
-     * @param Tracker_Artifact $artifact  Artifact
+     * @param Artifact $artifact Artifact
      *
      * @return Array
      */
-    private function getRecipientsFromRoles(Tracker_Artifact $artifact)
+    private function getRecipientsFromRoles(Artifact $artifact)
     {
         $recipients = [];
         $roles      = $this->getRoles();
@@ -370,11 +372,11 @@ class Tracker_DateReminder
     /**
      * Retreive The date Field value
      *
-     * @param Tracker_Artifact $artifact The artifact
+     * @param Artifact $artifact The artifact
      *
      * @return string|false
      */
-    public function getFieldValue(Tracker_Artifact $artifact)
+    public function getFieldValue(Artifact $artifact)
     {
         $field = $this->getField();
         return $field->getLastValue($artifact);

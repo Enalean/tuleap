@@ -527,7 +527,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $artifact  = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $trigger_1 = new Tracker_Workflow_Trigger_TriggerRule(
             1,

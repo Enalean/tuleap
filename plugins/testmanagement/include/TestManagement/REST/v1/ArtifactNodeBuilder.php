@@ -20,11 +20,11 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_Artifact;
 use PFUser;
 use Tracker_ArtifactDao;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactNodeBuilder
 {
@@ -51,7 +51,7 @@ class ArtifactNodeBuilder
         $this->node_builder_factory           = $node_builder_factory;
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact): NodeRepresentation
+    public function getNodeRepresentation(PFUser $user, Artifact $artifact): NodeRepresentation
     {
         $nodes        = [];
         $artifact_ids = [$artifact->getId()];

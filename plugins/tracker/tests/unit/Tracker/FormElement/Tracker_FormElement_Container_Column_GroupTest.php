@@ -26,9 +26,9 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Container_Column_Group;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ignore
 {
@@ -36,7 +36,7 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
 
     public function testFetchArtifact()
     {
-        $artifact         = Mockery::mock(Tracker_Artifact::class);
+        $artifact         = Mockery::mock(Artifact::class);
         $submitted_values = [];
 
         $column_01 = Mockery::mock(Tracker_FormElement_Container_Column::class);
@@ -81,7 +81,7 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
 
     public function testFetchArtifactWithEmptyColumns()
     {
-        $artifact         = Mockery::mock(Tracker_Artifact::class);
+        $artifact         = Mockery::mock(Artifact::class);
         $submitted_values = [];
 
         $column_01 = Mockery::mock(Tracker_FormElement_Container_Column::class);

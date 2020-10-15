@@ -53,7 +53,7 @@ class TrackerManagerTest extends TestCase
 
         $project = \Mockery::spy(\Project::class);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
 

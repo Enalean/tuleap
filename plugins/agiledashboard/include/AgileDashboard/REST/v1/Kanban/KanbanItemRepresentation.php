@@ -21,7 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -96,7 +96,7 @@ class KanbanItemRepresentation
      * @param string|int $in_column
      */
     public static function build(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timeinfo,
         $in_column,
         array $card_fields,

@@ -21,10 +21,10 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionWithAutomatedTestDataProvider
 {
@@ -46,8 +46,8 @@ class ExecutionWithAutomatedTestDataProvider
     }
 
     public function getExecutionWithAutomatedTestData(
-        Tracker_Artifact $execution,
-        Tracker_Artifact $definition,
+        Artifact $execution,
+        Artifact $definition,
         PFUser $user
     ): ?ExecutionWithAutomatedTestData {
         $definition_changeset_id = $this->execution_dao->searchDefinitionChangesetIdForExecution($execution->getId());

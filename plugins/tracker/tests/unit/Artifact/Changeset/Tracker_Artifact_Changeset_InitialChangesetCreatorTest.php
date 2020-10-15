@@ -19,6 +19,7 @@
  *
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
@@ -50,7 +51,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPU
      */
     private $submitter;
     /**
-     * @var \Mockery\Mock|Tracker_Artifact
+     * @var \Mockery\Mock|Artifact
      */
     private $artifact;
     /**
@@ -98,7 +99,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPU
         $this->changeset_factory->shouldReceive('getChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
         $tracker        = \Mockery::spy(\Tracker::class)->shouldReceive('getWorkflow')->andReturns($this->workflow)->getMock();
         $tracker->shouldReceive('getId')->andReturns(888);
-        $this->artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact->setId(42);
         $this->artifact->setTracker($tracker);
         $this->artifact->shouldReceive('getChangesetFactory')->andReturns($this->changeset_factory);

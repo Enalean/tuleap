@@ -29,11 +29,11 @@ use org\bovigo\vfs\vfsStream;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class XMLImportFieldStrategyAttachmentTest extends TestCase
 {
@@ -60,7 +60,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
      */
     private $submitted_by;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -85,7 +85,7 @@ class XMLImportFieldStrategyAttachmentTest extends TestCase
         $this->field = Mockery::mock(Tracker_FormElement_Field::class);
         $this->field->shouldReceive('getLabel')->andReturn('Attachments');
         $this->submitted_by = Mockery::mock(PFUser::class);
-        $this->artifact     = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact     = Mockery::mock(Artifact::class);
     }
 
     public function testItReturnsListOfFilesInfos(): void

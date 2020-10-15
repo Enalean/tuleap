@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * A presenter of card linked to card.mustache
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 interface Tracker_CardPresenter
 {
     /**
@@ -64,7 +67,7 @@ interface Tracker_CardPresenter
     public function getAncestorId();
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact();
 

@@ -42,7 +42,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends TestCase
      */
     private $milestone;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact
+     * @var M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -59,13 +59,13 @@ final class ArtifactMappedFieldValueRetrieverTest extends TestCase
         $this->mapped_field_retriever = M::mock(MappedFieldRetriever::class);
         $this->retriever              = new ArtifactMappedFieldValueRetriever($this->mapped_field_retriever);
         $this->release_tracker        = M::mock(\Tracker::class);
-        $release_artifact             = M::mock(\Tracker_Artifact::class);
+        $release_artifact             = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $release_artifact->shouldReceive('getTracker')
             ->andReturn($this->release_tracker);
         $this->milestone = M::mock(\Planning_Milestone::class);
         $this->milestone->shouldReceive('getArtifact')
             ->andReturn($release_artifact);
-        $this->artifact = M::mock(\Tracker_Artifact::class);
+        $this->artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->user = M::mock(\PFUser::class);
     }
 

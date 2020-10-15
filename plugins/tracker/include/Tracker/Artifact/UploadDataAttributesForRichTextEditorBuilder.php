@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 
 class UploadDataAttributesForRichTextEditorBuilder
 {
@@ -39,7 +38,7 @@ class UploadDataAttributesForRichTextEditorBuilder
         $this->file_upload_data_provider = $file_upload_data_provider;
     }
 
-    public function getDataAttributes(Tracker $tracker, PFUser $user, ?Tracker_Artifact $artifact): array
+    public function getDataAttributes(Tracker $tracker, PFUser $user, ?Artifact $artifact): array
     {
         $data_attributes = [];
 

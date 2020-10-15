@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
 {
 
@@ -47,7 +49,7 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
     }
 
     /** @return string | null */
-    public function getRawMailThatCreatedArtifact(Tracker_Artifact $artifact)
+    public function getRawMailThatCreatedArtifact(Artifact $artifact)
     {
         return $this->getRawMailForChangeset($artifact->getFirstChangeset());
     }
@@ -70,7 +72,7 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
         return null;
     }
 
-    private function getCachedRawMailByChangesetsForArtifact(Tracker_Artifact $artifact)
+    private function getCachedRawMailByChangesetsForArtifact(Artifact $artifact)
     {
         if (! isset($this->cache[$artifact->getId()])) {
             $this->cache[$artifact->getId()] = [];

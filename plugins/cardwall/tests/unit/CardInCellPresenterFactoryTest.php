@@ -24,6 +24,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -43,7 +44,7 @@ class CardInCellPresenterFactoryTest extends TestCase
             ->andReturns($this->field_id)
             ->getMock();
 
-        $this->artifact = Mockery::spy(Tracker_Artifact::class)
+        $this->artifact = Mockery::spy(Artifact::class)
             ->shouldReceive('getTracker')
             ->andReturn($tracker)
             ->getMock();

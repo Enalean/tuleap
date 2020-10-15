@@ -23,13 +23,13 @@ namespace Tuleap\AgileDashboard\Artifact;
 use PFUser;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class AdditionalArtifactActionBuilder
 {
@@ -86,7 +86,7 @@ class AdditionalArtifactActionBuilder
         $this->planning_tracker_backlog_checker  = $planning_tracker_backlog_checker;
     }
 
-    public function buildArtifactAction(Tracker_Artifact $artifact, PFUser $user): ?AdditionalButtonAction
+    public function buildArtifactAction(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
         $tracker  = $artifact->getTracker();
         $project  = $tracker->getProject();

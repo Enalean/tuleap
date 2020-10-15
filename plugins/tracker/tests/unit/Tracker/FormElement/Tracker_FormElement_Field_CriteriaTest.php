@@ -26,12 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 
@@ -121,11 +121,11 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             {
             }
 
-            protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
+            protected function fetchArtifactValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
             {
             }
 
-            public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+            public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
             {
             }
 
@@ -137,7 +137,7 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             {
             }
 
-            protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+            protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
             {
             }
 
@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_CriteriaTest extends TestCase
             {
             }
 
-            protected function validate(Tracker_Artifact $artifact, $value)
+            protected function validate(Artifact $artifact, $value)
             {
             }
 

@@ -21,12 +21,12 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class BurnupCalculator
 {
@@ -100,7 +100,7 @@ class BurnupCalculator
      * @return BurnupEffort
      */
     private function getEffort(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timestamp
     ) {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());

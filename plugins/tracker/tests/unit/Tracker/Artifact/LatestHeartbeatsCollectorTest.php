@@ -66,9 +66,9 @@ class LatestHeartbeatsCollectorTest extends TestCase
         $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
         $this->dao->shouldReceive('searchLatestUpdatedArtifactsInProject')->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)->andReturns(\TestHelper::arrayToDar(['id' => 1], ['id' => 2], ['id' => 3]));
 
-        $artifact1 = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn(1)->getMock();
-        $artifact2 = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn(2)->getMock();
-        $artifact3 = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn(3)->getMock();
+        $artifact1 = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn(1)->getMock();
+        $artifact2 = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn(2)->getMock();
+        $artifact3 = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn(3)->getMock();
 
         $artifact1->shouldReceive('userCanView')->andReturnTrue();
         $artifact3->shouldReceive('userCanView')->andReturnTrue();

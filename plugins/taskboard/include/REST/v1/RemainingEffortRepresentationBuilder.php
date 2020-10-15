@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class RemainingEffortRepresentationBuilder
 {
@@ -46,7 +46,7 @@ class RemainingEffortRepresentationBuilder
         $this->form_element_factory             = $form_element_factory;
     }
 
-    public function getRemainingEffort(PFUser $current_user, Tracker_Artifact $artifact): ?RemainingEffortRepresentation
+    public function getRemainingEffort(PFUser $current_user, Artifact $artifact): ?RemainingEffortRepresentation
     {
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
@@ -63,7 +63,7 @@ class RemainingEffortRepresentationBuilder
         );
     }
 
-    private function getValue(PFUser $current_user, Tracker_Artifact $artifact): ?float
+    private function getValue(PFUser $current_user, Artifact $artifact): ?float
     {
         $value = $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $artifact);
 

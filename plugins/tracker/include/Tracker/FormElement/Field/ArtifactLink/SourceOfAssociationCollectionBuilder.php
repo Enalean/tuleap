@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class SourceOfAssociationCollectionBuilder
 {
@@ -41,7 +41,7 @@ class SourceOfAssociationCollectionBuilder
     }
 
     public function getSourceOfAssociationCollection(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data
     ) {
         $source_of_association_collection = new SourceOfAssociationCollection();

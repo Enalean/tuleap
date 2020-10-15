@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use IProvideDataAccessResult;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 
@@ -44,7 +43,7 @@ class SlicedArtifactsBuilder
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function getSlicedChildrenArtifactsForUser(Tracker_Artifact $artifact, PFUser $user, $limit, $offset): SlicedArtifacts
+    public function getSlicedChildrenArtifactsForUser(Artifact $artifact, PFUser $user, $limit, $offset): SlicedArtifacts
     {
         $children           = [];
         $paginated_children = $this->getPaginatedChildrenOfArtifact($artifact, $limit, $offset);
@@ -63,7 +62,7 @@ class SlicedArtifactsBuilder
         );
     }
 
-    private function getPaginatedChildrenOfArtifact(Tracker_Artifact $artifact, $limit, $offset): IProvideDataAccessResult
+    private function getPaginatedChildrenOfArtifact(Artifact $artifact, $limit, $offset): IProvideDataAccessResult
     {
         return $this->artifact_dao->getPaginatedChildren($artifact->getId(), $limit, $offset);
     }

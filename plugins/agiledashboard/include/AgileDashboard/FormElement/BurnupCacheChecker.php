@@ -21,7 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 
@@ -56,7 +56,7 @@ class BurnupCacheChecker
         $this->cache_days_comparator = $cache_days_comparator;
     }
 
-    public function isBurnupUnderCalculation(Tracker_Artifact $artifact, TimePeriodWithoutWeekEnd $time_period, \PFUser $user)
+    public function isBurnupUnderCalculation(Artifact $artifact, TimePeriodWithoutWeekEnd $time_period, \PFUser $user)
     {
         $is_burnup_under_calculation = false;
 
@@ -73,7 +73,7 @@ class BurnupCacheChecker
     }
 
     private function isCacheCompleteForBurnup(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         TimePeriodWithoutWeekEnd $time_period,
         \PFUser $user
     ) {

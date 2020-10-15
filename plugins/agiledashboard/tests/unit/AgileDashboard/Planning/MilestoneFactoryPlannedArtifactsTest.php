@@ -27,7 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning_MilestoneFactory;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryPlannedArtifactsTest extends TestCase
@@ -36,19 +36,19 @@ final class MilestoneFactoryPlannedArtifactsTest extends TestCase
 
     public function testItReturnsATreeOfPlanningItems(): void
     {
-        $depth3_artifact  = Mockery::mock(Tracker_Artifact::class);
+        $depth3_artifact  = Mockery::mock(Artifact::class);
         $depth3_artifact->shouldReceive('getId')->andReturn(3);
         $depth3_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $depth2_artifact  = Mockery::mock(Tracker_Artifact::class);
+        $depth2_artifact  = Mockery::mock(Artifact::class);
         $depth2_artifact->shouldReceive('getId')->andReturn(2);
         $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth3_artifact]);
 
-        $depth1_artifact  = Mockery::mock(Tracker_Artifact::class);
+        $depth1_artifact  = Mockery::mock(Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(1);
         $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
 
-        $root_artifact    = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact    = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(100);
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
 
@@ -69,7 +69,7 @@ final class MilestoneFactoryPlannedArtifactsTest extends TestCase
 
         $this->assertFalse(empty($children));
         foreach ($children as $tree_node) {
-            $this->assertInstanceOf(Tracker_Artifact::class, $tree_node->getObject());
+            $this->assertInstanceOf(Artifact::class, $tree_node->getObject());
         }
     }
 }

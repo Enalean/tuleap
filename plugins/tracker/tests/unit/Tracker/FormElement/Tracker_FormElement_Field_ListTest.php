@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
@@ -118,7 +119,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = ['108', '107'];
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -128,7 +129,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = ['107', '108'];
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -138,7 +139,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = [];
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -148,7 +149,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = '108';
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -158,7 +159,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = ['107', '110'];
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -168,7 +169,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = ['107', '110'];
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -178,7 +179,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = '110';
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -188,7 +189,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $new_value = '110';
         $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
         $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->changeset_value, $new_value)
+            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
         );
     }
 
@@ -230,7 +231,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItHasErrorWhenValueIsNotAPossibleValue(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $this->list_field->shouldReceive('isPossibleValue')->andReturnFalse();
 
         $this->assertFalse($this->list_field->isValid($artifact, "impossible"));
@@ -238,7 +239,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItHasErrorWhenItIsNotValid(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
         $this->list_field->shouldReceive('validate')->andReturnFalse();
 
@@ -247,7 +248,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItIsValid(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
         $this->list_field->shouldReceive('validate')->andReturnTrue();
 
@@ -280,7 +281,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testValidateIsOkWhenNoWorkflowIsSet(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = 'value';
         $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnFalse();
 
@@ -289,7 +290,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItChecksTransitionIsValidWhenArtifactDoesNotHaveAnExistingChangeset(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn(null);
         $this->bind->shouldReceive('getValue')->andReturn(null);
         $value = 'value';
@@ -305,7 +306,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItChecksAllFieldsValueWhenLastChangesetHasAValue(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn(null);
         $this->bind->shouldReceive('getValue')->andReturn([$this->bind_value]);
         $value = 'value';
@@ -368,7 +369,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItIsValidWhenIsRequiredAndHaveAValue(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = 102;
         $this->list_field->shouldReceive('isRequired')->andReturnTrue();
         $this->list_field->shouldReceive('isNone')->andReturnFalse();
@@ -377,7 +378,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItIsInvalidWhenIsRequiredAndEmpty(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = 100;
         $this->list_field->shouldReceive('isRequired')->andReturnTrue();
         $this->list_field->shouldReceive('isNone')->andReturnTrue();
@@ -386,7 +387,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItIsValidWhenIsNotRequiredAndEmpty(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = 102;
         $this->list_field->shouldReceive('isRequired')->andReturnFalse();
         $this->list_field->shouldReceive('isNone')->andReturnFalse();
@@ -511,7 +512,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     public function testItDoesNotAcceptIncorrectValues(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $this->assertFalse($this->list_field->isValid($artifact, 9999));
         $this->assertFalse($this->list_field->isValid($artifact, [9998, 9999]));
         $this->assertFalse($this->list_field->isValid($artifact, [101, 9999]));

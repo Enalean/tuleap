@@ -79,7 +79,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->changeset_value
         );
 
@@ -100,7 +100,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->changeset_value
         );
 

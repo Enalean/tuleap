@@ -91,7 +91,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCanView(222, 102, null),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
@@ -119,7 +119,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
@@ -150,7 +150,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->changeset_value
         );
 
@@ -164,7 +164,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCannotView(111, 101, null),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
@@ -187,7 +187,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
@@ -211,7 +211,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->changeset_value
         );
 
@@ -226,7 +226,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCanView(222, 102, null),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
@@ -248,7 +248,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
             $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
         ]);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);

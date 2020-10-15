@@ -22,8 +22,8 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use PFUser;
 use Project;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class FolderHierarchicalRepresentationCollectionBuilder
 {
@@ -46,7 +46,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
 
     /** @return FolderHierarchicalRepresentationCollection */
     public function buildFolderHierarchicalRepresentationCollection(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Project $project,
         PFUser $current_user
     ) {
@@ -80,7 +80,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
 
     /** @return FolderHierarchicalRepresentationCollection */
     private function getAllFoldersAsFolderHierarchicalRepresentationCollection(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Project $project,
         PFUser $current_user
     ) {
@@ -96,7 +96,7 @@ class FolderHierarchicalRepresentationCollectionBuilder
         return $all_folders;
     }
 
-    /** @return Tracker_Artifact */
+    /** @return Artifact */
     private function getParent(
         FolderHierarchicalRepresentationCollection $all_folders,
         $parent_id,

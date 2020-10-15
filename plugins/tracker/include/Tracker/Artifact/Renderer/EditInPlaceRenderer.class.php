@@ -22,12 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_Renderer_EditInPlaceRenderer
 {
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var MustacheRenderer */
@@ -36,7 +37,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     /** @var HiddenFieldsetsDetector */
     private $hidden_fieldsets_detector;
 
-    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector)
+    public function __construct(Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector)
     {
         $this->renderer                  = $renderer;
         $this->artifact                  = $artifact;
@@ -99,7 +100,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         return $this->renderer->renderToString('follow-ups', $presenter);
     }
 
-    private function getFollowupsContent(Tracker_Artifact $artifact)
+    private function getFollowupsContent(Artifact $artifact)
     {
         $followups_content = $artifact->getChangesets();
         array_shift($followups_content);
@@ -116,7 +117,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         return ($first_followup->getFollowUpDate() < $second_followup->getFollowUpDate()) ? -1 : 1;
     }
 
-    private function getPriorityHistory(Tracker_Artifact $artifact)
+    private function getPriorityHistory(Artifact $artifact)
     {
         return $this->getPriorityManager()->getArtifactPriorityHistory($artifact);
     }

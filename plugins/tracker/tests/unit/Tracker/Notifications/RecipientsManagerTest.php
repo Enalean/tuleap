@@ -439,7 +439,7 @@ final class RecipientsManagerTest extends TestCase
             1 => Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('hasChanged')->andReturns(true),
         ]);
 
-        $artifact = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getCommentators')->andReturns(['recipient3'])->getMock();
+        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getCommentators')->andReturns(['recipient3'])->getMock();
         $previous_changeset = Mockery::spy(Tracker_Artifact_Changeset::class);
         $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
         $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns([]);
@@ -627,7 +627,7 @@ final class RecipientsManagerTest extends TestCase
         $changeset_value->shouldReceive('hasChanged')->andReturns($has_changed);
         $changeset->shouldReceive('getValues')->andReturns([1 => $changeset_value]);
 
-        $artifact           = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getCommentators')->andReturns($artifact_commentators)->getMock();
+        $artifact           = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getCommentators')->andReturns($artifact_commentators)->getMock();
         $artifact->shouldReceive('getPreviousChangeset')->andReturns($previous_changeset);
         $this->unsubscribers_notification_dao->shouldReceive('searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID')->andReturns($notifications_unsubscribers);
         $changeset->shouldReceive('getArtifact')->andReturns($artifact);

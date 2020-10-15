@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
@@ -123,7 +124,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         return $this->open_values;
     }
 
-    public function isOpen(Tracker_Artifact $artifact)
+    public function isOpen(Artifact $artifact)
     {
         if (! $this->getField()) {
             return true;
@@ -152,7 +153,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      *
      * @return string
      */
-    public function getNormalizedStatusLabel(Tracker_Artifact $artifact)
+    public function getNormalizedStatusLabel(Artifact $artifact)
     {
         if ($this->isOpen($artifact)) {
             return self::OPEN;
@@ -166,7 +167,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      *
      * @return string
      */
-    public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
+    public function getLocalizedStatusLabel(Artifact $artifact)
     {
         if ($this->isOpen($artifact)) {
             return dgettext('tuleap-tracker', 'Open');
@@ -179,7 +180,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      * @deprecated in favor of getLocalizedStatusLabel
      * @return string
      */
-    public function getStatus(Tracker_Artifact $artifact)
+    public function getStatus(Artifact $artifact)
     {
         return $this->getLocalizedStatusLabel($artifact);
     }

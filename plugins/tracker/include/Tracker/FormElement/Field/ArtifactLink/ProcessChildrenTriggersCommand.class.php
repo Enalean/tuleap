@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Update the link direction in order to ensure that it is correct resp. the
  * association definition.
@@ -44,7 +46,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
      * @see Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand::execute()
      */
     public function execute(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null

@@ -47,7 +47,7 @@ class MailGatewayTokenTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artifact                 = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact                 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->user                     = \Mockery::spy(\PFUser::class);
         $this->tracker                  = \Mockery::spy(\Tracker::class);
         $this->incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);

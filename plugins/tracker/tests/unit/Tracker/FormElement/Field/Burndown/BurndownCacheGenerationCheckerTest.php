@@ -24,10 +24,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class BurndownCacheGenerationCheckerTest extends TestCase
 {
@@ -66,7 +66,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
      */
     private $user;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -99,7 +99,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
             $this->remaining_effort_adder
         );
 
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(1);
         $this->user = Mockery::mock(\PFUser::class);
     }

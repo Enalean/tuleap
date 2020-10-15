@@ -32,7 +32,7 @@ final class ChangesetValueComputedXMLExporterTest extends \PHPUnit\Framework\Tes
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -54,7 +54,7 @@ final class ChangesetValueComputedXMLExporterTest extends \PHPUnit\Framework\Tes
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artifact            = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->field               = \Mockery::spy(\Tracker_FormElement_Field_Computed::class);
         $this->field               = $this->field->shouldReceive('getName')->andReturns('capacity')->getMock();
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');

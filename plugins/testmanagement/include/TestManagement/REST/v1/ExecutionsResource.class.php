@@ -24,7 +24,6 @@ use BackendLogger;
 use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List_Bind;
@@ -64,6 +63,7 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
@@ -533,7 +533,7 @@ class ExecutionsResource
         );
     }
 
-    private function getArtifactById(PFUser $user, int $id): Tracker_Artifact
+    private function getArtifactById(PFUser $user, int $id): Artifact
     {
         $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
@@ -640,14 +640,14 @@ class ExecutionsResource
         return $artifact_values_representation;
     }
 
-    private function sendAllowHeadersForExecutionPut(Tracker_Artifact $artifact): void
+    private function sendAllowHeadersForExecutionPut(Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPut();
         Header::lastModified($date);
     }
 
-    private function sendAllowHeadersForExecutionPost(Tracker_Artifact $artifact): void
+    private function sendAllowHeadersForExecutionPost(Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPost();
@@ -657,10 +657,10 @@ class ExecutionsResource
     /**
      *
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      * @throws RestException
      */
-    private function getDefinitionOfExecution(PFUser $user, Tracker_Artifact $execution_artifact)
+    private function getDefinitionOfExecution(PFUser $user, Artifact $execution_artifact)
     {
         try {
             return $this->definition_retriever->getDefinitionRepresentationForExecution(
@@ -673,8 +673,8 @@ class ExecutionsResource
     }
 
     /**
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
+     * @param PFUser   $user
+     * @param Artifact $artifact
      *
      * @return ExecutionRepresentation
      * @throws RestException

@@ -20,8 +20,8 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_Artifact;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class BugRepresentation
@@ -46,7 +46,7 @@ class BugRepresentation
      */
     public $tracker;
 
-    public function build(Tracker_Artifact $bug_artifact, MinimalTrackerRepresentation $tracker_representation): void
+    public function build(Artifact $bug_artifact, MinimalTrackerRepresentation $tracker_representation): void
     {
         $this->id      = JsonCast::toInt($bug_artifact->getId());
         $this->xref    = $bug_artifact->getXRef();

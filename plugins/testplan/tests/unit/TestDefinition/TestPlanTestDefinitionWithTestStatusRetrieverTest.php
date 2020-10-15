@@ -63,9 +63,9 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
 
     public function testRetrieveTestDefinitionWithTestStatusAndAllTestsWithUnknownStatusAtTheEnd(): void
     {
-        $milestone         = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('132')->getMock();
-        $test_definition_1 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
-        $test_definition_2 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
+        $milestone         = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('132')->getMock();
+        $test_definition_1 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
+        $test_definition_2 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
         $test_definitions  = [$test_definition_1, $test_definition_2];
 
         $information = new TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinition(
@@ -82,7 +82,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
         $this->dao->shouldReceive('searchTestStatusPerTestDefinitionInAMilestone')
             ->andReturn([457 => ['test_status' => 'passed', 'test_exec_id' => 95147, 'test_exec_submitted_on' => 10, 'test_exec_submitted_by' => 404, 'test_campaign_id' => 23]]);
 
-        $milestone = \Mockery::mock(\Tracker_Artifact::class);
+        $milestone = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $user      = UserTestBuilder::aUser()->build();
         $this->user_manager->shouldReceive('getUserById')->with(404)->andReturn(null);
         $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(UserTestBuilder::anAnonymousUser()->build());
@@ -107,12 +107,12 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
         $this->information_retriever->shouldReceive('getInformationNeededToRetrieveTestStatusPerTestDefinition')
             ->andReturn(null);
 
-        $test_definition_1 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
-        $test_definition_2 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
+        $test_definition_1 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('456')->getMock();
+        $test_definition_2 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('457')->getMock();
         $test_definitions  = [$test_definition_1, $test_definition_2];
 
         $test_definitions_with_test_status = $this->retriever->retrieveTestDefinitionWithTestStatus(
-            \Mockery::mock(\Tracker_Artifact::class),
+            \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
             UserTestBuilder::aUser()->build(),
             $test_definitions
         );

@@ -57,7 +57,7 @@ class TimeControllerTest extends TestCase
 
         $this->tracker  = \Mockery::spy(Tracker::class);
         $this->time     = new Time(83, 102, 2, '2018-04-04', 81, 'g');
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->tracker->shouldReceive([
             'getGroupId' => 102,

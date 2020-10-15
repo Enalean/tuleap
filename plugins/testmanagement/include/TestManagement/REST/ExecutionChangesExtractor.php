@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement\REST;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionChangesExtractor
 {
@@ -69,7 +69,7 @@ class ExecutionChangesExtractor
         array $uploaded_file_ids,
         int $time,
         string $results,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): array {
         $changes = [];

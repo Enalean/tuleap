@@ -21,12 +21,12 @@
 namespace Tuleap\Velocity;
 
 use Mockery;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
@@ -69,7 +69,7 @@ class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
      */
     private $before_event;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -77,7 +77,7 @@ class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->artifact     = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact     = Mockery::mock(Artifact::class);
         $this->before_event = Mockery::mock(BeforeEvent::class);
         $this->before_event->shouldReceive('getArtifact')->andReturn($this->artifact);
 

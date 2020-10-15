@@ -21,16 +21,18 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $release;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $product;
     /**
@@ -42,7 +44,7 @@ final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framewor
      */
     private $user;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $sprint;
 
@@ -55,12 +57,12 @@ final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framewor
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturnFalse();
 
-        $this->sprint = Mockery::mock(Tracker_Artifact::class);
+        $this->sprint = Mockery::mock(Artifact::class);
         $this->sprint->shouldReceive('getId')->andReturn(101);
-        $this->product = Mockery::mock(Tracker_Artifact::class);
+        $this->product = Mockery::mock(Artifact::class);
         $this->product->shouldReceive('getId')->andReturn(103);
         $this->product->shouldReceive('getTracker')->andReturn($tracker);
-        $this->release = Mockery::mock(Tracker_Artifact::class);
+        $this->release = Mockery::mock(Artifact::class);
         $this->release->shouldReceive('getId')->andReturn(102);
         $this->release->shouldReceive('getTracker')->andReturn($tracker);
     }
@@ -124,8 +126,8 @@ final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framewor
     }
 
     /**
-     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact $artifact
-     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact|null $parent
+     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact      $artifact
+     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact|null $parent
      */
     private function getParentOfArtifact($artifact, $parent): void
     {

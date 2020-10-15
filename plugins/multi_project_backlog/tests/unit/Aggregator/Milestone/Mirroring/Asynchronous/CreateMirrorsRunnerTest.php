@@ -84,7 +84,7 @@ final class CreateMirrorsRunnerTest extends TestCase
 
     public function testItExecuteMirrorsCreation(): void
     {
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
 
         $user = UserTestBuilder::aUser()->withId(10)->build();
@@ -146,7 +146,7 @@ final class CreateMirrorsRunnerTest extends TestCase
             ->with(101, 201)
             ->andReturn($result);
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->with(101)
             ->andReturn($artifact);
@@ -168,7 +168,7 @@ final class CreateMirrorsRunnerTest extends TestCase
             ->with(101, 201)
             ->andReturn($result);
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->with(101)
             ->andReturn($artifact);

@@ -20,7 +20,7 @@
 
 namespace Tuleap\ArtifactsFolders\Converter;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class CollectionOfLinksToAdd
 {
@@ -29,7 +29,7 @@ class CollectionOfLinksToAdd
      */
     private $links = [];
 
-    public function addALink(Tracker_Artifact $folder, Tracker_Artifact $item)
+    public function addALink(Artifact $folder, Artifact $item)
     {
         $folder_id = $folder->getId();
         $item_id   = $item->getId();

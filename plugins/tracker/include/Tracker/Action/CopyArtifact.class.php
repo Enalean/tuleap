@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -183,7 +184,7 @@ class Tracker_Action_CopyArtifact
     }
 
     /**
-     * @return Tracker_Artifact[] or null in case of error
+     * @return Artifact[] or null in case of error
      */
     private function importBareArtifacts(SimpleXMLElement $xml_artifacts)
     {
@@ -229,7 +230,7 @@ class Tracker_Action_CopyArtifact
     }
 
     private function addSummaryCommentChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         Tracker_Artifact_Changeset $from_changeset
     ) {
@@ -266,7 +267,7 @@ class Tracker_Action_CopyArtifact
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function redirectToArtifact(Tracker_Artifact $artifact)
+    private function redirectToArtifact(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
         $GLOBALS['Response']->redirect($url);

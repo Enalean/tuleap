@@ -36,6 +36,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
@@ -48,12 +49,12 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
@@ -430,8 +431,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * fetch FormElements
-     * @param Tracker_Artifact $artifact
-     * @param array $submitted_values the values already submitted
+     *
+     * @param Artifact $artifact
+     * @param array    $submitted_values the values already submitted
      *
      * @return string
      */
@@ -446,8 +448,8 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * fetch FormElements
-     * @param Tracker_Artifact $artifact
-     * @param array $submitted_values the values already submitted
+     * @param Artifact $artifact
+     * @param array    $submitted_values the values already submitted
      *
      * @return string
      */
@@ -463,8 +465,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Fetch FormElements in HTML without the container and column rendering
      *
-     * @param Tracker_Artifact $artifact
-     * @param array $submitted_values the values already submitted
+     * @param Artifact $artifact
+     * @param array    $submitted_values the values already submitted
      *
      * @return string
      */
@@ -482,7 +484,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return String
      */
-    public function fetchSubmitNoColumns(?Tracker_Artifact $artifact_to_link, array $submitted_values)
+    public function fetchSubmitNoColumns(?Artifact $artifact_to_link, array $submitted_values)
     {
         $html = '';
 
@@ -500,7 +502,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * fetch FormElements in read only mode
      *
-     * @param Tracker_Artifact $artifact
+     * @param Artifact $artifact
      *
      * @return string
      */
@@ -1644,7 +1646,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminFooter($layout);
     }
 
-    public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Tracker_Artifact $artifact)
+    public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Artifact $artifact)
     {
         $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
         $this->displayAdminItemHeader($layout, 'clean', dgettext('tuleap-tracker', 'Delete artifacts'));

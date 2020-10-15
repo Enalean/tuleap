@@ -26,14 +26,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Psr\Log\LoggerInterface;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeframeBuilder
 {
@@ -54,7 +54,7 @@ class TimeframeBuilder
         $this->logger                     = $logger;
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifact(Tracker_Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
+    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
@@ -82,7 +82,7 @@ class TimeframeBuilder
         return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
-    public function buildTimePeriodWithoutWeekendForArtifactForREST(Tracker_Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
@@ -113,7 +113,7 @@ class TimeframeBuilder
     /**
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Tracker_Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
+    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
@@ -192,7 +192,7 @@ class TimeframeBuilder
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    private function getTimestamp(PFUser $user, Tracker_Artifact $artifact, SemanticTimeframe $semantic_timeframe): int
+    private function getTimestamp(PFUser $user, Artifact $artifact, SemanticTimeframe $semantic_timeframe): int
     {
         $field = $semantic_timeframe->getStartDateField();
         if ($field === null || ! $field->userCanRead($user)) {
@@ -215,7 +215,7 @@ class TimeframeBuilder
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe)
+    private function getDurationFieldValue(PFUser $user, Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe)
     {
         $field = $semantic_timeframe->getDurationField();
 
@@ -237,7 +237,7 @@ class TimeframeBuilder
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    private function getEndDateFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe): int
+    private function getEndDateFieldValue(PFUser $user, Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe): int
     {
         $field = $semantic_timeframe->getEndDateField();
 

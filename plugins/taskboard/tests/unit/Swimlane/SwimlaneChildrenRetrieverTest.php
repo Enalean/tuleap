@@ -42,9 +42,9 @@ final class SwimlaneChildrenRetrieverTest extends TestCase
 
     public function testGetSwimlaneArtifactIdsReturnsLinkedArtifactIds(): void
     {
-        $first_linked_artifact  = M::mock(\Tracker_Artifact::class)->shouldReceive(['getId' => 123])->getMock();
-        $second_linked_artifact = M::mock(\Tracker_Artifact::class)->shouldReceive(['getId' => 456])->getMock();
-        $swimlane_artifact      = M::mock(\Tracker_Artifact::class);
+        $first_linked_artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getId' => 123])->getMock();
+        $second_linked_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getId' => 456])->getMock();
+        $swimlane_artifact      = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $swimlane_artifact->shouldReceive('getLinkedArtifacts')
             ->once()
             ->andReturn([$first_linked_artifact, $second_linked_artifact]);

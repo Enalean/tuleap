@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -42,9 +43,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
                 $a = 'A_' . $this->id;
                 return " INNER JOIN cross_references AS $a
-                         ON (artifact.id = $a.source_id AND $a.source_type = '" . Tracker_Artifact::REFERENCE_NATURE . "' AND $a.target_id = $criteria_value
+                         ON (artifact.id = $a.source_id AND $a.source_type = '" . Artifact::REFERENCE_NATURE . "' AND $a.target_id = $criteria_value
                              OR
-                             artifact.id = $a.target_id AND $a.target_type = '" . Tracker_Artifact::REFERENCE_NATURE . "' AND $a.source_id = $criteria_value
+                             artifact.id = $a.target_id AND $a.target_type = '" . Artifact::REFERENCE_NATURE . "' AND $a.source_id = $criteria_value
                          )
                 ";
             }
@@ -73,7 +74,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     {
         $crf  = new CrossReferenceFactory(
             $changeset->getArtifact()->getId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $this->getTracker()->getGroupId()
         );
         $crf->fetchDatas();
@@ -140,7 +141,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     private function getCrossReferencesFactory($artifact_id)
     {
-        $crossref_factory = new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_factory = new CrossReferenceFactory($artifact_id, Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_factory->fetchDatas();
 
         return $crossref_factory;
@@ -176,7 +177,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria[' . $this->id . ']" value="' . $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
@@ -261,7 +262,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     /**
      * Keep the value
      *
-     * @param Tracker_Artifact                $artifact                The artifact
+     * @param Artifact                        $artifact                The artifact
      * @param int                             $changeset_value_id      The id of the changeset_value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
@@ -301,14 +302,14 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     public function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -318,15 +319,15 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
@@ -336,7 +337,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $html;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
@@ -344,16 +345,16 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     /**
      * Fetch data to display the field value in mail
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param PFUser                          $user             The user who will receive the email
-     * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param string                          $format           output format
+     * @param Artifact                        $artifact The artifact
+     * @param PFUser                          $user     The user who will receive the email
+     * @param bool                            $ignore_perms
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param string                          $format   output format
      *
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -361,7 +362,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     ) {
         $output = '';
 
-        $crf  = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crf  = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crf->fetchDatas();
 
         switch ($format) {
@@ -450,10 +451,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = false, $condensed = true);
@@ -479,7 +480,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      * @param mixed $submitted_value      The submitted value
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
@@ -491,12 +492,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request.
+     * @param Artifact $artifact The artifact
+     * @param mixed    $value    data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         //No need to validate artifact id (read only for all)
         return true;

@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
 {
 
@@ -46,7 +48,7 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      *
      * @return Array of PFUser
      */
-    public function getRecipientsFromArtifact(Tracker_Artifact $artifact)
+    public function getRecipientsFromArtifact(Artifact $artifact)
     {
         $recipients = [];
         $userManager = $artifact->getUserManager();

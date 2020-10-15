@@ -20,8 +20,8 @@
 
 namespace Tuleap\ArtifactsFolders\Converter;
 
-use Tracker_Artifact;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class AncestorFolderChecker
@@ -44,8 +44,8 @@ class AncestorFolderChecker
     }
 
     public function isAncestorInSameFolder(
-        Tracker_Artifact $folder_artifact,
-        Tracker_Artifact $item_artifact
+        Artifact $folder_artifact,
+        Artifact $item_artifact
     ) {
         $ancestors_of_artifact = $this->nature_is_child_retriever->getParentsHierarchy($item_artifact);
         foreach ($ancestors_of_artifact->getArtifacts() as $ancestors) {

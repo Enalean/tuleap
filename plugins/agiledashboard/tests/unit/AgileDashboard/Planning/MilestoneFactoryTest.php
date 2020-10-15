@@ -35,11 +35,11 @@ use PlanningPermissionsManager;
 use Project;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class MilestoneFactoryTest extends TestCase
@@ -63,23 +63,23 @@ class MilestoneFactoryTest extends TestCase
      */
     private $planning;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact_closed_passed;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact_open_current_with_start_date;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact_open_current_without_start_date;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact_open_future_without_start_date;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact_open_future_with_start_date;
 
@@ -210,13 +210,13 @@ class MilestoneFactoryTest extends TestCase
         $this->assertEquals($this->artifact_closed_passed, $milestones[0]->getArtifact());
     }
 
-    private function mockAnArtifact(int $id, bool $is_open, string $status): Tracker_Artifact
+    private function mockAnArtifact(int $id, bool $is_open, string $status): Artifact
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($this->project);
         $tracker->shouldReceive('getId')->andReturn(100);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('isOpen')->andReturn($is_open);
         $artifact->shouldReceive('getStatus')->andReturn($status);

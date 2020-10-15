@@ -19,6 +19,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -62,8 +63,8 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItDoesNothingIfTheMilestoneHasNoParent(): void
     {
-        $artifact_added            = Mockery::mock(Tracker_Artifact::class);
-        $parent_milestone_artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact_added            = Mockery::mock(Artifact::class);
+        $parent_milestone_artifact = Mockery::spy(Artifact::class);
 
         $this->milestone->shouldReceive('getParent')->andReturns(null);
 
@@ -78,9 +79,9 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItDoesNothingIfTheArtifactTrackerIsNotInParentMilestoneBacklogTrackers(): void
     {
-        $artifact_added            = Mockery::mock(Tracker_Artifact::class);
+        $artifact_added            = Mockery::mock(Artifact::class);
         $artifact_added->shouldReceive('getTRackerId')->andReturn(201);
-        $parent_milestone_artifact = Mockery::spy(Tracker_Artifact::class);
+        $parent_milestone_artifact = Mockery::spy(Artifact::class);
         $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(202);
@@ -99,10 +100,10 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItDoesNothingIfTheParentIsLinkedToParentMilestone(): void
     {
-        $artifact_added            = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact_added            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
+        $parent_milestone_artifact = Mockery::spy(Artifact::class);
         $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(201);
 
@@ -122,11 +123,11 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItLinksTheItemToParentMilestone(): void
     {
-        $added_artifact            = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Tracker_Artifact::class);
+        $added_artifact            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
+        $parent_milestone_artifact = Mockery::spy(Artifact::class);
         $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $parent                    = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getId')->andReturns(103)->getMock();
+        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $parent                    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(103)->getMock();
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(201);
 
@@ -148,10 +149,10 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItLinksTheItemToParentMilestoneIfTheItemHasNoParent(): void
     {
-        $added_artifact            = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Tracker_Artifact::class);
+        $added_artifact            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
+        $parent_milestone_artifact = Mockery::spy(Artifact::class);
         $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Tracker_Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(201);
 

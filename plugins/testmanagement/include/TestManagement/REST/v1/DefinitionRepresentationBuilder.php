@@ -21,9 +21,9 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class DefinitionRepresentationBuilder
 {
@@ -59,7 +59,7 @@ class DefinitionRepresentationBuilder
         $this->purifier                     = $purifier;
     }
 
-    public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $definition_artifact): ?DefinitionRepresentation
+    public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact): ?DefinitionRepresentation
     {
         if (! $this->conformance_validator->isArtifactADefinition($definition_artifact)) {
             return null;
@@ -78,7 +78,7 @@ class DefinitionRepresentationBuilder
         );
     }
 
-    public function getMinimalRepresentation(PFUser $user, Tracker_Artifact $artifact): ?MinimalDefinitionRepresentation
+    public function getMinimalRepresentation(PFUser $user, Artifact $artifact): ?MinimalDefinitionRepresentation
     {
         if (! $this->conformance_validator->isArtifactADefinition($artifact)) {
             return null;

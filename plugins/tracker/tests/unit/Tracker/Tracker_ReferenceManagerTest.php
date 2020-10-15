@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_ReferenceManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -47,7 +49,7 @@ final class Tracker_ReferenceManagerTest extends \PHPUnit\Framework\TestCase
      */
     private $artifact_id;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -66,7 +68,7 @@ final class Tracker_ReferenceManagerTest extends \PHPUnit\Framework\TestCase
         $tracker           = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getName')->andReturn('My tracker');
-        $this->artifact = new Tracker_Artifact($this->artifact_id, 101, null, 10, null);
+        $this->artifact = new Artifact($this->artifact_id, 101, null, 10, null);
         $this->artifact->setTracker($tracker);
     }
 

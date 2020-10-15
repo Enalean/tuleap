@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * I'm responsible of managing Tracker related cross references
  */
@@ -48,16 +50,16 @@ class Tracker_ReferenceManager
      *
      * @return CrossReference
      */
-    public function getCrossReferenceBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    public function getCrossReferenceBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user)
     {
         return new CrossReference(
             $source_artifact->getId(),
             $source_artifact->getTracker()->getGroupId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $source_artifact->getTracker()->getItemname(),
             $target_artifact->getId(),
             $target_artifact->getTracker()->getGroupId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $target_artifact->getTracker()->getItemname(),
             $user->getId()
         );
@@ -69,7 +71,7 @@ class Tracker_ReferenceManager
      *
      * @return bool
      */
-    public function insertBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    public function insertBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user)
     {
         return $this->reference_manager->insertCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
@@ -82,7 +84,7 @@ class Tracker_ReferenceManager
      *
      * @return bool
      */
-    public function removeBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    public function removeBetweenTwoArtifacts(Artifact $source_artifact, Artifact $target_artifact, PFUser $user)
     {
         return $this->reference_manager->removeCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
@@ -106,7 +108,7 @@ class Tracker_ReferenceManager
     /**
      * @return Tracker_Reference
      */
-    private function getTrackerReference(Tracker_Artifact $artifact, $keyword)
+    private function getTrackerReference(Artifact $artifact, $keyword)
     {
         $reference = new Tracker_Reference(
             $artifact->getTracker(),

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand extends Planning_ArtifactParentsSelector_Command
 {
 
@@ -26,7 +28,7 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
      *
      * @return array of Tracker_Artifact
      */
-    public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user)
+    public function getPossibleParents(Tracker $parent_tracker, Artifact $source_artifact, PFUser $user)
     {
         $sub_childs = $this->getSubChildrenBelongingToTracker($source_artifact, $parent_tracker, $user);
         if ($sub_childs) {
@@ -34,7 +36,7 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
         }
     }
 
-    private function getSubChildrenBelongingToTracker(Tracker_Artifact $source_artifact, Tracker $expected_tracker, PFUser $user)
+    private function getSubChildrenBelongingToTracker(Artifact $source_artifact, Tracker $expected_tracker, PFUser $user)
     {
         $hierarchy = $this->getParentTrackersAndStopAtGivenTracker($expected_tracker, $source_artifact->getTracker());
         if ($hierarchy) {
@@ -42,7 +44,7 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
         }
     }
 
-    private function recursivelyFindChildrenBelongingToTracker(Tracker_Artifact $source_artifact, Tracker $expected_tracker, PFUser $user, array $hierarchy)
+    private function recursivelyFindChildrenBelongingToTracker(Artifact $source_artifact, Tracker $expected_tracker, PFUser $user, array $hierarchy)
     {
         $artifacts = [];
         $children = $source_artifact->getLinkedArtifactsOfHierarchy($user);

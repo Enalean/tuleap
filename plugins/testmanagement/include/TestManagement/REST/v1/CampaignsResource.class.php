@@ -31,7 +31,6 @@ use PFUser;
 use ProjectManager;
 use TemplateRenderer;
 use Tracker_AfterSaveException;
-use Tracker_Artifact;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -91,6 +90,7 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -689,7 +689,7 @@ class CampaignsResource
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeadersForExecutionsList(Tracker_Artifact $artifact): void
+    private function sendAllowHeadersForExecutionsList(Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPatch();

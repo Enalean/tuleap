@@ -89,7 +89,7 @@ class UsersArtifactsResourceController
 
         $artifacts = [];
         foreach ($users_artifacts->getArtifacts() as $artifact) {
-            assert($artifact instanceof \Tracker_Artifact);
+            assert($artifact instanceof \Tuleap\Tracker\Artifact\Artifact);
             $artifacts[] = MyArtifactsRepresentation::build(
                 $artifact,
                 MinimalTrackerRepresentation::build($artifact->getTracker())

@@ -26,7 +26,6 @@ use BackendLogger;
 use PFUser;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Semantic_DescriptionFactory;
@@ -42,6 +41,7 @@ use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\CopiedValuesGather
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MilestoneMirroringException;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\MirrorMilestonesCreator;
 use Tuleap\MultiProjectBacklog\Aggregator\Milestone\SynchronizedFieldRetrievalException;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use UserManager;
 use XMLImportHelper;
@@ -89,7 +89,7 @@ class CreateMirrorsTask
         $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
     }
 
-    public function createMirrors(Tracker_Artifact $artifact, PFUser $user, \Tracker_Artifact_Changeset $changeset): void
+    public function createMirrors(Artifact $artifact, PFUser $user, \Tracker_Artifact_Changeset $changeset): void
     {
         try {
             $this->create($artifact, $user, $changeset);
@@ -104,7 +104,7 @@ class CreateMirrorsTask
      * @throws SynchronizedFieldRetrievalException
      */
     private function create(
-        \Tracker_Artifact $aggregator_top_milestone_artifact,
+        \Tuleap\Tracker\Artifact\Artifact $aggregator_top_milestone_artifact,
         \PFUser $current_user,
         \Tracker_Artifact_Changeset $last_changeset
     ): void {

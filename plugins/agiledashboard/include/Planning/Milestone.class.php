@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Describe what a Milestone business object should present.
  */
@@ -38,7 +40,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     public function getProject();
 
         /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact();
 
@@ -85,7 +87,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user);
 

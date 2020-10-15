@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Cardwall_CardFieldPresenter
 {
 
@@ -27,11 +29,11 @@ class Cardwall_CardFieldPresenter
     private $field;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
-    public function __construct(Tracker_FormElement_Field $field, Tracker_Artifact $artifact, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences)
+    public function __construct(Tracker_FormElement_Field $field, Artifact $artifact, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences)
     {
         $this->field               = $field;
         $this->artifact            = $artifact;

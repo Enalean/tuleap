@@ -19,10 +19,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\REST\ResourceReference;
 use Tuleap\REST\JsonCast;
-use Tracker_Artifact;
+use Tuleap\REST\ResourceReference;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\TrackerReference;
 
 /**
  * @psalm-immutable
@@ -56,7 +56,7 @@ class BacklogItemParentReference
         $this->tracker = $tracker;
     }
 
-    public static function build(Tracker_Artifact $backlog_item): self
+    public static function build(Artifact $backlog_item): self
     {
         return new self(
             JsonCast::toInt($backlog_item->getId()),

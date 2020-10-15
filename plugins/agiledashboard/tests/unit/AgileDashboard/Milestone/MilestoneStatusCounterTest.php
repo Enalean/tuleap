@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -56,7 +58,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
             $this->artifact_factory
         );
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('userCanView')->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(
             $artifact
@@ -69,8 +71,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
         $result = $this->counter->getStatus($this->user, null);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 0,
-                Tracker_Artifact::STATUS_CLOSED => 0,
+                Artifact::STATUS_OPEN   => 0,
+                Artifact::STATUS_CLOSED => 0,
             ],
             $result
         );
@@ -82,8 +84,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 0,
-                Tracker_Artifact::STATUS_CLOSED => 0,
+                Artifact::STATUS_OPEN   => 0,
+                Artifact::STATUS_CLOSED => 0,
             ],
             $result
         );
@@ -103,16 +105,16 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
         );
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([35, 36])->andReturns(
             \TestHelper::arrayToDar(
-                ['id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN],
-                ['id' => 35, 'status' => Tracker_Artifact::STATUS_CLOSED]
+                ['id' => 36, 'status' => Artifact::STATUS_OPEN],
+                ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
             )
         );
         $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(\TestHelper::emptyDar());
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 1,
-                Tracker_Artifact::STATUS_CLOSED => 1,
+                Artifact::STATUS_OPEN   => 1,
+                Artifact::STATUS_CLOSED => 1,
             ],
             $result
         );
@@ -126,8 +128,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
         );
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([35, 36])->andReturns(
             \TestHelper::arrayToDar(
-                ['id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN],
-                ['id' => 35, 'status' => Tracker_Artifact::STATUS_CLOSED]
+                ['id' => 36, 'status' => Artifact::STATUS_OPEN],
+                ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
             )
         );
 
@@ -137,17 +139,17 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
         );
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([38, 39, 40])->andReturns(
             \TestHelper::arrayToDar(
-                ['id' => 38, 'status' => Tracker_Artifact::STATUS_OPEN],
-                ['id' => 39, 'status' => Tracker_Artifact::STATUS_CLOSED],
-                ['id' => 40, 'status' => Tracker_Artifact::STATUS_CLOSED]
+                ['id' => 38, 'status' => Artifact::STATUS_OPEN],
+                ['id' => 39, 'status' => Artifact::STATUS_CLOSED],
+                ['id' => 40, 'status' => Artifact::STATUS_CLOSED]
             )
         );
 
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 2,
-                Tracker_Artifact::STATUS_CLOSED => 3,
+                Artifact::STATUS_OPEN   => 2,
+                Artifact::STATUS_CLOSED => 3,
             ],
             $result
         );
@@ -155,12 +157,12 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
 
     public function testItDoesntCountBacklogElementNotReadable(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('userCanView')->andReturnFalse();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(35)->andReturns(
             $artifact
         );
-        $other_artifact = Mockery::mock(Tracker_Artifact::class);
+        $other_artifact = Mockery::mock(Artifact::class);
         $other_artifact->shouldReceive('userCanView')->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(36)->andReturns(
             $other_artifact
@@ -170,14 +172,14 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
             \TestHelper::arrayToDar(['id' => 35], ['id' => 36])
         );
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->andReturns(
-            \TestHelper::arrayToDar(['id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN])
+            \TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
         );
         $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(\TestHelper::emptyDar());
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 1,
-                Tracker_Artifact::STATUS_CLOSED => 0,
+                Artifact::STATUS_OPEN   => 1,
+                Artifact::STATUS_CLOSED => 0,
             ],
             $result
         );
@@ -185,19 +187,19 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
 
     public function testItDoesntCountSubElementsNotReadable(): void
     {
-        $artifact_36 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_36 = Mockery::mock(Artifact::class);
         $artifact_36->shouldReceive('userCanView')->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(36)->andReturns(
             $artifact_36
         );
 
-        $artifact_37 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_37 = Mockery::mock(Artifact::class);
         $artifact_37->shouldReceive('userCanView')->andReturnFalse();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturns(
             $artifact_37
         );
 
-        $artifact_38 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_38 = Mockery::mock(Artifact::class);
         $artifact_38->shouldReceive('userCanView')->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(38)->andReturns(
             $artifact_38
@@ -207,21 +209,21 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Frame
             \TestHelper::arrayToDar(['id' => 36])
         );
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([36])->andReturns(
-            \TestHelper::arrayToDar(['id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN])
+            \TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
         );
         $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(
             \TestHelper::arrayToDar(['id' => 37], ['id' => 38])
         );
 
         $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([37, 38])->andReturns(
-            \TestHelper::arrayToDar(['id' => 38, 'status' => Tracker_Artifact::STATUS_OPEN])
+            \TestHelper::arrayToDar(['id' => 38, 'status' => Artifact::STATUS_OPEN])
         );
 
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEquals(
             [
-                Tracker_Artifact::STATUS_OPEN   => 2,
-                Tracker_Artifact::STATUS_CLOSED => 0,
+                Artifact::STATUS_OPEN   => 2,
+                Artifact::STATUS_CLOSED => 0,
             ],
             $result
         );

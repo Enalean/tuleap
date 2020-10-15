@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use DateTime;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactTimeframeHelper
 {
@@ -72,7 +72,7 @@ class ArtifactTimeframeHelper
         return $timeframe_semantic->isDurationField($field) || $timeframe_semantic->isEndDateField($field);
     }
 
-    public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Tracker_Artifact $artifact): string
+    public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
     {
         $time_period = $this->time_frame_builder->buildTimePeriodWithoutWeekendForArtifact($artifact, $user);
 
@@ -82,7 +82,7 @@ class ArtifactTimeframeHelper
         return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
     }
 
-    public function getDurationArtifactHelperForReadOnlyView(PFUser $user, Tracker_Artifact $artifact): string
+    public function getDurationArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
     {
         $duration = (int) $this->time_frame_builder
             ->buildTimePeriodWithoutWeekendForArtifact($artifact, $user)

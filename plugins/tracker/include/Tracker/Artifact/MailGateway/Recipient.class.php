@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Value object of a the recipient of email gateway
  */
@@ -30,12 +32,12 @@ class Tracker_Artifact_MailGateway_Recipient
     /** @var PFUser */
     private $user;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     public function __construct(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $email
     ) {
         $this->user     = $user;

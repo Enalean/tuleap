@@ -277,9 +277,9 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $this->assertNull($information);
     }
 
-    private function buildMilestone(): \Tracker_Artifact
+    private function buildMilestone(): \Tuleap\Tracker\Artifact\Artifact
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(852);
         $tracker  = \Mockery::mock(\Tracker::class);
         $project  = \Mockery::mock(\Project::class);
@@ -303,12 +303,12 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
     }
 
     /**
-     * @return \Tracker_Artifact[]
+     * @return \Tuleap\Tracker\Artifact\Artifact[]
      */
     private function buildTestDefinitions(): array
     {
-        $test_definition_1 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('694')->getMock();
-        $test_definition_2 = \Mockery::mock(\Tracker_Artifact::class)->shouldReceive('getId')->andReturn('695')->getMock();
+        $test_definition_1 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('694')->getMock();
+        $test_definition_2 = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturn('695')->getMock();
 
         return [$test_definition_1, $test_definition_2];
     }

@@ -26,10 +26,10 @@ use Cardwall_Semantic_CardFields;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -57,7 +57,7 @@ class BackgroundColorBuilderTest extends TestCase
         parent::setUp();
 
         $this->card_fields_semantic = $this->createMock(Cardwall_Semantic_CardFields::class);
-        $this->artifact = $this->createMock(Tracker_Artifact::class);
+        $this->artifact = $this->createMock(Artifact::class);
         $this->current_user = $this->createMock(PFUser::class);
         $this->decorator_retriever = $this->createMock(BindDecoratorRetriever::class);
         $this->field = $this->createMock(Tracker_FormElement_Field_List::class);

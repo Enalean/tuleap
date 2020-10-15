@@ -24,7 +24,6 @@ namespace Tuleap\Taskboard\REST\v1\Card;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Exception;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_InvalidFieldException;
@@ -34,6 +33,7 @@ use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardPatcher
@@ -72,7 +72,7 @@ class CardPatcher
      * @throws I18NRestException
      * @throws RestException
      */
-    public function patchCard(Tracker_Artifact $artifact, PFUser $user, CardPatchRepresentation $payload): void
+    public function patchCard(Artifact $artifact, PFUser $user, CardPatchRepresentation $payload): void
     {
         $remaining_effort_field = $this->getRemainingEffortField($artifact, $user);
         $values                 = $this->getUpdateValues($payload, $remaining_effort_field);
@@ -98,7 +98,7 @@ class CardPatcher
      * @throws RestException
      */
     private function getRemainingEffortField(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): Tracker_FormElement_Field_Numeric {
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(

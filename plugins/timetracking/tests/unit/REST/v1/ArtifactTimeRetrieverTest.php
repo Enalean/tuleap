@@ -51,7 +51,7 @@ class ArtifactTimeRetrieverTest extends TestCase
      */
     private $artifact_factory;
     /**
-     * @var M\MockInterface|\Tracker_Artifact
+     * @var M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -88,7 +88,7 @@ class ArtifactTimeRetrieverTest extends TestCase
         $this->project_verificator   = M::mock(ProjectStatusVerificator::class);
         $this->project               = M::mock(\Project::class);
         $this->tracker               = M::mock(\Tracker::class, ['getProject' => $this->project]);
-        $this->artifact              = M::mock(\Tracker_Artifact::class, ['getTracker' => $this->tracker]);
+        $this->artifact              = M::mock(\Tuleap\Tracker\Artifact\Artifact::class, ['getTracker' => $this->tracker]);
         $this->artifact_factory      = M::mock(\Tracker_ArtifactFactory::class);
         $this->user                  = M::mock(\PFUser::class);
         $this->retriever             = new ArtifactTimeRetriever(

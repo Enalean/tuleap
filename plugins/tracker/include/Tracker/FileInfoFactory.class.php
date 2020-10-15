@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FileInfoFactory
 {
@@ -89,7 +90,7 @@ class Tracker_FileInfoFactory
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
      */
-    public function getArtifactByFileInfoIdAndUser(PFUser $user, int $id): Tracker_Artifact
+    public function getArtifactByFileInfoIdAndUser(PFUser $user, int $id): Artifact
     {
         $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
         if (! $row) {
@@ -104,7 +105,7 @@ class Tracker_FileInfoFactory
     }
 
     /**
-     * @return Tracker_Artifact|null
+     * @return Artifact|null
      */
     public function getArtifactByFileInfoIdInLastChangeset(int $id)
     {
@@ -120,7 +121,7 @@ class Tracker_FileInfoFactory
      *
      * @param int $id
      *
-     * @return Tracker_Artifact | null
+     * @return Artifact | null
      */
     public function getArtifactByFileInfoId($id)
     {

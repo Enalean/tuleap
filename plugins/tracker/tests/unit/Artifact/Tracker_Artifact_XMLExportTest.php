@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
@@ -224,9 +225,9 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $xml_element->artifacts->artifact[1]->changeset);
     }
 
-    private function buildArtifact(int $id, Tracker $tracker, array $changesets): Tracker_Artifact
+    private function buildArtifact(int $id, Tracker $tracker, array $changesets): Artifact
     {
-        $artifact = new Tracker_Artifact($id, $tracker->getId(), 101, 10, false);
+        $artifact = new Artifact($id, $tracker->getId(), 101, 10, false);
         $artifact->setChangesets($changesets);
         $artifact->setTracker($tracker);
         $artifact->setFormElementFactory($this->formelement_factory);

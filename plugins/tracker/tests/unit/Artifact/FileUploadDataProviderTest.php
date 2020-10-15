@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FileInfo;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -53,7 +52,7 @@ class FileUploadDataProviderTest extends TestCase
      */
     private $tracker;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -66,7 +65,7 @@ class FileUploadDataProviderTest extends TestCase
         $this->form_element_factory  = Mockery::mock(Tracker_FormElementFactory::class);
         $this->frozen_field_detector = Mockery::mock(FrozenFieldDetector::class);
         $this->tracker               = Mockery::mock(Tracker::class);
-        $this->artifact              = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact              = Mockery::mock(Artifact::class);
         $this->user                  = Mockery::mock(PFUser::class);
 
         $this->file_upload_data_provider = new FileUploadDataProvider(

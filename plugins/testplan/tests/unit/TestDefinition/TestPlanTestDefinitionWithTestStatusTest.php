@@ -32,7 +32,7 @@ final class TestPlanTestDefinitionWithTestStatusTest extends TestCase
 
     public function testBuildWhenTestStatusIsNotKnown(): void
     {
-        $test_def = \Mockery::mock(\Tracker_Artifact::class);
+        $test_def = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $test_def_with_status = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($test_def);
 
@@ -46,7 +46,7 @@ final class TestPlanTestDefinitionWithTestStatusTest extends TestCase
 
     public function testBuildWhenTestStatusIsKnown(): void
     {
-        $test_def     = \Mockery::mock(\Tracker_Artifact::class);
+        $test_def     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $submitted_by = UserTestBuilder::aUser()->build();
 
         $test_def_with_status = TestPlanTestDefinitionWithTestStatus::knownTestStatusForTheDefinition($test_def, 'passed', 852, 10, $submitted_by, 14);

@@ -23,15 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Event;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactUpdated implements Dispatchable
 {
     public const NAME = 'trackerArtifactUpdated';
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      * @psalm-readonly
      */
     private $artifact;
@@ -41,7 +41,7 @@ class ArtifactUpdated implements Dispatchable
      */
     private $user;
 
-    public function __construct(Tracker_Artifact $artifact, PFUser $user)
+    public function __construct(Artifact $artifact, PFUser $user)
     {
         $this->artifact = $artifact;
         $this->user     = $user;
@@ -50,7 +50,7 @@ class ArtifactUpdated implements Dispatchable
     /**
      * @psalm-mutation-free
      */
-    public function getArtifact(): Tracker_Artifact
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }

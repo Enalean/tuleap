@@ -18,20 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * A TreeNode that holds an Tracker_Artifact
  */
 class ArtifactNode extends TreeNode
 {
 
-    public function __construct(Tracker_Artifact $artifact, ?array $data = null)
+    public function __construct(Artifact $artifact, ?array $data = null)
     {
         parent::__construct($data, $artifact->getId());
         $this->setObject($artifact);
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact()
     {

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 require_once __DIR__ . '/../../../bootstrap.php';
 
 class Tracker_Artifact_MailGateway_IncomingMessageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
@@ -30,7 +32,7 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactoryTest extends \PHPUnit\F
         $tracker_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(true);
 
         $recipient = Mockery::mock(Tracker_Artifact_MailGateway_Recipient::class);
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $user      = Mockery::mock(PFUser::class);
 
         $artifact->shouldReceive('getTracker')->andReturns(Mockery::mock(Tracker::class));

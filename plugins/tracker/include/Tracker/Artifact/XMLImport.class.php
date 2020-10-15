@@ -21,6 +21,7 @@
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -317,7 +318,7 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @return null|Tracker_Artifact
+     * @return null|Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importBareArtifact(
@@ -333,7 +334,7 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @return null|Tracker_Artifact
+     * @return null|Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importBareArtifactInUpdateMode(Tracker $tracker, SimpleXMLElement $xml_artifact)
@@ -360,7 +361,7 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @return null|Tracker_Artifact
+     * @return null|Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importBareArtifactInStandardMode(Tracker $tracker, SimpleXMLElement $xml_artifact)
@@ -372,7 +373,7 @@ class Tracker_Artifact_XMLImport
     }
 
     /**
-     * @return Tracker_Artifact|null
+     * @return Artifact|null
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importNewBareArtifact(
@@ -413,7 +414,7 @@ class Tracker_Artifact_XMLImport
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importChangesets(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_artifact,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
         ImportConfig $configuration,
@@ -478,7 +479,7 @@ class Tracker_Artifact_XMLImport
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importAllChangesetsBySubmitionDate(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_changesets,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
         ImportConfig $configuration,
@@ -514,7 +515,7 @@ class Tracker_Artifact_XMLImport
     /**
      * @return int
      */
-    private function getCountChangeset(Tracker_Artifact $artifact, ImportConfig $configuration)
+    private function getCountChangeset(Artifact $artifact, ImportConfig $configuration)
     {
         if (! $configuration->isUpdate()) {
             return 0;
@@ -531,7 +532,7 @@ class Tracker_Artifact_XMLImport
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importFirstChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_changeset,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
         CreatedFileURLMapping $url_mapping,
@@ -565,7 +566,7 @@ class Tracker_Artifact_XMLImport
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importFakeFirstChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_changeset,
         CreatedFileURLMapping $url_mapping,
         ImportedChangesetMapping $changeset_id_mapping,
@@ -598,7 +599,7 @@ class Tracker_Artifact_XMLImport
      * @throws \Tuleap\Tracker\Artifact\Exception\FieldValidationException
      */
     private function importRemainingChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimpleXMLElement $xml_changeset,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder,
         CreatedFileURLMapping $url_mapping,
@@ -680,7 +681,7 @@ class Tracker_Artifact_XMLImport
         Tracker $tracker,
         SimpleXMLElement $xml_artifact,
         PFUser $user
-    ): ?Tracker_Artifact {
+    ): ?Artifact {
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
             $first_changeset = count($changesets) ? $changesets[0] : null;

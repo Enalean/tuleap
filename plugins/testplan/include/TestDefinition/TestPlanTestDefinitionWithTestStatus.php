@@ -27,7 +27,7 @@ use PFUser;
 final class TestPlanTestDefinitionWithTestStatus
 {
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $test_definition;
     /**
@@ -57,7 +57,7 @@ final class TestPlanTestDefinitionWithTestStatus
      * @psalm-param null|"notrun"|"passed"|"failed"|"blocked" $status
      */
     private function __construct(
-        \Tracker_Artifact $test_definition,
+        \Tuleap\Tracker\Artifact\Artifact $test_definition,
         ?string $status,
         ?int $test_execution_id_used_to_define_status,
         ?int $test_execution_date,
@@ -72,7 +72,7 @@ final class TestPlanTestDefinitionWithTestStatus
         $this->test_campaign_id                        = $test_campaign_id;
     }
 
-    public static function unknownTestStatusForTheDefinition(\Tracker_Artifact $test_definition): self
+    public static function unknownTestStatusForTheDefinition(\Tuleap\Tracker\Artifact\Artifact $test_definition): self
     {
         return new self($test_definition, null, null, null, null, null);
     }
@@ -81,7 +81,7 @@ final class TestPlanTestDefinitionWithTestStatus
      * @psalm-param "notrun"|"passed"|"failed"|"blocked" $status
      */
     public static function knownTestStatusForTheDefinition(
-        \Tracker_Artifact $test_definition,
+        \Tuleap\Tracker\Artifact\Artifact $test_definition,
         string $status,
         int $test_execution_id_used_to_define_status,
         int $test_execution_date,
@@ -98,7 +98,7 @@ final class TestPlanTestDefinitionWithTestStatus
         );
     }
 
-    public function getTestDefinition(): \Tracker_Artifact
+    public function getTestDefinition(): \Tuleap\Tracker\Artifact\Artifact
     {
         return $this->test_definition;
     }

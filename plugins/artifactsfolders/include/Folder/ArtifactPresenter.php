@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use DateTime;
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserHelper;
 
 class ArtifactPresenter
@@ -37,7 +37,7 @@ class ArtifactPresenter
     public $assignees;
     public $folder_hierarchy;
 
-    public function build(PFUser $current_user, Tracker_Artifact $artifact, array $folder_hierarchy)
+    public function build(PFUser $current_user, Artifact $artifact, array $folder_hierarchy)
     {
         $this->id               = $artifact->getId();
         $this->html_url         = $artifact->getUri();
@@ -68,7 +68,7 @@ class ArtifactPresenter
     private function getFolderHierarchyPresenter(array $folder_hierarchy)
     {
         return array_map(
-            function (Tracker_Artifact $folder) {
+            function (Artifact $folder) {
                 $title = $folder->getTitle();
                 if (! $title) {
                     $title = $folder->getXRef();
@@ -102,7 +102,7 @@ class ArtifactPresenter
         return UserHelper::instance()->getDisplayNameFromUser($user);
     }
 
-    private function getTitle(Tracker_Artifact $artifact)
+    private function getTitle(Artifact $artifact)
     {
         $title = $artifact->getTitle();
 

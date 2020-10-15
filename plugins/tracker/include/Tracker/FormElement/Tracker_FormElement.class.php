@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
@@ -371,8 +372,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      *
-     * @param Tracker_Artifact $artifact
-     * @param string $format
+     * @param Artifact $artifact
+     * @param string   $format
+     *
      * @return string
      */
     public function fetchMailFormElements($artifact, $format = 'text', $ignore_perms = false)
@@ -682,26 +684,26 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return string html
      */
     abstract public function fetchArtifact(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_values,
         array $additional_classes
     );
 
-    abstract public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch the element for the artifact in read only
      *
-     * @param Tracker_Artifact $artifact The artifact
+     * @param Artifact $artifact The artifact
      *
      * @return string html
      */
-    abstract public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values);
 
     /**
      * @return mixed
      */
-    abstract public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch mail rendering in a given format
@@ -717,7 +719,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
+    public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return '';
     }
@@ -740,7 +742,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return String
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,

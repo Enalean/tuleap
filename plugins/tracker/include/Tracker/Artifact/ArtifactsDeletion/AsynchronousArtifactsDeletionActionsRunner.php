@@ -22,12 +22,12 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Exception;
 use ForgeConfig;
-use Psr\Log\LoggerInterface;
 use PFUser;
-use Tracker_Artifact;
+use Psr\Log\LoggerInterface;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class AsynchronousArtifactsDeletionActionsRunner
 {
@@ -73,7 +73,7 @@ class AsynchronousArtifactsDeletionActionsRunner
             $message = $event->getPayload();
 
             $pending_artifact = $this->pending_artifact_removal_dao->getPendingArtifactById($message['artifact_id']);
-            $artifact         = new Tracker_Artifact(
+            $artifact         = new Artifact(
                 $pending_artifact['id'],
                 $pending_artifact['tracker_id'],
                 $pending_artifact['submitted_by'],
@@ -87,14 +87,14 @@ class AsynchronousArtifactsDeletionActionsRunner
         }
     }
 
-    private function processArchiveAndArtifactDeletion(Tracker_Artifact $artifact, PFUser $user): void
+    private function processArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user): void
     {
         $task = $this->task_builder->build($this->logger);
 
         $task->archive($artifact, $user);
     }
 
-    public function executeArchiveAndArtifactDeletion(Tracker_Artifact $artifact, PFUser $user): void
+    public function executeArchiveAndArtifactDeletion(Artifact $artifact, PFUser $user): void
     {
         if (ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
             $this->processArchiveAndArtifactDeletion($artifact, $user);

@@ -51,7 +51,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItReturnsCopiedValues(): void
     {
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(104);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 123456789, '');
         $tracker   = $this->buildTestTracker(89);
@@ -97,7 +97,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenChangesetHasNoValueForTitleField(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
@@ -111,7 +111,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenTitleChangesetValueCannotBeCastToString(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
@@ -128,7 +128,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenChangesetHasNoValueForDescriptionField(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
@@ -147,7 +147,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenChangesetHasNoValueForStatusField(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
@@ -170,7 +170,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenChangesetHasNoValueForStartDateField(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 
@@ -198,7 +198,7 @@ final class CopiedValuesGathererTest extends TestCase
 
     public function testItThrowsWhenChangesetHasNoValueForEndPeriodField(): void
     {
-        $artifact  = M::mock(\Tracker_Artifact::class);
+        $artifact  = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $tracker   = $this->buildTestTracker(89);
 

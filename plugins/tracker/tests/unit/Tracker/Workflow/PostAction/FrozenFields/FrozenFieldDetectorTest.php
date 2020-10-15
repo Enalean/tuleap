@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Transition;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
@@ -58,7 +58,7 @@ final class FrozenFieldDetectorTest extends TestCase
 
         $this->assertFalse(
             $this->frozen_field_detector->isFieldFrozen(
-                Mockery::mock(Tracker_Artifact::class),
+                Mockery::mock(Artifact::class),
                 Mockery::mock(Tracker_FormElement_Field::class)
             )
         );
@@ -66,7 +66,7 @@ final class FrozenFieldDetectorTest extends TestCase
 
     public function testIsFieldFrozenReturnsFalseWhenNoFrozenFieldsPostAction(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $field    = Mockery::mock(Tracker_FormElement_Field::class);
 
         $transition = Mockery::mock(\Transition::class);
@@ -124,7 +124,7 @@ final class FrozenFieldDetectorTest extends TestCase
     private function mockArtifactWithWorkflow(): Mockery\MockInterface
     {
         $transition = Mockery::mock(\Transition::class);
-        $artifact   = Mockery::mock(Tracker_Artifact::class);
+        $artifact   = Mockery::mock(Artifact::class);
         $workflow   = $this->mockSimpleModeWorkflow();
         $workflow->shouldReceive('getReferenceTransitionForCurrentState')
             ->andReturns($transition);

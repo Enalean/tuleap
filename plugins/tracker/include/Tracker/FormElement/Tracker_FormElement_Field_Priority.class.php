@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
 
@@ -119,14 +121,14 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -136,12 +138,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
     }
@@ -159,7 +161,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -178,7 +180,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -220,7 +222,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return $this->getArtifactRank($artifact->getID());
     }
@@ -228,12 +230,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request.
+     * @param Artifact $artifact The artifact
+     * @param mixed    $value    data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return true;
     }
@@ -299,14 +301,14 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * Validate a field
      *
-     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param Artifact                        $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      *
      * @return bool true on success or false on failure
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
@@ -328,7 +330,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
+    public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
 

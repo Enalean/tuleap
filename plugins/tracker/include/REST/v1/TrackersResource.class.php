@@ -25,7 +25,6 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -47,6 +46,7 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -59,25 +59,25 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
-use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
 use Workflow_Dao;
 use Workflow_Transition_ConditionFactory;
@@ -477,7 +477,7 @@ class TrackersResource extends AuthenticatedResource
             new NatureDao()
         );
 
-        $build_artifact_representation = function (?Tracker_Artifact $artifact) use (
+        $build_artifact_representation = function (?Artifact $artifact) use (
             $builder,
             $user,
             $with_all_field_values
@@ -542,7 +542,7 @@ class TrackersResource extends AuthenticatedResource
         $parent = $this->getParentTracker($user, $tracker);
 
         $possible_parents_getr                       = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
-        list($label, $pagination, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
+        [$label, $pagination, $display_selector] = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
 
         if ($display_selector) {
             $nb_matching = $pagination->getTotalSize();

@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
 {
 
     /** @var Tracker */
     private $tracker;
 
-    /** @var Tracker_Artifact | null */
+    /** @var Artifact | null */
     private $artifact_to_link;
 
     /** @var Tracker_FormElement[] */

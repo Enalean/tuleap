@@ -190,11 +190,11 @@ final class MilestoneRepresentationBuilderTest extends TestCase
         \Planning $planning,
         \Tracker $milestone_tracker
     ): \Planning_ArtifactMilestone {
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $artifact->shouldReceive('getTitle')->andReturn('Test Milestone');
         $artifact->shouldReceive('getStatus')->andReturn('Ongoing');
-        $artifact->shouldReceive('getSemanticStatusValue')->andReturn(\Tracker_Artifact::STATUS_OPEN);
+        $artifact->shouldReceive('getSemanticStatusValue')->andReturn(\Tuleap\Tracker\Artifact\Artifact::STATUS_OPEN);
         $artifact->shouldReceive('getDescription')->andReturn('Test description');
         $artifact->shouldReceive('getPostProcessedDescription')->andReturn('Test description');
         $artifact->shouldReceive('getLastUpdateDate')->andReturn(1);

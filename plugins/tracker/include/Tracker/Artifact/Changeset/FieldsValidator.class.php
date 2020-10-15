@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 
@@ -50,7 +51,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
      * @return bool true if all fields are valid, false otherwise. This function update $field_data (set values to null if not valid)
      */
     public function validate(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         \PFUser $user,
         $fields_data,
         ChangesetValidationContext $changeset_validation_context
@@ -78,7 +79,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
      * @param mixed $submitted_value
      */
     private function validateOneField(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         Tracker_FormElement_Field $field,
         $submitted_value,
@@ -100,7 +101,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
     }
 
     abstract protected function canValidateField(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $field,
         PFUser $user
     ): bool;
@@ -109,7 +110,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
      * @return bool
      */
     abstract protected function validateField(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $field,
         \PFUser $user,
         $submitted_value

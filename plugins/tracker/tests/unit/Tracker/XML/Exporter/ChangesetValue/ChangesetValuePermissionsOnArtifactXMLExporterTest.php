@@ -23,10 +23,10 @@ namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_FormElement_Field;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
@@ -82,7 +82,7 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(Tracker_Artifact::class),
+            \Mockery::spy(Artifact::class),
             $changeset_value
         );
 
@@ -108,7 +108,7 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(Tracker_Artifact::class),
+            \Mockery::spy(Artifact::class),
             $changeset_value
         );
 

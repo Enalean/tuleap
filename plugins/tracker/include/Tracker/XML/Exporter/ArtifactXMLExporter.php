@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 class Tracker_XML_Exporter_ArtifactXMLExporter
@@ -61,7 +62,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporter
      */
     public function exportFullHistory(
         SimpleXMLElement $artifacts_xml,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         $artifact_xml = $artifacts_xml->addChild('artifact');
         $artifact_xml->addAttribute('id', $artifact->getId());

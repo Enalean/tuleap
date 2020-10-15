@@ -25,7 +25,6 @@ use LogicException;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
@@ -33,6 +32,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -156,7 +156,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
         array $submitted_values = []
     ): string {
@@ -180,7 +180,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ): string {
@@ -189,7 +189,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ): string {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
@@ -221,7 +221,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     protected function fetchTooltipValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ): string {
         return '';
@@ -245,7 +245,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         if ($this->doesUserWantToRemoveAllSteps($value)) {
             return true;
@@ -293,7 +293,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     public function hasChanges(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
         $new_value
     ) {
@@ -406,7 +406,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $steps;
     }
 
-    private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps): bool
+    private function extractCrossRefs(Artifact $artifact, array $submitted_steps): bool
     {
         if (! isset($submitted_steps['description']) && ! isset($submitted_steps['expected_results'])) {
             return true;
@@ -425,7 +425,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return ReferenceManager::instance()->extractCrossRef(
             $text,
             $artifact->getId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $tracker->getGroupID(),
             $this->getCurrentUser()->getId(),
             $tracker->getItemName()
@@ -513,7 +513,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return String
      */
-    protected function renderStepEditionToString(?Tracker_Artifact $artifact, array $steps_presenters)
+    protected function renderStepEditionToString(?Artifact $artifact, array $steps_presenters)
     {
         $tracker = $this->getTracker();
         if (! $tracker) {

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_Milestone_MilestoneStatusCounter
 {
@@ -49,8 +50,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounter
     public function getStatus(PFUser $user, $milestone_artifact_id)
     {
         $status = [
-            Tracker_Artifact::STATUS_OPEN   => 0,
-            Tracker_Artifact::STATUS_CLOSED => 0,
+            Artifact::STATUS_OPEN   => 0,
+            Artifact::STATUS_CLOSED => 0,
         ];
         if ($milestone_artifact_id) {
             $this->getStatusForMilestoneArtifactId($user, $milestone_artifact_id, $status);

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
@@ -165,7 +166,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
     }
 
     /** @return Tracker_Artifact_Changeset|null */
-    private function addFollowUp(PFUser $user, Tracker_Artifact $artifact, $body)
+    private function addFollowUp(PFUser $user, Artifact $artifact, $body)
     {
         $this->logger->debug("Receiving new follow-up comment from " . $user->getUserName());
 
@@ -184,7 +185,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         );
     }
 
-    /** @return Tracker_Artifact|false */
+    /** @return Artifact|false */
     private function createArtifact(PFUser $user, Tracker $tracker, $title, $body)
     {
         $this->logger->debug("Receiving new artifact from " . $user->getUserName());

@@ -55,7 +55,7 @@ class ArtifactDeletorTest extends TestCase
         $tracker->shouldReceive('getName')->andReturn("My tracker name");
         $tracker->shouldReceive('getGroupId')->andReturn(104);
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive("getId")->andReturn($artifact_id);
         $artifact->shouldReceive('getTrackerId')->andReturn(4);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);

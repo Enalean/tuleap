@@ -24,9 +24,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
-use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
+use TrackerFactory;
 
 class CampaignCreatorTest extends TestCase
 {
@@ -109,7 +109,7 @@ class CampaignCreatorTest extends TestCase
 
     private function stubCampaignArtifact()
     {
-        $campaign_artifact = Mockery::spy(\Tracker_Artifact::class);
+        $campaign_artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_ref      = Mockery::spy(\Tuleap\Tracker\REST\Artifact\ArtifactReference::class);
 
         $artifact_ref->shouldReceive('getArtifact')->andReturn($campaign_artifact);
@@ -190,11 +190,11 @@ class CampaignCreatorTest extends TestCase
 
     public function testItCreatesTestExecutionsForSelectedDefinitions()
     {
-        $definition_1 = Mockery::mock(\Tracker_Artifact::class);
+        $definition_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $definition_1->allows()->getId()->andReturn("1");
-        $definition_2 = Mockery::mock(\Tracker_Artifact::class);
+        $definition_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $definition_2->allows()->getId()->andReturn("2");
-        $definition_3 = Mockery::mock(\Tracker_Artifact::class);
+        $definition_3 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $definition_3->allows()->getId()->andReturn("3");
         $test_definitions = [$definition_1, $definition_2, $definition_3];
 
@@ -213,7 +213,7 @@ class CampaignCreatorTest extends TestCase
 
         $this->execution_creator->shouldReceive('createTestExecution')
             ->times(count($test_definitions))
-            ->andReturn(Mockery::spy(\Tracker_Artifact::class));
+            ->andReturn(Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
 
         $this->campaign_creator->createCampaign(

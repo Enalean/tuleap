@@ -26,11 +26,11 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
 class BurnupDataBuilderTest extends TestCase
@@ -93,7 +93,7 @@ class BurnupDataBuilderTest extends TestCase
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
         $tracker  = Mockery::mock(Tracker::class);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
@@ -132,7 +132,7 @@ class BurnupDataBuilderTest extends TestCase
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
         $tracker  = Mockery::mock(Tracker::class);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
@@ -176,7 +176,7 @@ class BurnupDataBuilderTest extends TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $artifact->shouldReceive('getId')->andReturn(101);
@@ -209,7 +209,7 @@ class BurnupDataBuilderTest extends TestCase
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
         $tracker  = Mockery::mock(Tracker::class);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
         $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));

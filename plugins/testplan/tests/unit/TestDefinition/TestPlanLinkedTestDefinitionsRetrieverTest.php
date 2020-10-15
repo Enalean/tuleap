@@ -80,22 +80,22 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
             );
         $this->artifact_dao->shouldReceive('foundRows')->andReturn(2);
 
-        $artifact_user_can_view     = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact_user_can_view     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_user_can_view->shouldReceive('userCanView')->andReturn(true);
-        $artifact_user_can_not_view = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact_user_can_not_view = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_user_can_not_view->shouldReceive('userCanView')->andReturn(false);
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->twice()->andReturn(
             $artifact_user_can_view,
             $artifact_user_can_not_view,
         );
 
-        $backlog_item = \Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(789);
         $tracker      = \Mockery::mock(Tracker::class);
         $project      = \Mockery::mock(\Project::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $backlog_item->shouldReceive('getTracker')->andReturn($tracker);
-        $milestone    = \Mockery::mock(\Tracker_Artifact::class);
+        $milestone    = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $user         = UserTestBuilder::aUser()->build();
 
         $test_definition_with_test_status = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($artifact_user_can_view);
@@ -118,7 +118,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
     {
         $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(false);
 
-        $backlog_item = \Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker      = \Mockery::mock(Tracker::class);
         $project      = \Mockery::mock(\Project::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
@@ -128,7 +128,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
             TestPlanLinkedTestDefinitions::empty(),
             $this->retriever->getDefinitionsLinkedToAnArtifact(
                 $backlog_item,
-                \Mockery::mock(\Tracker_Artifact::class),
+                \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class),
                 UserTestBuilder::aUser()->build(),
                 512,
                 0

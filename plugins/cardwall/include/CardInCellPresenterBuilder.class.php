@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * Builds instances of CardInCellPresenterNode
@@ -63,7 +64,7 @@ class Cardwall_CardInCellPresenterBuilder
     /**
      * @return Cardwall_CardInCellPresenter
      */
-    public function getCardInCellPresenter(Tracker_Artifact $artifact, $swimline_id = 0)
+    public function getCardInCellPresenter(Artifact $artifact, $swimline_id = 0)
     {
         return $this->card_in_cell_presenter_factory->getCardInCellPresenter(
             $this->getCardPresenter($artifact, $swimline_id)
@@ -84,7 +85,7 @@ class Cardwall_CardInCellPresenterBuilder
         return $presenters;
     }
 
-    private function getCardPresenter(Tracker_Artifact $artifact, $swimline_id)
+    private function getCardPresenter(Artifact $artifact, $swimline_id)
     {
         $color                = $this->accent_color_builder->build($artifact, $this->user);
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());

@@ -26,8 +26,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class UnplannedArtifactsAdderTest extends TestCase
 {
@@ -54,7 +54,7 @@ class UnplannedArtifactsAdderTest extends TestCase
     private $planned_artifact_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -75,7 +75,7 @@ class UnplannedArtifactsAdderTest extends TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(101);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(1);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
     }

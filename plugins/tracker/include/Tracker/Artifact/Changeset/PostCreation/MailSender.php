@@ -24,19 +24,19 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use Codendi_HTMLPurifier;
 use EventManager;
 use HTTPRequest;
-use PermissionsOverrider_PermissionsOverriderManager;
-use Tracker_Artifact_Changeset;
-use trackerPlugin;
+use MailBuilder;
 use MailEnhancer;
 use MailNotificationBuilder;
-use MailBuilder;
+use PermissionsOverrider_PermissionsOverriderManager;
 use TemplateRendererFactory;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use Tracker_Artifact;
-use UserManager;
+use Tracker_Artifact_Changeset;
+use trackerPlugin;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Tracker\Artifact\Artifact;
+use UserManager;
 
 class MailSender
 {
@@ -140,7 +140,7 @@ class MailSender
     /**
      * @return string html call to action button to include in an html mail
      */
-    private function getUnsubscribeLink(Tracker_Artifact $artifact)
+    private function getUnsubscribeLink(Artifact $artifact)
     {
         $link = HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?aid=' . (int) $artifact->getId() . '&func=manage-subscription';
 

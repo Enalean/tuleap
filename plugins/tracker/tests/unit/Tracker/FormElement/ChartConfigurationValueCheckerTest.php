@@ -58,7 +58,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
     private $user;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -118,7 +118,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
         $this->start_date_field     = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $this->end_date_field       = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $this->duration_field       = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $this->artifact             = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact             = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->user                 = \Mockery::mock(\PFUser::class);
         $this->start_date_changeset = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
         $this->end_date_changeset   = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);

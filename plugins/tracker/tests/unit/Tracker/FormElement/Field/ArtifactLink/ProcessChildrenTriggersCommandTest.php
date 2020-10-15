@@ -18,6 +18,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -33,7 +34,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
      */
     private $command;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
     /**
@@ -69,7 +70,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
                 100
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->artifact              = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact              = Mockery::mock(Artifact::class);
         $this->user                  = new PFUser(['language_id' => 'en']);
 
         $this->nature_factory = \Mockery::spy(

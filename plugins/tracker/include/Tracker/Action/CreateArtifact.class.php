@@ -19,6 +19,7 @@
  */
 
 use Tuleap\JSONHeader;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Action_CreateArtifact
 {
@@ -64,7 +65,7 @@ class Tracker_Action_CreateArtifact
      * @param Codendi_Request                $request
      * @param PFUser                         $user
      *
-     * @return Tracker_Artifact|false the new artifact
+     * @return Artifact|false the new artifact
      */
     private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user)
     {
@@ -83,7 +84,7 @@ class Tracker_Action_CreateArtifact
         return $this->artifact_factory->createArtifact($this->tracker, $fields_data, $user, $email, true);
     }
 
-    private function associateImmediatelyIfNeeded(Tracker_Artifact $new_artifact, $link_artifact_id, $doitnow, PFUser $current_user)
+    private function associateImmediatelyIfNeeded(Artifact $new_artifact, $link_artifact_id, $doitnow, PFUser $current_user)
     {
         if ($link_artifact_id && $doitnow) {
             $source_artifact = $this->artifact_factory->getArtifactById($link_artifact_id);
@@ -93,13 +94,13 @@ class Tracker_Action_CreateArtifact
         }
     }
 
-    private function redirect(Codendi_Request $request, PFUser $current_user, Tracker_Artifact $artifact)
+    private function redirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact)
     {
         $redirect = $this->getRedirect($request, $current_user, $artifact);
         $this->executeRedirect($request, $artifact, $redirect);
     }
 
-    private function getRedirect(Codendi_Request $request, PFUser $current_user, Tracker_Artifact $artifact)
+    private function getRedirect(Codendi_Request $request, PFUser $current_user, Artifact $artifact)
     {
         $redirect = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
         $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
@@ -107,7 +108,7 @@ class Tracker_Action_CreateArtifact
         return $redirect;
     }
 
-    private function executeRedirect(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect)
+    private function executeRedirect(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect)
     {
         if ($request->isAjax()) {
             header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
@@ -129,7 +130,7 @@ class Tracker_Action_CreateArtifact
         return false;
     }
 
-    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request)
+    protected function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request)
     {
         $parent_tracker = $this->tracker->getParent();
         if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {

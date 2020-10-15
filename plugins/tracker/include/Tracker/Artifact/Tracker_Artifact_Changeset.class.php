@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
@@ -47,11 +48,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Constructor
      *
-     * @param int              $id           The changeset Id
-     * @param Tracker_Artifact $artifact     The artifact
-     * @param int              $submitted_by The id of the owner of this changeset
-     * @param int              $submitted_on The timestamp
-     * @param string           $email        The email of the submitter if anonymous mode
+     * @param int      $id           The changeset Id
+     * @param Artifact $artifact     The artifact
+     * @param int      $submitted_by The id of the owner of this changeset
+     * @param int      $submitted_on The timestamp
+     * @param string   $email        The email of the submitter if anonymous mode
      */
     public function __construct($id, $artifact, $submitted_by, $submitted_on, $email)
     {
@@ -498,7 +499,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $reference_manager->extractCrossRef(
                     $body,
                     $this->artifact->getId(),
-                    Tracker_Artifact::REFERENCE_NATURE,
+                    Artifact::REFERENCE_NATURE,
                     $this->artifact->getTracker()->getGroupID(),
                     $user->getId(),
                     $this->artifact->getTracker()->getItemName()
@@ -784,7 +785,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Return the Tracker_Artifact of this changeset
      *
-     * @return Tracker_Artifact The artifact of this changeset
+     * @return Artifact The artifact of this changeset
      */
     public function getArtifact()
     {

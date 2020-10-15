@@ -35,7 +35,7 @@ class RecipientFactoryTest extends TestCase
         parent::setUp();
         $this->user      = new PFUser(['user_id' => 123, 'language_id' => 'en']);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(200)->getMock();
-        $this->artifact  = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getId')->andReturns(101)->getMock();
         $this->artifact->shouldReceive('getChangeset')->with(200)->andReturns($this->changeset);
         $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
 

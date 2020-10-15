@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_XMLExport
 {
@@ -88,7 +89,7 @@ class Tracker_Artifact_XMLExport
     }
 
     /**
-     * @param Tracker_Artifact[] $artifacts
+     * @param Artifact[] $artifacts
      */
     private function exportBunchOfArtifacts(
         array $artifacts,

@@ -108,17 +108,17 @@ final class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest
 
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $sprint_artifact_1231 = Mockery::mock(\Tracker_Artifact::class);
+        $sprint_artifact_1231 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $sprint_artifact_1231->shouldReceive('getId')->andReturn(1231);
         $sprint_artifact_1231->shouldReceive('userCanView')->with($this->user)->andReturnFalse();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1231)->andReturns($sprint_artifact_1231);
 
-        $sprint_artifact_1232 = Mockery::mock(\Tracker_Artifact::class);
+        $sprint_artifact_1232 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $sprint_artifact_1232->shouldReceive('getId')->andReturn(1232);
         $sprint_artifact_1232->shouldReceive('userCanView')->with($this->user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1232)->andReturns($sprint_artifact_1232);
 
-        $sprint_artifact_1241 = Mockery::mock(\Tracker_Artifact::class);
+        $sprint_artifact_1241 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $sprint_artifact_1241->shouldReceive('getId')->andReturn(1241);
         $sprint_artifact_1241->shouldReceive('userCanView')->with($this->user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1241)->andReturns($sprint_artifact_1241);

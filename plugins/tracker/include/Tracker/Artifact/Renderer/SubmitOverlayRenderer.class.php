@@ -22,11 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer
 {
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $source_artifact;
 
@@ -40,7 +42,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
      */
     private $current_user;
 
-    public function __construct(Tracker $tracker, Tracker_Artifact $source_artifact, EventManager $event_manager, Tracker_IFetchTrackerSwitcher $tracker_switcher)
+    public function __construct(Tracker $tracker, Artifact $source_artifact, EventManager $event_manager, Tracker_IFetchTrackerSwitcher $tracker_switcher)
     {
         parent::__construct($tracker, $event_manager);
         $this->source_artifact  = $source_artifact;

@@ -24,18 +24,18 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use PlanningFactory;
-use Tracker_ArtifactFactory;
-use Tracker_Artifact;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_Backlog;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
-use Planning_MilestoneFactory;
-use Planning_Milestone;
 use PFUser;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
+use PlanningFactory;
 use Project;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class MilestoneResourceValidator
 {
@@ -192,12 +192,12 @@ class MilestoneResourceValidator
         return $this->backlog_item_collection_factory->getTodoCollection($user, $milestone, $backlog, false);
     }
 
-    private function isArtifactInUnplannedParentMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $unplanned_backlog_items)
+    private function isArtifactInUnplannedParentMilestoneBacklogItems(Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $unplanned_backlog_items)
     {
         return $unplanned_backlog_items->containsId($artifact->getId());
     }
 
-    private function isArtifactInPlannedMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo)
+    private function isArtifactInPlannedMilestoneBacklogItems(Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo)
     {
         return ($done->containsId($artifact->getId()) || $todo->containsId($artifact->getId()));
     }
@@ -350,7 +350,7 @@ class MilestoneResourceValidator
         }
     }
 
-    public function canBacklogItemBeAddedToMilestone(Tracker_Artifact $artifact, array $allowed_trackers)
+    public function canBacklogItemBeAddedToMilestone(Artifact $artifact, array $allowed_trackers)
     {
         $artifact_tracker_id = $artifact->getTrackerId();
 

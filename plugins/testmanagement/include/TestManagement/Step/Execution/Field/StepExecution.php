@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\Step\Execution\Field;
 
 use Codendi_HTMLPurifier;
 use TemplateRendererFactory;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
@@ -30,6 +29,7 @@ use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Execution\StepResultPresenter;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
@@ -134,7 +134,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     }
 
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -148,7 +148,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     }
 
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
@@ -169,7 +169,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      * @return string
      */
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
         array $submitted_values = []
     ) {
@@ -187,7 +187,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '';
     }
@@ -210,13 +210,13 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return true;
     }
 
     public function hasChanges(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
         $new_value
     ) {

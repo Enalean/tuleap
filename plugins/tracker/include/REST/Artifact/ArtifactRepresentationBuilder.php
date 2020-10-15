@@ -22,13 +22,13 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Closure;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Alphanum;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\REST\ChangesetRepresentationCollection;
@@ -65,7 +65,7 @@ class ArtifactRepresentationBuilder
      *
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         return ArtifactRepresentation::build(
             $user,
@@ -81,7 +81,7 @@ class ArtifactRepresentationBuilder
      *
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         return ArtifactRepresentation::build(
             $user,
@@ -97,7 +97,7 @@ class ArtifactRepresentationBuilder
      *
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         return ArtifactRepresentation::build(
             $user,
@@ -113,7 +113,7 @@ class ArtifactRepresentationBuilder
      *
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    public function getArtifactRepresentation(PFUser $user, Artifact $artifact)
     {
         $tracker_representation  = MinimalTrackerRepresentation::build($artifact->getTracker());
 
@@ -126,7 +126,7 @@ class ArtifactRepresentationBuilder
         );
     }
 
-    private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact)
+    private function getFieldsValues(PFUser $user, Artifact $artifact)
     {
         $changeset = $artifact->getLastChangeset();
         return $this->mapAndFilter(
@@ -135,7 +135,7 @@ class ArtifactRepresentationBuilder
         );
     }
 
-    private function getFieldValuesIndexedByName(PFUser $user, Tracker_Artifact $artifact)
+    private function getFieldValuesIndexedByName(PFUser $user, Artifact $artifact)
     {
         $changeset = $artifact->getLastChangeset();
         $values    = [];
@@ -202,7 +202,7 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactChangesetsRepresentation(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $fields,
         $offset,
         $limit,
@@ -229,7 +229,7 @@ class ArtifactRepresentationBuilder
 
     public function getArtifactRepresentationCollection(
         PFUser $user,
-        Tracker_Artifact $artifact_id,
+        Artifact $artifact_id,
         $nature,
         $direction,
         $offset,

@@ -25,12 +25,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
@@ -61,7 +61,7 @@ final class TrackerArtifactCreatorTest extends TestCase
     /** @var Tracker_ArtifactDao */
     private $dao;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $bare_artifact;
     /**
      * @var \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder
@@ -101,7 +101,7 @@ final class TrackerArtifactCreatorTest extends TestCase
             null
         );
         $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
-        $this->bare_artifact = new Tracker_Artifact(0, 123, 101, 1234567890, 0);
+        $this->bare_artifact = new Artifact(0, 123, 101, 1234567890, 0);
 
         $this->creator = new TrackerArtifactCreator(
             $this->artifact_factory,

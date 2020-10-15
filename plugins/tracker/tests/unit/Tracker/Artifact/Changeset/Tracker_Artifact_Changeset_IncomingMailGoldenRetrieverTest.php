@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \PHPUnit\Framework\TestCase
 {
@@ -31,10 +33,10 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
     /** @var Tracker_Artifact_Changeset_IncomingMailGoldenRetriever */
     private $retriever;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact_by_mail;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact_by_web;
 
     /** @var Tracker_Artifact_Changeset */
@@ -69,9 +71,9 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends \
         $this->retriever = new Tracker_Artifact_Changeset_IncomingMailGoldenRetriever($this->dao);
     }
 
-    private function buildArtifactWithChangesets(int $id, array $changesets): Tracker_Artifact
+    private function buildArtifactWithChangesets(int $id, array $changesets): Artifact
     {
-        $artifact = new Tracker_Artifact($id, 123, null, 10, null);
+        $artifact = new Artifact($id, 123, null, 10, null);
         $artifact->setChangesets($changesets);
 
         return $artifact;

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
@@ -122,7 +123,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
         $exporter = $changeset_value->accept($this);

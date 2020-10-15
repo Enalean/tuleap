@@ -44,7 +44,7 @@ class ArtifactMappedFieldValueRetriever
 
     public function getValueAtLastChangeset(
         \Planning_Milestone $milestone,
-        \Tracker_Artifact $artifact,
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
         \PFUser $user
     ): ?Tracker_FormElement_Field_List_BindValue {
         $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $artifact->getTracker());

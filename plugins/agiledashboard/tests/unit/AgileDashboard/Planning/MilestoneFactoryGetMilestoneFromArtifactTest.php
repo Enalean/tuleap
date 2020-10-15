@@ -34,10 +34,10 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
@@ -53,11 +53,11 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
      */
     private $milestone_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $task_artifact;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $release_artifact;
     /**
@@ -76,13 +76,13 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 
         $release_tracker  = Mockery::mock(Tracker::class);
         $release_tracker->shouldReceive('getProject')->andReturn($this->project);
-        $this->release_artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->release_artifact = Mockery::mock(Artifact::class);
         $this->release_artifact->shouldReceive('getTracker')->andReturn($release_tracker);
 
         $task_tracker  = Mockery::mock(Tracker::class);
         $task_tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
 
-        $this->task_artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->task_artifact = Mockery::mock(Artifact::class);
         $this->task_artifact->shouldReceive('getTracker')->andReturn($task_tracker);
 
         $this->planning_factory        = Mockery::mock(PlanningFactory::class);

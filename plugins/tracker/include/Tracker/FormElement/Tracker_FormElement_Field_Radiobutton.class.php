@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox
 {
@@ -67,7 +68,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return parent::hasChanges($artifact, $old_value, $this->filterZeroWhenArray($new_value));
     }

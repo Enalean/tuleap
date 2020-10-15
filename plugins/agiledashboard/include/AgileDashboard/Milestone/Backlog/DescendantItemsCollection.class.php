@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iterator, Countable
 {
 
-    /** @var Tracker_Artifact[] */
+    /** @var Artifact[] */
     private $items = [];
 
     /** @var int */
     private $total_available_size;
 
-    public function push(Tracker_Artifact $item)
+    public function push(Artifact $item)
     {
         $this->items[] = $item;
     }

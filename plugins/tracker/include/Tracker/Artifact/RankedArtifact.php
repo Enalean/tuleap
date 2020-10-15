@@ -22,23 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Tracker_Artifact;
-
 class RankedArtifact
 {
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var int */
     private $rank;
 
-    public function __construct(Tracker_Artifact $artifact, int $rank)
+    public function __construct(Artifact $artifact, int $rank)
     {
         $this->artifact = $artifact;
         $this->rank     = $rank;
     }
 
-    public function getArtifact(): Tracker_Artifact
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }

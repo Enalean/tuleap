@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -73,8 +75,8 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItAsksTheColumnIfItGoesInThere(): void
     {
-        $artifact1 = Mockery::mock(Tracker_Artifact::class);
-        $artifact2 = Mockery::mock(Tracker_Artifact::class);
+        $artifact1 = Mockery::mock(Artifact::class);
+        $artifact2 = Mockery::mock(Artifact::class);
         $label = $bgcolor = null;
         $column1   = new Cardwall_Column(55, $label, $bgcolor);
         $column2   = new Cardwall_Column(100, $label, $bgcolor);
@@ -96,7 +98,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItIgnoresPresentersIfThereIsNoMatchingColumn(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $column = new Cardwall_Column(55, null, null);
         $columns  = new Cardwall_OnTop_Config_ColumnCollection();
         $columns[] = $column;

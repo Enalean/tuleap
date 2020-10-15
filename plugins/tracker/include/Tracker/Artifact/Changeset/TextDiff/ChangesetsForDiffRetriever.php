@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
-use Tracker_Artifact;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetsForDiffRetriever
 {
@@ -49,7 +49,7 @@ class ChangesetsForDiffRetriever
      * @throws NotFoundException
      * @throws ForbiddenException
      */
-    public function retrieveChangesets(Tracker_Artifact $artifact, int $field_id, int $changeset_id): ChangesetsForDiff
+    public function retrieveChangesets(Artifact $artifact, int $field_id, int $changeset_id): ChangesetsForDiff
     {
         $next_changeset = $this->changeset_factory->getChangeset($artifact, $changeset_id);
         if (! $next_changeset) {

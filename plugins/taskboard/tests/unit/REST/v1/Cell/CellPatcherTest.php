@@ -30,8 +30,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\REST\I18NRestException;
-use UserManager;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
+use UserManager;
 
 final class CellPatcherTest extends TestCase
 {
@@ -229,11 +229,11 @@ final class CellPatcherTest extends TestCase
     }
 
     /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact
+     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private function mockArtifact(int $artifact_id, bool $user_can_view)
     {
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
@@ -247,7 +247,7 @@ final class CellPatcherTest extends TestCase
     }
 
     /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact
+     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private function mockSwimlaneArtifactWithValidProject()
     {

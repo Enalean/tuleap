@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,7 +39,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
     /** @var Tracker_Artifact_ChangesetValue */
     private $values;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
     private $user_manager;
 
@@ -85,7 +87,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
             $this->float_changeset_value
         ];
 
-        $this->artifact  = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->comment   = \Mockery::spy(\Tracker_Artifact_Changeset_Comment::class);
 

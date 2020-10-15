@@ -48,7 +48,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
     private $configuration_retriever;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -93,7 +93,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
         $this->tracker->shouldReceive('getId')->andReturn(101);
         $this->tracker->shouldReceive('getName')->andReturn("Scrum");
 
-        $this->artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->user     = \Mockery::mock(\PFUser::class);
 

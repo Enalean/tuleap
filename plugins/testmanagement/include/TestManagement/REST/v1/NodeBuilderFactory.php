@@ -20,17 +20,17 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use PFUser;
+use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_ResourceDoesntExistException;
-use Tuleap\REST\ProjectAuthorization;
-use Tracker_Artifact;
 use Tracker_URLVerification;
-use Tracker_ArtifactDao;
-use PFUser;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao as TestManagementDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class NodeBuilderFactory
 {
@@ -62,7 +62,7 @@ class NodeBuilderFactory
         );
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact): NodeRepresentation
+    public function getNodeRepresentation(PFUser $user, Artifact $artifact): NodeRepresentation
     {
         return $this->artifact_builder->getNodeRepresentation($user, $artifact);
     }
@@ -71,7 +71,7 @@ class NodeBuilderFactory
     /**
      * @param int $id
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifactById(PFUser $user, $id)
     {

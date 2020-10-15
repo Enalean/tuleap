@@ -138,7 +138,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->unused_workflow->setField($this->status_field);
         $this->unused_legacy_workflow->setField($this->status_field);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->event_manager = \Mockery::spy(EventManager::class);
         EventManager::setInstance($this->event_manager);
@@ -380,7 +380,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $previous_changeset->shouldReceive('getValue')->with($this->status_field)->andReturns($changeset_value_list);
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $fields_data = [
             '103' => "$this->close_value_id",
@@ -394,7 +394,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $fields_data = [
             '103' => "$this->open_value_id",
@@ -408,7 +408,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
         $fields_data        = [];
 
         $this->trigger_rules_manager->shouldReceive('processTriggers')->with($new_changeset)->once();
@@ -420,7 +420,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $fields_data = [
             '103' => "$this->open_value_id",
@@ -438,7 +438,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $fields_data = [
             '103' => "$this->open_value_id",
@@ -453,7 +453,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     public function testItRaisesNoExceptionIfWorkflowIsNotEnabled(): void
     {
         $fields_data = [];
-        $artifact    = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->unused_workflow->validate($fields_data, $artifact, '', $this->current_user);
     }
@@ -484,7 +484,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         $fields_data = [$field_id => 66];
-        $artifact    = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $retriever = Mockery::mock(TransitionRetriever::class);
         $retriever->shouldReceive('retrieveTransition')->andReturn($transition);
@@ -578,7 +578,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
         $transition->shouldReceive('validate')->never();
 
-        $workflow->validate($fields_data, \Mockery::spy(\Tracker_Artifact::class), '', $this->current_user);
+        $workflow->validate($fields_data, \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), '', $this->current_user);
     }
 
     public function testItDisablesTheGlobalRulesValidation(): void

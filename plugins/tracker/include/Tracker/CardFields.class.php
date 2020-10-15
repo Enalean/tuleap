@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_CardFields
 {
 
@@ -46,7 +48,7 @@ class Tracker_CardFields
      *
      * @return Tracker_FormElement_Field[]
      */
-    public function getFields(Tracker_Artifact $artifact)
+    public function getFields(Artifact $artifact)
     {
         $diplayed_fields = [];
         $tracker_id      = $artifact->getTrackerId();

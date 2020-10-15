@@ -23,7 +23,7 @@ namespace Tuleap\TestManagement;
 use PFUser;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactFactory
 {
@@ -49,12 +49,12 @@ class ArtifactFactory
         $this->dao                      = $dao;
     }
 
-    public function getArtifactById(int $id): ?Tracker_Artifact
+    public function getArtifactById(int $id): ?Artifact
     {
         return $this->tracker_artifact_factory->getArtifactById($id);
     }
 
-    public function getArtifactByIdUserCanView(PFUser $user, int $id): ?Tracker_Artifact
+    public function getArtifactByIdUserCanView(PFUser $user, int $id): ?Artifact
     {
         return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $id);
     }
@@ -152,7 +152,7 @@ class ArtifactFactory
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    public function getCampaignForExecution(Tracker_Artifact $execution): ?Tracker_Artifact
+    public function getCampaignForExecution(Artifact $execution): ?Artifact
     {
         $campaign_tracker_id    = $this->config->getCampaignTrackerId($execution->getTracker()->getProject());
         $campaign_artifact_data = $this->dao->searchCampaignArtifactForExecution(

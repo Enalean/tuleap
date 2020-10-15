@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract
 {
@@ -52,12 +53,12 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
 
     public function count_closed_backlog_items()
     {
-        return $this->status_count[Tracker_Artifact::STATUS_CLOSED];
+        return $this->status_count[Artifact::STATUS_CLOSED];
     }
 
     public function count_open_backlog_items()
     {
-        return $this->status_count[Tracker_Artifact::STATUS_OPEN];
+        return $this->status_count[Artifact::STATUS_OPEN];
     }
 
     public function open()

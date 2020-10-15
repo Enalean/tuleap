@@ -26,9 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class StatusValueProviderTest extends TestCase
 {
@@ -47,13 +47,13 @@ class StatusValueProviderTest extends TestCase
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
 
         $this->user = Mockery::mock(PFUser::class);
 

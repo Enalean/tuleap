@@ -22,9 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
@@ -32,7 +33,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
 
     public function __construct(
         EventManager $event_manager,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,

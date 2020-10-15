@@ -23,12 +23,12 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Exception;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityManager;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactLinkUpdater
 {
@@ -44,7 +44,7 @@ class ArtifactLinkUpdater
 
     public function update(
         array $new_linked_artifact_ids,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
         string $type
@@ -68,7 +68,7 @@ class ArtifactLinkUpdater
 
     private function getFieldsDataForNewChangeset(
         Tracker_FormElement_Field_ArtifactLink $artlink_field,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
         array $new_linked_artifact_ids,
@@ -121,7 +121,7 @@ class ArtifactLinkUpdater
      */
     public function updateArtifactLinks(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $to_add,
         array $to_remove,
         string $type
@@ -144,7 +144,7 @@ class ArtifactLinkUpdater
     }
 
     private function unlinkAndLinkElements(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $current_user,
         array $linked_artifact_ids
@@ -160,10 +160,10 @@ class ArtifactLinkUpdater
         $this->setOrderWithoutHistoryChangeLogging($linked_artifact_ids);
     }
 
-    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user): array
+    public function getElementsAlreadyLinkedToArtifact(Artifact $artifact, PFUser $user): array
     {
         return array_map(
-            function (Tracker_Artifact $artifact) {
+            function (Artifact $artifact) {
                 return $artifact->getId();
             },
             $artifact->getLinkedArtifacts($user)

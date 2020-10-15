@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * I am a Backlog Item
  */
@@ -50,10 +52,10 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
 
     public function getParent();
 
-    public function setParent(Tracker_Artifact $parent);
+    public function setParent(Artifact $parent);
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact();
 

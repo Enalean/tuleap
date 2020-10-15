@@ -42,7 +42,7 @@ class ArtifactWithTrackerStructureExporter
         $this->convertor     = $convertor;
     }
 
-    public function exportArtifactAndTrackerStructureToXML(PFUser $user, \Tracker_Artifact $artifact, ZipArchive $archive)
+    public function exportArtifactAndTrackerStructureToXML(PFUser $user, \Tuleap\Tracker\Artifact\Artifact $artifact, ZipArchive $archive)
     {
         $xml_element = $this->exporter->exportSingleTrackerBunchOfArtifactsToXml(
             $artifact->getTracker()->getId(),

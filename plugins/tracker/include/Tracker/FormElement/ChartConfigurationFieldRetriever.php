@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class ChartConfigurationFieldRetriever
@@ -137,7 +137,7 @@ class ChartConfigurationFieldRetriever
     /**
      * @return bool|Tracker_FormElement_Field
      */
-    public function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user)
+    public function getBurndownRemainingEffortField(Artifact $artifact, PFUser $user)
     {
         return $this->form_element_field_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),

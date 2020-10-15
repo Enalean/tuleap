@@ -24,7 +24,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
@@ -32,6 +31,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class CountElementsCalculatorTest extends TestCase
 {
@@ -142,7 +142,7 @@ final class CountElementsCalculatorTest extends TestCase
 
         $epic_tracker = Mockery::mock(Tracker::class);
 
-        $epic = Mockery::mock(Tracker_Artifact::class);
+        $epic = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(2)
@@ -184,13 +184,13 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_tracker = Mockery::mock(Tracker::class);
 
-        $user_story_01 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(3)
             ->andReturn($user_story_01);
 
-        $user_story_02 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(4)
@@ -253,13 +253,13 @@ final class CountElementsCalculatorTest extends TestCase
 
         $task_tracker = Mockery::mock(Tracker::class);
 
-        $task_01 = Mockery::mock(Tracker_Artifact::class);
+        $task_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(5)
             ->andReturn($task_01);
 
-        $task_02 = Mockery::mock(Tracker_Artifact::class);
+        $task_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(6)
@@ -317,7 +317,7 @@ final class CountElementsCalculatorTest extends TestCase
 
         $epic_tracker = Mockery::mock(Tracker::class);
 
-        $epic = Mockery::mock(Tracker_Artifact::class);
+        $epic = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(2)
@@ -359,13 +359,13 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_tracker = Mockery::mock(Tracker::class);
 
-        $user_story_01 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(3)
             ->andReturn($user_story_01);
 
-        $user_story_02 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(4)
@@ -428,13 +428,13 @@ final class CountElementsCalculatorTest extends TestCase
 
         $task_tracker = Mockery::mock(Tracker::class);
 
-        $task_01 = Mockery::mock(Tracker_Artifact::class);
+        $task_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->twice()
             ->with(5)
             ->andReturn($task_01);
 
-        $task_02 = Mockery::mock(Tracker_Artifact::class);
+        $task_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(6)
@@ -490,19 +490,19 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_tracker = Mockery::mock(Tracker::class);
 
-        $user_story_01 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(2)
             ->andReturn($user_story_01);
 
-        $user_story_02 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(3)
             ->andReturn($user_story_02);
 
-        $user_story_03 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_03 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(4)
@@ -565,19 +565,19 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_tracker = Mockery::mock(Tracker::class);
 
-        $user_story_01 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(2)
             ->andReturn($user_story_01);
 
-        $user_story_02 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_02 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(3)
             ->andReturn($user_story_02);
 
-        $user_story_03 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_03 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
             ->with(4)

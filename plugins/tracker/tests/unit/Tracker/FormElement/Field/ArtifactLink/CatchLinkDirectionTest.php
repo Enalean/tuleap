@@ -26,12 +26,12 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_HierarchyFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
 final class CatchLinkDirectionTest extends TestCase
@@ -47,7 +47,7 @@ final class CatchLinkDirectionTest extends TestCase
      */
     private $modified_artifact_id;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $modified_artifact;
     private $old_changeset;
@@ -68,11 +68,11 @@ final class CatchLinkDirectionTest extends TestCase
      */
     private $new_changeset_value_id;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact_123;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact_124;
     /**
@@ -108,7 +108,7 @@ final class CatchLinkDirectionTest extends TestCase
         $this->submitter        = \Mockery::mock(\PFUser::class);
         $this->new_changeset_value_id = 66666;
 
-        $this->artifact_123 = \Mockery::spy(Tracker_Artifact::class);
+        $this->artifact_123 = \Mockery::spy(Artifact::class);
         $this->artifact_123->shouldReceive('getId')->andReturn(123);
         $this->artifact_123->shouldReceive('getTracker')->andReturn($parent_tracker);
         $this->artifact_123->shouldReceive('getTrackerId')->andReturn($parent_tracker->getId());
@@ -116,7 +116,7 @@ final class CatchLinkDirectionTest extends TestCase
         $changeset->shouldReceive('getId')->andReturn(1231);
         $this->artifact_123->shouldReceive('getLastChangeset')->andReturn($changeset);
 
-        $this->artifact_124 = \Mockery::spy(Tracker_Artifact::class);
+        $this->artifact_124 = \Mockery::spy(Artifact::class);
         $this->artifact_124->shouldReceive('getId')->andReturn(124);
         $this->artifact_124->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact_124->shouldReceive('getTrackerId')->andReturn($tracker->getId());
@@ -165,9 +165,9 @@ final class CatchLinkDirectionTest extends TestCase
         );
     }
 
-    private function buildArtifact(int $id, Tracker $tracker): Tracker_Artifact
+    private function buildArtifact(int $id, Tracker $tracker): Artifact
     {
-        $artifact = new Tracker_Artifact($id, $tracker->getId(), 101, 1, false);
+        $artifact = new Artifact($id, $tracker->getId(), 101, 1, false);
         $artifact->setTracker($tracker);
 
         return $artifact;

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * I'm implemented by fields that are able to produce a numerical value
  */
@@ -25,9 +27,9 @@ interface Tracker_FormElement_IComputeValues
 {
     public function getComputedValue(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timestamp = null
     );
 
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
+    public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null);
 }

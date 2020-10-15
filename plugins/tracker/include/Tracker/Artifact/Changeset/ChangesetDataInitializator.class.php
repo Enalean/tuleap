@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Changeset_ChangesetDataInitializator
 {
 
@@ -31,7 +33,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function process(Tracker_Artifact $artifact, array $fields_data)
+    public function process(Artifact $artifact, array $fields_data)
     {
         $tracker_data = [];
 

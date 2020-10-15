@@ -21,10 +21,10 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -73,7 +73,7 @@ class MinimalDefinitionRepresentation
     public $automated_tests;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset = null
@@ -103,7 +103,7 @@ class MinimalDefinitionRepresentation
         );
     }
 
-    private static function getArtifactLastChangeset(Tracker_Artifact $artifact): ?Tracker_Artifact_Changeset
+    private static function getArtifactLastChangeset(Artifact $artifact): ?Tracker_Artifact_Changeset
     {
         return $artifact->getLastChangeset();
     }
@@ -117,7 +117,7 @@ class MinimalDefinitionRepresentation
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_Changeset $changeset,
         $field_shortname
     ) {
@@ -139,7 +139,7 @@ class MinimalDefinitionRepresentation
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_Changeset $changeset,
         $field_shortname
     ) {

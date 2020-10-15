@@ -19,6 +19,8 @@
  * along with Test. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_FormElement_Field_LastUpdateDateTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -27,13 +29,13 @@ final class Tracker_FormElement_Field_LastUpdateDateTest extends \PHPUnit\Framew
     {
         $f = $this->getLastUpdateDateField();
         $v = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $this->assertFalse($f->hasChanges(Mockery::mock(Tracker_Artifact::class), $v, null));
+        $this->assertFalse($f->hasChanges(Mockery::mock(Artifact::class), $v, null));
     }
 
     public function testisValid(): void
     {
         $f = $this->getLastUpdateDateField();
-        $a = Mockery::mock(Tracker_Artifact::class);
+        $a = Mockery::mock(Artifact::class);
         $this->assertTrue($f->isValid($a, null));
     }
 

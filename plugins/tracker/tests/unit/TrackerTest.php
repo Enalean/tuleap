@@ -255,13 +255,13 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
                     ['4','summary 4', 'details 4'],
                  ];
 
-        $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
-        $artifact2 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact2->shouldReceive('getId')->andReturns('2');
-        $artifact3 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact3 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact3->shouldReceive('getId')->andReturns('3');
-        $artifact4 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact4 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact4->shouldReceive('getId')->andReturns('4');
 
         $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
@@ -285,11 +285,11 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
                     ['4','summary 4', 'details 4'],
                  ];
 
-        $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
-        $artifact2 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact2->shouldReceive('getId')->andReturns('2');
-        $artifact3 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact3 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact3->shouldReceive('getId')->andReturns('3');
 
         $af = \Mockery::spy(\Tracker_ArtifactFactory::class);

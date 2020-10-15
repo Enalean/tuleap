@@ -44,7 +44,7 @@ class SimilarFieldsFormatterTest extends TestCase
     private $formatter;
     /** @var Mockery\MockInterface | BindToValueVisitor */
     private $bind_to_value_visitor;
-    /** @var Mockery\MockInterface | \Tracker_Artifact */
+    /** @var Mockery\MockInterface | \Tuleap\Tracker\Artifact\Artifact */
     private $artifact;
     /** @var Mockery\MockInterface | \Tracker_Artifact_Changeset */
     private $last_changeset;
@@ -62,7 +62,7 @@ class SimilarFieldsFormatterTest extends TestCase
             $this->csv_formatter_visitor,
             $this->bind_to_value_visitor
         );
-        $this->artifact              = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact              = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->last_changeset        = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->artifact->shouldReceive(
             [

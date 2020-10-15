@@ -26,13 +26,13 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Workflow_Trigger_FieldValue;
 use Tracker_Workflow_Trigger_RulesBuilderData;
 use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_Trigger_TriggerRule;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 final class WorkflowTriggerRulesProcessorTest extends TestCase
@@ -60,8 +60,8 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $rule->shouldReceive('getCondition')->andReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
         $rule->shouldReceive('getAsChangesetComment')->andReturn('');
 
-        $artifact_1 = Mockery::mock(Tracker_Artifact::class);
-        $artifact_2 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(Artifact::class);
+        $artifact_2 = Mockery::mock(Artifact::class);
         $artifact_2->shouldReceive('getTrackerId')->andReturn(852);
         $this->prepareArtifactMockToBeProcessed(
             $artifact_1,
@@ -84,7 +84,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
     private function prepareArtifactMockToBeProcessed(
         Mockery\MockInterface $artifact_mock,
         int $artifact_id,
-        Tracker_Artifact $parent,
+        Artifact $parent,
         Tracker_Workflow_Trigger_TriggerRule $rule,
         Tracker_Workflow_Trigger_RulesProcessor $processor
     ): void {
@@ -119,10 +119,10 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $rule->shouldReceive('getTarget')->andReturn($field_value);
         $rule->shouldReceive('getCondition')->andReturn(Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
         $artifact->shouldReceive('getXRef')->andReturn('xref #' . 123);
-        $parent_artifact = Mockery::mock(Tracker_Artifact::class);
+        $parent_artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getParentWithoutPermissionChecking')->andReturn($parent_artifact);
         $parent_artifact->shouldReceive('getTrackerId')->andReturn(963);
         $parent_artifact->shouldReceive('getId')->andReturn(122);

@@ -32,7 +32,6 @@ use Psr\Log\LogLevel;
 use Response;
 use Tracker;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreatorBase;
@@ -732,11 +731,12 @@ class XmlImportTest extends TestCase
      * @param $tracker
      * @param $tracker_id
      * @param array $changeset
-     * @return Tracker_Artifact
+     *
+     * @return Artifact
      */
     private function mockAnArtifact($id, $tracker, $tracker_id, $changeset = [])
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);

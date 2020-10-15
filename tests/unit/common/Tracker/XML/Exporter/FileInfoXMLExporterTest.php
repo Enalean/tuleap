@@ -26,10 +26,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_FileInfo;
 use Tracker_XML_Exporter_FilePathXMLExporter;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class FileInfoXMLExporterTest extends TestCase
 {
@@ -39,7 +39,7 @@ class FileInfoXMLExporterTest extends TestCase
     {
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
 
-        $artifact = Mockery::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 123])->getMock();
+        $artifact = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 123])->getMock();
 
         $path_exporter = Mockery::mock(Tracker_XML_Exporter_FilePathXMLExporter::class);
         $exporter = new FileInfoXMLExporter($path_exporter);
@@ -52,10 +52,10 @@ class FileInfoXMLExporterTest extends TestCase
     {
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
 
-        $artifact         = Mockery::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 123])->getMock();
-        \assert($artifact instanceof Tracker_Artifact);
-        $another_artifact = Mockery::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 124])->getMock();
-        \assert($another_artifact instanceof Tracker_Artifact);
+        $artifact         = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 123])->getMock();
+        \assert($artifact instanceof Artifact);
+        $another_artifact = Mockery::mock(Artifact::class)->shouldReceive(['getId' => 124])->getMock();
+        \assert($another_artifact instanceof Artifact);
 
         $path_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
         $exporter = new FileInfoXMLExporter($path_exporter);

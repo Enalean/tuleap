@@ -31,9 +31,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
@@ -71,11 +71,11 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getProject')->andReturn($project);
 
-        $artifact_01 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_01 = Mockery::mock(Artifact::class);
         $artifact_01->shouldReceive('getId')->andReturn(11);
         $artifact_01->shouldReceive('getTracker')->andReturn($tracker);
 
-        $artifact_02 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_02 = Mockery::mock(Artifact::class);
         $artifact_02->shouldReceive('getId')->andReturn(12);
         $artifact_02->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -102,9 +102,9 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
 
         $this->dao->shouldReceive('getChildrenForArtifacts')->with([11, 12])->andReturns(\TestHelper::arrayToDar($artiafct_as_dar1, $artiafct_as_dar2));
 
-        $child_artifact1 = \Mockery::mock(Tracker_Artifact::class);
+        $child_artifact1 = \Mockery::mock(Artifact::class);
         $child_artifact1->shouldReceive('userCanView')->andReturn(true);
-        $child_artifact2 = \Mockery::mock(Tracker_Artifact::class);
+        $child_artifact2 = \Mockery::mock(Artifact::class);
         $child_artifact2->shouldReceive('userCanView')->andReturn(true);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artiafct_as_dar1)->andReturns($child_artifact1);

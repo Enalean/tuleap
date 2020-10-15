@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
@@ -46,7 +46,7 @@ class ArtifactMoveButtonPresenterBuilder
         $this->event_manager            = $event_manager;
     }
 
-    public function getMoveArtifactButton(PFUser $user, Tracker_Artifact $artifact)
+    public function getMoveArtifactButton(PFUser $user, Artifact $artifact)
     {
         if (! $artifact->getTracker()->userIsAdmin($user)) {
             return;
@@ -82,7 +82,7 @@ class ArtifactMoveButtonPresenterBuilder
         );
     }
 
-    public function getMoveArtifactModal(Tracker_Artifact $artifact)
+    public function getMoveArtifactModal(Artifact $artifact)
     {
         return new ArtifactMoveModalPresenter($artifact);
     }
@@ -121,7 +121,7 @@ class ArtifactMoveButtonPresenterBuilder
         return dgettext("tuleap-tracker", "No semantic defined in this tracker.");
     }
 
-    private function collectErrorsRelatedToArtifactLinks(Tracker_Artifact $artifact, PFUser $user)
+    private function collectErrorsRelatedToArtifactLinks(Artifact $artifact, PFUser $user)
     {
         if ($artifact->getLinkedAndReverseArtifacts($user)) {
             return dgettext("tuleap-tracker", "Artifacts with artifact links can not be moved.");

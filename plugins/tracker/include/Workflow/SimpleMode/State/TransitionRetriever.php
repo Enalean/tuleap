@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Tracker_Artifact;
 use Transition;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class TransitionRetriever
@@ -49,7 +49,7 @@ class TransitionRetriever
     /**
      * @throws NoTransitionForStateException
      */
-    public function getReferenceTransitionForCurrentState(Tracker_Artifact $artifact): Transition
+    public function getReferenceTransitionForCurrentState(Artifact $artifact): Transition
     {
         $workflow = $artifact->getWorkflow();
 

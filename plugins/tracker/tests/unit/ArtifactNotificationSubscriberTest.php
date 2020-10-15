@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -32,7 +35,7 @@ class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
     /** @var PFUser */
     private $user;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var Tracker_ArtifactDao */
@@ -42,7 +45,7 @@ class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->artifact     = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact     = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(201);
         $this->artifact->shouldReceive('getUri');
         $this->artifact_dao = \Mockery::spy(\Tracker_ArtifactDao::class);

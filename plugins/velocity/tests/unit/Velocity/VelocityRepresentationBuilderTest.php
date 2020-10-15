@@ -27,12 +27,12 @@ use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_Float;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
@@ -86,7 +86,7 @@ class VelocityRepresentationBuilderTest extends TestCase
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
@@ -142,7 +142,7 @@ class VelocityRepresentationBuilderTest extends TestCase
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $last_changeset->shouldReceive('getValue')->with($velocity_field)->never();
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
@@ -190,7 +190,7 @@ class VelocityRepresentationBuilderTest extends TestCase
     {
         $tracker = Mockery::mock(Tracker::class);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
         $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
@@ -245,7 +245,7 @@ class VelocityRepresentationBuilderTest extends TestCase
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
@@ -307,7 +307,7 @@ class VelocityRepresentationBuilderTest extends TestCase
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
@@ -366,7 +366,7 @@ class VelocityRepresentationBuilderTest extends TestCase
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
 
-        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact = Mockery::mock(Artifact::class);
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $linked_artifact->shouldReceive('getId')->andReturn(102);

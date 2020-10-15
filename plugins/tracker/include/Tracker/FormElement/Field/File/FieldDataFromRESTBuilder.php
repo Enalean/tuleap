@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Tracker_Artifact;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_FileInfoFactory;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class FieldDataFromRESTBuilder
@@ -76,7 +76,7 @@ class FieldDataFromRESTBuilder
     public function buildFieldDataFromREST(
         $rest_value,
         Tracker_FormElement_Field_File $field,
-        ?Tracker_Artifact $artifact
+        ?Artifact $artifact
     ) {
         $field_data = [];
 
@@ -115,8 +115,8 @@ class FieldDataFromRESTBuilder
      * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
      */
     private function checkLinkedArtifactIsLinkedToTheCurrentOne(
-        Tracker_Artifact $linked_artifact,
-        ?Tracker_Artifact $current_artifact,
+        Artifact $linked_artifact,
+        ?Artifact $current_artifact,
         int $file_id
     ): void {
         if (! $current_artifact) {
@@ -183,7 +183,7 @@ class FieldDataFromRESTBuilder
     }
 
     private function markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_ids,
         array &$field_data
     ): void {
@@ -198,7 +198,7 @@ class FieldDataFromRESTBuilder
     /**
      * @return int[]
      */
-    private function getAlreadyAttachedFileIds(Tracker_Artifact $artifact): array
+    private function getAlreadyAttachedFileIds(Artifact $artifact): array
     {
         $formelement_files = $this->form_element_factory->getUsedFormElementsByType($artifact->getTracker(), 'file');
 

@@ -26,7 +26,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
@@ -36,6 +35,7 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class TrackerFormElementFieldFileTest extends TestCase
 {
@@ -388,7 +388,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidNotFilled()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => '',
@@ -414,7 +414,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidTwoNotFilled()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => '',
@@ -448,7 +448,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidOnlyDescriptionFilled()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => 'User sets the description but the file is not submitted (missing, ... ?)',
@@ -473,7 +473,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidDescriptionFilledButErrorWithFileUpload()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => 'User sets the description but the file has error (network, ... ?)',
@@ -498,7 +498,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidDescriptionFilledAndFileOk()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -523,7 +523,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -544,7 +544,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidTwoFilesOk()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -577,7 +577,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidOneFileOkAmongTwo()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -610,7 +610,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     public function testIsValidOneFileOkAndOneEmpty()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $value    = [
             [
                 'description' => "Capture d'ecran",
@@ -664,7 +664,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
             ]
         ];
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
 
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturn(false);
         $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturn(true);
@@ -690,7 +690,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
         $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
         $changesets = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
         $changesets->shouldReceive('getFiles')->andReturn([$file]);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($changesets);
 
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
@@ -718,7 +718,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
         $file       = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
         $changesets = Mockery::mock(Tracker_Artifact_ChangesetValue_File::class);
         $changesets->shouldReceive('getFiles')->andReturn([$file]);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($changesets);
 
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
@@ -735,7 +735,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
         $submitted_value        = [];
 
         $no_changeset = Mockery::mock(\Tracker_Artifact_Changeset_Null::class);
-        $artifact     = Mockery::mock(Tracker_Artifact::class);
+        $artifact     = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($no_changeset);
 
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);

@@ -43,7 +43,7 @@ class DefinitionRepresentationTest extends TestCase
 
     public function testItBuildsADescriptionWithCrossReferences(): void
     {
-        $artifact   = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact   = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker_id = 10;
         $artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);
         $artifact->shouldReceive('getId')->andReturn(1);

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -33,7 +33,7 @@ class ParentArtifactReference extends ArtifactReference
      */
     public $title;
 
-    private function __construct(Tracker_Artifact $artifact, \Tracker $tracker, string $format = '')
+    private function __construct(Artifact $artifact, \Tracker $tracker, string $format = '')
     {
         parent::__construct($artifact, $tracker, $format);
 
@@ -43,7 +43,7 @@ class ParentArtifactReference extends ArtifactReference
     /**
      * @return ParentArtifactReference
      */
-    public static function build(Tracker_Artifact $artifact, string $format = ''): ArtifactReference
+    public static function build(Artifact $artifact, string $format = ''): ArtifactReference
     {
         return new self($artifact, $artifact->getTracker(), $format);
     }

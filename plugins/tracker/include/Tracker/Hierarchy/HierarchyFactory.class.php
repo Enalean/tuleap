@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class Tracker_HierarchyFactory
@@ -215,9 +216,9 @@ class Tracker_HierarchyFactory
      * Return the parent artifact
      *
      *
-     * @return null| Tracker_Artifact
+     * @return null| Artifact
      */
-    public function getParentArtifact(PFUser $user, Tracker_Artifact $child)
+    public function getParentArtifact(PFUser $user, Artifact $child)
     {
         $parents = [];
         if ($child->getTracker()->isProjectAllowedToUseNature() === true) {
@@ -244,7 +245,7 @@ class Tracker_HierarchyFactory
         return implode(', ', array_map([$this, 'getParentTitle'], $parents));
     }
 
-    private function getParentTitle(Tracker_Artifact $artifact)
+    private function getParentTitle(Artifact $artifact)
     {
         return '"' . $artifact->getTitle() . ' (' . $artifact->fetchXRefLink() . ')"';
     }
@@ -261,7 +262,7 @@ class Tracker_HierarchyFactory
      *
      * @return Array of Tracker_Artifact
      */
-    public function getAllAncestors(PFUser $user, Tracker_Artifact $child, array &$stack = [])
+    public function getAllAncestors(PFUser $user, Artifact $child, array &$stack = [])
     {
         if (! isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
             $parent = $this->getParentArtifact($user, $child);

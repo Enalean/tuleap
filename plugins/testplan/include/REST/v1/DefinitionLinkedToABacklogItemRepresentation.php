@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;
 
 /**
@@ -58,7 +58,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
      * @psalm-param TestStatus $test_status
      */
     private function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         string $short_type,

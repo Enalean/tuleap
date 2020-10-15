@@ -26,14 +26,14 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
 use Tuleap\TestManagement\REST\v1\ExecutionFromAutomatedTestsUpdater;
 use Tuleap\TestManagement\REST\v1\ExecutionStatusUpdater;
-use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
+use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
 {
@@ -52,7 +52,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
      */
     private $execution_from_automated_test_updater;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -75,7 +75,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(102);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -101,7 +101,7 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
     public function testUpdateExecutionFromAutomatedSuccessTestCase(): void
     {
         $extracted_test = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $execution_1    = Mockery::mock(Tracker_Artifact::class);
+        $execution_1    = Mockery::mock(Artifact::class);
 
         $extracted_test->shouldReceive('getTime')->andReturn(5);
         $extracted_test->shouldReceive('getStatus')->andReturn("passed");
@@ -166,8 +166,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
     {
         $extracted_test_1 = Mockery::mock(ExtractedTestResultFromJunit::class);
         $extracted_test_2 = Mockery::mock(ExtractedTestResultFromJunit::class);
-        $execution_1      = Mockery::mock(Tracker_Artifact::class);
-        $execution_2      = Mockery::mock(Tracker_Artifact::class);
+        $execution_1      = Mockery::mock(Artifact::class);
+        $execution_2      = Mockery::mock(Artifact::class);
 
         $extracted_test_1->shouldReceive('getTime')->andReturn(5);
         $extracted_test_1->shouldReceive('getStatus')->andReturn("passed");

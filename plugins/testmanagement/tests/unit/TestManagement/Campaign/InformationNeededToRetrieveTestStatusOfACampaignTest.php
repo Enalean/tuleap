@@ -37,7 +37,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends TestCas
     private const USER_UGROUP_IDS = ['123', 4];
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $campaign;
     /**
@@ -63,7 +63,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends TestCas
 
     protected function setUp(): void
     {
-        $this->campaign = \Mockery::mock(\Tracker_Artifact::class);
+        $this->campaign = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->campaign->shouldReceive('getId')->andReturn((string) self::CAMPAIGN_ID);
         $this->campaign_tracker = \Mockery::mock(\Tracker::class);
         $this->campaign->shouldReceive('getTracker')->andReturn($this->campaign_tracker);

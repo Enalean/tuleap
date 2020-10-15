@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Release     ->   Epic
  * `- Sprint   ->   `- Story
@@ -33,7 +35,7 @@ class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand
      *
      * @return array of Tracker_Artifact
      */
-    public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user)
+    public function getPossibleParents(Tracker $parent_tracker, Artifact $source_artifact, PFUser $user)
     {
         $milestone = $this->findNearestMilestoneWithBacklogTracker($parent_tracker, $source_artifact, $user);
         if ($milestone) {
@@ -46,7 +48,7 @@ class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand
         }
     }
 
-    private function findNearestMilestoneWithBacklogTracker(Tracker $expected_backlog_tracker, Tracker_Artifact $source_artifact, PFUser $user)
+    private function findNearestMilestoneWithBacklogTracker(Tracker $expected_backlog_tracker, Artifact $source_artifact, PFUser $user)
     {
         $planning = $this->planning_factory->getPlanningByPlanningTracker($source_artifact->getTracker());
         if ($planning && in_array($expected_backlog_tracker->getId(), $planning->getBacklogTrackersIds())) {
