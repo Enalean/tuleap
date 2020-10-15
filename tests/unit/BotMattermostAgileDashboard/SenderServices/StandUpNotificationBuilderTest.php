@@ -32,9 +32,8 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
-use Tracker_Artifact;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class StandUpNotificationBuilderTest extends TestCase
 {
@@ -66,7 +65,7 @@ final class StandUpNotificationBuilderTest extends TestCase
         $planning_milestone->shouldReceive('getArtifactTitle')->andReturn('My Release');
         $planning_milestone->shouldReceive('getStartDate')->andReturn(0);
         $planning_milestone->shouldReceive('getEndDate')->andReturn(1);
-        $milestone_artifact = Mockery::mock(Tracker_Artifact::class);
+        $milestone_artifact = Mockery::mock(Artifact::class);
         $planning_milestone->shouldReceive('getArtifact')->andReturn($milestone_artifact);
         $planning_milestone->shouldReceive('getDaysUntilEnd')->andReturn(0);
         $milestone_status_counter->shouldReceive('getStatus')->andReturn(['open' => 0, 'closed' => 0]);

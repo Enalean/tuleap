@@ -20,19 +20,19 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
+use AgileDashboard_Milestone_MilestoneStatusCounter;
 use HTTPRequest;
 use PFUser;
-use PlanningFactory;
 use Planning;
-use Planning_MilestoneFactory;
 use Planning_Milestone;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Planning_MilestoneFactory;
+use PlanningFactory;
 use Project;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Burndown;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
 use Tuleap\BotMattermostAgileDashboard\Presenter\StandUpSummaryPresenter;
 use Tuleap\TimezoneRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class StandUpNotificationBuilder
 {
@@ -121,7 +121,7 @@ class StandUpNotificationBuilder
         ];
     }
 
-    private function getBurndownUrl(HTTPRequest $http_request, Tracker_Artifact $artifact, PFUser $user)
+    private function getBurndownUrl(HTTPRequest $http_request, Artifact $artifact, PFUser $user)
     {
         $user_timezone = date_default_timezone_get();
 
@@ -132,7 +132,7 @@ class StandUpNotificationBuilder
         return $burndown;
     }
 
-    private function buildBurndownUrl(HTTPRequest $http_request, Tracker_Artifact $artifact, PFUser $user)
+    private function buildBurndownUrl(HTTPRequest $http_request, Artifact $artifact, PFUser $user)
     {
         if ($artifact->getABurndownField($user)) {
             $url_query = http_build_query(
@@ -175,7 +175,7 @@ class StandUpNotificationBuilder
         );
     }
 
-    private function checkModificationOnArtifact(Tracker_Artifact $artifact)
+    private function checkModificationOnArtifact(Artifact $artifact)
     {
         return $artifact->getLastUpdateDate() > strtotime('-1 day', time());
     }
@@ -207,7 +207,7 @@ class StandUpNotificationBuilder
         return date('d M H:i', $date);
     }
 
-    private function buildArtifactLink(HTTPRequest $http_request, Tracker_Artifact $tracker_Artifact)
+    private function buildArtifactLink(HTTPRequest $http_request, Artifact $tracker_Artifact)
     {
         return [
             'url'  => $http_request->getServerUrl() . $tracker_Artifact->getUri(),
@@ -226,7 +226,7 @@ class StandUpNotificationBuilder
         return $table_body;
     }
 
-    private function getTrackerArtifactInfo(HTTPRequest $http_request, Tracker_Artifact $tracker_artifact)
+    private function getTrackerArtifactInfo(HTTPRequest $http_request, Artifact $tracker_artifact)
     {
         return [
             'artifact_link' => $this->buildArtifactLink($http_request, $tracker_artifact),
