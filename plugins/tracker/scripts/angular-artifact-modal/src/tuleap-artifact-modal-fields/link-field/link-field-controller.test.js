@@ -1,4 +1,4 @@
-import link_module from "./link-field.js";
+import tuleap_artifact_modal_module from "../../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./link-field-controller.js";
@@ -16,7 +16,7 @@ describe("LinkFieldController -", () => {
         isInCreationMode;
 
     beforeEach(() => {
-        angular.mock.module(link_module);
+        angular.mock.module(tuleap_artifact_modal_module);
         angular.mock.inject(function (_$controller_, _$q_, _$rootScope_) {
             $controller = _$controller_;
             $q = _$q_;

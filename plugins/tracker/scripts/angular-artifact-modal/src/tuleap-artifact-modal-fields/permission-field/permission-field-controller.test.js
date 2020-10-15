@@ -1,4 +1,4 @@
-import permission_field_module from "./permission-field.js";
+import tuleap_artifact_modal_module from "../../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
@@ -8,7 +8,7 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
     var TuleapArtifactModalPermissionFieldController;
 
     beforeEach(function () {
-        angular.mock.module(permission_field_module);
+        angular.mock.module(tuleap_artifact_modal_module);
 
         var $controller;
 

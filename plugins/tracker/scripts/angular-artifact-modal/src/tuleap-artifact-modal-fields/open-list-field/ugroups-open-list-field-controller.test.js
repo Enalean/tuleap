@@ -1,4 +1,4 @@
-import open_list_field_module from "./open-list-field.js";
+import tuleap_artifact_modal_module from "../../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
@@ -11,7 +11,7 @@ describe("UgroupsOpenListFieldController", function () {
     var $element, UgroupsOpenListFieldController;
 
     beforeEach(function () {
-        angular.mock.module(open_list_field_module);
+        angular.mock.module(tuleap_artifact_modal_module);
 
         var $controller;
         angular.mock.inject(function (_$controller_) {

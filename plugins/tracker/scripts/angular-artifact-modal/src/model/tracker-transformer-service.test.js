@@ -1,11 +1,11 @@
-import model_module from "./model.js";
+import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
 describe("TuleapArtifactModalTrackerTransformerService", function () {
     var TrackerTransformerService;
     beforeEach(function () {
-        angular.mock.module(model_module, function ($provide) {
+        angular.mock.module(tuleap_artifact_modal_module, function ($provide) {
             $provide.value("translateFilter", function (value) {
                 return value;
             });

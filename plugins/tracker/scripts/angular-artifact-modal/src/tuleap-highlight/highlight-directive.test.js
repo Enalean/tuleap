@@ -1,4 +1,4 @@
-import highlight_module from "./highlight.js";
+import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
@@ -6,7 +6,7 @@ describe("TuleapHighlightDirective", function () {
     var element, $scope, $timeout;
 
     beforeEach(function () {
-        angular.mock.module(highlight_module, function ($provide) {
+        angular.mock.module(tuleap_artifact_modal_module, function ($provide) {
             $provide.decorator("$timeout", function ($delegate) {
                 jest.spyOn($delegate, "cancel").mockImplementation(() => {});
 

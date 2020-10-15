@@ -20,6 +20,7 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import angular_moment from "angular-moment";
+import filter from "angular-filter";
 import "angular-gettext";
 import translations from "../po/fr.po";
 
@@ -28,10 +29,6 @@ import "ngVue/build/plugins.js";
 import Vue from "vue";
 import "./vue-initializer.js";
 
-import fields from "./tuleap-artifact-modal-fields/fields.js";
-import model from "./model/model.js";
-import quota_display from "./quota-display/quota-display.js";
-import tuleap_highlight from "./tuleap-highlight/highlight.js";
 import angular_tlp from "angular-tlp";
 
 import FieldDependenciesService from "./field-dependencies-service.js";
@@ -43,6 +40,22 @@ import TextField from "./tuleap-artifact-modal-fields/text-field/TextField.vue";
 import FollowupEditor from "./followups/FollowupEditor.vue";
 import NgVueConfig from "./ng-vue-config.js";
 import "../../../../../src/themes/tlp/src/js/custom-elements/relative-date";
+import ComputedFieldDirective from "./tuleap-artifact-modal-fields/computed-field/computed-field-directive.js";
+import DateFieldDirective from "./tuleap-artifact-modal-fields/date-field/date-field-directive.js";
+import FileFieldDirective from "./tuleap-artifact-modal-fields/file-field/file-field-directive.js";
+import FileInputDirective from "./tuleap-artifact-modal-fields/file-field/file-input-directive.js";
+import LinkFieldDirective from "./tuleap-artifact-modal-fields/link-field/link-field-directive.js";
+import StaticOpenListFieldDirective from "./tuleap-artifact-modal-fields/open-list-field/static-open-list-field-directive.js";
+import UgroupsOpenListFieldDirective from "./tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field-directive.js";
+import UsersOpenListFieldDirective from "./tuleap-artifact-modal-fields/open-list-field/users-open-list-field-directive.js";
+import PermissionFieldDirective from "./tuleap-artifact-modal-fields/permission-field/permission-field-directive.js";
+import focusOnClickDirective from "./tuleap-focus/focus-on-click-directive.js";
+import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
+import { STRUCTURAL_FIELDS } from "../../constants/fields-constants.js";
+import FieldValuesService from "./model/field-values-service.js";
+import TrackerTransformerService from "./model/tracker-transformer-service.js";
+import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
+import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -51,11 +64,8 @@ export default angular
         "ngVue",
         "ngVue.plugins",
         angular_tlp,
-        fields,
-        model,
+        filter,
         ngSanitize,
-        quota_display,
-        tuleap_highlight,
     ])
     .run([
         "gettextCatalog",
@@ -67,12 +77,28 @@ export default angular
         },
     ])
     .config(NgVueConfig)
+    .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
+    .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)
-    .value("TuleapArtifactModalLoading", {
-        loading: false,
-    })
+    .directive("tuleapArtifactModalComputedField", ComputedFieldDirective)
+    .directive("tuleapArtifactModalDateField", DateFieldDirective)
+    .directive("tuleapArtifactModalFileField", FileFieldDirective)
+    .directive("tuleapArtifactModalFileInput", FileInputDirective)
+    .directive("tuleapArtifactModalLinkField", LinkFieldDirective)
+    .directive("tuleapArtifactModalStaticOpenListField", StaticOpenListFieldDirective)
+    .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
+    .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
+    .directive("tuleapArtifactModalPermissionField", PermissionFieldDirective)
+    .directive("tuleapFocusOnClick", focusOnClickDirective)
+    .directive("tuleapArtifactModalQuotaDisplay", QuotaDisplayDirective)
+    .directive("tuleapHighlightDirective", HighlightDirective)
     .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
+    .service("TuleapArtifactFieldValuesService", FieldValuesService)
+    .service("TuleapArtifactModalTrackerTransformerService", TrackerTransformerService)
+    .value("TuleapArtifactModalLoading", {
+        loading: false,
+    })
     .value(TextField.name, Vue.component(TextField.name, TextField))
     .value(FollowupEditor.name, Vue.component(FollowupEditor.name, FollowupEditor)).name;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import model_module from "./model.js";
+import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
 import angular from "angular";
 import moment from "moment";
 import "angular-mocks";
@@ -25,7 +25,7 @@ import "angular-mocks";
 describe("TuleapArtifactFieldValuesService", () => {
     let FieldValuesService;
     beforeEach(() => {
-        angular.mock.module(model_module);
+        angular.mock.module(tuleap_artifact_modal_module);
 
         angular.mock.inject(function (_TuleapArtifactFieldValuesService_) {
             FieldValuesService = _TuleapArtifactFieldValuesService_;

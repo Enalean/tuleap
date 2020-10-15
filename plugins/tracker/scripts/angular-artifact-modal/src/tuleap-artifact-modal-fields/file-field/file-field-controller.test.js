@@ -1,4 +1,4 @@
-import file_field_module from "./file-field.js";
+import tuleap_artifact_modal_module from "../../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
@@ -8,7 +8,7 @@ describe("TuleapArtifactModalFileFieldController", function () {
     var TuleapArtifactModalFileFieldController;
 
     beforeEach(function () {
-        angular.mock.module(file_field_module);
+        angular.mock.module(tuleap_artifact_modal_module);
 
         angular.mock.inject(function ($controller) {
             TuleapArtifactModalFileFieldController = $controller(BaseFileFieldController, {});
