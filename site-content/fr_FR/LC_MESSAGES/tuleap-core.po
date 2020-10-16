@@ -277,8 +277,8 @@ msgstr "Administrateur"
 msgid "Administrators"
 msgstr "Administrateurs"
 
-msgid "Agile ALM"
-msgstr "ALM Agile"
+msgid "Agile Enterprise Planning - Full ALM"
+msgstr "Agile Enterprise Planning - ALM complet"
 
 msgid "All groups"
 msgstr "Tous les groupes"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project unix-name="agilealm" full-name="Agile ALM" description="Template used to create a project providing ALM tools through Scrum methodology" access="public">
+<project unix-name="agilealm" full-name="Agile Enterprise Planning - Full ALM" description="Template used to create a project providing ALM tools through Scrum methodology" access="public">
   <long-description></long-description>
   <services>
     <service shortname="summary" enabled="1"/>
