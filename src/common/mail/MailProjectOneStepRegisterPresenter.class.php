@@ -102,11 +102,6 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
         return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_three', [$this->getUrlProjectAdministration()]);
     }
 
-    public function get_section_four()
-    {
-        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_four', [ForgeConfig::get('sys_name')]);
-    }
-
     public function get_help()
     {
         return $GLOBALS['Language']->getText('mail_outline', 'help', [ForgeConfig::get('sys_email_admin')]);
@@ -136,7 +131,6 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
                . $this->get_section_one() . "\n\n"
                . $this->get_section_two() . "\n\n"
                . $this->get_section_three() . "\n\n"
-               . $this->get_section_four() . "\n\n"
                . $this->get_thanks() . "\n\n"
                . $this->get_signature() . "\n\n";
         return $message;
