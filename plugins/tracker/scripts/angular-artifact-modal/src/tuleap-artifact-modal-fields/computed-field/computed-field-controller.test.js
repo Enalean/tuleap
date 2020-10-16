@@ -1,4 +1,4 @@
-import computed_field_module from "./computed-field.js";
+import tuleap_artifact_modal_module from "../../tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
@@ -8,7 +8,7 @@ describe("ComputedFieldController", function () {
     var ComputedFieldController;
 
     beforeEach(function () {
-        angular.mock.module(computed_field_module);
+        angular.mock.module(tuleap_artifact_modal_module);
 
         var $controller;
 
