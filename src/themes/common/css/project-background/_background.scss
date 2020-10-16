@@ -67,6 +67,15 @@ $definitions: (
         color: rgb(143, 177, 176),
         size: 100%
     ),
+    brown-alpaca:
+    (
+        // Photo by Pexels
+        // https://pixabay.com/fr/photos/alpaga-animaux-herbe-prairie-1845919/
+        image-2400px: url(#{$project-background-images-path}/brown-alpaca-2400px.webp) no-repeat,
+        image-1680px: url(#{$project-background-images-path}/brown-alpaca-1680px.webp) no-repeat,
+        color: rgb(191, 159, 120),
+        size: 100%
+    ),
     brown-desert:
     (
         // Photo by Wolfgang Hasselmann

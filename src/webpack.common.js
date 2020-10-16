@@ -521,6 +521,7 @@ const project_background_themes = [
     "beach-daytime",
     "blue-rain",
     "blue-sand",
+    "brown-alpaca",
     "brown-desert",
     "brown-grass",
     "brown-textile",

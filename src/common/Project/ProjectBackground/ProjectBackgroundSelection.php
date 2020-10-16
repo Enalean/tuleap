@@ -33,6 +33,7 @@ final class ProjectBackgroundSelection
         'beach-daytime'   => 'Chris Stenger',
         'blue-rain'       => 'Jackson David',
         'blue-sand'       => 'Amy Humphries',
+        'brown-alpaca'    => 'Pexels',
         'brown-desert'    => 'Wolfgang Hasselmann',
         'brown-grass'     => 'Hasan Almasi',
         'brown-textile'   => 'Noah Kroes',
