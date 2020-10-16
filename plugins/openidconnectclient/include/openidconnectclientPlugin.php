@@ -184,7 +184,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         if (! $this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
             return;
         }
-        if (ForgeConfig::get(ForgeAccess::CONFIG) !== ForgeAccess::ANONYMOUS) {
+        if (ForgeConfig::get(ForgeAccess::CONFIG) !== ForgeAccess::ANONYMOUS && ! ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE)) {
             $params['login_url'] = OPENIDCONNECTCLIENT_BASE_URL . '/login.php?' . http_build_query(
                 ['return_to' => $params['return_to']]
             );
