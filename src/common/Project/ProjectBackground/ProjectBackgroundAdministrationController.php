@@ -28,6 +28,7 @@ use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -89,7 +90,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
             $request,
             $variables['id'],
             _('Project background'),
-            'background',
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback
         );
     }

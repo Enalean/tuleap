@@ -25,6 +25,7 @@ use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
@@ -37,8 +38,6 @@ use UserManager;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const PANE_SHORTNAME = 'project_ownership';
-
     /** @var LayoutHelper */
     private $layout_helper;
     /** @var \TemplateRenderer */
@@ -95,7 +94,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
             $request,
             $variables['project_id'],
             dgettext('tuleap-project_ownership', 'Project ownership'),
-            self::PANE_SHORTNAME,
+            NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback
         );
     }
