@@ -91,7 +91,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchByProject($project) as $row) {
-            $repositories[] = $this->instantiateFromRow($row, $project);
+            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
         }
 
         return $repositories;
@@ -104,7 +104,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
-            $repositories[] = $this->instantiateFromRow($row, $project);
+            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
         }
 
         return new RepositoryPaginatedCollection(
@@ -120,7 +120,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchPaginatedByProjectAndByName($project, $repository_name, $limit, $offset) as $row) {
-            $repositories[] = $this->instantiateFromRow($row, $project);
+            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
         }
 
         return new RepositoryPaginatedCollection(
@@ -129,41 +129,57 @@ class RepositoryManager
         );
     }
 
-    public function getRepositoriesInProjectWithLastCommitInfo(Project $project)
+    /**
+     * @return RepositoryWithLastCommitDate[]
+     */
+    public function getRepositoriesInProjectWithLastCommitInfo(Project $project): array
     {
         $repositories = [];
+        if ($this->dao->isCoreSvnEnabled($project)) {
+            $repositories[] = new RepositoryWithLastCommitDate(
+                new CoreRepository($project),
+                $this->dao->getCoreLastCommitDate($project),
+            );
+        }
+
         foreach ($this->dao->searchByProject($project) as $row) {
-            $repositories[] = [
-                'repository'  => $this->instantiateFromRow($row, $project),
-                'commit_date' => $row['commit_date']
-            ];
+            $repositories[] = new RepositoryWithLastCommitDate(
+                SvnRepository::buildFromDatabase($row, $project),
+                $row['commit_date'] === null || $row['commit_date'] === '' ? null : new \DateTimeImmutable('@' . $row['commit_date']),
+            );
         }
 
         return $repositories;
     }
 
-    public function getRepositoryByName(Project $project, $name)
+    public function getRepositoryByName(Project $project, string $name): Repository
     {
         $row = $this->dao->searchRepositoryByName($project, $name);
         if ($row) {
-            return $this->instantiateFromRow($row, $project);
+            return SvnRepository::buildFromDatabase($row, $project);
         } else {
             throw new CannotFindRepositoryException();
         }
     }
 
-    public function getByIdAndProject($id_repository, Project $project)
+    public function getByIdAndProject(int $id_repository, Project $project): Repository
     {
+        if ($id_repository === CoreRepository::ID) {
+            return new CoreRepository($project);
+        }
         $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
         if (! $row) {
             throw new CannotFindRepositoryException();
         }
 
-        return $this->instantiateFromRow($row, $project);
+        return SvnRepository::buildFromDatabase($row, $project);
     }
 
-    public function getRepositoryById($id)
+    public function getRepositoryById(int $id): Repository
     {
+        if ($id === CoreRepository::ID) {
+            throw new CannotFindRepositoryException('Cannot find Core repository with `getRepositoryById`');
+        }
         $row = $this->dao->searchByRepositoryId($id);
         if (! $row) {
             throw new CannotFindRepositoryException();
@@ -208,10 +224,17 @@ class RepositoryManager
      */
     public function getRepositoryFromPublicPath(HTTPRequest $request)
     {
-        $path    = $request->get('root');
-        $project = $request->getProject();
+        $path         = $request->get('root');
+        $project      = $request->getProject();
+        $project_name = $project->getUnixNameMixedCase();
 
-        if (! preg_match('/^' . preg_quote($project->getUnixNameMixedCase(), '/') . '\/(' . RuleName::PATTERN_REPOSITORY_NAME . ')$/', $path, $matches)) {
+        $matches = [];
+        if (preg_match('/^' . preg_quote($project_name, '/') . '$/', $path, $matches)) {
+            return new CoreRepository($project);
+        }
+
+        $matches = [];
+        if (! preg_match('/^' . preg_quote($project_name, '/') . '\/(' . RuleName::PATTERN_REPOSITORY_NAME . ')$/', $path, $matches)) {
             throw new CannotFindRepositoryException();
         }
 
@@ -250,7 +273,7 @@ class RepositoryManager
         $deleted_existed_repositories      = [];
         foreach ($deleted_repositories_instantiated as $delete_repository) {
             $archive = $delete_repository->getBackupPath();
-            if (file_exists($archive)) {
+            if ($archive && file_exists($archive)) {
                 $repository_presenter = new RestorableRepositoryPresenter(
                     $user,
                     $delete_repository->getName(),
@@ -277,22 +300,11 @@ class RepositoryManager
         return $archived_repositories;
     }
 
-    private function instantiateFromRow(array $row, Project $project): Repository
-    {
-        return new Repository(
-            $row['id'],
-            $row['name'],
-            $row['backup_path'],
-            $row['repository_deletion_date'],
-            $project
-        );
-    }
-
     private function instantiateFromRowWithoutProject(array $row): Repository
     {
         $project = $this->project_manager->getProject($row['project_id']);
 
-        return $this->instantiateFromRow($row, $project);
+        return SvnRepository::buildFromDatabase($row, $project);
     }
 
     public function purgeArchivedRepositories()
@@ -322,7 +334,7 @@ class RepositoryManager
         $this->logger->info('Restoring repository : ' . $repository->getName());
         $backup_path = $repository->getBackupPath();
 
-        if (! file_exists($backup_path)) {
+        if (! $backup_path || ! file_exists($backup_path)) {
             $this->logger->error('[Restore] Unable to find repository archive: ' . $backup_path);
             return false;
         }
@@ -348,8 +360,9 @@ class RepositoryManager
         $this->logger->info('Purge of archived SVN repository: ' . $repository->getName());
         $path = $repository->getBackupPath();
         $this->logger->debug('Delete backup ' . $path);
-        if (empty($path) || ! is_writable($path)) {
+        if (! $path || ! is_writable($path)) {
             $this->logger->debug('Empty path or permission denied ' . $path);
+            return;
         }
         $this->logger->debug('Removing physically the repository');
 
@@ -363,7 +376,7 @@ class RepositoryManager
     {
         $source_path = $repository->getBackupPath();
 
-        if (dirname($source_path)) {
+        if ($source_path && dirname($source_path)) {
             $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($source_path, self::PREFIX));
 
             $this->event_manager->processEvent($event);

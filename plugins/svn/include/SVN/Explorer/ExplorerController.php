@@ -29,7 +29,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
@@ -115,7 +115,7 @@ class ExplorerController
 
         $repo_name = $request->get("repo_name");
 
-        $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
+        $repository_to_create = SvnRepository::buildToBeCreatedRepository($repo_name, $request->getProject());
         try {
             $this->repository_creator->create($repository_to_create, $user);
 

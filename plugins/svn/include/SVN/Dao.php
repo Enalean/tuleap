@@ -306,4 +306,29 @@ class Dao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function isCoreSvnEnabled(Project $project): bool
+    {
+        $sql = <<<EOT
+            SELECT NULL
+            FROM service
+            WHERE group_id = %d
+                AND is_used = 1
+                AND short_name = 'svn'
+            LIMIT 1
+        EOT;
+        $dar = $this->retrieve(sprintf($sql, $project->getID()));
+        return $dar && $dar->rowCount() > 0;
+    }
+
+    public function getCoreLastCommitDate(Project $project): ?\DateTimeImmutable
+    {
+        $sql = sprintf('SELECT date FROM svn_commits WHERE group_id = %d ORDER BY date DESC LIMIT 1', $project->getID());
+        $dar = $this->retrieve($sql);
+        if ($dar && count($dar) === 1) {
+            $row = $dar->getRow();
+            return new \DateTimeImmutable('@' . $row['date']);
+        }
+        return null;
+    }
 }

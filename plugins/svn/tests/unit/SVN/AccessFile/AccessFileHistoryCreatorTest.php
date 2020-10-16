@@ -24,11 +24,11 @@ namespace Tuleap\SVN\AccessControl;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
 use SVN_AccessFile_Writer;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
 
@@ -81,8 +81,6 @@ class AccessFileHistoryCreatorTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
         $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
 
@@ -102,7 +100,7 @@ class AccessFileHistoryCreatorTest extends TestCase
 
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(100);
-        $this->repository = new Repository(1, 'repo name', vfsStream::setup()->url(), null, $project);
+        $this->repository = SvnRepository::buildActiveRepository(1, 'repo name', $project);
 
         $access_file_history = new NullAccessFileHistory($this->repository);
         $this->access_file_factory->shouldReceive('getLastVersion')->withArgs([$this->repository])->andReturn($access_file_history);

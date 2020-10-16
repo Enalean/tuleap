@@ -37,7 +37,7 @@ import session
 username = os.getenv('REMOTE_USER', '')
 project_name = os.getenv('TULEAP_PROJECT_NAME', '')
 repo_name = os.getenv('TULEAP_REPO_NAME', '')
-full_repo_name = project_name + '/' + repo_name
+full_repo_name = os.getenv('TULEAP_FULL_REPO_NAME', '')
 repo_path = os.getenv('TULEAP_REPO_PATH', '')
 path_info = os.getenv('PATH_INFO', '/')
 # Remove potential / duplicates

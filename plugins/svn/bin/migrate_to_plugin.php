@@ -45,8 +45,8 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
@@ -102,7 +102,7 @@ $backend_svn    = Backend::instance('SVN');
 $svn_admin      = new SvnAdmin($system_command, $logger, $backend_svn);
 $dao            = new Dao();
 
-$repository                  = new Repository("", $repository_name, '', '', $project);
+$repository                  = SvnRepository::buildToBeCreatedRepository($repository_name, $project);
 $hook_dao                    = new HookDao();
 $immutable_tag_dao           = new ImmutableTagDao();
 $project_history_formatter   = new ProjectHistoryFormatter();

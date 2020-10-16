@@ -1,0 +1,146 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\SVN\Repository;
+
+use ForgeConfig;
+use HTTPRequest;
+
+class CoreRepository implements Repository
+{
+    public const ID = 0;
+
+    /**
+     * @var \Project
+     */
+    private $project;
+
+    public function __construct(\Project $project)
+    {
+        $this->project = $project;
+    }
+
+    public function getSettingUrl(): string
+    {
+        return sprintf('/svn/admin/?group_id=%d', $this->project->getID());
+    }
+
+    public function setId(int $id): void
+    {
+    }
+
+    public function getId(): int
+    {
+        return 0;
+    }
+
+    public function getName(): string
+    {
+        return $this->project->getUnixNameMixedCase();
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->project;
+    }
+
+    public function getPublicPath(): string
+    {
+        return '/svnroot/' . $this->getName();
+    }
+
+    public function getFullName(): string
+    {
+        return $this->project->getUnixNameMixedCase();
+    }
+
+    public function getSystemPath(): string
+    {
+        return ForgeConfig::get('sys_data_dir') . '/svnroot/' . $this->getName();
+    }
+
+    public function isRepositoryCreated(): bool
+    {
+        return is_dir($this->getSystemPath());
+    }
+
+    public function getSvnUrl(): string
+    {
+        return $this->getSvnDomain() . $this->getPublicPath();
+    }
+
+    public function getSvnDomain(): string
+    {
+        // Domain name must be lowercase (issue with some SVN clients)
+        return strtolower(HTTPRequest::instance()->getServerUrl());
+    }
+
+    public function getHtmlPath(): string
+    {
+        return SVN_BASE_URL . '/?' . http_build_query(
+            [
+                'roottype' => 'svn',
+                'root' => $this->getFullName()
+            ]
+        );
+    }
+
+    public function canBeDeleted(): bool
+    {
+        return false;
+    }
+
+    public function getBackupPath(): ?string
+    {
+        throw new \RuntimeException('Cannot delete a core repository yet');
+        return null;
+    }
+
+    public function getSystemBackupPath(): string
+    {
+        throw new \RuntimeException('Cannot delete a core repository yet');
+        return '';
+    }
+
+    public function getBackupFileName(): string
+    {
+        throw new \RuntimeException('Cannot delete a core repository yet');
+        return '';
+    }
+
+    public function getDeletionDate(): ?int
+    {
+        throw new \RuntimeException('Cannot delete a core repository yet');
+        return null;
+    }
+
+    public function setDeletionDate(int $deletion_date): void
+    {
+        throw new \RuntimeException('Cannot delete a core repository yet');
+    }
+
+    public function isDeleted(): bool
+    {
+        return false;
+    }
+}

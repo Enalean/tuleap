@@ -128,7 +128,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends TestCase // phpcs:ignore Squ
         );
 
         $system_event->shouldReceive('done')->once();
-        $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
+        $system_event->shouldReceive('getRequiredParameter')->andReturn(1);
 
         $system_event->process();
     }

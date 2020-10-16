@@ -25,11 +25,10 @@ use CrossReferenceFactory;
 use EventManager;
 use HTTPRequest;
 use Project;
-use ProjectManager;
 use ReferenceManager;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
-use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\Repository;
 
 class ViewVCProxy
 {
@@ -38,8 +37,6 @@ class ViewVCProxy
      * @var AccessHistorySaver
      */
     private $access_history_saver;
-    private $repository_manager;
-    private $project_manager;
     /**
      * @var EventManager
      */
@@ -50,14 +47,10 @@ class ViewVCProxy
     private $access_suspended_controller;
 
     public function __construct(
-        RepositoryManager $repository_manager,
-        ProjectManager $project_manager,
         AccessHistorySaver $access_history_saver,
         EventManager $event_manager,
         ProjectAccessSuspendedController $access_suspended_controller
     ) {
-        $this->repository_manager          = $repository_manager;
-        $this->project_manager             = $project_manager;
         $this->access_history_saver        = $access_history_saver;
         $this->event_manager               = $event_manager;
         $this->access_suspended_controller = $access_suspended_controller;
@@ -192,19 +185,17 @@ class ViewVCProxy
         return '/usr/bin/python';
     }
 
-    public function getContent(HTTPRequest $request, string $path)
+    public function getContent(HTTPRequest $request, \PFUser $user, Repository $repository, string $path)
     {
-        $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
             return dgettext('tuleap-svn', 'You can not browse the repository without being logged.');
         }
 
-        $project = $this->project_manager->getProject($request->get('group_id'));
+        $project = $repository->getProject();
         if ($project->isSuspended() && ! $user->isSuperUser()) {
             $this->access_suspended_controller->displayError($user);
             exit();
         }
-        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $project);
 
         $this->access_history_saver->saveAccess($user, $repository);
 
@@ -218,6 +209,7 @@ class ViewVCProxy
             'TULEAP_PROJECT_NAME=' . escapeshellarg($repository->getProject()->getUnixNameMixedCase()) . ' ' .
             'TULEAP_REPO_NAME=' . escapeshellarg($repository->getName()) . ' ' .
             'TULEAP_REPO_PATH=' . escapeshellarg($repository->getSystemPath()) . ' ' .
+            'TULEAP_FULL_REPO_NAME=' . escapeshellarg($repository->getFullName()) . ' ' .
             $this->getPythonLauncher() . ' ' . __DIR__ . '/../../../bin/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
@@ -226,7 +218,7 @@ class ViewVCProxy
             return $this->getPermissionDeniedError($project);
         }
 
-        list($headers, $body) = http_split_header_body($content);
+        [$headers, $body] = http_split_header_body($content);
 
         $content_type_line = strtok($content, "\n\t\r\0\x0B");
 

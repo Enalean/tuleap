@@ -82,8 +82,6 @@ class RepositoryCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->system_event_manager = \Mockery::spy(\SystemEventManager::class);
         $this->history_dao          = \Mockery::spy(\ProjectHistoryDao::class);
         $this->dao                  = \Mockery::spy(\Tuleap\SVN\Dao::class);
@@ -107,15 +105,9 @@ class RepositoryCreatorTest extends TestCase
         $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('project-unix-name');
         $this->user       = \Mockery::mock(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(110);
-        $this->repository = new Repository(
-            01,
-            'repo01',
-            '',
-            '',
-            $this->project
-        );
+        $this->repository = SvnRepository::buildActiveRepository(1, 'repo01', $this->project);
 
-        $this->dao->shouldReceive('create')->andReturn([1]);
+        $this->dao->shouldReceive('create')->andReturn(1);
     }
 
     public function testItCreatesTheRepository(): void

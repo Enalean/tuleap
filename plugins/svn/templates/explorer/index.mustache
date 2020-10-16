@@ -84,6 +84,14 @@
                     {{/ is_admin }}
                     <a class="tlp-card tlp-card-selectable svn-homepage-repository-card" href="{{ getHtmlPath }}" data-test="svn-repository-access-{{ getName }}">
                         <span class="svn-homepage-repository-name">{{ getName }}</span>
+                        {{# is_core }}
+                            <span
+                                class="tlp-badge-secondary tlp-badge-outline"
+                                title="{{# dgettext }} tuleap-svn |This is the historical repository provided by legacy 'Subversion' service.{{/ dgettext }}"
+                            >
+                            {{# dgettext }} tuleap-svn | Core {{/ dgettext }}
+                            </span>
+                        {{/ is_core }}
                         {{# commit_date }}
                             <span
                                 class="svn-homepage-repository-date"

@@ -85,13 +85,6 @@ class RepositoryDeleterTest extends TestCase
         $this->fixtures_dir = dirname(__FILE__) . '/../_fixtures';
     }
 
-    public function testItReturnFalseWhenRepositoryIsNotLinkedToAProject(): void
-    {
-        $this->repository->shouldReceive('getProject')->andReturn(null);
-
-        $this->assertFalse($this->repository_deleter->delete($this->repository));
-    }
-
     public function testItReturnFalseWhenRepositoryIsNotFoundOnFileSystem(): void
     {
         $this->repository->shouldReceive('getProject')->andReturn($this->project);
@@ -129,9 +122,9 @@ class RepositoryDeleterTest extends TestCase
     {
         $this->repository_manager->shouldReceive('getRepositoriesInProject')->andReturn(
             [
-                new Repository(1, 'repo01', '', '', $this->project),
-                new Repository(2, 'repo02', '', '', $this->project),
-                new Repository(3, 'repo03', '', '', $this->project),
+                SvnRepository::buildActiveRepository(1, 'repo01', $this->project),
+                SvnRepository::buildActiveRepository(2, 'repo02', $this->project),
+                SvnRepository::buildActiveRepository(3, 'repo03', $this->project),
             ]
         );
 

@@ -60,6 +60,7 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
@@ -670,7 +671,7 @@ class RepositoryResource extends AuthenticatedResource
             new \URLVerification()
         );
 
-        $repository_to_create = new Repository("", $name, "", "", $project);
+        $repository_to_create = SvnRepository::buildToBeCreatedRepository($name, $project);
         try {
             $repository_settings       = $this->getPOSTSettings($repository_to_create, $settings);
             $has_initial_layout        = $settings !== null && $settings->layout !== null;

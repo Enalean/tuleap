@@ -78,7 +78,7 @@ class RepositoryDisplayController
                 'explorer/repository_display',
                 new RepositoryDisplayPresenter(
                     $repository,
-                    $this->proxy->getContent($request, $this->fixPathInfo($url_variables)),
+                    $this->proxy->getContent($request, $request->getCurrentUser(), $repository, $this->fixPathInfo($url_variables)),
                     $username
                 ),
                 $this->proxy->getBodyClass(),

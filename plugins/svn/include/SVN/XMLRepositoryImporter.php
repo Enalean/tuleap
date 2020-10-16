@@ -36,6 +36,7 @@ use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
+use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
@@ -152,7 +153,7 @@ class XMLRepositoryImporter
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: " . $rule_name->getErrorMessage());
         }
 
-        $repo = new Repository("", $this->name, '', '', $project);
+        $repo = SvnRepository::buildToBeCreatedRepository($this->name, $project);
 
         try {
             $copy_from_core = false;
