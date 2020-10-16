@@ -34,7 +34,7 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
     public function __construct(
         Project $project,
         $color_logo,
-        $logo_url,
+        string $logo_url,
         $color_button
     ) {
         parent::__construct(

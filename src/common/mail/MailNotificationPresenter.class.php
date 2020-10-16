@@ -27,7 +27,7 @@ class MailNotificationPresenter extends MailOutlinePresenter
     public $color_button;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $section_one,
         $thanks,

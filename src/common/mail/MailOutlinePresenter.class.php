@@ -20,7 +20,9 @@
 
 class MailOutlinePresenter
 {
-
+    /**
+     * @var string
+     */
     public $logo_url;
     public $title;
     public $thanks;
@@ -28,16 +30,16 @@ class MailOutlinePresenter
     public $color_logo;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $thanks,
         $signature,
         $color_logo
     ) {
-        $this->logo_url             = $logo_url;
-        $this->title                = $title;
-        $this->thanks               = $thanks;
-        $this->signature            = $signature;
-        $this->color_logo           = $color_logo;
+        $this->logo_url   = $logo_url;
+        $this->title      = $title;
+        $this->thanks     = $thanks;
+        $this->signature  = $signature;
+        $this->color_logo = $color_logo;
     }
 }

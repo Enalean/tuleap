@@ -28,7 +28,7 @@ class MailRegisterPresenter extends MailOutlinePresenter
     public $login;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $section_one,
         $section_two,

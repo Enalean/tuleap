@@ -24,7 +24,7 @@ class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter
     public $section_three;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $section_one,
         $section_two,

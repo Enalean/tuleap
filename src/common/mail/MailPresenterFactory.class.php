@@ -31,7 +31,7 @@ class MailPresenterFactory
      *
      * @return MailRegisterPresenter
      */
-    public function createMailAccountPresenter($login, $confirm_hash, $presenter_role, $logo_url)
+    public function createMailAccountPresenter($login, $confirm_hash, $presenter_role, string $logo_url)
     {
         $color_logo = "#000";
         $color_button = "#347DBA";

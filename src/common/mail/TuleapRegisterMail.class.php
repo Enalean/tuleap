@@ -141,7 +141,7 @@ class TuleapRegisterMail
         return $message;
     }
 
-    private function addLogoInAttachment(Codendi_Mail $mail)
+    private function addLogoInAttachment(Codendi_Mail $mail): string
     {
         $logo_retriever = new LogoRetriever();
         $cid_logo       = '';
