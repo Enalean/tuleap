@@ -46,7 +46,7 @@ register_form	last_name	Nom
 register_form	email	E-mail
 register_form	project_name	Nom du projet
 register_form	proj_description	Description brève<br>du projet&nbsp;:
-register_form	desired_subdomain	Sous-domaine souhaité&nbsp;:<br>(e.g. 
+register_form	desired_subdomain	Sous-domaine souhaité&nbsp;:<br>(e.g.
 register_form	passwd	Mot de passe souhaité&nbsp;:<br>(à saisir deux fois)
 register_form	comments	Commentaires/Questions&nbsp;:
 register_form	clear_form	Effacer le formulaire
@@ -178,8 +178,7 @@ register_confirmation_approval_project_one_step	redirect_content	Retourner sur m
 mail_register_project_one_step	title	Projet $1 approuvé
 mail_register_project_one_step	section_one	Veuillez prendre un peu de temps pour parcourir la <a href="$1">documentation du site</a> concernant les outils et services offerts par $2 aux équipes de projet (y compris un guide complet l'utilisateur).
 mail_register_project_one_step	section_two	Nous vous invitons maintenant à visiter la <a href="$1">page de sommaire</a> de votre projet, à écrire une courte description de votre projet et à le classer dans l'arbre des projets si vous ne l'avez pas encore fait.
-mail_register_project_one_step	section_three	En tant qu'administrateur de projet, vous avez accès à <a href="$1">toutes les fonctions d'administration</a> comme créer des outils de suivi de tâches ou de défauts, créer des listes de distribution, des forums ou encore des dépôts git ou subversion.
-mail_register_project_one_step	section_four	Remarque : si vous possédez déjà un dépôt CVS ou subversion l'équipe $1 est en mesure de le transférer tel quel sur le site. N'hésitez pas à la contacter pour connaître la marche à suivre.
+mail_register_project_one_step	section_three	En tant qu'administrateur de projet, vous avez accès à <a href="$1">toutes les fonctions d'administration</a> comme créer, configurer des trackers pour suivre et gérer n'importe quel type d'activités, créer des dépôts git ou encore planifier vos releases et gérer les tests.
 mail_register_project_one_step	full_name	Nom complet
 mail_register_project_one_step	short_name	Nom court
 mail_register_project_one_step	summary_page	Page de description

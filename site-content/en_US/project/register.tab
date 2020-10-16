@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * Copyright (c) Enalean, 2019. All rights reserved
 #  * http://www.codendi.com
@@ -53,7 +53,7 @@ register_form	last_name	Last Name
 register_form	email	Email
 register_form	project_name	Project Name
 register_form	proj_description	Brief Description<br>of Project:
-register_form	desired_subdomain	Desired Subdomain:<br>(e.g. 
+register_form	desired_subdomain	Desired Subdomain:<br>(e.g.
 register_form	passwd	Desired Password:<br>(enter twice)
 register_form	comments	Comments/Questions:
 register_form	clear_form	Clear Form
@@ -196,8 +196,7 @@ register_confirmation_approval_project_one_step	redirect_content	Go back to your
 mail_register_project_one_step	title	$1 Project approved
 mail_register_project_one_step	section_one	Please take some time to read the <a href="$1">site documentation</a> about the tools and services offered by $2 to project administrators (including a detailed User Guide).
 mail_register_project_one_step	section_two	We now invite you to visit the <a href="$1">Summary page</a> of your project, create a short public description for your project and categorize it in the Software Map if it hasn't been done.
-mail_register_project_one_step	section_three	As project administrator, you can <a href="$1">fully administrate your project</a> environment. You can create task or defect trackers, mailing lists, forums, git repositories, etc.
-mail_register_project_one_step	section_four	Remark: if you already have a CVS or Subversion repository of your own and want to transfer it as is on $1 then contact the $1 team.
+mail_register_project_one_step	section_three	As project administrator, you can <a href="$1">fully administrate your project</a> environment. You can create and customize trackers to trace and track any kind of activity, create git repositories or plan releases and manage testing.
 mail_register_project_one_step	full_name	Full name
 mail_register_project_one_step	short_name	Short name
 mail_register_project_one_step	summary_page	Summary page
