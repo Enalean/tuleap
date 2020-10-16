@@ -25,7 +25,7 @@ class MailRegisterByAdminPresenter extends MailRegisterPresenter
     public $password;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $section_one,
         $section_two,

@@ -26,7 +26,7 @@ class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter
     public $section_after_login;
 
     public function __construct(
-        $logo_url,
+        string $logo_url,
         $title,
         $section_one,
         $section_two,
