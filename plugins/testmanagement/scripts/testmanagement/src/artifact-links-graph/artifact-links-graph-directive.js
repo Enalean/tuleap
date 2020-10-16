@@ -22,7 +22,7 @@ import _, { has, remove } from "lodash";
 import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
 import { drag } from "d3-drag";
 import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
-import { event as d3_event, select, selectAll } from "d3-selection";
+import { select, selectAll } from "d3-selection";
 
 export default Graph;
 
@@ -252,36 +252,35 @@ function Graph(
                         })
                         .enter()
                         .append("circle")
-                        .attrs({
-                            class: (d) =>
-                                d.id
-                                    ? normalizeColor(d.color) + " circle_" + d.id
-                                    : normalizeColor(d.color),
-                            r: 8,
-                        })
+                        .attr("class", (d) =>
+                            d.id
+                                ? normalizeColor(d.color) + " circle_" + d.id
+                                : normalizeColor(d.color)
+                        )
+                        .attr("r", 8)
                         .call(
                             drag()
-                                .on("start", function () {
-                                    if (!d3_event.active) {
+                                .on("start", function (event) {
+                                    if (!event.active) {
                                         graphd3.graph().alphaTarget(0.3).restart();
                                     }
                                 })
-                                .on("drag", function (d) {
+                                .on("drag", function (event, d) {
                                     var position = calculatePosition(
                                         document.getElementsByClassName("graph-container")[0],
                                         document.getElementsByClassName(
                                             "graph-elements-clickable"
                                         )[0],
-                                        d3_event.x,
-                                        d3_event.y,
+                                        event.x,
+                                        event.y,
                                         graphd3.width(),
                                         graphd3.height()
                                     );
                                     d.fx = position.x;
                                     d.fy = position.y;
                                 })
-                                .on("end", function () {
-                                    if (!d3_event.active) {
+                                .on("end", function (event) {
+                                    if (!event.active) {
                                         graphd3.graph().alphaTarget(0);
                                     }
                                 })
@@ -324,24 +323,20 @@ function Graph(
                         })
                         .enter()
                         .append("a")
-                        .attrs({
-                            class: function (d) {
-                                if (d.id) {
-                                    return "graph-label updatable text_" + d.id;
-                                }
-                            },
-                            "xlink:href": function (d) {
-                                return d.url;
-                            },
+                        .attr("class", function (d) {
+                            if (d.id) {
+                                return "graph-label updatable text_" + d.id;
+                            }
+                        })
+                        .attr("xlink:href", function (d) {
+                            return d.url;
                         })
                         .append("text")
-                        .attrs({
-                            class: "ref-name ",
-                            x: 13,
-                            y: ".31em",
-                            id: function (d) {
-                                return d.ref_name + "_" + d.id;
-                            },
+                        .attr("class", "ref-name ")
+                        .attr("x", 13)
+                        .attr("y", ".31em")
+                        .attr("id", function (d) {
+                            return d.ref_name + "_" + d.id;
                         })
                         .text(function (d) {
                             return d.ref_name + " " + d.id;
@@ -350,34 +345,36 @@ function Graph(
 
                 selectAll(".graph-label")
                     .insert("rect", ":first-child")
-                    .attrs({
-                        width: function (d) {
-                            return (
-                                angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().width +
-                                6
-                            );
-                        },
-                        height: function (d) {
-                            return (
-                                angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().height +
-                                4
-                            );
-                        },
-                        class: function (d) {
-                            return "ref-name-background " + d.color.replace("_", "-");
-                        },
-                        x: 10,
-                        y: -9,
-                        rx: 3,
-                        ry: 3,
-                    });
+                    .attr("width", function (d) {
+                        return (
+                            angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().width + 6
+                        );
+                    })
+                    .attr("height", function (d) {
+                        return (
+                            angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().height + 4
+                        );
+                    })
+                    .attr("class", function (d) {
+                        return "ref-name-background " + d.color.replace("_", "-");
+                    })
+                    .attr("height", function (d) {
+                        return (
+                            angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().height + 4
+                        );
+                    })
+                    .attr("class", function (d) {
+                        return "ref-name-background " + d.color.replace("_", "-");
+                    })
+                    .attr("x", 10)
+                    .attr("y", -9)
+                    .attr("rx", 3)
+                    .attr("ry", 3);
 
                 selectAll(".graph-label")
                     .append("text")
-                    .attrs({
-                        x: 10,
-                        y: 20,
-                    })
+                    .attr("x", 10)
+                    .attr("y", 20)
                     .text(function (d) {
                         return d.title + " ";
                     });
@@ -387,9 +384,9 @@ function Graph(
                 graphd3.zoom(
                     d3_zoom()
                         .scaleExtent([0.5, 8])
-                        .on("zoom", function () {
-                            graphd3.g().attr("transform", d3_event.transform);
-                            graphd3.gClickable().attr("transform", d3_event.transform);
+                        .on("zoom", function (event) {
+                            graphd3.g().attr("transform", event.transform);
+                            graphd3.gClickable().attr("transform", event.transform);
                         })
                 );
 
@@ -397,11 +394,11 @@ function Graph(
                 graphd3.height(element.height());
 
                 graphd3.svg(
-                    select(element[0]).append("svg").attrs({
-                        class: "graph-container",
-                        width: graphd3.width(),
-                        height: graphd3.height(),
-                    })
+                    select(element[0])
+                        .append("svg")
+                        .attr("class", "graph-container")
+                        .attr("width", graphd3.width())
+                        .attr("height", graphd3.height())
                 );
 
                 graphd3.g(graphd3.svg().append("g").attr("class", "graph-elements"));
@@ -437,10 +434,10 @@ function Graph(
 
             graphd3.initLoader = function () {
                 graphd3.loader(
-                    select(".graph").append("img").attrs({
-                        src: "/themes/BurningParrot/images/spinner.gif",
-                        class: "loader loader-node",
-                    })
+                    select(".graph")
+                        .append("img")
+                        .attr("src", "/themes/BurningParrot/images/spinner.gif")
+                        .attr("class", "loader loader-node")
                 );
             };
 
