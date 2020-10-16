@@ -72,7 +72,7 @@ describe("Project admin", function () {
 
         it("should verify that a project administrator can enable a new service", () => {
             cy.visitProjectService("project-admin-test", "Admin");
-            cy.contains("Services").click();
+            cy.contains("Services").click({ force: true });
 
             cy.get("[data-test=edit-service-plugin_svn]").click();
 
@@ -100,8 +100,8 @@ context("Project member", function () {
 
     it("should raise an error when user try to access to project admin page", function () {
         //here we don't care about project, member should not be admin of any project
-        cy.visit("/project/admin/?group_id=101");
+        cy.visit("/project/admin/?group_id=101", { failOnStatusCode: false });
 
-        cy.get("[data-test=feedback]").contains("You do not have permission to view this page");
+        cy.contains("You don't have permission to access administration of this project.");
     });
 });
