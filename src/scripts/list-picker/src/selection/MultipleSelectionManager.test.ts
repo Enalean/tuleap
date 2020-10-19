@@ -25,6 +25,7 @@ import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-lis
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
+import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -77,6 +78,7 @@ describe("MultipleSelectionManager", () => {
 
         item_1 = findListPickerItemInItemMap(item_map, "item-1");
         item_2 = findListPickerItemInItemMap(item_map, "item-2");
+        jest.spyOn(source_select_box, "dispatchEvent");
     });
 
     describe("initSelection", () => {
@@ -95,6 +97,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).not.toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
     });
 
@@ -106,6 +109,7 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             expect(isItemSelected(item_1)).toBe(false);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
 
         it("when an item is unselected and was the only selected item, then the search input placeholder should be reset and the 'remove all values' button removed", () => {
@@ -117,6 +121,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
 
         it("when the first item is selected, the placeholder on the search input is removed, and the 'clear all values' button is added", () => {
@@ -131,6 +136,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).not.toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
         it("selects items", () => {
@@ -155,6 +161,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 items_badges[1].querySelector(".list-picker-value-remove-button")
             ).not.toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
     });
 
@@ -179,6 +186,7 @@ describe("MultipleSelectionManager", () => {
                     ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
                 )
             ).toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
 
         it("should not unselect the item if the source <select> is disabled", () => {
@@ -197,6 +205,7 @@ describe("MultipleSelectionManager", () => {
 
             expect(isItemSelected(item_1)).toBe(true);
             expect(openListPicker).not.toHaveBeenCalled();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
         it("When the 'remove all value' button is clicked, then all values should be unselected", () => {
@@ -220,6 +229,7 @@ describe("MultipleSelectionManager", () => {
             ).toBeNull();
             expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
             expect(openListPicker).toHaveBeenCalled();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
     });
 
@@ -235,6 +245,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).toBeNull();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
 
         it("should let the user delete the content of the search input", () => {
@@ -244,6 +255,7 @@ describe("MultipleSelectionManager", () => {
             manager.handleBackspaceKey(backspace_down_event);
 
             expect(backspace_down_event.cancelBubble).toBe(false);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
 
         it("when no item is selected and the user deletes the last letter of the input content, then it should put the placeholder back", () => {
@@ -254,6 +266,7 @@ describe("MultipleSelectionManager", () => {
 
             expect(backspace_down_event.cancelBubble).toBe(false);
             expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
     });
 });

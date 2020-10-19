@@ -42,6 +42,7 @@ export class EventManager {
 
         this.attachOpenCloseEvent();
         this.attachItemListEvent();
+        this.attachSourceSelectBoxChangeEvent();
         this.escape_key_handler = this.attachEscapeKeyPressedEvent();
         this.click_outside_handler = this.attachClickOutsideEvent();
 
@@ -151,5 +152,17 @@ export class EventManager {
         ) {
             this.dropdown_toggler.closeListPicker();
         }
+    }
+
+    private attachSourceSelectBoxChangeEvent(): void {
+        this.source_select_box.addEventListener("change", () => {
+            const is_valid = this.source_select_box.checkValidity();
+
+            if (!is_valid) {
+                this.wrapper_element.classList.add("list-picker-error");
+            } else {
+                this.wrapper_element.classList.remove("list-picker-error");
+            }
+        });
     }
 }

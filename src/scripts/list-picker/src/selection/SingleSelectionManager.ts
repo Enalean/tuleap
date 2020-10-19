@@ -97,6 +97,7 @@ export class SingleSelectionManager implements SelectionManager {
         item.is_selected = true;
         item.element.setAttribute("aria-selected", "true");
         item.target_option.setAttribute("selected", "selected");
+        this.source_select_box.dispatchEvent(new Event("change"));
 
         this.selection_state = {
             selected_item: item,
@@ -118,6 +119,7 @@ export class SingleSelectionManager implements SelectionManager {
         newly_selected_item.element.setAttribute("aria-selected", "true");
         newly_selected_item.target_option.setAttribute("selected", "selected");
 
+        this.source_select_box.dispatchEvent(new Event("change"));
         this.selection_element.removeChild(selection_state.selected_value_element);
         this.selection_element.appendChild(new_selected_value_element);
         this.selection_state = {
@@ -148,6 +150,7 @@ export class SingleSelectionManager implements SelectionManager {
         item_to_unselect.element.setAttribute("aria-selected", "false");
         item_to_unselect.target_option.removeAttribute("selected");
         item_to_unselect.is_selected = false;
+        this.source_select_box.dispatchEvent(new Event("change"));
 
         this.selection_state = null;
     }
