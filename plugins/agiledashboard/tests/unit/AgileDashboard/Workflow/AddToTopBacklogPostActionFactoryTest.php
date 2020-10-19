@@ -57,11 +57,17 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Workflow
+     */
+    private $workflow;
+    /**
+     * @var int
+     */
+    private $transition_id;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
         $this->unplanned_artifacts_adder          = Mockery::mock(UnplannedArtifactsAdder::class);
         $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
@@ -72,9 +78,18 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
             $this->explicit_backlog_dao
         );
 
-        $this->transition = Mockery::mock(Transition::class);
-        $this->transition->shouldReceive('getId')->andReturn('923');
-        $this->transition->shouldReceive('getGroupId')->andReturn('101');
+        $workflow_id    = 112;
+        $this->workflow = Mockery::mock(
+            \Workflow::class,
+            [
+                'getId' => (string) $workflow_id,
+                'getTracker' => Mockery::mock(\Tracker::class, ['getGroupId' => '101']),
+            ]
+        );
+
+        $this->transition_id = 923;
+        $this->transition    = new Transition((string) $this->transition_id, (string) $workflow_id, null, null);
+        $this->transition->setWorkflow($this->workflow);
     }
 
     public function testItBuildsThePostAction()
@@ -85,16 +100,17 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
             ->andReturnTrue();
 
         $this->add_to_top_backlog_post_action_dao->shouldReceive('searchByTransitionId')
-            ->with(923)
+            ->with($this->transition_id)
             ->andReturn([
                 'id' => 1,
-                'transition_id' => 923
+                'transition_id' => $this->transition_id
             ]);
 
         $post_actions = $this->factory->loadPostActions($this->transition);
         $this->assertCount(1, $post_actions);
 
         $this->assertInstanceOf(AddToTopBacklog::class, $post_actions[0]);
+        self::assertEquals(1, $post_actions[0]->getId());
     }
 
     public function testItDoesNotBuildThePostActionIfProjectDoesNotUseExplicitTopBacklogManagement()
@@ -108,5 +124,36 @@ class AddToTopBacklogPostActionFactoryTest extends TestCase
 
         $post_actions = $this->factory->loadPostActions($this->transition);
         $this->assertEmpty($post_actions);
+    }
+
+
+    public function testItWarmsTheCacheUpBeforeGettingThePostAction()
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->once()
+            ->andReturnTrue();
+
+        $this->add_to_top_backlog_post_action_dao->shouldReceive('searchByWorkflow')
+            ->with($this->workflow)
+            ->andReturn(
+                [
+                    [
+                        'id' => 2,
+                        'transition_id' => 329
+                    ],
+                    [
+                        'id' => 1,
+                        'transition_id' => $this->transition_id
+                    ],
+                ]
+            );
+
+        $this->factory->warmUpCacheForWorkflow($this->workflow);
+        $post_actions = $this->factory->loadPostActions($this->transition);
+        $this->assertCount(1, $post_actions);
+
+        $this->assertInstanceOf(AddToTopBacklog::class, $post_actions[0]);
+        self::assertEquals(1, $post_actions[0]->getId());
     }
 }

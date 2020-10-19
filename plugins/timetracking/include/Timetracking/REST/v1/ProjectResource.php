@@ -24,15 +24,12 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use EventManager;
 use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use TransitionFactory;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
@@ -57,7 +54,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
-use Workflow_Transition_ConditionFactory;
 
 class ProjectResource
 {
@@ -93,13 +89,7 @@ class ProjectResource
 
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
-                new TransitionFactory(
-                    Workflow_Transition_ConditionFactory::build(),
-                    EventManager::instance(),
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
-                    )
-                ),
+                TransitionFactory::instance(),
                 new SimpleWorkflowDao()
             ),
             new TransitionExtractor()

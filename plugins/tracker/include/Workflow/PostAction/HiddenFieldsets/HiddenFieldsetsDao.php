@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,25 @@ class HiddenFieldsetsDao extends DataAccessObject
         return $result !== false;
     }
 
+    /**
+     * @psalm-return list<array{transition_id: int, postaction_id: int, fieldset_id: int}>
+     */
+    public function searchByWorkflow(\Workflow $workflow): array
+    {
+        $sql = <<<EOT
+            SELECT transition_id, hfv.*
+            FROM plugin_tracker_workflow_postactions_hidden_fieldsets_value hfv
+                INNER JOIN plugin_tracker_workflow_postactions_hidden_fieldsets hf ON (hfv.postaction_id = hf.id)
+                INNER JOIN tracker_workflow_transition USING (transition_id)
+            WHERE workflow_id= ?
+            EOT;
+
+        return $this->getDB()->q($sql, $workflow->getId());
+    }
+
+    /**
+     * @psalm-return list<array{postaction_id: int, fieldset_id: int}>
+     */
     public function searchByTransitionId(int $transition_id): array
     {
         $sql = 'SELECT plugin_tracker_workflow_postactions_hidden_fieldsets_value.*

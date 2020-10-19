@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_FormElementFactory;
 
 class HiddenFieldsetsFactoryTest extends TestCase
 {
@@ -39,41 +38,31 @@ class HiddenFieldsetsFactoryTest extends TestCase
     private $hidden_fieldsets_factory;
 
     /**
-     * @var Tracker_FormElementFactory
+     * @var HiddenFieldsetsRetriever
      */
-    private $form_element_factory;
+    private $hidden_fieldsets_retriever;
 
     protected function setUp(): void
     {
-        $this->hidden_fieldsets_dao = Mockery::mock(HiddenFieldsetsDao::class);
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->hidden_fieldsets_dao       = Mockery::mock(HiddenFieldsetsDao::class);
+        $this->hidden_fieldsets_retriever = Mockery::mock(HiddenFieldsetsRetriever::class);
 
         $this->hidden_fieldsets_factory = new HiddenFieldsetsFactory(
             $this->hidden_fieldsets_dao,
-            $this->form_element_factory
+            $this->hidden_fieldsets_retriever
         );
     }
 
     public function testLoadPostActionsReturnsASinglePostAction()
     {
-        $this->hidden_fieldsets_dao->shouldReceive('searchByTransitionId')->andReturn(
-            [
-                ['postaction_id' => 72, 'fieldset_id' => 331],
-                ['postaction_id' => 72, 'fieldset_id' => 651],
-                ['postaction_id' => 72, 'fieldset_id' => 987]
-            ]
-        );
+        $transition = new \Transition(null, null, null, null);
 
-        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_03 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $expected_post_action = new HiddenFieldsets($transition, 0, []);
 
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(331)->andReturn($fieldset_01);
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(651)->andReturn($fieldset_02);
-        $this->form_element_factory->shouldReceive('getFieldsetById')->with(987)->andReturn($fieldset_03);
-
-        $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new HiddenFieldsets($transition, 72, [$fieldset_01, $fieldset_02, $fieldset_03]);
+        $this->hidden_fieldsets_retriever
+            ->shouldReceive('getHiddenFieldsets')
+            ->with($transition)
+            ->andReturn($expected_post_action);
 
         $result = $this->hidden_fieldsets_factory->loadPostActions($transition);
         $this->assertEquals([$expected_post_action], $result);
@@ -81,11 +70,11 @@ class HiddenFieldsetsFactoryTest extends TestCase
 
     public function testLoadPostActionsReturnsEmptyArray()
     {
-        $this->hidden_fieldsets_dao->shouldReceive('searchByTransitionId')->andReturn(
-            []
-        );
-
-        $transition = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 18])->getMock();
+        $transition = new \Transition(null, null, null, null);
+        $this->hidden_fieldsets_retriever
+            ->shouldReceive('getHiddenFieldsets')
+            ->with($transition)
+            ->andThrow(new NoHiddenFieldsetsPostActionException());
 
         $result = $this->hidden_fieldsets_factory->loadPostActions($transition);
         $this->assertEquals([], $result);

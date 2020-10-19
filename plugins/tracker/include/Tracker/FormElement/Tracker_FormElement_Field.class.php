@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -1562,21 +1560,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return new FrozenFieldDetector(
             new TransitionRetriever(
                 new StateFactory(
-                    new TransitionFactory(
-                        Workflow_Transition_ConditionFactory::build(),
-                        EventManager::instance(),
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
-                    ),
+                    TransitionFactory::instance(),
                     new SimpleWorkflowDao()
                 ),
                 new TransitionExtractor()
             ),
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                $this->getFormElementFactory()
-            )
+            FrozenFieldsRetriever::instance(),
         );
     }
 }

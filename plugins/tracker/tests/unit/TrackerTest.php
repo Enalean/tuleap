@@ -390,7 +390,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     public function testItHasADefaultWorkflow(): void
     {
         $this->setUpTrackerWorkflowTest();
-        $workflow = Mockery::mock(Workflow::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
+        $workflow = Mockery::mock(WorkflowWithoutTransition::class)->shouldReceive('getId')->andReturn($this->tracker_id)->getMock();
         $this->workflow_factory->shouldReceive('getWorkflowByTrackerId')->andReturns(false);
         $this->workflow_factory->shouldReceive('getWorkflowWithoutTransition')->andReturns($workflow);
         $this->assertEquals($workflow, $this->tracker->getWorkflow());
@@ -401,10 +401,10 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         $this->setUpTrackerWorkflowTest();
         $this->workflow_factory->shouldReceive('getWorkflowByTrackerId')->andReturns(false);
         $this->workflow_factory->shouldReceive('getWorkflowWithoutTransition')->andReturns(
-            Mockery::mock(Workflow::class)->shouldReceive('getId')->andReturn(12)->getMock()
+            Mockery::mock(WorkflowWithoutTransition::class)->shouldReceive('getId')->andReturn(12)->getMock()
         );
         $this->workflow_factory->shouldReceive('getWorkflowWithoutTransition')->andReturns(
-            Mockery::mock(Workflow::class)->shouldReceive('getId')->andReturn(33)->getMock()
+            Mockery::mock(WorkflowWithoutTransition::class)->shouldReceive('getId')->andReturn(33)->getMock()
         );
         $this->assertEquals($this->tracker->getWorkflow(), $this->tracker->getWorkflow());
     }

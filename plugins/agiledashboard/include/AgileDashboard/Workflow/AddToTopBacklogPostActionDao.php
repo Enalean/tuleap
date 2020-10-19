@@ -27,6 +27,22 @@ use Tuleap\DB\DataAccessObject;
 
 class AddToTopBacklogPostActionDao extends DataAccessObject
 {
+
+    /**
+     * @psalm-return list<array{id: int, transition_id: int}>
+     */
+    public function searchByWorkflow(\Workflow $workflow): array
+    {
+        $sql = <<<EOT
+            SELECT atb.*
+            FROM plugin_agiledashboard_tracker_workflow_action_add_top_backlog AS atb
+                JOIN tracker_workflow_transition USING (transition_id)
+            WHERE workflow_id = ?
+            EOT;
+
+        return $this->getDB()->q($sql, $workflow->getId());
+    }
+
     public function searchByTransitionId(int $transition_id): ?array
     {
         $sql = "SELECT *

@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR . '/Workflow/PostAction/PostActionSubFactory.class.php';
-
 /**
  * Loads and saves Field post actions
  */
@@ -27,18 +25,23 @@ require_once TRACKER_BASE_DIR . '/Workflow/PostAction/PostActionSubFactory.class
 class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory
 {
 
-    /** @var Array of available post actions classes */
+    /** @psalm-var array<string, class-string<Transition_PostAction_Field>> available post actions classes */
     protected $post_actions_classes = [
-        Transition_PostAction_Field_Date::SHORT_NAME  => 'Transition_PostAction_Field_Date',
-        Transition_PostAction_Field_Int::SHORT_NAME   => 'Transition_PostAction_Field_Int',
-        Transition_PostAction_Field_Float::SHORT_NAME => 'Transition_PostAction_Field_Float',
+        Transition_PostAction_Field_Date::SHORT_NAME  => Transition_PostAction_Field_Date::class,
+        Transition_PostAction_Field_Int::SHORT_NAME   => Transition_PostAction_Field_Int::class,
+        Transition_PostAction_Field_Float::SHORT_NAME => Transition_PostAction_Field_Float::class,
     ];
 
-    /** @var array of Transition_PostAction_FieldDao */
+    /** @var Transition_PostAction_FieldDao[] */
     private $daos;
 
     /** @var Tracker_FormElementFactory */
     private $element_factory;
+
+    /**
+     * @psalm-var array<int, array<string, array<int, list<mixed>>>>
+     */
+    private $cache;
 
     public function __construct(
         Tracker_FormElementFactory $element_factory,
@@ -69,10 +72,29 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         );
     }
 
+    public function warmUpCacheForWorkflow(Workflow $workflow): void
+    {
+        $workflow_id = (int) $workflow->getId();
+        if (isset($this->cache[$workflow_id])) {
+            return;
+        }
+        $this->cache[$workflow_id] = [];
+        foreach ($this->daos as $shortname => $dao) {
+            $dar = $dao->searchByWorkflow($workflow);
+            if (! $dar) {
+                return;
+            }
+            $this->cache[$workflow_id][$shortname] = [];
+            foreach ($dar as $row) {
+                $this->cache[$workflow_id][$shortname][(int) $row['transition_id']][] = $row;
+            }
+        }
+    }
+
     /**
-     * @see Transition_PostActionSubFactory::loadPostActions()
+     * @return Transition_PostAction_Field[]
      */
-    public function loadPostActions(Transition $transition)
+    public function loadPostActions(Transition $transition): array
     {
         $post_actions = [];
         $post_actions_classes = $this->post_actions_classes;
@@ -84,6 +106,26 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         }
         return $post_actions;
     }
+
+    /**
+     * Retrieves matching PostAction database records.
+     *
+     * @param Transition $transition The Transition to which the PostActions must be associated
+     * @param string     $shortname  The PostAction type (short name, not class name)
+     *
+     * @psalm-return DataAccessResult|list<mixed>|array
+     */
+    private function loadPostActionRows(Transition $transition, $shortname)
+    {
+        $workflow_id = (int) $transition->getWorkflow()->getId();
+        if (isset($this->cache[$workflow_id])) {
+            $transition_id = (int) $transition->getId();
+            return $this->cache[$workflow_id][$shortname][$transition_id] ?? [];
+        }
+        $dao = $this->getDao($shortname);
+        return $dao->searchByTransitionId($transition->getId());
+    }
+
 
     /**
      * @return \Transition_PostAction_Field_Date[]
@@ -188,7 +230,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @param string $xml_tag_name
      *
-     * @psalm-return class-string<Transition_PostAction>
+     * @psalm-return class-string<Transition_PostAction_Field>
      *
      * @throws Transition_PostAction_NotFoundException
      */
@@ -237,15 +279,16 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @psalm-param class-string $klass
      *
-     * @return Transition_PostAction
      */
-    private function buildPostAction(Transition $transition, $row, $shortname, string $klass)
+    private function buildPostAction(Transition $transition, $row, $shortname, string $klass): Transition_PostAction_Field
     {
         $id    = (int) $row['id'];
         $field = $this->getFieldFromRow($row);
         $value = $this->getValueFromRow($row, $shortname);
 
-        return new $klass($transition, $id, $field, $value);
+        $object = new $klass($transition, $id, $field, $value);
+        assert($object instanceof Transition_PostAction_Field);
+        return $object;
     }
 
     /**
@@ -318,19 +361,5 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
             default:
                 throw new Transition_PostAction_NotFoundException($shortname);
         }
-    }
-
-    /**
-     * Retrieves matching PostAction database records.
-     *
-     * @param Transition $transition The Transition to which the PostActions must be associated
-     * @param string     $shortname  The PostAction type (short name, not class name)
-     *
-     * @return DataAccessResult
-     */
-    private function loadPostActionRows(Transition $transition, $shortname)
-    {
-        $dao = $this->getDao($shortname);
-        return $dao->searchByTransitionId($transition->getId());
     }
 }

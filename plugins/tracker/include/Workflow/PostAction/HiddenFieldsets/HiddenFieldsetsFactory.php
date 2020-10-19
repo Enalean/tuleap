@@ -24,63 +24,44 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
-use Tracker_FormElementFactory;
 use Transition;
 use Transition_PostAction;
+use Workflow;
 
 class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
 {
-
     /**
      * @var HiddenFieldsetsDao
      */
     private $hidden_fieldsets_dao;
-
     /**
-     * @var Tracker_FormElementFactory
+     * @var HiddenFieldsetsRetriever
      */
-    private $form_element_factory;
+    private $hidden_fieldsets_retriever;
 
     public function __construct(
         HiddenFieldsetsDao $hidden_fieldsets_dao,
-        Tracker_FormElementFactory $form_element_factory
+        HiddenFieldsetsRetriever $hidden_fieldsets_retriever
     ) {
         $this->hidden_fieldsets_dao = $hidden_fieldsets_dao;
-        $this->form_element_factory = $form_element_factory;
+        $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;
+    }
+
+    public function warmUpCacheForWorkflow(Workflow $workflow): void
+    {
+        $this->hidden_fieldsets_retriever->warmUpCacheForWorkflow($workflow);
     }
 
     /**
-     * Instanciate the post actions of a given transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return array of Transition_PostAction
+     * @return HiddenFieldsets[]
      */
-    public function loadPostActions(Transition $transition)
+    public function loadPostActions(Transition $transition): array
     {
-        $rows = $this->hidden_fieldsets_dao->searchByTransitionId((int) $transition->getId());
-
-        $fieldset_ids   = [];
-        $post_action_id = null;
-        foreach ($rows as $row) {
-            $fieldset_ids[] = $row['fieldset_id'];
-            // There is only one HiddenFieldsets post-action per transition, so we just choose the last row's id
-            $post_action_id = $row['postaction_id'];
+        try {
+            return [$this->hidden_fieldsets_retriever->getHiddenFieldsets($transition)];
+        } catch (NoHiddenFieldsetsPostActionException $exception) {
         }
-        if ($post_action_id === null) {
-            return [];
-        }
-
-        $fieldsets = [];
-        foreach ($fieldset_ids as $fieldset_id) {
-            $fieldset = $this->form_element_factory->getFieldsetById($fieldset_id);
-            if ($fieldset) {
-                $fieldsets[] = $fieldset;
-            }
-        }
-
-        $post_action = new HiddenFieldsets($transition, $post_action_id, $fieldsets);
-        return [$post_action];
+        return [];
     }
 
     /**

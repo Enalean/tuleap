@@ -174,10 +174,9 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Get parent workflow
      *
-     * @return Workflow
      * @throws OrphanTransitionException if this transition has no workflow
      */
-    public function getWorkflow()
+    public function getWorkflow(): Workflow
     {
         if (! $this->workflow) {
             $this->workflow = WorkflowFactory::instance()->getWorkflow($this->workflow_id);

@@ -43,13 +43,22 @@ class Transition_PostActionSubFactories
     }
 
     /**
-     * Load the post actions that belong to a transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return void
+     * Prepare what needs to be prepared to efficiently fetch data from the DB in case of workflow load
      */
-    public function loadPostActions(Transition $transition)
+    public function warmUpCacheForWorkflow(Workflow $workflow): void
+    {
+        array_map(
+            static function (Transition_PostActionSubFactory $factory) use ($workflow) {
+                $factory->warmUpCacheForWorkflow($workflow);
+            },
+            $this->factories
+        );
+    }
+
+    /**
+     * Load the post actions that belong to a transition
+     */
+    public function loadPostActions(Transition $transition): void
     {
         $post_actions = [];
         foreach ($this->factories as $factory) {

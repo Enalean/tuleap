@@ -32,10 +32,28 @@ class FrozenFieldsRetriever
      */
     private $form_element_factory;
 
+    /**
+     * @psalm-var array<int, array<int, list<array{postaction_id: int, field_id: int}>>>
+     */
+    private $cache = [];
+
+    /**
+     * @var self
+     */
+    private static $instance;
+
     public function __construct(FrozenFieldsDao $frozen_dao, \Tracker_FormElementFactory $form_element_factory)
     {
         $this->frozen_dao           = $frozen_dao;
         $this->form_element_factory = $form_element_factory;
+    }
+
+    public static function instance(): self
+    {
+        if (! self::$instance) {
+            self::$instance = new self(new FrozenFieldsDao(), \Tracker_FormElementFactory::instance());
+        }
+        return self::$instance;
     }
 
     /**
@@ -43,7 +61,7 @@ class FrozenFieldsRetriever
      */
     public function getFrozenFields(\Transition $transition): FrozenFields
     {
-        $rows = $this->frozen_dao->searchByTransitionId((int) $transition->getId());
+        $rows = $this->getPostActionRows($transition);
 
         $field_ids = [];
         $post_action_id = null;
@@ -65,5 +83,37 @@ class FrozenFieldsRetriever
         }
 
         return new FrozenFields($transition, $post_action_id, $fields);
+    }
+
+    /**
+     * @psalm-return list<array{postaction_id: int, field_id: int}>
+     * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
+     */
+    private function getPostActionRows(\Transition $transition): array
+    {
+        $this->warmUpCacheForWorkflow($transition->getWorkflow());
+
+        $workflow_id = (int) $transition->getWorkflow()->getId();
+        if (isset($this->cache[$workflow_id])) {
+            $transition_id = (int) $transition->getId();
+            return $this->cache[$workflow_id][$transition_id] ?? [];
+        }
+
+        return $this->frozen_dao->searchByTransitionId((int) $transition->getId());
+    }
+
+    public function warmUpCacheForWorkflow(\Workflow $workflow): void
+    {
+        $workflow_id = (int) $workflow->getId();
+        if (isset($this->cache[$workflow_id])) {
+            return;
+        }
+        $this->cache[$workflow_id] = [];
+        foreach ($this->frozen_dao->searchByWorkflow($workflow) as $row) {
+            $this->cache[$workflow_id][$row['transition_id']][] = [
+                'postaction_id' => $row['postaction_id'],
+                'field_id' => $row['field_id'],
+            ];
+        }
     }
 }

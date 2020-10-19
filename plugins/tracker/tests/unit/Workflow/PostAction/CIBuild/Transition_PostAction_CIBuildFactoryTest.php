@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2020. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,18 +46,27 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_CIBuildDao
      */
     private $dao;
+    /**
+     * @var Workflow
+     */
+    private $workflow;
 
     protected function setUp(): void
     {
         $this->transition_id  = 123;
         $this->post_action_id = 789;
 
+        $workflow_id = '1112';
+        $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
+
         $this->transition = new Transition(
             $this->transition_id,
-            0,
+            $workflow_id,
             null,
             null
         );
+        $this->transition->setWorkflow($this->workflow);
+
         $this->dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);
         $this->factory    = new Transition_PostAction_CIBuildFactory($this->dao);
     }
@@ -66,8 +75,9 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
     {
         $post_action_value = 'http://ww.myjenks.com/job';
         $post_action_rows  = [
-            'id'         => $this->post_action_id,
-            'job_url'    => $post_action_value,
+            'id'            => $this->post_action_id,
+            'job_url'       => $post_action_value,
+            'transition_id' => (string) $this->transition_id,
         ];
 
         $this->dao->shouldReceive('searchByTransitionId')->with($this->transition_id)
@@ -76,6 +86,35 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
         $this->assertCount(1, $this->factory->loadPostActions($this->transition));
 
         $post_action_array = $this->factory->loadPostActions($this->transition);
+        $first_pa = $post_action_array[0];
+
+        $this->assertEquals($post_action_value, $first_pa->getJobUrl());
+        $this->assertEquals($this->post_action_id, $first_pa->getId());
+        $this->assertEquals($this->transition, $first_pa->getTransition());
+    }
+
+    public function testItLoadsCIBuildPostActionsWithCache(): void
+    {
+        $post_action_value = 'http://ww.myjenks.com/job';
+
+        $this->dao->shouldReceive('searchByWorkflow')->with($this->workflow)
+            ->andReturns(\TestHelper::arrayToDar(
+                [
+                    'id'         => (string) $this->post_action_id,
+                    'job_url'    => $post_action_value,
+                    'transition_id' => (string) $this->transition_id,
+                ],
+                [
+                    'id'         => "132",
+                    'job_url'    => "https://example.com/jenkins/job",
+                    'transition_id' => "999",
+                ],
+            ));
+
+        $this->factory->warmUpCacheForWorkflow($this->workflow);
+        $post_action_array = $this->factory->loadPostActions($this->transition);
+        $this->assertCount(1, $post_action_array);
+
         $first_pa = $post_action_array[0];
 
         $this->assertEquals($post_action_value, $first_pa->getJobUrl());

@@ -26,13 +26,16 @@
 interface Transition_PostActionSubFactory
 {
     /**
-     * Instanciate the post actions of a given transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return array of Transition_PostAction
+     * Prepare what needs to be prepared to efficiently fetch data from the DB in case of workflow load
      */
-    public function loadPostActions(Transition $transition);
+    public function warmUpCacheForWorkflow(Workflow $workflow): void;
+
+    /**
+     * Instantiate the post actions of a given transition
+     *
+     * @return Transition_PostAction[]
+     */
+    public function loadPostActions(Transition $transition): array;
 
     /**
      * Save a postaction object

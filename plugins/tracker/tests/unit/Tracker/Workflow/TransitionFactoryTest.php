@@ -25,12 +25,16 @@ namespace Tuleap\Tracker\Workflow;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
+use Tracker_RulesManager;
+use Tracker_Workflow_Trigger_RulesManager;
 use TransitionFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
+use Workflow_TransitionDao;
 
 class TransitionFactoryTest extends TestCase
 {
@@ -44,15 +48,13 @@ class TransitionFactoryTest extends TestCase
 
     private $postaction_factory;
     private $project;
-    private $field;
-    private $from_value;
     private $to_value;
     private $xml_mapping;
 
     /**
-     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Workflow_TransitionDao
      */
-    private $event_manager;
+    private $transition_dao;
 
     protected function setUp(): void
     {
@@ -60,29 +62,30 @@ class TransitionFactoryTest extends TestCase
 
         $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
         $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
-        $this->event_manager      = \Mockery::mock(\EventManager::class);
+        $event_manager            = \Mockery::mock(\EventManager::class);
+        $this->transition_dao     = \Mockery::mock(Workflow_TransitionDao::class);
         $this->factory            = \Mockery::mock(
             \TransitionFactory::class,
             [
                 $this->condition_factory,
-                $this->event_manager,
-                new DBTransactionExecutorPassthrough()
+                $event_manager,
+                new DBTransactionExecutorPassthrough(),
+                $this->postaction_factory,
+                $this->transition_dao,
             ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->factory->shouldReceive('getPostActionFactory')->andReturn($this->postaction_factory);
-
         $this->project = \Mockery::spy(\Project::class);
 
-        $this->field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $field             = Mockery::mock(Tracker_FormElement_Field_List::class);
 
-        $this->from_value  = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
+        $from_value        = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $this->to_value    = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $this->xml_mapping = [
-            'F32'    => $this->field,
-            'F32-V1' => $this->from_value,
+            'F32'    => $field,
+            'F32-V1' => $from_value,
             'F32-V0' => $this->to_value
         ];
     }
@@ -162,5 +165,23 @@ class TransitionFactoryTest extends TestCase
         );
 
         $this->assertCount(2, $transitions);
+    }
+
+    public function testGetTransitionsWhenNoTransitionsDefined(): void
+    {
+        $workflow = new \Workflow(
+            Mockery::mock(Tracker_RulesManager::class),
+            Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
+            new WorkflowBackendLogger(new NullLogger(), 0),
+            '123',
+            '444',
+            '333',
+            null,
+            null
+        );
+
+        $this->transition_dao->shouldReceive('searchByWorkflow')->with('123')->andReturn([]);
+
+        self::assertSame([], $this->factory->getTransitions($workflow));
     }
 }

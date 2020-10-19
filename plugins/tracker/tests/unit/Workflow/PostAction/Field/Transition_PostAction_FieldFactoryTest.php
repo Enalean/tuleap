@@ -76,16 +76,24 @@ final class Transition_PostAction_FieldFactoryTest extends \PHPUnit\Framework\Te
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction_Field_DateDao
      */
     private $date_dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow
+     */
+    private $workflow;
 
     protected function setUp(): void
     {
+        $workflow_id = '1112';
+        $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
+
         $this->transition_id = 123;
         $this->transition    = new Transition(
             $this->transition_id,
-            0,
+            $workflow_id,
             null,
             null
         );
+        $this->transition->setWorkflow($this->workflow);
 
         $this->date_dao        = \Mockery::spy(\Transition_PostAction_Field_DateDao::class);
         $this->int_dao         = \Mockery::spy(\Transition_PostAction_Field_IntDao::class);
@@ -113,6 +121,11 @@ final class Transition_PostAction_FieldFactoryTest extends \PHPUnit\Framework\Te
 
     public function testItLoadsIntFieldPostActions(): void
     {
+        $this->element_factory
+            ->shouldReceive('getFormElementById')
+            ->with($this->field_id)
+            ->andReturn(new Tracker_FormElement_Field_Integer(null, null, null, null, null, null, null, null, null, null, null));
+
         $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
             \TestHelper::arrayToDar($this->post_action_rows)
         );
@@ -134,6 +147,11 @@ final class Transition_PostAction_FieldFactoryTest extends \PHPUnit\Framework\Te
 
     public function testItLoadsFloatFieldPostActions(): void
     {
+        $this->element_factory
+            ->shouldReceive('getFormElementById')
+            ->with($this->field_id)
+            ->andReturn(new Tracker_FormElement_Field_Float(null, null, null, null, null, null, null, null, null, null, null));
+
         $this->int_dao->shouldReceive('searchByTransitionId')->with($this->transition_id)->andReturns(
             \TestHelper::emptyDar()
         );
@@ -155,6 +173,11 @@ final class Transition_PostAction_FieldFactoryTest extends \PHPUnit\Framework\Te
 
     public function testItLoadsDateFieldPostActions(): void
     {
+        $this->element_factory
+            ->shouldReceive('getFormElementById')
+            ->with($this->field_id)
+            ->andReturn(new Tracker_FormElement_Field_Date(null, null, null, null, null, null, null, null, null, null, null));
+
         $post_action_rows = [
             'id'         => $this->post_action_id,
             'field_id'   => $this->field_id,

@@ -18,15 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -233,21 +230,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                         new FrozenFieldDetector(
                             new TransitionRetriever(
                                 new StateFactory(
-                                    new TransitionFactory(
-                                        Workflow_Transition_ConditionFactory::build(),
-                                        EventManager::instance(),
-                                        new DBTransactionExecutorWithConnection(
-                                            DBFactory::getMainTuleapDBConnection()
-                                        )
-                                    ),
+                                    TransitionFactory::instance(),
                                     new SimpleWorkflowDao()
                                 ),
                                 new TransitionExtractor()
                             ),
-                            new FrozenFieldsRetriever(
-                                new FrozenFieldsDao(),
-                                Tracker_FormElementFactory::instance()
-                            )
+                            FrozenFieldsRetriever::instance(),
                         ),
                         Tracker_FormElementFactory::instance()
                     )

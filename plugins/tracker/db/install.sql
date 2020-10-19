@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   from_id int(11) default NULL,
   to_id int(11) NOT NULL,
   workflow_id int(11) NOT NULL,
-  INDEX idx_wf_workflow_id( workflow_id )
+  INDEX idx_wf_workflow_id(workflow_id, transition_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_workflow_transition_condition_field_notempty;
