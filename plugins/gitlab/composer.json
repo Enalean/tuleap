@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Gitlab\\": "include/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
