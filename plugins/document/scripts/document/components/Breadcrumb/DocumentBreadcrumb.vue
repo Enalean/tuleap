@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="breadcrumb-container">
+    <div class="breadcrumb-container document-breadcrumb">
         <breadcrumb-privacy
             v-bind:project_flags="project_flags"
             v-bind:privacy="privacy"

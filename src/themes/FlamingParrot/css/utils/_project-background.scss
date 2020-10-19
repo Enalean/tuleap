@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../common/css/project-background/background';
+
 $tlp-theme-sidebar-background-color: $sidebar-background;
 $sidebar-expanded-width: $sidebar-width;
 $sidebar-collapsed-width: $sidebar-width-collapsed;
@@ -25,10 +27,9 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
 .project-with-background {
     .administration-title {
+        @include background.project-background-title-header-typography($white);
         margin: 0;
         padding: 0 $tlp-medium-spacing 30px;
-        color: $white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .breadcrumb-container {
@@ -37,9 +38,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     .breadcrumb,
     .breadcrumb-link {
-        color: $white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-    }
+        @include background.project-background-title-header-typography($white); }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
         background: rgba(0, 0, 0, .3);

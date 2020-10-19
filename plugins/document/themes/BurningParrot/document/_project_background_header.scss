@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,34 +18,16 @@
  */
 
 @use '../../src/themes/common/css/project-background/background';
-@import '../../src/themes/BurningParrot/css/includes/global-variables';
 
 .project-with-background {
-    .trackers-homepage-title,
-    .tracker-administration-title {
+    .document-header-title {
         @include background.project-background-title-header-typography($tlp-ui-white);
-        margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
-    }
-
-    .trackers-homepage {
-        margin: $tlp-medium-spacing;
-    }
-
-    .main-project-tabs + h2 {
-        margin: $tlp-medium-spacing 0 0;
     }
 }
 
 body {
     @include background.apply-background(
-        '.tracker-administration-title',
-        $tlp-theme-sidebar-background-color,
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width
-    );
-    @include background.apply-background(
-        '.trackers-homepage-title',
+        '.document-header',
         $tlp-theme-sidebar-background-color,
         $sidebar-expanded-width,
         $sidebar-collapsed-width

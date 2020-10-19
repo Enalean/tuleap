@@ -37,26 +37,22 @@ body {
 
 .project-with-background {
     .project-administration-title {
+        @include background.project-background-title-header-typography($tlp-ui-white);
         margin: 0;
         padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
-        color: $tlp-ui-white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .dashboard-project-title {
-        color: $tlp-ui-white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+        @include background.project-background-title-header-typography($tlp-ui-white);
     }
 
     .dashboard-project-header-trovecat-icon {
-        color: $tlp-ui-white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+        @include background.project-background-title-header-typography($tlp-ui-white);
     }
 
     .dashboard-project-header-trovecat {
-        color: $tlp-ui-white;
+        @include background.project-background-title-header-typography($tlp-ui-white);
         font-weight: 500;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
     .main-project-tabs > .tlp-tabs {
@@ -80,8 +76,7 @@ body {
     .breadcrumb,
     .breadcrumb-link,
     #dashboard-tabs-dropdown-trigger {
-        color: $tlp-ui-white;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+        @include background.project-background-title-header-typography($tlp-ui-white);
     }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
@@ -215,10 +210,6 @@ body {
     margin: 40px 0 0;
 
     > .project-admin-background-submit-button-container {
-        @keyframes footerAppear {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
 
         position: fixed;
         bottom: 0;
@@ -230,6 +221,10 @@ body {
         background: transparentize($tlp-ui-white, .1);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
         text-align: center;
+        @keyframes footerAppear {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
     }
 }
 
