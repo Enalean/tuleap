@@ -22,12 +22,12 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class StepsResultsChangesBuilder
@@ -63,8 +63,8 @@ class StepsResultsChangesBuilder
      */
     public function getStepsChanges(
         array $submitted_steps_results,
-        Tracker_Artifact $execution_artifact,
-        Tracker_Artifact $definition_artifact,
+        Artifact $execution_artifact,
+        Artifact $definition_artifact,
         PFUser $user
     ) {
         $execution_field = $this->getExecutionField($execution_artifact, $user);
@@ -155,7 +155,7 @@ class StepsResultsChangesBuilder
      * @return StepResult[]
      */
     private function getExistingStepsResultsIndexedById(
-        Tracker_Artifact $execution_artifact,
+        Artifact $execution_artifact,
         StepExecution $execution_field
     ) {
         $changeset_value = $execution_artifact->getValue($execution_field);
@@ -173,7 +173,7 @@ class StepsResultsChangesBuilder
         return $indexed_by_id;
     }
 
-    private function getDefinitionField(Tracker_Artifact $definition_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getDefinitionField(Artifact $definition_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $definition_artifact->getTrackerId(),
@@ -182,7 +182,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getExecutionField(Tracker_Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getExecutionField(Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),
@@ -191,7 +191,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getStatusField(Tracker_Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getStatusField(Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),
@@ -200,7 +200,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getDefinitionChangeset(Tracker_Artifact $execution_artifact, Tracker_Artifact $definition_artifact): ?\Tracker_Artifact_Changeset
+    private function getDefinitionChangeset(Artifact $execution_artifact, Artifact $definition_artifact): ?\Tracker_Artifact_Changeset
     {
         $rows = $this->execution_dao->searchDefinitionsChangesetIdsForExecution([$execution_artifact->getId()]);
         if ($rows) {
@@ -213,7 +213,7 @@ class StepsResultsChangesBuilder
     }
 
     private function enforceTestStatusAccordingToStepsStatus(
-        Tracker_Artifact $execution_artifact,
+        Artifact $execution_artifact,
         PFUser $user,
         array &$changes,
         array $steps_defined_in_test,

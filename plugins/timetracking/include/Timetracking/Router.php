@@ -25,12 +25,11 @@ use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminController;
-use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
@@ -38,6 +37,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 use Tuleap\Timetracking\Time\TimeController;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Router
 {
@@ -193,7 +193,7 @@ class Router
         }
     }
 
-    private function redirectToArtifactViewInTimetrackingPane(Tracker_Artifact $artifact)
+    private function redirectToArtifactViewInTimetrackingPane(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
                 'aid'  => $artifact->getId(),
@@ -203,7 +203,7 @@ class Router
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function redirectToArtifactView(Tracker_Artifact $artifact)
+    private function redirectToArtifactView(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
                 'aid'  => $artifact->getId()
@@ -232,7 +232,7 @@ class Router
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     private function getArtifactFromRequest(Codendi_Request $request, PFUser $user)
     {
@@ -287,7 +287,7 @@ class Router
     /**
      * @return CSRFSynchronizerToken
      */
-    private function getCSRFForArtifact(Tracker_Artifact $artifact)
+    private function getCSRFForArtifact(Artifact $artifact)
     {
         return new CSRFSynchronizerToken($artifact->getUri());
     }

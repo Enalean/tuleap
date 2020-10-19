@@ -21,11 +21,11 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactPresenterBuilder
@@ -63,7 +63,7 @@ class ArtifactPresenterBuilder
     }
 
     /** @return ArtifactPresenter[] */
-    public function buildInFolder(PFUser $user, Tracker_Artifact $folder)
+    public function buildInFolder(PFUser $user, Artifact $folder)
     {
         $list_artifact_representation = $this->buildInFolderWithNoFilter($user, $folder);
 
@@ -90,7 +90,7 @@ class ArtifactPresenterBuilder
     /**
      * @return ArtifactPresenter[]
      */
-    private function buildInFolderWithNoFilter(PFUser $user, Tracker_Artifact $folder)
+    private function buildInFolderWithNoFilter(PFUser $user, Artifact $folder)
     {
         $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
             $folder->getId(),
@@ -137,7 +137,7 @@ class ArtifactPresenterBuilder
     }
 
     /** @return ArtifactPresenter[] */
-    public function buildIsChild(PFUser $user, Tracker_Artifact $artifact)
+    public function buildIsChild(PFUser $user, Artifact $artifact)
     {
         $linked_artifacts_ids = $this->nature_dao->getForwardLinkedArtifactIds(
             $artifact->getId(),
@@ -176,7 +176,7 @@ class ArtifactPresenterBuilder
         return $artifact_representations;
     }
 
-    private function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact, array $folder_hierarchy)
+    private function getArtifactRepresentation(PFUser $user, Artifact $artifact, array $folder_hierarchy)
     {
         $artifact_representation = new ArtifactPresenter();
         $artifact_representation->build($user, $artifact, $folder_hierarchy);

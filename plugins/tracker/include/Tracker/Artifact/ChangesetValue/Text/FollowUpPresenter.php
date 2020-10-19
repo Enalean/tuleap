@@ -41,7 +41,7 @@ class FollowUpPresenter
     public $artifact_id;
 
     public function __construct(
-        \Tracker_Artifact $artifact,
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
         \Tracker_FormElement_Field_Text $field,
         \Tracker_Artifact_ChangesetValue_Text $changeset_value
     ) {

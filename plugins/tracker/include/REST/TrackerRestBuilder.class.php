@@ -18,15 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRepresentation;
-use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
-use Tuleap\Tracker\REST\WorkflowRulesRepresentation;
 use Tuleap\Tracker\REST\WorkflowRuleDateRepresentation;
 use Tuleap\Tracker\REST\WorkflowRuleListRepresentation;
+use Tuleap\Tracker\REST\WorkflowRulesRepresentation;
+use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
 
 class Tracker_REST_TrackerRestBuilder
 {
@@ -64,7 +65,7 @@ class Tracker_REST_TrackerRestBuilder
         );
     }
 
-    public function getTrackerRepresentationInArtifactContext(PFUser $user, Tracker_Artifact $artifact): CompleteTrackerRepresentation
+    public function getTrackerRepresentationInArtifactContext(PFUser $user, Artifact $artifact): CompleteTrackerRepresentation
     {
         $tracker = $artifact->getTracker();
 

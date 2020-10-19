@@ -24,6 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -104,7 +105,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog                     = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $descendant_items_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(10);
         $descendant_items_collection->push($artifact);
 
@@ -178,7 +179,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog                     = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $descendant_items_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(10);
         $descendant_items_collection->push($artifact);
 
@@ -268,7 +269,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
         $backlog_item           = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
         $backlog_item->shouldReceive('id')->andReturn(9);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(8);
         $tracker = Mockery::mock(Tracker::class);
         $project = Mockery::mock(Project::class);
@@ -313,7 +314,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('id')->andReturn(9);
         $artifact->shouldReceive('getId')->andReturn(9);
         $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
@@ -392,7 +393,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('id')->andReturn(9);
         $artifact->shouldReceive('getId')->andReturn(9);
         $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
@@ -475,11 +476,11 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             );
         $this->artifacts_in_explicit_backlog_dao->shouldReceive('foundRows')->once()->andReturn(2);
 
-        $artifact_9 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_9 = Mockery::mock(Artifact::class);
         $artifact_9->shouldReceive('getId')->andReturn(9);
         $this->artifact_factory->shouldReceive('getArtifactById')->withArgs([9])->andReturn($artifact_9);
 
-        $artifact_10 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_10 = Mockery::mock(Artifact::class);
         $artifact_10->shouldReceive('getId')->andReturn(10);
         $this->artifact_factory->shouldReceive('getArtifactById')->withArgs([10])->andReturn($artifact_10);
 

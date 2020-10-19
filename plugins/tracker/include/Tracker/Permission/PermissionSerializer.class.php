@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\UGroupLiteralizer;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Permission_PermissionsSerializer
 {
@@ -33,7 +34,7 @@ class Tracker_Permission_PermissionsSerializer
         $this->assignee_retriever = $assignee_retriever;
     }
 
-    public function getLiteralizedUserGroupsThatCanViewTracker(Tracker_Artifact $artifact)
+    public function getLiteralizedUserGroupsThatCanViewTracker(Artifact $artifact)
     {
         return $this->literalize(
             $this->getUserGroupsThatCanViewTracker($artifact),
@@ -41,7 +42,7 @@ class Tracker_Permission_PermissionsSerializer
         );
     }
 
-    public function getLiteralizedUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact)
+    public function getLiteralizedUserGroupsThatCanViewArtifact(Artifact $artifact)
     {
         return $this->literalize(
             $this->getUserGroupsThatCanViewArtifact($artifact),
@@ -49,7 +50,7 @@ class Tracker_Permission_PermissionsSerializer
         );
     }
 
-    public function getLiteralizedUserGroupsSubmitterOnly(Tracker_Artifact $artifact)
+    public function getLiteralizedUserGroupsSubmitterOnly(Artifact $artifact)
     {
         return $this->literalize(
             $this->getUserGroupsSubmitterOnly($artifact),
@@ -57,7 +58,7 @@ class Tracker_Permission_PermissionsSerializer
         );
     }
 
-    public function getLiteralizedUserGroupsThatCanViewTrackerFields(Tracker_Artifact $artifact)
+    public function getLiteralizedUserGroupsThatCanViewTrackerFields(Artifact $artifact)
     {
         $u_groups_literalize_by_field = [];
         $u_groups_ids_by_field = $this->getUserGroupsThatCanViewTrackerFields($artifact);
@@ -85,7 +86,7 @@ class Tracker_Permission_PermissionsSerializer
         return $literalizer->ugroupIdsToString($ugroups_ids, $project);
     }
 
-    public function getUserGroupsThatCanViewTracker(Tracker_Artifact $artifact)
+    public function getUserGroupsThatCanViewTracker(Artifact $artifact)
     {
         $authorized_ugroups  = [ProjectUGroup::PROJECT_ADMIN];
         $tracker_permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
@@ -110,7 +111,7 @@ class Tracker_Permission_PermissionsSerializer
         return $authorized_ugroups;
     }
 
-    public function getUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact)
+    public function getUserGroupsThatCanViewArtifact(Artifact $artifact)
     {
         $authorized_ugroups  = [];
         $artifact_ugroup_ids = $artifact->getAuthorizedUGroups();
@@ -123,7 +124,7 @@ class Tracker_Permission_PermissionsSerializer
         return array_unique($authorized_ugroups);
     }
 
-    private function getUserGroupsSubmitterOnly(Tracker_Artifact $artifact)
+    private function getUserGroupsSubmitterOnly(Artifact $artifact)
     {
         $authorized_ugroups  = [];
         $tracker_permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
@@ -176,12 +177,12 @@ class Tracker_Permission_PermissionsSerializer
         return $authorized_ugroups;
     }
 
-    private function getSubmitterUGroups(Tracker_Artifact $artifact)
+    private function getSubmitterUGroups(Artifact $artifact)
     {
         return $this->getUserUGroups($artifact->getSubmittedByUser(), $artifact);
     }
 
-    private function getAssigneesUGroups(Tracker_Artifact $artifact)
+    private function getAssigneesUGroups(Artifact $artifact)
     {
         $assignees_ugroups = [];
         foreach ($this->assignee_retriever->getAssignees($artifact) as $assignee) {
@@ -190,7 +191,7 @@ class Tracker_Permission_PermissionsSerializer
         return $assignees_ugroups;
     }
 
-    private function getUserUGroups(PFUser $user, Tracker_Artifact $artifact)
+    private function getUserUGroups(PFUser $user, Artifact $artifact)
     {
         return $user->getUgroups($artifact->getTracker()->getProject()->getID(), []);
     }

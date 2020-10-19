@@ -21,15 +21,15 @@
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use DateTime;
-use Psr\Log\LoggerInterface;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
 class BurndownCacheGenerationChecker
@@ -87,7 +87,7 @@ class BurndownCacheGenerationChecker
         $this->remaining_effort_adder = $remaining_effort_adder;
     }
 
-    public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
+    public function isCacheBurndownAlreadyAsked(Artifact $artifact)
     {
         return $this->event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
             SystemEvent_BURNDOWN_GENERATE::class,
@@ -96,7 +96,7 @@ class BurndownCacheGenerationChecker
     }
 
     public function isBurndownUnderCalculationBasedOnServerTimezone(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity
@@ -128,7 +128,7 @@ class BurndownCacheGenerationChecker
 
     private function isCacheCompleteForBurndown(
         TimePeriodWithoutWeekEnd $time_period,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ) {
         if (

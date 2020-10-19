@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
 {
 
@@ -29,14 +31,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      * @return string html
      */
     public function fetchArtifact(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_values,
         array $additional_classes
     ) {
         return $this->fetchWithColumnGroup('fetchArtifact', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactInGroup(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactInGroup(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, []);
     }
@@ -44,26 +46,26 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact The artifact
+     * @param Artifact $artifact The artifact
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchWithColumnGroup('fetchArtifactReadOnly', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactReadOnlyInGroup(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
+    public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchWithColumnGroup('fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
 
-    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
+    public function fetchMailArtifactInGroup($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
@@ -71,12 +73,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchWithColumnGroup('fetchArtifactCopyMode', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyModeInGroup(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values, []);
     }

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 
@@ -78,7 +79,7 @@ class Tracker_ArtifactFactory
      *
      * @param int $id the id of the artifact to retrieve
      *
-     * @return Tracker_Artifact|null the artifact identified by id (null if not found)
+     * @return Artifact|null the artifact identified by id (null if not found)
      */
     public function getArtifactById($id)
     {
@@ -97,7 +98,7 @@ class Tracker_ArtifactFactory
      *
      * @param int $id
      *
-     * @return Tracker_Artifact|null
+     * @return Artifact|null
      */
     public function getArtifactByIdUserCanView(PFUser $user, $id)
     {
@@ -148,7 +149,7 @@ class Tracker_ArtifactFactory
      *
      * @param array $artifact_ids
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getArtifactsByArtifactIdList(array $artifact_ids)
     {
@@ -300,11 +301,11 @@ class Tracker_ArtifactFactory
      *
      * @param array $row the value of the artifact form the db
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getInstanceFromRow($row)
     {
-        $artifact = new Tracker_Artifact(
+        $artifact = new Artifact(
             $row['id'],
             $row['tracker_id'],
             $row['submitted_by'],
@@ -345,7 +346,7 @@ class Tracker_ArtifactFactory
      * @param string|null  $email             The email if the user is anonymous (null if anonymous)
      * @param bool $send_notification true if a notification must be sent, false otherwise
      *
-     * @return Tracker_Artifact|false false if an error occurred
+     * @return Artifact|false false if an error occurred
      */
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, bool $should_visit_be_recorded, $send_notification = true)
     {
@@ -372,7 +373,7 @@ class Tracker_ArtifactFactory
         return $artifact;
     }
 
-    public function save(Tracker_Artifact $artifact)
+    public function save(Artifact $artifact)
     {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
     }
@@ -380,20 +381,20 @@ class Tracker_ArtifactFactory
     /**
      * @return Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function getLinkedArtifacts(Tracker_Artifact $artifact)
+    public function getLinkedArtifacts(Artifact $artifact)
     {
         return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
     }
 
-    public function getIsChildLinkedArtifactsById(Tracker_Artifact $artifact)
+    public function getIsChildLinkedArtifactsById(Artifact $artifact)
     {
         return $this->getDao()->searchIsChildLinkedArtifactsById($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
-    public function getChildren(Tracker_Artifact $artifact)
+    public function getChildren(Artifact $artifact)
     {
         if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
             return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
@@ -405,7 +406,7 @@ class Tracker_ArtifactFactory
     /**
      * @return bool
      */
-    public function hasChildren(Tracker_Artifact $artifact)
+    public function hasChildren(Artifact $artifact)
     {
         $children_count = $this->getDao()->getChildrenCount([$artifact->getId()]);
         return $children_count[$artifact->getId()] > 0;
@@ -420,8 +421,9 @@ class Tracker_ArtifactFactory
     /**
      * Return children of all given artifacts.
      *
-     * @param Tracker_Artifact[] $artifacts
-     * @return Tracker_Artifact[]
+     * @param Artifact[] $artifacts
+     *
+     * @return Artifact[]
      */
     public function getChildrenForArtifacts(PFUser $user, array $artifacts)
     {
@@ -439,7 +441,7 @@ class Tracker_ArtifactFactory
     private function getArtifactIds(array $artifacts)
     {
         return array_map(
-            static function (Tracker_Artifact $artifact) {
+            static function (Artifact $artifact) {
                 return $artifact->getId();
             },
             $artifacts
@@ -451,8 +453,9 @@ class Tracker_ArtifactFactory
      *
      * Nota: it's better to do it directly in SQL.
      *
-     * @param Tracker_Artifact[] $artifacts
-     * @return Tracker_Artifact[]
+     * @param Artifact[] $artifacts
+     *
+     * @return Artifact[]
      */
     public function sortByPriority(array $artifacts)
     {
@@ -480,7 +483,8 @@ class Tracker_ArtifactFactory
      * Build the list of parents according to a list of artifact ids
      *
      * @param int[] $artifact_ids
-     * @return Tracker_Artifact[]
+     *
+     * @return Artifact[]
      */
     public function getParents(array $artifact_ids)
     {
@@ -498,7 +502,7 @@ class Tracker_ArtifactFactory
     /**
      * Batch search and update given artifact titles
      *
-     * @param Tracker_Artifact[] $artifacts
+     * @param Artifact[] $artifacts
      */
     public function setTitles(array $artifacts)
     {

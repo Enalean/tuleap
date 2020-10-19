@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -613,7 +614,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
         $this->restricted->shouldReceive('isMember')->andReturn(true);
 
-        $artifact = \Mockery::mock(Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->assertFalse($this->permission_checker->userCanView($this->restricted, $artifact));
@@ -630,7 +631,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $permissions = ["PLUGIN_TRACKER_ACCESS_SUBMITTER" => [0 => $ugroup_sub]];
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns($permissions);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturns($this->tracker);
         $artifact->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact->shouldReceive('getSubmittedBy')->andReturns(123);
@@ -657,7 +658,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
-        $artifact_assignee = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_assignee = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_assignee->shouldReceive('getTracker')->andReturns($this->tracker);
         $artifact_assignee->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_assignee->shouldReceive('getSubmittedBy')->andReturns(120);
@@ -691,7 +692,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
-        $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_subass = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
@@ -758,7 +759,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
         $contributor_field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker->shouldReceive('getContributorField')->andReturns($contributor_field);
-        $artifact_subass = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact_subass = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_subass->shouldReceive('getTracker')->andReturns($this->tracker);
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);

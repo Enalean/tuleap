@@ -24,8 +24,8 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use PFUser;
 use Planning_MilestoneFactory;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class DirectArtifactLinkCleaner
 {
@@ -55,7 +55,7 @@ class DirectArtifactLinkCleaner
     }
 
     public function cleanDirectlyMadeArtifactLinks(
-        Tracker_Artifact $milestone_artifact,
+        Artifact $milestone_artifact,
         PFUser $user
     ): void {
         $project_id = (int) $milestone_artifact->getTracker()->getGroupId();

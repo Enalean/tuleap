@@ -41,7 +41,7 @@ final class ArtifactChangesetSaverTest extends TestCase
     private $user;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -80,7 +80,7 @@ final class ArtifactChangesetSaverTest extends TestCase
             $this->changeset_from_xml_dao
         );
 
-        $this->artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->user = \Mockery::mock(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(102);

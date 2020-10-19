@@ -43,7 +43,7 @@ class ArtifactMoveModalPresenter
      */
     public $project_id;
 
-    public function __construct(\Tracker_Artifact $artifact)
+    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
         $this->tracker_id    = $artifact->getTrackerId();
         $this->tracker_name  = $artifact->getTracker()->getItemName();

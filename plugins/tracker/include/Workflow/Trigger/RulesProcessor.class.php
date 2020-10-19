@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 /**
@@ -47,7 +48,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
      * Apply $rule that was triggered by a change on $artifact
      *
      */
-    public function process(Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
+    public function process(Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
     {
         $this->logger->start(__METHOD__, $artifact->getXRef(), $rule->getId());
 
@@ -79,7 +80,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
         $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
     }
 
-    private function updateParent(Tracker_Artifact $parent, Tracker_Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule): void
+    private function updateParent(Artifact $parent, Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule): void
     {
         $rule_parent_target_tracker_id = $rule->getTargetTracker()->getId();
         if ($parent->getTrackerId() !== $rule_parent_target_tracker_id) {
@@ -113,12 +114,12 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
         }
     }
 
-    private function parentAlreadyHasTargetValue(Tracker_Artifact $parent, Tracker_Workflow_Trigger_TriggerRule $rule)
+    private function parentAlreadyHasTargetValue(Artifact $parent, Tracker_Workflow_Trigger_TriggerRule $rule)
     {
         return $rule->getTarget()->isSetForArtifact($parent);
     }
 
-    private function getRuleStrategy(Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
+    private function getRuleStrategy(Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
     {
         if ($rule->getCondition() == Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE) {
             return new Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy();

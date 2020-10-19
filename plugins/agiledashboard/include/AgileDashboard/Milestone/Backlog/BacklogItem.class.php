@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Milestone_Backlog_IBacklogItem
 {
     /** @var Int */
@@ -53,10 +55,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /** @var String */
     private $color;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $parent;
 
     /** @var bool */
@@ -66,7 +68,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
      */
     private $is_inconsistent;
 
-    public function __construct(Tracker_Artifact $artifact, bool $is_inconsistent)
+    public function __construct(Artifact $artifact, bool $is_inconsistent)
     {
         $this->id              = $artifact->getId();
         $this->title           = $artifact->getTitle() ?? '';
@@ -77,13 +79,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         $this->is_inconsistent = $is_inconsistent;
     }
 
-    public function setParent(Tracker_Artifact $parent)
+    public function setParent(Artifact $parent)
     {
         $this->parent = $parent;
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getParent()
     {
@@ -161,7 +163,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->has_children;
     }
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact()
     {

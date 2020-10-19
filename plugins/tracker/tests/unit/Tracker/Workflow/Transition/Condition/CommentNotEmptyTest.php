@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Workflow\Transition\Condition;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Transition;
+use Tuleap\Tracker\Artifact\Artifact;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
@@ -46,7 +46,7 @@ class CommentNotEmpty_validateTest extends TestCase
         parent::setUp();
         $this->dao          = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
         $this->transition   = Mockery::mock(Transition::class);
-        $this->artifact     = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact     = Mockery::mock(Artifact::class);
         $this->current_user = \Mockery::spy(\PFUser::class);
 
         $this->transition->shouldReceive('getId')->andReturn(42);

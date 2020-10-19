@@ -23,14 +23,15 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Artifact\View\Nature;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
-use Tuleap\Tracker\Artifact\View\Nature;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer
@@ -58,13 +59,13 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     private $hidden_fieldsets_detector;
 
     /**
-     * @var Tracker_Artifact[]
+     * @var Artifact[]
      */
     private $hierarchy;
 
     public function __construct(
         EventManager $event_manager,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
         VisitRecorder $visit_recorder,
@@ -230,7 +231,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
-    private function fetchMultipleParentsTitle(Tracker_Artifact $artifact, ParentOfArtifactCollection $hierarchy)
+    private function fetchMultipleParentsTitle(Artifact $artifact, ParentOfArtifactCollection $hierarchy)
     {
         $tab_level = 0;
         $html      = '';
@@ -287,8 +288,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     /**
-     * @param Tracker_Artifact[] $parents
-     * @param string             $padding_prefix
+     * @param Artifact[] $parents
+     * @param string     $padding_prefix
      *
      * @return string
      */

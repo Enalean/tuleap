@@ -52,7 +52,7 @@ final class VisitRecorderTest extends TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturn(false);
         $user->shouldReceive('getId')->andReturn(102);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(1003);
 
         $this->visit_recorder->record($user, $artifact);
@@ -65,6 +65,6 @@ final class VisitRecorderTest extends TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturn(true);
 
-        $this->visit_recorder->record($user, \Mockery::mock(\Tracker_Artifact::class));
+        $this->visit_recorder->record($user, \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
     }
 }

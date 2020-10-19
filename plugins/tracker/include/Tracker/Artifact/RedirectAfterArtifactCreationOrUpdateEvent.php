@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use Codendi_Request;
-use Tracker_Artifact;
 use Tracker_Artifact_Redirect;
 use Tuleap\Event\Dispatchable;
 
@@ -40,14 +39,14 @@ class RedirectAfterArtifactCreationOrUpdateEvent implements Dispatchable
      */
     private $redirect;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
     public function __construct(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         $this->request  = $request;
         $this->redirect = $redirect;
@@ -64,7 +63,7 @@ class RedirectAfterArtifactCreationOrUpdateEvent implements Dispatchable
         return $this->redirect;
     }
 
-    public function getArtifact(): Tracker_Artifact
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }

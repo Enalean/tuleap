@@ -57,7 +57,7 @@ class PermissionsExporterTest extends TestCase
             ->andReturn($initial_permissions);
 
         $user         = \Mockery::mock(\PFUser::class);
-        $artifact     = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector->shouldNotReceive('isFieldFrozen');
 
@@ -77,7 +77,7 @@ class PermissionsExporterTest extends TestCase
             ->andReturn($initial_permissions);
 
         $user         = \Mockery::mock(\PFUser::class);
-        $artifact     = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector
             ->shouldReceive('isFieldFrozen')
@@ -101,7 +101,7 @@ class PermissionsExporterTest extends TestCase
             ->andReturn($initial_permissions);
 
         $user         = \Mockery::mock(\PFUser::class);
-        $artifact     = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector
             ->shouldReceive('isFieldFrozen')
@@ -131,7 +131,7 @@ class PermissionsExporterTest extends TestCase
             ->andReturn($initial_permissions);
 
         $user     = \Mockery::mock(\PFUser::class);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturnTrue();
 

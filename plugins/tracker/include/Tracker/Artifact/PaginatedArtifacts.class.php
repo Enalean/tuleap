@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_PaginatedArtifacts
 {
 
     /**
-     * @var Tracker_Artifact[]
+     * @var Artifact[]
      */
     private $artifacts;
 
@@ -33,8 +35,8 @@ class Tracker_Artifact_PaginatedArtifacts
 
     /**
      *
-     * @param Tracker_Artifact[] $artifacts
-     * @param int $total_size
+     * @param Artifact[] $artifacts
+     * @param int        $total_size
      */
     public function __construct(array $artifacts, $total_size)
     {
@@ -48,7 +50,7 @@ class Tracker_Artifact_PaginatedArtifacts
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getArtifacts()
     {

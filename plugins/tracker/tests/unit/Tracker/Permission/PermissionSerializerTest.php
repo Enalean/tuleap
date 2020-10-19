@@ -19,6 +19,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -81,7 +82,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
      */
     private $tracker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -131,7 +132,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         return $user;
     }
 
-    private function assertTrackerUGroupIdsWithoutAdminsEquals(Tracker_Artifact $artifact, array $expected_values): void
+    private function assertTrackerUGroupIdsWithoutAdminsEquals(Artifact $artifact, array $expected_values): void
     {
         $this->assertEquals(
             $expected_values,
@@ -139,7 +140,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         );
     }
 
-    private function assertTrackerUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_values): void
+    private function assertTrackerUGroupIdsEquals(Artifact $artifact, array $expected_values): void
     {
         $this->assertTrackerUGroupIdsWithoutAdminsEquals(
             $artifact,
@@ -148,7 +149,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
     }
 
     private function assertArtifactUGroupIdsWithoutAdminsEquals(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $expected_values
     ): void {
         $this->assertEquals(
@@ -157,7 +158,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         );
     }
 
-    private function assertArtifactUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_values): void
+    private function assertArtifactUGroupIdsEquals(Artifact $artifact, array $expected_values): void
     {
         if ($expected_values) {
             $expected_values = array_merge([ProjectUGroup::PROJECT_ADMIN], $expected_values);
@@ -168,7 +169,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         );
     }
 
-    private function assertSubmitterOnlyUGroupIdsEquals(Tracker_Artifact $artifact, $expected_value): void
+    private function assertSubmitterOnlyUGroupIdsEquals(Artifact $artifact, $expected_value): void
     {
         $this->assertEquals(
             $expected_value,
@@ -176,7 +177,7 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         );
     }
 
-    private function assertFieldsPermissionUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_value): void
+    private function assertFieldsPermissionUGroupIdsEquals(Artifact $artifact, array $expected_value): void
     {
         $this->assertEquals(
             $expected_value,
@@ -192,9 +193,9 @@ final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classe
         );
     }
 
-    private function anArtifact($submitter, array $assignees, array $authorized_ugroups): Tracker_Artifact
+    private function anArtifact($submitter, array $assignees, array $authorized_ugroups): Artifact
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getSubmittedByUser')->andReturn($submitter);
         $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $artifact->shouldReceive('getAuthorizedUGroups')->andReturn($authorized_ugroups);

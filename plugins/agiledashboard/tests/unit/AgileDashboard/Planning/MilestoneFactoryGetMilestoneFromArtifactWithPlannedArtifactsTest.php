@@ -28,7 +28,7 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Planning_MilestoneFactory;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest extends TestCase
 {
@@ -41,11 +41,11 @@ final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest ext
             ->shouldAllowMockingProtectedMethods();
 
         $user     = Mockery::mock(PFUser::class);
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact2 = Mockery::mock(Tracker_Artifact::class);
+        $artifact2 = Mockery::mock(Artifact::class);
         $artifact2->shouldReceive('getId')->andReturn(102);
-        $artifact3 = Mockery::mock(Tracker_Artifact::class);
+        $artifact3 = Mockery::mock(Artifact::class);
         $artifact3->shouldReceive('getId')->andReturn(103);
 
         $node = new ArtifactNode($artifact);

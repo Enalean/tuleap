@@ -35,19 +35,19 @@ class ConfigConformanceAsserterTest extends TestCase
     /** @var ConfigConformanceValidator */
     private $validator;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $artifact_outside_of_project;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $execution_artifact;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $another_execution_artifact;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $campaign_artifact;
 
-    /** @var \Tracker_Artifact */
+    /** @var \Tuleap\Tracker\Artifact\Artifact */
     private $definition_artifact;
 
     private $user_id                      = 100;
@@ -94,11 +94,11 @@ class ConfigConformanceAsserterTest extends TestCase
         $this->user = Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn($this->user_id);
 
-        $this->campaign_artifact = \Mockery::spy(\Tracker_Artifact::class);
-        $this->definition_artifact = \Mockery::spy(\Tracker_Artifact::class);
-        $this->execution_artifact = \Mockery::spy(\Tracker_Artifact::class);
-        $this->another_execution_artifact = \Mockery::spy(\Tracker_Artifact::class);
-        $this->artifact_outside_of_project = \Mockery::spy(\Tracker_Artifact::class);
+        $this->campaign_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->definition_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->execution_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->another_execution_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact_outside_of_project = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->campaign_artifact->shouldReceive('getTracker')->andReturn($campaign_tracker);
         $this->campaign_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturn([$this->execution_artifact]);

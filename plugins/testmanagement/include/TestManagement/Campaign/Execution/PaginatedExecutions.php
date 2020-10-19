@@ -20,12 +20,12 @@
 
 namespace Tuleap\TestManagement\Campaign\Execution;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class PaginatedExecutions
 {
     /**
-     * @var Tracker_Artifact[]
+     * @var Artifact[]
      */
     private $artifacts;
     /**
@@ -39,9 +39,9 @@ class PaginatedExecutions
 
     /**
      *
-     * @param Tracker_Artifact[] $artifacts
-     * @param int                $total_size
-     * @param int[]              $definitions_changeset_ids
+     * @param Artifact[] $artifacts
+     * @param int        $total_size
+     * @param int[]      $definitions_changeset_ids
      */
     public function __construct(array $artifacts, $total_size, array $definitions_changeset_ids)
     {
@@ -59,7 +59,7 @@ class PaginatedExecutions
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getArtifacts()
     {

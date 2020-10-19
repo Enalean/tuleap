@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -32,15 +34,15 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
      */
     private $selector;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $epic2;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $epic;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $sprint;
     /**
@@ -119,11 +121,11 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private function getArtifact($id, Tracker $tracker)
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact_factory->shouldReceive('getArtifactById')->with($id)->andReturns($artifact);

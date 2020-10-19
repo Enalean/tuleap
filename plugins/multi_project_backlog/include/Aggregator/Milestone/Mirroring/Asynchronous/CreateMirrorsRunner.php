@@ -25,13 +25,13 @@ namespace Tuleap\MultiProjectBacklog\Aggregator\Milestone\Mirroring\Asynchronous
 use BackendLogger;
 use Exception;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class CreateMirrorsRunner
@@ -129,13 +129,13 @@ class CreateMirrorsRunner
         }
     }
 
-    private function processArtifactCreation(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_Changeset $changeset): void
+    private function processArtifactCreation(Artifact $artifact, PFUser $user, Tracker_Artifact_Changeset $changeset): void
     {
         $task = CreateMirrorsTask::build();
         $task->createMirrors($artifact, $user, $changeset);
     }
 
-    public function executeMirrorsCreation(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_Changeset $changeset): void
+    public function executeMirrorsCreation(Artifact $artifact, PFUser $user, Tracker_Artifact_Changeset $changeset): void
     {
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);

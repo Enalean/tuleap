@@ -21,10 +21,10 @@
 namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Chart_Field_Exception;
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ChartConfigurationValueChecker
 {
@@ -45,7 +45,7 @@ class ChartConfigurationValueChecker
         $this->configuration_value_retriever = $configuration_value_retriever;
     }
 
-    public function hasStartDate(Tracker_Artifact $artifact, PFUser $user)
+    public function hasStartDate(Artifact $artifact, PFUser $user)
     {
         try {
             $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
@@ -73,7 +73,7 @@ class ChartConfigurationValueChecker
     /**
      * @return bool
      */
-    public function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
+    public function areBurndownFieldsCorrectlySet(Artifact $artifact, PFUser $user)
     {
         try {
             $time_period = $this->configuration_value_retriever->getTimePeriod($artifact, $user);
@@ -84,7 +84,7 @@ class ChartConfigurationValueChecker
     }
 
     public function hasConfigurationChange(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         Tracker_Artifact_Changeset $new_changeset
     ): bool {
@@ -111,7 +111,7 @@ class ChartConfigurationValueChecker
     /**
      * @return bool
      */
-    public function doesUserCanReadRemainingEffort(Tracker_Artifact $artifact, PFUser $user)
+    public function doesUserCanReadRemainingEffort(Artifact $artifact, PFUser $user)
     {
         $remaining_effort_field = $this->configuration_field_retriever->getBurndownRemainingEffortField(
             $artifact,

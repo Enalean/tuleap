@@ -20,8 +20,8 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tracker_Artifact;
 
 /**
  * @psalm-immutable
@@ -45,11 +45,11 @@ class ArtifactReference
     public $tracker;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
-    protected function __construct(Tracker_Artifact $artifact, \Tracker $tracker, string $format = '')
+    protected function __construct(Artifact $artifact, \Tracker $tracker, string $format = '')
     {
         $this->id  = JsonCast::toInt($artifact->getId());
         $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;
@@ -63,7 +63,7 @@ class ArtifactReference
         $this->artifact = clone $artifact;
     }
 
-    public static function build(Tracker_Artifact $artifact, string $format = ''): ArtifactReference
+    public static function build(Artifact $artifact, string $format = ''): ArtifactReference
     {
         return new self($artifact, $artifact->getTracker(), $format);
     }

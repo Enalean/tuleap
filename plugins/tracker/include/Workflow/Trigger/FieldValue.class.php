@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Trigger_FieldValue
 {
     private $field;
@@ -78,7 +81,7 @@ class Tracker_Workflow_Trigger_FieldValue
      *
      * @return bool
      */
-    public function isSetForArtifact(Tracker_Artifact $artifact)
+    public function isSetForArtifact(Artifact $artifact)
     {
         $artifact_value = $artifact->getValue($this->getField());
         if ($artifact_value && $artifact_value->getValue() == [$this->getValue()->getId()]) {

@@ -43,7 +43,7 @@ final class ArchiveAndDeleteArtifactTaskTest extends TestCase
 
         $task = new ArchiveAndDeleteArtifactTask($artifact_exporter, $artifact_deletor, $event_manager, $db_connection, $logger);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(10);
         $user = \Mockery::mock(\PFUser::class);
 

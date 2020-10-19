@@ -23,6 +23,7 @@ use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Cardwall_SingleCardBuilder
 {
@@ -112,7 +113,7 @@ class Cardwall_SingleCardBuilder
     protected function getCardInCellPresenter(
         Cardwall_CardInCellPresenterFactory $presenter_factory,
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         BackgroundColor $background_color,
@@ -135,7 +136,7 @@ class Cardwall_SingleCardBuilder
      */
     private function getCardPresenter(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         BackgroundColor $background_color,
@@ -156,7 +157,7 @@ class Cardwall_SingleCardBuilder
         );
     }
 
-    private function getColumnId(Tracker_Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
+    private function getColumnId(Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
     {
         foreach ($columns as $column) {
             if ($config->isInColumn($artifact, $field_provider, $column)) {
@@ -207,7 +208,7 @@ class Cardwall_SingleCardBuilder
      */
     private function getCardInCellPresenterFactory(
         Cardwall_OnTop_Config $config,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {

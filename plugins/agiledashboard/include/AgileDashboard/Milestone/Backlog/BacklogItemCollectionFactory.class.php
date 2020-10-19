@@ -24,6 +24,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * I build collections of IBacklogItem
@@ -409,7 +410,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $semantics;
     }
 
-    private function setTitleSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    private function setTitleSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
     {
         $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = '';
         if ($this->userCanReadBacklogTitleField($user, $tracker)) {
@@ -418,7 +419,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
-    private function setStatusSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    private function setStatusSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
     {
         $semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] = '';
         if ($this->userCanReadBacklogStatusField($user, $tracker)) {
@@ -426,7 +427,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
-    private function setInitialEffortSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    private function setInitialEffortSemantic(PFUser $user, Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
     {
         $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = '';
         if ($this->userCanReadInitialEffortField($user, $tracker)) {
@@ -438,7 +439,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     /**
      * @return string | float
      */
-    private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact)
+    private function getSemanticEffortValue(PFUser $user, Artifact $artifact)
     {
         if (! $field = $this->getInitialEffortField($artifact->getTracker())) {
             return false;
@@ -510,7 +511,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
     private function pushItem(
         Planning_Milestone $milestone,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         array $parents,
         array $semantics,
@@ -537,7 +538,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
     private function pushItemInOpenCollections(
         Planning_Milestone $milestone,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $semantics,
         AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         PFUser $user
@@ -557,7 +558,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
     private function pushItemInDoneCollection(
         Planning_Milestone $milestone,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $semantics,
         AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         PFUser $user

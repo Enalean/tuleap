@@ -98,7 +98,7 @@ class CrossTrackerArtifactReportRepresentation
         $this->project          = $project;
     }
 
-    public static function build(\Tracker_Artifact $artifact, \PFUser $user): self
+    public static function build(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user): self
     {
         $assigned_to = [];
         foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {

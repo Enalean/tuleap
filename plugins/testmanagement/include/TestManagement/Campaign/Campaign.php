@@ -23,7 +23,7 @@ namespace Tuleap\TestManagement\Campaign;
 class Campaign
 {
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -40,7 +40,7 @@ class Campaign
      *
      * @param string            $label
      */
-    public function __construct(\Tracker_Artifact $artifact, $label, JobConfiguration $job_configuration)
+    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact, $label, JobConfiguration $job_configuration)
     {
         $this->artifact          = $artifact;
         $this->label             = $label;
@@ -48,7 +48,7 @@ class Campaign
     }
 
     /**
-     * @return \Tracker_Artifact
+     * @return \Tuleap\Tracker\Artifact\Artifact
      */
     public function getArtifact()
     {

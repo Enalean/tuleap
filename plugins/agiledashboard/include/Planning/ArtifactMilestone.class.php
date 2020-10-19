@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * A planning milestone (e.g.: Sprint, Release...)
@@ -47,7 +48,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      *
      * For instance a Sprint or a Release
      *
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -106,7 +107,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     public function __construct(
         Project $project,
         Planning $planning,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ?ArtifactNode $planned_artifacts = null
     ) {
@@ -134,7 +135,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact()
     {
@@ -213,7 +214,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user)
     {

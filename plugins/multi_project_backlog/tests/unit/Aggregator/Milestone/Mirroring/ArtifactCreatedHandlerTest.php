@@ -75,7 +75,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     public function testHandleDelegatesToAsynchronousMirrorCreator(): void
     {
         $project  = \Project::buildForTest();
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
         $tracker = $this->buildTestTracker(15, $project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
@@ -99,7 +99,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     public function testHandleReactsOnlyToArtifactsFromAggregatorProjects(): void
     {
         $project  = \Project::buildForTest();
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = $this->buildTestTracker(15, $project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
@@ -114,7 +114,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     public function testHandleDoesNotReactWhenNoPlanningException(): void
     {
         $project  = \Project::buildForTest();
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = $this->buildTestTracker(15, $project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
@@ -130,7 +130,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     public function testHandleReactsOnlyToTopMilestones(): void
     {
         $project  = \Project::buildForTest();
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = $this->buildTestTracker(404, $project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');

@@ -31,13 +31,13 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SystemEventManager;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_BurndownTest extends TestCase
@@ -60,7 +60,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
     private $burndown_field;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -81,7 +81,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
     private $tracker_id;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $sprint;
     /**
@@ -103,7 +103,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
         $this->tracker_id = 101;
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -124,7 +124,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
         SystemEventManager::setInstance(\Mockery::spy(SystemEventManager::class));
 
-        $this->sprint            = \Mockery::spy(\Tracker_Artifact::class);
+        $this->sprint            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->sprint_tracker_id = 113;
         $this->sprint_tracker    = \Mockery::spy(\Tracker::class);
         $this->sprint_tracker->shouldReceive("getId")->andReturn($this->sprint_tracker_id);
@@ -314,7 +314,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
             ]
         );
 
-        $artifact        = Mockery::spy(\Tracker_Artifact::class);
+        $artifact        = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
         $artifactFactory->shouldReceive('getArtifactById')->withArgs([$artifact_id])->andReturn($artifact);
 

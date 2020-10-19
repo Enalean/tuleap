@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Action_UpdateArtifact
 {
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var Tracker_FormElementFactory */
@@ -45,7 +46,7 @@ class Tracker_Action_UpdateArtifact
     private $hidden_fieldsets_detector;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         EventManager $event_manager,
         NatureIsChildLinkRetriever $artifact_retriever,
@@ -164,7 +165,7 @@ class Tracker_Action_UpdateArtifact
     }
 
 
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user)
+    private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user)
     {
         $card_info               = [];
         $tracker_id              = $artifact->getTracker()->getId();
@@ -185,7 +186,7 @@ class Tracker_Action_UpdateArtifact
     }
 
     private function addAutocomputeLabelIfFieldIsAutcocomputed(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $remaining_effort_field,
         $remaining_effort
     ) {

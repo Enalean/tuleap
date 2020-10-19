@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_BatchIterator
 {
 
@@ -37,7 +39,7 @@ class Tracker_Artifact_BatchIterator
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function next()
     {
@@ -47,7 +49,7 @@ class Tracker_Artifact_BatchIterator
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function current()
     {

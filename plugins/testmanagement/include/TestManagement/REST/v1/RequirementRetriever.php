@@ -21,10 +21,10 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class RequirementRetriever
 {
@@ -55,9 +55,9 @@ class RequirementRetriever
     }
 
     /**
-     * @return Tracker_Artifact | null
+     * @return Artifact | null
      */
-    public function getRequirementForDefinition(Tracker_Artifact $definition, PFUser $user)
+    public function getRequirementForDefinition(Artifact $definition, PFUser $user)
     {
         $requirement_id = $this->artifact_dao->searchFirstRequirementId(
             $definition->getId(),

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Represents the fields of a cardwall.
  */
@@ -34,7 +36,7 @@ class Cardwall_CardFields
      *
      * @return Tracker_FormElement_Field[]
      */
-    public function getFields(Tracker_Artifact $artifact)
+    public function getFields(Artifact $artifact)
     {
         $diplayed_fields = [];
         $tracker         = $artifact->getTracker();

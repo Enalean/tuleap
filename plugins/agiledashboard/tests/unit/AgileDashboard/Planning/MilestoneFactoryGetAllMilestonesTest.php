@@ -36,11 +36,11 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryGetAllMilestonesTest extends TestCase
@@ -98,9 +98,9 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
 
     public function testItReturnsAsManyMilestonesAsThereAreArtifacts(): void
     {
-        $artifact1 = Mockery::spy(Tracker_Artifact::class);
+        $artifact1 = Mockery::spy(Artifact::class);
         $artifact1->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-        $artifact2 = Mockery::spy(Tracker_Artifact::class);
+        $artifact2 = Mockery::spy(Artifact::class);
         $artifact2->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $artifacts = [
             $artifact1,
@@ -114,7 +114,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
     public function testItReturnsMilestones(): void
     {
         $changeset01 = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $artifact    = Mockery::mock(Tracker_Artifact::class);
+        $artifact    = Mockery::mock(Artifact::class);
 
         $artifact->shouldReceive('getId')->andReturns(101);
         $artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([]);
@@ -197,11 +197,11 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
     }
 
     /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     protected function getAMockedArtifact()
     {
-        $artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact = Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
 
         return $artifact;

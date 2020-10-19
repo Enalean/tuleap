@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\TestCase
 {
@@ -26,7 +28,7 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\Tes
 
     public function testItHasJsonRepresentation(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, $artifact, 45, $timestamp, ''])
             ->makePartial()

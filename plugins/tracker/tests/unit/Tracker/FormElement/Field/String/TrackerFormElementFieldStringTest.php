@@ -25,9 +25,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Rule_NoCr;
 use Rule_String;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_String;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TrackerFormElementFieldStringTest extends TestCase
 {
@@ -35,7 +35,7 @@ class TrackerFormElementFieldStringTest extends TestCase
     use GlobalResponseMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -57,7 +57,7 @@ class TrackerFormElementFieldStringTest extends TestCase
                                ->makePartial()
                                ->shouldAllowMockingProtectedMethods();
 
-        $this->artifact    = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact    = Mockery::mock(Artifact::class);
         $this->rule_string = Mockery::mock(Rule_String::class);
         $this->rule_string->shouldReceive('isValid')->andReturns(true);
 

@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
@@ -35,6 +34,7 @@ use Tuleap\AgileDashboard\REST\v1\BacklogAddRepresentation;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class MilestoneElementAdderTest extends TestCase
 {
@@ -70,7 +70,7 @@ class MilestoneElementAdderTest extends TestCase
     private $top_backlog_elements_to_add_checker;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -101,7 +101,7 @@ class MilestoneElementAdderTest extends TestCase
         $this->backlog_add_representation = new BacklogAddRepresentation();
         $this->backlog_add_representation->id = 112;
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
     }
 
     public function testItAddsElementToMilestoneInExplicitMode(): void

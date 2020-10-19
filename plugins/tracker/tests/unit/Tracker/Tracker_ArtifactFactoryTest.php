@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
 class Tracker_ArtifactFactoryTest extends TestCase
@@ -48,10 +49,10 @@ class Tracker_ArtifactFactoryTest extends TestCase
 
     public function testItFetchArtifactsTitlesFromDb(): void
     {
-        $art12 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art12 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art12->shouldReceive('getId')->andReturn(12);
 
-        $art30 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art30 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art30->shouldReceive('getId')->andReturn(30);
 
         $artifacts = [$art12, $art30];
@@ -63,7 +64,7 @@ class Tracker_ArtifactFactoryTest extends TestCase
 
     public function testItSetTheTitlesToTheArtifact(): void
     {
-        $art24 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art24 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24->shouldReceive('getId')->andReturn(24);
 
         $artifacts = [$art24];
@@ -77,10 +78,10 @@ class Tracker_ArtifactFactoryTest extends TestCase
 
     public function testItSetTheTitlesWhenThereAreSeveralArtifacts(): void
     {
-        $art24 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art24 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24->shouldReceive('getId')->andReturn(24);
 
-        $art32 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art32 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art32->shouldReceive('getId')->andReturn(32);
 
         $artifacts = [$art24, $art32];
@@ -95,9 +96,9 @@ class Tracker_ArtifactFactoryTest extends TestCase
 
     public function testItSetTheTitlesWhenThereAreSeveralTimeTheSameArtifact(): void
     {
-        $art24_1 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art24_1 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24_1->shouldReceive('getId')->andReturn(24);
-        $art24_2 = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $art24_2 = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $art24_2->shouldReceive('getId')->andReturn(24);
 
         $artifacts = [$art24_1, $art24_2];

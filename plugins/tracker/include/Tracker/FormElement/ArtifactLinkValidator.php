@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Feedback;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
 
@@ -57,7 +57,7 @@ class ArtifactLinkValidator
      */
     public function isValid(
         $value,
-        \Tracker_Artifact $artifact,
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $field,
         ArtifactLinkValidationContext $context
     ): bool {
@@ -136,7 +136,7 @@ class ArtifactLinkValidator
     /**
      * @param $artifact_id
      *
-     * @return \Tracker_Artifact|null
+     * @return \Tuleap\Tracker\Artifact\Artifact|null
      */
     private function getArtifact(Tracker_FormElement_Field_ArtifactLink $field, $artifact_id)
     {
@@ -159,7 +159,7 @@ class ArtifactLinkValidator
      * @return bool
      */
     private function isTrackerDeleted(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $field,
         $artifact_id
     ) {
@@ -178,7 +178,7 @@ class ArtifactLinkValidator
     /**
      * @return bool
      */
-    private function isProjectActive(Tracker_Artifact $artifact)
+    private function isProjectActive(Artifact $artifact)
     {
         if (! $artifact->getTracker()->getProject()->isActive()) {
             $GLOBALS['Response']->addFeedback(
@@ -199,7 +199,7 @@ class ArtifactLinkValidator
      * @param array $value
      */
     private function areTypesValid(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $value,
         Tracker_FormElement_Field_ArtifactLink $field,
         ArtifactLinkValidationContext $context
@@ -280,7 +280,7 @@ class ArtifactLinkValidator
     /**
      * @return array<int,string>
      */
-    private function getUsedTypeShortnameByArtifactID(Tracker_Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field): array
+    private function getUsedTypeShortnameByArtifactID(Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field): array
     {
         $changeset = $artifact->getLastChangesetWithFieldValue($field);
         if ($changeset === null) {

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -95,7 +96,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @throws Tracker_Exception In the validation
      */
     public function create(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         string $comment,
         PFUser $submitter,
@@ -221,7 +222,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
     abstract protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
@@ -233,7 +234,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @throws Tracker_FieldValueNotStoredException
      */
     private function storeFieldsValues(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
@@ -263,7 +264,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     }
 
     private function storeComment(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $comment,
         PFUser $submitter,
         $submitted_on,
@@ -293,7 +294,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $this->reference_manager->extractCrossRef(
             $comment,
             $artifact->getId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $artifact->getTracker()->getGroupID(),
             $submitter->getId(),
             $artifact->getTracker()->getItemName()
@@ -303,7 +304,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     }
 
     private function validateNewChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         $comment,
         PFUser $submitter,

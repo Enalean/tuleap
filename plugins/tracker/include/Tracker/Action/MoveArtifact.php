@@ -23,12 +23,12 @@ namespace Tuleap\Tracker\Action;
 use PFUser;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
@@ -94,7 +94,7 @@ class MoveArtifact
      * @throws MoveArtifactSemanticsException
      */
     public function checkMoveIsPossible(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector
@@ -116,7 +116,7 @@ class MoveArtifact
      * @throws MoveArtifactTargetProjectNotActiveException
      */
     public function move(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector
@@ -145,7 +145,7 @@ class MoveArtifact
      * @return SimpleXMLElement
      */
     private function getUpdatedXML(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
@@ -42,7 +42,7 @@ class FrozenFieldDetector
         $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 
-    public function isFieldFrozen(Tracker_Artifact $artifact, Tracker_FormElement_Field $field): bool
+    public function isFieldFrozen(Artifact $artifact, Tracker_FormElement_Field $field): bool
     {
         try {
             $current_state_transition = $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);

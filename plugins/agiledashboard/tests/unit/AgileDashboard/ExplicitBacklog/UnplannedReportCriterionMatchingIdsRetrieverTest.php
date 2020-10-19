@@ -28,9 +28,9 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 {
@@ -156,7 +156,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
     {
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, 142)
-            ->andReturn(Mockery::mock(Tracker_Artifact::class));
+            ->andReturn(Mockery::mock(Artifact::class));
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, 148)

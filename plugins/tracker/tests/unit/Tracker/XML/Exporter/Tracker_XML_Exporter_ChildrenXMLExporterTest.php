@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -60,10 +61,10 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \PHPUnit\Framework\Te
         $this->file_updater = Mockery::mock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
         $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
 
-        $artifact_1 = Mockery::mock(Tracker_Artifact::class)
+        $artifact_1 = Mockery::mock(Artifact::class)
             ->shouldReceive(['getId' => $this->artifact_id_1, 'getTrackerId' => 101])
             ->getMock();
-        $artifact_2 = Mockery::mock(Tracker_Artifact::class)
+        $artifact_2 = Mockery::mock(Artifact::class)
             ->shouldReceive(['getId' => $this->artifact_id_2, 'getTrackerId' => 101])
             ->getMock();
 

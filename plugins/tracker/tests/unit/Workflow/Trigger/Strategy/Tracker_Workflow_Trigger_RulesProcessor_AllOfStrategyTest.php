@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -41,10 +42,10 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $story_tracker      = $this->buildTracker(888);
         $this->task_tracker = $this->buildTracker(899);
 
-        $parent = \Mockery::spy(\Tracker_Artifact::class);
+        $parent = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $parent->shouldReceive('getTracker')->andReturns($story_tracker);
 
-        $this->artifact = new Tracker_Artifact(
+        $this->artifact = new Artifact(
             2,
             $this->task_tracker->getId(),
             null,
@@ -159,7 +160,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
 
     public function testItDoesntSetTheValueIfOneSiblingHasNoValue(): void
     {
-        $sibling = new Tracker_Artifact(
+        $sibling = new Artifact(
             3,
             $this->task_tracker->getId(),
             null,
@@ -175,7 +176,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
 
     public function testItSetTheValueIfOneSameTypeSiblingHasCorrectValue(): void
     {
-        $sibling = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling->shouldReceive('getId')->andReturns(112);
         $sibling->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $changeset_value_list = new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value]);
@@ -187,14 +188,14 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
 
     public function testItDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue(): void
     {
-        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
             new Tracker_Artifact_ChangesetValue_List(43, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
-        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_2->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);
@@ -209,14 +210,14 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
 
     public function testItSetTheValueIfDifferentTypeSiblingHaveLegitValue(): void
     {
-        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
             new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
-        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->bug_tracker);
         $sibling_2->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
@@ -230,14 +231,14 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
 
     public function testItDoesntSetTheValueIfOneOfTheChildDoesntApply(): void
     {
-        $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_1->shouldReceive('getId')->andReturns(112);
         $sibling_1->shouldReceive('getTracker')->andReturns($this->task_tracker);
         $sibling_1->shouldReceive('getValue')->with($this->trigger_field)->andReturns(
             new Tracker_Artifact_ChangesetValue_List(41, Mockery::mock(Tracker_Artifact_Changeset::class), null, null, [$this->trigger_value])
         );
 
-        $sibling_2 = \Mockery::spy(\Tracker_Artifact::class);
+        $sibling_2 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $sibling_2->shouldReceive('getId')->andReturns(113);
         $sibling_2->shouldReceive('getTracker')->andReturns($this->bug_tracker);
         $bind_static_value = new Tracker_FormElement_Field_List_Bind_StaticValue(74, 'label', 'description', 0, false);

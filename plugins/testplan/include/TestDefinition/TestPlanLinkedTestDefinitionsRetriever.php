@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\TestDefinition;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TestPlanLinkedTestDefinitionsRetriever
 {
@@ -61,7 +61,7 @@ class TestPlanLinkedTestDefinitionsRetriever
         $this->test_definition_with_test_status_retriever = $test_definition_with_test_status_retriever;
     }
 
-    public function getDefinitionsLinkedToAnArtifact(Tracker_Artifact $artifact, Tracker_Artifact $milestone, PFUser $user, int $limit, int $offset): TestPlanLinkedTestDefinitions
+    public function getDefinitionsLinkedToAnArtifact(Artifact $artifact, Artifact $milestone, PFUser $user, int $limit, int $offset): TestPlanLinkedTestDefinitions
     {
         $test_definition_tracker_id = $this->testmanagement_config->getTestDefinitionTrackerId($artifact->getTracker()->getProject());
         if ($test_definition_tracker_id === false) {

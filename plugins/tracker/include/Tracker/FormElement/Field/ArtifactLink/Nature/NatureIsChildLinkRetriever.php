@@ -24,8 +24,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
 class NatureIsChildLinkRetriever
@@ -50,7 +50,7 @@ class NatureIsChildLinkRetriever
     }
 
     /** @return ParentOfArtifactCollection */
-    public function getParentsHierarchy(Tracker_Artifact $artifact)
+    public function getParentsHierarchy(Artifact $artifact)
     {
         $collection = new ParentOfArtifactCollection();
         $this->addParentsOfArtifactToCollection($artifact, $collection, []);
@@ -59,7 +59,7 @@ class NatureIsChildLinkRetriever
     }
 
     private function addParentsOfArtifactToCollection(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ParentOfArtifactCollection $collection,
         array $already_seen_artifacts
     ) {
@@ -80,16 +80,16 @@ class NatureIsChildLinkRetriever
         }
     }
 
-    /** @return Tracker_Artifact[] */
-    public function getChildren(Tracker_Artifact $artifact)
+    /** @return Artifact[] */
+    public function getChildren(Artifact $artifact)
     {
         return $this->factory->getIsChildLinkedArtifactsById($artifact);
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
-    public function getDirectParents(Tracker_Artifact $artifact)
+    public function getDirectParents(Artifact $artifact)
     {
         $parents = [];
         foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {

@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Semantic_Title;
 use TrackerFactory;
 
@@ -56,7 +55,7 @@ class MyArtifactsCollection implements \Countable
         return isset($this->artifacts[(int) $tracker->getId()][$artifact_id]);
     }
 
-    public function addArtifactForTracker(Tracker $tracker, Tracker_Artifact $artifact): void
+    public function addArtifactForTracker(Tracker $tracker, Artifact $artifact): void
     {
         if ($artifact->userCanView()) {
             $this->artifacts[(int) $tracker->getId()][(int) $artifact->getId()] = $artifact;
@@ -82,7 +81,7 @@ class MyArtifactsCollection implements \Countable
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getArtifactsInTracker(Tracker $tracker): array
     {

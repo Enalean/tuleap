@@ -24,9 +24,9 @@ namespace Tuleap\TestManagement\REST;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
@@ -47,7 +47,7 @@ class FormattedChangesetValueForFileFieldRetriever
      */
     public function getFormattedChangesetValueForFieldFile(
         array $uploaded_file_ids,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): ArtifactValuesRepresentation {
         $field_upload_data = $this->file_upload_data_provider->getFileUploadData(

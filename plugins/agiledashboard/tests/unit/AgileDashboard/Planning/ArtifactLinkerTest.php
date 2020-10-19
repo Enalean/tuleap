@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -31,23 +32,23 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
      */
     private $linker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $epic;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $theme;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $release;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $product;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $corp;
     /**
@@ -111,7 +112,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
 
     private function getArtifact($id, Tracker $tracker, array $ancestors)
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->andReturns($ancestors);
@@ -122,8 +123,8 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
     public function testItDoesntLinkWhenItWasLinkedToAParent(): void
     {
         $story_id = 5698;
-        $story    = Mockery::mock(Tracker_Artifact::class);
-        $task     = Mockery::mock(Tracker_Artifact::class);
+        $story    = Mockery::mock(Artifact::class);
+        $task     = Mockery::mock(Artifact::class);
 
         $task->shouldReceive('getAllAncestors')->with($this->user)->andReturns([$story])->once();
 

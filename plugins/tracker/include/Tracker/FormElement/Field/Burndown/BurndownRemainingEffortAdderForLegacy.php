@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use DateTime;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
@@ -50,7 +50,7 @@ class BurndownRemainingEffortAdderForLegacy
 
     public function addRemainingEffortDataForLegacy(
         Tracker_Chart_Data_Burndown $burndown_data,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ) {
         $field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);

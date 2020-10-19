@@ -20,6 +20,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -42,7 +43,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TestCase
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FileInfoXMLExporter  */
     private $file_exporter;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact */
+    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact */
     private $artifact;
 
     protected function setUp(): void
@@ -50,7 +51,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TestCase
         parent::setUp();
         $this->artifacts_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class)
+        $this->artifact = Mockery::mock(Artifact::class)
             ->shouldReceive(['getId' => 123, 'getTrackerId' => 456])
             ->getMock();
 

@@ -105,6 +105,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -671,7 +672,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Tracker_Artifact $last_milestone_artifact = null)
+    private function redirectOrAppend(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Artifact $last_milestone_artifact = null)
     {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
 
@@ -688,7 +689,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect)
+    private function redirectToPlanning(Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect)
     {
         $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
         if ($redirect_to_artifact == -1) {
@@ -704,7 +705,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         ];
     }
 
-    private function redirectToTopPlanning(Tracker_Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect)
+    private function redirectToTopPlanning(Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect)
     {
         $redirect->base_url = '/plugins/agiledashboard/';
         $group_id = null;

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
 {
@@ -52,7 +53,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
     {
         return parent::hasChanges($artifact, $previous_changesetvalue, $this->filterZeroWhenArray($new_value));
     }

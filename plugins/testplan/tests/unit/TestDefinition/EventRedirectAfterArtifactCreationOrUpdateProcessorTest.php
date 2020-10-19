@@ -75,7 +75,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
     {
         $request  = $this->aRequest([]);
         $redirect = new Tracker_Artifact_Redirect();
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->processor->process($request, $redirect, $artifact);
 
@@ -91,7 +91,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->processor->process($request, $redirect, $artifact);
 
@@ -109,7 +109,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -133,10 +133,10 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(['getId' => 1001]);
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -171,10 +171,10 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(['getId' => 1001]);
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -213,7 +213,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)
@@ -224,7 +224,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
                 ])->getMock()
         ]);
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -258,7 +258,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(
             [
                 'getId'      => 123,
@@ -273,7 +273,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
             ]
         );
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -299,7 +299,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)
@@ -310,7 +310,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
                 ])->getMock()
         ]);
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -343,7 +343,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
         );
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)
@@ -354,7 +354,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
                 ])->getMock()
         ]);
 
-        $backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(123);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')

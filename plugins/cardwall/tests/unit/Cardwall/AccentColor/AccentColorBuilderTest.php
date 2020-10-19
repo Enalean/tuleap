@@ -26,8 +26,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -59,7 +59,7 @@ class AccentColorBuilderTest extends TestCase
         $this->decorator_retriever  = $this->createMock(BindDecoratorRetriever::class);
         $tracker                    = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn(651);
-        $this->artifact = $this->createMock(Tracker_Artifact::class);
+        $this->artifact = $this->createMock(Artifact::class);
         $this->artifact->method('getTracker')->willReturn($tracker);
         $this->current_user         = $this->createMock(PFUser::class);
         $this->selectbox            = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);

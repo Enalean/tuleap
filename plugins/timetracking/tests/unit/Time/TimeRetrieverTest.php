@@ -50,7 +50,7 @@ class TimeRetrieverTest extends TestCase
         $this->user->allows()->getId()->andReturns(102);
 
         $this->tracker  = \Mockery::spy(Tracker::class);
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->tracker->shouldReceive([
             'getId'      => 16,

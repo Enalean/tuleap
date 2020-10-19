@@ -82,7 +82,7 @@ class ActionsRunnerTest extends TestCase
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId');
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(753);
         $changeset->shouldReceive('getArtifact')->andReturn($artifact);
 

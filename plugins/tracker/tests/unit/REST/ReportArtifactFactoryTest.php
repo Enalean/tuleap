@@ -65,9 +65,9 @@ class ReportArtifactFactoryTest extends TestCase
         $from_where = new FromWhere('', '');
 
         $report->shouldReceive('getMatchingIdsWithAdditionalFromWhere')->andReturns(['id' => '12,85,217,98']);
-        $artifact_one = Mockery::spy(\Tracker_Artifact::class);
+        $artifact_one = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_one->shouldReceive('getId')->andReturn(85);
-        $artifact_two = Mockery::spy(\Tracker_Artifact::class);
+        $artifact_two = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_two->shouldReceive('getId')->andReturn(217);
         $this->tracker_artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->andReturns([$artifact_one, $artifact_two]);
 

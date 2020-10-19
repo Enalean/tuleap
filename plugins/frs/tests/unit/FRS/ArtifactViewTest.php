@@ -34,7 +34,7 @@ final class ArtifactViewTest extends TestCase
     private $artifact_view;
     /** @var int */
     private $release_id = 78;
-    /** @var M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact */
+    /** @var M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact */
     private $artifact;
     /** @var \Codendi_Request|M\LegacyMockInterface|M\MockInterface */
     private $request;
@@ -43,7 +43,7 @@ final class ArtifactViewTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifact      = M::mock(\Tracker_Artifact::class);
+        $this->artifact      = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->request       = M::mock(\Codendi_Request::class);
         $this->user          = M::mock(\PFUser::class);
         $this->artifact_view = new ArtifactView($this->release_id, $this->artifact, $this->request, $this->user);

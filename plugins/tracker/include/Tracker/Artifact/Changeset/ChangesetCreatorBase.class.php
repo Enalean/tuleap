@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 
@@ -69,7 +70,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
      * and enforce SRP ?
      */
     protected function saveArtifactAfterNewChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,

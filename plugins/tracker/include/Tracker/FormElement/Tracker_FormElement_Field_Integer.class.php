@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
@@ -130,7 +131,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
         if ($value) {
@@ -177,7 +178,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         assert($old_value instanceof Tracker_Artifact_ChangesetValue_Integer);
         return (new ChangesChecker())->hasChanges($old_value, $new_value);

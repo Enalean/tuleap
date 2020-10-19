@@ -129,7 +129,7 @@ final class TrackerCollectionRetrieverTest extends TestCase
             ->andReturn($planning);
         $milestone->shouldReceive('getArtifact')
             ->andReturn(
-                M::mock(\Tracker_Artifact::class)->shouldReceive(['getTracker' => $milestone_tracker])
+                M::mock(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive(['getTracker' => $milestone_tracker])
                     ->getMock()
             );
         return $milestone;

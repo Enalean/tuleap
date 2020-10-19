@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item
 {
 
@@ -32,17 +34,17 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     private $id;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $moved_artifact;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact_higher;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact_lower;
 
@@ -75,9 +77,9 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     public function __construct(
         Tracker_ArtifactFactory $tracker_artifact_factory,
         $id,
-        Tracker_Artifact $moved_artifact,
-        Tracker_Artifact $artifact_higher,
-        Tracker_Artifact $artifact_lower,
+        Artifact $moved_artifact,
+        Artifact $artifact_higher,
+        Artifact $artifact_lower,
         $context,
         Project $project,
         $has_been_raised,

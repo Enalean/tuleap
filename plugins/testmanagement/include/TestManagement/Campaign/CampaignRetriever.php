@@ -20,11 +20,11 @@
 
 namespace Tuleap\TestManagement\Campaign;
 
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class CampaignRetriever
 {
@@ -73,7 +73,7 @@ class CampaignRetriever
      *
      * @return Campaign
      */
-    public function getByArtifact(Tracker_Artifact $artifact)
+    public function getByArtifact(Artifact $artifact)
     {
         $configuration = $this->campaign_dao->searchByCampaignId($artifact->getId());
 

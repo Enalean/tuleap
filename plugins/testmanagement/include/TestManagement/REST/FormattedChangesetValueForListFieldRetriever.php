@@ -24,8 +24,8 @@ namespace Tuleap\TestManagement\REST;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class FormattedChangesetValueForListFieldRetriever
@@ -46,7 +46,7 @@ class FormattedChangesetValueForListFieldRetriever
     public function getFormattedChangesetValueForFieldList(
         string $field_name,
         string $value,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);

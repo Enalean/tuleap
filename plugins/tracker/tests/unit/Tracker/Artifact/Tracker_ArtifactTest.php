@@ -26,7 +26,6 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreator;
@@ -50,7 +49,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
     public function testLastChangesetIsRetrieved(): void
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
@@ -65,7 +64,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
     public function testLastChangesetIsRetrievedWhenAllChangesetsHaveAlreadyBeenLoaded(): void
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial();
 
         $last_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
@@ -91,7 +90,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $changeset->shouldReceive('getValue')->andReturns($value);
 
         $id       = $tracker_id = $use_artifact_permissions = $submitted_by = $submitted_on = '';
-        $artifact = new Tracker_Artifact($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
+        $artifact = new Artifact($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
 
         $this->assertEquals($value, $artifact->getValue($field, $changeset));
     }
@@ -104,7 +103,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
         $changeset->shouldReceive('getValue')->andReturns($value);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
         $this->assertEquals($value, $artifact->getValue($field));
@@ -137,7 +136,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $workflow = \Mockery::spy(\Workflow::class);
         $workflow->shouldReceive('before')->times(2);
         $workflow->shouldReceive('validate')->andReturns(true);
@@ -299,7 +298,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $hierarchy_factory->shouldReceive('getChildren')->andReturns([]);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
@@ -407,7 +406,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $hierarchy_factory->shouldReceive('getChildren')->andReturns([]);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
@@ -528,8 +527,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $hierarchy_factory->shouldReceive('getChildren')->andReturns([]);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        assert($artifact instanceof Tracker_Artifact);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        assert($artifact instanceof Artifact);
         $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
@@ -662,7 +661,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $hierarchy_factory->shouldReceive('getChildren')->andReturns([]);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
@@ -720,7 +719,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $um->shouldReceive('getUserById')->with(101)->andReturns($u1);
         $um->shouldReceive('getUserById')->with(102)->andReturns($u2);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->shouldReceive('getChangesets')->andReturns([$c1, $c2, $c3, $c4]);
         $artifact->shouldReceive('getUserManager')->andReturns($um);
 
@@ -744,11 +743,11 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 
     public function testItReturnsTheParentArtifactFromAncestors(): void
     {
-        $release           = Mockery::mock(Tracker_Artifact::class);
+        $release           = Mockery::mock(Artifact::class);
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $user              = Mockery::mock(\PFUser::class);
 
-        $sprint = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sprint = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $sprint->shouldReceive("getHierarchyFactory")->andReturn($hierarchy_factory);
 
         $hierarchy_factory->shouldReceive('getParentArtifact')->with($user, $sprint)->andReturn($release);
@@ -761,7 +760,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $user              = Mockery::mock(\PFUser::class);
 
-        $sprint = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sprint = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $sprint->shouldReceive("getHierarchyFactory")->andReturn($hierarchy_factory);
         $hierarchy_factory->shouldReceive('getParentArtifact')->with($user, $sprint)->andReturn(null);
 
@@ -773,7 +772,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $workflow = Mockery::mock(Workflow::class);
         $tracker  = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getWorkflow')->andReturn($workflow);
-        $artifact = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $workflow->shouldReceive('setArtifact')->with($artifact)->once();
@@ -808,7 +807,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $tracker->shouldReceive('getId')->andReturn(101);
         $tracker->shouldReceive('getProject')->andReturn($project);
 
-        $artifact = new Tracker_Artifact(101, $tracker->getId(), $user->getId(), 10, null);
+        $artifact = new Artifact(101, $tracker->getId(), $user->getId(), 10, null);
         $artifact->addChangeset($changeset_01);
         $artifact->addChangeset($changeset_02);
         $artifact->setFormElementFactory($form_element_factory);

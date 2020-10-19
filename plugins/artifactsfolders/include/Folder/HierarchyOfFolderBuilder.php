@@ -20,8 +20,8 @@
 
 namespace Tuleap\ArtifactsFolders\Folder;
 
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class HierarchyOfFolderBuilder
@@ -51,7 +51,7 @@ class HierarchyOfFolderBuilder
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function getHierarchyOfFolderForArtifact(Tracker_Artifact $artifact)
+    public function getHierarchyOfFolderForArtifact(Artifact $artifact)
     {
         $hierarchy = [];
         $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
@@ -63,7 +63,7 @@ class HierarchyOfFolderBuilder
         return $hierarchy;
     }
 
-    public function getHierarchyOfFolder(Tracker_Artifact $folder)
+    public function getHierarchyOfFolder(Artifact $folder)
     {
         $hierarchy = [];
         foreach ($this->retriever->getParentsHierarchy($folder)->getArtifacts() as $ancestors) {
@@ -80,9 +80,9 @@ class HierarchyOfFolderBuilder
     }
 
     /**
-     * @return null|Tracker_Artifact
+     * @return null|Artifact
      */
-    public function getDirectFolderForArtifact(Tracker_Artifact $artifact)
+    public function getDirectFolderForArtifact(Artifact $artifact)
     {
         $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
         if ($row) {
@@ -96,7 +96,7 @@ class HierarchyOfFolderBuilder
     {
         $parent_folder = null;
         foreach ($ancestors as $parent) {
-            \assert($parent instanceof Tracker_Artifact);
+            \assert($parent instanceof Artifact);
             if ($this->folder_dao->isTrackerConfiguredToContainFolders($parent->getTrackerId())) {
                 $parent_folder = $parent;
             }

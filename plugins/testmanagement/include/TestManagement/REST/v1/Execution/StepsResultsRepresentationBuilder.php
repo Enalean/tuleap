@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1\Execution;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\ExecutionRepresentation;
@@ -29,6 +28,7 @@ use Tuleap\TestManagement\REST\v1\StepResultRepresentation;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class StepsResultsRepresentationBuilder
 {
@@ -51,8 +51,8 @@ class StepsResultsRepresentationBuilder
      */
     public function build(
         PFUser $user,
-        Tracker_Artifact $execution,
-        Tracker_Artifact $definition
+        Artifact $execution,
+        Artifact $definition
     ) {
         return array_reduce(
             $this->getStepsResults($user, $execution, $definition),
@@ -72,7 +72,7 @@ class StepsResultsRepresentationBuilder
      *
      * @return StepResult[]
      */
-    private function getStepsResults(PFUser $user, Tracker_Artifact $execution, Tracker_Artifact $definition)
+    private function getStepsResults(PFUser $user, Artifact $execution, Artifact $definition)
     {
         $execution_changeset_value = $this->getFieldChangeValue(
             $user,
@@ -105,7 +105,7 @@ class StepsResultsRepresentationBuilder
      *
      * @return null | StepDefinitionChangesetValue | StepExecutionChangesetValue
      */
-    private function getFieldChangeValue(PFUser $user, Tracker_Artifact $execution, $field_name)
+    private function getFieldChangeValue(PFUser $user, Artifact $execution, $field_name)
     {
         $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(
             $execution->getTrackerId(),

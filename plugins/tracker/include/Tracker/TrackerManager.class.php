@@ -24,6 +24,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -100,7 +101,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         // Need specific treatment for artifact
         // TODO: transfer in Tracker_Artifact::process
-        if ($object instanceof Tracker_Artifact) {
+        if ($object instanceof Artifact) {
             $artifact = $object;
             if ((int) $request->get('aid')) {
                 if ($artifact->userCanView($user)) {

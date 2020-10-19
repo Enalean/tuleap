@@ -27,11 +27,11 @@ class SwimlaneChildrenRetriever
     /**
      * @return int[] array of Tracker_Artifact ids
      */
-    public function getSwimlaneArtifactIds(\Tracker_Artifact $swimlane_artifact, \PFUser $current_user): array
+    public function getSwimlaneArtifactIds(\Tuleap\Tracker\Artifact\Artifact $swimlane_artifact, \PFUser $current_user): array
     {
         $swimlane_children = $swimlane_artifact->getLinkedArtifacts($current_user);
         return array_map(
-            function (\Tracker_Artifact $child) {
+            function (\Tuleap\Tracker\Artifact\Artifact $child) {
                 return $child->getId();
             },
             $swimlane_children

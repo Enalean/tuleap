@@ -55,7 +55,7 @@ final class RedirectParameterInjectorTest extends TestCase
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $backlog_item;
 
@@ -64,7 +64,7 @@ final class RedirectParameterInjectorTest extends TestCase
         $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->response         = $GLOBALS['Response'];
 
-        $this->backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $this->backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->backlog_item->shouldReceive('getId')->andReturn(123);
         $this->user         = Mockery::mock(\PFUser::class);
 
@@ -126,7 +126,7 @@ final class RedirectParameterInjectorTest extends TestCase
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, '42')
             ->once()
-            ->andReturn(Mockery::mock(\Tracker_Artifact::class));
+            ->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
@@ -150,7 +150,7 @@ final class RedirectParameterInjectorTest extends TestCase
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, "123")
             ->once()
-            ->andReturn(Mockery::mock(\Tracker_Artifact::class));
+            ->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, '42')
@@ -183,7 +183,7 @@ final class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $milestone = Mockery::mock(\Tracker_Artifact::class);
+        $milestone = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')

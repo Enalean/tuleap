@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class SubmittedValueConvertorTest extends TestCase
 {
@@ -46,13 +46,13 @@ final class SubmittedValueConvertorTest extends TestCase
     /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
     private $previous_changesetvalue;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $art_123;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $art_124;
 
     protected function setUp(): void
@@ -66,17 +66,17 @@ final class SubmittedValueConvertorTest extends TestCase
         $changesets_201 = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changesets_201->shouldReceive('getId')->andReturns(2011);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(120);
-        $this->art_123 = Mockery::mock(Tracker_Artifact::class);
+        $this->art_123 = Mockery::mock(Artifact::class);
         $this->art_123->shouldReceive('getId')->andReturn(123);
         $this->art_123->shouldReceive('getTracker')->andReturn($tracker);
         $this->art_123->shouldReceive('getLastChangeset')->andReturn($changesets_123);
-        $this->art_124 = Mockery::mock(Tracker_Artifact::class);
+        $this->art_124 = Mockery::mock(Artifact::class);
         $this->art_124->shouldReceive('getId')->andReturn(124);
         $this->art_124->shouldReceive('getTracker')->andReturn($tracker);
         $this->art_124->shouldReceive('getLastChangeset')->andReturn($changesets_124);
-        $this->art_201 = Mockery::mock(Tracker_Artifact::class);
+        $this->art_201 = Mockery::mock(Artifact::class);
         $this->art_201->shouldReceive('getId')->andReturn(201);
         $this->art_201->shouldReceive('getTracker')->andReturn($tracker);
         $this->art_201->shouldReceive('getLastChangeset')->andReturn($changesets_201);

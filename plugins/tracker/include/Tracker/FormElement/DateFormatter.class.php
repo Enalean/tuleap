@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_FormElement_DateFormatter
 {
     public const DATE_FORMAT           = "Y-m-d";
@@ -59,7 +61,7 @@ class Tracker_FormElement_DateFormatter
     }
 
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         if (empty($value) || ! $value->getTimestamp()) {

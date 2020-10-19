@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
@@ -242,7 +243,7 @@ class Tracker_Workflow_Trigger_RulesManager
         }
     }
 
-    public function processChildrenTriggers(Tracker_Artifact $parent)
+    public function processChildrenTriggers(Artifact $parent)
     {
         $this->loop_safe_guard->process(
             $parent,
@@ -252,7 +253,7 @@ class Tracker_Workflow_Trigger_RulesManager
         );
     }
 
-    private function processChildrenTriggersWithinLoopSafeGuard(Tracker_Artifact $parent): void
+    private function processChildrenTriggersWithinLoopSafeGuard(Artifact $parent): void
     {
         $this->logger->start(__METHOD__, $parent->getId());
 

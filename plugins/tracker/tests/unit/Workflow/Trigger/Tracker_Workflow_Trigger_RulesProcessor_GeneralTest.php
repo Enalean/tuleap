@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -29,7 +30,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
     use \Tuleap\GlobalLanguageMock;
 
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $parent;
     private $artifact;
@@ -42,11 +43,11 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
 
     protected function setUp(): void
     {
-        $this->parent = Mockery::spy(Tracker_Artifact::class);
+        $this->parent = Mockery::spy(Artifact::class);
         $this->parent->shouldReceive('getTrackerId')->andReturn(899);
         $task_tracker = Mockery::spy(Tracker::class);
         $task_tracker->shouldReceive('getId')->andReturn(899);
-        $this->artifact = new Tracker_Artifact(1, 899, null, 10, null);
+        $this->artifact = new Artifact(1, 899, null, 10, null);
         $this->artifact->setChangesets([\Mockery::spy(\Tracker_Artifact_Changeset::class)]);
         $this->artifact->setParentWithoutPermissionChecking($this->parent);
         $this->artifact->setTracker($task_tracker);
@@ -79,7 +80,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
 
     public function testItDoesNothingWhenArtifactHasNoParents(): void
     {
-        $this->artifact->setParentWithoutPermissionChecking(Tracker_Artifact::NO_PARENT);
+        $this->artifact->setParentWithoutPermissionChecking(Artifact::NO_PARENT);
 
         // expect no errors
         $this->rules_processor->process($this->artifact, $this->rule);

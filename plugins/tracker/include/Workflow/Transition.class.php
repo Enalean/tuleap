@@ -20,6 +20,7 @@
  *
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -235,7 +236,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * @return bool true if the transition can occur, false otherwise
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool
+    public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         return $this->getConditions()->validate($fields_data, $artifact, $comment_body, $current_user);
     }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
 
@@ -31,7 +33,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric implements T
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         return (string) $field_change->value;
     }

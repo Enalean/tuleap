@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class StatusValueProvider
 {
@@ -38,7 +38,7 @@ class StatusValueProvider
         $this->for_changeset_provider = $for_changeset_provider;
     }
 
-    public function getStatusValue(Tracker_Artifact $artifact, PFUser $user): ?Tracker_FormElement_Field_List_BindValue
+    public function getStatusValue(Artifact $artifact, PFUser $user): ?Tracker_FormElement_Field_List_BindValue
     {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {

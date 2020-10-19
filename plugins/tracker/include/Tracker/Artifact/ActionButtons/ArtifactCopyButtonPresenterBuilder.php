@@ -21,11 +21,11 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactCopyButtonPresenterBuilder
 {
-    public function getCopyArtifactButton(PFUser $user, Tracker_Artifact $artifact)
+    public function getCopyArtifactButton(PFUser $user, Artifact $artifact)
     {
         if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
             return new ArtifactCopyButtonPresenter(

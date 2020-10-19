@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_REST_Artifact_ArtifactUpdater
 {
@@ -35,7 +37,7 @@ class Tracker_REST_Artifact_ArtifactUpdater
         return new self(new Tracker_REST_Artifact_ArtifactValidator(Tracker_FormElementFactory::instance()));
     }
 
-    public function update(PFUser $user, Tracker_Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null)
+    public function update(PFUser $user, Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null)
     {
         $this->checkArtifact($user, $artifact);
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
@@ -50,7 +52,7 @@ class Tracker_REST_Artifact_ArtifactUpdater
         $artifact->createNewChangeset($fields_data, $comment_body, $user, true, $comment_format);
     }
 
-    private function checkArtifact(PFUser $user, Tracker_Artifact $artifact)
+    private function checkArtifact(PFUser $user, Artifact $artifact)
     {
         if (! $artifact) {
             throw new \Luracast\Restler\RestException(404, 'Artifact not found');
@@ -69,7 +71,7 @@ class Tracker_REST_Artifact_ArtifactUpdater
         return (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_MATCH']));
     }
 
-    private function isUpdatingLatestVersion(Tracker_Artifact $artifact)
+    private function isUpdatingLatestVersion(Artifact $artifact)
     {
         $valid_unmodified = true;
         $valid_match      = true;

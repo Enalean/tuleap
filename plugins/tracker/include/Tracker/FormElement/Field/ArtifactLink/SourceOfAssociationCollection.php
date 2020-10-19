@@ -20,22 +20,22 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker_Artifact;
 use PFUser;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class SourceOfAssociationCollection implements \Countable
 {
     /**
-     * @var Tracker_Artifact[]
+     * @var Artifact[]
      */
     private $artifacts = [];
 
-    public function add(Tracker_Artifact $artifact)
+    public function add(Artifact $artifact)
     {
         $this->artifacts[] = $artifact;
     }
 
-    public function linkToArtifact(Tracker_Artifact $artifact, PFUser $submitter)
+    public function linkToArtifact(Artifact $artifact, PFUser $submitter)
     {
         foreach ($this->artifacts as $source_artifact) {
             $source_artifact->linkArtifact($artifact->getId(), $submitter);

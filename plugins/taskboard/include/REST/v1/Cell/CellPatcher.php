@@ -24,7 +24,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
 use Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException;
@@ -33,8 +32,9 @@ use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
-use UserManager;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
+use UserManager;
 
 class CellPatcher
 {
@@ -109,7 +109,7 @@ class CellPatcher
     /**
      * @throws I18NRestException
      */
-    private function getArtifactToAdd(PFUser $current_user, int $id): Tracker_Artifact
+    private function getArtifactToAdd(PFUser $current_user, int $id): Artifact
     {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if (! $artifact || ! $artifact->userCanView($current_user)) {
@@ -127,7 +127,7 @@ class CellPatcher
     /**
      * @throws RestException
      */
-    private function getSwimlaneArtifact(PFUser $current_user, int $id): Tracker_Artifact
+    private function getSwimlaneArtifact(PFUser $current_user, int $id): Artifact
     {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if (! $artifact || ! $artifact->userCanView($current_user)) {
@@ -143,7 +143,7 @@ class CellPatcher
     private function validateOrder(
         OrderRepresentation $order,
         PFUser $current_user,
-        Tracker_Artifact $swimlane_artifact
+        Artifact $swimlane_artifact
     ): void {
         $children_artifact_ids          = $this->children_retriever->getSwimlaneArtifactIds(
             $swimlane_artifact,

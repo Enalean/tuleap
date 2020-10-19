@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -48,16 +47,17 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
 {
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
-    public function __construct(Tracker_Artifact $artifact)
+    public function __construct(Artifact $artifact)
     {
         $this->artifact = $artifact;
     }

@@ -22,13 +22,13 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
@@ -70,7 +70,7 @@ class ExecutionStatusUpdater
      *
      */
     public function update(
-        Tracker_Artifact $execution_artifact,
+        Artifact $execution_artifact,
         array $changes,
         PFUser $user
     ): void {
@@ -105,7 +105,7 @@ class ExecutionStatusUpdater
     }
 
     /** @return string|null */
-    private function getCurrentStatus(Tracker_Artifact $artifact)
+    private function getCurrentStatus(Artifact $artifact)
     {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {
@@ -116,7 +116,7 @@ class ExecutionStatusUpdater
     }
 
     /** @return UserRepresentation | null */
-    private function getCurrentSubmittedBy(Tracker_Artifact $artifact)
+    private function getCurrentSubmittedBy(Artifact $artifact)
     {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {

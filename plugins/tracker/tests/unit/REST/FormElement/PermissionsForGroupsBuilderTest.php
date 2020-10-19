@@ -250,7 +250,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
             ]
         );
 
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->frozen_detector->shouldReceive('isFieldFrozen')->with($artifact, $form_element)->andReturnFalse();
 
         $representation = $this->builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);
@@ -287,7 +287,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
             ]
         );
 
-        $artifact = M::mock(\Tracker_Artifact::class);
+        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->frozen_detector->shouldReceive('isFieldFrozen')->with($artifact, $form_element)->andReturnTrue();
 
         $representation = $this->builder->getPermissionsForGroups($form_element, $artifact, $this->tracker_admin_user);

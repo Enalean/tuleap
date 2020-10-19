@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -48,7 +49,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \PHPU
      */
     protected $ugroup_id_submitter_only;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     protected $artifact;
     /**
@@ -94,7 +95,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \PHPU
         $this->user_manager->shouldReceive('getUserById')->with(120)->andReturns($this->user);
         $this->user_manager->shouldReceive('getUserById')->with(250)->andReturns($this->submitter);
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
 
         $this->tracker->shouldReceive('getAuthorizedUgroupsByPermissionType')->andReturns(

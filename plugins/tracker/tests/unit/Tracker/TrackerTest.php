@@ -71,7 +71,7 @@ class TrackerTest extends TestCase
         $field1->shouldReceive('getId')->andReturns(1);
         $field2->shouldReceive('getId')->andReturns(2);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
@@ -122,7 +122,7 @@ class TrackerTest extends TestCase
         $field1->shouldReceive('getId')->andReturns(1);
         $field2->shouldReceive('getId')->andReturns(2);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
@@ -173,7 +173,7 @@ class TrackerTest extends TestCase
         $field1->shouldReceive('getId')->andReturns(1);
         $field2->shouldReceive('getId')->andReturns(2);
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
         $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
         $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);

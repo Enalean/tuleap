@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Represents an artifact or a specifict information of it
  */
 abstract class Tracker_Artifact_View_View
 {
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     protected $artifact;
 
     /** @var PFUser */
@@ -32,7 +34,7 @@ abstract class Tracker_Artifact_View_View
     /** @var Codendi_Request */
     protected $request;
 
-    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user)
+    public function __construct(Artifact $artifact, Codendi_Request $request, PFUser $user)
     {
         $this->artifact = $artifact;
         $this->request  = $request;

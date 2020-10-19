@@ -40,7 +40,7 @@ final class Tracker_FormElement_Field_RadiobuttonTest extends \PHPUnit\Framework
             [5123]
         )->getMock();
         $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertFalse($field->hasChanges(\Mockery::mock(\Tracker_Artifact::class), $previous, ['5123']));
+        $this->assertFalse($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, ['5123']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
@@ -49,7 +49,7 @@ final class Tracker_FormElement_Field_RadiobuttonTest extends \PHPUnit\Framework
             [5123]
         )->getMock();
         $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tracker_Artifact::class), $previous, null));
+        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, null));
     }
 
     public function testItHasChangesWhenSubmittedValuesContainsDifferentValues(): void
@@ -58,7 +58,7 @@ final class Tracker_FormElement_Field_RadiobuttonTest extends \PHPUnit\Framework
             ['5123']
         )->getMock();
         $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tracker_Artifact::class), $previous, ['5122']));
+        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, ['5122']));
     }
 
     public function testItReplaceCSVNullValueByNone(): void

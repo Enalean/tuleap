@@ -49,7 +49,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
      */
     private $submitted_on;
     /**
-     * @var Mockery\Mock | \Tracker_Artifact
+     * @var Mockery\Mock | \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -93,7 +93,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
 
         $tracker = Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getWorkflow')->andReturn($this->workflow);
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
         $this->artifact->shouldReceive('getWorkflow')->andReturn($this->workflow);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);

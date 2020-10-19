@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class GetFieldDataTest extends TestCase
 {
@@ -42,7 +42,7 @@ final class GetFieldDataTest extends TestCase
      */
     private $last_changset_id;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -51,7 +51,7 @@ final class GetFieldDataTest extends TestCase
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->last_changset_id = 1234;
-        $this->artifact         = new Tracker_Artifact(147, 65, 102, 1, null);
+        $this->artifact         = new Artifact(147, 65, 102, 1, null);
         $last_changeset         = new Tracker_Artifact_Changeset($this->last_changset_id, $this->artifact, '', '', '');
         $this->artifact->setChangesets([$last_changeset]);
     }
@@ -80,7 +80,7 @@ final class GetFieldDataTest extends TestCase
 
     public function testOnlyAddsNewValuesWhenEmptyArtifactGivenAtCSVArtifactCreation(): void
     {
-        $artifact_without_changeset = new Tracker_Artifact(148, 65, 102, 1, null);
+        $artifact_without_changeset = new Artifact(148, 65, 102, 1, null);
         $artifact_without_changeset->setChangesets([]);
 
         $this->assertEquals(

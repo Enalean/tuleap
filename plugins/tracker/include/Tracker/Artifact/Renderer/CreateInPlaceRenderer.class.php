@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Renderer_CreateInPlaceRenderer
 {
 
@@ -66,7 +68,7 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer
         $this->renderer->renderToPage('create-artifact-modal', $presenter);
     }
 
-    private function isArtifactInParentTracker(Tracker_Artifact $linked_artifact)
+    private function isArtifactInParentTracker(Artifact $linked_artifact)
     {
         $linked_artifact_tracker_id = $linked_artifact->getTrackerId();
         $parent_tracker             = $this->tracker->getParent();

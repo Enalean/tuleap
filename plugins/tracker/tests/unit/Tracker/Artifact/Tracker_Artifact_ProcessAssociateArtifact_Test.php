@@ -26,7 +26,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -41,7 +40,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
     use GlobalResponseMock;
 
     /**
-     * @var Mockery\Mock|Tracker_Artifact
+     * @var Mockery\Mock|Artifact
      */
     private $artifact;
     /**
@@ -79,7 +78,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
 
         $this->factory = Mockery::mock(Tracker_FormElementFactory::class);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact->shouldReceive('getUserManager')->andReturn($this->user_manager);
         $this->artifact->shouldReceive('getFormElementFactory')->andReturn($this->factory);
 

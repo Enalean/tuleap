@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -152,7 +152,7 @@ class ArtifactRepresentation
         $this->assignees          = $assignees;
     }
 
-    public static function build(PFUser $current_user, Tracker_Artifact $artifact, ?array $values, ?array $values_by_field, TrackerRepresentation $tracker_representation): self
+    public static function build(PFUser $current_user, Artifact $artifact, ?array $values, ?array $values_by_field, TrackerRepresentation $tracker_representation): self
     {
         $artifact_id = $artifact->getId();
 

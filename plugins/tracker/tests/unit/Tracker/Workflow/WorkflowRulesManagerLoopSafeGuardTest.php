@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Workflow;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 {
@@ -39,7 +39,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 
         $guard = new WorkflowRulesManagerLoopSafeGuard($workflow_logger);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
 
         $process = new class ($guard, $artifact) {
@@ -52,11 +52,11 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
              */
             private $guard;
             /**
-             * @var Tracker_Artifact
+             * @var Artifact
              */
             private $artifact;
 
-            public function __construct(WorkflowRulesManagerLoopSafeGuard $guard, Tracker_Artifact $artifact)
+            public function __construct(WorkflowRulesManagerLoopSafeGuard $guard, Artifact $artifact)
             {
                 $this->guard    = $guard;
                 $this->artifact = $artifact;
@@ -82,7 +82,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 
         $guard = new WorkflowRulesManagerLoopSafeGuard($workflow_logger);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
 
         $process = new class {

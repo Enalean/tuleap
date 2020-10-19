@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -46,7 +48,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
 
     public function testItContainsChanges(): void
     {
-        $artifact      = Mockery::mock(Tracker_Artifact::class);
+        $artifact      = Mockery::mock(Artifact::class);
         $empty_comment = $this->getEmptyComment();
         $comment       = $this->getComment();
 
@@ -75,7 +77,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
 
     public function testItContainsComment(): void
     {
-        $artifact      = Mockery::mock(Tracker_Artifact::class);
+        $artifact      = Mockery::mock(Artifact::class);
         $empty_comment = $this->getEmptyComment();
         $comment       = $this->getComment();
 
@@ -104,7 +106,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
 
     public function testItContainsSystemUser(): void
     {
-        $artifact      = Mockery::mock(Tracker_Artifact::class);
+        $artifact      = Mockery::mock(Artifact::class);
         $empty_comment = $this->getEmptyComment();
         $comment       = $this->getComment();
 
@@ -136,7 +138,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
      */
     private function buildChangeset(
         int $id,
-        Tracker_artifact $artifact,
+        Artifact $artifact,
         ?int $submitted_by,
         int $submitted_on,
         string $email,
@@ -197,7 +199,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $value2_previous    = \Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
         $value2_current     = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $fact               = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $artifact           = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact           = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $previous_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
         $current_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class)->makePartial(
@@ -267,7 +269,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $tracker = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $comment = $this->getComment();
 

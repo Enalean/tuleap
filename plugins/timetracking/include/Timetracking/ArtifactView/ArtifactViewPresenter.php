@@ -21,8 +21,8 @@
 namespace Tuleap\Timetracking\ArtifactView;
 
 use CSRFSynchronizerToken;
-use Tracker_Artifact;
 use Tuleap\Timetracking\Time\TimeChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactViewPresenter
 {
@@ -82,7 +82,7 @@ class ArtifactViewPresenter
     public $pattern;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         CSRFSynchronizerToken $csrf,
         array $times,
         $formatted_total_time,

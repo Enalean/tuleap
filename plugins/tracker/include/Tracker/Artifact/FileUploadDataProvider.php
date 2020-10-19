@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
@@ -48,7 +47,7 @@ class FileUploadDataProvider
     /**
      * @return FileUploadData | null
      */
-    public function getFileUploadData(Tracker $tracker, ?Tracker_Artifact $artifact, PFUser $user)
+    public function getFileUploadData(Tracker $tracker, ?Artifact $artifact, PFUser $user)
     {
         $file_fields = $this->formelement_factory->getUsedFileFields($tracker);
         foreach ($file_fields as $field) {

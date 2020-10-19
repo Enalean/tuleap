@@ -22,8 +22,8 @@ namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -47,7 +47,7 @@ class TimeCheckerTest extends TestCase
         $this->time_checker    = new TimeChecker();
         $this->time            = \Mockery::spy(Time::class);
 
-        $this->artifact        = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact        = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive([
             'getId'      => 200
         ]);

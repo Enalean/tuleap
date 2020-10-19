@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class MovedArtifactValueBuilderTest extends TestCase
@@ -34,7 +34,7 @@ class MovedArtifactValueBuilderTest extends TestCase
     /** @var  MovedArtifactValueBuilder */
     private $builder;
 
-    /** @var  Tracker_Artifact */
+    /** @var  Artifact */
     private $artifact;
 
     /** @var  Tracker */
@@ -46,7 +46,7 @@ class MovedArtifactValueBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->builder      = new MovedArtifactValueBuilder();
-        $this->artifact     = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact     = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->tracker      = \Mockery::spy(\Tracker::class);
         $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(101)->getMock();
     }

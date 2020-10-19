@@ -22,12 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_ArtifactRenderer
 {
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     protected $artifact;
     /**
@@ -35,7 +36,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
      */
     private $visit_recorder;
 
-    public function __construct(Tracker_Artifact $artifact, EventManager $event_manager, VisitRecorder $visit_recorder)
+    public function __construct(Artifact $artifact, EventManager $event_manager, VisitRecorder $visit_recorder)
     {
         parent::__construct($artifact->getTracker(), $event_manager);
         $this->artifact = $artifact;
@@ -58,7 +59,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         return $this->fetchArtifactInformations($this->artifact);
     }
 
-    private function fetchArtifactInformations(Tracker_Artifact $artifact)
+    private function fetchArtifactInformations(Artifact $artifact)
     {
         $html          = "";
         $html_purifier = Codendi_HTMLPurifier::instance();

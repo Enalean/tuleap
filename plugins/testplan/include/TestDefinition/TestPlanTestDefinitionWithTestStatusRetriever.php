@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\TestDefinition;
 
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
 class TestPlanTestDefinitionWithTestStatusRetriever
@@ -53,10 +53,11 @@ class TestPlanTestDefinitionWithTestStatusRetriever
 
 
     /**
-     * @param Tracker_Artifact[] $test_definitions
+     * @param Artifact[] $test_definitions
+     *
      * @return TestPlanTestDefinitionWithTestStatus[]
      */
-    public function retrieveTestDefinitionWithTestStatus(Tracker_Artifact $milestone, PFUser $user, array $test_definitions): array
+    public function retrieveTestDefinitionWithTestStatus(Artifact $milestone, PFUser $user, array $test_definitions): array
     {
         $information = $this->test_status_per_test_definitions_information_for_user_retriever->getInformationNeededToRetrieveTestStatusPerTestDefinition(
             $user,

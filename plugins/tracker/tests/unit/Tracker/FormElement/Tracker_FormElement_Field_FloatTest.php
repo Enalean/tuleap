@@ -28,12 +28,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Response;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tracker_Report_Criteria;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use UserManager;
 
@@ -109,7 +109,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Artifact::class);
         $this->assertTrue($float_field->isValid($artifact, 2));
         $this->assertTrue($float_field->isValid($artifact, 789));
         $this->assertTrue($float_field->isValid($artifact, 1.23));
@@ -129,7 +129,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Artifact::class);
         $this->assertTrue($float_field->isValid($artifact, ''));
         $this->assertTrue($float_field->isValid($artifact, null));
     }
@@ -245,7 +245,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
 
-        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $artifact        = Mockery::mock(Artifact::class);
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
         $changeset_value->shouldReceive('getValue')->once()->andReturn(5.1);
 
@@ -270,7 +270,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
 
-        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $artifact        = Mockery::mock(Artifact::class);
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
         $changeset_value->shouldReceive('getValue')->once()->andReturn(0);
 
@@ -288,7 +288,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
 
         $float_field->shouldReceive('getNoValueLabel')->once()->andReturn('Empty');
 
@@ -303,7 +303,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $artifact        = Mockery::mock(Artifact::class);
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
         $changeset_value->shouldReceive('getValue')->once()->andReturnNull();
 

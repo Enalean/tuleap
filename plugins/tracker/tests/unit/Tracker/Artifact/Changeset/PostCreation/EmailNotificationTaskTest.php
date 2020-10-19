@@ -56,7 +56,7 @@ class EmailNotificationTaskTest extends TestCase
         $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(['format' => '', 'enabled' => 0]);
 
         $this->tracker  = \Mockery::spy(\Tracker::class);
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->changeset->shouldReceive('getTracker')->andReturns($this->tracker);

@@ -25,17 +25,17 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactFilesDeletorVisitorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -46,7 +46,7 @@ class ArtifactFilesDeletorVisitorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->visitor  = new ArtifactFilesDeletorVisitor($this->artifact);
     }
 

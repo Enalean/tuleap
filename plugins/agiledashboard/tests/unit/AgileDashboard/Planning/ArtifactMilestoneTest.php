@@ -28,9 +28,9 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_ArtifactMilestone;
 use Project;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Burndown;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -58,7 +58,7 @@ final class ArtifactMilestoneTest extends TestCase
         $this->planning = Mockery::mock(Planning::class);
         $this->planning->shouldReceive('getId')->andReturn(9999);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(201);
 
         $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
@@ -101,7 +101,7 @@ final class ArtifactMilestoneTest extends TestCase
     {
         $this->assertNull($this->milestone->getPlannedArtifacts());
 
-        $node_artifact = Mockery::mock(Tracker_Artifact::class);
+        $node_artifact = Mockery::mock(Artifact::class);
         $node_artifact->shouldReceive('getId')->andReturn(202);
 
         $planned_artifacts = new ArtifactNode($node_artifact);
@@ -113,7 +113,7 @@ final class ArtifactMilestoneTest extends TestCase
     public function testItGetsLinkedArtifactsOfTheRootLevelArtifact()
     {
         $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([
-            Mockery::mock(Tracker_Artifact::class)
+            Mockery::mock(Artifact::class)
         ]);
 
         $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
@@ -125,17 +125,17 @@ final class ArtifactMilestoneTest extends TestCase
     {
         $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(9999);
         $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $child1_artifact = Mockery::mock(Tracker_Artifact::class);
+        $child1_artifact = Mockery::mock(Artifact::class);
         $child1_artifact->shouldReceive('getId')->andReturn(1111);
         $child1_artifact->shouldReceive('getTitle')->andReturn('child artifact 1');
         $child1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $child2_artifact = Mockery::mock(Tracker_Artifact::class);
+        $child2_artifact = Mockery::mock(Artifact::class);
         $child2_artifact->shouldReceive('getId')->andReturn(2222);
         $child2_artifact->shouldReceive('getTitle')->andReturn('child artifact 2');
         $child2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
@@ -157,17 +157,17 @@ final class ArtifactMilestoneTest extends TestCase
     {
         $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(9999);
         $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $depth1_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth1_artifact = Mockery::mock(Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(1111);
         $depth1_artifact->shouldReceive('getTitle')->andReturn('depth artifact 1');
         $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $depth2_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth2_artifact = Mockery::mock(Artifact::class);
         $depth2_artifact->shouldReceive('getId')->andReturn(2222);
         $depth2_artifact->shouldReceive('getTitle')->andReturn('depth artifact 2');
         $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
@@ -190,22 +190,22 @@ final class ArtifactMilestoneTest extends TestCase
     {
         $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(9999);
         $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $linked_artifact_1 = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact_1 = Mockery::mock(Artifact::class);
         $linked_artifact_1->shouldReceive('getId')->andReturn(1111);
         $linked_artifact_1->shouldReceive('getTitle')->andReturn('depth artifact 1');
         $linked_artifact_1->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $linked_artifact_2 = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact_2 = Mockery::mock(Artifact::class);
         $linked_artifact_2->shouldReceive('getId')->andReturn(2222);
         $linked_artifact_2->shouldReceive('getTitle')->andReturn('depth artifact 2');
         $linked_artifact_2->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(4444);
         $artifact->shouldReceive('getTitle')->andReturn('artifact');
         $artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$linked_artifact_1, $linked_artifact_2]);

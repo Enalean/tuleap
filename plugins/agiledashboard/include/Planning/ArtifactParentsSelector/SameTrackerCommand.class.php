@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Planning_ArtifactParentsSelector_SameTrackerCommand extends Planning_ArtifactParentsSelector_Command
 {
 
@@ -26,7 +28,7 @@ class Planning_ArtifactParentsSelector_SameTrackerCommand extends Planning_Artif
      *
      * @return array of Tracker_Artifact
      */
-    public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user)
+    public function getPossibleParents(Tracker $parent_tracker, Artifact $source_artifact, PFUser $user)
     {
         if ((int) $source_artifact->getTracker()->getId() === (int) $parent_tracker->getId()) {
             return [$source_artifact];

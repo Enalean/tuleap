@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
 /**
@@ -57,7 +58,7 @@ abstract class Workflow_Transition_Condition
      * Validate the condition
      *
      */
-    abstract public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool;
+    abstract public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool;
 
     public function getTransition()
     {

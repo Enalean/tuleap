@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
@@ -117,7 +118,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function getComputedValue(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timestamp = null
     ) {
         return $this->getCalculator()->calculate(
@@ -129,7 +130,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         );
     }
 
-    public function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
+    public function getComputedValueWithNoStopOnManualValue(Artifact $artifact)
     {
         $computed_children_to_fetch    = [];
         $artifact_ids_to_fetch         = [];
@@ -216,7 +217,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return "<span class='empty_value auto-computed-label'>" . $this->getFieldEmptyMessage() . "</span>";
     }
 
-    protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
+    protected function getComputedValueWithNoLabel(Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
         if ($stop_on_manual_value) {
             $empty_array = [];
@@ -325,7 +326,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -334,7 +335,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     protected function getHiddenArtifactValueForEdition(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -379,7 +380,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -414,13 +415,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $changeset_value = null
     ) {
         $value    = null;
@@ -460,16 +461,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * Fetch data to display the field value in mail
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param PFUser                          $user             The user who will receive the email
-     * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param string                          $format           output format
+     * @param Artifact                        $artifact The artifact
+     * @param PFUser                          $user     The user who will receive the email
+     * @param bool                            $ignore_perms
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param string                          $format   output format
      *
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -487,7 +488,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $current_user = UserManager::instance()->getCurrentUser();
         $changeset    = $artifact->getLastChangesetWithFieldValue($this);
@@ -542,7 +543,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return null;
     }
 
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if ($this->isAutocomputedDisabledAndNoManualValueProvided($value) || isset($value['value'])) {
             throw new Tracker_FormElement_InvalidFieldValueException(
@@ -787,7 +788,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         $purifier       = Codendi_HTMLPurifier::instance();
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -853,7 +854,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedDao();
     }
 
-    public function isArtifactValueAutocomputed(Tracker_Artifact $artifact)
+    public function isArtifactValueAutocomputed(Artifact $artifact)
     {
         if (! $artifact->getLastChangeset()->getValue($this)) {
             return true;
@@ -867,7 +868,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return string
      */
-    public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences)
+    public function fetchCard(Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences)
     {
         $value                      = $this->fetchCardValue($artifact, $display_preferences);
         $computed_value             = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -993,7 +994,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
         if (
             ! $previous_changeset_value->isManualValue() &&
@@ -1029,7 +1030,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return true;
     }
 
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return $this->validateValue($value);
     }
@@ -1042,7 +1043,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * @return int | null if no value found
      */
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
+    public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null)
     {
         $dao   = ComputedFieldDaoCache::instance();
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
@@ -1064,7 +1065,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     public function validateFieldWithPermissionsAndRequiredStatus(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $submitted_value,
         PFUser $user,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
@@ -1101,7 +1102,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return true;
     }
 
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value)
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
     {
         if ($this->isAnEmptyArray($submitted_value)) {
             $this->addRequiredError();

@@ -50,7 +50,7 @@ class VisitRetriever
     }
 
     /**
-     * @return \Tracker_Artifact[]
+     * @return \Tuleap\Tracker\Artifact\Artifact[]
      * @throws \DataAccessException
      */
     public function getMostRecentlySeenArtifacts(\PFUser $user, $nb_maximum_artifacts)

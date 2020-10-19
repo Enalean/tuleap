@@ -24,11 +24,11 @@ use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class BurndownDataBuilderForRESTTest extends TestCase
 {
@@ -44,7 +44,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
      */
     private $user;
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
 
@@ -102,7 +102,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
             $this->common_data_builder
         );
 
-        $this->artifact = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
         $this->user = Mockery::mock(\PFUser::class);

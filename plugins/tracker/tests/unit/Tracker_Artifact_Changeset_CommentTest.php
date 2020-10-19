@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -186,7 +188,7 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact                      = Mockery::mock(Tracker_Artifact::class);
+        $artifact                      = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->getPurifier($artifact);
 
@@ -220,7 +222,7 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact                      = Mockery::mock(Tracker_Artifact::class);
+        $artifact                      = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->changeset->artifact = $artifact;

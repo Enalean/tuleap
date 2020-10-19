@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class Tracker_REST_Artifact_ArtifactValidator
@@ -72,7 +73,7 @@ class Tracker_REST_Artifact_ArtifactValidator
     /**
      * @param ArtifactValuesRepresentation[] $values
      */
-    public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact)
+    public function getFieldsDataOnUpdate(array $values, Artifact $artifact)
     {
         $new_values     = [];
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());

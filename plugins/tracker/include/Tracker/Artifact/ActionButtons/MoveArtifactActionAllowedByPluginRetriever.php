@@ -27,7 +27,7 @@ class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 {
     public const NAME = 'moveArtifactActionAllowedByPluginRetriever';
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
     /**
@@ -48,7 +48,7 @@ class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
      */
     private $can_be_moved = true;
 
-    public function __construct(\Tracker_Artifact $artifact)
+    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
         $this->tracker = $artifact->getTracker();
         $this->artifact = $artifact;
@@ -84,7 +84,7 @@ class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
     }
 
     /**
-     * @return \Tracker_Artifact
+     * @return \Tuleap\Tracker\Artifact\Artifact
      */
     public function getArtifact()
     {

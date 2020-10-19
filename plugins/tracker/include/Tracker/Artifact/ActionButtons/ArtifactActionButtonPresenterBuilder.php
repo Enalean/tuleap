@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactActionButtonPresenterBuilder
 {
@@ -62,7 +62,7 @@ class ArtifactActionButtonPresenterBuilder
         $this->additional_buttons_builder   = $additional_buttons_builder;
     }
 
-    public function build(PFUser $user, Tracker_Artifact $artifact, AdditionalArtifactActionButtonsFetcher $action_buttons_fetcher)
+    public function build(PFUser $user, Artifact $artifact, AdditionalArtifactActionButtonsFetcher $action_buttons_fetcher)
     {
         $original_email       = $this->mail_button_builder->getIncomingEmailButton($user, $artifact);
         $copy_artifact        = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);

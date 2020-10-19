@@ -96,11 +96,11 @@ final class MirrorMilestonesCreatorTest extends \PHPUnit\Framework\TestCase
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
-            ->andReturn(\Mockery::mock(\Tracker_Artifact::class));
+            ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($second_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
-            ->andReturn(\Mockery::mock(\Tracker_Artifact::class));
+            ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->mirrors_creator->createMirrors($copied_values, $trackers, $current_user);
     }

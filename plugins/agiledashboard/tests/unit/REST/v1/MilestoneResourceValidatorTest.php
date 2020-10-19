@@ -33,11 +33,11 @@ final class MilestoneResourceValidatorTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact2;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact1;
     /**
@@ -93,10 +93,10 @@ final class MilestoneResourceValidatorTest extends TestCase
         $planning     = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getId')->andReturn(3);
 
-        $this->artifact1 = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact1->shouldReceive('getTrackerId')->andReturn(555);
         $this->artifact1->shouldReceive('getId')->andReturn(102);
-        $this->artifact2 = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact2->shouldReceive('getTrackerId')->andReturn(666);
         $this->artifact2->shouldReceive('getId')->andReturn(174);
 
@@ -352,17 +352,17 @@ final class MilestoneResourceValidatorTest extends TestCase
      */
     private function mockMilestoneWithArtifactLinks()
     {
-        $artifact112 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact112 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact112->shouldReceive('getId')->andReturn(112);
-        $artifact113 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact113 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact113->shouldReceive('getId')->andReturn(113);
-        $artifact114 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact114 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact114->shouldReceive('getId')->andReturn(114);
-        $artifact115 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact115 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact115->shouldReceive('getId')->andReturn(115);
 
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getLinkedArtifacts')
             ->andReturn([$artifact112, $artifact113, $artifact114, $artifact115]);
 

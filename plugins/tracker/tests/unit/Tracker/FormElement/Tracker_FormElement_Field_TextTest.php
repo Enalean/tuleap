@@ -135,7 +135,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
 
     public function testIsValid(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $rule_string = \Mockery::spy(\Rule_String::class);
         $rule_string->shouldReceive('isValid')->andReturns(true);
@@ -151,7 +151,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         $value->shouldReceive('getText')->andReturns('v1');
 
         $this->assertTrue(
-            $this->text_field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $value, ['content' => 'v2'])
+            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $value, ['content' => 'v2'])
         );
     }
 
@@ -159,7 +159,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
     {
         $this->text_field->shouldReceive('isRequired')->andReturns(true);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue($this->text_field->isValid($artifact, 'This is a text'));
         $this->assertTrue($this->text_field->isValid($artifact, '2009-08-45'));
         $this->assertFalse($this->text_field->isValid($artifact, 25));
@@ -196,7 +196,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
             'format'  => 'text'
         ];
 
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->text_field->isValid($artifact, $value_1);
         $this->text_field->isValid($artifact, $value_2);
         $this->text_field->isValid($artifact, $value_3);
@@ -237,7 +237,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
      */
     public function testItIsEmptyWhenThereIsNoContent(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue(
             $this->text_field->isEmpty(
                 [
@@ -254,7 +254,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
      */
     public function testItIsEmptyWhenThereIsOnlyWhitespaces(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue(
             $this->text_field->isEmpty(
                 [
@@ -271,7 +271,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
      */
     public function testItIsNotEmptyWhenThereIsContent(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertFalse(
             $this->text_field->isEmpty(
                 [
@@ -285,13 +285,13 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
 
     public function testItIsEmptyWhenValueIsAnEmptyString(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertTrue($this->text_field->isEmpty('', $artifact));
     }
 
     public function testItIsNotEmptyWhenValueIsAStringWithContent(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->assertFalse($this->text_field->isEmpty('aaa', $artifact));
     }
 
@@ -319,7 +319,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         ];
 
         $this->assertTrue(
-            $this->text_field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value)
+            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
         );
     }
 
@@ -331,7 +331,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         ];
 
         $this->assertFalse(
-            $this->text_field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value)
+            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
         );
     }
 
@@ -343,7 +343,7 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         ];
 
         $this->assertFalse(
-            $this->text_field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value)
+            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
         );
     }
 }

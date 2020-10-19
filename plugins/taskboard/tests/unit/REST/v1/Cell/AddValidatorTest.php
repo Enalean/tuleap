@@ -26,8 +26,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class AddValidatorTest extends TestCase
 {
@@ -37,7 +37,7 @@ final class AddValidatorTest extends TestCase
     private $validator;
     /** @var M\LegacyMockInterface|M\MockInterface|PFUser */
     private $current_user;
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_Artifact */
+    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
     private $swimlane_artifact;
 
     protected function setUp(): void
@@ -84,23 +84,23 @@ final class AddValidatorTest extends TestCase
         $this->validate($this->swimlane_artifact);
     }
 
-    private function validate(Tracker_Artifact $artifact_to_add): void
+    private function validate(Artifact $artifact_to_add): void
     {
         $this->validator->validateArtifacts($this->swimlane_artifact, $artifact_to_add, $this->current_user);
     }
 
     /**
-     * @return M\LegacyMockInterface|M\MockInterface|Tracker_Artifact
+     * @return M\LegacyMockInterface|M\MockInterface|Artifact
      */
     private function mockArtifact(int $id)
     {
-        $artifact = M::mock(Tracker_Artifact::class);
+        $artifact = M::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         return $artifact;
     }
 
     /**
-     * @return M\LegacyMockInterface|M\MockInterface|Tracker_Artifact
+     * @return M\LegacyMockInterface|M\MockInterface|Artifact
      */
     private function mockArtifactWithParent(int $id)
     {

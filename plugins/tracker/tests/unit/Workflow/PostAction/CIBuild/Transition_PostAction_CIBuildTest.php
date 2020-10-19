@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Transition_PostAction_CIBuildTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -34,7 +36,7 @@ final class Transition_PostAction_CIBuildTest extends \PHPUnit\Framework\TestCas
      */
     private $tracker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -96,7 +98,7 @@ final class Transition_PostAction_CIBuildTest extends \PHPUnit\Framework\TestCas
 
         $this->tracker   = \Mockery::spy(\Tracker::class);
         $this->project   = \Mockery::spy(\Project::class);
-        $this->artifact  = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->field     = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
 

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -32,7 +33,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
     private $dao;
 
-    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, ?Tracker_Artifact $artifact = null)
+    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, ?Artifact $artifact = null)
     {
         parent::__construct($transition);
         $this->dao                = $dao;
@@ -79,7 +80,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $ids;
     }
 
-    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool
+    public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         if (empty($this->fields)) {
             return true;
@@ -99,7 +100,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $is_valid;
     }
 
-    private function getFieldValue($fields_data, Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    private function getFieldValue($fields_data, Artifact $artifact, Tracker_FormElement_Field $field)
     {
         $field_id = $field->getId();
         if (isset($fields_data[$field_id])) {
@@ -108,7 +109,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this->getFieldValueFromLastChangeset($artifact, $field);
     }
 
-    private function getFieldValueFromLastChangeset(Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    private function getFieldValueFromLastChangeset(Artifact $artifact, Tracker_FormElement_Field $field)
     {
         $value = null;
         $last_changeset = $artifact->getLastChangeset();

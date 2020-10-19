@@ -22,9 +22,9 @@ namespace Tuleap\Timetracking\ArtifactView;
 
 use Codendi_Request;
 use PFUser;
-use Tracker_Artifact_View_View;
-use Tracker_Artifact;
 use TemplateRendererFactory;
+use Tracker_Artifact_View_View;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactView extends Tracker_Artifact_View_View
 {
@@ -36,7 +36,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     private $presenter;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Codendi_Request $request,
         PFUser $user,
         ArtifactViewPresenter $presenter

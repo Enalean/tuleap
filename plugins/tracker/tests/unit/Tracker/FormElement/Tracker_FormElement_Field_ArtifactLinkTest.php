@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -36,7 +37,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     protected function setUp(): void
     {
         $this->changeset = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $this->changeset->shouldReceive('getArtifact')->andReturn(Mockery::spy(Tracker_Artifact::class));
+        $this->changeset->shouldReceive('getArtifact')->andReturn(Mockery::spy(Artifact::class));
     }
 
     public function testNoDefaultValue(): void
@@ -103,7 +104,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $c = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $c->shouldReceive('getValue')->andReturns($cv);
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $tracker  = Mockery::mock(\Tracker::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($c);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
@@ -124,7 +125,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $cv->shouldReceive('getArtifactIds')->andReturns($ids);
         $c = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $c->shouldReceive('getValue')->andReturns($cv);
-        $a = Mockery::spy(\Tracker_Artifact::class);
+        $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $a->shouldReceive('getLastChangeset')->andReturns($c);
 
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, ['new_values' => '']));
@@ -136,7 +137,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $f = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('isRequired')->andReturns(true);
 
-        $a = Mockery::spy(\Tracker_Artifact::class);
+        $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $a->shouldReceive('getLastChangeset')->andReturns(false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ['new_values' => '']));
         $this->assertTrue($f->hasErrors());
@@ -147,7 +148,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $f = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('isRequired')->andReturns(true);
 
-        $a = Mockery::spy(\Tracker_Artifact::class);
+        $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $a->shouldReceive('getLastChangeset')->andReturns(false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertTrue($f->hasErrors());
@@ -178,10 +179,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->andReturn(true);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
@@ -202,10 +203,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->andReturn(true);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
@@ -227,10 +228,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->andReturn(true);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
@@ -251,10 +252,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->andReturn(true);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
@@ -274,7 +275,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     public function testIgnoresIdsThatDontExist(): void
     {
         $user     = Mockery::mock(PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
         $artifact->shouldReceive('userCanView')->andReturn(true);
 
@@ -292,7 +293,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     public function testIgnoresInPaginatedListIdsThatDontExist(): void
     {
         $user     = Mockery::mock(PFUser::class);
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
         $artifact->shouldReceive('userCanView')->andReturn(true);
 
@@ -312,10 +313,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->with($user)->andReturn(false);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
@@ -335,10 +336,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->with($user)->andReturn(false);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
@@ -359,10 +360,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->with($user)->andReturn(false);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
@@ -381,10 +382,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $user = Mockery::mock(PFUser::class);
 
-        $artifact_1 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_1->shouldReceive('getId')->andReturn(123);
         $artifact_1->shouldReceive('userCanView')->with($user)->andReturn(false);
-        $artifact_2 = Mockery::mock(\Tracker_Artifact::class);
+        $artifact_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 

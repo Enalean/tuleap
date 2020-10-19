@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\FormElement\Field;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TrackerFormElementFieldStringChangesTest extends TestCase
 {
@@ -51,13 +51,13 @@ class TrackerFormElementFieldStringChangesTest extends TestCase
     {
         $new_value = '1.0';
 
-        $this->assertTrue($this->field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->previous_value, $new_value));
+        $this->assertTrue($this->field->hasChanges(Mockery::mock(Artifact::class), $this->previous_value, $new_value));
     }
 
     public function testItReturnsFalseIfThereIsNoChange()
     {
         $new_value = '1';
 
-        $this->assertFalse($this->field->hasChanges(Mockery::mock(Tracker_Artifact::class), $this->previous_value, $new_value));
+        $this->assertFalse($this->field->hasChanges(Mockery::mock(Artifact::class), $this->previous_value, $new_value));
     }
 }

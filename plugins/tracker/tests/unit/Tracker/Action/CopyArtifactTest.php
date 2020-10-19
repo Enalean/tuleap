@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -47,10 +49,10 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
     /** @var int */
     private $changeset_id = 101;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact */
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
     private $from_artifact;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact */
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
     private $new_artifact;
 
     /** @var int */
@@ -89,7 +91,7 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
     /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
 
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact */
+    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact */
     private $a_mocked_artifact;
 
     /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory */
@@ -103,7 +105,7 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
         $this->tracker     = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(1);
         $this->tracker->shouldReceive('getItemName');
-        $this->new_artifact = Mockery::mock(Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods(
+        $this->new_artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods(
         );
         $this->new_artifact->setId($this->new_artifact_id);
         $this->layout         = Mockery::spy(Tracker_IDisplayTrackerLayout::class);
@@ -114,7 +116,7 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
         $this->file_updater   = Mockery::spy(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
         $this->from_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->from_changeset->shouldReceive('getId')->andReturn($this->changeset_id);
-        $this->from_artifact = Mockery::mock(Tracker_Artifact::class)->makePartial(
+        $this->from_artifact = Mockery::mock(Artifact::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $this->from_artifact->setId($this->artifact_id);
         $this->from_artifact->setTracker($this->tracker);
@@ -159,7 +161,7 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->andReturns($this->default_xml)->byDefault(
         );
 
-        $this->a_mocked_artifact = Mockery::spy(\Tracker_Artifact::class);
+        $this->a_mocked_artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->xml_importer->shouldReceive('createFieldsDataBuilder')
             ->andReturn(Mockery::spy(Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder::class));
@@ -168,7 +170,9 @@ final class Tracker_Action_CopyArtifactTest extends \PHPUnit\Framework\TestCase 
     public function testItExportsTheRequiredSnapshotArtifact(): void
     {
         $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
-        $this->xml_importer->shouldReceive('importBareArtifact')->andReturn(Mockery::spy(\Tracker_Artifact::class));
+        $this->xml_importer->shouldReceive('importBareArtifact')->andReturn(Mockery::spy(
+            \Tuleap\Tracker\Artifact\Artifact::class
+        ));
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')
             ->withArgs([Mockery::any(), $this->from_changeset])
             ->once()
@@ -309,7 +313,7 @@ XML;
     {
         $another_tracker = Mockery::mock(Tracker::class);
         $another_tracker->shouldReceive('getId')->andReturn(111);
-        $artifact_in_another_tracker = Mockery::mock(Tracker_Artifact::class);
+        $artifact_in_another_tracker = Mockery::mock(Artifact::class);
         $artifact_in_another_tracker->shouldReceive('getTracker')->andReturn($another_tracker);
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
@@ -397,13 +401,13 @@ XML;
         $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([1])->andReturn($tracker1);
         $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([2])->andReturn($tracker2);
 
-        $artifact123 = Mockery::mock(Tracker_Artifact::class);
+        $artifact123 = Mockery::mock(Artifact::class);
         $artifact123->shouldReceive('getId')->andReturn(123);
         $artifact123->shouldReceive('getTracker')->andReturn($tracker1);
-        $artifact456 = Mockery::mock(Tracker_Artifact::class);
+        $artifact456 = Mockery::mock(Artifact::class);
         $artifact456->shouldReceive('getId')->andReturn(456);
         $artifact456->shouldReceive('getTracker')->andReturn($tracker1);
-        $artifact789 = Mockery::mock(Tracker_Artifact::class);
+        $artifact789 = Mockery::mock(Artifact::class);
         $artifact789->shouldReceive('getId')->andReturn(789);
         $artifact789->shouldReceive('getTracker')->andReturn($tracker2);
 

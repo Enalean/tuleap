@@ -46,7 +46,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
@@ -68,7 +68,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenUserIsWorkflowUser()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
@@ -89,7 +89,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenBothLastChangesetValueAndSubmittedValueAreNull()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
@@ -110,7 +110,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenFieldHasNoChanges()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
@@ -135,7 +135,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsTrueWhenGivenFieldIsReadOnly()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
@@ -162,7 +162,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedReturnsFalseWhenFieldIsNotReadOnly()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
@@ -188,7 +188,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedChecksFieldWhenLastChangesetWasNull()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = 'Arguslike';
@@ -213,7 +213,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     public function testCanFieldBeUpdatedChecksFieldWhenSubmittedValueIsNull()
     {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $artifact             = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = null;

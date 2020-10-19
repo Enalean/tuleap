@@ -21,7 +21,7 @@
 namespace Tuleap\ArtifactsFolders\Folder;
 
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Controller
 {
@@ -35,7 +35,7 @@ class Controller
         $this->presenter_builder = $presenter_builder;
     }
 
-    public function getChildren(PFUser $user, Tracker_Artifact $artifact)
+    public function getChildren(PFUser $user, Artifact $artifact)
     {
         $artifact_representations = $this->presenter_builder->buildIsChild($user, $artifact);
 

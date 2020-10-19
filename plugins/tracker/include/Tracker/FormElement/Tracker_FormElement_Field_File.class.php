@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForRestCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTusUploadCreator;
@@ -26,8 +27,8 @@ use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
 use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FieldDataFromRESTBuilder;
-use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAttachedProvider;
 use Tuleap\Tracker\FormElement\Field\File\FileFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAttachedProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
@@ -163,14 +164,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -182,7 +183,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
@@ -192,7 +193,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return '';
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
@@ -205,15 +206,15 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in Mail
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param PFUser                          $user             The user who will receive the email
-     * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
+     * @param Artifact                        $artifact The artifact
+     * @param PFUser                          $user     The user who will receive the email
+     * @param bool                            $ignore_perms
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -229,12 +230,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
         $submitter_needed = true;
@@ -243,7 +244,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -637,12 +638,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact            $artifact The artifact
+     * @param Artifact                    $artifact The artifact
      * @param Tracker_ChangesetValue_File $value    The changeset value of this field
      *
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
         if ($value) {
@@ -683,12 +684,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request.
+     * @param Artifact $artifact The artifact
+     * @param mixed    $value    data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return true;
     }
@@ -696,12 +697,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request. May be string or array.
+     * @param Artifact $artifact The artifact
+     * @param mixed    $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
-    public function isValid(Tracker_Artifact $artifact, $value)
+    public function isValid(Artifact $artifact, $value)
     {
         $this->has_errors = false;
 
@@ -744,12 +745,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Validate a required field
      *
-     * @param Tracker_Artifact                $artifact             The artifact to check
-     * @param mixed                           $value      The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed    $value    The submitted value
      *
      * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value)
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $value)
     {
         $this->has_errors = false;
 
@@ -880,7 +881,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         //"old" and "new" value are irrelevant in this context.
         //We just have to know if there is at least one file successfully uploaded
@@ -963,12 +964,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return array
      */
-    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         return [];
     }
 
-    public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $rest_value, ?Artifact $artifact = null)
     {
         //Transform array to object
         $value = json_decode(json_encode($rest_value), false);
@@ -985,7 +986,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $builder->buildFieldDataFromREST($value, $this, $artifact);
     }
 
-    public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)
     {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
@@ -1045,7 +1046,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $visitor->visitFile($this);
     }
 
-    protected function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value)
+    protected function isPreviousChangesetEmpty(Artifact $artifact, $value)
     {
         $last_changeset = $artifact->getLastChangeset();
 

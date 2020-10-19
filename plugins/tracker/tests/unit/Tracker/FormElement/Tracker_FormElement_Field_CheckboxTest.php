@@ -19,6 +19,8 @@
  *
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -39,28 +41,28 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '5125']));
+        $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '5125']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesContainsZero(): void
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '0', '5125']));
+        $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5125']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertTrue($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, null));
+        $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, null));
     }
 
     public function testItHasChangesWhenSubmittedValuesContainsDifferentValues(): void
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertTrue($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '0', '5122']));
+        $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5122']));
     }
 
     public function testItHasAnHiddenFieldForEachCheckbox(): void

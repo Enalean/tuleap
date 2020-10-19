@@ -50,7 +50,7 @@ class NatureCoveredByOverriderTest extends TestCase
     {
         parent::setUp();
 
-        $this->artifact  = Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact  = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
 
         $this->project  = Mockery::spy(\Project::class);

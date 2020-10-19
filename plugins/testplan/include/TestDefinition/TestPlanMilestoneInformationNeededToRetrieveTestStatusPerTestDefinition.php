@@ -55,13 +55,16 @@ final class TestPlanMilestoneInformationNeededToRetrieveTestStatusPerTestDefinit
     public $test_campaign_art_link_field_id;
 
     /**
-     * @param \Tracker_Artifact[] $test_definitions
-     * @psalm-param non-empty-array<\Tracker_Artifact> $test_definitions
-     * @param array<string|int> $current_user_ugroup_ids
-     * @psalm-param non-empty-array<string|int> $current_user_ugroup_ids
+     * @param \Tuleap\Tracker\Artifact\Artifact[]                      $test_definitions
+     *
+     * @psalm-param non-empty-array<\Tuleap\Tracker\Artifact\Artifact> $test_definitions
+     *
+     * @param array<string|int>                                        $current_user_ugroup_ids
+     *
+     * @psalm-param non-empty-array<string|int>                        $current_user_ugroup_ids
      */
     public function __construct(
-        \Tracker_Artifact $milestone,
+        \Tuleap\Tracker\Artifact\Artifact $milestone,
         array $test_definitions,
         array $current_user_ugroup_ids,
         int $test_exec_status_field_id,

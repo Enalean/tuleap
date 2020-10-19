@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
@@ -42,7 +42,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
      */
     private $tracker;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
     /**
@@ -73,7 +73,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         );
 
         $this->user     = Mockery::mock(PFUser::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->tracker  = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getGroupId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
@@ -158,7 +158,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([\Mockery::mock(Tracker_Artifact::class)]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([\Mockery::mock(Artifact::class)]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 

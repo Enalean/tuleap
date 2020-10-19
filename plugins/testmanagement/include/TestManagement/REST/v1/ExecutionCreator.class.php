@@ -23,12 +23,12 @@ namespace Tuleap\TestManagement\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -73,7 +73,7 @@ class ExecutionCreator
     /**
      * @return ArtifactReference
      */
-    public function createTestExecution(int $project_id, PFUser $user, Tracker_Artifact $definition)
+    public function createTestExecution(int $project_id, PFUser $user, Artifact $definition)
     {
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());

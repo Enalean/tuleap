@@ -33877,7 +33877,7 @@
       <code>string</code>
     </InvalidParamDefault>
     <MissingClosureReturnType occurrences="1">
-      <code>function (?Tracker_Artifact $artifact) use (</code>
+      <code>function (?Artifact $artifact) use (</code>
     </MissingClosureReturnType>
     <MissingParamType occurrences="3">
       <code>$artifacts</code>
@@ -33942,7 +33942,7 @@
       <code>$workflow-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingClosureReturnType occurrences="1">
-      <code>function (?Tracker_Artifact $artifact) use (</code>
+      <code>function (?Artifact $artifact) use (</code>
     </MissingClosureReturnType>
     <MissingParamType occurrences="15">
       <code>$artifacts</code>
@@ -34101,7 +34101,7 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CopyArtifact.class.php">
     <InvalidNullableReturnType occurrences="1">
-      <code>Tracker_Artifact[]</code>
+      <code>Artifact[]</code>
     </InvalidNullableReturnType>
     <MissingParamType occurrences="1">
       <code>$message</code>
@@ -34434,6 +34434,153 @@
       <code>hasExternalSemanticDefined</code>
       <code>setCanNotBeMoveDueToExternalPlugin</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/Artifact.php">
+    <DeprecatedFunction occurrences="2">
+      <code>db_fetch_array($res)</code>
+      <code>db_numrows($res)</code>
+    </DeprecatedFunction>
+    <InvalidNullableReturnType occurrences="4">
+      <code>Artifact</code>
+      <code>Tracker_Artifact_Changeset</code>
+      <code>Tracker_FormElement_Field_Burndown</code>
+      <code>bool</code>
+    </InvalidNullableReturnType>
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>self::NO_PARENT</code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement occurrences="1">
+      <code>$assigned_users</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>PFUser[]</code>
+      <code>bool</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$linked_artifact_ids</code>
+    </InvalidScalarArgument>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
+    </LessSpecificReturnStatement>
+    <MissingDocblockType occurrences="1">
+      <code>$field</code>
+    </MissingDocblockType>
+    <MissingParamType occurrences="19">
+      <code>$artlink_fields</code>
+      <code>$comment</code>
+      <code>$comment_format</code>
+      <code>$comment_format_field_name</code>
+      <code>$fields_data</code>
+      <code>$format</code>
+      <code>$hierarchy</code>
+      <code>$linked_artifact_id</code>
+      <code>$linked_artifact_id</code>
+      <code>$linked_artifact_id</code>
+      <code>$linked_artifact_id</code>
+      <code>$milestone_id</code>
+      <code>$parent</code>
+      <code>$permission_type</code>
+      <code>$prefix</code>
+      <code>$prefix</code>
+      <code>$send_notification</code>
+      <code>$siblings</code>
+      <code>$unsubscribe_button</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="7">
+      <code>$changesets</code>
+      <code>$id</code>
+      <code>$per_tracker_id</code>
+      <code>$submitted_by</code>
+      <code>$submitted_on</code>
+      <code>$tracker_id</code>
+      <code>$use_artifact_permissions</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="56">
+      <code>addChangeset</code>
+      <code>clearChangesets</code>
+      <code>doesUserHaveUnsubscribedFromArtifactNotification</code>
+      <code>exportToXML</code>
+      <code>fetchActionButtons</code>
+      <code>fetchColoredXRef</code>
+      <code>fetchHiddenTrackerId</code>
+      <code>fetchTitleContent</code>
+      <code>fetchTitleWithoutUnsubscribeButton</code>
+      <code>filterArtifactIdsIAmAlreadyLinkedTo</code>
+      <code>flattenChangesetArray</code>
+      <code>forceFetchAllChangesets</code>
+      <code>getArtifactlinkDao</code>
+      <code>getAuthorizedUGroups</code>
+      <code>getCachedTitle</code>
+      <code>getChildNaturePresenterCollection</code>
+      <code>getCrossReferenceFactory</code>
+      <code>getCurrentUser</code>
+      <code>getDao</code>
+      <code>getEmailDomain</code>
+      <code>getErrors</code>
+      <code>getLastModifiedBy</code>
+      <code>getNatureIsChildLinkRetriever</code>
+      <code>getNoNatureForLink</code>
+      <code>getPriorityHistory</code>
+      <code>getProjectId</code>
+      <code>getRestUri</code>
+      <code>getSemanticStatusValue</code>
+      <code>getSortedBySubmittedOn</code>
+      <code>getSourceOfAssociationCollectionBuilder</code>
+      <code>getXRefAndTitle</code>
+      <code>hasChildren</code>
+      <code>hasMoreThanOneChangeset</code>
+      <code>isOpen</code>
+      <code>isOpenAtGivenChangeset</code>
+      <code>permission_db_authorized_ugroups</code>
+      <code>prepareElementsForDisplay</code>
+      <code>sendUserDoesNotHavePermissionsErrorCode</code>
+      <code>setAllAncestors</code>
+      <code>setArtifactFactory</code>
+      <code>setAuthorizedUGroups</code>
+      <code>setChangesets</code>
+      <code>setFormElementFactory</code>
+      <code>setHierarchyFactory</code>
+      <code>setParentWithoutPermissionChecking</code>
+      <code>setSiblingsWithoutPermissionChecking</code>
+      <code>setStatus</code>
+      <code>setSubmittedByUser</code>
+      <code>setTitle</code>
+      <code>setTracker</code>
+      <code>setTransactionExecutorForTests</code>
+      <code>summonArtifactAssociators</code>
+      <code>summonArtifactRedirectors</code>
+      <code>unlinkArtifact</code>
+      <code>userHasRankingPermissions</code>
+      <code>wasLastModifiedByAnonymous</code>
+    </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>MustacheRenderer</code>
+    </MoreSpecificReturnType>
+    <NullableReturnStatement occurrences="3">
+      <code>$previous</code>
+      <code>$this-&gt;getFormElementFactory()-&gt;getABurndownField($user, $this-&gt;getTracker())</code>
+      <code>$this-&gt;getHierarchyFactory()-&gt;getParentArtifact($user, $this)</code>
+    </NullableReturnStatement>
+    <PossiblyNullArgument occurrences="1">
+      <code>$this-&gt;getLastChangeset()</code>
+    </PossiblyNullArgument>
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
+      <code>$this-&gt;getUserManager()-&gt;getUserById($this-&gt;submitted_by)</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference occurrences="2">
+      <code>getValue</code>
+      <code>getValue</code>
+    </PossiblyNullReference>
+    <TooManyArguments occurrences="1">
+      <code>getChildNaturePresenterCollection</code>
+    </TooManyArguments>
+    <UndefinedMethod occurrences="4">
+      <code>getContentAsText</code>
+      <code>getText</code>
+      <code>previewAttachment</code>
+      <code>showAttachment</code>
+    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactChildPresenter.class.php">
     <MissingParamType occurrences="1">
@@ -35407,190 +35554,12 @@
       <code>$offset</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact.class.php">
-    <DeprecatedFunction occurrences="2">
-      <code>db_fetch_array($res)</code>
-      <code>db_numrows($res)</code>
-    </DeprecatedFunction>
-    <InvalidNullableReturnType occurrences="4">
-      <code>Tracker_Artifact</code>
-      <code>Tracker_Artifact_Changeset</code>
-      <code>Tracker_FormElement_Field_Burndown</code>
-      <code>bool</code>
-    </InvalidNullableReturnType>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>self::NO_PARENT</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="1">
-      <code>$assigned_users</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>PFUser[]</code>
-      <code>bool</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$linked_artifact_ids</code>
-    </InvalidScalarArgument>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
-    </LessSpecificReturnStatement>
-    <MissingDocblockType occurrences="1">
-      <code>$field</code>
-    </MissingDocblockType>
-    <MissingParamType occurrences="19">
-      <code>$artlink_fields</code>
-      <code>$comment</code>
-      <code>$comment_format</code>
-      <code>$comment_format_field_name</code>
-      <code>$fields_data</code>
-      <code>$format</code>
-      <code>$hierarchy</code>
-      <code>$linked_artifact_id</code>
-      <code>$linked_artifact_id</code>
-      <code>$linked_artifact_id</code>
-      <code>$linked_artifact_id</code>
-      <code>$milestone_id</code>
-      <code>$parent</code>
-      <code>$permission_type</code>
-      <code>$prefix</code>
-      <code>$prefix</code>
-      <code>$send_notification</code>
-      <code>$siblings</code>
-      <code>$unsubscribe_button</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="7">
-      <code>$changesets</code>
-      <code>$id</code>
-      <code>$per_tracker_id</code>
-      <code>$submitted_by</code>
-      <code>$submitted_on</code>
-      <code>$tracker_id</code>
-      <code>$use_artifact_permissions</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="56">
-      <code>addChangeset</code>
-      <code>clearChangesets</code>
-      <code>doesUserHaveUnsubscribedFromArtifactNotification</code>
-      <code>exportToXML</code>
-      <code>fetchActionButtons</code>
-      <code>fetchColoredXRef</code>
-      <code>fetchHiddenTrackerId</code>
-      <code>fetchTitleContent</code>
-      <code>fetchTitleWithoutUnsubscribeButton</code>
-      <code>filterArtifactIdsIAmAlreadyLinkedTo</code>
-      <code>flattenChangesetArray</code>
-      <code>forceFetchAllChangesets</code>
-      <code>getArtifactlinkDao</code>
-      <code>getAuthorizedUGroups</code>
-      <code>getCachedTitle</code>
-      <code>getChildNaturePresenterCollection</code>
-      <code>getCrossReferenceFactory</code>
-      <code>getCurrentUser</code>
-      <code>getDao</code>
-      <code>getEmailDomain</code>
-      <code>getErrors</code>
-      <code>getLastModifiedBy</code>
-      <code>getNatureIsChildLinkRetriever</code>
-      <code>getNoNatureForLink</code>
-      <code>getPriorityHistory</code>
-      <code>getProjectId</code>
-      <code>getRestUri</code>
-      <code>getSemanticStatusValue</code>
-      <code>getSortedBySubmittedOn</code>
-      <code>getSourceOfAssociationCollectionBuilder</code>
-      <code>getXRefAndTitle</code>
-      <code>hasChildren</code>
-      <code>hasMoreThanOneChangeset</code>
-      <code>isOpen</code>
-      <code>isOpenAtGivenChangeset</code>
-      <code>permission_db_authorized_ugroups</code>
-      <code>prepareElementsForDisplay</code>
-      <code>sendUserDoesNotHavePermissionsErrorCode</code>
-      <code>setAllAncestors</code>
-      <code>setArtifactFactory</code>
-      <code>setAuthorizedUGroups</code>
-      <code>setChangesets</code>
-      <code>setFormElementFactory</code>
-      <code>setHierarchyFactory</code>
-      <code>setParentWithoutPermissionChecking</code>
-      <code>setSiblingsWithoutPermissionChecking</code>
-      <code>setStatus</code>
-      <code>setSubmittedByUser</code>
-      <code>setTitle</code>
-      <code>setTracker</code>
-      <code>setTransactionExecutorForTests</code>
-      <code>summonArtifactAssociators</code>
-      <code>summonArtifactRedirectors</code>
-      <code>unlinkArtifact</code>
-      <code>userHasRankingPermissions</code>
-      <code>wasLastModifiedByAnonymous</code>
-    </MissingReturnType>
-    <MoreSpecificReturnType occurrences="1">
-      <code>MustacheRenderer</code>
-    </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="3">
-      <code>$previous</code>
-      <code>$this-&gt;getFormElementFactory()-&gt;getABurndownField($user, $this-&gt;getTracker())</code>
-      <code>$this-&gt;getHierarchyFactory()-&gt;getParentArtifact($user, $this)</code>
-    </NullableReturnStatement>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;getLastChangeset()</code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>$this-&gt;getUserManager()-&gt;getUserById($this-&gt;submitted_by)</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference occurrences="2">
-      <code>getValue</code>
-      <code>getValue</code>
-    </PossiblyNullReference>
-    <TooManyArguments occurrences="1">
-      <code>getChildNaturePresenterCollection</code>
-    </TooManyArguments>
-    <UndefinedMethod occurrences="4">
-      <code>getContentAsText</code>
-      <code>getText</code>
-      <code>previewAttachment</code>
-      <code>showAttachment</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactCreator.class.php">
-    <MissingParamType occurrences="17">
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$send_notification</code>
-      <code>$send_notification</code>
-      <code>$send_notification</code>
-      <code>$submitted_by</code>
-      <code>$submitted_by</code>
-      <code>$submitted_by</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$submitted_on</code>
-      <code>$use_artifact_permissions</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$tracker-&gt;id</code>
-      <code>$tracker-&gt;id</code>
-      <code>$tracker-&gt;id</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>getBareArtifact</code>
-      <code>insertArtifactWithAllData</code>
-      <code>revertBareArtifactInsertion</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$sorted_artifacts</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
-      <code>Tracker_Artifact[]</code>
+      <code>Artifact[]</code>
     </InvalidReturnType>
     <MissingParamType occurrences="4">
       <code>$reverse_order</code>
@@ -37813,7 +37782,7 @@
       <code>$parents</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
-      <code>Tracker_Artifact[]</code>
+      <code>Artifact[]</code>
     </InvalidReturnType>
     <MissingReturnType occurrences="1">
       <code>addParentsOfArtifactToCollection</code>

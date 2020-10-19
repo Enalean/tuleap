@@ -20,6 +20,7 @@
  *
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -290,7 +291,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
 
     public function testItAcceptsValidValues(): void
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

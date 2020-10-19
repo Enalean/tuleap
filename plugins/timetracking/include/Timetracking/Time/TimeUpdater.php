@@ -21,7 +21,6 @@
 namespace Tuleap\Timetracking\Time;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
@@ -29,6 +28,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeUpdater
 {
@@ -63,7 +63,7 @@ class TimeUpdater
      */
     public function addTimeForUserInArtifact(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $added_date,
         $added_time,
         $added_step
@@ -90,7 +90,7 @@ class TimeUpdater
      * @throws TimeTrackingNotAllowedToDeleteException
      * @throws TimeTrackingNotBelongToUserException
      */
-    public function deleteTime(PFUser $user, Tracker_Artifact $artifact, Time $time)
+    public function deleteTime(PFUser $user, Artifact $artifact, Time $time)
     {
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             throw new TimeTrackingNotAllowedToDeleteException();
@@ -110,7 +110,7 @@ class TimeUpdater
      * @throws TimeTrackingMissingTimeException
      * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException
      */
-    public function updateTime(PFUser $user, Tracker_Artifact $artifact, Time $time, $updated_date, $updated_time, $updated_step)
+    public function updateTime(PFUser $user, Artifact $artifact, Time $time, $updated_date, $updated_time, $updated_step)
     {
         if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             throw new TimeTrackingNotAllowedToEditException();

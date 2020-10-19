@@ -36,10 +36,10 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
@@ -67,7 +67,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
      */
     private $milestone_factory;
     /**
-     * @var Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\MockInterface|Artifact
      */
     private $sprint_1_artifact;
     /**
@@ -101,7 +101,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->sprint_1_artifact  = Mockery::mock(Tracker_Artifact::class);
+        $this->sprint_1_artifact  = Mockery::mock(Artifact::class);
         $this->sprint_1_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
 
         $this->planning_id         = 12;
@@ -127,7 +127,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
     {
         $this->artifact_factory->shouldReceive('getOpenArtifactsByTrackerIdUserCanView')
             ->with($this->current_user, $this->planning_tracker_id)
-            ->andReturn(['115' => $this->sprint_1_artifact, '104' => Mockery::mock(Tracker_Artifact::class)]);
+            ->andReturn(['115' => $this->sprint_1_artifact, '104' => Mockery::mock(Artifact::class)]);
 
         $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
             ->with($this->sprint_1_artifact)

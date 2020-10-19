@@ -40,8 +40,12 @@ final class TestPlanLinkedTestDefinitionsTest extends TestCase
     public function testStoreASubsetOfLinkedTestDefinitions(): void
     {
         $artifacts = [
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class)),
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class))
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+                \Tuleap\Tracker\Artifact\Artifact::class
+            )),
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+                \Tuleap\Tracker\Artifact\Artifact::class
+            ))
         ];
         $linked_test_definitions = TestPlanLinkedTestDefinitions::subset($artifacts, 512);
 
@@ -52,8 +56,12 @@ final class TestPlanLinkedTestDefinitionsTest extends TestCase
     public function testCannotGiveASubsetBiggerThanTheTotalNumberOfTestDefinitions(): void
     {
         $artifacts = [
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class)),
-            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class))
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+                \Tuleap\Tracker\Artifact\Artifact::class
+            )),
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
+                \Tuleap\Tracker\Artifact\Artifact::class
+            ))
         ];
 
         $this->expectException(\LogicException::class);

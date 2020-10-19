@@ -19,14 +19,15 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
-use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
+use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -179,7 +180,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return Planning_Milestone|null
      */
-    public function getBareMilestoneByArtifact(PFUser $user, Tracker_Artifact $artifact)
+    public function getBareMilestoneByArtifact(PFUser $user, Artifact $artifact)
     {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
@@ -192,7 +193,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return Planning_Milestone
      */
-    private function getBareMilestoneByArtifactAndPlanning(PFUser $user, Tracker_Artifact $artifact, Planning $planning)
+    private function getBareMilestoneByArtifactAndPlanning(PFUser $user, Artifact $artifact, Planning $planning)
     {
         $milestone = new Planning_ArtifactMilestone(
             $artifact->getTracker()->getProject(),
@@ -266,7 +267,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $milestone;
     }
 
-    protected function getComputedFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name)
+    protected function getComputedFieldValue(PFUser $user, Artifact $milestone_artifact, $field_name)
     {
         $field = $this->formelement_factory->getComputableFieldByNameForUser(
             $milestone_artifact->getTracker()->getId(),
@@ -303,7 +304,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getPlannedArtifacts(
         PFUser $user,
-        Tracker_Artifact $milestone_artifact
+        Artifact $milestone_artifact
     ) {
         if ($milestone_artifact == null) {
             return; //it is not possible!
@@ -322,7 +323,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private function addChildrenPlannedArtifacts(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         TreeNode $parent_node,
         array $parents
     ) {
@@ -740,7 +741,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact, PFUser $user)
+    public function getMilestoneFromArtifactWithPlannedArtifacts(Artifact $artifact, PFUser $user)
     {
         $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
         return $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
@@ -752,7 +753,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, ?TreeNode $planned_artifacts = null)
+    public function getMilestoneFromArtifact(Artifact $artifact, ?TreeNode $planned_artifacts = null)
     {
         $tracker = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
@@ -772,7 +773,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Create Milestones corresponding to an array of artifacts
      *
-     * @param Tracker_Artifact[] $artifacts
+     * @param Artifact[] $artifacts
      *
      * @return Planning_ArtifactMilestone[]
      */
@@ -924,7 +925,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return Planning_ArtifactMilestone
      */
-    private function getMilestoneFromArtifactWithBurndownInfo(Tracker_Artifact $artifact, PFUser $user)
+    private function getMilestoneFromArtifactWithBurndownInfo(Artifact $artifact, PFUser $user)
     {
         $milestone = $this->getMilestoneFromArtifact($artifact);
         $milestone->setHasUsableBurndownField($this->burndown_field_checker->hasUsableBurndownField($user, $milestone));
@@ -932,25 +933,25 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $milestone;
     }
 
-    private function getMilestoneEndDate(Tracker_Artifact $milestone_artifact, PFUser $user)
+    private function getMilestoneEndDate(Artifact $milestone_artifact, PFUser $user)
     {
         return $this->getMilestoneTimePeriod($milestone_artifact, $user)
             ->getEndDate();
     }
 
-    private function isMilestoneCurrent(Tracker_Artifact $milestone_artifact, PFUser $user)
+    private function isMilestoneCurrent(Artifact $milestone_artifact, PFUser $user)
     {
         return $milestone_artifact->isOpen() && ! $this->getMilestoneTimePeriod($milestone_artifact, $user)
             ->isTodayBeforeTimePeriod();
     }
 
-    private function isMilestoneFuture(Tracker_Artifact $milestone_artifact, PFUser $user)
+    private function isMilestoneFuture(Artifact $milestone_artifact, PFUser $user)
     {
         return $milestone_artifact->isOpen() && $this->getMilestoneTimePeriod($milestone_artifact, $user)
             ->isTodayBeforeTimePeriod();
     }
 
-    private function isMilestonePast(Tracker_Artifact $milestone_artifact)
+    private function isMilestonePast(Artifact $milestone_artifact)
     {
         return $milestone_artifact->getStatus() && ! $milestone_artifact->isOpen();
     }
@@ -958,12 +959,12 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return TimePeriodWithoutWeekEnd
      */
-    private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user)
+    private function getMilestoneTimePeriod(Artifact $milestone_artifact, PFUser $user)
     {
         return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifact($milestone_artifact, $user);
     }
 
-    private function milestoneHasStartDate(Tracker_Artifact $milestone_artifact, PFUser $user)
+    private function milestoneHasStartDate(Artifact $milestone_artifact, PFUser $user)
     {
         $time_period = $this->getMilestoneTimePeriod($milestone_artifact, $user);
 
@@ -1005,7 +1006,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return bool
      */
-    private function isClosedMilestone(Tracker_Artifact $artifact)
+    private function isClosedMilestone(Artifact $artifact)
     {
         return ($artifact->getStatus() && ! $artifact->isOpen());
     }
@@ -1013,7 +1014,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return bool
      */
-    public function notCurrentMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)
+    public function notCurrentMilestoneHasStartDate(Artifact $artifact, PFUser $user)
     {
         return (! $this->isMilestoneCurrent($artifact, $user) && $this->milestoneHasStartDate($artifact, $user));
     }
@@ -1021,7 +1022,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return bool
      */
-    public function notFutureMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)
+    public function notFutureMilestoneHasStartDate(Artifact $artifact, PFUser $user)
     {
         return (! $this->isMilestoneFuture($artifact, $user) && $this->milestoneHasStartDate($artifact, $user));
     }

@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
 use FeedbackDao;
-use Psr\Log\NullLogger;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
-use Tracker_Artifact;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Changeset as Changeset;
@@ -71,6 +70,7 @@ use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
@@ -91,15 +91,15 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
-use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -1132,7 +1132,7 @@ class ArtifactsResource extends AuthenticatedResource
     /**
      * @param int $id
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      * @throws Project_AccessProjectNotFoundException 404
      * @throws Project_AccessException 403
      * @throws RestException 404
@@ -1171,12 +1171,12 @@ class ArtifactsResource extends AuthenticatedResource
         Header::allowOptionsGetPutDeletePatch();
     }
 
-    private function sendLastModifiedHeader(Tracker_Artifact $artifact)
+    private function sendLastModifiedHeader(Artifact $artifact)
     {
         Header::lastModified($artifact->getLastUpdateDate());
     }
 
-    private function sendETagHeader(Tracker_Artifact $artifact)
+    private function sendETagHeader(Artifact $artifact)
     {
         Header::eTag($artifact->getVersionIdentifier());
     }

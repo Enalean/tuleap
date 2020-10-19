@@ -20,23 +20,23 @@
 
 namespace Tuleap\TestManagement\Campaign\Execution;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class DefinitionNotFoundException extends \Exception
 {
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $execution_artifact;
 
-    public function __construct(Tracker_Artifact $execution_artifact)
+    public function __construct(Artifact $execution_artifact)
     {
         parent::__construct();
         $this->execution_artifact = $execution_artifact;
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getExecutionArtifact()
     {

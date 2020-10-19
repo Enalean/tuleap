@@ -19,9 +19,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-use Tuleap\REST\JsonCast;
 use AgileDashboard_KanbanItemDao;
-use Tracker_Artifact;
+use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TimeInfoFactory
 {
@@ -37,7 +37,7 @@ class TimeInfoFactory
     }
 
     /** @return array */
-    public function getTimeInfo(Tracker_Artifact $artifact)
+    public function getTimeInfo(Artifact $artifact)
     {
         $timeinfo = [];
         foreach ($this->dao->searchTimeInfoForItem($artifact->getTrackerId(), $artifact->getId()) as $row) {

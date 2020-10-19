@@ -19,7 +19,9 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -42,7 +44,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
     /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao */
     private $nature_dao;
 
-    /** @var  Tracker_Artifact */
+    /** @var  Artifact */
     private $artifact;
 
     protected function setUp(): void
@@ -52,7 +54,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->nature_dao       = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class);
-        $this->artifact         = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact         = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturns(888);
 
         $this->artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();

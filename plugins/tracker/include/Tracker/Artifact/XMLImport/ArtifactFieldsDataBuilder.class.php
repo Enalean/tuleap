@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -121,7 +122,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     /**
      * @return array
      */
-    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by, Tracker_Artifact $artifact)
+    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by, Artifact $artifact)
     {
         $data = [];
 
@@ -138,7 +139,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     private function getChangesetData(
         SimpleXMLElement $xml_field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $data
     ) {
         foreach ($xml_field_change as $field_change) {
@@ -168,7 +169,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         try {
             $submitted_value = $this->getFieldData($field, $field_change, $submitted_by, $artifact);
@@ -193,18 +194,18 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
      * An artifact is needed by List type of field to do Workflow check
      * But as workflow is disabled we don't care
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     private function createFakeArtifact()
     {
-        return new Tracker_Artifact(-1, $this->tracker->getID(), -1, -1, -1);
+        return new Artifact(-1, $this->tracker->getID(), -1, -1, -1);
     }
 
     private function getFieldData(
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
-        Tracker_Artifact $artifact
+        Artifact $artifact
     ) {
         $type = (string) $field_change['type'];
 

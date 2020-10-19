@@ -78,7 +78,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         );
 
         $tracker      = $this->buildTrackerMock();
-        $artifact     = Mockery::spy(\Tracker_Artifact::class);
+        $artifact     = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
         $artifact->shouldReceive(
             [
@@ -420,7 +420,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             [
                 'getId'      => 888,
                 'getProject' => $project,
-                'getName'    => 'Tracker_Artifact',
+                'getName'    => 'Tuleap\Artifact\Artifact',
                 'getColor'   => TrackerColor::default()
             ]
         );
@@ -428,12 +428,12 @@ final class ArtifactRepresentationBuilderTest extends TestCase
     }
 
     /**
-     * @return Mockery\MockInterface|\Tracker_Artifact
+     * @return Mockery\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private function buildBasicArtifactMock()
     {
         $tracker  = $this->buildTrackerMock();
-        $artifact = Mockery::spy(\Tracker_Artifact::class);
+        $artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(
             [
                 'getId'              => 756,

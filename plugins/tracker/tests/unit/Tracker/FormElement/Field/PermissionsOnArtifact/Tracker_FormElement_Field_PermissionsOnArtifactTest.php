@@ -24,9 +24,9 @@ use ForgeAccess;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -39,13 +39,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //php
     private $field;
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
     public function setUp(): void
     {
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->field    = Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class)
                                  ->makePartial()

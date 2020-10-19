@@ -36,7 +36,7 @@ class AssignedToRepresentationBuilderTest extends TestCase
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder($tracker_form_element_factory, $user_manager);
 
         $user      = \Mockery::mock(\PFUser::class);
-        $execution = \Mockery::mock(\Tracker_Artifact::class);
+        $execution = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $execution->shouldReceive('getTrackerId')->andReturn(1);
 
         $representation = $assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution);

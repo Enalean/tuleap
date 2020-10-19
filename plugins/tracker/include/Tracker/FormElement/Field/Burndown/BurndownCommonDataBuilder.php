@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use Psr\Log\LoggerInterface;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tuleap\TimezoneRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
@@ -66,7 +66,7 @@ class BurndownCommonDataBuilder
      * @return bool
      */
     public function getBurndownCalculationStatus(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         TimePeriodWithoutWeekEnd $time_period,
         $capacity,
@@ -95,7 +95,7 @@ class BurndownCommonDataBuilder
     /**
      * @return int|null
      */
-    public function getCapacity(Tracker_Artifact $artifact, PFUser $user)
+    public function getCapacity(Artifact $artifact, PFUser $user)
     {
         $capacity = null;
 

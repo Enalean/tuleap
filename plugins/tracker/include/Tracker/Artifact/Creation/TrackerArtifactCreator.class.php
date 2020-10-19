@@ -25,7 +25,6 @@ use DataAccessQueryException;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_FieldsValidator;
 use Tracker_Artifact_Changeset_InitialChangesetCreatorBase;
@@ -34,6 +33,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -108,7 +108,7 @@ class TrackerArtifactCreator
      * Add an artifact without its first changeset to a tracker
      * The artifact must be completed by writing its first changeset
      */
-    public function createBare(Tracker $tracker, PFUser $user, int $submitted_on): ?Tracker_Artifact
+    public function createBare(Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact
     {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
         $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on);
@@ -122,7 +122,7 @@ class TrackerArtifactCreator
      * Creates the first changeset for a bare artifact.
      */
     public function createFirstChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $user,
         int $submitted_on,
@@ -158,7 +158,7 @@ class TrackerArtifactCreator
      * already have checked them.
      */
     private function createFirstChangesetNoValidation(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $user,
         int $submitted_on,
@@ -215,7 +215,7 @@ class TrackerArtifactCreator
         bool $send_notification,
         bool $should_visit_be_recorded,
         ChangesetValidationContext $context
-    ): ?Tracker_Artifact {
+    ): ?Artifact {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
         if (! $this->fields_validator->validate($artifact, $user, $fields_data, $context)) {
@@ -256,7 +256,7 @@ class TrackerArtifactCreator
         return $artifact;
     }
 
-    private function revertBareArtifactInsertion(Tracker_Artifact $artifact): void
+    private function revertBareArtifactInsertion(Artifact $artifact): void
     {
         $this->artifact_dao->delete($artifact->getId());
     }
@@ -268,7 +268,7 @@ class TrackerArtifactCreator
     private function insertArtifact(
         Tracker $tracker,
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         int $submitted_on
     ): bool {
         $use_artifact_permissions = 0;
@@ -291,7 +291,7 @@ class TrackerArtifactCreator
      */
     private function insertArtifactWithAllData(
         Tracker $tracker,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         int $submitted_on,
         int $submitted_by
     ): int {
@@ -306,7 +306,7 @@ class TrackerArtifactCreator
         );
     }
 
-    public function createBareWithAllData(Tracker $tracker, int $artifact_id, int $submitted_on, int $submitted_by): ?Tracker_Artifact
+    public function createBareWithAllData(Tracker $tracker, int $artifact_id, int $submitted_on, int $submitted_by): ?Artifact
     {
         try {
             $artifact = $this->getBareArtifact($tracker, $submitted_on, $submitted_by, $artifact_id);
@@ -318,7 +318,7 @@ class TrackerArtifactCreator
         }
     }
 
-    private function getBareArtifact(Tracker $tracker, int $submitted_on, int $submitted_by, int $artifact_id): Tracker_Artifact
+    private function getBareArtifact(Tracker $tracker, int $submitted_on, int $submitted_by, int $artifact_id): Artifact
     {
         $artifact = $this->artifact_factory->getInstanceFromRow(
             [

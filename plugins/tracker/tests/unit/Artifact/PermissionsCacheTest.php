@@ -29,7 +29,7 @@ class PermissionsCacheTest extends TestCase
 
     public function testItUsesCacheWhenPossible(): void
     {
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(102);
 
         $user = Mockery::mock(\PFUser::class);

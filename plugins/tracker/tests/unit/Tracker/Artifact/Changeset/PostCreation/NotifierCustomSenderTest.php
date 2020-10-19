@@ -23,19 +23,19 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use BaseLanguage;
+use ConfigNotificationAssignedTo;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tracker_Artifact_Changeset;
 use Tracker;
-use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use UserHelper;
-use Tracker_Artifact_MailGateway_RecipientFactory;
-use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
-use ConfigNotificationAssignedTo;
 
 class NotifierCustomSenderTest extends TestCase
 {
@@ -78,7 +78,7 @@ class NotifierCustomSenderTest extends TestCase
         $tracker = \Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
-        $artifact = \Mockery::spy(Tracker_Artifact::class);
+        $artifact = \Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(111);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -141,7 +141,7 @@ class NotifierCustomSenderTest extends TestCase
 
         $changeset->shouldReceive('getTracker')->andReturn($tracker);
 
-        $artifact = \Mockery::spy(Tracker_Artifact::class);
+        $artifact = \Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(666);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 

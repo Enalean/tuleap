@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_ArtifactLinkInfo
 {
     protected $artifact_id;
@@ -28,7 +30,7 @@ class Tracker_ArtifactLinkInfo
     protected $last_changeset_id;
     private $nature;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -49,7 +51,7 @@ class Tracker_ArtifactLinkInfo
         $this->nature            = $nature;
     }
 
-    public static function buildFromArtifact(Tracker_Artifact $artifact, string $nature): self
+    public static function buildFromArtifact(Artifact $artifact, string $nature): self
     {
         $tracker = $artifact->getTracker();
 
@@ -174,7 +176,7 @@ class Tracker_ArtifactLinkInfo
         return $artifact !== null && $artifact->userCanView($user);
     }
 
-    public function getArtifact(): ?Tracker_Artifact
+    public function getArtifact(): ?Artifact
     {
         if (! $this->artifact) {
             $this->artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
@@ -182,7 +184,7 @@ class Tracker_ArtifactLinkInfo
         return $this->artifact;
     }
 
-    private function setArtifact(Tracker_Artifact $artifact): self // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
+    private function setArtifact(Artifact $artifact): self // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
     {
         $this->artifact    = $artifact;
         $this->artifact_id = $artifact->getId();

@@ -38,10 +38,10 @@ use Project;
 use TestHelper;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class MilestoneFactoryGetMilestoneTest extends TestCase
@@ -108,7 +108,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
         $sprint_planning   = Mockery::mock(Planning::class);
         $hackfest_planning = Mockery::mock(Planning::class);
 
-        $release_1_0 = Mockery::mock(Tracker_Artifact::class);
+        $release_1_0 = Mockery::mock(Artifact::class);
         $release_1_0->shouldReceive('getId')->andReturn(1);
         $sprint_1      = $this->getArtifactAllUserConViewForTracker($sprints_tracker, 101);
         $sprint_2      = $this->getArtifactAllUserConViewForTracker($sprints_tracker, 102);
@@ -238,19 +238,19 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
 
     public function testItCanSetMilestonesWithAHierarchyDepthGreaterThan2(): void
     {
-        $depth3_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth3_artifact = Mockery::mock(Artifact::class);
         $depth3_artifact->shouldReceive('getId')->andReturn(3);
         $depth3_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $depth2_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth2_artifact = Mockery::mock(Artifact::class);
         $depth2_artifact->shouldReceive('getId')->andReturn(2);
         $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth3_artifact]);
 
-        $depth1_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth1_artifact = Mockery::mock(Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(1);
         $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(100);
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
 
@@ -268,7 +268,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
     {
         $root_aid = 100;
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn($root_aid);
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
@@ -283,11 +283,11 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
     {
         $root_aid = 100;
 
-        $depth1_artifact = Mockery::mock(Tracker_Artifact::class);
+        $depth1_artifact = Mockery::mock(Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(9999);
         $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $root_artifact = Mockery::mock(Tracker_Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn($root_aid);
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
 
@@ -300,11 +300,11 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
     }
 
     /**
-     * @return Mockery\MockInterface|Tracker_Artifact
+     * @return Mockery\MockInterface|Artifact
      */
     private function getArtifactAllUserConViewForTracker(Tracker $tracker, int $id)
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('userCanView')->andReturnTrue();
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getId')->andReturn($id);

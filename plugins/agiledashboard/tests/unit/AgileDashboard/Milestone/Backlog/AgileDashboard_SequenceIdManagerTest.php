@@ -31,7 +31,7 @@ use AgileDashboard_SequenceIdManager;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -58,27 +58,27 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
      */
     private $artifact_id_6;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_1;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_2;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_3;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_4;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_5;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_6;
     /**
@@ -161,22 +161,22 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $this->artifact_id_2 = 456;
         $this->artifact_id_3 = 789;
 
-        $this->artifact_1 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_1 = Mockery::mock(Artifact::class);
         $this->artifact_1->shouldReceive('getId')->andReturn($this->artifact_id_1);
-        $this->artifact_2 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_2 = Mockery::mock(Artifact::class);
         $this->artifact_2->shouldReceive('getId')->andReturn($this->artifact_id_2);
-        $this->artifact_3 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_3 = Mockery::mock(Artifact::class);
         $this->artifact_3->shouldReceive('getId')->andReturn($this->artifact_id_3);
 
         $artifact_id_4       = 254;
         $artifact_id_5       = 255;
         $this->artifact_id_6 = 256;
 
-        $this->artifact_4 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_4 = Mockery::mock(Artifact::class);
         $this->artifact_4->shouldReceive('getId')->andReturn($artifact_id_4);
-        $this->artifact_5 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_5 = Mockery::mock(Artifact::class);
         $this->artifact_5->shouldReceive('getId')->andReturn($artifact_id_5);
-        $this->artifact_6 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_6 = Mockery::mock(Artifact::class);
         $this->artifact_6->shouldReceive('getId')->andReturn($this->artifact_id_6);
 
         $this->backlog_item_1 = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItem::class)

@@ -20,13 +20,13 @@
 
 namespace Tuleap\CrossTracker\Report\CSV;
 
-use Tracker_Artifact;
 use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\CSV\Format\FormElementToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\ValueVisitable;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class SimilarFieldsFormatter
 {
@@ -47,7 +47,7 @@ class SimilarFieldsFormatter
      * @return mixed[]
      */
     public function formatSimilarFields(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         SimilarFieldCollection $similar_fields,
         FormatterParameters $parameters
     ) {

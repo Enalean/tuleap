@@ -20,8 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class SimilarFieldCollection implements \IteratorAggregate
 {
@@ -104,7 +104,7 @@ class SimilarFieldCollection implements \IteratorAggregate
     /**
      * @return Tracker_FormElement_Field|null
      */
-    public function getField(Tracker_Artifact $artifact, SimilarFieldIdentifier $identifier)
+    public function getField(Artifact $artifact, SimilarFieldIdentifier $identifier)
     {
         $this->sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded();
         $identifier_string = $identifier->getIdentifierWithBindType();

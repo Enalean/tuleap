@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_ArtifactNodeTest extends \PHPUnit\Framework\TestCase
 {
@@ -31,7 +33,7 @@ final class Tracker_ArtifactNodeTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->artifact = new Tracker_Artifact(9787, 123, null, 10, null);
+        $this->artifact = new Artifact(9787, 123, null, 10, null);
         $this->data     = ['somekey' => 'somevalue'];
         $this->node     = new ArtifactNode($this->artifact, $this->data);
     }

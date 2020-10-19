@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class XMLImportFieldStrategyComputedTest extends TestCase
 {
@@ -40,7 +40,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
 
         $this->assertSame($expected_result, $change_computed);
@@ -56,7 +56,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
         $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
         $this->assertSame($expected_result, $change_computed);
@@ -73,7 +73,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
                   </field_change>');
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
-        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
+        $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Artifact::class));
         $expected_result = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'

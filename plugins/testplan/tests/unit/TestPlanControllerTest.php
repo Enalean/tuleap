@@ -223,7 +223,7 @@ class TestPlanControllerTest extends TestCase
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
-        $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tracker_Artifact::class));
+        $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
         $milestone->shouldReceive('getArtifactTitle')->andReturn("Title");
 
         $this->milestone_factory
@@ -261,7 +261,7 @@ class TestPlanControllerTest extends TestCase
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
-        $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tracker_Artifact::class));
+        $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
         $milestone->shouldReceive('getArtifactTitle')->andReturn("Title");
 
         $this->milestone_factory

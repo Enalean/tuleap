@@ -19,9 +19,9 @@
 
 namespace Tuleap\Tracker\RealTime;
 
-use Tuleap\RealTime\MessageRightsPresenter;
 use Tracker_Permission_PermissionsSerializer;
-use Tracker_Artifact;
+use Tuleap\RealTime\MessageRightsPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactRightsPresenter implements MessageRightsPresenter
 {
@@ -33,7 +33,7 @@ class ArtifactRightsPresenter implements MessageRightsPresenter
     public $field;
 
     public function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_Permission_PermissionsSerializer $permission_serializer
     ) {
         $this->submitter_id       = intval($artifact->getSubmittedByUser()->getId());

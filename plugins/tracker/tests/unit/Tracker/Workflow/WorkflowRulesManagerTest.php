@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesBuilderFactory;
@@ -32,6 +31,7 @@ use Tracker_Workflow_Trigger_RulesDao;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_Trigger_TriggerRule;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class WorkflowRulesManagerTest extends TestCase
 {
@@ -66,7 +66,7 @@ final class WorkflowRulesManagerTest extends TestCase
         $rules_dao->shouldReceive('searchForInvolvedRulesForChildrenLastChangeset')
             ->andReturn([['rule_id' => 963]]);
 
-        $parent_artifact = Mockery::mock(Tracker_Artifact::class);
+        $parent_artifact = Mockery::mock(Artifact::class);
         $parent_artifact->shouldReceive('getId')->andReturn(147);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
@@ -74,7 +74,7 @@ final class WorkflowRulesManagerTest extends TestCase
         Tracker_ArtifactFactory::setInstance($artifact_factory);
 
         $rules_processor->shouldReceive('process')->withArgs(
-            static function (Tracker_Artifact $artifact) use ($rules_manager): bool {
+            static function (Artifact $artifact) use ($rules_manager): bool {
                 $rules_manager->processChildrenTriggers($artifact);
                 return true;
             }

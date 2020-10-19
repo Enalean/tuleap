@@ -20,6 +20,8 @@
 */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
@@ -35,7 +37,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -248,7 +249,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @return array
      * @throws Exception
      */
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if (array_key_exists('links', $value) && is_array($value['links'])) {
             $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromArray($value['links']);
@@ -260,7 +261,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)
     {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
@@ -268,18 +269,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Get the field data (REST or CSV) for artifact submission
      *
-     * @param string           $value The rest field value
-     * @param Tracker_Artifact $artifact     The artifact the value is to be added/removed
+     * @param string   $value    The rest field value
+     * @param Artifact $artifact The artifact the value is to be added/removed
      *
      * @return array
      */
-    public function getFieldData($value, ?Tracker_Artifact $artifact = null)
+    public function getFieldData($value, ?Artifact $artifact = null)
     {
         $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($value);
         return $this->getDataLikeWebUI($submitted_ids, [$value], $artifact);
     }
 
-    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         return $this->getFieldData($csv_value, $artifact);
     }
@@ -290,7 +291,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return array
      */
-    private function getDataLikeWebUI(array $submitted_ids, array $submitted_values, ?Tracker_Artifact $artifact = null)
+    private function getDataLikeWebUI(array $submitted_ids, array $submitted_values, ?Artifact $artifact = null)
     {
         $existing_links   = $this->getArtifactLinkIdsOfLastChangeset($artifact);
         $new_values       = array_diff($submitted_ids, $existing_links);
@@ -299,7 +300,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->getFieldDataBuilder()->getDataLikeWebUI($new_values, $removed_values, $submitted_values);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         $user_manager   = UserManager::instance();
         $user           = $user_manager->getCurrentUser();
@@ -336,7 +337,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
     }
 
-    private function getArtifactLinkIdsOfLastChangeset(?Tracker_Artifact $artifact = null)
+    private function getArtifactLinkIdsOfLastChangeset(?Artifact $artifact = null)
     {
         $link_ids = [];
 
@@ -494,17 +495,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Fetch the html widget for the field
      *
-     * @param Tracker_Artifact $artifact               Artifact on which we operate
-     * @param string           $name                   The name, if any
-     * @param string           $prefill_new_values     Prefill new values field (what the user has submitted, if any)
-     * @param array            $prefill_removed_values Pre-remove values (what the user has submitted, if any)
-     * @param string           $prefill_parent         Prefilled parent (what the user has submitted, if any) - Only valid on submit
-     * @param bool             $read_only              True if the user can't add or remove links
+     * @param Artifact $artifact               Artifact on which we operate
+     * @param string   $name                   The name, if any
+     * @param string   $prefill_new_values     Prefill new values field (what the user has submitted, if any)
+     * @param array    $prefill_removed_values Pre-remove values (what the user has submitted, if any)
+     * @param string   $prefill_parent         Prefilled parent (what the user has submitted, if any) - Only valid on submit
+     * @param bool     $read_only              True if the user can't add or remove links
      *
      * @return string html
      */
     private function fetchHtmlWidget(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $name,
         ArtifactLinksToRender $artifact_links_to_render,
         $prefill_new_values,
@@ -939,14 +940,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -957,7 +958,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     private function fetchLinks(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ArtifactLinksToRender $artifact_links_to_render,
         array $submitted_values
     ) {
@@ -1021,7 +1022,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function getReverseArtifactLinksToRender(Tracker_Artifact $artifact)
+    private function getReverseArtifactLinksToRender(Artifact $artifact)
     {
         $reverse_links = $this->getReverseLinks($artifact->getId());
 
@@ -1035,7 +1036,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function fetchReverseLinks(Tracker_Artifact $artifact)
+    private function fetchReverseLinks(Artifact $artifact)
     {
         $from_aid = $artifact->getId();
 
@@ -1060,13 +1061,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
     public function fetchArtifactValueReadOnly(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
         ?ArtifactLinksToRender $artifact_links_to_render = null
     ) {
@@ -1079,13 +1080,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $links_tab_read_only . $reverse_links_tab;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -1093,7 +1094,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
     }
 
-    private function fetchLinksReadOnly(Tracker_Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render)
+    private function fetchLinksReadOnly(Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render)
     {
         $read_only              = true;
         $name                   = '';
@@ -1154,7 +1155,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
         // Here to avoid having to pass null arg for fetchHtmlWidget
-        $artifact = new Tracker_Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
+        $artifact = new Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
 
         $artifact_links_to_render = new ArtifactLinksToRender(
             $this->getCurrentUser(),
@@ -1205,7 +1206,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
         if ($value != null) {
@@ -1230,15 +1231,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param PFUser                          $user             The user who will receive the email
-     * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
+     * @param Artifact                        $artifact The artifact
+     * @param PFUser                          $user     The user who will receive the email
+     * @param bool                            $ignore_perms
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -1404,7 +1405,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         if (! $old_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink) {
             return false;
@@ -1452,12 +1453,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param array            $value    data coming from the request.
+     * @param Artifact $artifact The artifact
+     * @param array    $value    data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
-    public function isValid(Tracker_Artifact $artifact, $value)
+    public function isValid(Artifact $artifact, $value)
     {
         $this->has_errors = ! $this->validate($artifact, $value);
 
@@ -1467,12 +1468,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Validate a required field
      *
-     * @param Tracker_Artifact                $artifact             The artifact to check
-     * @param mixed                           $submitted_value      The submitted value
+     * @param Artifact $artifact        The artifact to check
+     * @param mixed    $submitted_value The submitted value
      *
      * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value)
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
     {
         if ((! is_array($submitted_value) || empty($value['new_values'])) && $this->isRequired()) {
             if (! $this->isEmpty($submitted_value, $artifact)) {
@@ -1497,7 +1498,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return bool true if the submitted value is empty
      */
-    public function isEmpty($submitted_value, Tracker_Artifact $artifact)
+    public function isEmpty($submitted_value, Artifact $artifact)
     {
         $hasNoNewValues           = empty($submitted_value['new_values']);
         $hasNoLastChangesetValues = true;
@@ -1539,14 +1540,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     /**
      * Validate a value
-     * @param Tracker_Artifact $artifact The artifact
-     * @param string           $value    data coming from the request. Should be artifact id separated by comma
+     *
+     * @param Artifact $artifact The artifact
+     * @param string   $value    data coming from the request. Should be artifact id separated by comma
      *
      * @return bool true if the value is considered ok
      * @deprecated Use ArtifactLinkValidator instead
      *
      */
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return true;
     }
@@ -1584,7 +1586,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @see Tracker_FormElement_Field::postSaveNewChangeset()
      */
     public function postSaveNewChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null
@@ -1627,7 +1629,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     public function saveNewChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_Changeset $old_changeset,
         int $new_changeset_id,
         $submitted_value,
@@ -1723,7 +1725,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
      * @param PFUser                       $user      The user who will see the artifacts
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user)
     {
@@ -1740,7 +1742,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * Retrieve linked artifacts and reverse linked artifacts according to user's permissions
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user)
     {
@@ -1800,7 +1802,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    /** @return Tracker_Artifact|null */
+    /** @return Artifact|null */
     private function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user)
     {
         $artifact = $this->getArtifactFactory()->getArtifactById($id);

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -115,7 +114,7 @@ class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
 
     private function mockAnArtifact($value, $id)
     {
-        $artifact = \Mockery::mock(Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Artifact::class);
         $changeset = \Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $changeset->shouldReceive('getValue')->andReturn($value);
         $artifact->shouldReceive('getValue')->andReturn($changeset);

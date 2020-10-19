@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 
@@ -43,7 +44,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
     /** @var Workflow */
     private $workflow;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var Tracker_FormElement_Field */
@@ -96,7 +97,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
         $this->changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
         $this->changeset->shouldReceive('getValue')->with($this->field1)->andReturns($this->changeset_value1);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class));
         $this->artifact->shouldReceive('getWorkflow')->andReturns($this->workflow);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($this->changeset);

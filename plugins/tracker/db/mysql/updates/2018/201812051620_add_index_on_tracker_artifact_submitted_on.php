@@ -33,7 +33,7 @@ class b201812051620_add_index_on_tracker_artifact_submitted_on extends ForgeUpgr
     public function up()
     {
         $this->db->addIndex(
-            'tracker_artifact',
+            'Tuleap\Artifact\Artifact',
             'idx_submitted_on',
             'alter table tracker_artifact add index idx_submitted_on(submitted_on)'
         );

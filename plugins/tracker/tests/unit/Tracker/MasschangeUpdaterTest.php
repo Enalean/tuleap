@@ -29,7 +29,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactDao;
@@ -42,6 +41,7 @@ use Tracker_Report;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class MasschangeUpdaterTest extends TestCase
 {
@@ -80,11 +80,11 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([]);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_201 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_201 = Mockery::mock(Artifact::class);
         $artifact_201->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
         $artifact_201->shouldReceive('createNewChangeset')->once();
         $artifact_factory->shouldReceive('getArtifactById')->with(201)->andReturn($artifact_201);
-        $artifact_202 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_202 = Mockery::mock(Artifact::class);
         $artifact_202->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $artifact_202->shouldReceive('createNewChangeset')->once();
         $artifact_factory->shouldReceive('getArtifactById')->with(202)->andReturn($artifact_202);
@@ -126,13 +126,13 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([]);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_201 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_201 = Mockery::mock(Artifact::class);
         $artifact_201->shouldReceive('getId')->andReturn(201);
         $artifact_201->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
         $artifact_201->shouldReceive('userCanView')->andReturn(true);
         $artifact_201->shouldReceive('createNewChangeset');
         $artifact_factory->shouldReceive('getArtifactById')->with(201)->andReturn($artifact_201);
-        $artifact_202 = Mockery::mock(Tracker_Artifact::class);
+        $artifact_202 = Mockery::mock(Artifact::class);
         $artifact_202->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
         $artifact_202->shouldReceive('getId')->andReturn(202);
         $artifact_202->shouldReceive('userCanView')->andReturn(true);
@@ -205,7 +205,7 @@ final class MasschangeUpdaterTest extends TestCase
         $form_element_factory->shouldReceive('getUsedListFieldById')->with($tracker, 3202)->andReturn($source_and_target_field_both_rules);
         $form_element_factory->shouldReceive('getUsedListFieldById')->with($tracker, 3203)->andReturn($target_field_rule2);
 
-        $artifact       = Mockery::mock(Tracker_Artifact::class);
+        $artifact       = Mockery::mock(Artifact::class);
         $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);

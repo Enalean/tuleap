@@ -30,8 +30,8 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Project;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TopBacklogElementsToAddCheckerTest extends TestCase
 {
@@ -68,12 +68,12 @@ class TopBacklogElementsToAddCheckerTest extends TestCase
     private $root_planning;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_201;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact_202;
 
@@ -97,8 +97,8 @@ class TopBacklogElementsToAddCheckerTest extends TestCase
         $this->root_planning = Mockery::mock(Planning::class);
         $this->root_planning->shouldReceive('getBacklogTrackersIds')->andReturn([101, 104]);
 
-        $this->artifact_201 = Mockery::mock(Tracker_Artifact::class);
-        $this->artifact_202 = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact_201 = Mockery::mock(Artifact::class);
+        $this->artifact_202 = Mockery::mock(Artifact::class);
     }
 
     public function testItDoesNotThrowExceptionIfArtifactsAreInTopBacklogTracker(): void

@@ -23,7 +23,6 @@ namespace Tuleap\TestManagement\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
@@ -34,6 +33,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class StepsResultsChangesBuilderTest extends TestCase
@@ -59,8 +59,8 @@ final class StepsResultsChangesBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->user                       = $this->createMock(PFUser::class);
-        $this->execution_artifact         = $this->createMock(Tracker_Artifact::class);
-        $this->definition_artifact        = $this->createMock(Tracker_Artifact::class);
+        $this->execution_artifact         = $this->createMock(Artifact::class);
+        $this->definition_artifact        = $this->createMock(Artifact::class);
         $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
         $this->execution_dao              = $this->createMock(ExecutionDao::class);
         $this->execution_field            = $this->createMock(StepExecution::class);

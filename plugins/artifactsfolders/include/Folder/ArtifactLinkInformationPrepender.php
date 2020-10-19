@@ -22,7 +22,7 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use Codendi_HTMLPurifier;
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactLinkInformationPrepender
 {
@@ -44,7 +44,7 @@ class ArtifactLinkInformationPrepender
     }
 
     public function prependArtifactLinkInformation(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $current_user,
         $reverse_artifact_links,
         $read_only,
@@ -79,7 +79,7 @@ class ArtifactLinkInformationPrepender
         $purifier = Codendi_HTMLPurifier::instance();
         $folders = [];
         foreach ($folder_hierarchy as $folder) {
-            \assert($folder instanceof Tracker_Artifact);
+            \assert($folder instanceof Artifact);
             $uri = $folder->getUri() . '&view=artifactsfolders';
 
             $link = '<a href="' . $purifier->purify($uri) . '" class="direct-link-to-artifact">';
@@ -93,10 +93,10 @@ class ArtifactLinkInformationPrepender
     }
 
     private function fetchSelectBox(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $current_user,
         array $additional_classes,
-        ?Tracker_Artifact $current_folder = null
+        ?Artifact $current_folder = null
     ) {
         $class = "";
         if (count($additional_classes) === 0) {

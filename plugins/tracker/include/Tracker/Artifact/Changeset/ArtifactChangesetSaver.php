@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetDao;
 use Tracker_ArtifactDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
@@ -78,7 +78,7 @@ class ArtifactChangesetSaver
      * @throws \Tracker_Artifact_Exception_CannotCreateNewChangeset
      */
     public function saveChangeset(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $submitter,
         int $submitted_on,
         TrackerImportConfig $import_config

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 class Tracker_Artifact_IncomingMessageInsecureBuilder
@@ -114,7 +115,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     private function getArtifactFromMailHeader($mail_receiver)
     {

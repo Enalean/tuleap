@@ -25,8 +25,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_Artifact;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends TestCase
 {
@@ -51,7 +51,7 @@ class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends TestCase
         $import_strategie = new TrackerArtifactXMLImportXMLImportFieldStrategySteps();
         $field            = Mockery::mock(Tracker_FormElement_Field::class);
         $user             = Mockery::mock(PFUser::class);
-        $artifact         = Mockery::mock(Tracker_Artifact::class);
+        $artifact         = Mockery::mock(Artifact::class);
 
         $data = [
             'description_format'      => ["text", "html"],

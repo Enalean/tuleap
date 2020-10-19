@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 class ArtifactMatchingReportCollection
 {
-    /** @var \Tracker_Artifact[] */
+    /** @var \Tuleap\Tracker\Artifact\Artifact[] */
     private $artifacts;
     /** @var int */
     private $total_size;
@@ -34,7 +34,7 @@ class ArtifactMatchingReportCollection
     }
 
     /**
-     * @return \Tracker_Artifact[]
+     * @return \Tuleap\Tracker\Artifact\Artifact[]
      */
     public function getArtifacts()
     {

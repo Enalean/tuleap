@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use Codendi_HTMLPurifier;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactIncomingEmailButtonPresenterBuilder
 {
@@ -37,7 +37,7 @@ class ArtifactIncomingEmailButtonPresenterBuilder
         $this->mail_golden_retriever = $mail_golden_retriever;
     }
 
-    public function getIncomingEmailButton(PFUser $user, Tracker_Artifact $artifact)
+    public function getIncomingEmailButton(PFUser $user, Artifact $artifact)
     {
         if (! $user->isSuperUser()) {
             return;

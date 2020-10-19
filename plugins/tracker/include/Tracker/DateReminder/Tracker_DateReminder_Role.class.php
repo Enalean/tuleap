@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 interface Tracker_DateReminder_Role
 {
 
@@ -39,5 +41,5 @@ interface Tracker_DateReminder_Role
      *
      * @return Array of PFUser
      */
-    public function getRecipientsFromArtifact(Tracker_Artifact $artifact);
+    public function getRecipientsFromArtifact(Artifact $artifact);
 }

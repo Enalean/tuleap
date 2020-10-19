@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues
@@ -172,7 +173,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
     public function getComputedValue(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timestamp = null
     ) {
         if ($this->userCanRead($user)) {
@@ -181,12 +182,12 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
+    public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null)
     {
         return $this->getComputedValue($user, $artifact, $timestamp);
     }
 
-    private function getCurrentValue(Tracker_Artifact $artifact)
+    private function getCurrentValue(Artifact $artifact)
     {
         $changeset_value = $artifact->getValue($this);
 
@@ -199,7 +200,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             $submitted_bind_value_ids = array_filter(array_unique($value['bind_value_ids']));
@@ -237,7 +238,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $bind_value_id;
     }
 
-    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
+    public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         if ($csv_value !== '100' && $this->isNone($csv_value)) {
             return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;

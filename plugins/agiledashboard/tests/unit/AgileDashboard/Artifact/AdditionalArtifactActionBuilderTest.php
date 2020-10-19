@@ -29,13 +29,13 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class AdditionalArtifactActionBuilderTest extends TestCase
 {
@@ -67,7 +67,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
     private $artifacts_explicit_backlog_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
 
@@ -119,7 +119,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getId')->andReturn('148');
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact->shouldReceive('getId')->andReturn('205');
 

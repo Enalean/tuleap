@@ -21,8 +21,8 @@
 namespace Tuleap\TestManagement\Campaign\Execution;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class DefinitionForExecutionRetriever
 {
@@ -38,12 +38,12 @@ class DefinitionForExecutionRetriever
 
     /**
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      * @throws DefinitionNotFoundException
      */
     public function getDefinitionRepresentationForExecution(
         PFUser $user,
-        Tracker_Artifact $execution
+        Artifact $execution
     ) {
         $art_links = $execution->getLinkedArtifacts($user);
         foreach ($art_links as $art_link) {

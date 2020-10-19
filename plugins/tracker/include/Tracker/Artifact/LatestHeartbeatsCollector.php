@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use Codendi_HTMLPurifier;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
@@ -95,7 +94,7 @@ class LatestHeartbeatsCollector
     /**
      * @return null|PFUser
      */
-    private function getLastModifiedBy(Tracker_Artifact $artifact)
+    private function getLastModifiedBy(Artifact $artifact)
     {
         $user = null;
 
@@ -107,7 +106,7 @@ class LatestHeartbeatsCollector
         return $user;
     }
 
-    private function getHTMLMessage(Tracker_Artifact $artifact)
+    private function getHTMLMessage(Artifact $artifact)
     {
         $last_modified_by = $this->getLastModifiedBy($artifact);
         $is_an_update     = $artifact->hasMoreThanOneChangeset();
@@ -148,7 +147,7 @@ class LatestHeartbeatsCollector
     /**
      * @return string
      */
-    private function getTitle(Tracker_Artifact $artifact)
+    private function getTitle(Artifact $artifact)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 

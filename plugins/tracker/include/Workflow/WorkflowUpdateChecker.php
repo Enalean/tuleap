@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\Workflow;
 
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class WorkflowUpdateChecker
@@ -36,7 +36,7 @@ class WorkflowUpdateChecker
     }
 
     public function canFieldBeUpdated(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $field,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value,
         $submitted_value,
@@ -55,7 +55,7 @@ class WorkflowUpdateChecker
     }
 
     private function fieldHasChanges(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $field,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value,
         $submitted_value

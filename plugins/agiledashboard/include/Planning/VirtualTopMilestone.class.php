@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * This class represents a virtual TopMilestone
  *
@@ -80,7 +82,7 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
         return null;
     }
 
-    public function setArtifact(Tracker_Artifact $artifact)
+    public function setArtifact(Artifact $artifact)
     {
         $this->artifact = $artifact;
     }

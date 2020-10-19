@@ -26,13 +26,13 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class BurnupCalculatorTest extends TestCase
 {
@@ -76,8 +76,8 @@ class BurnupCalculatorTest extends TestCase
             ]);
 
         $tracker       = Mockery::mock(Tracker::class);
-        $user_story_01 = Mockery::mock(Tracker_Artifact::class);
-        $user_story_02 = Mockery::mock(Tracker_Artifact::class);
+        $user_story_01 = Mockery::mock(Artifact::class);
+        $user_story_02 = Mockery::mock(Artifact::class);
 
         $changeset_01 = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset_01->shouldReceive('getArtifact')->andReturn($user_story_01);

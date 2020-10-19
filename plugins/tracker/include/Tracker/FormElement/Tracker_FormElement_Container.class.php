@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
@@ -50,7 +51,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
+    public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
@@ -231,14 +232,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      * @return string html
      */
     public function fetchArtifact(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $submitted_values,
         array $additional_classes
     ) {
         return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, $additional_classes);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values, []);
     }
@@ -254,7 +255,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
@@ -262,7 +263,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values, []);
     }
@@ -282,7 +283,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return $html;
     }
 
-    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, array $submitted_values, array $additional_classes)
+    protected function fetchRecursiveArtifact($method, Artifact $artifact, array $submitted_values, array $additional_classes)
     {
         $html = '';
         $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);

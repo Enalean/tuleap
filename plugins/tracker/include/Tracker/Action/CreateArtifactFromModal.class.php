@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Action_CreateArtifactFromModal
 {
@@ -61,7 +63,7 @@ class Tracker_Action_CreateArtifactFromModal
         return $this->tracker_artifact_factory->createArtifact($this->tracker, $fields_data, $current_user, $email, true);
     }
 
-    private function linkArtifact(PFUser $current_user, Tracker_Artifact $new_artifact)
+    private function linkArtifact(PFUser $current_user, Artifact $new_artifact)
     {
         $artifact_link_id = $this->request->get('artifact-link-id');
         $source_artifact  = $this->tracker_artifact_factory->getArtifactById($artifact_link_id);

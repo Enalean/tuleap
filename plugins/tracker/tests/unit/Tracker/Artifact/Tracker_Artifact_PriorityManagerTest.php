@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Artifact_PriorityManagerTest extends TestCase
@@ -170,7 +171,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
 
     private function mockMovedArtifact(int $artifact_id, bool $are_priority_changes_shown)
     {
-        $artifact = M::mock(Tracker_Artifact::class);
+        $artifact = M::mock(Artifact::class);
         $tracker  = M::mock(Tracker::class);
         $tracker->shouldReceive('arePriorityChangesShown')
             ->once()
@@ -320,7 +321,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             ->andReturnTrue();
         $this->assertTrue(
             $this->priority_manager->deletePriority(
-                M::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 58])->getMock()
+                M::mock(Artifact::class)->shouldReceive(['getId' => 58])->getMock()
             )
         );
     }
@@ -337,7 +338,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             ->andReturnFalse();
         $this->assertFalse(
             $this->priority_manager->deletePriority(
-                M::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 58])->getMock()
+                M::mock(Artifact::class)->shouldReceive(['getId' => 58])->getMock()
             )
         );
     }
@@ -348,7 +349,7 @@ final class Tracker_Artifact_PriorityManagerTest extends TestCase
             ->with(58, 1042)
             ->once();
         $this->priority_manager->putArtifactAtAGivenRank(
-            M::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 58])->getMock(),
+            M::mock(Artifact::class)->shouldReceive(['getId' => 58])->getMock(),
             1042
         );
     }

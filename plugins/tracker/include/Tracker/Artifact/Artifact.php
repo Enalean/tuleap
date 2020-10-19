@@ -23,8 +23,76 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Artifact;
 require_once __DIR__ . '/../../constants.php';
 
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use CrossReferenceFactory;
+use EventManager;
+use Feedback;
+use ForgeConfig;
+use MustacheRenderer;
+use PermissionsManager;
+use PermissionsOverrider_PermissionsOverriderManager;
+use PFUser;
+use ProjectManager;
+use Recent_Element_Interface;
+use ReferenceManager;
+use RuntimeException;
+use SimpleXMLElement;
+use SystemEventManager;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_Action_UpdateArtifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_Comment;
+use Tracker_Artifact_Changeset_CommentDao;
+use Tracker_Artifact_Changeset_FieldsValidator;
+use Tracker_Artifact_Changeset_IncomingMailGoldenRetriever;
+use Tracker_Artifact_Changeset_NewChangesetCreator;
+use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
+use Tracker_Artifact_ChangesetDao;
+use Tracker_Artifact_ChangesetFactory;
+use Tracker_Artifact_ChangesetFactoryBuilder;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_ArtifactLink;
+use Tracker_Artifact_CopyRenderer;
+use Tracker_Artifact_EditOverlayRenderer;
+use Tracker_Artifact_Followup_Item;
+use Tracker_Artifact_PaginatedArtifacts;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_Artifact_ReadOnlyRenderer;
+use Tracker_Artifact_Redirect;
+use Tracker_Artifact_Renderer_EditInPlaceRenderer;
+use Tracker_ArtifactChildPresenter;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tracker_ArtifactNotificationSubscriber;
+use Tracker_Dispatchable_Interface;
+use Tracker_Exception;
+use Tracker_FormElement;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_FormElement_Field_Burndown;
+use Tracker_FormElementFactory;
+use Tracker_HierarchyFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_NoChangeException;
+use Tracker_Permission_PermissionChecker;
+use Tracker_Semantic_Contributor;
+use Tracker_Semantic_Description;
+use Tracker_Semantic_Status;
+use Tracker_Semantic_Title;
+use Tracker_XML_Exporter_ArtifactAttachmentExporter;
+use Tracker_XML_Exporter_ArtifactXMLExporter;
+use TrackerFactory;
+use trackerPlugin;
+use TransitionFactory;
+use Tuleap;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -41,27 +109,23 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
-use Tuleap\Tracker\Artifact\ArtifactDescriptionProvider;
-use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
-use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
@@ -83,8 +147,11 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use UserManager;
+use Workflow;
+use Workflow_Transition_ConditionFactory;
 
-class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface
+class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface
 {
     public const REST_ROUTE        = 'artifacts';
     public const NO_PARENT         = -1;
@@ -148,13 +215,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_Artifact[] */
+    /** @var Artifact[] */
     private $siblings_without_permission_checking;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $parent_without_permission_checking;
 
-    /** @var PFUser*/
+    /** @var PFUser */
     private $submitted_by_user;
 
     /** @var array */
@@ -167,10 +234,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Constructor
      *
-     * @param int     $id                       The Id of the artifact
-     * @param int     $tracker_id               The tracker Id the artifact belongs to
-     * @param int     $submitted_by             The id of the user who's submitted the artifact
-     * @param int     $submitted_on             The timestamp of artifact submission
+     * @param int  $id                       The Id of the artifact
+     * @param int  $tracker_id               The tracker Id the artifact belongs to
+     * @param int  $submitted_by             The id of the user who's submitted the artifact
+     * @param int  $submitted_on             The timestamp of artifact submission
      *
      * @param bool $use_artifact_permissions True if this artifact uses permission, false otherwise
      */
@@ -200,18 +267,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return bool
      */
-    public function equals(?Tracker_Artifact $artifact = null)
+    public function equals(?Artifact $artifact = null)
     {
         return $artifact && $this->id == $artifact->getId();
     }
 
     /**
-    * Set the value of use_artifact_permissions
-    *
-    * @param bool $use_artifact_permissions
-    *
-    * @return bool true if the artifact has individual permissions set
-    */
+     * Set the value of use_artifact_permissions
+     *
+     * @param bool $use_artifact_permissions
+     *
+     * @return bool true if the artifact has individual permissions set
+     */
     public function setUseArtifactPermissions($use_artifact_permissions)
     {
         $this->use_artifact_permissions = $use_artifact_permissions;
@@ -257,13 +324,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($user->isAnonymous() || ! $this->userCanView($user)) {
             return false;
         }
+
         return true;
     }
 
     /**
      * @deprecated
      */
-    public function permission_db_authorized_ugroups($permission_type)
+    public function permission_db_authorized_ugroups($permission_type) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
         $result = [];
@@ -272,6 +340,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             while ($row = db_fetch_array($res)) {
                 $result[] = $row;
             }
+
             return $result;
         } else {
             return false;
@@ -301,9 +370,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * This method returns the artifact mail rendering
      *
-     * @param PFUser  $recipient
-     * @param string $format, the mail format text or html
-     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * @param PFUser $recipient
+     * @param string $format       , the mail format text or html
+     * @param bool   $ignore_perms , indicates if we ignore various permissions
      *
      * @return string
      */
@@ -315,11 +384,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
                     $output .=
-                    '<table style="width:100%">
+                        '<table style="width:100%">
                         <tr>
                             <td colspan="3" align="left">
                                 <h2>' .
-                                    dgettext('tuleap-tracker', 'Snapshot') . '
+                        dgettext('tuleap-tracker', 'Snapshot') . '
                                 </h2>
                             </td>
                         </tr>
@@ -332,21 +401,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 break;
         }
+
         return $output;
     }
 
     /**
      * Returns the artifact field for mail rendering
      *
-     * @param PFUser  $recipient
-     * @param string $format, the mail format text or html
-     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * @param PFUser $recipient
+     * @param string $format       , the mail format text or html
+     * @param bool   $ignore_perms , indicates if we ignore various permissions
      *
      * @return String
      */
     public function fetchMailFormElements($recipient, $format, $ignore_perms = false)
     {
-        $output = '';
+        $output                 = '';
         $toplevel_form_elements = $this->getTracker()->getFormElements();
         $this->prepareElementsForDisplay($toplevel_form_elements);
 
@@ -382,7 +452,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchTooltip($user)
     {
         $tooltip = $this->getTracker()->getTooltip();
-        $html = '';
+        $html    = '';
         if ($this->userCanView($user)) {
             $fields = $tooltip->getFields();
             if (! empty($fields)) {
@@ -394,6 +464,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $html .= '</table>';
             }
         }
+
         return $html;
     }
 
@@ -406,12 +477,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchWidget($item_name)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
-        $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= ' #';
-        $html .= $this->id;
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $html  .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
+        $html  .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
+        $html  .= ' #';
+        $html  .= $this->id;
         $title = $this->getTitle();
         if ($title) {
             $html .= ' - ';
@@ -419,6 +490,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         $html .= '</a>';
+
         return $html;
     }
 
@@ -427,7 +499,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->fetchTitleContent($prefix, false);
     }
 
-     /**
+    /**
      * Returns HTML code to display the artifact title
      *
      * @param string $prefix The prefix to display before the title of the artifact. Default is blank.
@@ -451,6 +523,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         $html .= '</div>';
+
         return $html;
     }
 
@@ -528,16 +601,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getXRefAndTitle()
     {
         $hp = Codendi_HTMLPurifier::instance();
+
         return '<span class="' . $hp->purify($this->getTracker()->getColor()->getName()) . ' xref-in-title">' .
-                $hp->purify($this->getXRef()) . "\n" .
-                '</span>' .
-                $hp->purify($this->getTitle());
+            $hp->purify($this->getXRef()) . "\n" .
+            '</span>' .
+            $hp->purify($this->getTitle());
     }
 
     public function fetchColoredXRef()
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        return '<span class="colored-xref ' . $purifier->purify($this->getTracker()->getColor()->getName()) . '"><a class="cross-reference" href="' . $this->getUri() . '">' . $this->getXRef() . '</a></span>';
+
+        return '<span class="colored-xref ' . $purifier->purify(
+            $this->getTracker()->getColor()->getName()
+        ) . '"><a class="cross-reference" href="' . $this->getUri() . '">' . $this->getXRef() . '</a></span>';
     }
 
     /**
@@ -559,6 +636,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         }
+
         return $this->title;
     }
 
@@ -568,12 +646,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getDescription(): string
     {
         $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
+
         return $provider->getDescription($this);
     }
 
     public function getPostProcessedDescription(): string
     {
         $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
+
         return $provider->getPostProcessedDescription($this);
     }
 
@@ -600,9 +680,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $assigned_users[] = $assigned_user;
                     }
                 }
+
                 return $assigned_users;
             }
         }
+
         return [];
     }
 
@@ -623,7 +705,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         if (! isset($this->status)) {
             $this->status = '';
-            $provider = new StatusValueProvider(new StatusValueForChangesetProvider());
+            $provider     = new StatusValueProvider(new StatusValueForChangesetProvider());
             $status_value = $provider->getStatusValue($this, UserManager::instance()->getCurrentUser());
             if ($status_value) {
                 $this->status = $status_value->getLabel();
@@ -640,7 +722,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getStatusForChangeset(Tracker_Artifact_Changeset $changeset)
     {
-        $provider = new StatusValueForChangesetProvider();
+        $provider     = new StatusValueForChangesetProvider();
         $status_value = $provider->getStatusValueForChangeset($changeset, UserManager::instance()->getCurrentUser());
         if (! $status_value) {
             return null;
@@ -676,7 +758,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      *
      * @param PFUser $recipient
-     * @param bool $ignore_perms
+     * @param bool   $ignore_perms
+     *
      * @return string
      */
     public function fetchMailTitle($recipient, $format = 'text', $ignore_perms = false)
@@ -691,6 +774,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         }
+
         return $output;
     }
 
@@ -704,15 +788,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function validateCommentFormat($request, $comment_format_field_name)
     {
         $comment_format = $request->get($comment_format_field_name);
+
         return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
 
     /**
      * Process the artifact functions
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data from the user
-     * @param PFUser                           $current_user    The current user
+     * @param Tracker_IDisplayTrackerLayout $layout       Displays the page header and footer
+     * @param Codendi_Request               $request      The data from the user
+     * @param PFUser                        $current_user The current user
      *
      * @return void
      */
@@ -732,7 +817,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ((int) $request->get('changeset_id') && $request->exist('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
                         $comment_format = $this->validateCommentFormat($request, 'comment_format');
-                        $changeset->updateComment($request->get('content'), $current_user, $comment_format, $_SERVER['REQUEST_TIME']);
+                        $changeset->updateComment(
+                            $request->get('content'),
+                            $current_user,
+                            $comment_format,
+                            $_SERVER['REQUEST_TIME']
+                        );
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
                             echo $changeset->getComment()->fetchFollowUp($current_user);
@@ -753,7 +843,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'Permission Denied')
                         );
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $this->getTrackerId()));
+                        $GLOBALS['Response']->redirect(
+                            TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $this->getTrackerId())
+                        );
                     }
                     if ($request->get('func') === 'show-attachment') {
                         $field->showAttachment($request->get('attachment'));
@@ -789,7 +881,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $source_artifact      = (int) $request->get('from-artifact');
                 $destination_artifact = (int) $request->get('to-artifact');
 
-                if (! ($this->userHasRankingPermissions($source_artifact) && $this->userHasRankingPermissions($destination_artifact))) {
+                if (
+                    ! ($this->userHasRankingPermissions($source_artifact) && $this->userHasRankingPermissions(
+                        $destination_artifact
+                    ))
+                ) {
                     $this->sendUserDoesNotHavePermissionsErrorCode();
                 }
                 break;
@@ -806,7 +902,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
                     $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'));
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        dgettext(
+                            'tuleap-tracker',
+                            'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'
+                        )
+                    );
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
                 break;
@@ -825,28 +927,46 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'show-in-overlay':
-                $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager(), $this->getVisitRecorder());
+                $renderer = new Tracker_Artifact_EditOverlayRenderer(
+                    $this,
+                    $this->getEventManager(),
+                    $this->getVisitRecorder()
+                );
                 $renderer->display($request, $current_user);
                 break;
             case 'get-new-changesets':
-                $changeset_id = $request->getValidated('changeset_id', 'uint', 0);
+                $changeset_id      = $request->getValidated('changeset_id', 'uint', 0);
                 $changeset_factory = $this->getChangesetFactory();
-                $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id, $current_user));
+                $GLOBALS['Response']->sendJSON(
+                    $changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id, $current_user)
+                );
                 break;
             case 'edit':
                 $GLOBALS['Response']->redirect($this->getUri());
                 break;
             case 'get-edit-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer(), $this->getHiddenFieldsetsDetector());
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer(
+                    $this,
+                    $this->getMustacheRenderer(),
+                    $this->getHiddenFieldsetsDetector()
+                );
                 $renderer->display($current_user, $request);
                 break;
             case 'update-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer(), $this->getHiddenFieldsetsDetector());
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer(
+                    $this,
+                    $this->getMustacheRenderer(),
+                    $this->getHiddenFieldsetsDetector()
+                );
                 $renderer->updateArtifact($request, $current_user);
                 break;
             case 'copy-artifact':
                 $art_link = $this->fetchDirectLinkToArtifact();
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'You are currently copying the artifact %1$s.'), $art_link), CODENDI_PURIFIER_LIGHT);
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    sprintf(dgettext('tuleap-tracker', 'You are currently copying the artifact %1$s.'), $art_link),
+                    CODENDI_PURIFIER_LIGHT
+                );
                 EventManager::instance()->processEvent(
                     self::DISPLAY_COPY_OF_ARTIFACT,
                     [
@@ -921,7 +1041,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function sendUserDoesNotHavePermissionsErrorCode()
     {
-        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You are not allowed to rank on this planning. Your action was not taken into account. Please reload the page.'));
+        $GLOBALS['Response']->addFeedback(
+            'error',
+            dgettext(
+                'tuleap-tracker',
+                'You are not allowed to rank on this planning. Your action was not taken into account. Please reload the page.'
+            )
+        );
         $GLOBALS['Response']->sendStatusCode(403);
     }
 
@@ -958,7 +1084,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
-    /** @return Tracker_Artifact[] */
+    /** @return Artifact[] */
     public function getChildrenForUser(PFUser $current_user)
     {
         $children = [];
@@ -967,6 +1093,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $children[] = $child;
             }
         }
+
         return $children;
     }
 
@@ -975,25 +1102,37 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $presenters = [];
         foreach ($this->getChildrenForUser($current_user) as $child) {
-            $tracker      = $child->getTracker();
-            $semantics    = Tracker_Semantic_Status::load($tracker);
+            $tracker   = $child->getTracker();
+            $semantics = Tracker_Semantic_Status::load($tracker);
 
-            $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics, $this->getNatureIsChildLinkRetriever());
+            $presenters[] = new Tracker_ArtifactChildPresenter(
+                $child,
+                $this,
+                $semantics,
+                $this->getNatureIsChildLinkRetriever()
+            );
         }
+
         return $presenters;
     }
 
     private function getChildNaturePresenterCollection()
     {
         $presenters = [];
-        $artifacts = $this->getNatureIsChildLinkRetriever()->getChildren($this);
+        $artifacts  = $this->getNatureIsChildLinkRetriever()->getChildren($this);
 
         foreach ($artifacts as $artifact) {
-            $tracker      = $artifact->getTracker();
-            $semantics    = Tracker_Semantic_Status::load($tracker);
+            $tracker   = $artifact->getTracker();
+            $semantics = Tracker_Semantic_Status::load($tracker);
 
-            $presenters[] = new Tracker_ArtifactChildPresenter($artifact, $this, $semantics, $this->getNatureIsChildLinkRetriever());
+            $presenters[] = new Tracker_ArtifactChildPresenter(
+                $artifact,
+                $this,
+                $semantics,
+                $this->getNatureIsChildLinkRetriever()
+            );
         }
+
         return $presenters;
     }
 
@@ -1026,7 +1165,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchDirectLinkToArtifactWithoutXRef()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<a class="direct-link-to-artifact" href="' . $this->getUri() . '">' . $hp->purify($this->getTitle()) . '</a>';
+
+        return '<a class="direct-link-to-artifact" href="' . $this->getUri() . '">' . $hp->purify(
+            $this->getTitle()
+        ) . '</a>';
     }
 
     public function getRestUri()
@@ -1057,11 +1199,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchXRefLink()
     {
-        return '<a class="cross-reference" href="/goto?' . http_build_query([
-            'key'      => $this->getTracker()->getItemName(),
-            'val'      => $this->getId(),
-            'group_id' => $this->getTracker()->getGroupId(),
-        ]) . '">' . Codendi_HTMLPurifier::instance()->purify($this->getXRef()) . '</a>';
+        return '<a class="cross-reference" href="/goto?' . http_build_query(
+            [
+                    'key'      => $this->getTracker()->getItemName(),
+                    'val'      => $this->getId(),
+                    'group_id' => $this->getTracker()->getGroupId(),
+                ]
+        ) . '">' . Codendi_HTMLPurifier::instance()->purify($this->getXRef()) . '</a>';
     }
 
     /**
@@ -1074,6 +1218,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (empty($this->formElementFactory)) {
             $this->formElementFactory = Tracker_FormElementFactory::instance();
         }
+
         return $this->formElementFactory;
     }
 
@@ -1092,6 +1237,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->artifact_factory) {
             return $this->artifact_factory;
         }
+
         return Tracker_ArtifactFactory::instance();
     }
 
@@ -1103,31 +1249,37 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getErrors()
     {
         $list_errors = [];
-        $is_valid = true;
-        $used_fields    = $this->getFormElementFactory()->getUsedFields($this->getTracker());
+        $is_valid    = true;
+        $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
         foreach ($used_fields as $field) {
             if ($field->hasErrors()) {
                 $list_errors[] = $field->getId();
             }
         }
+
         return $list_errors;
     }
 
     /**
      * Update an artifact (means create a new changeset)
      *
-     * @param array   $fields_data       Artifact fields values
-     * @param string  $comment           The comment (follow-up) associated with the artifact update
-     * @param PFUser  $submitter         The user who is doing the update
-     * @param bool $send_notification true if a notification must be sent, false otherwise
-     * @param string  $comment_format    The comment (follow-up) type ("text" | "html")
+     * @param array  $fields_data       Artifact fields values
+     * @param string $comment           The comment (follow-up) associated with the artifact update
+     * @param PFUser $submitter         The user who is doing the update
+     * @param bool   $send_notification true if a notification must be sent, false otherwise
+     * @param string $comment_format    The comment (follow-up) type ("text" | "html")
      *
-     * @throws Tracker_Exception In the validation
-     * @throws Tracker_NoChangeException In the validation
      * @return Tracker_Artifact_Changeset|null
+     * @throws Tracker_NoChangeException In the validation
+     * @throws Tracker_Exception In the validation
      */
-    public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)
-    {
+    public function createNewChangeset(
+        $fields_data,
+        $comment,
+        PFUser $submitter,
+        $send_notification = true,
+        $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+    ) {
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
             $this->getFormElementFactory(),
@@ -1157,7 +1309,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $comment_format
     ): ?Tracker_Artifact_Changeset {
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator = new NewChangesetFieldsWithoutRequiredValidationValidator(
+        $validator    = new NewChangesetFieldsWithoutRequiredValidationValidator(
             $this->getFormElementFactory(),
             $this->getArtifactLinkValidator()
         );
@@ -1208,12 +1360,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             $this->tracker = $tracker;
         }
+
         return $this->tracker;
     }
 
     public function setTracker(Tracker $tracker)
     {
-        $this->tracker = $tracker;
+        $this->tracker    = $tracker;
         $this->tracker_id = $tracker->getId();
     }
 
@@ -1228,6 +1381,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($last_changeset) {
             return $last_changeset->getSubmittedOn();
         }
+
         return -1;
     }
 
@@ -1238,8 +1392,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($last_changeset->getSubmittedBy()) {
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -1250,8 +1406,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($last_changeset->getSubmittedBy()) {
                 return $last_changeset->getSubmittedBy();
             }
+
             return $last_changeset->getEmail();
         }
+
         return $this->getSubmittedBy();
     }
 
@@ -1275,10 +1433,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         if ($this->changesets === null) {
             $this->last_changeset = $this->getChangesetFactory()->getLastChangeset($this);
+
             return $this->last_changeset;
         }
         $changesets           = $this->getChangesets();
         $this->last_changeset = end($changesets);
+
         return $this->last_changeset;
     }
 
@@ -1299,6 +1459,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $changesets = $this->getChangesets();
         reset($changesets);
+
         return current($changesets);
     }
 
@@ -1315,6 +1476,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function isFirstChangeset(Tracker_Artifact_Changeset $changeset)
     {
         $c = $this->getFirstChangeset();
+
         return $c->getId() == $changeset->getId();
     }
 
@@ -1348,6 +1510,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         ksort($changeset_array, SORT_NUMERIC);
+
         return $this->flattenChangesetArray($changeset_array);
     }
 
@@ -1359,6 +1522,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $changesets[] = $changeset;
             }
         }
+
         return $changesets;
     }
 
@@ -1372,6 +1536,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->changesets === null) {
             $this->forceFetchAllChangesets();
         }
+
         return $this->changesets;
     }
 
@@ -1419,6 +1584,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $commentators[] = $email;
             }
         }
+
         return $commentators;
     }
 
@@ -1468,6 +1634,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->changesets[$changeset_id] = $this->getChangesetFactory()->getChangeset($this, $changeset_id);
             $this->last_changeset            = null;
         }
+
         return $this->changesets[$changeset_id];
     }
 
@@ -1480,7 +1647,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getPreviousChangeset($changeset_id)
     {
-        $previous = null;
+        $previous   = null;
         $changesets = $this->getChangesets();
         foreach ($changesets as $changeset) {
             if ($changeset->getId() == $changeset_id) {
@@ -1488,6 +1655,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             $previous = $changeset;
         }
+
         return $previous;
     }
 
@@ -1508,11 +1676,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param int $id the new id of the artifact
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -1523,14 +1692,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
      */
-    public function getValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_Changeset $changeset = null): ?Tracker_Artifact_ChangesetValue
-    {
+    public function getValue(
+        Tracker_FormElement_Field $field,
+        ?Tracker_Artifact_Changeset $changeset = null
+    ): ?Tracker_Artifact_ChangesetValue {
         if (! $changeset) {
             $changeset = $this->getLastChangeset();
         }
         if ($changeset) {
             return $changeset->getValue($field);
         }
+
         return null;
     }
 
@@ -1567,6 +1739,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->submitted_by_user === null) {
             $this->setSubmittedByUser($this->getUserManager()->getUserAnonymous());
         }
+
         return $this->submitted_by_user;
     }
 
@@ -1586,6 +1759,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->per_tracker_id == null) {
             $this->per_tracker_id = $this->getDao()->getPerTrackerArtifactId($this->id);
         }
+
         return $this->per_tracker_id;
     }
 
@@ -1601,6 +1775,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             return null;
         }
         $workflow->setArtifact($this);
+
         return $workflow;
     }
 
@@ -1622,7 +1797,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * User want to link an artifact to the current one
      *
-     * @param int  $linked_artifact_id The id of the artifact to link
+     * @param int    $linked_artifact_id The id of the artifact to link
      * @param PFUser $current_user       The user who made the link
      *
      * @return bool true if success false otherwise
@@ -1639,7 +1814,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 return true;
             }
 
-            $fields_data   = [];
+            $fields_data                                        = [];
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
             if ($this->getTracker()->isProjectAllowedToUseNature()) {
@@ -1648,16 +1823,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
             try {
                 $this->createNewChangeset($fields_data, $comment, $current_user);
+
                 return true;
             } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+
                 return false;
             } catch (Tracker_Exception $e) {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+
                 return false;
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'));
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                dgettext(
+                    'tuleap-tracker',
+                    'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'
+                )
+            );
         }
     }
 
@@ -1665,7 +1849,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * User want to link an artifact to the current one
      *
      * @param array  $linked_artifact_ids The ids of the artifacts to link
-     * @param PFUser $current_user       The user who made the link
+     * @param PFUser $current_user        The user who made the link
      *
      * @return bool true if success false otherwise
      */
@@ -1678,10 +1862,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user)
     {
-        $comment       = '';
-        $artlink_field = $artlink_fields[0];
-        $fields_data   = [];
-        $fields_data[$artlink_field->getId()]['new_values'] = '';
+        $comment                                                = '';
+        $artlink_field                                          = $artlink_fields[0];
+        $fields_data                                            = [];
+        $fields_data[$artlink_field->getId()]['new_values']     = '';
         $fields_data[$artlink_field->getId()]['removed_values'] = [$linked_artifact_id => 1];
 
         try {
@@ -1693,8 +1877,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function filterArtifactIdsIAmAlreadyLinkedTo(Tracker_FormElement_Field_ArtifactLink $field, $linked_artifact_id)
-    {
+    private function filterArtifactIdsIAmAlreadyLinkedTo(
+        Tracker_FormElement_Field_ArtifactLink $field,
+        $linked_artifact_id
+    ) {
         $linked_artifact_id_as_array = explode(',', $linked_artifact_id);
 
         $last_changeset = $this->getLastChangeset();
@@ -1719,7 +1905,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param PFUser $user The user who should see the artifacts
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user)
     {
@@ -1736,7 +1922,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get artifacts linked to the current artifact and reverse linked artifacts
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getLinkedAndReverseArtifacts(PFUser $user)
     {
@@ -1754,13 +1940,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get artifacts linked to the current artifact
      *
-     * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()
-     *
      * @param PFUser $user   The user who should see the artifacts
      * @param int    $limit  The number of artifact to fetch
      * @param int    $offset The offset
      *
      * @return Tracker_Artifact_PaginatedArtifacts
+     * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()
+     *
      */
     public function getSlicedLinkedArtifacts(PFUser $user, $limit, $offset)
     {
@@ -1781,7 +1967,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getLinkedArtifactsOfHierarchy(PFUser $user)
     {
-        $artifact_links = $this->getLinkedArtifacts($user);
+        $artifact_links   = $this->getLinkedArtifacts($user);
         $allowed_trackers = $this->getAllowedChildrenTypes();
 
 
@@ -1796,6 +1982,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $artifact_links       = array_merge($artifact_links, $sub_linked_artifacts);
             }
         }
+
         return $artifact_links;
     }
 
@@ -1818,6 +2005,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $allowed_children[] = $tracker;
             }
         }
+
         return $allowed_children;
     }
 
@@ -1831,12 +2019,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getUniqueLinkedArtifacts(PFUser $user)
     {
-        $sub_artifacts = $this->getLinkedArtifacts($user);
+        $sub_artifacts        = $this->getLinkedArtifacts($user);
         $grandchild_artifacts = [];
         foreach ($sub_artifacts as $artifact) {
             $grandchild_artifacts = array_merge($grandchild_artifacts, $artifact->getLinkedArtifactsOfHierarchy($user));
         }
         array_filter($grandchild_artifacts);
+
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
 
@@ -1849,13 +2038,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
      *
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getAllAncestors(PFUser $user)
     {
         if (! isset($this->ancestors)) {
             $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
         }
+
         return $this->ancestors;
     }
 
@@ -1868,7 +2058,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Return the parent artifact of current artifact if any
      *
      *
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getParent(PFUser $user)
     {
@@ -1885,7 +2075,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)) {
             $dar = $this->getDao()->getParents([$this->getId()]);
             if ($dar && count($dar) == 1) {
-                $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
+                $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow(
+                    $dar->current()
+                );
             } else {
                 $this->parent_without_permission_checking = self::NO_PARENT;
             }
@@ -1893,6 +2085,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->parent_without_permission_checking === self::NO_PARENT) {
             return null;
         }
+
         return $this->parent_without_permission_checking;
     }
 
@@ -1904,13 +2097,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get all sista & bro regartheless if user can access them
      *
-     * @return Tracker_Artifact[]
+     * @return Artifact[]
      */
     public function getSiblingsWithoutPermissionChecking()
     {
         if (! isset($this->siblings_without_permission_checking)) {
-            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith([$this->getArtifactFactory(), 'getInstanceFromRow']);
+            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith(
+                [$this->getArtifactFactory(), 'getInstanceFromRow']
+            );
         }
+
         return $this->siblings_without_permission_checking;
     }
 
@@ -1930,6 +2126,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->hierarchy_factory == null) {
             $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
+
         return $this->hierarchy_factory;
     }
 
@@ -1946,11 +2143,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     protected function getChildTrackersIds()
     {
-        $children_trackers_ids = [];
+        $children_trackers_ids      = [];
         $children_hierarchy_tracker = $this->getHierarchyFactory()->getChildren($this->getTrackerId());
         foreach ($children_hierarchy_tracker as $tracker) {
             $children_trackers_ids[] = $tracker->getId();
         }
+
         return $children_trackers_ids;
     }
 
@@ -2035,6 +2233,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         }
+
         return $ugroups;
     }
 
@@ -2047,7 +2246,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $project     = ProjectManager::instance()->getProject($this->getTracker()->getGroupId());
         $literalizer = new UGroupLiteralizer();
-        $ugroupsId     = $this->getAuthorisedUgroups();
+        $ugroupsId   = $this->getAuthorisedUgroups();
+
         return $literalizer->ugroupIdsToString($ugroupsId, $project);
     }
 
@@ -2102,7 +2302,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @return string */
     public function getInsecureEmailAddress()
     {
-        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+' . $this->getId() . '@' . $this->getEmailDomain();
+        return trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+' . $this->getId(
+        ) . '@' . $this->getEmailDomain();
     }
 
     private function getEmailDomain()
@@ -2151,6 +2352,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($this->transaction_executor) {
             return $this->transaction_executor;
         }
+
         return new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());
     }
 
@@ -2161,11 +2363,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getNoNatureForLink($linked_artifact_id)
     {
-        $types = [];
+        $types                     = [];
         $linked_artifact_ids_array = explode(',', $linked_artifact_id);
         foreach ($linked_artifact_ids_array as $linked_artifact_id) {
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
+
         return $types;
     }
 
@@ -2175,7 +2378,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getBurndownCacheChecker()
     {
         $event_manager              = SystemEventManager::instance();
-        $logger                     = \BackendLogger::getDefaultLogger(Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER);
+        $logger                     = \BackendLogger::getDefaultLogger(
+            Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER
+        );
         $computed_dao               = new ComputedFieldDao();
         $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
@@ -2240,6 +2445,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $this->getFormElementFactory()
             )
         );
+
         return new WorkflowUpdateChecker($frozen_field_detector);
     }
 
@@ -2278,6 +2484,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getArtifactLinkValidator(): \Tuleap\Tracker\FormElement\ArtifactLinkValidator
     {
         $usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
+
         return new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $this->getArtifactFactory(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory(

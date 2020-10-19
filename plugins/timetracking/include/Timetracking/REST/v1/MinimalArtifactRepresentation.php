@@ -24,8 +24,8 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use Tracker_Artifact;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @psalm-immutable
@@ -80,7 +80,7 @@ class MinimalArtifactRepresentation
         $this->submission_date = $submission_date;
     }
 
-    public static function build(Tracker_Artifact $artifact): self
+    public static function build(Artifact $artifact): self
     {
         return new self(
             JsonCast::toInt($artifact->getId()),

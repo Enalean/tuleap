@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * Execute something during a postSaveNewChangeset
  */
@@ -28,7 +30,7 @@ interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
      * Do the real stuff
      */
     public function execute(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null

@@ -25,10 +25,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
-use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
 class BurndownRemainingEffortAdderForRESTTest extends TestCase
 {
@@ -39,7 +39,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
      */
     private $user;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
     /**
@@ -64,7 +64,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $this->computed_cache  = Mockery::mock(ComputedFieldDao::class);
         $this->adder           = new BurndownRemainingEffortAdderForREST($this->field_retriever, $this->computed_cache);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->user     = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('toRow');

@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionWithAutomatedTestData
 {
@@ -29,19 +29,19 @@ class ExecutionWithAutomatedTestData
      */
     private $automated_test;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $execution;
 
     public function __construct(
-        Tracker_Artifact $execution,
+        Artifact $execution,
         string $automated_test
     ) {
         $this->execution      = $execution;
         $this->automated_test = $automated_test;
     }
 
-    public function getExecution(): Tracker_Artifact
+    public function getExecution(): Artifact
     {
         return $this->execution;
     }

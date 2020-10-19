@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -76,7 +77,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      * @return int The Id of the initial changeset, or null if fields were not valid
      */
     public function create(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         int $submitted_on,
@@ -139,7 +140,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
     abstract protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
@@ -147,7 +148,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     ): void;
 
     private function storeFieldsValues(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         int $changeset_id,
@@ -159,7 +160,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     }
 
     private function doesRequestAppearToBeValid(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         ChangesetValidationContext $changeset_validation_context
@@ -173,7 +174,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     }
 
     private function askWorkflowToUpdateTheRequestAndCheckGlobalRules(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         array &$fields_data,
         PFUser $submitter
     ): bool {
@@ -197,7 +198,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         }
     }
 
-    private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Tracker_Artifact $artifact): void
+    private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Artifact $artifact): void
     {
         $artifact->setChangesets([new Tracker_Artifact_Changeset_Null()]);
     }

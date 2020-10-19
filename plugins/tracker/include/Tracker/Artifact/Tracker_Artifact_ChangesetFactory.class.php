@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_ChangesetFactory
 {
     /** Tracker_Artifact_ChangesetDao */
@@ -57,7 +59,7 @@ class Tracker_Artifact_ChangesetFactory
      * @param int $changeset_id
      * @return Tracker_Artifact_Changeset | null
      */
-    public function getChangeset(Tracker_Artifact $artifact, $changeset_id)
+    public function getChangeset(Artifact $artifact, $changeset_id)
     {
         $row = $this->dao->searchByArtifactIdAndChangesetId($artifact->getId(), $changeset_id)->getRow();
         if ($row) {
@@ -69,7 +71,7 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * @return \Tracker_Artifact_Changeset|null
      */
-    public function getLastChangeset(Tracker_Artifact $artifact)
+    public function getLastChangeset(Artifact $artifact)
     {
         $row = $this->dao->searchLastChangesetByArtifactId($artifact->getId())->getRow();
         if ($row) {
@@ -81,7 +83,7 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * @return null|Tracker_Artifact_Changeset
      */
-    public function getChangesetAtTimestamp(Tracker_Artifact $artifact, $timestamp)
+    public function getChangesetAtTimestamp(Artifact $artifact, $timestamp)
     {
         $row = $this->dao->searchChangesetByTimestamp($artifact->getId(), $timestamp)->getRow();
         if ($row) {
@@ -94,7 +96,7 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * @return \Tracker_Artifact_Changeset|null
      */
-    public function getLastChangesetWithFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    public function getLastChangesetWithFieldValue(Artifact $artifact, Tracker_FormElement_Field $field)
     {
         $dar = $this->dao->searchLastChangesetAndValueForArtifactField($artifact->getId(), $field->getId());
         if ($dar) {
@@ -111,7 +113,7 @@ class Tracker_Artifact_ChangesetFactory
      * @return \Tracker_Artifact_Changeset|null
      */
     public function getPreviousChangesetWithFieldValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElement_Field $field,
         $changeset_id
     ) {
@@ -134,7 +136,7 @@ class Tracker_Artifact_ChangesetFactory
      *
      * @return Tracker_Artifact_Changeset[]
      */
-    public function getChangesetsForArtifact(Tracker_Artifact $artifact)
+    public function getChangesetsForArtifact(Artifact $artifact)
     {
         $changesets = [];
         foreach ($this->dao->searchByArtifactId($artifact->getId()) as $row) {
@@ -146,7 +148,7 @@ class Tracker_Artifact_ChangesetFactory
     /**
      * @return Tracker_Artifact_Changeset[]
      */
-    public function getFullChangesetsForArtifact(Tracker_Artifact $artifact, PFUser $user)
+    public function getFullChangesetsForArtifact(Artifact $artifact, PFUser $user)
     {
         $changeset_values_cache = $this->changeset_value_dao->searchByArtifactId($artifact->getId());
         $comments_cache         = $this->changeset_comment_dao->searchLastVersionForArtifact($artifact->getId());
@@ -209,7 +211,7 @@ class Tracker_Artifact_ChangesetFactory
      * @param int $changeset_id
      * @return array
      */
-    public function getNewChangesetsFormattedForJson(Tracker_Artifact $artifact, $changeset_id, PFUser $current_user)
+    public function getNewChangesetsFormattedForJson(Artifact $artifact, $changeset_id, PFUser $current_user)
     {
         $changesets = [];
         foreach ($this->dao->searchChangesetNewerThan($artifact->getId(), $changeset_id) as $row) {
@@ -218,7 +220,7 @@ class Tracker_Artifact_ChangesetFactory
         return $changesets;
     }
 
-    private function getChangesetFromRow(Tracker_Artifact $artifact, $row)
+    private function getChangesetFromRow(Artifact $artifact, $row)
     {
         return new Tracker_Artifact_Changeset(
             $row['id'],

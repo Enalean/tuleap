@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_ReportDao extends DataAccessObject
 {
     public function __construct()
@@ -271,7 +273,7 @@ class Tracker_ReportDao extends DataAccessObject
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions
                               ON (permissions.object_id = CAST(c.artifact_id AS CHAR CHARACTER SET utf8)
-                                  AND permissions.permission_type = '" . Tracker_Artifact::PERMISSION_ACCESS . "')
+                                  AND permissions.permission_type = '" . Artifact::PERMISSION_ACCESS . "')
                             ";
             $res['where'] = " AND (artifact.use_artifact_permissions = 0
                                    OR (permissions.ugroup_id IN ($ugroups)))

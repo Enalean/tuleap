@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 
 class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -80,7 +81,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
     {
         $f = $this->getIntegerField();
         $f->shouldReceive('isRequired')->andReturn(true);
-        $a = Mockery::mock(Tracker_Artifact::class);
+        $a = Mockery::mock(Artifact::class);
         $this->assertTrue($f->isValid($a, 2));
         $this->assertTrue($f->isValid($a, 789));
         $this->assertTrue($f->isValid($a, -1));
@@ -99,7 +100,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
     {
         $f = $this->getIntegerField();
         $f->shouldReceive('isRequired')->andReturn(false);
-        $a = Mockery::mock(Tracker_Artifact::class);
+        $a = Mockery::mock(Artifact::class);
         $this->assertTrue($f->isValid($a, ''));
         $this->assertTrue($f->isValid($a, null));
     }

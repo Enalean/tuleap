@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Tracker_Artifact;
 use Tracker_FormElement;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
@@ -52,7 +52,7 @@ class PermissionsForGroupsBuilder
         $this->permissions_functions_wrapper = $permissions_functions_wrapper;
     }
 
-    public function getPermissionsForGroups(Tracker_FormElement $form_element, ?Tracker_Artifact $artifact, \PFUser $user): ?PermissionsForGroupsRepresentation
+    public function getPermissionsForGroups(Tracker_FormElement $form_element, ?Artifact $artifact, \PFUser $user): ?PermissionsForGroupsRepresentation
     {
         $tracker = $form_element->getTracker();
         if (! $tracker) {

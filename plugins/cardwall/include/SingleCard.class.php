@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * This class is a wrapper on top of card in cell presenter to be used when
  * a card is rendered out of the board context.
@@ -30,7 +32,7 @@ class Cardwall_SingleCard
     /** @var Cardwall_CardInCellPresenter */
     private $card_in_cell_presenter;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
 
     /** @var Cardwall_CardFields */
@@ -102,7 +104,7 @@ class Cardwall_SingleCard
     }
 
     /**
-     * @return Tracker_Artifact
+     * @return Artifact
      */
     public function getArtifact()
     {

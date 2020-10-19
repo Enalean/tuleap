@@ -69,7 +69,7 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends TestCase
 
         \ForgeConfig::set('sys_nb_backend_workers', 0);
 
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(1234);
 
         $this->runner->executeArchiveAndArtifactDeletion(

@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\Kanban\RealTime;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 
@@ -55,17 +55,17 @@ class KanbanArtifactMessageSender
         $this->backend_logger                  = $backend_logger;
     }
 
-    public function sendMessageArtifactCreated(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
+    public function sendMessageArtifactCreated(PFUser $user, Artifact $artifact, $kanban_id)
     {
         $this->sendMessageArtifact($user, $artifact, self::EVENT_NAME_ARTIFACT_CREATED, $kanban_id);
     }
 
-    public function sendMessageArtifactUpdated(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
+    public function sendMessageArtifactUpdated(PFUser $user, Artifact $artifact, $kanban_id)
     {
         $this->sendMessageArtifact($user, $artifact, self::EVENT_NAME_ARTIFACT_UPDATED, $kanban_id);
     }
 
-    public function sendMessageArtifact(PFUser $user, Tracker_Artifact $artifact, $event_name, $kanban_id)
+    public function sendMessageArtifact(PFUser $user, Artifact $artifact, $event_name, $kanban_id)
     {
         $data = (array) $this->kanban_artifact_message_builder->buildArtifactUpdated($artifact);
 
@@ -78,7 +78,7 @@ class KanbanArtifactMessageSender
         );
     }
 
-    public function sendMessageArtifactMoved(PFUser $user, Tracker_Artifact $artifact, $kanban_id)
+    public function sendMessageArtifactMoved(PFUser $user, Artifact $artifact, $kanban_id)
     {
         try {
             $data = (array) $this->kanban_artifact_message_builder->buildArtifactMoved($artifact);

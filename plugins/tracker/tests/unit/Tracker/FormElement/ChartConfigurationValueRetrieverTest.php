@@ -42,7 +42,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
     private $tracker;
 
     /**
-     * @var \Tracker_Artifact
+     * @var \Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact_sprint;
 
@@ -75,7 +75,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->field_retriever = \Mockery::mock(\Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever::class);
         $this->tracker         = \Mockery::mock(\Tracker::class);
-        $this->artifact_sprint = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact_sprint = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->user            = \Mockery::mock(\PFUser::class);
 
         $this->artifact_sprint->shouldReceive('getTracker')->andReturn($this->tracker);

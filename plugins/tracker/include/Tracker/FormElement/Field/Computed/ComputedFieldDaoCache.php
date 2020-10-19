@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Computed;
 
-use Tracker_Artifact;
+use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * Cache computation for better performances
@@ -72,7 +72,7 @@ class ComputedFieldDaoCache
         return $this->dao->deleteArtifactCacheValue($artifact_id, $field_id);
     }
 
-    public function deleteAllArtifactCacheValues(Tracker_Artifact $artifact)
+    public function deleteAllArtifactCacheValues(Artifact $artifact)
     {
         return $this->dao->deleteAllArtifactCacheValues($artifact->getId());
     }

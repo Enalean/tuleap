@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class FormattedChangesetValueForIntFieldRetriever
@@ -42,7 +42,7 @@ class FormattedChangesetValueForIntFieldRetriever
     public function getFormattedChangesetValueForFieldInt(
         string $field_name,
         int $value,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);

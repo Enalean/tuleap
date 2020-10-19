@@ -32,12 +32,12 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class TimeframeBuilderTest extends TestCase
 {
@@ -74,7 +74,7 @@ final class TimeframeBuilderTest extends TestCase
         );
 
         $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->user     = Mockery::mock(PFUser::class);
 
         $this->tracker->shouldReceive('getId')->andReturn(1);

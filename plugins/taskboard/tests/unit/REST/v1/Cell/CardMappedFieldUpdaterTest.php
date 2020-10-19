@@ -30,7 +30,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\GlobalLanguageMock;
@@ -42,6 +41,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class CardMappedFieldUpdaterTest extends TestCase
 {
@@ -64,9 +64,9 @@ final class CardMappedFieldUpdaterTest extends TestCase
     /** @var M\LegacyMockInterface|M\MockInterface|MappedValuesRetriever */
     private $mapped_values_retriever;
 
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_Artifact */
+    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
     private $swimlane_artifact;
-    /** @var M\LegacyMockInterface|M\MockInterface|Tracker_Artifact */
+    /** @var M\LegacyMockInterface|M\MockInterface|Artifact */
     private $artifact_to_add;
     /** @var M\LegacyMockInterface|M\MockInterface|PFUser */
     private $current_user;
@@ -88,8 +88,8 @@ final class CardMappedFieldUpdaterTest extends TestCase
             $this->mapped_values_retriever
         );
 
-        $this->swimlane_artifact = M::mock(Tracker_Artifact::class);
-        $this->artifact_to_add   = M::mock(Tracker_Artifact::class);
+        $this->swimlane_artifact = M::mock(Artifact::class);
+        $this->artifact_to_add   = M::mock(Artifact::class);
         $this->current_user      = M::mock(PFUser::class);
     }
 
@@ -226,7 +226,7 @@ final class CardMappedFieldUpdaterTest extends TestCase
         $this->artifact_updater->shouldReceive('update')
             ->once()
             ->withArgs(
-                function (PFUser $user, Tracker_Artifact $art, array $values) {
+                function (PFUser $user, Artifact $art, array $values) {
                     return $user === $this->current_user
                         && $art === $this->artifact_to_add
                         && $values[0]->field_id === 789

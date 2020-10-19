@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ArtifactDao;
@@ -31,6 +30,7 @@ use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
@@ -128,7 +128,7 @@ class ExecutionRepresentationBuilder
      */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $execution_tracker_id,
         int $limit,
         int $offset
@@ -144,7 +144,7 @@ class ExecutionRepresentationBuilder
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      * @throws DefinitionNotFoundException
      */
-    public function getExecutionRepresentation(PFUser $user, Tracker_Artifact $execution)
+    public function getExecutionRepresentation(PFUser $user, Artifact $execution)
     {
         $definitions_changeset_ids = $this->getDefinitionsChangesetIdsForExecutions([$execution->getId()]);
 
@@ -159,7 +159,7 @@ class ExecutionRepresentationBuilder
      */
     private function getExecutionRepresentationWithSpecificChangesetForDefinition(
         PFUser $user,
-        Tracker_Artifact $execution,
+        Artifact $execution,
         array $definitions_changeset_ids
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
@@ -217,7 +217,7 @@ class ExecutionRepresentationBuilder
      * @return PaginatedExecutions
      */
     private function getSlicedExecutionsForCampaign(
-        Tracker_Artifact $campaign_artifact,
+        Artifact $campaign_artifact,
         PFUser $user,
         int $execution_tracker_id,
         int $limit,
@@ -266,8 +266,8 @@ class ExecutionRepresentationBuilder
 
     private function getDefinitionRepresentationForExecution(
         PFUser $user,
-        Tracker_Artifact $execution,
-        Tracker_Artifact $definition,
+        Artifact $execution,
+        Artifact $definition,
         array $definitions_changeset_ids
     ): DefinitionRepresentation {
         return new DefinitionRepresentation(
@@ -286,8 +286,8 @@ class ExecutionRepresentationBuilder
      * @return null|\Tracker_Artifact_Changeset
      */
     private function getSpecificDefinitionChangesetForExecution(
-        Tracker_Artifact $execution,
-        Tracker_Artifact $definition,
+        Artifact $execution,
+        Artifact $definition,
         array $definitions_changeset_ids
     ) {
         if (isset($definitions_changeset_ids[$execution->getId()])) {
@@ -298,7 +298,7 @@ class ExecutionRepresentationBuilder
     /**
      * @return array
      */
-    private function getLinkedBugsRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
+    private function getLinkedBugsRepresentationForExecution(PFUser $user, Artifact $execution)
     {
         $art_links           = $execution->getLinkedArtifacts($user);
         $bug_representations = [];
@@ -316,7 +316,7 @@ class ExecutionRepresentationBuilder
         return $bug_representations;
     }
 
-    private function getExecutionResult(PFUser $user, Tracker_Artifact $execution): string
+    private function getExecutionResult(PFUser $user, Artifact $execution): string
     {
         $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_RESULTS);
         if (! $changeset_value) {
@@ -326,7 +326,7 @@ class ExecutionRepresentationBuilder
         return $changeset_value->getValue();
     }
 
-    private function getExecutionTime(PFUser $user, Tracker_Artifact $execution): string
+    private function getExecutionTime(PFUser $user, Artifact $execution): string
     {
         $changeset_value = $this->getFieldChangeValue($user, $execution, ExecutionRepresentation::FIELD_TIME);
         if (! $changeset_value) {
@@ -341,7 +341,7 @@ class ExecutionRepresentationBuilder
 
     private function getPreviousResultRepresentationForExecution(
         PFUser $user,
-        Tracker_Artifact $execution
+        Artifact $execution
     ): ?PreviousResultRepresentation {
         $last_changeset = $execution->getLastChangeset();
         if (! $last_changeset) {
@@ -371,7 +371,7 @@ class ExecutionRepresentationBuilder
      *
      * @return null|\Tracker_Artifact_ChangesetValue
      */
-    private function getFieldChangeValue(PFUser $user, Tracker_Artifact $execution, $field_name)
+    private function getFieldChangeValue(PFUser $user, Artifact $execution, $field_name)
     {
         $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(
             $execution->getTrackerId(),

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * A swimline in the dashboard
  */
@@ -25,7 +27,7 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
 {
 
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -33,7 +35,7 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
      *
      * @param array $cells
      */
-    public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, Tracker_Artifact $artifact, array $cells)
+    public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, Artifact $artifact, array $cells)
     {
         parent::__construct($swimline_artifact_presenter, $cells);
 

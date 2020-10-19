@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
@@ -43,7 +45,7 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \PHPUnit
     /** @var Tracker_XML_Exporter_ChangesetValuesXMLExporter */
     private $values_exporter;
 
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
     private $values;
 
@@ -64,7 +66,7 @@ final class Tracker_XML_Exporter_ChangesetValuesXMLExporterTest extends \PHPUnit
             $this->float_changeset_value
         ];
 
-        $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
     }
 
     public function testItCallsTheVisitorForEachChangesetValue(): void

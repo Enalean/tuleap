@@ -21,11 +21,11 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use EventManager;
-use Psr\Log\LoggerInterface;
 use PFUser;
-use Tracker_Artifact;
+use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBConnection;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
 class ArchiveAndDeleteArtifactTask
@@ -65,13 +65,13 @@ class ArchiveAndDeleteArtifactTask
         $this->logger                                   = $logger;
     }
 
-    public function archive(\Tracker_Artifact $artifact, \PFUser $user): void
+    public function archive(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user): void
     {
         $this->tryToArchiveArtifact($artifact, $user);
         $this->dependencies_deletor->cleanDependencies($artifact);
     }
 
-    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user): void
+    private function tryToArchiveArtifact(Artifact $artifact, PFUser $user): void
     {
         $archive_file_provider = new ArchiveDeletedArtifactProvider(
             $this->artifact_with_tracker_structure_exporter,

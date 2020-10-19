@@ -57,7 +57,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
 
     public function testItThrowsAnErrorWhenChangesetIsNotFound(): void
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturnNull();
 
         $this->expectException(NotFoundException::class);
@@ -68,7 +68,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
 
     public function testItThrowsAnExceptionWhenFieldIsNotFound(): void
     {
-        $artifact      = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);
 
@@ -82,7 +82,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
 
     public function testItThrowsAnExceptionWhenFieldIsNotATextField(): void
     {
-        $artifact      = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);
 
@@ -98,7 +98,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
 
     public function testItReturnsAChangesetsForDiff(): void
     {
-        $artifact      = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact      = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $next_changset = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $next_changset->shouldReceive('getId')->andReturn(12);
         $this->changeset_factory->shouldReceive("getChangeset")->once()->andReturn($next_changset);

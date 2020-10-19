@@ -22,8 +22,8 @@ namespace Tuleap\AgileDashboard\RealTime;
 
 use AgileDashboard_KanbanFactory;
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class RealTimeArtifactMessageController
 {
@@ -47,7 +47,7 @@ class RealTimeArtifactMessageController
         $this->kanban_artifact_message_sender = $kanban_artifact_message_sender;
     }
 
-    public function sendMessageForKanban(PFUser $user, Tracker_Artifact $artifact, $event_name_artifact)
+    public function sendMessageForKanban(PFUser $user, Artifact $artifact, $event_name_artifact)
     {
         $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
 

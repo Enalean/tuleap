@@ -162,7 +162,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     {
         $user        = UserTestBuilder::aUser()->build();
         $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $parent_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
         $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
@@ -181,7 +181,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $user        = UserTestBuilder::aUser()->build();
         $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $sub_planning = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $parent_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
         $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
@@ -224,7 +224,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     {
         $user                         = UserTestBuilder::aUser()->build();
         $planning                     = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
         $reference_milestone = new \Planning_ArtifactMilestone(
@@ -248,7 +248,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     {
         $user                         = UserTestBuilder::aUser()->build();
         $planning                     = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $sub_milestone_tracker = $this->buildTestTracker(17);
         $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
@@ -299,7 +299,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $project                      = \Project::buildForTest();
         $top_planning                 = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $sub_planning                 = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
         $reference_milestone = new \Planning_ArtifactMilestone(
@@ -311,7 +311,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $parent_milestone    = new \Planning_ArtifactMilestone(
             $project,
             $top_planning,
-            M::mock(\Tracker_Artifact::class),
+            M::mock(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->mono_milestone_checker
         );
         $reference_milestone->setAncestors([$parent_milestone]);
@@ -332,7 +332,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $project                      = \Project::buildForTest();
         $top_planning                 = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $sub_planning                 = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
-        $reference_milestone_artifact = M::mock(\Tracker_Artifact::class);
+        $reference_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $reference_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $sub_milestone_tracker = $this->buildTestTracker(17);
         $reference_milestone_artifact->shouldReceive('getTrackerId')->andReturn(17);
@@ -345,7 +345,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
         $parent_milestone    = new \Planning_ArtifactMilestone(
             $project,
             $top_planning,
-            M::mock(\Tracker_Artifact::class),
+            M::mock(\Tuleap\Tracker\Artifact\Artifact::class),
             $this->mono_milestone_checker
         );
         $reference_milestone->setAncestors([$parent_milestone]);
@@ -406,11 +406,11 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     }
 
     /**
-     * @return M\LegacyMockInterface|M\MockInterface|\Tracker_Artifact
+     * @return M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact
      */
     private function mockArtifact(int $artifact_id, \Tracker $milestone_tracker)
     {
-        $first_artifact = M::mock(\Tracker_Artifact::class);
+        $first_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $first_artifact->shouldReceive('getId')->andReturn($artifact_id);
         $first_artifact->shouldReceive('userCanView')->andReturnTrue();
         $first_artifact->shouldReceive('getTracker')->andReturn($milestone_tracker);

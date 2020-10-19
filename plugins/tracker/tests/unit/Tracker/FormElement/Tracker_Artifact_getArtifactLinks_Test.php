@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -43,7 +45,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
      */
     private $changeset;
     /**
-     * @var Tracker_Artifact
+     * @var Artifact
      */
     private $artifact;
 
@@ -54,7 +56,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $this->factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->artifact = Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [$this->current_id + 100, $this->current_id, null, 10, null]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -83,8 +85,8 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
     {
         $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
         $expected_list = [
-            new Tracker_Artifact(111, null, null, null, null),
-            new Tracker_Artifact(222, null, null, null, null)
+            new Artifact(111, null, null, null, null),
+            new Artifact(222, null, null, null, null)
         ];
 
         $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
@@ -177,7 +179,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $hierarchy_factory->shouldReceive('getChildren')->with(0)->andReturn([]);
 
         $artifact4 = \Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [
                 'getLastChangeset' => \Mockery::mock(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
@@ -190,7 +192,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         )->makePartial();
 
         $artifact3 = \Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [
                 'getLastChangeset' => \Mockery::mock(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
@@ -203,14 +205,14 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         )->makePartial();
 
         $artifact2 = \Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [
                 'getLastChangeset' => \Mockery::spy(Tracker_Artifact_Changeset::class),
             ]
         )->makePartial();
 
         $artifact1 = \Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [
                 'getLastChangeset' => \Mockery::spy(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
@@ -223,7 +225,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         )->makePartial();
 
         $artifact0 = \Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [
                 'getLastChangeset' => \Mockery::spy(Tracker_Artifact_Changeset::class),
                 'getAnArtifactLinkField' => \Mockery::mock(
@@ -267,7 +269,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
     }
 
     /**
-     * @return Tracker_Artifact | Mockery\Mock
+     * @return Artifact | Mockery\Mock
      */
     public function giveMeAnArtifactWithChildren()
     {
@@ -298,7 +300,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
 
 
         $artifact = Mockery::mock(
-            Tracker_Artifact::class,
+            Artifact::class,
             [$artifact_id, $this->current_id, null, 10, null]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->shouldReceive('getFormElementFactory')->andReturn($this->factory);

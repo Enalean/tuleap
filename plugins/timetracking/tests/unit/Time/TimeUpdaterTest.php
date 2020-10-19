@@ -54,7 +54,7 @@ class TimeUpdaterTest extends TestCase
 
         $this->tracker = \Mockery::spy(Tracker::class);
 
-        $this->artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive([
             'getTracker' => $this->tracker,
             'getId'      => 200

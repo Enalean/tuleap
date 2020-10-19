@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
 final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -113,7 +114,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $int_changeset_value
         );
     }
@@ -135,7 +136,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $float_changeset_value
         );
     }
@@ -158,7 +159,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $artlink_changeset_value
         );
     }
@@ -180,7 +181,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $external_changeset_value
         );
     }
@@ -201,7 +202,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            \Mockery::spy(\Tracker_Artifact::class),
+            \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class),
             $external_changeset_value
         );
     }
@@ -250,7 +251,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
             public function export(
                 SimpleXMLElement $artifact_xml,
                 SimpleXMLElement $changeset_xml,
-                Tracker_Artifact $artifact,
+                Artifact $artifact,
                 Tracker_Artifact_ChangesetValue $changeset_value
             ) {
             }

@@ -21,11 +21,11 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -54,11 +54,11 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
 
     public function __construct(
         \Codendi_HTMLPurifier $purifier,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset = null,
-        ?Tracker_Artifact $requirement = null
+        ?Artifact $requirement = null
     ) {
         parent::__construct($artifact, $form_element_factory, $user, $changeset);
 
@@ -102,7 +102,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
     }
 
-    private static function getTextFieldValueWithCrossReferences(\Codendi_HTMLPurifier $html_purifier, Tracker_FormElementFactory $form_element_factory, PFUser $user, ?Tracker_Artifact_Changeset $changeset, Tracker_Artifact $artifact, string $field_shortname): string
+    private static function getTextFieldValueWithCrossReferences(\Codendi_HTMLPurifier $html_purifier, Tracker_FormElementFactory $form_element_factory, PFUser $user, ?Tracker_Artifact_Changeset $changeset, Artifact $artifact, string $field_shortname): string
     {
         $field_value = self::getFieldValue(
             $form_element_factory,
@@ -120,7 +120,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         return $html_purifier->purifyHTMLWithReferences($field_value->getText(), $artifact->getTracker()->getGroupId());
     }
 
-    private static function getMinimalTrackerRepresentation(Tracker_Artifact $artifact): MinimalTrackerRepresentation
+    private static function getMinimalTrackerRepresentation(Artifact $artifact): MinimalTrackerRepresentation
     {
         return MinimalTrackerRepresentation::build($artifact->getTracker());
     }

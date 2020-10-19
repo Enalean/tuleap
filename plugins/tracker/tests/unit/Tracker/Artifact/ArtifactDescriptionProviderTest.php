@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_Text;
@@ -54,7 +53,7 @@ class ArtifactDescriptionProviderTest extends TestCase
     {
         $this->semantic_description->shouldReceive('getField')->once()->andReturnNull();
 
-        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Artifact::class)));
     }
 
     public function testGetDescriptionReturnNullIfUserCannotReadTheField(): void
@@ -64,7 +63,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnFalse();
 
-        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Artifact::class)));
     }
 
     public function testGetDescriptionReturnNullIfThereIsNoLastChangeset(): void
@@ -74,7 +73,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturnNull();
 
         $this->assertEquals('', $this->provider->getDescription($artifact));
@@ -88,7 +87,7 @@ class ArtifactDescriptionProviderTest extends TestCase
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
 
         $changeset->shouldReceive('getValue')->with($field)->once()->andReturnNull();
@@ -104,7 +103,7 @@ class ArtifactDescriptionProviderTest extends TestCase
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
 
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
@@ -119,7 +118,7 @@ class ArtifactDescriptionProviderTest extends TestCase
     {
         $this->semantic_description->shouldReceive('getField')->once()->andReturnNull();
 
-        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Artifact::class)));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfUserCannotReadTheField(): void
@@ -129,7 +128,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnFalse();
 
-        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getPostProcessedDescription(Mockery::mock(Artifact::class)));
     }
 
     public function testGetPostProcessedDescriptionReturnEmptyStringIfThereIsNoLastChangeset(): void
@@ -139,7 +138,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturnNull();
 
         $this->assertEquals('', $this->provider->getPostProcessedDescription($artifact));
@@ -153,7 +152,7 @@ class ArtifactDescriptionProviderTest extends TestCase
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
 
         $changeset->shouldReceive('getValue')->with($field)->once()->andReturnNull();
@@ -168,11 +167,11 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnTrue();
 
-        $tracker = Mockery::mock(Tracker_Artifact::class);
+        $tracker = Mockery::mock(Artifact::class);
         $tracker->shouldReceive('getGroupId')->once()->andReturn(101);
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturn($changeset);
         $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
 

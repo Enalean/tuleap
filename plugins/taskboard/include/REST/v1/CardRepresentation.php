@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
-use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -99,7 +99,7 @@ class CardRepresentation
      * @psalm-param list<MinimalUserRepresentation> $assignees
      */
     private function __construct(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         string $artifact_title,
         string $artifact_xref,
         bool $artifact_is_open,
@@ -136,7 +136,7 @@ class CardRepresentation
      * @psalm-param list<MinimalUserRepresentation> $assignees
      */
     public static function build(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         BackgroundColor $background_color,
         int $rank,
         array $assignees,

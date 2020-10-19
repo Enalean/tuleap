@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,7 +31,7 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
             \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
         )
             ->shouldReceive('getLastValue')->andReturns(['value' => '123.45'])->getMock();
-        $artifact  = Mockery::mock(Tracker_Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
         $field     = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
@@ -48,7 +50,7 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
         $value_dao      = \Mockery::mock(
             \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
         );
-        $artifact       =  Mockery::mock(Tracker_Artifact::class);
+        $artifact       =  Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
         $field          = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
@@ -68,7 +70,7 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
     public function testItReturnsZeroWhenUserDoesntHavePermissions(): void
     {
         $user           = new PFUser(['language_id' => 'en']);
-        $artifact       =  Mockery::mock(Tracker_Artifact::class);
+        $artifact       =  Mockery::mock(Artifact::class);
         $field          = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('userCanRead')->with($user)->andReturns(false);

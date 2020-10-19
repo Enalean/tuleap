@@ -148,7 +148,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = [];
-        $artifact    = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(true)->getMock();
         $transition->setConditions($conditions);
         $this->assertTrue($transition->validate($fields_data, $artifact, '', $this->current_user));
@@ -158,7 +158,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = [];
-        $artifact    = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(false)->getMock();
         $transition->setConditions($conditions);
         $this->assertFalse($transition->validate($fields_data, $artifact, '', $this->current_user));

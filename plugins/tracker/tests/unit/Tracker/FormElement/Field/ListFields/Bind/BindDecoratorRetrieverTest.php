@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
@@ -38,7 +38,7 @@ final class BindDecoratorRetrieverTest extends TestCase
     private $decorator_retriever;
     /** @var Tracker_FormElement_Field_List */
     private $list_field;
-    /** @var Tracker_Artifact */
+    /** @var Artifact */
     private $artifact;
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
@@ -53,7 +53,7 @@ final class BindDecoratorRetrieverTest extends TestCase
 
         $this->decorator_retriever = new BindDecoratorRetriever();
         $this->list_field          = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->artifact            = $this->createMock(Tracker_Artifact::class);
+        $this->artifact            = $this->createMock(Artifact::class);
         $this->changeset           = $this->createMock(Tracker_Artifact_Changeset::class);
         $this->changeset->method('getId')->willReturn(747);
         $this->decorator           = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);

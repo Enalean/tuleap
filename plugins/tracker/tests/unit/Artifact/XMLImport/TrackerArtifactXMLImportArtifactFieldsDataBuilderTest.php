@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_ArtifactFactory;
@@ -35,6 +34,7 @@ use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
@@ -52,7 +52,7 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -70,7 +70,7 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->user                = Mockery::mock(PFUser::class);
-        $this->artifact            = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact            = Mockery::mock(Artifact::class);
         $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $user_finder               = Mockery::mock(IFindUserFromXMLReference::class);
         $this->tracker             = Mockery::mock(Tracker::class);

@@ -58,7 +58,7 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $pane_factory->shouldReceive('getPanePresenterData')->andReturn(\Mockery::mock(PanePresenterData::class));
 
         $this->milestone = \Mockery::mock(Planning_ArtifactMilestone::class);
-        $artifact        = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact        = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn('999');
         $artifact->shouldReceive('getTitle')->andReturn('Milestone title');
         $this->milestone->shouldReceive('getArtifact')->andReturn($artifact);

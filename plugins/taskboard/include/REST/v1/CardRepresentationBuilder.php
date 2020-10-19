@@ -24,11 +24,11 @@ namespace Tuleap\Taskboard\REST\v1;
 
 use Cardwall_Semantic_CardFields;
 use PFUser;
-use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -59,7 +59,7 @@ class CardRepresentationBuilder
 
     public function build(
         \Planning_ArtifactMilestone $milestone,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         int $rank
     ): CardRepresentation {
@@ -84,7 +84,7 @@ class CardRepresentationBuilder
 
     private function getMappedListValue(
         \Planning_ArtifactMilestone $milestone,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): ?MappedListValueRepresentation {
         $mapped_list_value = $this->mapped_field_value_retriever->getValueAtLastChangeset($milestone, $artifact, $user);
@@ -99,7 +99,7 @@ class CardRepresentationBuilder
      * @return MinimalUserRepresentation[]
      * @psalm-return list<MinimalUserRepresentation>
      */
-    private function getAssignees(Tracker_Artifact $artifact, PFUser $user): array
+    private function getAssignees(Artifact $artifact, PFUser $user): array
     {
         $assignees = $artifact->getAssignedTo($user);
 
@@ -111,7 +111,7 @@ class CardRepresentationBuilder
         );
     }
 
-    private function getInitialEffort(Tracker_Artifact $artifact, PFUser $user)
+    private function getInitialEffort(Artifact $artifact, PFUser $user)
     {
         $initial_effort_field = \AgileDashBoard_Semantic_InitialEffort::load($artifact->getTracker())->getField();
 
@@ -157,7 +157,7 @@ class CardRepresentationBuilder
         );
     }
 
-    private function isCollapsed(PFUser $user, Tracker_Artifact $artifact, \Planning_ArtifactMilestone $milestone): bool
+    private function isCollapsed(PFUser $user, Artifact $artifact, \Planning_ArtifactMilestone $milestone): bool
     {
         $preference_name = 'plugin_taskboard_collapse_' . $milestone->getArtifactId() . '_' . $artifact->getId();
 

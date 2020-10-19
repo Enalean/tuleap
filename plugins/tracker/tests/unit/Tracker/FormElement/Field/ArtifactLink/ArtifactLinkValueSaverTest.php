@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_ArtifactLinkInfo;
 use Tracker_ArtifactFactory;
+use Tracker_ArtifactLinkInfo;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
@@ -86,25 +86,25 @@ class ArtifactLinkValueSaverTest extends TestCase
         $this->tracker->shouldReceive('getProject')->andReturns($project);
         $this->tracker_child->shouldReceive('getProject')->andReturns($project);
 
-        $this->initial_linked_artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->initial_linked_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->initial_linked_artifact->shouldReceive('getId')->andReturns(36);
         $this->initial_linked_artifact->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->initial_linked_artifact->shouldReceive('getLastChangeset')->andReturns(\Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(361)->getMock());
         $this->artifact_factory->shouldReceive('getArtifactById')->with(36)->andReturns($this->initial_linked_artifact);
 
-        $this->some_artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->some_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->some_artifact->shouldReceive('getId')->andReturns(456);
         $this->some_artifact->shouldReceive('getTracker')->andReturns($this->tracker_child);
         $this->some_artifact->shouldReceive('getLastChangeset')->andReturns(\Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(4561)->getMock());
         $this->artifact_factory->shouldReceive('getArtifactById')->with(456)->andReturns($this->some_artifact);
 
-        $this->other_artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->other_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->other_artifact->shouldReceive('getId')->andReturns(457);
         $this->other_artifact->shouldReceive('getTracker')->andReturns($this->tracker_child);
         $this->other_artifact->shouldReceive('getLastChangeset')->andReturns(\Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(4571)->getMock());
         $this->artifact_factory->shouldReceive('getArtifactById')->with(457)->andReturns($this->other_artifact);
 
-        $this->another_artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $this->another_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->another_artifact->shouldReceive('getId')->andReturns(458);
         $this->another_artifact->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->another_artifact->shouldReceive('getLastChangeset')->andReturns(\Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(4581)->getMock());
@@ -139,7 +139,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItRemovesACrossReference(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
 
         $value = [
             'list_of_artifactlinkinfo' => [],
@@ -166,7 +166,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItAddsACrossReference(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -191,7 +191,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -216,7 +216,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItUsesArtifactLinkNature(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -241,7 +241,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItUsesDefaultArtifactLinkNature(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -266,7 +266,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItUsesIsChildArtifactLinkTypeIfAHierarchyIsDefined(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -292,7 +292,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItDoesNotUseIsChildArtifactLinkTypeIfTargetTrackerIsNotChildInHierarchy(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [
@@ -316,7 +316,7 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     public function testItDoesNotUseIsChildArtifactLinkTypeIfTypeIsDisabled(): void
     {
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $value = [
             'list_of_artifactlinkinfo' => [

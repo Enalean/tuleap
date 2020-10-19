@@ -22,11 +22,11 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use CrossReferenceManager;
 use PermissionsManager;
-use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 
 class ArtifactDependenciesDeletor
 {
@@ -77,14 +77,14 @@ class ArtifactDependenciesDeletor
         $this->artifact_removal                  = $artifact_removal;
     }
 
-    public function cleanDependencies(Tracker_Artifact $artifact)
+    public function cleanDependencies(Artifact $artifact)
     {
         $artifact_deletor_visitor = new ArtifactFilesDeletorVisitor($artifact);
-        $this->permissions_manager->clearPermission(Tracker_Artifact::PERMISSION_ACCESS, $artifact->getId());
+        $this->permissions_manager->clearPermission(Artifact::PERMISSION_ACCESS, $artifact->getId());
         $tracker = $artifact->getTracker();
         $this->cross_reference_manager->deleteEntity(
             $artifact->getId(),
-            Tracker_Artifact::REFERENCE_NATURE,
+            Artifact::REFERENCE_NATURE,
             $tracker->getGroupId()
         );
 

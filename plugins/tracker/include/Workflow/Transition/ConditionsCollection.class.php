@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_ConditionsCollection implements ArrayAccess
 {
@@ -104,7 +106,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
      *
      * @return bool true if all conditions are satisfied
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, string $comment_body, PFUser $current_user): bool
+    public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         foreach ($this->getConditions() as $condition) {
             if (! $condition->validate($fields_data, $artifact, $comment_body, $current_user)) {

@@ -27,15 +27,15 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
+use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
 {
@@ -62,7 +62,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
      */
     private $execution_with_automated_data_provider;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
     /**
@@ -83,7 +83,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
 
         $this->user = Mockery::mock(PFUser::class);
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(102);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -106,8 +106,8 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
 
     public function testGetExecutionsWithAutomatedTestData(): void
     {
-        $definition_1 = Mockery::mock(Tracker_Artifact::class);
-        $execution_1  = Mockery::mock(Tracker_Artifact::class);
+        $definition_1 = Mockery::mock(Artifact::class);
+        $execution_1  = Mockery::mock(Artifact::class);
 
         $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')->andReturn(
             [["execution_1"]]
@@ -139,7 +139,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
 
     public function testGetExecutionsWithAutomatedTestDataReturnEmptyIfNoDefinition(): void
     {
-        $execution_1  = Mockery::mock(Tracker_Artifact::class);
+        $execution_1  = Mockery::mock(Artifact::class);
 
         $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')->andReturn(
             [["execution_1"]]

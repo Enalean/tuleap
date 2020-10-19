@@ -52,7 +52,7 @@ final class BacklogItemTestCreationUpdateInformationLinkPresenter
         $this->title      = $title;
     }
 
-    public static function fromArtifact(\Tracker_Artifact $artifact): self
+    public static function fromArtifact(\Tuleap\Tracker\Artifact\Artifact $artifact): self
     {
         return new self(
             $artifact->getUri(),

@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -42,7 +44,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->dao                            = \Mockery::spy(\AgileDashboard_BacklogItemDao::class);
         $this->swimline_factory               = \Mockery::spy(\Cardwall_SwimlineFactory::class);
         $this->user                           = new PFUser(['language_id' => 'en']);
-        $this->milestone_artifact             = Mockery::mock(Tracker_Artifact::class);
+        $this->milestone_artifact             = Mockery::mock(Artifact::class);
         $this->milestone_artifact->shouldReceive('getId')->andReturn(1);
         $this->mapping_collection             = \Mockery::spy(\Cardwall_MappingCollection::class);
         $this->columns                        = \Mockery::spy(\Cardwall_OnTop_Config_ColumnCollection::class);
@@ -98,11 +100,11 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private function buildMockArtifactAllUserCanView()
     {
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(1);
         $artifact->shouldReceive('userCanView')->andReturn(true);
 

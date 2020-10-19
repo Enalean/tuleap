@@ -27,13 +27,13 @@ use MilestoneParentLinker;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class MilestoneElementMoverTest extends TestCase
@@ -117,7 +117,7 @@ class MilestoneElementMoverTest extends TestCase
             ->once()
             ->andReturn($valid_to_add);
 
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $milestone->shouldReceive('getArtifact')
             ->twice()
             ->andReturn($artifact);
@@ -147,7 +147,7 @@ class MilestoneElementMoverTest extends TestCase
 
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once()->andReturn([$add]);
 
-        $milestone->shouldReceive('getArtifact')->once()->andReturn(Mockery::mock(Tracker_Artifact::class));
+        $milestone->shouldReceive('getArtifact')->once()->andReturn(Mockery::mock(Artifact::class));
         $planning_milestone = Mockery::mock(\Planning_Milestone::class);
         $planning_milestone->shouldReceive('getBacklogTrackersIds')->once()->andReturn([10, 11]);
         $milestone->shouldReceive('getPlanning')->once()->andReturn($planning_milestone);
@@ -155,7 +155,7 @@ class MilestoneElementMoverTest extends TestCase
         $project->shouldReceive('getID')->once()->andReturn(101);
         $milestone->shouldReceive('getProject')->once()->andReturn($project);
 
-        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTrackerId')->once()->andReturn(10);
         $this->tracker_artifact_factory->shouldReceive('getArtifactById')->twice()->withArgs([$add])->andReturn($artifact);
 

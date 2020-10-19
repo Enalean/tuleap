@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -41,7 +42,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
     /** @var SimpleXMLElement */
     private $changeset_xml;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact */
+    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact */
     private $artifact;
 
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetValue_File */
@@ -64,7 +65,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
             ->shouldReceive(['getField' => $field])
             ->getMock();
 
-        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $this->artifact = Mockery::mock(Artifact::class);
     }
 
     public function testItExportsEmptyValueIfThereIsNoFileChange(): void

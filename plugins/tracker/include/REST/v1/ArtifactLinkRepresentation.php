@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tracker_Artifact;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 /**
  * @psalm-immutable
@@ -41,12 +41,12 @@ class ArtifactLinkRepresentation
         $this->natures = $natures;
     }
 
-    public static function build(Tracker_Artifact $artifact): self
+    public static function build(Artifact $artifact): self
     {
         return new self(array_merge(self::getForwardNatures($artifact), self::getReverseNatures($artifact)));
     }
 
-    private static function getForwardNatures(Tracker_Artifact $artifact)
+    private static function getForwardNatures(Artifact $artifact)
     {
         $nature_dao     = new NatureDao();
         $nature_factory = self::getNaturePresenterFactory();
@@ -61,7 +61,7 @@ class ArtifactLinkRepresentation
         return $natures;
     }
 
-    private static function getReverseNatures(Tracker_Artifact $artifact)
+    private static function getReverseNatures(Artifact $artifact)
     {
         $nature_dao     = new NatureDao();
         $nature_factory = self::getNaturePresenterFactory();
@@ -87,7 +87,7 @@ class ArtifactLinkRepresentation
         return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
     }
 
-    private static function formatNature(NaturePresenter $nature, Tracker_Artifact $artifact, $direction)
+    private static function formatNature(NaturePresenter $nature, Artifact $artifact, $direction)
     {
         $label = $direction === NaturePresenter::FORWARD_LABEL ? $nature->forward_label : $nature->reverse_label;
 

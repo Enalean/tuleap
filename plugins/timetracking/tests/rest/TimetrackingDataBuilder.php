@@ -116,7 +116,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $this->addTimeOnLastMonthPeriod($time_dao, $artifact, $user);
     }
 
-    private function addTimesIn2018(TimeDao $time_dao, \Tracker_Artifact $artifact, PFUser $user)
+    private function addTimesIn2018(TimeDao $time_dao, \Tuleap\Tracker\Artifact\Artifact $artifact, PFUser $user)
     {
         $time_dao->addTime(
             $user->getId(),
@@ -129,7 +129,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     private function addTimeOnLastMonthPeriod(
         TimeDao $time_dao,
-        \Tracker_Artifact $artifact,
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
         PFUser $user
     ) {
         $time_dao->addTime(

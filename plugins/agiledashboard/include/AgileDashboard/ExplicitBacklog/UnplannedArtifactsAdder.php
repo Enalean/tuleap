@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class UnplannedArtifactsAdder
 {
@@ -55,7 +55,7 @@ class UnplannedArtifactsAdder
     /**
      * @throws ArtifactAlreadyPlannedException
      */
-    public function addArtifactToTopBacklog(Tracker_Artifact $artifact): void
+    public function addArtifactToTopBacklog(Artifact $artifact): void
     {
         $artifact_id = (int) $artifact->getId();
         $project_id  = (int) $artifact->getTracker()->getGroupId();

@@ -95,7 +95,7 @@ final class CreateMirrorsTaskTest extends TestCase
         $project->shouldReceive('getId')->andReturn(101);
         $tracker = $this->buildTestTracker(89);
         $tracker->setProject($project);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
         $artifact->shouldReceive('getId')->andReturn(101);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -135,7 +135,7 @@ final class CreateMirrorsTaskTest extends TestCase
         $project->shouldReceive('getId')->andReturn(101);
         $tracker = $this->buildTestTracker(89);
         $tracker->setProject($project);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 

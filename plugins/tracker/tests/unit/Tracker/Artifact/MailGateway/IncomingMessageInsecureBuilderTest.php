@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class IncomingMessageInsecureBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -164,7 +165,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
 
     public function testItFindsArtifactToHeader(): void
     {
-        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $artifact_mock = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
@@ -188,7 +189,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
 
     public function testItFindsArtifactCcHeader(): void
     {
-        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $artifact_mock = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
@@ -212,7 +213,7 @@ class IncomingMessageInsecureBuilderTest extends TestCase
 
     public function testItFindsArtifactMultipleUsers(): void
     {
-        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $artifact_mock = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
@@ -302,7 +303,9 @@ class IncomingMessageInsecureBuilderTest extends TestCase
 
     public function testItRejectsUnknownArtifact(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(
+            \Tuleap\Tracker\Artifact\Artifact::class
+        ));
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns([\Mockery::spy(\PFUser::class)]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(

@@ -21,9 +21,9 @@
 namespace Tuleap\TestManagement\Nature;
 
 use Project;
-use Tracker_Artifact;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class NatureCoveredByOverrider
 {
@@ -45,7 +45,7 @@ class NatureCoveredByOverrider
 
     public function getOverridingNature(
         Project $project,
-        Tracker_Artifact $to_artifact,
+        Artifact $to_artifact,
         array $new_linked_artifact_ids
     ): ?string {
         if ($this->dao->isTypeDisabledInProject($project->getID(), NatureCoveredByPresenter::NATURE_COVERED_BY)) {

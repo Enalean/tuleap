@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use PFUser;
-use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class FormattedChangesetValueForTextFieldRetriever
@@ -43,7 +43,7 @@ class FormattedChangesetValueForTextFieldRetriever
     public function getFormattedChangesetValueForFieldText(
         string $field_name,
         string $value,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);

@@ -92,7 +92,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
             'tracker_report_criteria_openlist_value',
             'tracker_report_criteria_permissionsonartifact_value',
             'tracker_field_list_bind_decorator',
-            'tracker_artifact',
+            'Tuleap\Artifact\Artifact',
             'tracker_tooltip',
             'tracker_global_notification',
             'tracker_watcher',

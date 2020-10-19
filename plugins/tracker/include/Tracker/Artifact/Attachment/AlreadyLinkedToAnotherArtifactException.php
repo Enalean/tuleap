@@ -19,9 +19,11 @@
   */
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 class Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException extends Exception
 {
-    public function __construct(int $file_id, Tracker_Artifact $linked_artifact)
+    public function __construct(int $file_id, Artifact $linked_artifact)
     {
         parent::__construct('File #' . $file_id . ' is already linked to artifact #' . $linked_artifact->getId());
     }

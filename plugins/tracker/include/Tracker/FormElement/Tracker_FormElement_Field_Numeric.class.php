@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -47,7 +48,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     public function getComputedValue(
         PFUser $user,
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         $timestamp = null
     ) {
         if ($this->userCanRead($user)) {
@@ -65,7 +66,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      *
      * @return mixed
      */
-    private function getComputedValueAt(Tracker_Artifact $artifact, $timestamp)
+    private function getComputedValueAt(Artifact $artifact, $timestamp)
     {
         $row = $this->getValueDao()->getValueAt($artifact->getId(), $this->getId(), $timestamp);
         return $row['value'];
@@ -76,7 +77,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      *
      * @return mixed
      */
-    private function getCurrentComputedValue(Tracker_Artifact $artifact)
+    private function getCurrentComputedValue(Artifact $artifact)
     {
         $row = $this->getValueDao()->getLastValue($artifact->getId(), $this->getId());
         if ($row) {
@@ -225,14 +226,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Artifact                        $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
     protected function fetchArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -256,16 +257,16 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * Fetch the field value in artifact to be displayed in mail
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param PFUser                          $user             The user who will receive the email
-     * @param bool $ignore_perms
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param string                          $format           mail format
+     * @param Artifact                        $artifact The artifact
+     * @param PFUser                          $user     The user who will receive the email
+     * @param bool                            $ignore_perms
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param string                          $format   mail format
      *
      * @return string
      */
     public function fetchMailArtifactValue(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         PFUser $user,
         $ignore_perms,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -291,12 +292,12 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Tracker_Artifact                $artifact The artifact
+     * @param Artifact                        $artifact The artifact
      * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         if ($value === null) {
             return $this->getNoValueLabel();
@@ -322,7 +323,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
-        Tracker_Artifact $artifact,
+        Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
@@ -332,7 +333,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return $old_value->getNumeric() !== $new_value;
     }
@@ -359,12 +360,12 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request. May be string or array.
+     * @param Artifact $artifact The artifact
+     * @param mixed    $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value)
+    protected function validate(Artifact $artifact, $value)
     {
         return $this->validateValue($value);
     }
@@ -409,7 +410,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return true;
     }
 
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
+    public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null)
     {
         return $this->getComputedValue($user, $artifact, $timestamp);
     }

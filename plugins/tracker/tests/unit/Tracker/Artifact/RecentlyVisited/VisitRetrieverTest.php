@@ -27,8 +27,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
@@ -46,7 +46,7 @@ class VisitRetrieverTest extends TestCase
             ]
         );
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact         = Mockery::mock(Tracker_Artifact::class);
+        $artifact         = Mockery::mock(Artifact::class);
         $artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
         $tracker = Mockery::mock(Tracker::class);
         $artifact->shouldReceive(

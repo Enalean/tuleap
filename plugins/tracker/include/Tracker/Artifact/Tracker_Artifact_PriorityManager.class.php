@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_PriorityManager
 {
@@ -182,7 +184,7 @@ class Tracker_Artifact_PriorityManager
         return $ranks;
     }
 
-    public function getArtifactPriorityHistory(Tracker_Artifact $artifact)
+    public function getArtifactPriorityHistory(Artifact $artifact)
     {
         $rows                     = $this->priority_history_dao->getArtifactPriorityHistory($artifact->getId());
         $priority_history_changes = [];
@@ -235,13 +237,13 @@ class Tracker_Artifact_PriorityManager
         );
     }
 
-    public function deletePriority(Tracker_Artifact $artifact)
+    public function deletePriority(Artifact $artifact)
     {
         return $this->priority_dao->remove($artifact->getId()) &&
         $this->priority_history_dao->deletePriorityChangesHistory($artifact->getId());
     }
 
-    public function putArtifactAtAGivenRank(Tracker_Artifact $artifact, $rank)
+    public function putArtifactAtAGivenRank(Artifact $artifact, $rank)
     {
         $this->priority_dao->putArtifactAtAGivenRank($artifact->getId(), $rank);
     }
