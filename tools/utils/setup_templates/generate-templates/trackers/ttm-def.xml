@@ -18,8 +18,8 @@
         </formElement>
         <formElement type="text" ID="F12745" rank="1">
           <name>details</name>
-          <label><![CDATA[Scenario]]></label>
-          <description><![CDATA[A full description of the test scenario]]></description>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Description of the test]]></description>
           <properties rows="10" cols="103"/>
         </formElement>
         <externalField type="ttmstepdef" ID="F12746" rank="2">
@@ -46,6 +46,27 @@
                   <item ID="V12807" label="Performance" is_hidden="0"/>
                   <item ID="V12808" label="Security" is_hidden="0"/>
                 </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="F12750" rank="5">
+          <name>descc2</name>
+          <label><![CDATA[Desc:C2]]></label>
+          <formElements>
+            <formElement type="cb" ID="F12751" rank="0">
+              <name>test_suite</name>
+              <label><![CDATA[Test suite]]></label>
+              <properties size="7"/>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V12809" label="Light" is_hidden="0"/>
+                  <item ID="V12810" label="Complete" is_hidden="0"/>
+                  <item ID="V12815" label="Non-regression" is_hidden="0"/>
+                </items>
+                <default_values>
+                  <value REF="V12810"/>
+                </default_values>
               </bind>
             </formElement>
           </formElements>
@@ -149,6 +170,9 @@
         <criteria rank="1">
           <field REF="F12749"/>
         </criteria>
+        <criteria rank="2">
+          <field REF="F12751"/>
+        </criteria>
       </criterias>
       <renderers>
         <renderer ID="R1684" type="table" rank="0" chunksz="15">
@@ -157,6 +181,7 @@
             <field REF="F12744"/>
             <field REF="F12763"/>
             <field REF="F12749"/>
+            <field REF="F12751"/>
           </columns>
           <sort>
             <field REF="F12749"/>
@@ -169,6 +194,70 @@
               <title>Test suite by category</title>
             </chart>
           </charts>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0">
+      <name>Test Suite Complete</name>
+      <description>Test definitions Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F12763"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F12749"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F12751"/>
+          <criteria_value type="list">
+            <selected_value REF="V12810"/>
+          </criteria_value>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1486" type="table" rank="0" chunksz="15">
+          <name>Results</name>
+          <columns>
+            <field REF="F12744"/>
+            <field REF="F12763"/>
+            <field REF="F12749"/>
+            <field REF="F12751"/>
+          </columns>
+          <sort>
+            <field REF="F12749"/>
+          </sort>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0">
+      <name>Test Suite Light</name>
+      <description>Test definitions Report</description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="F12763"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="F12749"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="F12751"/>
+          <criteria_value type="list">
+            <selected_value REF="V12809"/>
+          </criteria_value>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer ID="R1485" type="table" rank="0" chunksz="15">
+          <name>Results</name>
+          <columns>
+            <field REF="F12744"/>
+            <field REF="F12763"/>
+            <field REF="F12749"/>
+            <field REF="F12751"/>
+          </columns>
+          <sort>
+            <field REF="F12749"/>
+          </sort>
         </renderer>
       </renderers>
     </report>
@@ -190,6 +279,9 @@
     <permission scope="field" REF="F12749" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12749" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12749" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F12751" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F12751" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F12751" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F12752" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12752" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12752" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
