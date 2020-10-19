@@ -4,7 +4,6 @@ import shared_properties_module from "../shared-properties/shared-properties.js"
 import definition_module from "../definition/definition.js";
 import angular_tlp_module from "angular-tlp";
 
-import "restangular";
 import "angular-gettext";
 
 import CampaignConfig from "./campaign-config.js";
@@ -17,7 +16,6 @@ import CurrentPageFilter from "./campaign-new-filter.js";
 export default angular
     .module("campaign", [
         ui_router,
-        "restangular",
         "gettext",
         angular_tlp_module,
         definition_module,

@@ -20,15 +20,24 @@
 import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
 describe(`ArtifactLinksGraphRestService`, () => {
-    let ArtifactLinksGraphRestService, mockBackend, wrapPromise;
+    let ArtifactLinksGraphRestService, $q, wrapPromise;
     beforeEach(() => {
         angular.mock.module(testmanagment_module);
-        let $rootScope;
-        angular.mock.inject(function (_$rootScope_, $httpBackend, _ArtifactLinksGraphRestService_) {
+        let $rootScope, mockBackend;
+        angular.mock.inject(function (
+            _$rootScope_,
+            _$q_,
+            $httpBackend,
+            _ArtifactLinksGraphRestService_
+        ) {
             $rootScope = _$rootScope_;
+            $q = _$q_;
             mockBackend = $httpBackend;
             ArtifactLinksGraphRestService = _ArtifactLinksGraphRestService_;
         });
@@ -38,16 +47,31 @@ describe(`ArtifactLinksGraphRestService`, () => {
         mockBackend.when("GET", "campaign-list.tpl.html").respond(200);
     });
 
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
+
     describe(`getArtifactGraph`, () => {
         it(`will call GET on test management nodes and return the response`, async () => {
-            const artifact_id = "123";
-            mockBackend.expectGET("/api/v1/testmanagement_nodes").respond(artifact_id);
+            const links_representation = {
+                id: 456,
+                title: "mobilizable",
+                color: "inca-silver",
+                links: [{ id: 123, title: "metallography", color: "inca-silver" }],
+            };
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, { return_json: links_representation });
 
-            const promise = ArtifactLinksGraphRestService.getArtifactGraph();
-            mockBackend.flush();
+            const promise = ArtifactLinksGraphRestService.getArtifactGraph(25);
             const response = await wrapPromise(promise);
 
-            expect(response).toEqual(artifact_id);
+            expect(response).toEqual(links_representation);
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/testmanagement_nodes/25");
         });
     });
 });

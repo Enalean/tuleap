@@ -20,15 +20,19 @@
 import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import * as tlp from "tlp";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("tlp");
+
 describe(`JWTService`, () => {
-    let JWTService, mockBackend, wrapPromise;
+    let JWTService, $q, wrapPromise;
     beforeEach(() => {
         angular.mock.module(testmanagment_module);
-        let $rootScope;
-        angular.mock.inject(function (_$rootScope_, $httpBackend, _JWTService_) {
+        let $rootScope, mockBackend;
+        angular.mock.inject(function (_$rootScope_, _$q_, $httpBackend, _JWTService_) {
             $rootScope = _$rootScope_;
+            $q = _$q_;
             mockBackend = $httpBackend;
             JWTService = _JWTService_;
         });
@@ -38,16 +42,26 @@ describe(`JWTService`, () => {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
+    function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
+
     describe(`getJWT`, () => {
         it(`will call GET on jwt and return the response`, async () => {
             const token = "aaaaa";
-            mockBackend.expectGET("/api/v1/jwt").respond(token);
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, { return_json: token });
 
             const promise = JWTService.getJWT();
-            mockBackend.flush();
             const response = await wrapPromise(promise);
 
             expect(response).toEqual(token);
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/jwt");
         });
     });
 });

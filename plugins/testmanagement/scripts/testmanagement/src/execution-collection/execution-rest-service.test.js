@@ -26,35 +26,27 @@ import * as tlp from "tlp";
 jest.mock("tlp");
 
 describe("ExecutionRestService", () => {
-    let mockBackend, wrapPromise, $q, ExecutionRestService, SharedPropertiesService;
+    let wrapPromise, $q, ExecutionRestService;
     const UUID = "123";
 
     beforeEach(() => {
-        angular.mock.module(execution_module);
+        jest.resetAllMocks();
+        angular.mock.module(execution_module, function ($provide) {
+            $provide.decorator("SharedPropertiesService", function ($delegate) {
+                jest.spyOn($delegate, "getUUID").mockReturnValue(UUID);
+                return $delegate;
+            });
+        });
 
         let $rootScope;
-        angular.mock.inject(function (
-            $httpBackend,
-            _$rootScope_,
-            _$q_,
-            _ExecutionRestService_,
-            _SharedPropertiesService_
-        ) {
-            mockBackend = $httpBackend;
+        angular.mock.inject(function (_$q_, _$rootScope_, _ExecutionRestService_) {
+            $q = _$q_;
             $rootScope = _$rootScope_;
             $q = _$q_;
             ExecutionRestService = _ExecutionRestService_;
-            SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        jest.spyOn(SharedPropertiesService, "getUUID").mockReturnValue(UUID);
-
         wrapPromise = createAngularPromiseWrapper($rootScope);
-    });
-
-    afterEach(() => {
-        mockBackend.verifyNoOutstandingExpectation();
-        mockBackend.verifyNoOutstandingRequest();
     });
 
     function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
@@ -66,55 +58,78 @@ describe("ExecutionRestService", () => {
         );
     }
 
-    it("getRemoteExecutions()", async () => {
-        const response = [
-            {
-                id: 4,
-            },
-            {
-                id: 2,
-            },
-        ];
+    function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.reject({
+                response: {
+                    status,
+                    statusText,
+                    json: () => $q.when(error_json),
+                },
+            })
+        );
+    }
 
-        mockBackend
-            .expectGET(
-                "/api/v1/testmanagement_campaigns/1/testmanagement_executions?limit=10&offset=0"
-            )
-            .respond(JSON.stringify(response));
+    const expected_headers = {
+        "content-type": "application/json",
+        "X-Client-UUID": UUID,
+    };
+
+    it("getRemoteExecutions()", async () => {
+        const executions = [{ id: 4 }, { id: 2 }];
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
+            return_json: executions,
+            headers: {
+                get: () => {
+                    return "2";
+                },
+            },
+        });
 
         const promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
-        mockBackend.flush();
 
-        const executions = await wrapPromise(promise);
-        expect(executions.results.length).toEqual(2);
+        const response = await wrapPromise(promise);
+        expect(response.total).toEqual("2");
+        expect(response.results).toEqual(executions);
+        expect(tlpGet).toHaveBeenCalledWith(
+            "/api/v1/testmanagement_campaigns/1/testmanagement_executions",
+            {
+                params: { limit: 10, offset: 0 },
+            }
+        );
     });
 
     it("postTestExecution()", async () => {
-        const execution = {
-            id: 4,
-            status: "notrun",
-        };
+        const tlpPost = jest.spyOn(tlp, "post");
+        const execution_representation = { id: 4, status: "notrun" };
+        mockFetchSuccess(tlpPost, { return_json: execution_representation });
 
-        mockBackend.expectPOST("/api/v1/testmanagement_executions").respond(execution);
+        const promise = ExecutionRestService.postTestExecution(32, 231, "notrun");
+        const new_execution = await wrapPromise(promise);
 
-        const promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");
-
-        mockBackend.flush();
-
-        const execution_updated = await wrapPromise(promise);
-        expect(execution_updated.id).toBeDefined();
+        expect(new_execution).toEqual(execution_representation);
+        expect(tlpPost).toHaveBeenCalledWith("/api/v1/testmanagement_executions", {
+            headers: expected_headers,
+            body: JSON.stringify({
+                tracker: { id: 32 },
+                definition_id: 231,
+                status: "notrun",
+            }),
+        });
     });
 
     it("putTestExecution()", async () => {
+        const execution_representation = { id: 4, status: "passed", uploaded_file_ids: [13] };
         const tlpPutSpy = jest.spyOn(tlp, "put");
-        mockFetchSuccess(tlpPutSpy);
+        mockFetchSuccess(tlpPutSpy, { return_json: execution_representation });
 
-        await wrapPromise(ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]));
+        const promise = ExecutionRestService.putTestExecution(4, "passed", "nothing", [13]);
+        const execution_updated = await wrapPromise(promise);
 
+        expect(execution_updated).toEqual(execution_representation);
         expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/testmanagement_executions/4", {
-            headers: {
-                "content-type": "application/json",
-            },
+            headers: expected_headers,
             body: JSON.stringify({
                 status: "passed",
                 uploaded_file_ids: [13],
@@ -123,58 +138,147 @@ describe("ExecutionRestService", () => {
         });
     });
 
-    it("changePresenceOnTestExecution()", async () => {
-        mockBackend.expectPATCH("/api/v1/testmanagement_executions/9/presences").respond();
+    describe(`updateExecutionToUseLatestVersionOfDefinition()`, () => {
+        it(`will call PATCH on the execution to force it to use the latest test definition`, async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
-        const promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
+            const promise = ExecutionRestService.updateExecutionToUseLatestVersionOfDefinition(12);
+            await wrapPromise(promise);
 
-        mockBackend.flush();
-
-        const response = await wrapPromise(promise);
-        expect(response.status).toEqual(200);
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_executions/12", {
+                headers: expected_headers,
+                body: JSON.stringify({ force_use_latest_definition_version: true }),
+            });
+        });
     });
 
-    it("linkIssue()", async () => {
-        const issueId = 400;
-        const execution = {
-            id: 100,
-            previous_result: {
-                result: "Something wrong",
-            },
-            definition: {
-                summary: "test summary",
-                description: "test description",
-            },
+    it("changePresenceOnTestExecution()", async () => {
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        mockFetchSuccess(tlpPatch);
+
+        const promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
+        await wrapPromise(promise);
+
+        expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_executions/9/presences", {
+            headers: expected_headers,
+            body: JSON.stringify({ uuid: UUID, remove_from: 4 }),
+        });
+    });
+
+    describe(`leaveTestExecution()`, () => {
+        it(`will call PATCH on the execution's presences
+            and will remove the current user from the presences`, async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = ExecutionRestService.leaveTestExecution(9);
+            await wrapPromise(promise);
+
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_executions/9/presences", {
+                headers: expected_headers,
+                body: JSON.stringify({ uuid: UUID, remove_from: 9 }),
+            });
+        });
+    });
+
+    it("getArtifactById()", async () => {
+        const artifact = {
+            id: 61,
+            xref: "bug #61",
+            title: "intercloud haustorium",
+            tracker: { id: 4 },
         };
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, { return_json: artifact });
 
-        const expectedBody = new RegExp(
-            execution.definition.summary + ".*" + execution.definition.description
-        );
-        const matchPayload = {
-            id: issueId,
-            comment: {
-                body: "MATCHING TEST SUMMARY + DESCRIPTION",
-                format: "html",
-            },
-            test: function (data) {
-                const payload = JSON.parse(data);
-                return (
-                    payload.issue_id === issueId &&
-                    expectedBody.test(payload.comment.body) &&
-                    payload.comment.format === "html"
-                );
-            },
-        };
-        mockBackend
-            .expectPATCH("/api/v1/testmanagement_executions/100/issues", matchPayload)
-            .respond();
+        const promise = ExecutionRestService.getArtifactById(61);
+        const result = await wrapPromise(promise);
 
-        const promise = ExecutionRestService.linkIssue(issueId, execution);
+        expect(result).toEqual(artifact);
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/artifacts/61");
+    });
 
-        mockBackend.flush();
+    describe(`linkIssue()`, () => {
+        let execution;
+        beforeEach(() => {
+            execution = {
+                id: 100,
+                previous_result: { result: "Something wrong" },
+                definition: { summary: "test summary", description: "test description" },
+            };
+        });
 
-        const response = await wrapPromise(promise);
-        expect(response.status).toEqual(200);
+        it(`will call PATCH on the execution's issues
+            and will link the given issue to the execution
+            and will add the given comment to the exection`, async () => {
+            const issue_id = 400;
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const expected_body_regex = new RegExp(
+                execution.definition.summary + ".*" + execution.definition.description
+            );
+
+            const promise = ExecutionRestService.linkIssue(issue_id, execution);
+            await wrapPromise(promise);
+
+            expect(tlpPatch).toHaveBeenCalledWith(
+                "/api/v1/testmanagement_executions/100/issues",
+                expect.anything()
+            );
+            const init_argument = tlpPatch.mock.calls[0][1];
+            expect(init_argument.headers).toEqual(expected_headers);
+            const raw_body = JSON.parse(init_argument.body);
+            expect(raw_body.issue_id).toEqual(issue_id);
+            expect(raw_body.comment.format).toEqual("html");
+            expect(raw_body.comment.body).toMatch(expected_body_regex);
+        });
+
+        it(`when there is an error, it will parse the response's JSON a return its error property`, () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchError(tlpPatch, { status: 403, error_json: { error: "Forbidden" } });
+
+            expect.assertions(1);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = ExecutionRestService.linkIssue(123, execution).catch((error) => {
+                expect(error).toEqual("Forbidden");
+            });
+
+            return wrapPromise(promise);
+        });
+    });
+
+    describe(`linkIssueWithoutComment()`, () => {
+        it(`will call PATCH on the execution's issues
+            and will link the given issue to the execution
+            and will add an empty comment in text format`, async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            const promise = ExecutionRestService.linkIssueWithoutComment(123, { id: 456 });
+            await wrapPromise(promise);
+
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_executions/456/issues", {
+                headers: expected_headers,
+                body: JSON.stringify({ issue_id: 123, comment: { body: "", format: "text" } }),
+            });
+        });
+
+        it(`when there is an error, it will parse the response's JSON a return its error property`, () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchError(tlpPatch, { status: 403, error_json: { error: "Forbidden" } });
+
+            expect.assertions(1);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = ExecutionRestService.linkIssueWithoutComment(123, { id: 456 }).catch(
+                (error) => {
+                    expect(error).toEqual("Forbidden");
+                }
+            );
+
+            return wrapPromise(promise);
+        });
     });
 
     it("getLinkedArtifacts()", async () => {
@@ -193,73 +297,69 @@ describe("ExecutionRestService", () => {
             },
         ];
 
-        mockBackend
-            .expectGET(
-                "/api/v1/artifacts/148/linked_artifacts?direction=forward&limit=10&nature=&offset=0"
-            )
-            .respond(
-                angular.toJson({
-                    collection: linked_issues,
-                }),
-                {
-                    "X-Pagination-Size": 2,
-                }
-            );
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
+            return_json: { collection: linked_issues },
+            headers: {
+                get: () => {
+                    return "2";
+                },
+            },
+        });
 
         const test_execution = { id: 148 };
         const promise = ExecutionRestService.getLinkedArtifacts(test_execution, 10, 0);
-        mockBackend.flush();
 
         const result = await wrapPromise(promise);
         expect(result).toEqual({
             collection: linked_issues,
             total: 2,
         });
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/artifacts/148/linked_artifacts", {
+            params: { direction: "forward", nature: "", limit: 10, offset: 0 },
+        });
     });
 
-    it("getArtifactById()", async () => {
-        const artifact = {
-            id: 61,
-            xref: "bug #61",
-            title: "intercloud haustorium",
-            tracker: { id: 4 },
-        };
-        mockBackend.expectGET("/api/v1/artifacts/61").respond(angular.toJson(artifact));
+    describe(`getExecution()`, () => {
+        it(`will call GET on the testmanagement_executions and return the result`, async () => {
+            const test_execution = { id: 110 };
+            const tlpGet = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGet, { return_json: test_execution });
 
-        const promise = ExecutionRestService.getArtifactById(61);
-        mockBackend.flush();
+            const promise = ExecutionRestService.getExecution(110);
+            const result = await wrapPromise(promise);
 
-        const result = await wrapPromise(promise);
-        expect(result).toEqual(artifact);
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/testmanagement_executions/110");
+            expect(result).toEqual(test_execution);
+        });
     });
 
     describe("updateStepStatus()", () => {
-        it("Given an execution id, a step id and a status, then the REST route will be called", () => {
+        it("Given an execution id, a step id and a status, then the REST route will be called", async () => {
             const test_execution = { id: 26 };
             const step_id = 96;
             const status = "failed";
-            mockBackend
-                .expectPATCH(
-                    "/api/v1/testmanagement_executions/26",
-                    {
-                        steps_results: [{ step_id, status }],
-                    },
-                    (headers) => headers["X-Client-UUID"] === UUID
-                )
-                .respond(200);
+
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
 
             const promise = ExecutionRestService.updateStepStatus(test_execution, step_id, status);
-            mockBackend.flush();
+            await wrapPromise(promise);
 
-            return wrapPromise(promise);
+            expect(tlpPatch).toHaveBeenCalledWith("/api/v1/testmanagement_executions/26", {
+                headers: expected_headers,
+                body: JSON.stringify({ steps_results: [{ step_id, status }] }),
+            });
         });
 
         it("Given there is a REST error, then a promise will be rejected with the error message", () => {
             const test_execution = { id: 21 };
             const step_id = 38;
             const status = "blocked";
-            mockBackend.whenPATCH("/api/v1/testmanagement_executions/21").respond(403, {
-                error: { message: "This user cannot update the execution" },
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchError(tlpPatch, {
+                status: 403,
+                error_json: { error: "This user cannot update the execution" },
             });
 
             // eslint-disable-next-line jest/valid-expect-in-promise
@@ -270,7 +370,6 @@ describe("ExecutionRestService", () => {
             ).catch((error) => {
                 expect(error).toEqual("This user cannot update the execution");
             });
-            mockBackend.flush();
             return wrapPromise(promise);
         });
     });
