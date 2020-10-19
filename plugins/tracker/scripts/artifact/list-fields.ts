@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     listenToggleEditionEvents(document);
     initListPickersInArtifactCreationView(document);
     initListPickersPostUpdateErrorView(document);
+    initTrackerSelector(document);
 });
 
 export function listenToggleEditionEvents(doc: HTMLDocument): void {
@@ -69,4 +70,8 @@ function initListPickers(selects: NodeListOf<HTMLSelectElement>): void {
             is_filterable: true,
         });
     });
+}
+
+function initTrackerSelector(document: HTMLDocument): void {
+    initListPickers(document.querySelectorAll("#tracker_select_tracker"));
 }

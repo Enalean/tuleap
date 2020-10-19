@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer
 {
@@ -67,6 +68,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
     {
         $GLOBALS['HTML']->overlay_header();
         $this->displayTrackerSwitcher($this->current_user);
+        ListPickerIncluder::includeListPickerAssets();
         echo $this->fetchSubmitInstructions();
     }
 

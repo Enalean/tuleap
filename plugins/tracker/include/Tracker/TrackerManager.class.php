@@ -766,20 +766,29 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $html .= dgettext('tuleap-tracker', 'Please select a tracker');
         }
         $html .= '</strong>' . $separator;
-        $html .= '<select id="tracker_select_tracker">';
+        $html .= '<span class="tracker-selector"><select id="tracker_select_tracker">';
         if (! $current_tracker) {
             $html .= '<option selected="selected">--</option>';
         }
         $factory = TrackerFactory::instance();
+        $project_manager = ProjectManager::instance();
+
         foreach ($projects as $data) {
-            if ($trackers = $factory->getTrackersByGroupId($data['group_id'])) {
+            $project = $project_manager->getProject($data["group_id"]);
+
+            if (! $project->usesService(trackerPlugin::SERVICE_SHORTNAME)) {
+                continue;
+            }
+
+            $trackers = $factory->getTrackersByGroupId($project->getID());
+            if ($trackers) {
                 foreach ($trackers as $key => $v) {
                     if (! $v->userCanView($user)) {
                         unset($trackers[$key]);
                     }
                 }
                 if ($trackers) {
-                    $html .= '<optgroup label="' . $hp->purify($data['group_name'], CODENDI_PURIFIER_CONVERT_HTML) . '">';
+                    $html .= '<optgroup label="' . $hp->purify($project->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) . '">';
                     foreach ($trackers as $t) {
                         $selected = $current_tracker && $t->getId() == $current_tracker->getId() ? 'selected="selected"' : '';
                         $html .= '<option ' . $selected . ' value="' . $t->getId() . '">';
@@ -790,7 +799,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 }
             }
         }
-        $html .= '</select>';
+        $html .= '</select></span>';
         return $html;
     }
 
