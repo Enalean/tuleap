@@ -26,12 +26,17 @@ export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement):
     empty_option.value = "";
     select.appendChild(empty_option);
 
-    for (let i = 0; i < 3; i++) {
+    let i;
+    for (i = 0; i < 3; i++) {
         const option = document.createElement("option");
         option.value = "value_" + i;
         option.innerText = "Value " + i;
         select.appendChild(option);
     }
+    const option_with_label = document.createElement("option");
+    option_with_label.value = "value_" + i;
+    option_with_label.label = "Value " + i;
+    select.appendChild(option_with_label);
 }
 
 export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement): void {

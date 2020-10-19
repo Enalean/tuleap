@@ -56,6 +56,8 @@ import FieldValuesService from "./model/field-values-service.js";
 import TrackerTransformerService from "./model/tracker-transformer-service.js";
 import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
+import ListPickerDirective from "./tuleap-artifact-modal-fields/list-picker-field/list-picker-field-directive.js";
+import ListPickerMultipleDirective from "./tuleap-artifact-modal-fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -92,6 +94,8 @@ export default angular
     .directive("tuleapFocusOnClick", focusOnClickDirective)
     .directive("tuleapArtifactModalQuotaDisplay", QuotaDisplayDirective)
     .directive("tuleapHighlightDirective", HighlightDirective)
+    .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
+    .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
     .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)
     .service("NewTuleapArtifactModalService", ArtifactModalService)

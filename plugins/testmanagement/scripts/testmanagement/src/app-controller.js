@@ -46,6 +46,11 @@ function TestManagementCtrl(
         const ttm_admin_url = testmanagement_init_data.ttmAdminUrl;
         const ttm_admin_label = testmanagement_init_data.ttmAdminLabel;
 
+        const is_list_picker_enabled = Boolean(
+            JSON.parse(testmanagement_init_data.isListPickerEnabled)
+        );
+        SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
+
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);

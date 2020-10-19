@@ -24,6 +24,7 @@ use ForgeConfig as TuleapConfig;
 use PFUser;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
@@ -107,12 +108,16 @@ class IndexPresenter
      * @psalm-readonly
      */
     public $ttm_admin_url = '';
+    /**
+     * @var string
+     */
+    public $is_list_picker_enabled;
 
     /**
-     * @param int|false $campaign_tracker_id
-     * @param int|false $test_definition_tracker_id
-     * @param int|false $test_execution_tracker_id
-     * @param int|false|null $issue_tracker_id
+     * @param int|false                         $campaign_tracker_id
+     * @param int|false                         $test_definition_tracker_id
+     * @param int|false                         $test_execution_tracker_id
+     * @param int|false|null                    $issue_tracker_id
      * @param MilestoneRepresentation|\stdClass $milestone_representation
      */
     public function __construct(
@@ -163,6 +168,7 @@ class IndexPresenter
         $this->project_flags              = $project_flags;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->has_project_flags          = count($project_flags) > 0;
+        $this->is_list_picker_enabled     = json_encode((bool) \ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

@@ -38,7 +38,10 @@ export function generateItemMapBasedOnSourceSelectOptions(
         }
 
         const id = `item-${i}`;
-        const template = option.innerText;
+        const template =
+            option.innerText !== "" && option.innerText !== undefined
+                ? option.innerText
+                : option.label;
         const is_disabled = Boolean(option.hasAttribute("disabled"));
         const item: ListPickerItem = {
             id,

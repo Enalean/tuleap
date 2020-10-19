@@ -51,6 +51,9 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
             JSON.parse(planning_init_data.backlogAddItemAllowed)
         );
 
+        const is_list_picker_enabled = Boolean(JSON.parse(planning_init_data.isListPickerEnabled));
+        SharedPropertiesService.setEnableListPicker(is_list_picker_enabled);
+
         const language = planning_init_data.language;
         initLocale(language);
     }

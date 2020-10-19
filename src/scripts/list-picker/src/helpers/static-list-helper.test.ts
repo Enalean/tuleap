@@ -35,7 +35,7 @@ describe("static-list-helper", () => {
 
         const map = generateItemMapBasedOnSourceSelectOptions(select);
 
-        expect(map.size).toEqual(3);
+        expect(map.size).toEqual(4);
 
         const iterator = map.entries();
         expect(iterator.next().value).toEqual([
@@ -67,6 +67,18 @@ describe("static-list-helper", () => {
             {
                 id: "item-2",
                 template: "Value 2",
+                is_disabled: false,
+                group_id: "",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
+            },
+        ]);
+        expect(iterator.next().value).toEqual([
+            "item-3",
+            {
+                id: "item-3",
+                template: "Value 3",
                 is_disabled: false,
                 group_id: "",
                 is_selected: false,

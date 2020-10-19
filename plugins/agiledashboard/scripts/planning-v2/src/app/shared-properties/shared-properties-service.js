@@ -27,6 +27,7 @@ export default function SharedPropertiesService() {
         allowed_additional_panes_to_display: [],
         create_milestone_allowed: undefined,
         add_item_in_backlog_allowed: undefined,
+        is_list_picker_enabled: false,
     };
 
     return {
@@ -46,6 +47,8 @@ export default function SharedPropertiesService() {
         getCreateMilestoneAllowed,
         setAddItemInBacklogAllowed,
         getAddItemInBacklogAllowed,
+        setEnableListPicker,
+        isListPickerEnabled,
     };
 
     function getUserId() {
@@ -110,5 +113,13 @@ export default function SharedPropertiesService() {
 
     function getAddItemInBacklogAllowed() {
         return property.add_item_in_backlog_allowed;
+    }
+
+    function setEnableListPicker(is_list_picker_enabled) {
+        property.is_list_picker_enabled = is_list_picker_enabled;
+    }
+
+    function isListPickerEnabled() {
+        return property.is_list_picker_enabled;
     }
 }

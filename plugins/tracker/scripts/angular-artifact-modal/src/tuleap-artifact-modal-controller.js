@@ -79,6 +79,7 @@ function ArtifactModalController(
         title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
+        is_list_picker_enabled: modal_model.is_list_picker_enabled,
         followups_comments: {
             content: [],
             loading_comments: true,
