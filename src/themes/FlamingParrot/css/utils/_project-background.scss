@@ -41,6 +41,10 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     }
 
+    .breadcrumb-dropdown-item {
+        text-shadow: initial;
+    }
+
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
         background: rgba(0, 0, 0, .3);
         color: $white;
