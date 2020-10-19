@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Plateform allows restricted", function () {
+describe("Platform allows restricted", function () {
     it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityAndAllowRestricted();
 
@@ -52,6 +52,7 @@ describe("Plateform allows restricted", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-restricted", "Admin");
+        cy.contains("Details").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-submit-button]").click();
         cy.get("[data-test=term_of_service]").click();

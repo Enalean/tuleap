@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,7 @@ describe("Plateform allows anonymous", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-anonymous", "Admin");
+        cy.contains("Details").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-short-description-input]").type("My short description");
         cy.get("[data-test=project-details-submit-button]").click();
