@@ -572,10 +572,10 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/multi_project_backlog
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/multi_project_backlog
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/scaled_agile
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones

@@ -1,0 +1,6 @@
+/var/log/%PROJECT_NAME%/scaled_agile_syslog {
+    missingok
+    weekly
+    rotate 4
+    create 640 %APP_USER% %APP_USER%
+}
