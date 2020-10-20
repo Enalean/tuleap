@@ -45,7 +45,7 @@
     "json-loader": "^0.5.7",
     "lerna": "^3.22.1",
     "lodash.map": "4.6.0",
-    "mini-css-extract-plugin": "^1.0.0",
+    "mini-css-extract-plugin": "^1.1.0",
     "minimist": "^1.2.5",
     "ng-cache-loader": "0.0.26",
     "po-gettext-loader": "^1.0.0",
