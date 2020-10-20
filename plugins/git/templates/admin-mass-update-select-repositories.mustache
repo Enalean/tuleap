@@ -1,6 +1,6 @@
-<h1 data-test="git-administration-page">{{ git_admin }}</h1>
+<h1 class="almost-tlp-title administration-title" data-test="git-administration-page">{{ git_admin }}</h1>
 
-<div class="tabbable">
+<div class="main-project-tabs">
     <ul class="nav nav-tabs git-admin-tabs">
         <li>
             <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
@@ -22,7 +22,9 @@
             </li>
         {{/ external_pane_presenters }}
     </ul>
+</div>
 
+<div class="git-administration-content">
     <h2>{{ title }}</h2>
 
     <p>{{ select_repositories }}</p>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -219,12 +219,12 @@ class GitViews_RepoManagement
      */
     public function display()
     {
-        echo '<div class="tabbable">';
-        echo '<ul class="nav nav-tabs">';
+        echo '<div class="main-project-tabs"><ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
             $this->displayTab($pane);
         }
-        echo '</ul>';
+        echo '</ul></div>';
+        echo '<div class="git-administration-content">';
         echo '<div id="git_repomanagement" class="tab-content git_repomanagement">';
         echo '<div class="tab-pane active">';
         echo $this->panes[$this->current_pane]->getContent();

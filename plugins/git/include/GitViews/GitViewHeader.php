@@ -53,7 +53,7 @@ class GitViewHeader
                 'title'      => dgettext('tuleap-git', 'Git'),
                 'group'      => $project->getID(),
                 'toptab'     => dgettext('tuleap-git', 'Git'),
-                'body_class' => $this->getAdditionalBodyClasses($request)
+                'body_class' => array_merge(['git-administration'], $this->getAdditionalBodyClasses($request))
             ]
         );
     }

@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -163,7 +163,8 @@ class GitForkPermissionsManager
     {
         $repository_ids  = explode(',', $params['repos']);
         $sourceReposHTML = $this->displayForkSourceRepositories($repository_ids);
-        $form  = '<h2>' . dgettext('tuleap-git', 'Fork repositories') . '</h2>';
+        $form  = '<h1 class="almost-tlp-title administration-title">' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
+        $form .= '<div class="git-fork-creation-content">';
         $form .= sprintf(dgettext('tuleap-git', 'You are going to fork repository: %1$s'), $sourceReposHTML);
         $form .= $this->displayForkDestinationMessage($params);
         $form .= '<h3>Set permissions for the repository to be created</h3>';
@@ -183,7 +184,7 @@ class GitForkPermissionsManager
             $form .= $this->displayAccessControlWhileForkingASingleRepository($groupId);
         }
         $form .= '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" />';
-        $form .= '</form>';
+        $form .= '</form></div>';
         return $form;
     }
 
