@@ -119,7 +119,7 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
 
 @mixin tlp-button-disabled($background-color, $text-color) {
     border-color: transparent;
-    background: transparentize($background-color, .4);
+    background: desaturate(lighten($background-color, 17%), 19%);
     color: transparentize($text-color, .4);
 }
 
