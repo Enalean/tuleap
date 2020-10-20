@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="embedded-document-container tlp-framed-vertically">
+    <div class="embedded-document-container">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info
                 v-bind:item="currently_previewed_item"

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -20,9 +20,7 @@
   -->
 
 <template>
-    <div class="tlp-framed" v-bind:class="classes" v-if="!does_folder_have_any_error">
-        <folder-view />
-    </div>
+    <folder-view v-bind:class="classes" v-if="!does_folder_have_any_error" />
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
