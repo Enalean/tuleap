@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact;
 
 use Codendi_HTMLPurifier;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Tracker\Artifact\Heartbeat\OverrideArtifactsInFavourOfAnOther;
 use UserHelper;
 use UserManager;
 
@@ -52,29 +56,47 @@ class LatestHeartbeatsCollector
      * @var UserHelper
      */
     private $user_helper;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_manager;
 
     public function __construct(
         Tracker_ArtifactDao $dao,
         Tracker_ArtifactFactory $factory,
         GlyphFinder $glyph_finder,
         UserManager $user_manager,
-        UserHelper $user_helper
+        UserHelper $user_helper,
+        EventDispatcherInterface $event_manager
     ) {
-        $this->dao          = $dao;
-        $this->factory      = $factory;
-        $this->glyph_finder = $glyph_finder;
-        $this->user_manager = $user_manager;
-        $this->user_helper  = $user_helper;
+        $this->dao           = $dao;
+        $this->factory       = $factory;
+        $this->glyph_finder  = $glyph_finder;
+        $this->user_manager  = $user_manager;
+        $this->user_helper   = $user_helper;
+        $this->event_manager = $event_manager;
     }
 
-    public function collect(HeartbeatsEntryCollection $collection)
+    public function collect(HeartbeatsEntryCollection $collection): void
     {
         $artifacts = $this->dao->searchLatestUpdatedArtifactsInProject(
             $collection->getProject()->getID(),
             $collection::NB_MAX_ENTRIES
         );
+
+        if (! $artifacts) {
+            return;
+        }
+
+        $artifact_list = [];
         foreach ($artifacts as $row) {
-            $artifact = $this->factory->getInstanceFromRow($row);
+            $artifact_list[] = $this->factory->getInstanceFromRow($row);
+        }
+
+        $event = new OverrideArtifactsInFavourOfAnOther($artifact_list, $collection->getUser(), $collection->getProject());
+        $this->event_manager->dispatch($event);
+
+        foreach ($event->getOverriddenArtifacts() as $artifact) {
             if (! $artifact->userCanView($collection->getUser())) {
                 $collection->thereAreActivitiesUserCannotSee();
                 continue;
@@ -91,10 +113,7 @@ class LatestHeartbeatsCollector
         }
     }
 
-    /**
-     * @return null|PFUser
-     */
-    private function getLastModifiedBy(Artifact $artifact)
+    private function getLastModifiedBy(Artifact $artifact): ?PFUser
     {
         $user = null;
 
@@ -106,7 +125,7 @@ class LatestHeartbeatsCollector
         return $user;
     }
 
-    private function getHTMLMessage(Artifact $artifact)
+    private function getHTMLMessage(Artifact $artifact): string
     {
         $last_modified_by = $this->getLastModifiedBy($artifact);
         $is_an_update     = $artifact->hasMoreThanOneChangeset();
@@ -144,10 +163,7 @@ class LatestHeartbeatsCollector
         return $message;
     }
 
-    /**
-     * @return string
-     */
-    private function getTitle(Artifact $artifact)
+    private function getTitle(Artifact $artifact): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 

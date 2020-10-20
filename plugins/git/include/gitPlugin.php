@@ -2329,7 +2329,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
     {
         $collector = new LatestHeartbeatsCollector(
             $this->getRepositoryFactory(),

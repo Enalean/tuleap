@@ -24,6 +24,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -85,12 +86,16 @@ class LatestHeartbeatsCollectorTest extends TestCase
         $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 2])->andReturns($artifact2);
         $this->factory->shouldReceive('getInstanceFromRow')->with(['id' => 3])->andReturns($artifact3);
 
+        $event_manager = Mockery::mock(EventDispatcherInterface::class);
+        $event_manager->shouldReceive('dispatch');
+
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
             $this->factory,
             $glyph_finder,
             \Mockery::spy(\UserManager::class),
-            \Mockery::spy(\UserHelper::class)
+            \Mockery::spy(\UserHelper::class),
+            $event_manager
         );
     }
 

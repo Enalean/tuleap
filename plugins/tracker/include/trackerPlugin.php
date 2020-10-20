@@ -1607,14 +1607,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
     {
         $collector = new LatestHeartbeatsCollector(
             $this->getArtifactDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             $this->getUserManager(),
-            UserHelper::instance()
+            UserHelper::instance(),
+            EventManager::instance()
         );
         $collector->collect($collection);
     }
