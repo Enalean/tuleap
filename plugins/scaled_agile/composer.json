@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-scaled_agile",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ScaledAgile\\": "include/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\ScaledAgile\\": "tests/unit/"
+    }
+  }
+}
