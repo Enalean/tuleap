@@ -58,6 +58,9 @@ export default {
     setIsFirstLoadDone(state, is_first_load_done) {
         state.is_first_load_done = is_first_load_done;
     },
+    setServicesNameUsed(state, services_name_used) {
+        state.services_name_used = services_name_used;
+    },
 };
 
 function isUnknownMode(mode) {

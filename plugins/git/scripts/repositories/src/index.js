@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoriesOwners,
             displayMode,
             externalPlugins,
+            externalServicesNameUsed,
             projectPublicName,
             projectUrl,
             privacy,
@@ -82,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         new AppComponent({
             propsData: {
                 displayMode,
+                servicesNameUsed: JSON.parse(externalServicesNameUsed),
             },
         }).$mount(vue_mount_point);
     }

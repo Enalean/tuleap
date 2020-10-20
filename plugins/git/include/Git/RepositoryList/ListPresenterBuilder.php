@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\RepositoryList;
 
-use EventManager;
 use GitDao;
 use GitPermissionsManager;
 use PFUser;
@@ -29,6 +28,8 @@ use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
+use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class ListPresenterBuilder
 {
@@ -45,7 +46,7 @@ class ListPresenterBuilder
      */
     private $user_manager;
     /**
-     * @var EventManager
+     * @var EventDispatcherInterface
      */
     private $event_manager;
     /**
@@ -57,7 +58,7 @@ class ListPresenterBuilder
         GitPermissionsManager $git_permissions_manager,
         GitDao $dao,
         UserManager $user_manager,
-        EventManager $event_manager,
+        EventDispatcherInterface $event_manager,
         ProjectFlagsBuilder $project_flags_builder
     ) {
         $this->git_permissions_manager = $git_permissions_manager;
@@ -69,16 +70,20 @@ class ListPresenterBuilder
 
     public function build(Project $project, PFUser $current_user)
     {
-        $event = new GetExternalGitHomepagePluginsEvent($project);
-        $this->event_manager->processEvent($event);
+        $external_git_homapage_plugin_event = new GetExternalGitHomepagePluginsEvent($project);
+        $this->event_manager->dispatch($external_git_homapage_plugin_event);
+
+        $external_git_actions_event = new GetExternalUsedServiceEvent($project, $current_user);
+        $this->event_manager->dispatch($external_git_actions_event);
 
         return new GitRepositoryListPresenter(
             $current_user,
             $project,
             $this->git_permissions_manager->userIsGitAdmin($current_user, $project),
             $this->getRepositoriesOwnersRepresentations($project),
-            $event->getExternalPluginsInfos(),
+            $external_git_homapage_plugin_event->getExternalPluginsInfos(),
             $this->project_flags_builder->buildProjectFlags($project),
+            $external_git_actions_event->getExternalsUsedServices()
         );
     }
 

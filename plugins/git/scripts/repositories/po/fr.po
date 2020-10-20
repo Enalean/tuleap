@@ -52,6 +52,9 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Create a project repository"
+msgstr "Créer un dépôt"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
@@ -67,11 +70,17 @@ msgstr "Dépôts Git"
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
 
+msgid "Integrate a GitLab remote repository"
+msgstr "Intégrer un dépôt GitLab distant"
+
 msgid "Jenkins servers"
 msgstr "Serveurs Jenkins"
 
 msgid "Last update %{ formatted_last_update_date }"
 msgstr "Dernière mise à jour %{ formatted_last_update_date }"
+
+msgid "New project repository"
+msgstr "Nouveau dépôt"
 
 msgid "No repository name matching your query has been found."
 msgstr "Aucun nom de dépôt ne correspond à votre recherche."
