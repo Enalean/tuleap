@@ -45,8 +45,8 @@ class GerritSetupCommand extends Command
             ->addOption('gerrit-admin-login', 'u', InputOption::VALUE_OPTIONAL, 'Login name of gerrit administrator (eg. gerrit-admin)', 'gerrit-admin')
             ->addOption('tuleap-server', '', InputOption::VALUE_OPTIONAL, 'Tuleap server name', 'tuleap-web.tuleap-aio-dev.docker')
             ->addOption('gerrit-uri', '', InputOption::VALUE_OPTIONAL, 'Gerrit server URI', 'http://gerrit.tuleap-aio-dev.docker:8080')
-            ->addOption('ssh-private-key-path', '', InputOption::VALUE_OPTIONAL, 'Where is stored the codendiadm ssh private key for gerrit', '/home/codendiadm/.ssh/id_rsa-gerrit')
-            ->addOption('ssh-public-key-path', '', InputOption::VALUE_OPTIONAL, 'Where is stored the codendiadm ssh public key for gerrit', '/home/codendiadm/.ssh/id_rsa-gerrit.pub');
+            ->addOption('ssh-private-key-path', '', InputOption::VALUE_OPTIONAL, 'Where is stored the codendiadm ssh private key for gerrit', '/var/lib/tuleap/.ssh/id_rsa-gerrit')
+            ->addOption('ssh-public-key-path', '', InputOption::VALUE_OPTIONAL, 'Where is stored the codendiadm ssh public key for gerrit', '/var/lib/tuleap/.ssh/id_rsa-gerrit.pub');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
