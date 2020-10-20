@@ -32,7 +32,7 @@
 
         <select-owner />
 
-        <div class="git-repository-list-actions-spacer"></div>
+        <div class="git-repository-list-actions-spacer" v-if="!isCurrentRepositoryListEmpty"></div>
 
         <template v-if="!isCurrentRepositoryListEmpty">
             <display-mode-switcher />

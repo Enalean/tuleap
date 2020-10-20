@@ -20,12 +20,12 @@
 <template>
     <div>
         <git-breadcrumbs />
+        <div class="git-repository-list-header">
+            <h1><translate>Git repositories</translate></h1>
+            <jenkins-servers v-if="has_jenkins_server" v-bind:servers="jenkins_servers" />
+        </div>
+        <action-bar />
         <div class="tlp-framed">
-            <div class="git-repository-list-header">
-                <h1><translate>Git repositories</translate></h1>
-                <jenkins-servers v-if="has_jenkins_server" v-bind:servers="jenkins_servers" />
-            </div>
-            <action-bar />
             <error-message />
             <git-repository-create />
             <folder-repository-list v-if="isFolderDisplayMode" />

@@ -1,13 +1,15 @@
-<nav class="tlp-tabs">
-    {{# navigation_tabs_presenters }}
-        <a href="{{ url }}"
-           class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}"
-           id="{{ html_id }}"
-        >
-            {{ label }}
-            {{# has_count_to_display }}
-                <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">{{ count }}</span>
-            {{/ has_count_to_display }}
-        </a>
-    {{/ navigation_tabs_presenters }}
-</nav>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        {{# navigation_tabs_presenters }}
+            <a href="{{ url }}"
+               class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}"
+               id="{{ html_id }}"
+            >
+                {{ label }}
+                {{# has_count_to_display }}
+                    <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">{{ count }}</span>
+                {{/ has_count_to_display }}
+            </a>
+        {{/ navigation_tabs_presenters }}
+    </nav>
+</div>

@@ -43,7 +43,7 @@
 .git-repository-list-header {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing + $tlp-small-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 
     > h1 {
         margin: 0 $tlp-medium-spacing 0 0;
@@ -69,7 +69,11 @@
 
 .git-repository-list-actions {
     display: flex;
-    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 $tlp-medium-spacing 0;
+
+    > :last-child {
+        margin-bottom: $tlp-medium-spacing;
+    }
 }
 
 .git-repository-list-actions-spacer,
