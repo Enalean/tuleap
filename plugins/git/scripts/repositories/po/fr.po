@@ -55,6 +55,9 @@ msgstr "Fermer"
 msgid "Create a project repository"
 msgstr "Créer un dépôt"
 
+msgid "Fetch GitLab projects"
+msgstr "Récuperer les projets GitLab"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
@@ -66,6 +69,12 @@ msgstr "Le plugin Git est désactivé"
 
 msgid "Git repositories"
 msgstr "Dépôts Git"
+
+msgid "GitLab server URL"
+msgstr "URL du serveur GitLab"
+
+msgid "GitLab user token"
+msgstr "Jeton de l'utilisateur GitLab"
 
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"

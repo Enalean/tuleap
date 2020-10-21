@@ -22,6 +22,7 @@
         <button
             type="button"
             data-test="gitlab-project-button"
+            v-on:click="showAddGitlabProjectModal()"
             class="tlp-dropdown-menu-item"
             role="menuitem"
         >
@@ -34,12 +35,15 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
     name: "AddGitlabProjectActionButton",
     computed: {
         ...mapGetters(["isGitlabUsed"]),
+    },
+    methods: {
+        ...mapActions(["showAddGitlabProjectModal"]),
     },
 };
 </script>
