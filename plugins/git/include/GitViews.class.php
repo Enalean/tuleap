@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -45,9 +45,6 @@ class GitViews extends PluginViews
 
     /** @var UGroupManager */
     private $ugroup_manager;
-
-    /** @var Git_GitRepositoryUrlManager */
-    private $url_manager;
 
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
@@ -95,7 +92,6 @@ class GitViews extends PluginViews
 
     public function __construct(
         $controller,
-        Git_GitRepositoryUrlManager $url_manager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPermissionsManager $permissions_manager,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
@@ -115,7 +111,6 @@ class GitViews extends PluginViews
         $this->userName                                = $this->user->getName();
         $this->git_permissions_manager                 = $permissions_manager;
         $this->ugroup_manager                          = new UGroupManager();
-        $this->url_manager                             = $url_manager;
         $this->mirror_data_mapper                      = $mirror_data_mapper;
         $this->fine_grained_permission_factory         = $fine_grained_permission_factory;
         $this->fine_grained_retriever                  = $fine_grained_retriever;
@@ -154,7 +149,7 @@ class GitViews extends PluginViews
             $repository
         );
 
-        echo '<h1>' . $repository->getHTMLLink($this->url_manager) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
+        echo '<h1 class="almost-tlp-title administration-title">' . Codendi_HTMLPurifier::instance()->purify($repository->getName()) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
         $repo_management_view = new GitViews_RepoManagement(
             $repository,
             $this->controller->getRequest(),
@@ -230,7 +225,8 @@ class GitViews extends PluginViews
     {
         $params = $this->getData();
 
-        echo '<h1>' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
+        echo '<h1 class="almost-tlp-title administration-title">' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
+        echo '<div class="git-fork-creation-content">';
         if ($this->user->isMember($this->groupId)) {
             echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
         }
@@ -294,7 +290,7 @@ class GitViews extends PluginViews
 
             echo '</form>';
         }
-        echo '<br />';
+        echo '</div>';
     }
 
     protected function adminGitAdminsView($are_mirrors_defined)

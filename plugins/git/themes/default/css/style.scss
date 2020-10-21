@@ -19,6 +19,18 @@
 
 /* stylelint-disable selector-id-pattern, selector-no-qualifying-type, selector-class-pattern */
 
+body.git-administration .main .content {
+    padding: 0;
+}
+
+.git-administration-content {
+    padding: 0 12px;
+}
+
+.git-fork-creation-content {
+    padding: 12px 12px 0;
+}
+
 .help {
     width: auto;
     margin: .5em;
