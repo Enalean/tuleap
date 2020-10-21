@@ -48,6 +48,9 @@ export default {
     setAddRepositoryModal(state, modal) {
         state.add_repository_modal = modal;
     },
+    setAddGitlabProjectModal(state, modal) {
+        state.add_gitlab_project_modal = modal;
+    },
     setDisplayMode(state, new_mode) {
         if (isUnknownMode(new_mode)) {
             state.display_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;

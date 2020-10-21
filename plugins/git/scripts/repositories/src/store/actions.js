@@ -52,6 +52,10 @@ export const showAddRepositoryModal = ({ state }) => {
     state.add_repository_modal.toggle();
 };
 
+export const showAddGitlabProjectModal = ({ state }) => {
+    state.add_gitlab_project_modal.toggle();
+};
+
 export const changeRepositories = (context, new_owner_id) => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
