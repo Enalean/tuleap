@@ -49,7 +49,7 @@ final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInt
         ?array $template_type_parameters = null,
         ?string $called_fq_classlike_name = null,
         ?string $called_method_name_lowercase = null
-    ) {
+    ): ?Union {
         if ($method_name_lowercase === 'getstring') {
             return new Union([new TUnwrappedConcealedString()]);
         }
@@ -63,20 +63,20 @@ final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInt
         StatementsSource $statements_source,
         Codebase $codebase,
         array &$file_replacements = []
-    ) {
+    ): ?bool {
         if (! $stmt instanceof Stmt\Return_ || $stmt->expr === null) {
-            return;
+            return null;
         }
 
         $return = $statements_source->getNodeTypeProvider()->getType($stmt->expr);
         if ($return === null) {
-            return;
+            return null;
         }
 
         $return_types = $return->getAtomicTypes();
 
         if (! isset($return_types['string']) || ! ($return_types['string'] instanceof TUnwrappedConcealedString)) {
-            return;
+            return null;
         }
 
         \Psalm\IssueBuffer::accepts(
@@ -85,5 +85,6 @@ final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInt
             ),
             $statements_source->getSuppressedIssues()
         );
+        return null;
     }
 }
