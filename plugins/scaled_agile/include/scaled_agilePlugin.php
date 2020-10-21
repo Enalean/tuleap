@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\DB\DBFactory;
@@ -34,29 +31,33 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
-use Tuleap\ScaledAgile\Program\Milestone\CreationCheck\ArtifactCreatorChecker;
-use Tuleap\ScaledAgile\Program\Milestone\CreationCheck\MilestoneCreatorChecker;
-use Tuleap\ScaledAgile\Program\Milestone\CreationCheck\StatusSemanticChecker;
-use Tuleap\ScaledAgile\Program\Milestone\Mirroring\ArtifactCreatedHandler;
-use Tuleap\ScaledAgile\Program\Milestone\Mirroring\Asynchronous\CreateMirrorsRunner;
-use Tuleap\ScaledAgile\Program\Milestone\Mirroring\Asynchronous\PendingArtifactCreationDao;
-use Tuleap\ScaledAgile\Program\MirroredArtifactLink\MirroredMilestoneArtifactLinkType;
-use Tuleap\ScaledAgile\Program\PlannableItems\PlannableItemsCollectionBuilder;
-use Tuleap\ScaledAgile\Program\PlannableItems\PlannableItemsTrackersDao;
-use Tuleap\ScaledAgile\Program\PlannableItems\PlannableItemsTrackersUpdater;
-use Tuleap\ScaledAgile\Program\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
-use Tuleap\ScaledAgile\Program\ProgramDao;
-use Tuleap\ScaledAgile\Program\ReadOnlyProgramAdminURLBuilder;
-use Tuleap\ScaledAgile\Program\ReadOnlyProgramAdminViewController;
-use Tuleap\ScaledAgile\Program\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersDao;
+use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersUpdater;
+use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminURLBuilder;
+use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminViewController;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProjectIncrementsRunner;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProjectIncrementArtifactCreatorChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\RequiredFieldChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Team\TeamDao;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
@@ -209,17 +210,17 @@ final class scaled_agilePlugin extends Plugin
 
         $event->setBacklogItemsCannotBeAdded();
 
-        $milestone_creator_checker = $this->getMilestoneCreatorChecker();
+        $project_increment_creator_checker = $this->getProjectIncrementCreatorChecker();
 
         if (! $event->canUserCreateMilestone()) {
             return;
         }
-        $user_can_create_milestone = $milestone_creator_checker->canMilestoneBeCreated(
+        $user_can_create_project_increment = $project_increment_creator_checker->canProjectIncrementBeCreated(
             $event->getTopMilestone(),
             $event->getUser()
         );
 
-        if (! $user_can_create_milestone) {
+        if (! $user_can_create_project_increment) {
             $event->setUserCannotCreateMilestone();
         }
     }
@@ -229,7 +230,7 @@ final class scaled_agilePlugin extends Plugin
      */
     public function getArtifactLinkNatures(array $params): void
     {
-        $params['natures'][] = new MirroredMilestoneArtifactLinkType();
+        $params['natures'][] = new ProjectIncrementArtifactLinkType();
     }
 
     /**
@@ -237,8 +238,8 @@ final class scaled_agilePlugin extends Plugin
      */
     public function getNaturePresenter(array $params): void
     {
-        if ($params['shortname'] === MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME) {
-            $params['presenter'] = new MirroredMilestoneArtifactLinkType();
+        if ($params['shortname'] === ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME) {
+            $params['presenter'] = new ProjectIncrementArtifactLinkType();
         }
     }
 
@@ -247,48 +248,29 @@ final class scaled_agilePlugin extends Plugin
      */
     public function trackerAddSystemNatures(array $params): void
     {
-        $params['natures'][] = MirroredMilestoneArtifactLinkType::ART_LINK_SHORT_NAME;
+        $params['natures'][] = ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
-        $form_element_factory     = \Tracker_FormElementFactory::instance();
         $artifact_creator_checker = new ArtifactCreatorChecker(
-            new Planning_MilestoneFactory(
-                PlanningFactory::build(),
-                Tracker_ArtifactFactory::instance(),
-                $form_element_factory,
-                new AgileDashboard_Milestone_MilestoneStatusCounter(
-                    new AgileDashboard_BacklogItemDao(),
-                    new Tracker_ArtifactDao(),
-                    Tracker_ArtifactFactory::instance()
-                ),
-                new PlanningPermissionsManager(),
-                new AgileDashboard_Milestone_MilestoneDao(),
-                new ScrumForMonoMilestoneChecker(
-                    new ScrumForMonoMilestoneDao(),
-                    PlanningFactory::build()
-                ),
-                new TimeframeBuilder(
-                    new SemanticTimeframeBuilder(
-                        new SemanticTimeframeDao(),
-                        $form_element_factory
-                    ),
-                    \BackendLogger::getDefaultLogger()
-                ),
-                new MilestoneBurndownFieldChecker($form_element_factory)
-            ),
-            $this->getMilestoneCreatorChecker()
+            Planning_MilestoneFactory::build(),
+            $this->getProjectIncrementCreatorChecker()
         );
 
-        if (! $artifact_creator_checker->canCreateAnArtifact($can_submit_new_artifact->getUser(), $can_submit_new_artifact->getTracker())) {
+        if (
+            ! $artifact_creator_checker->canCreateAnArtifact(
+                $can_submit_new_artifact->getUser(),
+                $can_submit_new_artifact->getTracker()
+            )
+        ) {
             $can_submit_new_artifact->disableArtifactSubmission();
         }
     }
 
     public function workerEvent(WorkerEvent $event): void
     {
-        $create_mirrors_runner = CreateMirrorsRunner::build();
+        $create_mirrors_runner = CreateProjectIncrementsRunner::build();
         $create_mirrors_runner->addListener($event);
     }
 
@@ -303,44 +285,44 @@ final class scaled_agilePlugin extends Plugin
         $handler      = new ArtifactCreatedHandler(
             $program_dao,
             $planning_factory,
-            CreateMirrorsRunner::build(),
+            CreateProjectIncrementsRunner::build(),
             new PendingArtifactCreationDao()
         );
         $handler->handle($event);
     }
 
-    private function getMilestoneCreatorChecker(): MilestoneCreatorChecker
+    private function getProjectIncrementCreatorChecker(): ProjectIncrementArtifactCreatorChecker
     {
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $timeframe_dao = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger                  = $this->getLogger();
+        $logger = $this->getLogger();
 
-        return new MilestoneCreatorChecker(
+        return new ProjectIncrementArtifactCreatorChecker(
             new TeamProjectsCollectionBuilder(
                 new ProgramDao(),
                 ProjectManager::instance()
             ),
-            new \Tuleap\ScaledAgile\Program\Milestone\MilestoneTrackerCollectionFactory(
+            new TrackerCollectionFactory(
                 \PlanningFactory::build()
             ),
-            new \Tuleap\ScaledAgile\Program\Milestone\SynchronizedFieldCollectionBuilder(
-                new \Tuleap\ScaledAgile\Program\Milestone\SynchronizedFieldsGatherer(
+            new SynchronizedFieldCollectionBuilder(
+                new SynchronizedFieldsGatherer(
                     $form_element_factory,
                     new Tracker_Semantic_TitleFactory(),
                     new Tracker_Semantic_DescriptionFactory(),
                     $semantic_status_factory,
-                    new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
+                    new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
                 )
             ),
-            new \Tuleap\ScaledAgile\Program\Milestone\CreationCheck\SemanticChecker(
+            new SemanticChecker(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
             ),
-            new \Tuleap\ScaledAgile\Program\Milestone\CreationCheck\RequiredFieldChecker($logger),
-            new \Tuleap\ScaledAgile\Program\Milestone\CreationCheck\WorkflowChecker(
+            new RequiredFieldChecker($logger),
+            new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
                 new Tracker_Rule_List_Dao(),

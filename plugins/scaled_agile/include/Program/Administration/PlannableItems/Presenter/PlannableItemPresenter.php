@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\Tracker\TrackerColor;
 
-final class RootPlanningEditionHandler
+/**
+ * @psalm-immutable
+ */
+class PlannableItemPresenter
 {
     /**
-     * @var TeamDao
+     * @var string
      */
-    private $team_dao;
+    public $tracker_name;
 
-    public function __construct(TeamDao $team_dao)
-    {
-        $this->team_dao = $team_dao;
-    }
+    /**
+     * @var string
+     */
+    public $tracker_color;
 
-    public function handle(RootPlanningEditionEvent $event): void
+    public function __construct(string $tracker_name, TrackerColor $tracker_color)
     {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        $this->tracker_name  = $tracker_name;
+        $this->tracker_color = $tracker_color->getName();
     }
 }

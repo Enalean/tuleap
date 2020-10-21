@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use PHPUnit\Framework\TestCase;
 
-final class RootPlanningEditionHandler
+final class MirroredMilestoneArtifactLinkTypeTest extends TestCase
 {
-    /**
-     * @var TeamDao
-     */
-    private $team_dao;
-
-    public function __construct(TeamDao $team_dao)
+    public function testHasAMirroredMilestoneArtifactLinkType(): void
     {
-        $this->team_dao = $team_dao;
-    }
+        $art_link_type = new ProjectIncrementArtifactLinkType();
 
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        self::assertEquals(ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME, $art_link_type->shortname);
+        self::assertTrue($art_link_type->is_system);
+        self::assertFalse($art_link_type->is_visible);
     }
 }

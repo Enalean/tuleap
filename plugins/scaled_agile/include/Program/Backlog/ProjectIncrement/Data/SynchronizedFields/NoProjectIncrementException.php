@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 
-final class RootPlanningEditionHandler
+final class NoProjectIncrementException extends \RuntimeException implements ProjectIncrementTrackerRetrievalException
 {
-    /**
-     * @var TeamDao
-     */
-    private $team_dao;
-
-    public function __construct(TeamDao $team_dao)
+    public function __construct(int $planning_id)
     {
-        $this->team_dao = $team_dao;
-    }
-
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        parent::__construct("Planning with id $planning_id has no project increment tracker");
     }
 }

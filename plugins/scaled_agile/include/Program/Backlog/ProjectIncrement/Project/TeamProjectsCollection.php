@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Project;
 
-final class RootPlanningEditionHandler
+final class TeamProjectsCollection
 {
     /**
-     * @var TeamDao
+     * @var Project[]
+     * @psalm-readonly
      */
-    private $team_dao;
+    private $team_projects;
 
-    public function __construct(TeamDao $team_dao)
+    /**
+     * @param Project[] $team_projects
+     */
+    public function __construct(array $team_projects)
     {
-        $this->team_dao = $team_dao;
+        $this->team_projects = $team_projects;
     }
 
-    public function handle(RootPlanningEditionEvent $event): void
+    /**
+     * @psalm-mutation-free
+     */
+    public function isEmpty(): bool
     {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        return empty($this->team_projects);
+    }
+
+    /**
+     * @return Project[]
+     * @psalm-mutation-free
+     */
+    public function getTeamProjects(): array
+    {
+        return $this->team_projects;
     }
 }

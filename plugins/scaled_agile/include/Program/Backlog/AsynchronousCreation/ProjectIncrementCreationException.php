@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
-
-use Tuleap\AgileDashboard\Planning\Admin\ModificationBan;
-
-/**
- * @psalm-immutable
- */
-final class MilestoneTrackerUpdateProhibited implements ModificationBan
+interface ProjectIncrementCreationException extends \Throwable
 {
-    public function getMessage(): string
-    {
-        return dgettext(
-            'tuleap-scaled_agile',
-            'Modification of the milestone tracker of this planning is prohibited because this project is part of a scaled agile backlog.'
-        );
-    }
 }

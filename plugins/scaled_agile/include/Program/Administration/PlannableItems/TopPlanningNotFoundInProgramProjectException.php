@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
-
-final class RootPlanningEditionHandler
+class TopPlanningNotFoundInProgramProjectException extends \Exception
 {
-    /**
-     * @var TeamDao
-     */
-    private $team_dao;
-
-    public function __construct(TeamDao $team_dao)
+    public function __construct(int $program_project_id)
     {
-        $this->team_dao = $team_dao;
-    }
-
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        parent::__construct("Top planning not found in program project #$program_project_id.");
     }
 }

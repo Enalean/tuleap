@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementCreationException;
 
-final class RootPlanningEditionHandler
+final class NoDuckTypedMatchingValueException extends \RuntimeException implements ProjectIncrementCreationException
 {
-    /**
-     * @var TeamDao
-     */
-    private $team_dao;
-
-    public function __construct(TeamDao $team_dao)
+    public function __construct(string $source_value_label, int $team_status_field_id)
     {
-        $this->team_dao = $team_dao;
-    }
-
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        parent::__construct(
+            sprintf(
+                'No matching value found for value %s in field #%d by duck typing.',
+                $source_value_label,
+                $team_status_field_id
+            )
+        );
     }
 }

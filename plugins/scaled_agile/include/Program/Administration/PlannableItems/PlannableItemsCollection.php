@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
-
-final class RootPlanningEditionHandler
+/**
+ * @psalm-immutable
+ */
+class PlannableItemsCollection
 {
     /**
-     * @var TeamDao
+     * @var PlannableItems[]
      */
-    private $team_dao;
+    private $plannable_items;
 
-    public function __construct(TeamDao $team_dao)
+    public function __construct(array $plannable_items)
     {
-        $this->team_dao = $team_dao;
+        $this->plannable_items = $plannable_items;
     }
 
-    public function handle(RootPlanningEditionEvent $event): void
+    /**
+     * @return PlannableItems[]
+     */
+    public function getPlannableItems(): array
     {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        return $this->plannable_items;
     }
 }

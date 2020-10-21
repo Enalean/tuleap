@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Title;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
 
-final class RootPlanningEditionHandler
+final class TitleFieldHasIncorrectTypeException extends \RuntimeException implements SynchronizedFieldRetrievalException
 {
-    /**
-     * @var TeamDao
-     */
-    private $team_dao;
-
-    public function __construct(TeamDao $team_dao)
+    public function __construct(int $tracker_id, int $field_id)
     {
-        $this->team_dao = $team_dao;
-    }
-
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        parent::__construct(
+            "The title field with id $field_id in tracker $tracker_id has an incorrect type, it must be a string type"
+        );
     }
 }
