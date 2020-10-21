@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "codemirror": "^5.57.0",
-    "dompurify": "^2.1.1"
+    "dompurify": "^2.2.0"
   },
   "config": {
     "bin": "../../../node_modules/.bin"
