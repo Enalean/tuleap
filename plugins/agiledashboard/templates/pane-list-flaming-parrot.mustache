@@ -1,21 +1,23 @@
-<ul class="nav nav-tabs">
-    {{# getPaneInfoList }}
-        <li class="{{# isActive }}active{{/ isActive }}">
-            <a href="{{ getUri }}">
-                {{ getTitle }}
-                {{# isExternalLink }}
-                    <i class="fas fa-external-link-alt"></i>
-                {{/ isExternalLink }}
+<div class="main-project-tabs">
+    <ul class="nav nav-tabs">
+        {{# getPaneInfoList }}
+            <li class="{{# isActive }}active{{/ isActive }}">
+                <a href="{{ getUri }}">
+                    {{ getTitle }}
+                    {{# isExternalLink }}
+                        <i class="fas fa-external-link-alt"></i>
+                    {{/ isExternalLink }}
+                </a>
+            </li>
+        {{/ getPaneInfoList }}
+        <li>
+            <a href="/plugins/tracker/?aid={{ milestoneId }}">
+            {{ artifact }} <i class="fas fa-external-link-alt"></i>
             </a>
         </li>
-    {{/ getPaneInfoList }}
-    <li>
-        <a href="/plugins/tracker/?aid={{ milestoneId }}">
-            {{ artifact }} <i class="fas fa-external-link-alt"></i>
-        </a>
-    </li>
-</ul>
-<div class="tab-content">
+    </ul>
+</div>
+<div class="tab-content agiledashboard-content">
     <div id="{{ getActivePane.getIdentifier }}" class="tab-pane active">
     {{{ getActivePane.getFullContent }}}
     </div>

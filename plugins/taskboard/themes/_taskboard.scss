@@ -27,6 +27,7 @@
 @import 'includes/error';
 @import 'includes/swimlane-sticky-header';
 @import 'includes/button-bar';
+@import 'includes/project-header-background';
 @import '../scripts/taskboard/src/helpers/drag-and-drop/drekkenov';
 
 .header-taskboard-pinned {
@@ -64,9 +65,9 @@
     height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$tlp-medium-spacing});
 }
 
-.taskboard-root-title,
-.taskboard-root-tabs {
-    flex: 0 0 auto;
+.taskboard-root-title {
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
 .taskboard-app {

@@ -1,5 +1,5 @@
 {{# milestone_presenter }}
-    <h1 class="tlp-framed-horizontally testplan-root-title">
+    <h1 class="testplan-root-title">
         <div class="tlp-dropdown">
             <div id="agiledashboard-scrum-milestone-menu">
                 {{ milestoneTitle }}
@@ -22,18 +22,20 @@
         {{/ displayMilestoneDates }}
     </h1>
 
-    <nav class="tlp-tabs testplan-root-tabs">
-        {{# getPaneInfoList }}
-            <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
-                {{ getTitle }}
-                {{# isExternalLink }}
-                    <i class="fas fa-external-link-alt tlp-tab-icon"></i>
-                {{/ isExternalLink }}
-            </a>
-        {{/ getPaneInfoList }}
-        <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
+    <div class="main-project-tabs">
+        <nav class="tlp-tabs">
+            {{# getPaneInfoList }}
+                <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
+                    {{ getTitle }}
+                    {{# isExternalLink }}
+                        <i class="fas fa-external-link-alt tlp-tab-icon"></i>
+                    {{/ isExternalLink }}
+                </a>
+            {{/ getPaneInfoList }}
+            <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
             {{ artifact }}
             <i class="fas fa-external-link-alt tlp-tab-icon"></i>
-        </a>
-    </nav>
+            </a>
+        </nav>
+    </div>
 {{/ milestone_presenter }}

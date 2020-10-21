@@ -88,11 +88,6 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
      */
     private $per_team_presenter_collection_builder;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
-     */
-    private $include_assests;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -103,8 +98,7 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $this->administration_crumb_builder                 = Mockery::mock(AdministrationCrumbBuilder::class);
         $this->template_renderer                            = Mockery::mock(TemplateRenderer::class);
         $this->plannable_items_collection_builder           = Mockery::mock(PlannableItemsCollectionBuilder::class);
-        $this->per_team_presenter_collection_builder = Mockery::mock(PlannableItemsPerTeamPresenterCollectionBuilder::class);
-        $this->include_assests                              = Mockery::mock(IncludeAssets::class);
+        $this->per_team_presenter_collection_builder        = Mockery::mock(PlannableItemsPerTeamPresenterCollectionBuilder::class);
 
         $this->controller = new ReadOnlyProgramAdminViewController(
             $this->project_manager,
@@ -114,7 +108,8 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
             $this->template_renderer,
             $this->plannable_items_collection_builder,
             $this->per_team_presenter_collection_builder,
-            $this->include_assests
+            Mockery::mock(IncludeAssets::class),
+            Mockery::mock(IncludeAssets::class)
         );
     }
 
@@ -171,7 +166,7 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
 
         $service->shouldReceive('displayHeader')->once();
         $layout->shouldReceive('footer')->once();
-        $layout->shouldReceive('addCssAsset')->once();
+        $layout->shouldReceive('addCssAsset')->twice();
         $this->template_renderer->shouldReceive('renderToPage')->once();
 
         $this->controller->process(

@@ -1,0 +1,45 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../src/themes/common/css/project-background/background';
+@import '../../src/themes/BurningParrot/css/includes/global-variables';
+
+.project-with-background {
+    .agiledashboard-header-title,
+    .agiledashboard-header-title small {
+        @include background.project-background-title-header-typography($tlp-ui-white);
+
+        .tlp-dropdown-menu-item {
+            text-shadow: initial;
+        }
+    }
+}
+
+body {
+    $elements-with-project-background: '.agiledashboard-header-title', '#feedback';
+
+    @each $element-with-project-background in $elements-with-project-background {
+        @include background.apply-background(
+            $element-with-project-background,
+            $tlp-theme-sidebar-background-color,
+            $sidebar-expanded-width,
+            $sidebar-collapsed-width,
+        );
+    }
+}

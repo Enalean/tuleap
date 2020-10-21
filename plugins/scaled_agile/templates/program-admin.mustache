@@ -1,22 +1,22 @@
-<div class="tlp-framed">
-    <h1 class="agiledashboard-administration-title">{{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}</h1>
+<h1 class="agiledashboard-administration-title">{{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}</h1>
+
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a class="tlp-tab tlp-tab-active"
+           href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
+        </a>
+        <a class="tlp-tab"
+           href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=kanban">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}
+        </a>
+        {{# can_burnup_be_configured }}
+            <a class="tlp-tab"
+               href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
+            </a>
+        {{/ can_burnup_be_configured }}
+    </nav>
 </div>
 
-<nav class="tlp-tabs">
-    <a class="tlp-tab tlp-tab-active"
-       href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}
-    </a>
-    <a class="tlp-tab"
-       href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=kanban">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}
-    </a>
-    {{# can_burnup_be_configured }}
-        <a class="tlp-tab"
-           href="/plugins/agiledashboard/?group_id={{ project_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}
-        </a>
-    {{/ can_burnup_be_configured }}
-</nav>
-
-<div class="tlp-framed-horizontally">
+<div class="tlp-framed">
     <h2>{{ planning_name }}</h2>
     <section class="tlp-pane">
         <div class="tlp-pane-container">

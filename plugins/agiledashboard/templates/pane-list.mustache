@@ -1,18 +1,22 @@
-<nav class="tlp-tabs">
-    {{# getPaneInfoList }}
-        <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}" data-test="tab-{{ getIdentifier }}">
-            {{ getTitle }}
-            {{# isExternalLink }}
-                <i class="fas fa-external-link-alt tlp-tab-icon"></i>
-            {{/ isExternalLink }}
-        </a>
-    {{/ getPaneInfoList }}
-    <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        {{# getPaneInfoList }}
+            <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}" data-test="tab-{{ getIdentifier }}">
+                {{ getTitle }}
+                {{# isExternalLink }}
+                    <i class="fas fa-external-link-alt tlp-tab-icon"></i>
+                {{/ isExternalLink }}
+            </a>
+        {{/ getPaneInfoList }}
+        <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
         {{ artifact }}
         <i class="fas fa-external-link-alt tlp-tab-icon"></i>
-    </a>
-</nav>
+        </a>
+    </nav>
+</div>
 
-<div id="{{ getActivePane.getIdentifier }}">
-    {{{ getActivePane.getFullContent }}}
+<div class="tlp-framed-vertically">
+    <div id="{{ getActivePane.getIdentifier }}">
+        {{{ getActivePane.getFullContent }}}
+    </div>
 </div>

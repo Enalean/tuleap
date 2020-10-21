@@ -120,4 +120,17 @@ body {
         }
     }
 }
+
+body.agiledashboard-body .main .content {
+    padding: 0;
+}
+
 /* stylelint-enable */
+
+.agiledashboard-content {
+    padding: 0 12px;
+}
+
+.agiledashboard-body .project-header-title {
+    padding-top: 0;
+}

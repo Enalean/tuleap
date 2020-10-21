@@ -33,6 +33,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -83,7 +84,11 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
     /**
      * @var IncludeAssets
      */
-    private $include_assets;
+    private $assets_scaled_agile;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets_agile_dashboard;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -93,7 +98,8 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
         TemplateRenderer $template_renderer,
         PlannableItemsCollectionBuilder $plannable_items_collection_builder,
         PlannableItemsPerTeamPresenterCollectionBuilder $per_team_presenter_collection_builder,
-        IncludeAssets $include_assets
+        IncludeAssets $assets_scaled_agile,
+        IncludeAssets $assets_agile_dashboard
     ) {
         $this->project_manager                              = $project_manager;
         $this->planning_factory                             = $planning_factory;
@@ -101,8 +107,9 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
         $this->administration_crumb_builder                 = $administration_crumb_builder;
         $this->template_renderer                            = $template_renderer;
         $this->plannable_items_collection_builder           = $plannable_items_collection_builder;
-        $this->per_team_presenter_collection_builder = $per_team_presenter_collection_builder;
-        $this->include_assets                               = $include_assets;
+        $this->per_team_presenter_collection_builder        = $per_team_presenter_collection_builder;
+        $this->assets_scaled_agile                          = $assets_scaled_agile;
+        $this->assets_agile_dashboard                       = $assets_agile_dashboard;
     }
 
     public function getProject(array $variables): Project
@@ -153,7 +160,8 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "This planning is not the root planning of the project."));
         }
 
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'program-admin-style'));
+        $layout->addCssAsset(new CssAsset($this->assets_agile_dashboard, 'administration'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets_scaled_agile, 'program-admin-style'));
 
         $this->displayHeader($service, $user, $project);
 

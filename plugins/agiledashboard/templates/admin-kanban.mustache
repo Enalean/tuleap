@@ -1,6 +1,5 @@
-<div class="agiledashboard-admin-kanban">
-    <h1>{{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}</h1>
-
+<h1 class="almost-tlp-title project-header-title">{{# dgettext }} tuleap-agiledashboard | Agile Dashboard administration {{/ dgettext }}</h1>
+<div class="main-project-tabs">
     <ul class="nav nav-tabs">
         <li>
             <a href="?group_id={{ group_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}</a>
@@ -14,7 +13,8 @@
             </li>
         {{/ can_burnup_be_configured }}
     </ul>
-
+</div>
+<div class="agiledashboard-admin-kanban agiledashboard-content">
     <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST">
         {{# kanban_activated }}
             <div class="alert alert-success">

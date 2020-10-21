@@ -34,6 +34,7 @@
 @import 'kanban/feedback';
 @import 'kanban/add-in-place';
 @import 'kanban/under-the-fold-notification';
+@import 'kanban/project-header-background';
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
@@ -72,7 +73,7 @@ $kanban-column-footer-height: 50px;
     flex: 0 0 auto;
     flex-wrap: wrap;
     align-items: center;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
 .kanban-header-title {

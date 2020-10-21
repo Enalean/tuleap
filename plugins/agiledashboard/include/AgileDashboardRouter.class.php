@@ -291,7 +291,7 @@ class AgileDashboardRouter
                 $this->executeAction($planning_controller, 'create');
                 break;
             case 'edit':
-                $this->renderAction($planning_controller, 'edit', $request);
+                $this->renderAction($planning_controller, 'edit', $request, [], ['body_class' => ['agiledashboard-body']]);
                 break;
             case 'update':
                 $this->executeAction($planning_controller, 'update');
@@ -303,9 +303,9 @@ class AgileDashboardRouter
                 if ($this->userIsAdmin($request)) {
                     $pane = $request->get('pane');
                     if ($pane === self::PANE_KANBAN) {
-                        $this->renderAction($this->buildController($request), 'adminKanban', $request);
+                        $this->renderAction($this->buildController($request), 'adminKanban', $request, [], ['body_class' => ['agiledashboard-body']]);
                     } elseif (\ForgeConfig::get('use_burnup_count_elements') && $pane === self::PANE_CHARTS) {
-                        $this->renderAction($this->buildController($request), 'adminCharts', $request);
+                        $this->renderAction($this->buildController($request), 'adminCharts', $request, [], ['body_class' => ['agiledashboard-body']]);
                     } else {
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
@@ -342,7 +342,7 @@ class AgileDashboardRouter
                 break;
             case 'showKanban':
                 $header_options = [
-                    'body_class'                 => ['agiledashboard_kanban'],
+                    'body_class'                 => ['agiledashboard_kanban', 'agiledashboard-body'],
                     Layout::INCLUDE_FAT_COMBINED => false,
                 ];
 

@@ -1,7 +1,7 @@
-<div class="agiledashboard">
+<div class="agiledashboard almost-tlp-title project-header-title">
     <div class="dropdown">
         <input type="hidden" id="milestone_id" value="{{milestoneId}}" />
-        <h2 class="dropdown-toggle" data-toggle="dropdown">{{milestoneTitle}} <b class="caret"></b></h2>
+        <h2 class="dropdown-toggle" data-toggle="dropdown">{{milestoneTitle}} <i class="fas fa-fw fa-caret-down"></i></h2>
         <ul class="dropdown-menu">
             <li><a href="{{editArtifactUrl}}" class="backlog-item-link" data-artifact-id="{{milestoneId}}">{{editArtifact}}</a></li>
         </ul>
@@ -12,6 +12,5 @@
             {{startDate}} – {{endDate}}
         </div>
     {{/displayMilestoneDates}}
-
-    {{> pane-list-flaming-parrot }}
 </div>
+{{> pane-list-flaming-parrot }}

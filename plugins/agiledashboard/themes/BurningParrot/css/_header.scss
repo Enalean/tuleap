@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.agiledashboard-header-title {
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+}
+
 #agiledashboard-scrum-milestone-menu {
     cursor: pointer;
 }

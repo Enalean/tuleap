@@ -110,11 +110,12 @@ class Planning_MilestoneController extends BaseController
         );
 
         $header_options = [
-            Layout::INCLUDE_FAT_COMBINED => ! $is_pane_a_planning_v2
+            Layout::INCLUDE_FAT_COMBINED => ! $is_pane_a_planning_v2,
+            'body_class'                 => ['agiledashboard-body']
         ];
 
         if ($is_pane_a_planning_v2) {
-            $header_options['body_class'] = ['has-sidebar-with-pinned-header'];
+            $header_options['body_class'][] = 'has-sidebar-with-pinned-header';
         }
 
         return $header_options;
