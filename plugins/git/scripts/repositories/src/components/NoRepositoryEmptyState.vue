@@ -76,25 +76,33 @@
                 </g>
             </svg>
             <p class="empty-page-text" v-translate>There are no repositories in this project</p>
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-large"
-                v-if="is_admin"
-                v-on:click="showAddRepositoryModal()"
-                data-test="empty_state_create_repository"
-            >
-                <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Add project repository</translate>
-            </button>
+            <div v-if="is_admin">
+                <dropdown-action-button
+                    v-if="areExternalUsedServices"
+                    v-bind:is_empty_state="true"
+                />
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-button-large"
+                    v-else
+                    v-on:click="showAddRepositoryModal()"
+                    data-test="empty_state_create_repository"
+                >
+                    <i class="fa fa-plus tlp-button-icon"></i>
+                    <translate>Add project repository</translate>
+                </button>
+            </div>
         </div>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
+import DropdownActionButton from "./DropdownActionButton.vue";
 
 export default {
     name: "NoRepositoryEmptyState",
+    components: { DropdownActionButton },
     computed: {
         is_admin() {
             return getUserIsAdmin();
@@ -102,7 +110,11 @@ export default {
         show_empty_state() {
             return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
         },
-        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
+        ...mapGetters([
+            "isCurrentRepositoryListEmpty",
+            "isInitialLoadingDoneWithoutError",
+            "areExternalUsedServices",
+        ]),
     },
     methods: {
         ...mapActions(["showAddRepositoryModal"]),
