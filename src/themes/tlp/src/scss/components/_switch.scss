@@ -40,8 +40,12 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 }
 
 .tlp-switch-checkbox {
-    visibility: hidden;
     position: absolute;
+    opacity: 0;
+
+    &:focus + label::before {
+        box-shadow: $tlp-shadow-focus;
+    }
 }
 
 .tlp-switch-button {
@@ -62,7 +66,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
         right: $tlp-switch-button-padding;
         bottom: $tlp-switch-button-padding;
         left: $tlp-switch-button-padding;
-        transition: background-color 200ms;
+        transition: background-color 200ms, box-shadow 350ms;
         border-radius: $tlp-switch-height / 2;
         background-color: $tlp-switch-background;
     }

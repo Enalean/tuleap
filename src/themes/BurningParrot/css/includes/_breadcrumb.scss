@@ -61,7 +61,8 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         font-size: .55rem;
     }
 
-    &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
+    &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
+    &:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
         background: $step-active-background;
         color: $step-active-color;
     }
@@ -100,7 +101,8 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         }
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         > .breadcrumb-switch-menu-container {
             transform: translateY(0);
             opacity: 1;

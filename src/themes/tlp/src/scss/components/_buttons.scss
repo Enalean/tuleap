@@ -49,7 +49,7 @@ $tlp-button-mini-font-weight: 500;
 $tlp-button-mini-padding: 0 $tlp-small-spacing;
 $tlp-button-mini-radius: 3px;
 
-$tlp-button-outline-hover-color: #fcfcfc;
+$tlp-button-outline-hover-color: #fafafa;
 
 $tlp-button-secondary-background: $tlp-ui-border-light;
 $tlp-button-secondary-color: $tlp-theme-sidebar-background-color;
@@ -87,6 +87,10 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
         box-shadow: $tlp-button-shadow-hover;
         text-decoration: none;
+    }
+
+    &:focus {
+        box-shadow: $tlp-shadow-focus;
     }
 
     &:disabled,
@@ -128,7 +132,8 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     background: $tlp-ui-white;
     color: $outline-color;
 
-    &:hover {
+    &:hover,
+    &:focus {
         background: $tlp-button-outline-hover-color;
     }
 
@@ -150,7 +155,8 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     border-color: $button-color;
     background: $button-color;
 
-    &:hover {
+    &:hover,
+    &:focus {
         @include tlp-button-darken($button-color, 5%);
     }
 
