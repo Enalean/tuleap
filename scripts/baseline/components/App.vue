@@ -45,6 +45,7 @@
                 </div>
             </nav>
         </div>
+        <h1 class="baseline-title-header" v-translate>Baselines</h1>
 
         <main class="tlp-framed-vertically">
             <div class="tlp-framed-horizontally">

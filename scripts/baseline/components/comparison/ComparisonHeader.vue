@@ -25,11 +25,9 @@
             v-bind:base_baseline_id="comparison.base_baseline_id"
             v-bind:compared_to_baseline_id="comparison.compared_to_baseline_id"
         />
-        <h1 v-else-if="comparison.name">
-            {{ comparison.name }}
-        </h1>
 
         <h2>
+            <template v-if="comparison.name">{{ comparison.name }} - </template>
             {{ base_baseline.name }}
             <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
             {{ compared_to_baseline.name }}

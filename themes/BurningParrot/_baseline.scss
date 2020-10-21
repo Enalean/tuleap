@@ -25,6 +25,12 @@
 @import 'baseline/new-baseline-modal';
 @import 'baseline/new-comparison-modal';
 @import 'baseline/form';
+@import 'baseline/project-header-background';
+
+.baseline-title-header {
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+}
 
 .baseline-tooltip-icon {
     margin-left: $tlp-medium-spacing;
