@@ -15,23 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-import {
-    REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    ERROR_TYPE_NO_ERROR,
-    PROJECT_KEY,
-} from "../constants.js";
 
-const state = {
-    repositories_for_owner: {},
-    filter: "",
-    selected_owner_id: PROJECT_KEY,
-    error_message_type: ERROR_TYPE_NO_ERROR,
-    is_loading_initial: true,
-    is_loading_next: true,
-    add_repository_modal: null,
-    display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    is_first_load_done: false,
-    services_name_used: [],
-};
-export default state;
+import { createLocalVue } from "@vue/test-utils";
+import Vuex from "vuex";
+import GettextPlugin from "vue-gettext";
+
+const localVue = createLocalVue();
+localVue.use(Vuex);
+localVue.use(GettextPlugin, {
+    translations: {},
+    silent: true,
+});
+
+export default localVue;

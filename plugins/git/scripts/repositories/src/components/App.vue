@@ -68,7 +68,14 @@ export default {
         JenkinsServers,
     },
     props: {
-        displayMode: String,
+        displayMode: {
+            type: String,
+            default: "",
+        },
+        servicesNameUsed: {
+            type: Array(String),
+            default: () => [],
+        },
     },
     computed: {
         has_jenkins_server() {
@@ -85,6 +92,7 @@ export default {
     },
     mounted() {
         this.$store.commit("setDisplayMode", this.displayMode);
+        this.$store.commit("setServicesNameUsed", this.servicesNameUsed);
         this.$store.dispatch("changeRepositories", PROJECT_KEY);
     },
 };

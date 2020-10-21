@@ -170,3 +170,7 @@ export const isFolderDisplayMode = (state) => state.display_mode === REPOSITORIE
 export const isLoading = (state) => state.is_loading_initial || state.is_loading_next;
 
 export const isFiltering = (state) => state.filter.length > 0;
+
+export const isGitlabUsed = (state) => state.services_name_used.indexOf("gitlab") !== -1;
+
+export const areExternalUsedServices = (state) => state.services_name_used.length > 0;

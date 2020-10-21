@@ -145,3 +145,12 @@
 .git-repository-in-folder {
     margin: 0 0 $tlp-medium-spacing 33px;
 }
+
+.git-action-dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
+.git-add-action-button {
+    margin: 0 0 0 $tlp-small-spacing;
+}

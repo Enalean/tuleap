@@ -1,5 +1,0 @@
-msgid "Gitlab"
-msgstr ""
-
-msgid "Provides an integration Gitlab to Tuleap."
-msgstr ""

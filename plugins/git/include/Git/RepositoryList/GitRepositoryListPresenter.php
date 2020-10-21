@@ -56,6 +56,10 @@ class GitRepositoryListPresenter
      * @psalm-readonly
      */
     public $project_flags;
+    /**
+     * @var string
+     */
+    public $external_services_name_used;
 
     public function __construct(
         \PFUser $current_user,
@@ -63,7 +67,8 @@ class GitRepositoryListPresenter
         $is_git_administrator,
         array $repositories_owners,
         array $external_plugins,
-        array $project_flags
+        array $project_flags,
+        array $external_services_name_used
     ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
@@ -87,6 +92,7 @@ class GitRepositoryListPresenter
 
         $this->display_mode = (string) $current_user->getPreference("are_git_repositories_sorted_by_path");
         $this->external_plugins = json_encode($external_plugins);
+        $this->external_services_name_used = json_encode($external_services_name_used);
 
         $this->project_url         = $project->getUrl();
         $this->project_public_name = $project->getPublicName();

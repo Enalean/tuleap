@@ -19,16 +19,19 @@
 
 <template>
     <div class="git-repository-list-actions" v-if="is_first_load_done">
-        <button
-            type="button"
-            class="tlp-button-primary git-repository-list-create-repository-button"
-            v-if="show_create_repository_button"
-            v-on:click="showAddRepositoryModal()"
-            data-test="create-repository-button"
-        >
-            <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Add project repository</translate>
-        </button>
+        <div v-if="show_create_repository_button">
+            <dropdown-action-button v-if="areExternalUsedServices" />
+            <button
+                v-else
+                type="button"
+                class="tlp-button-primary git-repository-list-create-repository-button"
+                v-on:click="showAddRepositoryModal()"
+                data-test="create-repository-button"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <translate>Add project repository</translate>
+            </button>
+        </div>
 
         <select-owner />
 
@@ -45,11 +48,17 @@ import { mapGetters, mapActions, mapState } from "vuex";
 import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
 import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
+import DropdownActionButton from "./DropdownActionButton.vue";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
 
 export default {
     name: "ActionBar",
-    components: { SelectOwner, ListFilter, DisplayModeSwitcher },
+    components: {
+        DropdownActionButton,
+        SelectOwner,
+        ListFilter,
+        DisplayModeSwitcher,
+    },
     computed: {
         show_create_repository_button() {
             return (
@@ -57,7 +66,11 @@ export default {
                 !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
             );
         },
-        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
+        ...mapGetters([
+            "isCurrentRepositoryListEmpty",
+            "isInitialLoadingDoneWithoutError",
+            "areExternalUsedServices",
+        ]),
         ...mapState(["is_first_load_done"]),
     },
     methods: {
