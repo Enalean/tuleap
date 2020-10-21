@@ -213,6 +213,27 @@ final class CampaignsTest extends BaseTest
         $this->assertEquals(400, $response->getStatusCode());
     }
 
+    public function testPatchCampaignExecutions(): void
+    {
+        $campaign = $this->valid_73_campaign;
+        $def_id = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']["id"];
+
+        $all_executions_response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions',
+                null,
+                json_encode(["definition_ids_to_add" => [$def_id], "execution_ids_to_remove" => []])
+            )
+        );
+
+        $executions = $all_executions_response->json();
+
+        $this->assertCount(3, $executions);
+        $this->assertExecutionsContains($executions, 'Import default template');
+        $this->assertExecutionsContains($executions, 'Create a repository');
+        $this->assertExecutionsContains($executions, 'Delete a repository');
+    }
+
     private function revertCampaign(array $campaign)
     {
         $response = $this->getResponse(
@@ -234,5 +255,16 @@ final class CampaignsTest extends BaseTest
         )->json();
         $this->assertEquals($campaign['label'], $updated_campaign['label']);
         $this->assertEquals($campaign['job_configuration'], $updated_campaign['job_configuration']);
+    }
+
+    private function getFirstExecution($campaign_id, string $user_name): array
+    {
+        $executions_request = $this->client->get('testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
+        $executions         = $this->getResponse(
+            $executions_request,
+            $user_name
+        )->json();
+
+        return $executions[0];
     }
 }

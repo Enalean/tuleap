@@ -88,6 +88,7 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForIntFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
+use Tuleap\TestManagement\REST\v1\Execution\ListOfDefinitionsForCampaignRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -450,8 +451,22 @@ class CampaignsResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $project
         );
+        $execution_tracker_id = $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject());
+
+        $linked_definitions = [];
+        if ($execution_tracker_id) {
+            $linked_definitions = $this->getListOfDefinitionsForCampaignRetriever()->getDefinitionListForCampaign(
+                $user,
+                $artifact,
+                $execution_tracker_id
+            );
+        }
 
         foreach ($definition_ids_to_add as $definition_id) {
+            if (isset($linked_definitions[$definition_id])) {
+                continue;
+            }
+
             $definition = $this->artifact_factory->getArtifactById($definition_id);
             if (! $definition) {
                 throw new RestException(400, 'Invalid definition id ' . (int) $definition_id);
@@ -832,6 +847,15 @@ class CampaignsResource
         );
     }
 
+    private function getListOfDefinitionsForCampaignRetriever(): ListOfDefinitionsForCampaignRetriever
+    {
+        return new ListOfDefinitionsForCampaignRetriever(
+            $this->artifact_dao,
+            $this->artifact_factory,
+            $this->getDefinitionForExecutionRetriever()
+        );
+    }
+
     private function getExecutionsFromAutomatedTestsUpdater(): ExecutionFromAutomatedTestsUpdater
     {
         return new ExecutionFromAutomatedTestsUpdater(
@@ -847,9 +871,7 @@ class CampaignsResource
         return new ListOfExecutionsWithAutomatedTestDataRetriever(
             $this->config,
             $this->artifact_dao,
-            new DefinitionForExecutionRetriever(
-                new ConfigConformanceValidator($this->config)
-            ),
+            $this->getDefinitionForExecutionRetriever(),
             new ExecutionWithAutomatedTestDataProvider(
                 new ExecutionDao(),
                 $this->formelement_factory
@@ -895,5 +917,12 @@ class CampaignsResource
         );
 
         return \TemplateRendererFactory::build()->getRenderer($templates_path);
+    }
+
+    private function getDefinitionForExecutionRetriever(): DefinitionForExecutionRetriever
+    {
+        return new DefinitionForExecutionRetriever(
+            new ConfigConformanceValidator($this->config)
+        );
     }
 }
