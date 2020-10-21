@@ -19,7 +19,12 @@
 
 <template>
     <div class="tlp-dropdown">
-        <button class="tlp-button-primary dropdown-button-repo" ref="dropdownButton" type="button">
+        <button
+            class="tlp-button-primary"
+            v-bind:class="{ 'tlp-button-large': is_empty_state }"
+            ref="dropdownButton"
+            type="button"
+        >
             <translate>Create a project repository</translate>
             <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
@@ -47,6 +52,12 @@ import AddGitlabProjectActionButton from "./AddGitlabProjectActionButton.vue";
 export default {
     name: "DropdownActionButton",
     components: { AddGitlabProjectActionButton },
+    props: {
+        is_empty_state: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return { dropdown: null };
     },
