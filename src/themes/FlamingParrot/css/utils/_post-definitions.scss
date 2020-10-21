@@ -59,8 +59,14 @@
             }
 
             li a {
+                justify-content: center;
                 width: $sidebar-width-collapsed;
-                font-size: 18px;
+                padding: 0 3px 0 0;
+
+                > .project-sidebar-nav-item-icon {
+                    margin: 0;
+                    font-size: 1rem;
+                }
 
                 > span {
                     display: none;
