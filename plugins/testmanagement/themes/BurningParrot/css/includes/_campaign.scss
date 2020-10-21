@@ -1,7 +1,8 @@
 .test-campaigns-header {
     display: flex;
     align-items: flex-end;
-    margin: 0 0 $tlp-medium-spacing * 2;
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
 .test-campaigns-header-title {
