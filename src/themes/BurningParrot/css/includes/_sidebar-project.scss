@@ -53,7 +53,8 @@
     margin: 0 $tlp-small-spacing 0 0;
     border-radius: 50%;
     color: $tlp-ui-white;
-    font-size: .7rem;
+    font-size: .6rem;
+    line-height: 0;
     cursor: help;
 
     &.fa-lock,
@@ -66,6 +67,11 @@
     &.fa-tlp-unlock-plus-r {
         background: darken($tlp-theme-sidebar-background-color, 5%);
     }
+
+    &.fa-tlp-lock-plus-r,
+    &.fa-tlp-unlock-plus-r {
+        font-size: .75rem;
+    }
 }
 
 .project-sidebar-banner-button {
@@ -74,11 +80,13 @@
     transition: opacity ease-in-out 100ms;
 
     .fa-bullhorn {
+        width: 24px;
+        height: 24px;
         padding: 6.5px;
         border-radius: 50%;
         background-color: $tlp-ui-warning;
         color: $tlp-ui-white;
-        font-size: .7rem;
+        font-size: .6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, .5);
     }
 
@@ -90,7 +98,7 @@
 .project-sidebar-project-flags {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-small-spacing $tlp-medium-spacing;
+    margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
     color: $tlp-ui-border-dark;
     cursor: help;
 
@@ -160,10 +168,10 @@
     position: relative;
     align-items: center;
     height: $navbar-height;
-    padding: 0 3px 0 9px;
+    padding: 0 $tlp-medium-spacing;
     border-left: 3px solid transparent;
     color: $tlp-ui-border-dark;
-    font-size: 14px;
+    font-size: .8125rem;
     text-decoration: none;
 
     &:hover,
@@ -207,9 +215,8 @@
 }
 
 .project-sidebar-nav-item-icon {
-    margin: 0 7px 0 0;
-    font-size: 1rem;
-    -webkit-font-smoothing: antialiased;
+    margin: 0 $tlp-small-spacing 0 0;
+    font-size: .875rem;
 }
 
 .project-sidebar-nav-item-label {

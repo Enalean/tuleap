@@ -66,6 +66,7 @@ $tlp-fontawesome-icons: (
 @each $label, $unicode in $tlp-fontawesome-icons {
     .fa-tlp-#{$label} {
         font-family: TLPFontAwesome;
+        font-weight: 400;
 
         &::before {
             content: $unicode;
