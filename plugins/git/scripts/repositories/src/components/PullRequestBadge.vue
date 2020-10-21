@@ -23,7 +23,7 @@
         class="git-pullrequest-badge-link"
         v-if="numberPullRequest > 0"
     >
-        <span class="tlp-badge-primary git-pullrequest-badge">
+        <span class="tlp-badge-primary">
             <translate
                 v-bind:translate-n="numberPullRequest"
                 translate-plural="%{ numberPullRequest } pull requests"

@@ -25,7 +25,7 @@
             ref="dropdownButton"
             type="button"
         >
-            <translate>Create a project repository</translate>
+            <translate>New repository</translate>
             <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu" role="menu">
@@ -36,7 +36,7 @@
                 data-test="create-repository-button"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate class="git-add-action-button">New project repository</translate>
+                <translate class="git-add-action-button">Create a repository</translate>
             </button>
             <add-gitlab-project-action-button />
         </div>

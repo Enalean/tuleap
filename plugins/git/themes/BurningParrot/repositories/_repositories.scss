@@ -94,11 +94,14 @@
 .git-repository-list-actions-display-switch {
     margin: 0 $tlp-medium-spacing 0 0;
 
-    .fa-calendar {
-        position: relative;
-        top: -2px;
-        left: 0;
-        font-size: 15px;
+    .tlp-button-primary {
+        width: 65px;
+        text-align: center;
+    }
+
+    .fa-long-arrow-alt-down,
+    .fa-calendar-alt {
+        font-size: .8125rem;
     }
 }
 
@@ -113,11 +116,11 @@
     &::before {
         content: '';
         position: absolute;
-        top: 25px;
+        top: 24px;
         left: 10px;
         width: 1px;
-        height: calc(100% - 25px);
-        border-left: 1px solid $tlp-ui-border-normal;
+        height: calc(100% - 24px);
+        border-left: 1px solid $tlp-ui-border-dark;
     }
 }
 
@@ -127,23 +130,31 @@
 
 .git-repository-list-collapsible-folder {
     display: flex;
-    margin: 0 0 $tlp-medium-spacing;
+    align-items: center;
+    margin: 0 0 $tlp-small-spacing;
     color: $tlp-theme-color;
     cursor: pointer;
 
+    > .fa-caret-down,
+    > .fa-caret-right {
+        color: $tlp-ui-dimmed;
+        font-size: .8125rem;
+    }
+
     > .git-repository-list-folder-label {
         margin: 0 0 0 5px;
-        font-size: 16px;
+        font-size: 1rem;
+        line-height: 1.5rem;
 
-        > .fa-folder-o {
-            margin: 0 3px 0 0;
-            font-size: 18px;
+        > .fa-folder {
+            margin: 0 2px 0 0;
+            font-size: .8125rem;
         }
     }
 }
 
 .git-repository-in-folder {
-    margin: 0 0 $tlp-medium-spacing 33px;
+    margin: 0 0 $tlp-medium-spacing $tlp-large-spacing;
 }
 
 .git-action-dropdown {

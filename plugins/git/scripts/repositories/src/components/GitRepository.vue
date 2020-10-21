@@ -48,7 +48,7 @@
                     />
                     <div class="git-repository-card-last-update">
                         <i class="far fa-clock git-repository-card-last-update-icon"></i>
-                        <translate>Last update %{ formatted_last_update_date }</translate>
+                        <translate>Updated %{ formatted_last_update_date }</translate>
                     </div>
                     <a
                         v-if="is_admin"
