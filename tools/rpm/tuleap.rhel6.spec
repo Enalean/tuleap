@@ -610,6 +610,7 @@ done
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
