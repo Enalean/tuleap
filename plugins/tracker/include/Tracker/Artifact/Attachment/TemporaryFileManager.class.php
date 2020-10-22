@@ -93,10 +93,15 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
     /**
      * Return full path to the file on filesystem
      *
-     * @return String
+     * @psalm-taint-escape shell
+     * @psalm-taint-escape text
      */
-    public function getPath(PFUser $user, $attachment_name)
+    public function getPath(PFUser $user, $attachment_name): string
     {
+        $attachment_name = (string) $attachment_name;
+        if (strpos($attachment_name, DIRECTORY_SEPARATOR) !== false) {
+            throw new \RuntimeException('$attachment_name is not expected to contain a directory separator, got ' . $attachment_name);
+        }
         return ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix($user) . $attachment_name;
     }
 
