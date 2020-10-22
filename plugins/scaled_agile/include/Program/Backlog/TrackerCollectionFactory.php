@@ -22,27 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog;
 
-use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\MissingRootPlanningException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\NoProjectIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class TrackerCollectionFactory
 {
     /**
-     * @var \PlanningFactory
+     * @var PlanningAdapter
      */
-    private $planning_factory;
+    private $planning_adapter;
 
-    public function __construct(\PlanningFactory $planning_factory)
+    public function __construct(PlanningAdapter $planning_adapter)
     {
-        $this->planning_factory = $planning_factory;
+        $this->planning_adapter = $planning_adapter;
     }
 
     /**
-     * @throws ProjectIncrementTrackerRetrievalException
+     * @throws TopPlanningNotFoundInProjectException
      */
     public function buildFromProgramProjectAndItsTeam(
         \Project $program_project,
@@ -60,7 +60,7 @@ class TrackerCollectionFactory
     }
 
     /**
-     * @throws ProjectIncrementTrackerRetrievalException
+     * @throws TopPlanningNotFoundInProjectException
      */
     public function buildFromTeamProjects(
         TeamProjectsCollection $team_projects_collection,
@@ -74,16 +74,13 @@ class TrackerCollectionFactory
     }
 
     /**
-     * @throws ProjectIncrementTrackerRetrievalException
+     * @throws TopPlanningNotFoundInProjectException
      */
     private function getProjectIncrementTracker(\PFUser $user, \Project $project): \Tracker
     {
-        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
-        if (! $root_planning) {
-            throw new MissingRootPlanningException((int) $project->getID());
-        }
+        $root_planning     = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
         $project_increment = $root_planning->getPlanningTracker();
-        if (! $project_increment || $project_increment instanceof \NullTracker) {
+        if ($project_increment instanceof \NullTracker) {
             throw new NoProjectIncrementException($root_planning->getId());
         }
         return $project_increment;

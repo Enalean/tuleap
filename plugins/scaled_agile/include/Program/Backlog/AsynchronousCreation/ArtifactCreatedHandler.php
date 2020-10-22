@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 class ArtifactCreatedHandler
@@ -32,10 +34,6 @@ class ArtifactCreatedHandler
      */
     private $program_dao;
     /**
-     * @var \PlanningFactory
-     */
-    private $planning_factory;
-    /**
      * @var CreateProjectIncrementsRunner
      */
     private $create_project_increments_runner;
@@ -43,17 +41,21 @@ class ArtifactCreatedHandler
      * @var PendingArtifactCreationDao
      */
     private $pending_artifact_creation_dao;
+    /**
+     * @var PlanningAdapter
+     */
+    private $planning_adapter;
 
     public function __construct(
         ProgramDao $program_dao,
-        \PlanningFactory $planning_factory,
         CreateProjectIncrementsRunner $create_project_increments_runner,
-        PendingArtifactCreationDao $pending_artifact_creation_dao
+        PendingArtifactCreationDao $pending_artifact_creation_dao,
+        PlanningAdapter $planning_adapter
     ) {
         $this->program_dao                      = $program_dao;
-        $this->planning_factory                 = $planning_factory;
         $this->create_project_increments_runner = $create_project_increments_runner;
         $this->pending_artifact_creation_dao    = $pending_artifact_creation_dao;
+        $this->planning_adapter = $planning_adapter;
     }
 
     public function handle(ArtifactCreated $event): void
@@ -68,16 +70,13 @@ class ArtifactCreatedHandler
         }
 
         try {
-            $root_planning = $this->planning_factory->getVirtualTopPlanning(
-                $current_user,
-                (int) $source_project->getID()
-            );
-        } catch (\Planning_NoPlanningsException $e) {
+            $root_planning = $this->planning_adapter->buildRootPlanning($current_user, (int) $source_project->getID());
+        } catch (TopPlanningNotFoundInProjectException $e) {
             // Do nothing if there is no planning
             return;
         }
 
-        $program_top_milestones_tracker_id = $root_planning->getPlanningTrackerId();
+        $program_top_milestones_tracker_id = $root_planning->getPlanningTracker()->getId();
         if ($source_tracker->getId() !== $program_top_milestones_tracker_id) {
             return;
         }

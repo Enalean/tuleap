@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
-use Planning;
 use ProjectManager;
 use TrackerFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 
 class PlannableItemsCollectionBuilder
 {
@@ -53,7 +53,7 @@ class PlannableItemsCollectionBuilder
         $this->project_manager = $project_manager;
     }
 
-    public function buildCollection(Planning $project_root_planning): PlannableItemsCollection
+    public function buildCollection(PlanningData $project_root_planning): PlannableItemsCollection
     {
         $plannable_items_rows = $this->dao->getPlannableItemsTrackerIds((int) $project_root_planning->getID());
 

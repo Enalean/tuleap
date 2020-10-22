@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
 use PFUser;
-use Planning;
-use PlanningFactory;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\Team\TeamDao;
 
 class PlannableItemsTrackersUpdater
@@ -46,28 +47,28 @@ class PlannableItemsTrackersUpdater
     private $transaction_executor;
 
     /**
-     * @var PlanningFactory
+     * @var PlanningAdapter
      */
-    private $planning_factory;
+    private $planning_adapter;
 
     public function __construct(
         TeamDao $team_dao,
         PlannableItemsTrackersDao $plannable_items_trackers_dao,
-        PlanningFactory $planning_factory,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        PlanningAdapter $planning_adapter
     ) {
-        $this->team_dao              = $team_dao;
+        $this->team_dao                     = $team_dao;
         $this->plannable_items_trackers_dao = $plannable_items_trackers_dao;
         $this->transaction_executor         = $transaction_executor;
-        $this->planning_factory             = $planning_factory;
+        $this->planning_adapter             = $planning_adapter;
     }
 
     /**
-     * @throws TopPlanningNotFoundInProgramProjectException
+     * @throws TopPlanningNotFoundInProjectException
      */
-    public function updatePlannableItemsTrackersFromPlanning(Planning $updated_planning, PFUser $user): void
+    public function updatePlannableItemsTrackersFromPlanning(PlanningData $updated_planning, PFUser $user): void
     {
-        $project_id = (int) $updated_planning->getGroupId();
+        $project_id = (int) $updated_planning->getPlanningTracker()->getGroupId();
 
         if (! $this->team_dao->isProjectATeamProject($project_id)) {
             return;
@@ -82,14 +83,7 @@ class PlannableItemsTrackersUpdater
                 foreach ($program_project_ids_rows as $program_project_ids_row) {
                     $program_project_id = (int) $program_project_ids_row['program_project_id'];
 
-                    $program_top_planning = $this->planning_factory->getRootPlanning(
-                        $user,
-                        $program_project_id
-                    );
-
-                    if (! $program_top_planning) {
-                        throw new TopPlanningNotFoundInProgramProjectException($program_project_id);
-                    }
+                    $program_top_planning = $this->planning_adapter->buildRootPlanning($user, $program_project_id);
 
                     $program_top_planning_id = (int) $program_top_planning->getId();
 
@@ -100,7 +94,7 @@ class PlannableItemsTrackersUpdater
 
                     $this->plannable_items_trackers_dao->addPlannableItemsTrackerIds(
                         $program_top_planning_id,
-                        $updated_planning->getBacklogTrackersIds()
+                        $updated_planning->getPlannableTrackerIds()
                     );
                 }
             }

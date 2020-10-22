@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\Source;
 
-use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends TestCase
 {
@@ -32,12 +33,8 @@ final class SourceTrackerCollectionTest extends TestCase
 
     public function testGetTrackerIdsReturnsTrackerIds(): void
     {
-        $first_tracker = M::mock(\Tracker::class);
-        $first_tracker->shouldReceive('getId')->andReturn(78);
-        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
-        $second_tracker = M::mock(\Tracker::class);
-        $second_tracker->shouldReceive('getId')->andReturn(57);
-        $second_tracker->shouldReceive('getGroupId')->andReturn('104');
+        $first_tracker = TrackerTestBuilder::aTracker()->withId(78)->withProject(new Project(['group_id' => 103]))->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new Project(['group_id' => 104]))->build();
 
         $collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
         $ids        = $collection->getTrackerIds();
@@ -53,10 +50,8 @@ final class SourceTrackerCollectionTest extends TestCase
 
     public function testGetMilestoneTrackersReturnTrackers(): void
     {
-        $first_tracker = M::mock(\Tracker::class);
-        $first_tracker->shouldReceive('getGroupId')->andReturn('103');
-        $second_tracker = M::mock(\Tracker::class);
-        $second_tracker->shouldReceive('getGroupId')->andReturn('104');
+        $first_tracker = TrackerTestBuilder::aTracker()->withId(78)->withProject(new Project(['group_id' => 103]))->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new Project(['group_id' => 104]))->build();
 
         $collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
         $trackers   = $collection->getSourceTrackers();

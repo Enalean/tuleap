@@ -25,7 +25,6 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning_VirtualTopMilestone;
 use Project;
 use Psr\Log\NullLogger;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollection;
@@ -34,10 +33,12 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProjectIncrementCreatorCheckerTest extends TestCase
 {
@@ -106,8 +107,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -132,8 +132,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsTrueWhenAProjectHasNoTeamProjects(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->projects_builder->shouldReceive('getTeamProjectForAGivenProgramProject')
             ->andReturn(new TeamProjectsCollection([]));
@@ -144,8 +143,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $first_team_project  = new \Project(['group_id' => '104']);
         $second_team_project = new \Project(['group_id' => '198']);
@@ -155,10 +153,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
             ->andReturn(new TeamProjectsCollection([$first_team_project, $second_team_project]));
         $this->trackers_builder->shouldReceive('buildFromProgramProjectAndItsTeam')
             ->once()
-            ->andThrow(
-                new class extends \RuntimeException implements ProjectIncrementTrackerRetrievalException {
-                }
-            );
+            ->andThrow(new TopPlanningNotFoundInProjectException(198));
 
         $this->assertFalse($this->checker->canProjectIncrementBeCreated($program_milestone, $user));
     }
@@ -166,8 +161,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfSemanticsAreNotWellConfigured(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -179,8 +173,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project, false);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -192,8 +185,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -210,8 +202,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -229,8 +220,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfTrackersHaveRequiredFieldsThatCannotBeSynchronized(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -254,8 +244,7 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
     public function testItReturnsFalseIfTeamTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
     {
         $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $program_milestone->shouldReceive('getProject')->andReturn($this->project);
+        $program_milestone    = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -297,5 +286,11 @@ final class ProjectIncrementCreatorCheckerTest extends TestCase
         $this->trackers_builder->shouldReceive('buildFromTeamProjects')
             ->once()
             ->andReturn(new ProjectIncrementsTrackerCollection([$first_milestone_tracker, $second_milestone_tracker]));
+    }
+
+    private function getPlanningData(): PlanningData
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        return new PlanningData($tracker, 1, 'Release Planning', []);
     }
 }

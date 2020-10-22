@@ -24,19 +24,20 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning;
-use Planning_NoPlanningsException;
-use Planning_VirtualTopMilestone;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatorCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Planning_MilestoneFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningAdapter
      */
-    private $planning_milestone_factory;
+    private $planning_adapter;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectIncrementArtifactCreatorChecker
      */
@@ -49,23 +50,23 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->planning_milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class);
-        $this->milestone_creator_checker  = \Mockery::mock(ProjectIncrementArtifactCreatorChecker::class);
+        $this->planning_adapter          = \Mockery::mock(PlanningAdapter::class);
+        $this->milestone_creator_checker = \Mockery::mock(ProjectIncrementArtifactCreatorChecker::class);
 
-        $this->artifact_creator_checker = new ArtifactCreatorChecker($this->planning_milestone_factory, $this->milestone_creator_checker);
+        $this->artifact_creator_checker = new ArtifactCreatorChecker(
+            $this->planning_adapter,
+            $this->milestone_creator_checker
+        );
     }
 
     public function testDisallowArtifactCreationWhenItIsAMilestoneTrackerAndMilestoneCannotBeCreated(): void
     {
         $project  = \Project::buildForTest();
-        $planning = \Mockery::mock(Planning::class);
-        $this->planning_milestone_factory->shouldReceive('getVirtualTopMilestone')->andReturn(
-            new Planning_VirtualTopMilestone($project, $planning)
+        $tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $planning = new PlanningData($tracker, 43, 'Planning', [302, 504]);
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn(
+            $planning
         );
-        $planning->shouldReceive('getPlanningTrackerId')->andReturn(102);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(102);
-        $tracker->shouldReceive('getProject')->andReturn($project);
         $this->milestone_creator_checker->shouldReceive('canProjectIncrementBeCreated')->andReturn(false);
 
         $this->assertFalse(
@@ -78,10 +79,11 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     public function testAllowArtifactCreationWhenNoVirtualTopMilestoneCanBeFound(): void
     {
-        $this->planning_milestone_factory->shouldReceive('getVirtualTopMilestone')->andThrow(new Planning_NoPlanningsException());
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andThrow(
+            new TopPlanningNotFoundInProjectException(102)
+        );
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(\Project::buildForTest())->build();
 
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
@@ -93,15 +95,11 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     public function testAllowArtifactCreationWhenTrackerDoesNotCreateMilestone(): void
     {
-        $project  = \Project::buildForTest();
-        $planning = \Mockery::mock(Planning::class);
-        $this->planning_milestone_factory->shouldReceive('getVirtualTopMilestone')->andReturn(
-            new Planning_VirtualTopMilestone($project, $planning)
-        );
-        $planning->shouldReceive('getPlanningTrackerId')->andReturn(999);
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(102);
-        $tracker->shouldReceive('getProject')->andReturn($project);
+        $project          = \Project::buildForTest();
+        $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $planning         = new PlanningData($planning_tracker, 43, 'Planning', [302, 504]);
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn($planning);
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
 
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(

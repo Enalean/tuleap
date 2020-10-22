@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration;
 
-use Planning;
 use ProjectManager;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 
 class ReadOnlyProgramAdminURLBuilder
 {
@@ -44,13 +44,13 @@ class ReadOnlyProgramAdminURLBuilder
         $this->project_manager = $project_manager;
     }
 
-    public function buildURL(Planning $planning, ?Planning $root_planning): ?string
+    public function buildURL(PlanningData $planning, ?PlanningData $root_planning): ?string
     {
         if ($root_planning === null) {
             return null;
         }
 
-        $project_id = (int) $planning->getGroupId();
+        $project_id = (int) $planning->getPlanningTracker()->getGroupId();
 
         if (! $this->program_dao->isProjectAProgramProject($project_id)) {
             return null;
