@@ -22,7 +22,7 @@
     "lodash": "2.4.0",
     "moment": "^2.29.1",
     "mustache": "^4.0.1",
-    "ngVue": "^1.7.6",
+    "ngVue": "^1.7.8",
     "node-gettext": "^3.0.0",
     "phptomoment": "0.0.2",
     "pretty-kibibytes": "^4.0.4",
@@ -33,7 +33,7 @@
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.10",
-    "vue-router": "^3.4.5",
+    "vue-router": "^3.4.7",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
