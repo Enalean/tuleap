@@ -37,4 +37,17 @@ img.widget-lastbuilds-weather-img {
         height: 90px;
     }
 }
+
+body.continuous-integration-body .main .content {
+    padding: 0;
+}
+
+body.continuous-integration-body #feedback:empty {
+    padding: 0;
+}
+
 /* stylelint-enable */
+
+.continuous-integration-content {
+    padding: 0 12px;
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -36,10 +36,14 @@ class hudsonViews extends Views
 
     public function header()
     {
-        $request = HTTPRequest::instance();
-        $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'group' => $request->get('group_id'), 'toptab' => 'hudson']);
-        echo $this->_getHelp();
-        echo '<h2>' . $this->_getTitle() . '</h2>';
+        $request  = HTTPRequest::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $locale   = $request->getCurrentUser()->getShortLocale();
+        $GLOBALS['HTML']->addToolbarItem('<a href="javascript:help_window(\'' .
+                                         $purifier->purify('/doc/' . urlencode($locale) . '/user-guide/ci.html', CODENDI_PURIFIER_JS_QUOTE)
+                                         . '\')">' . $purifier->purify($GLOBALS['Language']->getText('global', 'help')) . '</a>');
+        $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'group' => $request->get('group_id'), 'toptab' => 'hudson', [], 'body_class' => ['continuous-integration-body']]);
+        echo '<h2 class="almost-tlp-title project-header-title">' . $this->_getTitle() . '</h2>';
     }
     public function _getTitle()
     {
@@ -96,11 +100,13 @@ class hudsonViews extends Views
                     )
             )
         */
+        echo '<div class="continuous-integration-content">';
         $em->processEvent('collect_ci_triggers', $params);
         $this->_display_jobs_table($group_id, $services);
         if ($user->isMember($request->get('group_id'), 'A')) {
             $this->_display_add_job_form($group_id, $services);
         }
+        echo '</div>';
     }
 
     public function job_details()
@@ -218,6 +224,7 @@ class hudsonViews extends Views
 
     public function editJob()
     {
+        echo '<div class="continuous-integration-content">';
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
@@ -257,6 +264,7 @@ class hudsonViews extends Views
                 );
             }
         }
+        echo '</div>';
     }
     // }}}
 
