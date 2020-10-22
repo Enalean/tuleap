@@ -97,6 +97,6 @@
     "sensiolabs-de/deptrac-shim": "^0.8.2",
     "slevomat/coding-standard": "^6.0",
     "squizlabs/php_codesniffer": "^3.4",
-    "vimeo/psalm": "^3.3"
+    "vimeo/psalm": "^4.0"
   }
 }
