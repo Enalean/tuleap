@@ -54,7 +54,8 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     .breadcrumb-link {
         @include background.project-background-title-header-typography($white); }
 
-    .breadcrumb-dropdown-item {
+    .breadcrumb-dropdown-item,
+    .breadcrumb-dropdown-section-title {
         text-shadow: initial;
     }
 
