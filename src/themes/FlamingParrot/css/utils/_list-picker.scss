@@ -88,7 +88,7 @@ $form-element-small-font-size: .8125rem;
 }
 
 .list-picker-dropdown-option-value {
-    &:hover {
+    &.list-picker-item-highlighted {
         background-color: $main;
         color: $white;
     }
@@ -108,7 +108,7 @@ $form-element-small-font-size: .8125rem;
         padding: 6px 12px 6px 32px;
         color: $main;
 
-        &:hover {
+        &.list-picker-item-highlighted {
             color: $white;
         }
     }
