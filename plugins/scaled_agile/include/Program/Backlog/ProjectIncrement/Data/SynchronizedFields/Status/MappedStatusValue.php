@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
-
-final class RootPlanningEditionHandler
+/**
+ * @psalm-immutable
+ */
+final class MappedStatusValue
 {
     /**
-     * @var TeamDao
+     * @var int[]
      */
-    private $team_dao;
+    private $values;
 
-    public function __construct(TeamDao $team_dao)
+    /**
+     * @param int[] $values
+     */
+    public function __construct(array $values)
     {
-        $this->team_dao = $team_dao;
+        $this->values = $values;
     }
 
-    public function handle(RootPlanningEditionEvent $event): void
+    /**
+     * @return int[]
+     */
+    public function getValues(): array
     {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        return $this->values;
     }
 }

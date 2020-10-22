@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\RootPlanning;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature;
 
-use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-final class RootPlanningEditionHandler
+final class ProjectIncrementArtifactLinkType extends NaturePresenter
 {
+    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
+
     /**
-     * @var TeamDao
+     * @psalm-readonly
      */
-    private $team_dao;
+    public $is_system = true;
 
-    public function __construct(TeamDao $team_dao)
+    public function __construct()
     {
-        $this->team_dao = $team_dao;
-    }
-
-    public function handle(RootPlanningEditionEvent $event): void
-    {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
-            $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
-        }
+        parent::__construct(
+            self::ART_LINK_SHORT_NAME,
+            dgettext('tuleap-scaled_agile', 'Mirror of'),
+            dgettext('tuleap-scaled_agile', 'Mirrored by'),
+            false
+        );
     }
 }
