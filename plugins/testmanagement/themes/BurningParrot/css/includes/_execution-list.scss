@@ -1,30 +1,33 @@
 @import 'link_issue_modal';
 @import 'current-execution';
 
+$height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
+
 .test-campaign {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$breadcrumb-height});
+    height: calc(100vh - #{$breadcrumb-height} - #{$height-testmanagement-header});
     overflow: hidden;
 }
 
 .sidebar-collapsed .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar});
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header});
 }
 
 .has-visible-project-banner .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height});
+    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$height-testmanagement-header});
 }
 
 .has-visible-project-banner.sidebar-collapsed .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height});
+    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$height-testmanagement-header});
 }
 
 .test-campaign-header {
     display: flex;
     flex: 0 0 auto;
     align-items: flex-end;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
 .test-campaign-header-title {
