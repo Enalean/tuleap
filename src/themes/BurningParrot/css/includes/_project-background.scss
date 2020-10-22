@@ -79,7 +79,8 @@ body {
         @include background.project-background-title-header-typography($tlp-ui-white);
     }
 
-    .breadcrumb-dropdown-item {
+    .breadcrumb-dropdown-item,
+    .breadcrumb-dropdown-section-title {
         text-shadow: initial;
     }
 
