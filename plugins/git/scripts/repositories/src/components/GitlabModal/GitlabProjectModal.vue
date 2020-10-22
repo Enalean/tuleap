@@ -20,12 +20,12 @@
 <template>
     <form
         role="dialog"
-        aria-labelledby="create-repository-modal-title"
-        id="create-repository-modal"
+        aria-labelledby="fetch-gitlab-project-modal-title"
+        id="fetch-gitlab-projects-modal"
         class="tlp-modal"
-        ref="create_modal"
-        v-on:submit="createRepository"
-        data-test="create-repository-modal-form"
+        ref="fetch_modal"
+        v-on:submit="fetchProjects"
+        data-test="fetch-gitlab-project-modal-form"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -120,7 +120,7 @@ export default {
         },
     },
     mounted() {
-        const create_modal = createModal(this.$refs.create_modal);
+        const create_modal = createModal(this.$refs.fetch_modal);
 
         create_modal.addEventListener("tlp-modal-hidden", this.reset);
 
@@ -132,7 +132,7 @@ export default {
             this.gitlab_token_user = "";
             this.is_loading = false;
         },
-        createRepository(event) {
+        fetchProjects(event) {
             event.preventDefault();
             this.is_loading = true;
         },
