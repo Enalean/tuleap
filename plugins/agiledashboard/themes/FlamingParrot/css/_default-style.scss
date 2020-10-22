@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@use '../../src/themes/FlamingParrot/css/utils/variables-color-common';
 
 /* stylelint-disable selector-no-qualifying-type */
 /* stylelint-disable-next-line selector-class-pattern */
@@ -367,6 +369,12 @@ body.agiledashboard_homepage .main .content {
     margin-bottom: 1em;
     color: #999999;
     font-size: 1.5em;
+}
+
+.project-with-background {
+    .release-date-info {
+        color: variables-color-common.$white;
+    }
 }
 
 /* stylelint-disable selector-no-qualifying-type */

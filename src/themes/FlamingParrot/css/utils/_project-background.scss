@@ -26,7 +26,8 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 @import '../../../common/css/project-background/project-background';
 
 .project-with-background {
-    .administration-title {
+    .administration-title,
+    .project-header-title {
         @include background.project-background-title-header-typography($white);
         margin: 0;
         padding: 0 $tlp-medium-spacing 30px;

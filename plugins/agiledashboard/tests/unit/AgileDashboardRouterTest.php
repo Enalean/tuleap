@@ -102,7 +102,7 @@ final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs
         $request->shouldReceive('get')->withArgs(['action'])->andReturn('edit');
         $request->shouldReceive('getValidated')->andReturn(0);
 
-        $this->router->shouldReceive('renderAction')->withArgs([$this->planning_controller, 'edit', $request])->once();
+        $this->router->shouldReceive('renderAction')->withArgs([$this->planning_controller, 'edit', $request, [], ['body_class' => ['agiledashboard-body']]])->once();
         $this->router->route($request);
     }
 

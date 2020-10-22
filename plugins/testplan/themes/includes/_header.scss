@@ -24,9 +24,9 @@
     margin: $tlp-medium-spacing 0 0;
 }
 
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
+.testplan-root-title {
+    margin: 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
 .test-plan-app {

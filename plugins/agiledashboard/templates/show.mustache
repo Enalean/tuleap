@@ -1,27 +1,24 @@
-<div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">
-        <div class="tlp-dropdown">
-            <div id="agiledashboard-scrum-milestone-menu">
-                {{ milestoneTitle }}
-                <i class="fa fa-fw fa-caret-down" id="agiledashboard-scrum-milestone-menu-caret"></i>
-            </div>
-            <div class="tlp-dropdown-menu" role="menu">
-                <a href="{{ editArtifactUrl }}"
-                   class="backlog-item-link tlp-dropdown-menu-item"
-                   data-artifact-id="{{ milestoneId }}"
-                   role="menuitem"
-                >
-                    {{ editArtifact }}
-                </a>
-            </div>
+<h1 class="agiledashboard-header-title">
+    <div class="tlp-dropdown">
+        <div id="agiledashboard-scrum-milestone-menu">
+            {{ milestoneTitle }}
+            <i class="fa fa-fw fa-caret-down" id="agiledashboard-scrum-milestone-menu-caret"></i>
         </div>
-        {{# displayMilestoneDates }}
-            <small>
-                {{startDate}} – {{endDate}}
-            </small>
-        {{/ displayMilestoneDates }}
-    </h1>
+        <div class="tlp-dropdown-menu" role="menu">
+            <a href="{{ editArtifactUrl }}"
+               class="backlog-item-link tlp-dropdown-menu-item"
+               data-artifact-id="{{ milestoneId }}"
+               role="menuitem"
+            >
+                {{ editArtifact }}
+            </a>
+        </div>
+    </div>
+    {{# displayMilestoneDates }}
+        <small>
+            {{startDate}} – {{endDate}}
+        </small>
+    {{/ displayMilestoneDates }}
+</h1>
 
-    {{> pane-list }}
-</div>
-
+{{> pane-list }}

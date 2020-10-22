@@ -143,7 +143,8 @@ final class scaled_agilePlugin extends Plugin
             new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/scaled_agile',
                 '/assets/scaled_agile'
-            )
+            ),
+            $agiledashboard_plugin->getIncludeAssets()
         );
     }
 
