@@ -111,6 +111,7 @@ export default {
         });
         $modal.on("hidden", () => {
             this.$store.commit("resetState");
+            this.$el.remove();
         });
         $modal.modal();
     },

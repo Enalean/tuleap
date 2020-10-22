@@ -36,8 +36,8 @@
 }
 
 .move-artifact-tracker-loader {
-    width: 100%;
-    margin: 20px 10px 0;
+    width: 35px;
+    margin: 28px 10px 0;
 }
 
 .highlight {
@@ -46,11 +46,16 @@
 
 .move-artifact-selectors {
     display: flex;
+    justify-content: space-between;
     height: 100px;
     padding: 15px;
 
     &.move-artifact-selectors-preview {
         height: auto;
+    }
+
+    &:last-child {
+        margin: 0 0 24px;
     }
 }
 
@@ -76,4 +81,9 @@
 
 .move-artifact-display-more-fields-message {
     margin: 10px 0 0 15px;
+}
+
+.move-artifact-tracker-selector-section,
+.move-artifact-project-selector-section {
+    flex: 1 1 0;
 }

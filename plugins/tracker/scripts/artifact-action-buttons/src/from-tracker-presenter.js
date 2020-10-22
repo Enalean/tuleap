@@ -24,16 +24,25 @@ export {
     getTrackerColor,
     getArtifactId,
     getProjectId,
+    isListPickerEnabled,
 };
 
-let tracker_id, tracker_name, tracker_color, artifact_id, project_id;
+let tracker_id, tracker_name, tracker_color, artifact_id, project_id, is_list_picker_enabled;
 
-function setFromTracker(id_tracker, name_tracker, color_tracker, id_artifact, id_project) {
+function setFromTracker(
+    id_tracker,
+    name_tracker,
+    color_tracker,
+    id_artifact,
+    id_project,
+    list_picker_is_enabled
+) {
     tracker_id = id_tracker;
     tracker_name = name_tracker;
     tracker_color = color_tracker;
     artifact_id = id_artifact;
     project_id = id_project;
+    is_list_picker_enabled = list_picker_is_enabled;
 }
 
 function getTrackerId() {
@@ -54,4 +63,8 @@ function getTrackerColor() {
 
 function getArtifactId() {
     return artifact_id;
+}
+
+function isListPickerEnabled() {
+    return is_list_picker_enabled;
 }
