@@ -32,6 +32,19 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         padding: 0 $tlp-medium-spacing 30px;
     }
 
+    .toolbar.nav-pills {
+        border-bottom: initial;
+
+        li > a {
+            @include background.project-background-title-header-typography($white);
+        }
+
+        li > a:hover,
+        li > a:focus {
+            color: $grey;
+        }
+    }
+
     .breadcrumb-container {
         padding: $tlp-medium-spacing $tlp-medium-spacing 0;
     }
