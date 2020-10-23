@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,8 +21,10 @@
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Gitlab\REST\ResourcesInjector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlabPlugin extends Plugin
@@ -48,6 +50,10 @@ class gitlabPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(GetExternalUsedServiceEvent::NAME);
+
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -87,5 +93,23 @@ class gitlabPlugin extends Plugin
             $fine_grained_dao,
             $fine_grained_retriever
         );
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $injector = new ResourcesInjector();
+        $injector->declareProjectGitlabResource($params['resources'], $params['project']);
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
