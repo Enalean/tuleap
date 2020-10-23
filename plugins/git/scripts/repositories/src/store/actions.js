@@ -31,6 +31,8 @@ import {
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
 } from "../constants.js";
+import { formatUrl } from "../gitlab/gitlab-credentials-helper";
+import { getAsyncGitlabProjectList } from "../gitlab/gitlab-api-querier";
 
 export const setDisplayMode = async (context, new_mode) => {
     context.commit("setDisplayMode", new_mode);
@@ -118,4 +120,15 @@ async function handleGetRepositoryListError(e, commit) {
         commit("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
         throw e;
     }
+}
+
+export async function getGitlabProjectList(context, credentials) {
+    credentials.server_url = formatUrl(credentials.server_url);
+
+    const response = await getAsyncGitlabProjectList(credentials);
+    if (response.status !== 200) {
+        throw Error();
+    }
+
+    return response.json();
 }
