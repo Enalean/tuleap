@@ -27,6 +27,8 @@ import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-i
 import { SingleSelectionManager } from "./selection/SingleSelectionManager";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import { hideSourceSelectBox } from "./helpers/hide-selectbox-helper";
+import { KeyboardNavigationManager } from "./navigation/KeyboardNavigationManager";
+import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -97,6 +99,12 @@ export async function createListPicker(
 
     dropdown_content_renderer.renderListPickerDropdownContent();
 
+    const highlighter = new ListItemHighlighter(dropdown_list_element);
+    const keyboard_navigation_manager = new KeyboardNavigationManager(
+        dropdown_list_element,
+        dropdown_toggler,
+        highlighter
+    );
     const event_manager = new EventManager(
         document,
         wrapper_element,
@@ -105,7 +113,9 @@ export async function createListPicker(
         source_select_box,
         selection_manager,
         dropdown_toggler,
-        dropdown_content_renderer
+        dropdown_content_renderer,
+        keyboard_navigation_manager,
+        highlighter
     );
 
     event_manager.attachEvents();

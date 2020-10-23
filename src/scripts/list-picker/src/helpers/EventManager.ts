@@ -19,10 +19,16 @@
 import { DropdownToggler } from "./DropdownToggler";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { SelectionManager } from "../type";
+import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
+import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
+import { isArrowDown, isArrowUp, isBackspaceKey, isEnterKey, isEscapeKey } from "./keys-helper";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
     private click_outside_handler!: (event: Event) => void;
+    private keyboard_events_handler!: (event: Event) => void;
+    private prevent_form_submit_on_enter_handler!: (event: Event) => void;
+    private has_keyboard_selection_occurred = false;
 
     constructor(
         private readonly doc: HTMLDocument,
@@ -32,7 +38,9 @@ export class EventManager {
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: SelectionManager,
         private readonly dropdown_toggler: DropdownToggler,
-        private readonly dropdown_content_renderer: DropdownContentRenderer
+        private readonly dropdown_content_renderer: DropdownContentRenderer,
+        private readonly keyboard_navigation_manager: KeyboardNavigationManager,
+        private readonly list_item_highlighter: ListItemHighlighter
     ) {}
 
     public attachEvents(): void {
@@ -45,6 +53,8 @@ export class EventManager {
         this.attachSourceSelectBoxChangeEvent();
         this.escape_key_handler = this.attachEscapeKeyPressedEvent();
         this.click_outside_handler = this.attachClickOutsideEvent();
+        this.keyboard_events_handler = this.attachKeyboardNavigationEvents();
+        this.prevent_form_submit_on_enter_handler = this.preventEnterKeyInSearchFieldToSubmitForm();
 
         if (this.search_field_element !== null) {
             this.attachSearchEvent(this.search_field_element);
@@ -54,6 +64,8 @@ export class EventManager {
     public removeEventsListenersOnDocument(): void {
         this.doc.removeEventListener("keyup", this.escape_key_handler);
         this.doc.removeEventListener("click", this.click_outside_handler);
+        this.doc.removeEventListener("keydown", this.keyboard_events_handler);
+        this.doc.removeEventListener("keypress", this.prevent_form_submit_on_enter_handler);
     }
 
     private attachEscapeKeyPressedEvent(): (event: Event) => void {
@@ -84,9 +96,19 @@ export class EventManager {
                 return;
             }
 
-            if (this.dropdown_element.classList.contains("list-picker-dropdown-shown")) {
+            if (
+                event.target instanceof Element &&
+                event.target.classList.contains("list-picker-search-field")
+            ) {
+                this.dropdown_toggler.openListPicker();
+                return;
+            }
+
+            if (this.isDropdownOpen()) {
+                this.resetSearchField();
                 this.dropdown_toggler.closeListPicker();
             } else {
+                this.list_item_highlighter.resetHighlight();
                 this.dropdown_toggler.openListPicker();
             }
         });
@@ -97,38 +119,69 @@ export class EventManager {
             element.classList.contains("list-picker-dropdown-option-value-disabled") ||
             element.classList.contains("list-picker-group-label") ||
             element.classList.contains("list-picker-item-group") ||
-            element.classList.contains("list-picker-search-field") ||
             element.classList.contains("list-picker-dropdown-search-section")
         );
     }
 
     private attachItemListEvent(): void {
         const items = this.dropdown_element.querySelectorAll(".list-picker-dropdown-option-value");
+        let mouse_target_id: string | null = null;
+
         items.forEach((item) => {
             item.addEventListener("click", () => {
                 this.selection_manager.processSelection(item);
+            });
+
+            item.addEventListener("mouseenter", () => {
+                if (mouse_target_id === item.id) {
+                    // keyboard navigation occurring, let's not mess things up.
+                    return;
+                }
+
+                mouse_target_id = item.id;
+                this.list_item_highlighter.highlightItem(item);
             });
         });
     }
 
     private attachSearchEvent(search_field_element: HTMLInputElement): void {
-        search_field_element.addEventListener("keyup", () => {
+        search_field_element.addEventListener("keyup", (event: Event) => {
+            if (isArrowUp(event) || isArrowDown(event)) {
+                return;
+            }
+
+            if (isEnterKey(event)) {
+                if (this.has_keyboard_selection_occurred) {
+                    this.has_keyboard_selection_occurred = false;
+                } else {
+                    this.dropdown_toggler.openListPicker();
+                }
+                return;
+            }
+
             const filter_query = search_field_element.value;
 
             this.dropdown_content_renderer.renderFilteredListPickerDropdownContent(filter_query);
+            this.list_item_highlighter.resetHighlight();
             this.dropdown_toggler.openListPicker();
         });
 
-        search_field_element.addEventListener("focus", () => {
-            this.dropdown_toggler.openListPicker();
-        });
+        if (
+            search_field_element.parentElement &&
+            search_field_element.parentElement.classList.contains(
+                "list-picker-multiple-search-section"
+            )
+        ) {
+            search_field_element.addEventListener("focus", () => {
+                this.list_item_highlighter.resetHighlight();
+                this.dropdown_toggler.openListPicker();
+            });
+        }
 
         search_field_element.addEventListener("keydown", (event: Event) => {
-            if (
-                event instanceof KeyboardEvent &&
-                (event.key === "Backspace" || event.keyCode === 8)
-            ) {
+            if (isBackspaceKey(event)) {
                 this.selection_manager.handleBackspaceKey(event);
+                event.stopPropagation();
             }
         });
     }
@@ -137,20 +190,38 @@ export class EventManager {
         const target_element = event.target;
 
         if (!(target_element instanceof Element)) {
+            this.resetSearchField();
+            this.has_keyboard_selection_occurred = false;
             return this.dropdown_toggler.closeListPicker();
         }
 
         if (!this.wrapper_element.contains(target_element)) {
+            this.resetSearchField();
+            this.has_keyboard_selection_occurred = false;
             return this.dropdown_toggler.closeListPicker();
         }
     }
 
+    private resetSearchField(): void {
+        if (!this.isDropdownOpen()) {
+            return;
+        }
+
+        if (!this.search_field_element) {
+            return;
+        }
+
+        this.search_field_element.value = "";
+        this.dropdown_content_renderer.renderFilteredListPickerDropdownContent("");
+        this.list_item_highlighter.resetHighlight();
+    }
+
     private handleEscapeKey(event: Event): void {
-        if (
-            event instanceof KeyboardEvent &&
-            (event.key === "Escape" || event.key === "Esc" || event.keyCode === 27)
-        ) {
+        if (isEscapeKey(event)) {
+            this.resetSearchField();
             this.dropdown_toggler.closeListPicker();
+            this.has_keyboard_selection_occurred = false;
+            event.stopPropagation();
         }
     }
 
@@ -164,5 +235,61 @@ export class EventManager {
                 this.wrapper_element.classList.remove("list-picker-error");
             }
         });
+    }
+
+    private attachKeyboardNavigationEvents(): (event: Event) => void {
+        const handler = (event: Event): void => {
+            if (this.shouldOpenDropdownForClosedSingleListPicker(event)) {
+                this.dropdown_toggler.openListPicker();
+                this.has_keyboard_selection_occurred = false;
+                return;
+            }
+
+            if (
+                !(event instanceof KeyboardEvent) ||
+                !this.dropdown_element.classList.contains("list-picker-dropdown-shown")
+            ) {
+                return;
+            }
+
+            const highlighted_item = this.list_item_highlighter.getHighlightedItem();
+            if (isEnterKey(event) && highlighted_item) {
+                this.selection_manager.processSelection(highlighted_item);
+                this.resetSearchField();
+                this.dropdown_toggler.closeListPicker();
+                this.has_keyboard_selection_occurred = true;
+            } else {
+                this.keyboard_navigation_manager.navigate(event);
+            }
+        };
+        this.doc.addEventListener("keydown", handler);
+        return handler;
+    }
+
+    private shouldOpenDropdownForClosedSingleListPicker(event: Event): boolean {
+        return (
+            this.source_select_box.getAttribute("multiple") === null &&
+            isEnterKey(event) &&
+            this.has_keyboard_selection_occurred
+        );
+    }
+
+    private isDropdownOpen(): boolean {
+        return this.dropdown_element.classList.contains("list-picker-dropdown-shown");
+    }
+
+    private preventEnterKeyInSearchFieldToSubmitForm(): (event: Event) => void {
+        const handler = (event: Event): void => {
+            if (
+                event.target &&
+                event.target instanceof HTMLElement &&
+                event.target.classList.contains("list-picker-search-field") &&
+                isEnterKey(event)
+            ) {
+                event.preventDefault();
+            }
+        };
+        this.doc.addEventListener("keypress", handler);
+        return handler;
     }
 }

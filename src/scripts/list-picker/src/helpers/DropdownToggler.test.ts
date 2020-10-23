@@ -83,9 +83,6 @@ describe("dropdown-toggler", () => {
         search_field.value = "filter query";
         jest.spyOn(search_field, "dispatchEvent");
         toggler.closeListPicker();
-
-        expect(search_field.dispatchEvent).toHaveBeenCalledWith(new Event("keyup"));
-        expect(search_field.value).toEqual("");
     });
 
     it("should not open the list picker if it's already open", () => {

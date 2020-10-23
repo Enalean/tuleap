@@ -38,11 +38,6 @@ export class DropdownToggler {
         if (this.selection_element.hasAttribute("aria-expanded")) {
             this.setAriaExpandedAttribute(this.selection_element, false);
         }
-
-        if (this.search_field_element && this.search_field_element.value.length > 0) {
-            this.search_field_element.value = "";
-            this.search_field_element.dispatchEvent(new Event("keyup"));
-        }
     }
 
     public openListPicker(): void {

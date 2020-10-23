@@ -416,7 +416,7 @@ $tlp-form-element-select-small-background-size: 6px;
 }
 
 .list-picker-dropdown-option-value {
-    &:hover {
+    &.list-picker-item-highlighted {
         background-color: $tlp-theme-color;
         color: $tlp-ui-white;
     }
@@ -436,7 +436,7 @@ $tlp-form-element-select-small-background-size: 6px;
         padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
         color: $tlp-theme-color;
 
-        &:hover {
+        &.list-picker-item-highlighted {
             color: $tlp-ui-white;
         }
     }
