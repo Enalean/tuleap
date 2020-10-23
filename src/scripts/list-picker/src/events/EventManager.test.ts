@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,9 +19,9 @@
 
 import { EventManager } from "./EventManager";
 import { SingleSelectionManager } from "../selection/SingleSelectionManager";
-import { DropdownToggler } from "./DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { DropdownContentRenderer } from "./DropdownContentRenderer";
+import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 

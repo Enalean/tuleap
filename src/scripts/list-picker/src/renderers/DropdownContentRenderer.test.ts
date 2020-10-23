@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,8 +22,8 @@ import {
     appendSimpleOptionsToSourceSelectBox,
 } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
-import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "./static-list-helper";
+import { BaseComponentRenderer } from "./BaseComponentRenderer";
+import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 
 describe("dropdown-content-renderer", () => {

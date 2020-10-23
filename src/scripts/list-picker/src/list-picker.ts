@@ -18,9 +18,9 @@
  */
 
 import { ListPicker, ListPickerOptions } from "./type";
-import { DropdownContentRenderer } from "./helpers/DropdownContentRenderer";
-import { EventManager } from "./helpers/EventManager";
-import { DropdownToggler } from "./helpers/DropdownToggler";
+import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
+import { EventManager } from "./events/EventManager";
+import { DropdownToggler } from "./dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
 import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list-helper";
 import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";

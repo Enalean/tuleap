@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";

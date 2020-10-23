@@ -20,12 +20,12 @@
 import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
-import { DropdownContentRenderer } from "../helpers/DropdownContentRenderer";
+import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ListPickerItem } from "../type";
 import { ListItemHighlighter } from "./ListItemHighlighter";
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,

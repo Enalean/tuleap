@@ -18,7 +18,7 @@
  */
 
 import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { sanitize } from "dompurify";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";

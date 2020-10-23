@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { sanitize } from "dompurify";
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
 import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 
