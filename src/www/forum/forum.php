@@ -316,7 +316,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         $sql = "SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id " .
         "FROM forum,user,forum_group_list WHERE forum.group_forum_id='" . db_ei($forum_id) . "' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id " .
-        "ORDER BY forum.date DESC LIMIT " . db_ei($offset) . "," . ($max_rows + 1);
+        "ORDER BY forum.date DESC LIMIT " . db_ei($offset) . "," . db_ei($max_rows + 1);
 
         $result = db_query($sql);
         $rows = db_numrows($result);

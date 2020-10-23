@@ -759,7 +759,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo $this->displayStylesheetElements([]);
         echo $this->displaySyndicationElements();
         echo '</head>';
-        echo '<body class="' . $theme_color_variant . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">';
+        echo '<body class="' . Codendi_HTMLPurifier::instance()->purify($theme_color_variant) . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">';
         echo '<div class="main_body_row"><div class="contenttable">';
         echo $this->getNotificationPlaceholder();
     }

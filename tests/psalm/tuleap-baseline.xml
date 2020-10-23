@@ -74816,11 +74816,12 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/forum/forum.php">
-    <DeprecatedFunction occurrences="47">
+    <DeprecatedFunction occurrences="48">
       <code>db_ei($f_id)</code>
       <code>db_ei($forum_id)</code>
       <code>db_ei($forum_id)</code>
       <code>db_ei($group_id)</code>
+      <code>db_ei($max_rows + 1)</code>
       <code>db_ei($msg_id)</code>
       <code>db_ei($offset)</code>
       <code>db_ei($thread_id)</code>
