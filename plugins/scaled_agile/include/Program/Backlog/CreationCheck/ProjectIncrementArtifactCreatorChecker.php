@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Planning_VirtualTopMilestone;
 use Psr\Log\LoggerInterface;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class ProjectIncrementArtifactCreatorChecker
 {
@@ -81,15 +81,13 @@ class ProjectIncrementArtifactCreatorChecker
         $this->logger                   = $logger;
     }
 
-    public function canProjectIncrementBeCreated(Planning_VirtualTopMilestone $top_milestone, PFUser $user): bool
+    public function canProjectIncrementBeCreated(PlanningData $planning, PFUser $user): bool
     {
+        $program_project = $planning->getPlanningTracker()->getProject();
         $this->logger->debug(
-            "Checking if program increment can be created in top planning of project " . $top_milestone->getProject(
-            )->getUnixName() .
+            "Checking if program increment can be created in top planning of project " . $program_project->getUnixName() .
             " by user " . $user->getName() . ' (#' . $user->getId() . ')'
         );
-
-        $program_project = $top_milestone->getProject();
 
         $team_projects_collection = $this->projects_builder->getTeamProjectForAGivenProgramProject(
             $program_project
@@ -108,12 +106,12 @@ class ProjectIncrementArtifactCreatorChecker
                 $team_projects_collection,
                 $user
             );
-        } catch (ProjectIncrementTrackerRetrievalException $exception) {
+        } catch (TopPlanningNotFoundInProjectException $exception) {
             $this->logger->error("Cannot retrieve all the program increments", ['exception' => $exception]);
 
             return false;
         }
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($top_milestone, $program_and_project_increment_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($planning, $program_and_project_increment_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
             return false;

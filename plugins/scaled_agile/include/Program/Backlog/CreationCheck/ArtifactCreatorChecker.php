@@ -23,40 +23,44 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Planning_MilestoneFactory;
 use Tracker;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class ArtifactCreatorChecker
 {
     /**
-     * @var Planning_MilestoneFactory
-     */
-    private $planning_milestone_factory;
-    /**
      * @var ProjectIncrementArtifactCreatorChecker
      */
     private $project_increment_artifact_creator_checker;
+    /**
+     * @var PlanningAdapter
+     */
+    private $planning_adapter;
 
     public function __construct(
-        Planning_MilestoneFactory $planning_milestone_factory,
+        PlanningAdapter $planning_adapter,
         ProjectIncrementArtifactCreatorChecker $project_increment_artifact_creator_checker
     ) {
-        $this->planning_milestone_factory                 = $planning_milestone_factory;
         $this->project_increment_artifact_creator_checker = $project_increment_artifact_creator_checker;
+        $this->planning_adapter                           = $planning_adapter;
     }
 
     public function canCreateAnArtifact(PFUser $user, Tracker $tracker): bool
     {
         try {
-            $virtual_top_milestone = $this->planning_milestone_factory->getVirtualTopMilestone($user, $tracker->getProject());
-        } catch (\Planning_NoPlanningsException $e) {
+            $root_planning = $this->planning_adapter->buildRootPlanning(
+                $user,
+                (int) $tracker->getProject()->getID()
+            );
+        } catch (TopPlanningNotFoundInProjectException $e) {
             return true;
         }
 
-        if ($virtual_top_milestone->getPlanning()->getPlanningTrackerId() !== $tracker->getId()) {
+        if ($root_planning->getPlanningTracker()->getId() !== $tracker->getId()) {
             return true;
         }
 
-        return $this->project_increment_artifact_creator_checker->canProjectIncrementBeCreated($virtual_top_milestone, $user);
+        return $this->project_increment_artifact_creator_checker->canProjectIncrementBeCreated($root_planning, $user);
     }
 }

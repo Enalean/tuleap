@@ -37,7 +37,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrement
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends TestCase
 {
@@ -93,10 +93,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     public function testItCreateMirrors(): void
     {
-        $project = \Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
-        $tracker = $this->buildTestTracker(89);
-        $tracker->setProject($project);
+        $tracker = TrackerTestBuilder::aTracker()->withId(89)->withProject(Project::buildForTest())->build();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
         $artifact->shouldReceive('getId')->andReturn(101);
@@ -104,7 +101,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
         $user = UserTestBuilder::aUser()->withId(1001)->build();
 
-        $team_projects = new TeamProjectsCollection([\Mockery::mock(Project::class)]);
+        $team_projects = new TeamProjectsCollection([Project::buildForTest()]);
 
         $copied_values = $this->buildCopiedValues();
         $this->copied_values_gatherer->shouldReceive('gather')->andReturn($copied_values);
@@ -112,7 +109,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
             ->once()
             ->andReturn($team_projects);
 
-        $milestone_trackers = [\Mockery::mock(\Tracker::class)];
+        $milestone_trackers = [TrackerTestBuilder::aTracker()->withId(102)->build()];
         $team_milestones = new ProjectIncrementsTrackerCollection($milestone_trackers);
         $this->milestone_trackers_factory->shouldReceive('buildFromTeamProjects')
             ->once()
@@ -133,10 +130,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     public function testItLogsWhenAnExceptionOccurrs(): void
     {
-        $project = \Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
-        $tracker = $this->buildTestTracker(89);
-        $tracker->setProject($project);
+        $tracker = TrackerTestBuilder::aTracker()->withId(89)->withProject(Project::buildForTest())->build();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -157,7 +151,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     private function buildCopiedValues(): CopiedValues
     {
-        $tracker = $this->buildTestTracker(89);
+        $tracker = TrackerTestBuilder::aTracker()->withId(89)->build();
         $title_changeset_value = new \Tracker_Artifact_ChangesetValue_String(
             10000,
             \Mockery::mock(\Tracker_Artifact_Changeset::class),
@@ -204,27 +198,6 @@ final class CreateProgramIncrementsTaskTest extends TestCase
             112,
             $start_date_changeset_value,
             $end_period_changeset_value
-        );
-    }
-
-    private function buildTestTracker(int $tracker_id): \Tracker
-    {
-        return new \Tracker(
-            $tracker_id,
-            null,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            TrackerColor::default(),
-            false
         );
     }
 }

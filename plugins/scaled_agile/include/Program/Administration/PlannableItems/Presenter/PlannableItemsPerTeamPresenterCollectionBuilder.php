@@ -23,19 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter;
 
 use PFUser;
-use PlanningFactory;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollection;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class PlannableItemsPerTeamPresenterCollectionBuilder
 {
     /**
-     * @var PlanningFactory
+     * @var PlanningAdapter
      */
-    private $planning_factory;
+    private $planning_adapter;
 
-    public function __construct(PlanningFactory $planning_factory)
+    public function __construct(PlanningAdapter $planning_adapter)
     {
-        $this->planning_factory = $planning_factory;
+        $this->planning_adapter = $planning_adapter;
     }
 
     public function buildPresenterCollectionFromObjectCollection(
@@ -52,11 +53,16 @@ class PlannableItemsPerTeamPresenterCollectionBuilder
                 );
             }
 
-            $team_project       = $plannable_items->getProject();
-            $team_root_planning = $this->planning_factory->getRootPlanning(
-                $user,
-                (int) $team_project->getID()
-            );
+            $team_project = $plannable_items->getProject();
+            try {
+                $team_root_planning = $this->planning_adapter->buildRootPlanning(
+                    $user,
+                    (int) $team_project->getID()
+                );
+            } catch (TopPlanningNotFoundInProjectException $e) {
+                //ignore when team does not have a root planning
+                $team_root_planning = null;
+            }
 
             $url = null;
             if ($team_root_planning) {

@@ -52,6 +52,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Team\TeamDao;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
@@ -124,9 +125,11 @@ final class scaled_agilePlugin extends Plugin
         $agiledashboard_plugin = PluginManager::instance()->getPluginByName(AgileDashboardPlugin::PLUGIN_NAME);
         assert($agiledashboard_plugin instanceof AgileDashboardPlugin);
 
+        $planning_adapter = $this->getPlanningAdapter();
+
         return new ReadOnlyProgramAdminViewController(
             ProjectManager::instance(),
-            PlanningFactory::build(),
+            $planning_adapter,
             new AgileDashboardCrumbBuilder(
                 $agiledashboard_plugin->getPluginPath()
             ),
@@ -138,7 +141,7 @@ final class scaled_agilePlugin extends Plugin
                 ProjectManager::instance()
             ),
             new PlannableItemsPerTeamPresenterCollectionBuilder(
-                PlanningFactory::build()
+                $planning_adapter
             ),
             new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/scaled_agile',
@@ -150,8 +153,13 @@ final class scaled_agilePlugin extends Plugin
 
     public function planningEditURLEvent(PlanningEditURLEvent $event): void
     {
-        $planning      = $event->getPlanning();
-        $root_planning = $event->getRootPlanning();
+        $adapter       = $this->getPlanningAdapter();
+        $planning      = $adapter->buildFromPlanning($event->getPlanning());
+        $root_planning = null;
+
+        if ($event->getRootPlanning()) {
+            $root_planning = $adapter->buildFromPlanning($event->getRootPlanning());
+        }
 
         $url_builder = new ReadOnlyProgramAdminURLBuilder(
             new ProgramDao(),
@@ -176,15 +184,18 @@ final class scaled_agilePlugin extends Plugin
 
     public function planningUpdatedEvent(PlanningUpdatedEvent $event): void
     {
+        $planning_adapter = $this->getPlanningAdapter();
+
+        $scaled_planning = $planning_adapter->buildFromPlanning($event->getPlanning());
         (new PlannableItemsTrackersUpdater(
             new TeamDao(),
             new PlannableItemsTrackersDao(),
-            PlanningFactory::build(),
             new DBTransactionExecutorWithConnection(
                 DBFactory::getMainTuleapDBConnection()
-            )
+            ),
+            $planning_adapter
         ))->updatePlannableItemsTrackersFromPlanning(
-            $event->getPlanning(),
+            $scaled_planning,
             $event->getUser()
         );
     }
@@ -201,11 +212,12 @@ final class scaled_agilePlugin extends Plugin
             ProjectManager::instance()
         );
 
+        $virtual_top_milestone   = $event->getTopMilestone();
         $team_project_collection = $team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $event->getTopMilestone()->getProject()
+            $virtual_top_milestone->getProject()
         );
 
-        if ($team_project_collection->isEmpty() === true) {
+        if ($team_project_collection->isEmpty() === true || $virtual_top_milestone->getPlanning()->getId() === null) {
             return;
         }
 
@@ -216,8 +228,12 @@ final class scaled_agilePlugin extends Plugin
         if (! $event->canUserCreateMilestone()) {
             return;
         }
+
+        $planning_adapter = $this->getPlanningAdapter();
+        $scaled_planning  = $planning_adapter->buildFromPlanning($virtual_top_milestone->getPlanning());
+
         $user_can_create_project_increment = $project_increment_creator_checker->canProjectIncrementBeCreated(
-            $event->getTopMilestone(),
+            $scaled_planning,
             $event->getUser()
         );
 
@@ -255,7 +271,7 @@ final class scaled_agilePlugin extends Plugin
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
         $artifact_creator_checker = new ArtifactCreatorChecker(
-            Planning_MilestoneFactory::build(),
+            $this->getPlanningAdapter(),
             $this->getProjectIncrementCreatorChecker()
         );
 
@@ -277,17 +293,22 @@ final class scaled_agilePlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $program_dao          = new ProgramDao();
-        $planning_factory        = \PlanningFactory::build();
-        $logger = $this->getLogger();
+        $program_dao = new ProgramDao();
+        $logger      = $this->getLogger();
 
-        $logger->debug(sprintf("Store program create with #%d by user #%d", (int) $event->getArtifact()->getId(), (int) $event->getUser()->getId()));
+        $logger->debug(
+            sprintf(
+                "Store program create with #%d by user #%d",
+                (int) $event->getArtifact()->getId(),
+                (int) $event->getUser()->getId()
+            )
+        );
 
-        $handler      = new ArtifactCreatedHandler(
+        $handler = new ArtifactCreatedHandler(
             $program_dao,
-            $planning_factory,
             CreateProjectIncrementsRunner::build(),
-            new PendingArtifactCreationDao()
+            new PendingArtifactCreationDao(),
+            $this->getPlanningAdapter()
         );
         $handler->handle($event);
     }
@@ -305,7 +326,7 @@ final class scaled_agilePlugin extends Plugin
                 ProjectManager::instance()
             ),
             new TrackerCollectionFactory(
-                \PlanningFactory::build()
+                $this->getPlanningAdapter()
             ),
             new SynchronizedFieldCollectionBuilder(
                 new SynchronizedFieldsGatherer(
@@ -336,5 +357,10 @@ final class scaled_agilePlugin extends Plugin
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger("scaled_agile_syslog");
+    }
+
+    private function getPlanningAdapter(): PlanningAdapter
+    {
+        return new PlanningAdapter(\PlanningFactory::build());
     }
 }

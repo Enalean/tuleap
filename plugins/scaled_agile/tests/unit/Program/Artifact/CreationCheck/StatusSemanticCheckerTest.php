@@ -25,14 +25,14 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning;
-use Planning_VirtualTopMilestone;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 class StatusSemanticCheckerTest extends TestCase
@@ -53,11 +53,6 @@ class StatusSemanticCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_StatusFactory
      */
     private $semantic_status_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_VirtualTopMilestone
-     */
-    private $top_milestone;
 
     /**
      * @var SourceTrackerCollection
@@ -86,8 +81,6 @@ class StatusSemanticCheckerTest extends TestCase
             $this->semantic_status_factory
         );
 
-        $this->top_milestone = Mockery::mock(Planning_VirtualTopMilestone::class);
-
         $this->tracker_team_01 = new Tracker(123, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $this->tracker_team_02 = new Tracker(124, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $this->collection             = new SourceTrackerCollection(
@@ -100,15 +93,8 @@ class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void
     {
-        $top_planning = Mockery::mock(Planning::class);
-        $this->top_milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($top_planning);
-
-        $top_planning_tracker = new Tracker(104, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $top_planning->shouldReceive('getPlanningTracker')
-            ->once()
-            ->andReturn($top_planning_tracker);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $top_planning = new PlanningData($top_planning_tracker, 1, 'Release Planning', []);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
@@ -147,7 +133,7 @@ class StatusSemanticCheckerTest extends TestCase
 
         $this->assertTrue(
             $this->checker->areSemanticStatusWellConfigured(
-                $this->top_milestone,
+                $top_planning,
                 $this->collection
             )
         );
@@ -155,15 +141,8 @@ class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
     {
-        $top_planning = Mockery::mock(Planning::class);
-        $this->top_milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($top_planning);
-
-        $top_planning_tracker = new Tracker(104, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $top_planning->shouldReceive('getPlanningTracker')
-            ->once()
-            ->andReturn($top_planning_tracker);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $top_planning = new PlanningData($top_planning_tracker, 1, 'Release Planning', []);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
@@ -175,7 +154,7 @@ class StatusSemanticCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areSemanticStatusWellConfigured(
-                $this->top_milestone,
+                $top_planning,
                 $this->collection
             )
         );
@@ -183,15 +162,8 @@ class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfSomeCTeamTrackersDoNotHaveSemanticStatusDefined(): void
     {
-        $top_planning = Mockery::mock(Planning::class);
-        $this->top_milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($top_planning);
-
-        $top_planning_tracker = new Tracker(104, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $top_planning->shouldReceive('getPlanningTracker')
-            ->once()
-            ->andReturn($top_planning_tracker);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $top_planning = new PlanningData($top_planning_tracker, 1, 'Release Planning', []);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
@@ -208,7 +180,7 @@ class StatusSemanticCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areSemanticStatusWellConfigured(
-                $this->top_milestone,
+                $top_planning,
                 $this->collection
             )
         );
@@ -216,15 +188,8 @@ class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoNotContainTheProgramOpenValue(): void
     {
-        $top_planning = Mockery::mock(Planning::class);
-        $this->top_milestone->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn($top_planning);
-
-        $top_planning_tracker = new Tracker(104, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $top_planning->shouldReceive('getPlanningTracker')
-            ->once()
-            ->andReturn($top_planning_tracker);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $top_planning = new PlanningData($top_planning_tracker, 1, 'Release Planning', []);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
@@ -254,7 +219,7 @@ class StatusSemanticCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areSemanticStatusWellConfigured(
-                $this->top_milestone,
+                $top_planning,
                 $this->collection
             )
         );

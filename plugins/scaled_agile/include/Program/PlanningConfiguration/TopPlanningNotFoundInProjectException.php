@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
-
-final class MissingRootPlanningException extends \RuntimeException implements ProjectIncrementTrackerRetrievalException
+class TopPlanningNotFoundInProjectException extends \Exception
 {
     public function __construct(int $project_id)
     {
-        parent::__construct("Project with id $project_id has no root planning");
+        parent::__construct("Top planning not found in project #$project_id.");
     }
 }

@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class WorkflowCheckerTest extends TestCase
 {
@@ -82,9 +83,7 @@ final class WorkflowCheckerTest extends TestCase
             [['tracker_id' => 758, 'field_id' => 963]]
         );
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(758);
-        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $field->shouldReceive('getId')->andReturn('963');
 
@@ -101,9 +100,7 @@ final class WorkflowCheckerTest extends TestCase
         $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(758);
-        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $field->shouldReceive('getId')->andReturn('963');
 
@@ -121,9 +118,7 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(758);
-        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $field->shouldReceive('getId')->andReturn('963');
 

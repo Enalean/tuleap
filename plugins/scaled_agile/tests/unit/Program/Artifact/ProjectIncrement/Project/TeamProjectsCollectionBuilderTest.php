@@ -65,7 +65,7 @@ class TeamProjectsCollectionBuilderTest extends TestCase
             $this->project_manager
         );
 
-        $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('123')->getMock();
+        $this->project = new Project(['group_id' => 123]);
     }
 
     public function testItBuildsACollectionOfTeamProjects(): void
@@ -78,8 +78,8 @@ class TeamProjectsCollectionBuilderTest extends TestCase
                 ['team_project_id' => 125],
             ]);
 
-        $team_project_01 = Mockery::mock(Project::class);
-        $team_project_02 = Mockery::mock(Project::class);
+        $team_project_01 = new Project(['group_id' => 124]);
+        $team_project_02 = new Project(['group_id' => 125]);
 
         $this->project_manager->shouldReceive('getProject')
             ->with(124)

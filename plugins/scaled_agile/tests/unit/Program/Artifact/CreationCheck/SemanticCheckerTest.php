@@ -26,6 +26,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerColor;
 
@@ -70,7 +71,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -102,7 +103,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -117,7 +118,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -134,7 +135,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -155,7 +156,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -178,7 +179,7 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
     {
-        $program_milestone         = M::mock(\Planning_VirtualTopMilestone::class);
+        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);

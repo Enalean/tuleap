@@ -24,12 +24,14 @@ namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use NullTracker;
 use PHPUnit\Framework\TestCase;
-use Planning;
 use Project;
 use ProjectManager;
 use Tracker;
 use TrackerFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class PlannableItemsCollectionBuilderTest extends TestCase
 {
@@ -72,7 +74,7 @@ class PlannableItemsCollectionBuilderTest extends TestCase
 
     public function testItBuildsAPlannableItemsCollection(): void
     {
-        $program_top_planning = new Planning(1, 'Release Planning', 104, 'Release Backlog', 'Sprint Plan', []);
+        $program_top_planning = new PlanningData(new NullTracker(), 1, 'Release Planning', []);
 
         $this->dao->shouldReceive('getPlannableItemsTrackerIds')
             ->once()
@@ -88,18 +90,18 @@ class PlannableItemsCollectionBuilderTest extends TestCase
                 ],
             ]);
 
-        $team_project_01 = Mockery::mock(Project::class);
-        $team_project_02 = Mockery::mock(Project::class);
+        $team_project_01 = new Project(['group_id' => 101]);
+        $team_project_02 = new Project(['group_id' => 102]);
 
         $this->mockTeampProjectsManager(
             $team_project_01,
             $team_project_02
         );
 
-        $team_project_01_tracker_01 = Mockery::mock(Tracker::class);
-        $team_project_01_tracker_02 = Mockery::mock(Tracker::class);
-        $team_project_02_tracker_01 = Mockery::mock(Tracker::class);
-        $team_project_02_tracker_02 = Mockery::mock(Tracker::class);
+        $team_project_01_tracker_01 = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $team_project_01_tracker_02 = TrackerTestBuilder::aTracker()->withId(2)->build();
+        $team_project_02_tracker_01 = TrackerTestBuilder::aTracker()->withId(3)->build();
+        $team_project_02_tracker_02 = TrackerTestBuilder::aTracker()->withId(4)->build();
 
         $this->mockTeampTrackersFactory(
             $team_project_01_tracker_01,

@@ -24,7 +24,6 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use BackendLogger;
 use PFUser;
-use PlanningFactory;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
@@ -44,6 +43,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -149,7 +149,6 @@ class CreateProgramIncrementsTask
     {
         $user_manager     = UserManager::instance();
         $program_dao      = new ProgramDao();
-        $planning_factory = PlanningFactory::build();
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
@@ -189,7 +188,7 @@ class CreateProgramIncrementsTask
                 $program_dao,
                 ProjectManager::instance()
             ),
-            new TrackerCollectionFactory($planning_factory),
+            new TrackerCollectionFactory(new PlanningAdapter(\PlanningFactory::build())),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao()

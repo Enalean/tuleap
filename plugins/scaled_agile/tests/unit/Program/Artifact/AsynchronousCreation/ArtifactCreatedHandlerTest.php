@@ -26,8 +26,12 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatedHandlerTest extends TestCase
 {
@@ -52,21 +56,21 @@ final class ArtifactCreatedHandlerTest extends TestCase
      */
     private $program_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
+     * @var M\LegacyMockInterface|M\MockInterface|PlanningAdapter
      */
-    private $planning_factory;
+    private $planning_adapter;
 
     protected function setUp(): void
     {
         $this->program_dao      = M::mock(ProgramDao::class);
-        $this->planning_factory = M::mock(\PlanningFactory::class);
+        $this->planning_adapter = M::mock(PlanningAdapter::class);
         $this->pending_artifact_creation_dao = M::mock(PendingArtifactCreationDao::class);
         $this->asyncronous_runner            = M::mock(CreateProjectIncrementsRunner::class);
         $this->handler          = new ArtifactCreatedHandler(
             $this->program_dao,
-            $this->planning_factory,
             $this->asyncronous_runner,
-            $this->pending_artifact_creation_dao
+            $this->pending_artifact_creation_dao,
+            $this->planning_adapter
         );
     }
 
@@ -75,13 +79,13 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $project  = \Project::buildForTest();
         $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
-        $tracker = $this->buildTestTracker(15, $project);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
+        $artifact->shouldReceive('getTracker')->andReturn($tracker)->once();
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
         $current_user = UserTestBuilder::aUser()->withId(1001)->build();
-        $planning = new \Planning(7, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 15);
-        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($planning);
+        $planning = new PlanningData($tracker, 7, 'Irrelevant', []);
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn($planning);
 
         $this->pending_artifact_creation_dao->shouldReceive('addArtifactToPendingCreation')
             ->withArgs([$artifact->getId(), $current_user->getId(), $changeset->getId()])
@@ -98,7 +102,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project  = \Project::buildForTest();
         $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->buildTestTracker(15, $project);
+        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $this->program_dao->shouldReceive('isProjectAProgramProject')->with(101)->once()->andReturnFalse();
@@ -113,11 +117,11 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project  = \Project::buildForTest();
         $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->buildTestTracker(15, $project);
+        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
-        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andThrow(new \Planning_NoPlanningsException());
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andThrow(new TopPlanningNotFoundInProjectException(102));
 
         $current_user = UserTestBuilder::aUser()->build();
         $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
@@ -129,39 +133,18 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project  = \Project::buildForTest();
         $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker  = $this->buildTestTracker(404, $project);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $top_tracker = TrackerTestBuilder::aTracker()->withId(404)->withProject($project)->build();
+        $artifact->shouldReceive('getTracker')->andReturn($top_tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 1, '');
         $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
-        $planning = new \Planning(7, 'Irrelevant', 101, 'Irrelevant', 'Irrelevant', [], 15);
-        $this->planning_factory->shouldReceive('getVirtualTopPlanning')->andReturn($planning);
+
+        $other_tracker = TrackerTestBuilder::aTracker()->withId(12)->withProject($project)->build();
+        $planning = new PlanningData($other_tracker, 7, 'Irrelevant', []);
+        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn($planning);
 
         $current_user = UserTestBuilder::aUser()->build();
         $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
 
         $this->asyncronous_runner->shouldNotHaveReceived('executeMirrorsCreation');
-    }
-
-    private function buildTestTracker(int $tracker_id, \Project $project): \Tracker
-    {
-        $tracker = new \Tracker(
-            $tracker_id,
-            null,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            \Tuleap\Tracker\TrackerColor::default(),
-            false
-        );
-        $tracker->setProject($project);
-        return $tracker;
     }
 }

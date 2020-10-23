@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
+namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
 
-class TopPlanningNotFoundInProgramProjectException extends \Exception
+class PlanningFotFoundException extends \Exception
 {
-    public function __construct(int $program_project_id)
+    public function __construct(int $planning_id)
     {
-        parent::__construct("Top planning not found in program project #$program_project_id.");
+        parent::__construct("The planning with id #$planning_id have not been found.");
     }
 }
