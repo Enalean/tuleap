@@ -52,12 +52,14 @@
         $this->_scripts($params);
         $this->_feedback($params);
         $this->_title($params);
+        echo '<div class="docman-content">';
         $this->_breadCrumbs($params);
         $this->_mode($params);
         $this->_filter($params);
         $this->_content($params);
         $this->_javascript($params);
         $this->_footer($params);
+        echo '</div>';
     }
     /* protected */ public function _header($params)
     {

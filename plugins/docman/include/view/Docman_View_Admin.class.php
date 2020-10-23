@@ -26,7 +26,7 @@ class Docman_View_Admin extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>' . dgettext('tuleap-docman', 'Documents') . ' - ' . dgettext('tuleap-docman', 'Administration') . '</h2>';
+        echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'Documents') . ' - ' . dgettext('tuleap-docman', 'Administration') . '</h2>';
     }
     public function _content($params)
     {

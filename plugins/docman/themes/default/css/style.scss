@@ -517,4 +517,18 @@ a img {
 .docman-footer-external-link-icon {
     margin: 0 5px 0 0;
 }
+
+body.docman-body .main .content {
+    padding: 0;
+}
+
+body.docman-body #feedback:empty {
+    padding: 0;
+}
+
 /* stylelint-enable */
+
+
+.docman-content {
+    padding: 12px 12px 0;
+}
