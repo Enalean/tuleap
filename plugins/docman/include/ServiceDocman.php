@@ -26,7 +26,7 @@ class ServiceDocman extends \Service
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 
-        parent::displayHeader($title, [], $toolbar);
+        parent::displayHeader($title, [], $toolbar, ['body_class' => ['docman-body']]);
     }
 
     public function getIconName(): string

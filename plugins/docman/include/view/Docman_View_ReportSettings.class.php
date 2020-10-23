@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright(c) STMicroelectronics, 2007
  *
  * Originally written by Manuel VACELET, STMicroelectronics, 2007
@@ -33,9 +33,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $request = HTTPRequest::instance();
         $hp = Codendi_HTMLPurifier::instance();
         if ($request->exist('report_id')) {
-            echo '<h2>' . dgettext('tuleap-docman', 'Report') . ' "' . $hp->purify($params['filter']->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '"</h2>';
+            echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'Report') . ' "' . $hp->purify($params['filter']->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '"</h2>';
         } else {
-            echo '<h2>' . dgettext('tuleap-docman', 'Search report administration') . '</h2>';
+            echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'Search report administration') . '</h2>';
         }
     }
 

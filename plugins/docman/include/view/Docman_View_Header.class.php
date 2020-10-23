@@ -56,6 +56,7 @@
                 }
             } else {
                 $GLOBALS['HTML']->includeCalendarScripts();
+                $htmlParams['body_class'] = ['docman-body'];
                 site_header($htmlParams);
             }
         }

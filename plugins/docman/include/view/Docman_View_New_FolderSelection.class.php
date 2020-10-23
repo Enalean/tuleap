@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright © STMicroelectronics, 2007. All Rights Reserved.
- * Copyright © Enalean, 2018. All Rights Reserved.
+ * Copyright © Enalean, 2018-Present. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -31,7 +31,7 @@ class Docman_View_New_FolderSelection extends Docman_View_Docman
         if (isset($params['pv']) && $params['pv'] > 0) {
             return;
         }
-        echo '<h2>' . dgettext('tuleap-docman', 'New document - Parent Folder Selection') . '</h2>';
+        echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'New document - Parent Folder Selection') . '</h2>';
     }
 
     public function _content($params)

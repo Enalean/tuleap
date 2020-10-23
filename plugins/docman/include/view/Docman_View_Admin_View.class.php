@@ -12,7 +12,7 @@ class Docman_View_Admin_View extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Display Preferences') . '</h2>';
+        echo '<h2 class="project-header-title">' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Display Preferences') . '</h2>';
     }
     public function _content($params)
     {
