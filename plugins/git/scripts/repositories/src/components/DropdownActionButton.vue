@@ -18,7 +18,10 @@
   -->
 
 <template>
-    <div class="tlp-dropdown">
+    <div
+        class="tlp-dropdown"
+        v-bind:class="{ 'git-repository-list-create-repository-button': !is_empty_state }"
+    >
         <button
             class="tlp-button-primary"
             v-bind:class="{ 'tlp-button-large': is_empty_state }"
