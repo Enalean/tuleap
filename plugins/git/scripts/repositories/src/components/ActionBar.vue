@@ -29,7 +29,7 @@
                 data-test="create-repository-button"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Add project repository</translate>
+                <translate>Create a repository</translate>
             </button>
         </div>
 
