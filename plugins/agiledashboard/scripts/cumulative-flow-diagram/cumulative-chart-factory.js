@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from "d3";
 import cumulativeFlowChart from "./cumulative-chart.js";
 import moment from "moment";
 /* eslint-disable-next-line you-dont-need-lodash-underscore/map, you-dont-need-lodash-underscore/find, you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/reduce */
 import { map, find, forEach, defaults, reduce } from "lodash";
+import { pointer, select, selectAll } from "d3-selection";
+import { bisector, extent, max } from "d3-array";
+import { scaleOrdinal, scaleTime, scaleLinear } from "d3-scale";
+import { axisBottom, axisLeft } from "d3-axis";
+import { stackOffsetNone, stackOrderNone, stack, area } from "d3-shape";
 
-export default function (options = {}) {
+export default (options = {}) => {
     let chart = {};
 
     cumulativeFlowChart(chart);
@@ -34,11 +38,11 @@ export default function (options = {}) {
     chart.data(options.data);
     chart.legendText(options.legend_text);
     chart.localizedFormat(options.localized_format);
-    chart.divGraph(d3.select("#" + options.graph_id));
+    chart.divGraph(select("#" + options.graph_id));
 
-    chart.init = function () {
+    chart.init = () => {
         chart.bisectDate(
-            d3.bisector(function (d) {
+            bisector((d) => {
                 return moment(d.date).valueOf();
             }).left
         );
@@ -75,20 +79,20 @@ export default function (options = {}) {
         chart.initLegendEvents();
     };
 
-    chart.initData = function () {
-        var stack_data = parseData(chart.data());
+    chart.initData = () => {
+        const stack_data = parseData(chart.data());
         chart.stackData(stack_data);
         chart.columns(chart.data());
 
-        var keys = map(chart.data(), function (column) {
+        const keys = map(chart.data(), (column) => {
             return column.id;
         });
 
         chart.keys(keys);
     };
 
-    chart.initColor = function () {
-        var schemeCategory20cWithoutLightest = [
+    chart.initColor = () => {
+        const schemeCategory20cWithoutLightest = [
             "#3182bd",
             "#6baed6",
             "#9ecae1",
@@ -106,31 +110,30 @@ export default function (options = {}) {
             "#bdbdbd",
         ];
 
-        var color_scale = d3.scaleOrdinal().range(schemeCategory20cWithoutLightest);
+        const color_scale = scaleOrdinal().range(schemeCategory20cWithoutLightest);
 
         chart.colorScale(color_scale);
 
-        var color_domain = chart.columns().map(function (data, index, columns) {
+        const color_domain = chart.columns().map((data, index, columns) => {
             return columns.length - 1 - index;
         });
         chart.colorScale().domain(color_domain);
     };
 
-    chart.initX = function () {
+    chart.initX = () => {
         const first_column = chart.columns()[0];
 
-        var time_scale_extent = d3.extent(first_column.values, function (d) {
+        const time_scale_extent = extent(first_column.values, (d) => {
             return moment(d.start_date).toDate();
         });
 
-        var x_scale = d3.scaleTime().domain(time_scale_extent).range([0, chart.width()]);
+        const x_scale = scaleTime().domain(time_scale_extent).range([0, chart.width()]);
 
         chart.xScale(x_scale);
 
-        var x_axis = d3
-            .axisBottom()
+        const x_axis = axisBottom()
             .scale(x_scale)
-            .tickFormat(function (d) {
+            .tickFormat((d) => {
                 return moment(d).format(chart.localizedFormat());
             });
 
@@ -141,12 +144,12 @@ export default function (options = {}) {
         chart.xAxis(x_axis);
     };
 
-    chart.initY = function () {
-        var y_scale = d3.scaleLinear().domain([0, chart.yMax()]).range([chart.height(), 0]);
+    chart.initY = () => {
+        const y_scale = scaleLinear().domain([0, chart.yMax()]).range([chart.height(), 0]);
 
         chart.yScale(y_scale);
 
-        var y_axis = d3.axisLeft().scale(y_scale);
+        const y_axis = axisLeft().scale(y_scale);
 
         if (chart.getYAxisTicks(chart.height()) > 0) {
             y_axis.ticks(chart.getYAxisTicks(chart.height()));
@@ -155,10 +158,10 @@ export default function (options = {}) {
         chart.yAxis(y_axis);
     };
 
-    chart.initYMax = function () {
+    chart.initYMax = () => {
         const first_column = chart.columns()[0];
 
-        var max_kanban_items_count = d3.max(first_column.values, function (data_point, index) {
+        const max_kanban_items_count = max(first_column.values, function (data_point, index) {
             return sumKanbanItemsCountsForOneDay(index);
         });
 
@@ -167,32 +170,32 @@ export default function (options = {}) {
         function sumKanbanItemsCountsForOneDay(day_index) {
             const columns_activated = chart.columns().filter((column) => column.activated === true);
 
-            return columns_activated.reduce(function (previous_sum, current_column) {
+            return columns_activated.reduce((previous_sum, current_column) => {
                 return previous_sum + current_column.values[day_index].kanban_items_count;
             }, 0);
         }
     };
 
-    chart.initGraph = function () {
+    chart.initGraph = () => {
         chart.drawAxis();
         chart.drawArea();
         chart.drawGuideLine();
         chart.updateGrid();
     };
 
-    chart.initAreaEvents = function () {
+    chart.initAreaEvents = () => {
         chart
             .g()
             .selectAll(".area")
-            .on("mouseover", function (event, d) {
-                d3.select("#area_" + d.key).classed("hover", true);
-                var column = find(chart.columns(), { id: d.key });
+            .on("mouseover", (event, d) => {
+                select("#area_" + d.key).classed("hover", true);
+                const column = find(chart.columns(), { id: d.key });
                 if (column) {
                     column.hover = true;
                 }
             })
             .on("mousemove", function (event) {
-                var data_set = getDataSet(d3.pointer(event)[0]);
+                const data_set = getDataSet(pointer(event)[0]);
 
                 if (data_set && total(data_set) > 0) {
                     chart
@@ -210,7 +213,7 @@ export default function (options = {}) {
                         .classed("tooltip-displayed", true)
                         .classed("tooltip-undisplayed", false);
 
-                    var position = getTooltipPosition(d3.pointer(event)[0], d3.pointer(event)[1]);
+                    const position = getTooltipPosition(pointer(event)[0], pointer(event)[1]);
 
                     chart
                         .tooltip()
@@ -219,15 +222,15 @@ export default function (options = {}) {
                         .style("top", position.top + "px");
                 }
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", (event, d) => {
                 if (
                     event.relatedTarget &&
                     event.relatedTarget.nodeName !== "line" &&
                     event.relatedTarget.id !== "tooltip_" + d.key &&
                     event.relatedTarget.id !== "area_" + d.key
                 ) {
-                    d3.select("#area_" + d.key).classed("hover", false);
-                    var column = find(chart.columns(), { id: d.key });
+                    select("#area_" + d.key).classed("hover", false);
+                    const column = find(chart.columns(), { id: d.key });
                     if (column) {
                         column.hover = false;
                     }
@@ -246,16 +249,16 @@ export default function (options = {}) {
             });
 
         function getTooltipPosition(mouse_x, mouse_y) {
-            var position = {
+            const position = {
                 left: mouse_x + 100,
                 top: mouse_y - 50,
             };
 
-            var first_x_date = chart.stackData()[0].date;
-            var last_x_date = chart.stackData()[chart.stackData().length - 1].date;
-            var position_x_first_date = chart.xScale()(moment(first_x_date).toDate());
-            var position_x_last_date = chart.xScale()(moment(last_x_date).toDate());
-            var tooltip_width = d3.select("#tooltip").node().getBoundingClientRect().width;
+            const first_x_date = chart.stackData()[0].date;
+            const last_x_date = chart.stackData()[chart.stackData().length - 1].date;
+            const position_x_first_date = chart.xScale()(moment(first_x_date).toDate());
+            const position_x_last_date = chart.xScale()(moment(last_x_date).toDate());
+            const tooltip_width = select("#tooltip").node().getBoundingClientRect().width;
 
             if (
                 position.left + tooltip_width >= position_x_last_date &&
@@ -268,11 +271,11 @@ export default function (options = {}) {
         }
 
         function getDataSet(coordinate_x) {
-            var x_value = chart.xScale().invert(coordinate_x),
+            const x_value = chart.xScale().invert(coordinate_x),
                 index = chart.bisectDate()(chart.stackData(), moment(x_value).valueOf()),
                 data_set_min = chart.stackData()[index - 1],
-                data_set_max = chart.stackData()[index],
-                data_set_min_diff = 0,
+                data_set_max = chart.stackData()[index];
+            let data_set_min_diff = 0,
                 data_set_max_diff = 0;
 
             if (data_set_min) {
@@ -287,30 +290,30 @@ export default function (options = {}) {
         }
 
         function constructTooltipContent(data) {
-            var tooltip = d3.select(document.createElement("div")).attr("class", "tooltip-content");
+            let tooltip = select(document.createElement("div")).attr("class", "tooltip-content");
 
             tooltip
                 .append("div")
                 .attr("class", "row-date")
                 .text(moment(data.date).format(chart.localizedFormat()));
 
-            var tooltip_content_row = tooltip
+            const tooltip_content_row = tooltip
                 .selectAll(".tooltip-content-row")
                 .data(chart.columns().filter((column) => column.activated === true))
                 .enter()
                 .append("div")
-                .attr("id", function (d) {
+                .attr("id", (d) => {
                     return "tooltip_" + d.id;
                 })
                 .attr("class", "tooltip-content-row")
-                .classed("hover", function (d) {
+                .classed("hover", (d) => {
                     return d.hover;
                 });
 
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-legend")
-                .style("background-color", function (d) {
+                .style("background-color", (d) => {
                     const index = chart.columns().findIndex((column) => column.id === d.id);
                     return chart.colorScale()(chart.columns().length - 1 - index);
                 });
@@ -318,18 +321,20 @@ export default function (options = {}) {
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-label")
-                .text(function (d) {
+                .text((d) => {
                     return d.label;
                 });
 
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-value")
-                .text(function (d) {
+                .text((d) => {
                     return data[d.id];
                 });
 
-            var tooltip_content_total = tooltip.append("div").attr("class", "tooltip-content-row");
+            const tooltip_content_total = tooltip
+                .append("div")
+                .attr("class", "tooltip-content-row");
 
             tooltip_content_total
                 .append("div")
@@ -350,59 +355,54 @@ export default function (options = {}) {
         }
     };
 
-    chart.initLegendEvents = function () {
-        d3.selectAll(".legend-value")
-            .on("click", function (event, d) {
-                updateLegend(d, d3.select(this));
+    chart.initLegendEvents = () => {
+        selectAll(".legend-value")
+            .on("click", (event, d) => {
+                updateLegend(d, select(this));
                 chart.redraw();
             })
-            .on("mouseover", function (event, d) {
-                d3.select("#area_" + d.id).classed("hover", true);
+            .on("mouseover", (event, d) => {
+                select("#area_" + d.id).classed("hover", true);
             })
-            .on("mouseout", function (event, d) {
-                d3.select("#area_" + d.id).classed("hover", false);
+            .on("mouseout", (event, d) => {
+                select("#area_" + d.id).classed("hover", false);
             });
     };
 
-    chart.initStack = function () {
-        var stack = d3
-            .stack()
-            .keys(chart.keys())
-            .order(d3.stackOrderNone)
-            .offset(d3.stackOffsetNone);
+    chart.initStack = () => {
+        const d3_stack = stack().keys(chart.keys()).order(stackOrderNone).offset(stackOffsetNone);
 
-        chart.stack(stack);
+        chart.stack(d3_stack);
     };
 
-    chart.initArea = function () {
-        var area = d3
-            .area()
-            .x(function (d) {
+    chart.initArea = () => {
+        const d3_area = area()
+            .x((d) => {
                 return chart.xScale()(moment(d.data.date).toDate());
             })
-            .y0(function (d) {
+            .y0((d) => {
                 return chart.yScale()(d[0]);
             })
-            .y1(function (d) {
+            .y1((d) => {
                 return chart.yScale()(d[1]);
             });
 
-        chart.area(area);
+        chart.area(d3_area);
     };
 
-    chart.initLegend = function () {
-        var svg_legend = chart.divGraph().append("div").attr("id", "legend").append("ul");
+    chart.initLegend = () => {
+        const svg_legend = chart.divGraph().append("div").attr("id", "legend").append("ul");
 
-        var legend = svg_legend
+        const legend = svg_legend
             .selectAll(".legend-value")
             .data(chart.columns().reverse())
             .enter()
             .append("li")
-            .attr("id", function (d) {
+            .attr("id", (d) => {
                 return "legend_" + d.id;
             })
             .attr("class", "legend-value")
-            .style("text-decoration", function (d) {
+            .style("text-decoration", (d) => {
                 if (d.activated) {
                     return "none";
                 }
@@ -413,17 +413,17 @@ export default function (options = {}) {
         legend
             .append("span")
             .attr("class", "legend-value-color")
-            .style("background-color", function (d, i) {
+            .style("background-color", (d, i) => {
                 return chart.colorScale()(chart.columns().length - 1 - i);
             });
 
-        legend.append("span").text(function (d) {
+        legend.append("span").text((d) => {
             return d.label;
         });
     };
 
-    chart.initTooltip = function () {
-        var tooltip = chart
+    chart.initTooltip = () => {
+        const tooltip = chart
             .divGraph()
             .append("div")
             .attr("id", "tooltip")
@@ -433,7 +433,7 @@ export default function (options = {}) {
         chart.tooltip(tooltip);
     };
 
-    chart.drawAxis = function () {
+    chart.drawAxis = () => {
         chart
             .g()
             .append("g")
@@ -453,24 +453,24 @@ export default function (options = {}) {
             .text(chart.legendText());
     };
 
-    chart.drawArea = function () {
+    chart.drawArea = () => {
         chart
             .g()
             .selectAll(".area")
             .data(chart.stack()(chart.stackData()))
             .enter()
             .append("path")
-            .attr("id", function (d) {
+            .attr("id", (d) => {
                 return "area_" + d.key;
             })
             .attr("class", "area")
-            .attr("fill", function (d, i) {
+            .attr("fill", (d, i) => {
                 return chart.colorScale()(i);
             })
             .attr("d", chart.area());
     };
 
-    chart.drawGuideLine = function () {
+    chart.drawGuideLine = () => {
         chart
             .g()
             .append("line")
@@ -479,14 +479,14 @@ export default function (options = {}) {
             .classed("guide-line-undisplayed", true);
     };
 
-    chart.updateGrid = function () {
+    chart.updateGrid = () => {
         chart.g().selectAll(".x-axis .tick line").attr("y2", -chart.height());
 
         /* eslint-disable */
         chart
             .g()
             .selectAll(".y-axis .tick line")
-            .attr("x2", function(d, i, lines) {
+            .attr("x2", (d, i, lines) => {
                 if (i < lines.length - 1) {
                     return chart.width();
                 }
@@ -498,7 +498,7 @@ export default function (options = {}) {
         chart
             .g()
             .selectAll(".y-axis .tick")
-            .attr("class", function (d, i) {
+            .attr("class", (d, i) => {
                 if (i > 0) {
                     return "tick grid";
                 }
@@ -506,8 +506,8 @@ export default function (options = {}) {
             });
     };
 
-    chart.getXAxisTicks = function (size) {
-        var ticks = 0;
+    chart.getXAxisTicks = (size) => {
+        let ticks = 0;
 
         if (size <= 320) {
             ticks = 3;
@@ -520,8 +520,8 @@ export default function (options = {}) {
         return ticks;
     };
 
-    chart.getYAxisTicks = function (size) {
-        var ticks = 0;
+    chart.getYAxisTicks = (size) => {
+        let ticks = 0;
 
         if (size <= 320) {
             ticks = 5;
@@ -542,7 +542,7 @@ export default function (options = {}) {
         return chart;
     };
 
-    chart.redraw = function () {
+    chart.redraw = () => {
         chart.initData(chart.columns());
         chart.initYMax();
 
@@ -577,10 +577,10 @@ export default function (options = {}) {
     };
 
     return chart;
-}
+};
 
 function parseData(data) {
-    var parsed_data = [];
+    const parsed_data = [];
     forEach(data, function (column) {
         defaults(column, { activated: true });
 
