@@ -124,42 +124,6 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
-.empty-state-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.empty-state-button {
-    margin: $tlp-medium-spacing 0 0 0;
-}
-
-.empty-state-button-arrow-link {
-    margin: 0 0 0 $tlp-small-spacing;
-}
-
-.empty-state-text {
-    align-self: center;
-    width: 40%;
-    margin: 0 0 $tlp-small-spacing 0;
-    color: $tlp-ui-dimmed;
-    font-size: .875rem;
-    line-height: $tlp-large-spacing;
-    text-align: center;
-}
-
-.empty-state-svg {
-    margin: 0 0 $tlp-medium-spacing 0;
-}
-
-.empty-state-svg-inside {
-    fill: $tlp-theme-color;
-}
-
-.empty-state-svg-container {
-    fill: $tlp-ui-border-light;
-}
-
 .button-backlog-link {
     &:hover {
         text-decoration: none;

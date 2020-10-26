@@ -1347,6 +1347,9 @@ msgstr "Annonces que {{ user_group_name }} peuvent voir"
 msgid "No"
 msgstr "Non"
 
+msgid "No activity yet"
+msgstr "Pas encore d'activité"
+
 msgid "No background"
 msgstr "Pas d'image de fond"
 

@@ -112,6 +112,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (! $total_rows) {
+            if (! $form) {
+                $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../src/templates/dashboard');
+                return $renderer->renderToString("widget-empty-content-svg", null);
+            }
+
             return '<p>' . dgettext('tuleap-tracker', 'No artifact found.') . '</p>';
         }
 
