@@ -68,6 +68,11 @@ class NavigationPresenter implements Dispatchable
         return array_values($this->entries);
     }
 
+    public function hasEntries(): bool
+    {
+        return ! empty($this->entries);
+    }
+
     public function getProjectId()
     {
         return $this->project->getID();

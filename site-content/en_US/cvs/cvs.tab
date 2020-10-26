@@ -2,7 +2,7 @@
 #  *
 #  * CVS scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -75,17 +75,15 @@ cvs_detail_commit	error_notfound	Commit #$1 not found in this project
 #
 cvs_commit_utils	error_project	Only Projects Can Use The CVS Web Service
 cvs_commit_utils	error_off	This Project Has Turned CVS Off
-cvs_commit_utils	menu_info	CVS Info
-cvs_commit_utils	menu_browse	Browse CVS Tree
-cvs_commit_utils	menu_my	My CVS Commits
-cvs_commit_utils	menu_query	CVS Query
-cvs_commit_utils	menu_admin	CVS Admin
+cvs_commit_utils	menu_info	Info
+cvs_commit_utils	menu_browse	Tree
+cvs_commit_utils	menu_query	Commits
 cvs_commit_utils	error_nogid	ERROR - no group_id
 cvs_commit_utils	sorted_by	sorted by
 cvs_commit_utils	matching	matching commits
 cvs_commit_utils	sort_msg	Click a column heading to sort results (up or down), or <A HREF="$1"><b>Reset sort</b></a>. You can also <a href="$2"><b>$3 multicolumn sort</b></a>.
-cvs_commit_utils	activate	activate	
-cvs_commit_utils	deactivate	deactivate	
+cvs_commit_utils	activate	activate
+cvs_commit_utils	deactivate	deactivate
 cvs_commit_utils	description	Description
 cvs_commit_utils	id	ID
 cvs_commit_utils	who	Submitted by
@@ -108,8 +106,8 @@ cvs_commit_utils	removed_line	Removed Lines
 #-----------------------------------------------
 # Script: SF/www/cvs/viewvc.php
 #
-cvs_viewvc	title	Browse CVS Tree	
-cvs_viewvc	error_noaccess	Access Denied	
+cvs_viewvc	title	Browse CVS Tree
+cvs_viewvc	error_noaccess	Access Denied
 cvs_viewvc	error_noaccess_msg	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 
 

@@ -100,6 +100,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         $this->serviceClassnames = [
             Service::FILE => ServiceFile::class,
             Service::SVN  => ServiceSVN::class,
+            Service::CVS  => \Tuleap\ConcurrentVersionsSystem\ServiceCVS::class,
         ];
 
         EventManager::instance()->processEvent(

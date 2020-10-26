@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CVS\ViewVC;
+namespace Tuleap\ConcurrentVersionsSystem\ViewVC;
 
 use HTTPRequest;
 use ProjectManager;

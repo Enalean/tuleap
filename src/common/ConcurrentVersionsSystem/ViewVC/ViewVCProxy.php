@@ -18,15 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CVS\ViewVC;
+namespace Tuleap\ConcurrentVersionsSystem\ViewVC;
 
 require_once __DIR__ . '/../../../www/include/viewvc_utils.php';
 require_once __DIR__ . '/../../../www/cvs/commit_utils.php';
 
+use Codendi_HTMLPurifier;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
-use Codendi_HTMLPurifier;
+use Tuleap\ConcurrentVersionsSystem\ServiceCVS;
 
 class ViewVCProxy
 {
@@ -146,11 +147,11 @@ class ViewVCProxy
         $content = $this->setLocaleOnCommand($command, $return_var);
 
         if ($return_var === 128) {
-            $this->display($project, $this->getPermissionDeniedError($project));
+            $this->display($project, $user, $this->getPermissionDeniedError($project));
             return;
         }
 
-        list($headers, $body) = http_split_header_body($content);
+        [$headers, $body] = http_split_header_body($content);
 
         $content_type_line   = strtok($content, "\n\t\r\0\x0B");
 
@@ -167,7 +168,7 @@ class ViewVCProxy
 
         $parse = $this->displayViewVcHeader($request_uri);
         if ($parse) {
-            $this->display($project, $body);
+            $this->display($project, $user, $body);
         } elseif ($this->isAGraphImageRequest($request_uri)) {
             header('Content-Type: image/png');
             echo $body;
@@ -181,15 +182,24 @@ class ViewVCProxy
         }
     }
 
-    private function display(Project $project, $body)
+    private function display(Project $project, \PFUser $user, $body)
     {
-        commits_header(
-            [
-                'title' => $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
-                'group' => $project->getID(),
-                'body_class' => ['viewvc-epel']
-            ]
+        $service = $project->getService(\Service::CVS);
+        if (! ($service instanceof ServiceCVS)) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+            );
+            return;
+        }
+
+        $service->displayCVSRepositoryHeader(
+            $user,
+            $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
+            'browse',
+            ['body_class' => ['viewvc-epel']]
         );
+
         echo util_make_reference_links(
             $body,
             $project->getID()

@@ -118,12 +118,12 @@ use Tuleap\User\Account\Appearance\LanguagePresenterBuilder;
 use Tuleap\User\Account\Appearance\ThemeColorPresenterBuilder;
 use Tuleap\User\Account\ChangeAvatarController;
 use Tuleap\User\Account\ConfirmNewEmailController;
+use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayEditionController;
 use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
-use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
@@ -532,7 +532,7 @@ class RouteCollector
 
     public static function getCVSViewVC()
     {
-        return new \Tuleap\CVS\ViewVC\ViewVCController();
+        return new \Tuleap\ConcurrentVersionsSystem\ViewVC\ViewVCController();
     }
 
     public static function getOldFileDownloadURLRedirection(): FRSFileDownloadOldURLRedirectionController

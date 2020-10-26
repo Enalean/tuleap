@@ -1,8 +1,27 @@
 <?php
-// Copyright (c) Enalean, 2016-Present. All Rights Reserved.
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
+/**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Tuleap\ConcurrentVersionsSystem\ServiceCVS;
+
 require_once __DIR__ . '/commit_utils.php';
 
 $request  = HTTPRequest::instance();
@@ -15,11 +34,18 @@ if (! $group_id) {
 
 session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
-commits_header([
-    'title' => $GLOBALS['Language']->getText('cvs_admin_commit', 'title'),
-    'help'  => 'cvs.html#cvs-administration',
-    'group' => $group_id
-]);
+$pm = ProjectManager::instance();
+$project = $pm->getProject($group_id);
+$service = $project->getService(\Service::CVS);
+if (! ($service instanceof ServiceCVS)) {
+    exit_error(
+        $GLOBALS['Language']->getText('global', 'error'),
+        $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+    );
+    return;
+}
+
+$service->displayCVSAdminHeader($request->getCurrentUser());
 
 // get project name
 $sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=" . db_ei($group_id);
@@ -48,9 +74,7 @@ $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-echo "<h2>" . $GLOBALS['Language']->getText('cvs_admin_commit', 'title') . "</h2>";
-
-echo '<FORM ACTION="?" METHOD="GET">
+echo '<FORM ACTION="?" METHOD="GET" class="cvs-admin">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
 	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_hdr') . '</h3>

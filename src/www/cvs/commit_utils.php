@@ -30,75 +30,11 @@
 function uniformat_date($format, $date)
 {
     if (preg_match("/([0-9]{4})-?([0-9]{2})-?([0-9]{2}) ?([0-9]{2}):?([0-9]{2}):?([0-9]{2})/", $date, $gp)) {
-        list(,$y, $m, $d, $h, $min, $s) = $gp;
+        [, $y, $m, $d, $h, $min, $s] = $gp;
         $time = mktime($h, $min, $s, $m, $d, $y);
         $date = date($format, $time);
     }
     return $date;
-}
-
-function commits_header($params)
-{
-    \Tuleap\Project\ServiceInstrumentation::increment('cvs');
-
-    $params['toptab'] = 'cvs';
-    $group_id        = $params['group'];
-
-    $additional_params = [];
-    if (isset($params['body_class'])) {
-        $additional_params = [
-            'body_class' => $params['body_class']
-        ];
-    }
-
-    $pm = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
-
-    $service = $project->getService(Service::CVS);
-    if ($service === null) {
-        exit_error(
-            $GLOBALS['Language']->getText('global', 'error'),
-            $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
-        );
-        return;
-    }
-
-    $toolbar = [];
-    $toolbar[] = ['title' => $GLOBALS['Language']->getText('svn_utils', 'svn_info'),
-        'url'   => '/cvs/?func=info&group_id=' . $group_id];
-
-    if ($project->isPublic() || user_isloggedin()) {
-        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse'),
-            'url'   => '/cvs/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=cvs'];
-    }
-
-    if (user_isloggedin()) {
-        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_my'),
-            'url'   => '/cvs/?func=browse&group_id=' . $group_id . '&set=my'];
-        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query'),
-            'url'   => '/cvs/?func=browse&group_id=' . $group_id];
-    }
-    if (user_ismember($group_id, 'A')) {
-        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin'),
-            'url'   => '/cvs/?func=admin&group_id=' . $group_id];
-    }
-    if (! isset($params['help'])) {
-        $params['help'] = "cvs.html";
-    }
-    $toolbar[] = ['title' => $GLOBALS['Language']->getText('global', 'help'),
-        'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
-
-    $service->displayHeader(
-        $params['title'],
-        [
-            [
-                'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_cvs_lbl_key'),
-                'url' => '/cvs/?group_id=' . $group_id
-            ]
-        ],
-        $toolbar,
-        $additional_params
-    );
 }
 
 function commits_footer($params)
@@ -367,7 +303,7 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
         $i = 0;
         foreach ($arr as $attr) {
             preg_match("/\s*([^<>]*)([<>]*)/", $attr, $match);
-            list(,$mattr,$mdir) = $match;
+            [, $mattr, $mdir] = $match;
             //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
             if ($mattr == $order) {
                 if (($mdir == '>') || (! isset($mdir))) {
@@ -467,6 +403,7 @@ function show_commit_details($group_id, $commit_id, $result)
     } else {
         $hdr = $GLOBALS['Language']->getText('cvs_commit_utils', 'checkin') . ' ';
     }
+    echo '<div class="cvs-commit">';
     echo '<h2>' . $hdr . uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when')) . '</h2></h2>';
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="' . util_get_alt_row_color(0) . '"><td>' . $list_log . '</td></tr></table>';
 
@@ -607,6 +544,7 @@ function show_commit_details($group_id, $commit_id, $result)
         echo '&nbsp;';
     }
     echo '</TD></TR></TABLE>';
+    echo '</div>';
 }
 
 
