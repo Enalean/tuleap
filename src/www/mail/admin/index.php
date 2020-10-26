@@ -123,8 +123,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         /*
           Show the form for adding mailing list
          */
-        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'add_a_mail_list'),
-            'help' => 'collaboration.html#creation']);
+        mail_header(['title' => $Language->getText('mail_admin_index', 'add_a_mail_list')]);
 
         echo '
             <H3>' . $Language->getText('mail_admin_index', 'add_a_mail_list') . '</H3>';
@@ -163,8 +162,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         /*
           Change a forum to public/private
          */
-        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'update_mail_list'),
-            'help' => 'collaboration.html#creation']);
+        mail_header(['title' => $Language->getText('mail_admin_index', 'update_mail_list')]);
 
         $sql = "SELECT list_name,group_list_id,is_public,description " .
                 "FROM mail_group_list " .
@@ -228,8 +226,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
           Show main page for choosing
           either moderotor or delete
          */
-        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'mail_list_admin'),
-            'help' => 'collaboration.html#mailing-lists']);
+        mail_header(['title' => $Language->getText('mail_admin_index', 'mail_list_admin')]);
 
         echo '
             <H2>' . $Language->getText('mail_admin_index', 'mail_list_admin') . '</H2>

@@ -70,8 +70,6 @@ mail_nav	admin	Administration
 #
 mail_utils	mail_turned_off	Ce projet a désactivé les listes de diffusion
 mail_utils	admin	Administration
-mail_utils	add_list	Créer une liste
-mail_utils	update_list	Modifier une liste
 #------------------------------------------------
 # SystemEvent
 #

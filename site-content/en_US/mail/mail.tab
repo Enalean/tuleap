@@ -77,8 +77,6 @@ mail_nav	admin	Administration
 #
 mail_utils	mail_turned_off	This Project Has Turned Off Mailing Lists
 mail_utils	admin	Admin
-mail_utils	add_list	Add List
-mail_utils	update_list	Update List
 #------------------------------------------------
 # SystemEvent
 #
