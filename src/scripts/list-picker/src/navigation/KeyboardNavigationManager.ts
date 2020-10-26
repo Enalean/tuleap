@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { getNextItem, getPreviousItem } from "../helpers/list-item-finder";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";

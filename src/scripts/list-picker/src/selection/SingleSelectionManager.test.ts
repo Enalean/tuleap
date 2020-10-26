@@ -18,7 +18,7 @@
  */
 
 import { SingleSelectionManager } from "./SingleSelectionManager";
-import { DropdownToggler } from "../helpers/DropdownToggler";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";

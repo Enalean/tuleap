@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,12 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { DropdownToggler } from "./DropdownToggler";
-import { DropdownContentRenderer } from "./DropdownContentRenderer";
+import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { SelectionManager } from "../type";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import { isArrowDown, isArrowUp, isBackspaceKey, isEnterKey, isEscapeKey } from "./keys-helper";
+import {
+    isArrowDown,
+    isArrowUp,
+    isBackspaceKey,
+    isEnterKey,
+    isEscapeKey,
+} from "../helpers/keys-helper";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
