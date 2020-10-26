@@ -43,6 +43,20 @@
             </div>
         </div>
         <div class="tlp-modal-body git-repository-create-modal-body">
+            <div
+                class="tlp-alert-danger"
+                data-test="gitlab-fail-load-projects"
+                v-if="error_message.length > 0"
+            >
+                {{ error_message }}
+            </div>
+            <div
+                class="tlp-alert-success"
+                data-test="gitlab-success-load-projects"
+                v-if="success_message.length > 0"
+            >
+                {{ success_message }}
+            </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_server">
                     <translate>GitLab server URL</translate>
@@ -88,7 +102,7 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                v-bind:disabled="is_loading"
+                v-bind:disabled="disabled_button"
                 data-test="button_add_gitlab_project"
             >
                 <i
@@ -104,6 +118,8 @@
 
 <script>
 import { createModal } from "tlp";
+import { mapActions } from "vuex";
+import { credentialsAreEmpty, serverUrlIsValid } from "../../gitlab/gitlab-credentials-helper";
 
 export default {
     name: "GitlabProjectModal",
@@ -112,11 +128,16 @@ export default {
             gitlab_server: "",
             gitlab_token_user: "",
             is_loading: false,
+            error_message: "",
+            success_message: "",
         };
     },
     computed: {
         close_label() {
             return this.$gettext("Close");
+        },
+        disabled_button() {
+            return this.gitlab_server === "" || this.gitlab_token_user === "" || this.is_loading;
         },
     },
     mounted() {
@@ -127,14 +148,51 @@ export default {
         this.$store.commit("setAddGitlabProjectModal", create_modal);
     },
     methods: {
+        ...mapActions(["getGitlabProjectList"]),
         reset() {
             this.gitlab_server = "";
             this.gitlab_token_user = "";
             this.is_loading = false;
+            this.resetMessages();
         },
-        fetchProjects(event) {
+        resetMessages() {
+            this.success_message = "";
+            this.error_message = "";
+        },
+        handleError() {
+            this.resetMessages();
+            this.error_message = this.$gettext(
+                "Cannot connect to GitLab server, please check your credentials."
+            );
+        },
+        async fetchProjects(event) {
             event.preventDefault();
-            this.is_loading = true;
+            this.resetMessages();
+            const credentials = {
+                server_url: this.gitlab_server,
+                token: this.gitlab_token_user,
+            };
+            if (credentialsAreEmpty(credentials)) {
+                this.error_message = this.$gettext(
+                    "You must provide a valid GitLab server and user API token"
+                );
+                return;
+            }
+
+            if (!serverUrlIsValid(credentials.server_url)) {
+                this.error_message = this.$gettext("Server url is invalid");
+                return;
+            }
+
+            try {
+                this.is_loading = true;
+                await this.getGitlabProjectList(credentials);
+                this.success_message = this.$gettext("GitLab projects have been retrieved.");
+            } catch (e) {
+                this.handleError();
+            } finally {
+                this.is_loading = false;
+            }
         },
     },
 };

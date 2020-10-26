@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@ import localVue from "../../support/local-vue.js";
 import GitlabProjectModal from "./GitlabProjectModal.vue";
 
 describe("GitlabProjectModal", () => {
-    let store_options;
+    let store_options, store;
     beforeEach(() => {
         store_options = {
             state: {
@@ -39,28 +39,83 @@ describe("GitlabProjectModal", () => {
     });
 
     function instantiateComponent() {
-        const store = createStoreMock(store_options);
+        store = createStoreMock(store_options);
         return shallowMount(GitlabProjectModal, {
             mocks: { $store: store },
             localVue,
         });
     }
 
-    it("When the user clicked on the button, Then the submit button is disabled ans icon changed", async () => {
+    it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
         const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-arrow-right");
 
         wrapper.setData({
-            is_loading: true,
+            is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token_user: "AFREZF546",
         });
 
         await wrapper.vm.$nextTick();
 
+        wrapper.find("[data-test=fetch-gitlab-project-modal-form]").trigger("submit.prevent");
+        await wrapper.vm.$nextTick();
+
         expect(
             wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-sync-alt");
+
+        expect(store.dispatch).toHaveBeenCalledWith("getGitlabProjectList", {
+            server_url: "https://example.com",
+            token: "AFREZF546",
+        });
+    });
+
+    it("When there is an error message, Then it's displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "https://example.com",
+            gitlab_token_user: "AFREZF546",
+            error_message: "Error message",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-fail-load-projects]").text()).toEqual(
+            "Error message"
+        );
+    });
+
+    it("When there is a success message, Then it's displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "https://example.com",
+            gitlab_token_user: "AFREZF546",
+            success_message: "Success message",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-success-load-projects]").text()).toEqual(
+            "Success message"
+        );
+    });
+
+    it("When there are no token and server url, Then submit button is disabled", async () => {
+        const wrapper = instantiateComponent();
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "",
+            gitlab_token_user: "",
+        });
+        await wrapper.vm.$nextTick();
+        expect(
+            wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
+        ).toBeTruthy();
     });
 });

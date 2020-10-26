@@ -49,6 +49,11 @@ msgstr "Une erreur est survenue lors de la création du dépôt."
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cannot connect to GitLab server, please check your credentials."
+msgstr ""
+"Impossible de se connecter au serveur GitLab, veuillez vérifier vos "
+"identifiants de connexion."
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -69,6 +74,9 @@ msgstr "Le plugin Git est désactivé"
 
 msgid "Git repositories"
 msgstr "Dépôts Git"
+
+msgid "GitLab projects have been retrieved."
+msgstr "Les projets GitLab ont été récupérés."
 
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
@@ -113,6 +121,9 @@ msgstr ""
 "de slashes au début ou à la fin, les noms des repertoires ne doivent pas "
 "finir par \".git\"."
 
+msgid "Server url is invalid"
+msgstr "L'url du serveur est invalide"
+
 msgid "Sort repositories alphabetically"
 msgstr "Trier les dépôts par ordre alphabétique"
 
@@ -140,3 +151,6 @@ msgid ""
 msgstr ""
 "Vous n'avez pas la permission de créer de dépôts git comme vous n'êtes pas "
 "administrateur du service Git."
+
+msgid "You must provide a valid GitLab server and user API token"
+msgstr "Vous devez fournir un serveur GitLab et un jeton d'API valides"

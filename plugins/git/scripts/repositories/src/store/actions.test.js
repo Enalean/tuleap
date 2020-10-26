@@ -29,9 +29,15 @@ import {
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
 } from "../constants.js";
-import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
+import {
+    setDisplayMode,
+    getAsyncRepositoryList,
+    changeRepositories,
+    getGitlabProjectList,
+} from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter.js";
 import * as rest_querier from "../api/rest-querier.js";
+import * as gitlab_querier from "../gitlab/gitlab-api-querier";
 
 describe("Store actions", () => {
     describe("setDisplayMode", () => {
@@ -247,6 +253,64 @@ describe("Store actions", () => {
 
             await expect(getAsyncRepositoryList(commit, getRepositories)).rejects.toBeDefined();
             expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
+        });
+    });
+
+    describe("getGitlabProjectList", () => {
+        let context;
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+            };
+        });
+
+        it("When api is called, Then url is formatted", async () => {
+            const getAsyncGitlabProjectList = jest.spyOn(
+                gitlab_querier,
+                "getAsyncGitlabProjectList"
+            );
+            getAsyncGitlabProjectList.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        status: 200,
+                        json: () => Promise.resolve([{ id: 10 }]),
+                    });
+                })
+            );
+            const credentials = {
+                server_url: "https://example/",
+                token: "azerty1234",
+            };
+
+            expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
+            expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
+                server_url: "https://example/api/v4/projects?membership=true&per_page=20",
+                token: "azerty1234",
+            });
+        });
+
+        it("When en error retrieved from api, Then an error is thrown", async () => {
+            const getAsyncGitlabProjectList = jest.spyOn(
+                gitlab_querier,
+                "getAsyncGitlabProjectList"
+            );
+            getAsyncGitlabProjectList.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        status: 401,
+                    });
+                })
+            );
+            const credentials = {
+                server_url: "https://example/",
+                token: "azerty1234",
+            };
+
+            await expect(getGitlabProjectList(context, credentials)).rejects.toEqual(new Error());
+            expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
+                server_url: "https://example/api/v4/projects?membership=true&per_page=20",
+                token: "azerty1234",
+            });
         });
     });
 });
