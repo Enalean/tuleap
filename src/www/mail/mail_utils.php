@@ -3,6 +3,13 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+
 function mail_header($params)
 {
     global $group_id, $Language;
@@ -20,42 +27,45 @@ function mail_header($params)
         exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
     }
 
-    site_project_header($params);
-    echo '<P><B>';
-    // admin link is only displayed if the user is a project administrator
+    $list_breadcrumb = new BreadCrumb(
+        new BreadCrumbLink(_('Lists'), '/mail/?group_id=' . urlencode($group_id)),
+    );
+    $breadcrumbs = new BreadCrumbCollection();
+    $breadcrumbs->addBreadCrumb($list_breadcrumb);
+
     if (user_ismember($group_id, 'A')) {
-        echo '<A HREF="/mail/admin/?group_id=' . $group_id . '">' . $Language->getText('mail_utils', 'admin') . '</A>';
-        echo ' | ';
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection(
+                    [
+                        new BreadCrumbLink(
+                            _('Add List'),
+                            '/mail/admin/?' . http_build_query(
+                                [
+                                    'group_id' => $project->getID(),
+                                    'add_list' => '1'
+                                ]
+                            ),
+                        ),
+                        new BreadCrumbLink(
+                            _('Update List'),
+                            '/mail/admin/?' . http_build_query(
+                                [
+                                    'group_id'      => $project->getID(),
+                                    'change_status' => '1'
+                                ]
+                            ),
+                        )
+                    ]
+                )
+            )
+        );
+        $list_breadcrumb->setSubItems($sub_items);
     }
-    if ($params['help']) {
-        echo help_button($params['help'], false, $Language->getText('global', 'help'));
-    }
-    echo '</B><P>';
-}
-function mail_header_admin($params)
-{
-    global $group_id, $Language;
 
-    //required for site_project_header
-    $params['group'] = $group_id;
-    $params['toptab'] = 'mail';
-
-    $pm = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
-
-    if (! $project->usesMail()) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
-    }
-
+    $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
     site_project_header($params);
-    echo '
-		<P><B><A HREF="/mail/admin/?group_id=' . $group_id . '">' . $Language->getText('mail_utils', 'admin') . '</A></B>
- | <B><A HREF="/mail/admin/?group_id=' . $group_id . '&add_list=1">' . $Language->getText('mail_utils', 'add_list') . '</A></B>
- | <B><A HREF="/mail/admin/?group_id=' . $group_id . '&change_status=1">' . $Language->getText('mail_utils', 'update_list') . '</A></B>
-';
-    if ($params['help']) {
-        echo ' | <B>' . help_button($params['help'], false, $Language->getText('global', 'help')) . '</B>';
-    }
 }
 
 function mail_footer($params)

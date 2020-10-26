@@ -226,6 +226,9 @@ msgstr "Actions"
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
+msgid "Add List"
+msgstr "Créer une liste"
+
 msgid "Add SSH key"
 msgstr "Ajouter une clef SSH"
 
@@ -1181,6 +1184,9 @@ msgstr "Lien"
 
 msgid "Links"
 msgstr "Liens"
+
+msgid "Lists"
+msgstr "Listes"
 
 msgid "Lists the project members."
 msgstr "Affiche la liste des membres du projet."
@@ -2521,6 +2527,9 @@ msgstr "Jusqu'à 2 catégories peuvent être utilisées en tant que marqueur."
 
 msgid "Update"
 msgstr "Mettre à jour"
+
+msgid "Update List"
+msgstr "Modifier une liste"
 
 msgid "Update failed"
 msgstr "La mise à jour a échoué"
