@@ -70,6 +70,10 @@ body {
                 border-top-color: $tlp-ui-white;
                 background: rgba(0, 0, 0, .3);
             }
+
+            &:hover > .tlp-tab-menu {
+                bottom: 0;
+            }
         }
     }
 
