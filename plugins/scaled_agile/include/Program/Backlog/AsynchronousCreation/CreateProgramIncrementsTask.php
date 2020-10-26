@@ -36,11 +36,17 @@ use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\CopiedValuesGatherer;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status\StatusValueMapper;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\EndPeriodValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollectionAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
@@ -55,9 +61,9 @@ use XMLImportHelper;
 class CreateProgramIncrementsTask
 {
     /**
-     * @var CopiedValuesGatherer
+     * @var SourceChangesetValuesCollectionAdapter
      */
-    private $copied_values_gatherer;
+    private $changeset_collection_adapter;
     /**
      * @var TeamProjectsCollectionBuilder
      */
@@ -80,14 +86,14 @@ class CreateProgramIncrementsTask
     private $pending_artifact_creation_dao;
 
     public function __construct(
-        CopiedValuesGatherer $copied_values_gatherer,
+        SourceChangesetValuesCollectionAdapter $changeset_collection_adapter,
         TeamProjectsCollectionBuilder $projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
         ProjectIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationDao $pending_artifact_creation_dao
     ) {
-        $this->copied_values_gatherer        = $copied_values_gatherer;
+        $this->changeset_collection_adapter  = $changeset_collection_adapter;
         $this->projects_collection_builder   = $projects_collection_builder;
         $this->scale_tracker_factory         = $scale_tracker_factory;
         $this->program_increment_creator     = $program_increment_creator;
@@ -119,7 +125,7 @@ class CreateProgramIncrementsTask
     ): void {
         $source_tracker = $source_artifact->getTracker();
 
-        $copied_values = $this->copied_values_gatherer->gather(
+        $copied_values = $this->changeset_collection_adapter->buildCollection(
             $source_changeset,
             $source_tracker
         );
@@ -181,8 +187,14 @@ class CreateProgramIncrementsTask
         );
 
         return new self(
-            new CopiedValuesGatherer(
-                $synchronized_fields_gatherer
+            new SourceChangesetValuesCollectionAdapter(
+                $synchronized_fields_gatherer,
+                new TitleValueAdapter(),
+                new DescriptionValueAdapter(),
+                new StatusValueAdapter(),
+                new StartDateValueAdapter(),
+                new EndPeriodValueAdapter(),
+                new ArtifactLinkValueAdapter()
             ),
             new TeamProjectsCollectionBuilder(
                 $program_dao,

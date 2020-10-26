@@ -24,10 +24,10 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\ProjectIncrementFieldsData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\CopiedValues;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status\StatusValueMapper;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
@@ -69,7 +69,7 @@ class ProjectIncrementsCreator
      * @throws SynchronizedFieldRetrievalException
      */
     public function createProjectIncrements(
-        CopiedValues $copied_values,
+        SourceChangesetValuesCollection $copied_values,
         ProjectIncrementsTrackerCollection $project_increments_tracker_collection,
         \PFUser $current_user
     ): void {
@@ -78,7 +78,7 @@ class ProjectIncrementsCreator
                 foreach ($project_increments_tracker_collection->getProjectIncrementTrackers() as $project_increment_tracker) {
                     $synchronized_fields = $this->fields_gatherer->gather($project_increment_tracker);
                     $mapped_status       = $this->status_mapper->mapStatusValueByDuckTyping($copied_values, $synchronized_fields);
-                    $fields_data         = ProjectIncrementFieldsData::fromCopiedValuesAndSynchronizedFields(
+                    $fields_data         = ProjectIncrementFieldsData::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
                         $mapped_status,
                         $synchronized_fields

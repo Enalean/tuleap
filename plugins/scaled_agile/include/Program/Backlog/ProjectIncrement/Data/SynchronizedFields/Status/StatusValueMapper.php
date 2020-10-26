@@ -22,8 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\CopiedValues;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\MappedStatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class StatusValueMapper
@@ -42,12 +43,12 @@ class StatusValueMapper
      * @throws NoDuckTypedMatchingValueException
      */
     public function mapStatusValueByDuckTyping(
-        CopiedValues $copied_values,
+        SourceChangesetValuesCollection $changeset_values_collection,
         SynchronizedFields $target_fields
     ): MappedStatusValue {
         $matching_values     = [];
         $target_status_field = $target_fields->getStatusField();
-        foreach ($copied_values->getStatusValue()->getListValues() as $status_value) {
+        foreach ($changeset_values_collection->getStatusValue()->getListValues() as $status_value) {
             $matching_value = $this->value_matcher->getMatchingBindValueByDuckTyping(
                 $status_value,
                 $target_status_field

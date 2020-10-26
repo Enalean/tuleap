@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
-use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 

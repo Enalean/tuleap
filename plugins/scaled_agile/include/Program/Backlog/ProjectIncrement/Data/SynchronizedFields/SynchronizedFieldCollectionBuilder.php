@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields;
 
-use Tuleap\ScaledAgile\Program\Backlog\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerCollection;
 
 class SynchronizedFieldCollectionBuilder
 {
