@@ -236,7 +236,9 @@ class Tuleap123Template extends BaseTemplate
         <?php
         $this->printTrail();
                 echo "</div></div>\n";
-                $GLOBALS['HTML']->footer($this->params);
+        if (! $this->isCompatibilityViewEnabled()) {
+            $GLOBALS['HTML']->footer($this->params);
+        }
         echo Html::closeElement('body');
         echo Html::closeElement('html');
         wfRestoreWarnings();
