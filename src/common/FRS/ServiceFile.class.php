@@ -20,8 +20,14 @@
  */
 
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
-class ServiceFile extends Service
+class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR2.Methods.MethodDeclaration.Underscore
 {
     public function getIconName(): string
     {
@@ -42,7 +48,7 @@ class ServiceFile extends Service
         $html   .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($this->getIcon()) . '"></i>';
         $html   .= $GLOBALS['Language']->getText('include_project_home', 'file_releases') . '</a>';
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $html   .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'packages', count($this->_getPackagesForUser($user_id))) . ' )';
+        $html   .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'packages', count($this->getPackagesForUser($user_id))) . ' )';
         $html   .= '</p>';
         return $html;
     }
@@ -61,7 +67,7 @@ class ServiceFile extends Service
             'content' => ''
         ];
 
-        $packages = $this->_getPackagesForUser($user->getId());
+        $packages = $this->getPackagesForUser($user->getId());
         if (count($packages)) {
             $ret['content'] .= '
                 <table cellspacing="1" cellpadding="5" width="100%" border="0" class="tlp-table">
@@ -122,12 +128,7 @@ class ServiceFile extends Service
         return new FRSPackageFactory();
     }
 
-    /**
-    * _getPackagesForUser
-    *
-    * return the packages the user can see
-    */
-    public function _getPackagesForUser($user_id)
+    private function getPackagesForUser($user_id): array
     {
         $frspf = $this->getFRSPackageFactory();
         $packages = [];
@@ -177,25 +178,36 @@ class ServiceFile extends Service
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
 
+        $frs_breadcrumb = new BreadCrumb(
+            new BreadCrumbLink($this->getInternationalizedName(), $this->getUrl()),
+        );
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($frs_breadcrumb);
+
         $user = UserManager::instance()->getCurrentUser();
         if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {
-            $toolbar[]   = [
-                'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
-                'url'   => '/file/admin/?' . http_build_query([
-                        'group_id' => $project->getID(),
-                        'action'   => 'edit-permissions'
-                    ])
-            ];
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(
+                new SubItemsUnlabelledSection(
+                    new BreadCrumbLinkCollection(
+                        [
+                            new BreadCrumbLink(
+                                _('Administration'),
+                                '/file/admin/?' . http_build_query(
+                                    [
+                                        'group_id' => $project->getID(),
+                                        'action'   => 'edit-permissions'
+                                    ]
+                                ),
+                            )]
+                    )
+                )
+            );
+            $frs_breadcrumb->setSubItems($sub_items);
         }
 
-        $toolbar[] = [
-            'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "javascript:help_window('/doc/" . $user->getShortLocale() . "/user-guide/documents-and-files/frs.html')"
-        ];
-
-        $breadcrumbs = [];
-
-        $this->displayHeader($title, $breadcrumbs, $toolbar);
+        $this->displayHeader($title, $breadcrumbs, []);
     }
 
     private function getFrsPermissionManager()
