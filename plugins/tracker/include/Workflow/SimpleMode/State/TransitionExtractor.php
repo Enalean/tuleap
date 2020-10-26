@@ -35,11 +35,10 @@ class TransitionExtractor
         $transitions = $state->getTransitions();
 
         if (count($transitions) === 1) {
-            return $transitions[0];
+            return reset($transitions);
         }
 
         foreach ($transitions as $transition) {
-            \assert($transition instanceof Transition);
             if ($transition->getIdFrom() !== '') {
                 return $transition;
             }
