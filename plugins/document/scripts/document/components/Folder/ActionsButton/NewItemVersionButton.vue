@@ -18,9 +18,11 @@
   -->
 
 <template>
-    <a
+    <button
         v-if="item.user_can_write"
         v-bind:class="button_classes"
+        type="button"
+        role="menuitem"
         v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_because_approval_table"
         v-on:click="goToUpdate"
         data-test="document-new-item-version-button"
@@ -32,7 +34,7 @@
         ></i>
         <i v-else v-bind:class="iconClasses"></i>
         <translate>Create new version</translate>
-    </a>
+    </button>
 </template>
 <script>
 import { TYPE_LINK, TYPE_WIKI } from "../../../constants.js";

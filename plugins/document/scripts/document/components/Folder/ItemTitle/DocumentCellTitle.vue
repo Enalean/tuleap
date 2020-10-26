@@ -23,7 +23,9 @@
     <div>
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        {{ item.title }}
+        <span tabindex="0" class="document-folder-subitem-link">
+            {{ item.title }}
+        </span>
     </div>
 </template>
 

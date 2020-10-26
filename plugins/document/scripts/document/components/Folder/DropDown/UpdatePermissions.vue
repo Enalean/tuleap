@@ -18,15 +18,16 @@
   -->
 
 <template>
-    <a
+    <button
         v-if="item.can_user_manage"
         v-on:click.prevent="showUpdateModal"
         class="tlp-dropdown-menu-item"
+        type="button"
         role="menuitem"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Permissions</translate>
-    </a>
+    </button>
 </template>
 
 <script>

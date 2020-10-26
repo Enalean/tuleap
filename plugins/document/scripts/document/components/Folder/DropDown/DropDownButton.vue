@@ -30,6 +30,7 @@
             ref="dropdownButton"
             type="button"
             data-test="document-drop-down-button"
+            v-bind:aria-label="$gettext(`Open dropdown menu`)"
         >
             <i class="fa fa-ellipsis-h" v-if="!isAppended"></i>
             <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': !isAppended }"></i>

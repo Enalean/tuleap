@@ -18,8 +18,9 @@
   -->
 
 <template>
-    <a
+    <button
         class="tlp-dropdown-menu-item document-clipboard-menu-item-paste"
+        type="button"
         role="menuitem"
         v-if="can_item_be_pasted"
         v-on:click="pasteItem"
@@ -37,7 +38,7 @@
                 {{ item_title }}
             </span>
         </div>
-    </a>
+    </button>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
