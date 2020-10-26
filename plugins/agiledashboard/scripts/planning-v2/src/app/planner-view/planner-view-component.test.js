@@ -479,7 +479,8 @@ describe("PlannerView", () => {
                 102,
                 30,
                 651,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
@@ -544,7 +545,8 @@ describe("PlannerView", () => {
                 102,
                 12,
                 9040,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
         });
@@ -566,7 +568,8 @@ describe("PlannerView", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 82,
                 PlanningController.milestone_id,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 
@@ -676,7 +679,8 @@ describe("PlannerView", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 94,
                 null,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 

@@ -71,8 +71,15 @@ function ArtifactModalService(
      * @param {int} parent_artifact_id       The artifact's parent's id
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
      * @param {array} prefill_values         The prefill values for creation, using field name as identifier
+     * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
      */
-    function showCreation(tracker_id, parent_artifact_id, displayItemCallback, prefill_values) {
+    function showCreation(
+        tracker_id,
+        parent_artifact_id,
+        displayItemCallback,
+        is_list_picker_enabled = false,
+        prefill_values
+    ) {
         TuleapArtifactModalLoading.loading = true;
 
         return TlpModalService.open({
@@ -84,6 +91,7 @@ function ArtifactModalService(
                 modal_model: self.initCreationModalModel(
                     tracker_id,
                     parent_artifact_id,
+                    is_list_picker_enabled,
                     prefill_values
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
@@ -101,8 +109,15 @@ function ArtifactModalService(
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} artifact_id              The id of the artifact we want to edit
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
+     * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
      */
-    function showEdition(user_id, tracker_id, artifact_id, displayItemCallback) {
+    function showEdition(
+        user_id,
+        tracker_id,
+        artifact_id,
+        displayItemCallback,
+        is_list_picker_enabled = false
+    ) {
         TuleapArtifactModalLoading.loading = true;
 
         return TlpModalService.open({
@@ -111,19 +126,30 @@ function ArtifactModalService(
             controllerAs: "modal",
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
-                modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
+                modal_model: self.initEditionModalModel(
+                    user_id,
+                    tracker_id,
+                    artifact_id,
+                    is_list_picker_enabled
+                ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
             },
         });
     }
 
-    function initCreationModalModel(tracker_id, parent_artifact_id, prefill_values) {
+    function initCreationModalModel(
+        tracker_id,
+        parent_artifact_id,
+        is_list_picker_enabled,
+        prefill_values
+    ) {
         var modal_model = {};
 
         const creation_mode = true;
         setCreationMode(creation_mode);
         modal_model.tracker_id = tracker_id;
         modal_model.parent_artifact_id = parent_artifact_id;
+        modal_model.is_list_picker_enabled = is_list_picker_enabled;
 
         var promise = $q
             .when(getTracker(tracker_id))
@@ -161,10 +187,12 @@ function ArtifactModalService(
         return promise;
     }
 
-    function initEditionModalModel(user_id, tracker_id, artifact_id) {
+    function initEditionModalModel(user_id, tracker_id, artifact_id, is_list_picker_enabled) {
         var modal_model = {};
 
         const creation_mode = false;
+
+        modal_model.is_list_picker_enabled = is_list_picker_enabled;
         setCreationMode(creation_mode);
         modal_model.user_id = user_id;
         modal_model.tracker_id = tracker_id;

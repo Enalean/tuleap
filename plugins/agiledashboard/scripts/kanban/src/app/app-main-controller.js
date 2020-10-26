@@ -62,6 +62,9 @@ function MainCtrl(
         const nodejs_server = kanban_init_data.nodejsServer;
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
 
+        const is_list_picker_enabled = Boolean(JSON.parse(kanban_init_data.isListPickerEnabled));
+        SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
+
         setAccessibilityMode(JSON.parse(kanban_init_data.userAccessibilityMode));
     }
 }

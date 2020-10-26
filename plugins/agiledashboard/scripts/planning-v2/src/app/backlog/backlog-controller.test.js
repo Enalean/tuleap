@@ -461,7 +461,8 @@ describe("BacklogController -", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 50,
                 null,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 
@@ -517,7 +518,8 @@ describe("BacklogController -", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 50,
                 null,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 

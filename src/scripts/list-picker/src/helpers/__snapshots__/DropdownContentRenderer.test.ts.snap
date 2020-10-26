@@ -24,5 +24,6 @@ exports[`dropdown-content-renderer without search input renders simple list item
   <li id="item-0" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 0</li>
   <li id="item-1" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 1</li>
   <li id="item-2" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 2</li>
+  <li id="item-3" role="option" aria-selected="false" class="list-picker-dropdown-option-value">Value 3</li>
 </ul>
 `;

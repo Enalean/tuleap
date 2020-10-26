@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 {
 
@@ -62,6 +64,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
     public $backlog_add_item_allowed;
 
     /**
+     * @var string
+     */
+    public $is_list_picker_enabled;
+
+    /**
      * @param string[] $allowed_additional_panes_to_display
      */
     public function __construct(
@@ -83,6 +90,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->allowed_additional_panes_to_display = json_encode($allowed_additional_panes_to_display);
         $this->create_milestone_allowed            = json_encode($create_milestone_allowed);
         $this->backlog_add_item_allowed            = json_encode($backlog_add_item_allowed);
+        $this->is_list_picker_enabled              = json_encode((bool) ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
     }
 
     private function getLanguageAbbreviation(PFUser $current_user)

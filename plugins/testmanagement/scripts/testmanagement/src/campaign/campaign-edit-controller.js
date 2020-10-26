@@ -163,9 +163,8 @@ function CampaignEditCtrl(
             return "removed";
         } else if (test.selected) {
             return "added";
-        } else {
-            return "unselected";
         }
+        return "unselected";
     }
 
     function addedTests() {
@@ -218,7 +217,8 @@ function CampaignEditCtrl(
         NewTuleapArtifactModalService.showCreation(
             SharedPropertiesService.getDefinitionTrackerId(),
             null,
-            callback
+            callback,
+            SharedPropertiesService.isListPickerEnabled()
         );
     }
 

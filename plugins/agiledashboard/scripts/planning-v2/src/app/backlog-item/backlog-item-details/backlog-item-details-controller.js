@@ -49,7 +49,12 @@ function BacklogItemDetailsController(
             });
         }
 
-        NewTuleapArtifactModalService.showCreation(item_type.id, self.backlog_item.id, callback);
+        NewTuleapArtifactModalService.showCreation(
+            item_type.id,
+            self.backlog_item.id,
+            callback,
+            SharedPropertiesService.isListPickerEnabled()
+        );
     }
 
     function appendItemToChildren(child_item_id) {

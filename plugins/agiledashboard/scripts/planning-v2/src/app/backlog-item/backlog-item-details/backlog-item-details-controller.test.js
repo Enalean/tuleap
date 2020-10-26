@@ -77,7 +77,8 @@ describe("BacklogItemDetailsController -", function () {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 7,
                 BacklogItemDetailsController.backlog_item.id,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 

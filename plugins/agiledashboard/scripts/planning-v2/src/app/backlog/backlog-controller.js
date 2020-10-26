@@ -283,7 +283,12 @@ function BacklogController(
             return promise;
         }
 
-        NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);
+        NewTuleapArtifactModalService.showCreation(
+            item_type.id,
+            null,
+            callback,
+            SharedPropertiesService.isListPickerEnabled()
+        );
     }
 
     function showAddBacklogItemParentModal(item_type) {
@@ -302,7 +307,12 @@ function BacklogController(
             });
         }
 
-        NewTuleapArtifactModalService.showCreation(item_type.id, null, callback);
+        NewTuleapArtifactModalService.showCreation(
+            item_type.id,
+            null,
+            callback,
+            SharedPropertiesService.isListPickerEnabled()
+        );
     }
 
     function dragularOptionsForBacklog() {

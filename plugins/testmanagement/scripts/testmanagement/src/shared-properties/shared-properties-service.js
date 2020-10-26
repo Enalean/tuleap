@@ -9,6 +9,7 @@ function SharedPropertiesService() {
         nodejs_server_version: undefined,
         uuid: undefined,
         milestone: undefined,
+        is_list_picker_enabled: false,
     };
 
     return {
@@ -36,6 +37,8 @@ function SharedPropertiesService() {
         getIssueTrackerConfig: getIssueTrackerConfig,
         getCurrentMilestone: getCurrentMilestone,
         setCurrentMilestone: setCurrentMilestone,
+        isListPickerEnabled: isListPickerEnabled,
+        setIsListPickerEnabled: setIsListPickerEnabled,
     };
 
     function getProjectId() {
@@ -132,5 +135,13 @@ function SharedPropertiesService() {
 
     function setCurrentMilestone(milestone) {
         property.milestone = milestone;
+    }
+
+    function isListPickerEnabled() {
+        return property.is_list_picker_enabled;
+    }
+
+    function setIsListPickerEnabled(is_list_picker_enabled) {
+        property.is_list_picker_enabled = is_list_picker_enabled;
     }
 }

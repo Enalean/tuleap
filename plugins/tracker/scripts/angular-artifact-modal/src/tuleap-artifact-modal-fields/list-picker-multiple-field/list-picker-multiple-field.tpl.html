@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  ~
+  -->
+<div class="tlp-form-element">
+    <label for="{{ ('tracker_field_' + list_picker_multiple_field.field.field_id) }}" class="tlp-label">
+        {{ list_picker_multiple_field.field.label }}
+        <i ng-if="::(list_picker_multiple_field.field.required)" class="fas fa-asterisk"></i>
+    </label>
+    <select id="{{ ('tracker_field_' + list_picker_multiple_field.field.field_id) }}"
+            multiple
+            ng-class="{'tlp-select': !list_picker_multiple_field.is_list_picker_enabled}"
+            ng-model="list_picker_multiple_field.value_model.bind_value_ids"
+            ng-options="field_value.id as field_value.label for field_value in list_picker_multiple_field.options_value"
+            ng-required="{{ list_picker_multiple_field.field.required }}"
+            ng-disabled="list_picker_multiple_field.isDisabled(field)"
+            data-select="list-picker-multiple"
+            tuleap-highlight-directive="field.filtered_values"
+    >
+    </select>
+</div>

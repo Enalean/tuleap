@@ -189,7 +189,8 @@ function ExecutionDetailCtrl(
             SharedPropertiesService.getIssueTrackerId(),
             null,
             callback,
-            prefill_values
+            prefill_values,
+            SharedPropertiesService.isListPickerEnabled()
         );
     }
 
@@ -269,7 +270,8 @@ function ExecutionDetailCtrl(
                     current_user_id,
                     artifact.tracker.id,
                     artifact.id,
-                    callback
+                    callback,
+                    SharedPropertiesService.isListPickerEnabled()
                 );
             });
         }

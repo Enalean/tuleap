@@ -597,7 +597,8 @@ describe("KanbanCtrl", function () {
                 102,
                 56,
                 4288,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
 
@@ -700,7 +701,8 @@ describe("KanbanCtrl", function () {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 56,
                 null,
-                expect.any(Function)
+                expect.any(Function),
+                false
             );
         });
         describe("callback -", function () {

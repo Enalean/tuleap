@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Widget\WidgetFactory;
 
 class KanbanPresenter
@@ -64,6 +65,9 @@ class KanbanPresenter
 
     /** @var string */
     public $user_accessibility_mode;
+
+    /** @var string */
+    public $is_list_picker_enabled;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
@@ -126,5 +130,6 @@ class KanbanPresenter
             ]
         );
         $this->user_accessibility_mode = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->is_list_picker_enabled  = json_encode((bool) ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
     }
 }

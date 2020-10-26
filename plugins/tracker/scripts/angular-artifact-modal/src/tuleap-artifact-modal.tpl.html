@@ -39,39 +39,26 @@
 </script>
 
 <script type="text/ng-template" id="field-sb.tpl.html">
-<div class="tlp-form-element">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tlp-label">
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-    <select id="{{ 'tracker_field_' + field.field_id }}"
-        class="tlp-select"
-        ng-model="modal.values[field.field_id].bind_value_ids[0]"
-        ng-options="field_value.id as field_value.label for field_value in field.filtered_values"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        tuleap-highlight-directive="field.filtered_values"
-    >
-    </select>
-</div>
+    <div
+        class="field"
+        tuleap-artifact-modal-list-picker-field="field"
+        is-disabled="modal.isDisabled(field)"
+        value-model="modal.values[field.field_id]"
+        options-value="field.filtered_values"
+        is-list-picker-enabled="modal.is_list_picker_enabled"
+    ></div>
 </script>
 
 <script type="text/ng-template" id="field-msb.tpl.html">
 <div class="tlp-form-element">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tlp-label">
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-    <select id="{{ 'tracker_field_' + field.field_id }}"
-        class="tlp-select"
-        multiple
-        ng-model="modal.values[field.field_id].bind_value_ids"
-        ng-options="field_value.id as field_value.label for field_value in field.filtered_values"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        tuleap-highlight-directive="field.filtered_values"
-    >
-    </select>
+    <div
+        class="field"
+        tuleap-artifact-modal-list-picker-multiple-field="field"
+        is-disabled="modal.isDisabled(field)"
+        value-model="modal.values[field.field_id]"
+        options-value="field.filtered_values"
+        is-list-picker-enabled="modal.is_list_picker_enabled"
+    ></div>
 </div>
 </script>
 
@@ -408,7 +395,6 @@
             <div class="tlp-alert-info" ng-if="modal.isNewParentAlertShown()" translate>
                 The artifact will be linked to {{ modal.parent.title }}.
             </div>
-
             <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>
         </div>
 

@@ -442,7 +442,13 @@ function KanbanCtrl(
                 }
             });
         };
-        NewTuleapArtifactModalService.showCreation(self.kanban.tracker_id, null, callback);
+        const is_list_picker_enabled = SharedPropertiesService.isListPickerEnabled();
+        NewTuleapArtifactModalService.showCreation(
+            self.kanban.tracker_id,
+            null,
+            callback,
+            is_list_picker_enabled
+        );
     }
 
     function loadColumns() {
@@ -618,7 +624,8 @@ function KanbanCtrl(
                 SharedPropertiesService.getUserId(),
                 kanban.tracker_id,
                 item.id,
-                callback
+                callback,
+                SharedPropertiesService.isListPickerEnabled()
             );
         }
     }
