@@ -23,6 +23,12 @@ namespace Tuleap\ProFTPd;
 use Service;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class ServiceProFTPd extends Service
 {
@@ -51,21 +57,35 @@ class ServiceProFTPd extends Service
 
     private function displayServiceHeader(HTTPRequest $request, $title)
     {
-        $toolbar = [];
+        $proftpd_breadcrumb = new BreadCrumb(
+            new BreadCrumbLink($this->getInternationalizedName(), $this->getUrl()),
+        );
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($proftpd_breadcrumb);
+
         if ($this->userIsAdmin($request)) {
-            $toolbar[] = [
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => PROFTPD_BASE_URL . '/?' . http_build_query([
-                    'group_id'   => $request->get('group_id'),
-                    'controller' => 'admin',
-                    'action'     => 'index',
-                ])
-            ];
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(
+                new SubItemsUnlabelledSection(
+                    new BreadCrumbLinkCollection(
+                        [
+                            new BreadCrumbLink(
+                                _('Administration'),
+                                PROFTPD_BASE_URL . '/?' . http_build_query([
+                                    'group_id'   => $request->get('group_id'),
+                                    'controller' => 'admin',
+                                    'action'     => 'index',
+                                ]),
+                            )]
+                    )
+                )
+            );
+            $proftpd_breadcrumb->setSubItems($sub_items);
         }
 
-        $title       = $title . ' - ' . $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key');
-        $breadcrumbs = [];
-        parent::displayHeader($title, $breadcrumbs, $toolbar);
+        $title .= ' - ' . $this->getInternationalizedName();
+        $this->displayHeader($title, $breadcrumbs, []);
     }
 
     /**
