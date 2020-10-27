@@ -499,7 +499,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $div_class = 'tracker-report-query-undisplayed';
         }
         $html  = '';
-        $html .= '<div id="tracker-report-normal-query" class="tracker-report-query ' . $div_class . '" data-report-id="' . $this->id . '">';
+        $html .= '<div id="tracker-report-normal-query" class="' . $div_class . '" data-report-id="' . $this->id . '">';
         $html .= '<form action="" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
@@ -585,7 +585,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
     }
 
-    public function fetchDisplayQueryExpertMode($report_can_be_modified, PFUser $current_user)
+    private function fetchDisplayQueryExpertMode($report_can_be_modified, PFUser $current_user): string
     {
         $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
@@ -611,7 +611,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             TRACKER_TEMPLATE_DIR . '/report/'
         );
 
-        $renderer->renderToPage('tracker-report-expert-query', $tracker_report_expert_query_presenter);
+        return $renderer->renderToString('tracker-report-expert-query', $tracker_report_expert_query_presenter);
     }
 
     private function getExpertModeButton()
@@ -871,8 +871,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             }
             $additional_criteria = $this->getAdditionalCriteria();
 
+            $html .= '<div class="tracker-report-query">';
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
-            $this->fetchDisplayQueryExpertMode($report_can_be_modified, $current_user);
+            $html .= $this->fetchDisplayQueryExpertMode($report_can_be_modified, $current_user);
+            $html .= '</div>';
 
             //Display Renderers
             $html .= '<div>';

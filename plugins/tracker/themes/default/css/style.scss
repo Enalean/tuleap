@@ -26,6 +26,7 @@
 @import 'includes/artifact-link-field';
 @import 'includes/xml-changesets';
 @import 'includes/xml-validation';
+@import 'includes/project-header-background';
 
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
@@ -38,7 +39,7 @@ button[name=tracker_query_submit] {
 }
 
 .browse_instructions {
-    padding: 0 15px;
+    padding: 14px 15px;
 }
 
 .trackers-pending-tracker-removal-action {

@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../src/themes/common/css/project-background/background';
+@use '../../src/themes/FlamingParrot/css/utils/variables-common';
+@use '../../src/themes/FlamingParrot/css/utils/variables-color-common';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-green';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
+@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-red';
+
+.project-with-background {
+    #tracker_report_config_options { // stylelint-disable-line selector-id-pattern
+        @include background.project-background-title-header-typography(variables-color-common.$white);
+
+        .dropdown-menu {
+            text-shadow: none;
+        }
+    }
+
+    :not(.browse_instructions) + .tracker-report-query { // stylelint-disable-line selector-class-pattern
+        border-top: 0;
+    }
+}
+
+body.in_tracker_report .project-with-background .content { // stylelint-disable-line selector-no-qualifying-type,selector-class-pattern
+    padding-top: 0;
+}
+
+@mixin definitions-with-theme-colors($sidebar-background) {
+    $elements-with-project-background: '#tracker_report_config_options';
+
+    @each $element-with-project-background in $elements-with-project-background {
+        @include background.apply-background(
+            $element-with-project-background,
+            $sidebar-background,
+            variables-common.$sidebar-width,
+            variables-common.$sidebar-width-collapsed,
+        );
+    }
+}
+
+body {
+    &.FlamingParrot_Orange { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-orange.$sidebar-background);
+    }
+
+    &.FlamingParrot_Blue { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-blue.$sidebar-background);
+    }
+
+    &.FlamingParrot_Green { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-green.$sidebar-background);
+    }
+
+    &.FlamingParrot_BlueGrey { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-bluegrey.$sidebar-background);
+    }
+
+    &.FlamingParrot_Purple { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-purple.$sidebar-background);
+    }
+
+    &.FlamingParrot_Red { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @include definitions-with-theme-colors(variables-red.$sidebar-background);
+    }
+}
