@@ -1,6 +1,6 @@
-<div class="tlp-framed">
-    <h1 translate>Dependencies graph of &#34;{{ graph.title }}&#34;</h1>
+<h1 class="test-dependency-graph-title" translate>Dependencies graph of &#34;{{ graph.title }}&#34;</h1>
 
+<div class="tlp-framed">
     <div ng-repeat="error in graph.errors track by $index" class="tlp-alert-danger">{{ error }}</div>
 
     <div id="graph-container">
