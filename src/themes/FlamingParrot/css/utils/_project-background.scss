@@ -27,6 +27,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
 .project-with-background {
     .administration-title,
+    .cvs-header > .administration-title,
     .project-header-title {
         @include background.project-background-title-header-typography($white);
         margin: 0;

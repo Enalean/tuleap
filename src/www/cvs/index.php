@@ -32,8 +32,8 @@ switch ($func) {
         $result = db_query($sql);
         $initial_settings = db_fetch_array($result);
 
-        $feedback .= $GLOBALS['Language']->getText('cvs_index', 'config_updated');
         $status = $GLOBALS['Language']->getText('cvs_index', 'full_success');
+        $feedback_level = \Feedback::INFO;
 
         $tracked               = $request->get('tracked');
         $watches               = $request->get('watches');
@@ -50,11 +50,16 @@ switch ($func) {
             $mailing_list = 'NULL';
         } else {
             if (! validate_emails($mailing_list)) {
-                  $mailing_list = 'NULL';
-                  $status = $GLOBALS['Language']->getText('cvs_index', 'partial_success');
+                $mailing_list = 'NULL';
+                $status = $GLOBALS['Language']->getText('cvs_index', 'partial_success');
+                $feedback_level = \Feedback::WARN;
             }
         }
-        $feedback = $feedback . ' ' . $status;
+        $GLOBALS['Response']->addFeedback(
+            $feedback_level,
+            $GLOBALS['Language']->getText('cvs_index', 'config_updated') . ' ' . $status,
+            Codendi_HTMLPurifier::CONFIG_LIGHT,
+        );
         $is_private = '';
         if ($request->exist('private')) {
            //TODO check that the project is public (else the cvs is always private)
@@ -77,7 +82,7 @@ switch ($func) {
         if ($mailing_header !== 'NULL') {
             $mailing_header_sql = '"' . db_es($mailing_header) . '"';
         }
-        $query = 'update groups 
+        $query = 'update groups
              set cvs_tracker="' . db_es($tracked) . '",
                  cvs_watch_mode="' . db_es($watches) . '",
                  cvs_events_mailing_list=' . $mailing_list_sql . ',

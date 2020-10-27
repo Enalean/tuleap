@@ -61736,7 +61736,7 @@
       <code>add</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/cvs/ViewVC/ViewVCProxy.php">
+  <file src="src/common/ConcurrentVersionsSystem/ViewVC/ViewVCProxy.php">
     <InvalidScalarArgument occurrences="1">
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>

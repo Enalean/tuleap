@@ -68,17 +68,15 @@ cvs_detail_commit	error_notfound	Commit #$1 introuvable dans ce projet
 #
 cvs_commit_utils	error_project	Seuls les projets peuvent utiliser le service Web CVS
 cvs_commit_utils	error_off	Ce projet a désactivé CVS
-cvs_commit_utils	menu_info	Information CVS
-cvs_commit_utils	menu_browse	Afficher l'arbre CVS
-cvs_commit_utils	menu_my	Mes commits CVS
-cvs_commit_utils	menu_query	Recherche CVS
-cvs_commit_utils	menu_admin	Administration CVS
+cvs_commit_utils	menu_info	Information
+cvs_commit_utils	menu_browse	Arborescence
+cvs_commit_utils	menu_query	Commits
 cvs_commit_utils	error_nogid	ERREUR - pas de group_id
 cvs_commit_utils	sorted_by	trié par
 cvs_commit_utils	matching	commit(s) correspondant(s)
 cvs_commit_utils	sort_msg	Cliquer sur une entête de colonne pour trier les résultats (ascendant ou descendant), ou <A HREF="$1"><b>réinitialiser le tri</b></a>. Vous pouvez aussi utiliser le <a href="$2"><b>$3 tri multi-colonnes</b></a>.
-cvs_commit_utils	activate	activer	
-cvs_commit_utils	deactivate	désactiver	
+cvs_commit_utils	activate	activer
+cvs_commit_utils	deactivate	désactiver
 cvs_commit_utils	description	Description
 cvs_commit_utils	id	ID
 cvs_commit_utils	who	Soumis par
@@ -101,7 +99,7 @@ cvs_commit_utils	removed_line	Lignes supprimées
 #-----------------------------------------------
 # Script: SF/www/cvs/viewvc.php
 #
-cvs_viewvc	title	Affichage de l'arbre CVS	
+cvs_viewvc	title	Affichage de l'arbre CVS
 cvs_viewvc	error_noaccess	Accès refusé
 cvs_viewvc	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 

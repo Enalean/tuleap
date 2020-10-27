@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ConcurrentVersionsSystem\ServiceCVS;
 
 require_once __DIR__ . '/commit_utils.php';
 
@@ -29,12 +30,22 @@ if (! $group_id) {
     exit_no_group();
 }
 
+$pm = ProjectManager::instance();
+$project = $pm->getProject($group_id);
+$service = $project->getService(\Service::CVS);
+if (! ($service instanceof ServiceCVS)) {
+    exit_error(
+        $GLOBALS['Language']->getText('global', 'error'),
+        $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+    );
+    return;
+}
 
-commits_header([
-    'title' => $GLOBALS['Language']->getText('cvs_browse_commit', 'title'),
-    'help'  => 'cvs.html#querying-cvs',
-    'group' => $group_id
-]);
+$service->displayCVSRepositoryHeader(
+    $request->getCurrentUser(),
+    $GLOBALS['Language']->getText('cvs_browse_commit', 'title'),
+    'query',
+);
 
 $offset = (int) $request->get('offset');
 if ($offset < 0) {
@@ -169,7 +180,7 @@ $_commit_id = $request->exist('_commit_id') ? $request->get('_commit_id') : $_co
 $_commiter = $request->exist('_commiter') ? $request->get('_commiter') : $_commiter;
 $_srch     = $request->exist('_srch') ? $request->get('_srch') : $_srch;
 
-list($result, $totalrows) = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
+[$result, $totalrows] = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
 
 /*
     creating a custom technician box which includes "any"
@@ -182,6 +193,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 /*
     Show the new pop-up boxes to select assigned to and/or status
 */
+echo '<div class="cvs-commits">';
 echo '<H3>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'browse_by') . ':</H3>';
 echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
@@ -220,5 +232,6 @@ if ($result && db_numrows($result) > 0) {
     echo '
 	       <H3>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'no_commit') . '</H3>';
 }
+echo '</div>';
 
 commits_footer([]);

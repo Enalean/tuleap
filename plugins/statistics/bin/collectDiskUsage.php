@@ -3,11 +3,11 @@
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
+use Tuleap\ConcurrentVersionsSystem\DiskUsage\Collector as CVSCollector;
+use Tuleap\ConcurrentVersionsSystem\DiskUsage\FullHistoryDao;
+use Tuleap\ConcurrentVersionsSystem\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
-use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
-use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 $disk_usage_dao  = new Statistics_DiskUsageDao();
 $svn_log_dao     = new SVN_LogDao();
