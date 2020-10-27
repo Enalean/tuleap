@@ -136,8 +136,8 @@ pipeline {
                         }
                         stage('Psalm static analysis') {
                             agent {
-                                dockerfile {
-                                    dir 'sources/tests/psalm/'
+                                docker {
+                                    image 'enalean/tuleap-test-phpunit:c7-php73'
                                     reuseNode true
                                     args '--network none'
                                 }
@@ -161,7 +161,7 @@ pipeline {
                         stage('Architecture') {
                             agent {
                                 docker {
-                                    image 'php:7.4-cli-alpine'
+                                    image 'enalean/tuleap-test-phpunit:c7-php73'
                                     reuseNode true
                                     args '--network none'
                                 }

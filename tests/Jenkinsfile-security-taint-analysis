@@ -28,8 +28,8 @@ pipeline {
 
         stage('Psalm taint analysis') {
             agent {
-                dockerfile {
-                    dir 'sources/tests/psalm/'
+                docker {
+                    image 'enalean/tuleap-test-phpunit:c7-php73'
                     reuseNode true
                     args '--network none'
                 }
