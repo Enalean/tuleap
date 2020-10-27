@@ -55,7 +55,8 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\AccessControl\AccessFileReader;
 use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
-use Tuleap\SVN\Admin\GlobalAdminController;
+use Tuleap\SVN\Admin\GlobalAdministratorsUpdater;
+use Tuleap\SVN\Admin\GlobalAdministratorsController;
 use Tuleap\SVN\Admin\ImmutableTagController;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
 use Tuleap\SVN\Admin\ImmutableTagDao;
@@ -631,7 +632,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getImmutableTagCreator(),
                 $this->getImmutableTagFactory()
             ),
-            new GlobalAdminController(
+            new GlobalAdministratorsUpdater(
                 $this->getForgeUserGroupFactory(),
                 $permissions_manager
             ),
@@ -651,9 +652,19 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new RedirectOldViewVCUrls($this->getPluginPath());
     }
 
+    public function routeSvnAdmin(): DispatchableWithRequest
+    {
+        return new GlobalAdministratorsController(
+            ProjectManager::instance(),
+            $this->getForgeUserGroupFactory(),
+            $this->getPermissionsManager(),
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/{project_name}/admin', $this->getRouteHandler('routeSvnAdmin'));
             $r->get('/index.php{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
             $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
@@ -1118,12 +1129,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $quick_links_collector->addQuickLink(
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-svn', 'SVN'),
-                $this->getPluginPath() . '/?' . http_build_query(
-                    [
-                        'group_id' => $project->getID(),
-                        'action'   => 'admin-groups'
-                    ]
-                )
+                GlobalAdministratorsController::getURL($project),
             )
         );
     }

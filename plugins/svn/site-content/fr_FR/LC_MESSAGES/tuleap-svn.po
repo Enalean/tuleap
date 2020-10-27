@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2020-09-16 14:57+0200\n"
+"PO-Revision-Date: 2020-10-27 10:39+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -211,6 +211,9 @@ msgstr "Permission"
 msgid "Project SVN repositories"
 msgstr "Dépôts SVN du projet"
 
+msgid "Project not found."
+msgstr "Projet non trouvé"
+
 msgid "Read"
 msgstr "Lecture"
 
@@ -262,6 +265,10 @@ msgstr ""
 
 msgid "SVN service is disabled."
 msgstr "Le service SVN est inactif."
+
+#, php-format
+msgid "SVN service is not activated in project %s"
+msgstr "Le service SVN n'est pas activé dans le projet %s"
 
 msgid "SVN with multiple repositories"
 msgstr "SVN avec dépôt multiple"
@@ -399,6 +406,9 @@ msgstr ""
 
 msgid "Unable to delete notification list"
 msgstr "Impossible de supprimer la liste des emails notifiés"
+
+msgid "Unable to find SVN service"
+msgstr "Impossible de trouver le service SVN"
 
 #, php-format
 msgid "Unable to read file %1$s"

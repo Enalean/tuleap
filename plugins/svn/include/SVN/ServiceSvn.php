@@ -31,6 +31,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\SVN\Admin\GlobalAdministratorsController;
 
 class ServiceSvn extends Service
 {
@@ -83,9 +84,6 @@ class ServiceSvn extends Service
         $params = [
             'body_class' => [$body_class]
         ];
-        $GLOBALS['HTML']->includeJavascriptSnippet(
-            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
-        );
         $title = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
 
         $repository_list_breadcrumb = new BreadCrumb(
@@ -97,7 +95,7 @@ class ServiceSvn extends Service
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
             $admin_link = new BreadCrumbLink(
                 _('Administration'),
-                SVN_BASE_URL . "/?group_id=" . urlencode((string) $request->getProject()->getId()) . "&action=admin-groups",
+                GlobalAdministratorsController::getURL($request->getProject()),
             );
             $admin_link->setDataAttribute('test', 'svn-admin-groups');
 

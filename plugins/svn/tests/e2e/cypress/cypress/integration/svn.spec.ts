@@ -19,7 +19,6 @@
  */
 
 describe("SVN", function () {
-    let project_id: string;
     context("Project Administrators", function () {
         beforeEach(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
@@ -35,8 +34,7 @@ describe("SVN", function () {
         });
 
         it("can access to admin section", function () {
-            project_id = this.svn_project_id;
-            cy.visit("/plugins/svn/?group_id=" + project_id + "&action=admin-groups");
+            cy.visit("/plugins/svn/svn-project-full/admin");
         });
 
         it("should be able to delete a repository", function () {
@@ -135,7 +133,7 @@ describe("SVN", function () {
         });
 
         it("should raise an error when user try to access to plugin SVN admin page", function () {
-            cy.visit("/plugins/svn/?group_id=" + project_id + "&action=admin-groups");
+            cy.visit("/plugins/svn/svn-project-full/admin");
 
             cy.get("[data-test=feedback]").contains("Permission Denied");
         });

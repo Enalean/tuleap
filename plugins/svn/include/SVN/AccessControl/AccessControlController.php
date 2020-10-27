@@ -88,6 +88,10 @@ class AccessControlController
             $content = $accessfile_reader->readContentBlock($repository);
         }
 
+        $GLOBALS['HTML']->includeJavascriptSnippet(
+            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
+        );
+
         $service->renderInPage(
             $request,
             $title,

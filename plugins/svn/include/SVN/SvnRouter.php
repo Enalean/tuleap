@@ -28,7 +28,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\Admin\AdminController;
-use Tuleap\SVN\Admin\GlobalAdminController;
+use Tuleap\SVN\Admin\GlobalAdministratorsUpdater;
 use Tuleap\SVN\Admin\ImmutableTagController;
 use Tuleap\SVN\Admin\RestoreController;
 use Tuleap\SVN\Explorer\ExplorerController;
@@ -61,7 +61,7 @@ class SvnRouter implements DispatchableWithRequest
     /** @var ImmutableTagController */
     private $immutable_tag_controller;
 
-    /** @var GlobalAdminController */
+    /** @var GlobalAdministratorsUpdater */
     private $global_admin_controller;
 
     /** @var RestoreController */
@@ -87,7 +87,7 @@ class SvnRouter implements DispatchableWithRequest
         ExplorerController $explorer_controller,
         RepositoryDisplayController $display_controller,
         ImmutableTagController $immutable_tag_controller,
-        GlobalAdminController $global_admin_controller,
+        GlobalAdministratorsUpdater $global_admin_controller,
         RestoreController $restore_controller,
         SVNJSONPermissionsRetriever $json_retriever,
         SvnPlugin $plugin,
@@ -194,15 +194,8 @@ class SvnRouter implements DispatchableWithRequest
                 case 'save-admin-groups':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->global_admin_controller->saveAdminGroups(
-                        $this->getService($request),
-                        $request
-                    );
-                    break;
-                case 'admin-groups':
-                    $this->checkUserCanAdministrateARepository($request);
-                    $this->global_admin_controller->showAdminGroups(
-                        $this->getService($request),
-                        $request
+                        $request,
+                        $GLOBALS['Response'],
                     );
                     break;
                 case 'permission-per-group':
