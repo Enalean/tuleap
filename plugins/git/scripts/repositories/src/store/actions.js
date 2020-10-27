@@ -123,7 +123,36 @@ async function handleGetRepositoryListError(e, commit) {
 }
 
 export async function getGitlabProjectList(context, credentials) {
+    let pagination = 1;
+    let projects_gitlab = [];
     credentials.server_url = formatUrl(credentials.server_url);
+    const server_url_without_pagination = credentials.server_url;
+
+    const response = await getAsyncGitlabProjectList(credentials);
+
+    if (response.status !== 200) {
+        throw Error();
+    }
+    const total_page = response.headers.get("X-Total-Pages");
+    projects_gitlab.push(...(await response.json()));
+
+    pagination++;
+
+    while (pagination <= total_page) {
+        const projects = await queryAPIGitlab(
+            credentials,
+            server_url_without_pagination,
+            pagination
+        );
+        projects_gitlab.push(...projects);
+        pagination++;
+    }
+
+    return projects_gitlab;
+}
+
+async function queryAPIGitlab(credentials, server_url_without_pagination, pagination) {
+    credentials.server_url = server_url_without_pagination + "&page=" + pagination;
 
     const response = await getAsyncGitlabProjectList(credentials);
     if (response.status !== 200) {

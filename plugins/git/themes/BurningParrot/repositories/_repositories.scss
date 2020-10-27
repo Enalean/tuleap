@@ -165,3 +165,22 @@
 .git-add-action-button {
     margin: 0 0 0 $tlp-small-spacing;
 }
+
+.gitlab-avatar {
+    display: block;
+    width: $tlp-large-spacing;
+    height: $tlp-large-spacing;
+    border-radius: 2px;
+}
+
+.gitlab-select-radio-button-container {
+    width: 0;
+}
+
+.tlp-radio > .gitlab-select-radio-button {
+    vertical-align: middle;
+}
+
+.gitlab-select-avatar {
+    width: min-content;
+}

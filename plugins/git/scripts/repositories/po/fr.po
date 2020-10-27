@@ -46,6 +46,9 @@ msgstr "Une erreur est survenue lors de votre dernière action."
 msgid "An error occurred while creating the repository."
 msgstr "Une erreur est survenue lors de la création du dépôt."
 
+msgid "Back"
+msgstr "Retour"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -75,9 +78,6 @@ msgstr "Le plugin Git est désactivé"
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
-msgid "GitLab projects have been retrieved."
-msgstr "Les projets GitLab ont été récupérés."
-
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
 
@@ -90,14 +90,23 @@ msgstr "Aller à l'administration du dépôt"
 msgid "Integrate a GitLab remote repository"
 msgstr "Intégrer un dépôt GitLab distant"
 
+msgid "Integrate the project"
+msgstr "Intégrer le projet"
+
 msgid "Jenkins servers"
 msgstr "Serveurs Jenkins"
 
 msgid "New repository"
 msgstr "Nouveau dépôt"
 
+msgid "No project is available with your GitLab account"
+msgstr "Aucun projet n'est disponible avec votre compte GitLab"
+
 msgid "No repository name matching your query has been found."
 msgstr "Aucun nom de dépôt ne correspond à votre recherche."
+
+msgid "Project"
+msgstr "Projet"
 
 msgid "Project not found"
 msgstr "Projet non trouvé"
