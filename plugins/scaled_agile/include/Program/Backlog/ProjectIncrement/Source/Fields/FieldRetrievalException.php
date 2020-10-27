@@ -20,33 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
-
-/**
- * @psalm-immutable
- */
-class ArtifactLinkValueData
+class FieldRetrievalException extends \RuntimeException implements FieldSynchronizationException
 {
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
-
-    public function __construct(int $source_artifact_id)
+    public function __construct(int $tracker_id, string $semantic_type)
     {
-        $this->source_artifact_id = $source_artifact_id;
-    }
-
-    /**
-     * @return array{new_values: string, natures: array<string, string>}
-     */
-    public function getValues(): array
-    {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        parent::__construct(
+            "Expected tracker with id $tracker_id to have a field associated to its $semantic_type semantic, but this field was not found"
+        );
     }
 }

@@ -22,22 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 class StartDateValueAdapter
 {
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function build(SynchronizedFields $fields, \Tracker_Artifact_Changeset $source_changeset): StartDateValueData
+    public function build(FieldData $field_start_date_data, \Tracker_Artifact_Changeset $source_changeset): StartDateValueData
     {
-        $start_date_field = $fields->getTimeframeFields()->getStartDateField();
-        $start_date_value = $source_changeset->getValue($start_date_field);
+        $start_date_value = $source_changeset->getValue($field_start_date_data->getField());
 
         if (! $start_date_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $source_changeset->getId(),
-                (int) $start_date_field->getId(),
+                (int) $field_start_date_data->getId(),
                 "timeframe start date"
             );
         }

@@ -24,50 +24,35 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 final class EndPeriodValueAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_Date
+     * @var \Tracker_FormElement_Field_Date
      */
     private $end_date_field;
 
     /**
-     * @var \Tracker_FormElement_Field_Date
-     */
-    private $start_date;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_Integer
+     * @var \Tracker_FormElement_Field_Integer
      */
     private $duration_field;
 
     /**
-     * @var SynchronizedFields
+     * @var FieldEndDurationData
      */
-    private $synchronized_fields;
+    private $end_date_field_data;
+
+    /**
+     * @var FieldEndDateData
+     */
+    private $duration_field_data;
 
     protected function setUp(): void
     {
-        $this->start_date = new \Tracker_FormElement_Field_Date(
-            1,
-            10,
-            null,
-            'duration',
-            'duration',
-            '',
-            true,
-            null,
-            true,
-            true,
-            1
-        );
-
-        $this->duration_field = new \Tracker_FormElement_Field_Integer(
+        $this->duration_field      = new \Tracker_FormElement_Field_Integer(
             10,
             10,
             null,
@@ -80,7 +65,8 @@ final class EndPeriodValueAdapterTest extends TestCase
             true,
             1
         );
-        $this->end_date_field = new \Tracker_FormElement_Field_Date(
+        $this->duration_field_data = new FieldData($this->duration_field);
+        $this->end_date_field      = new \Tracker_FormElement_Field_Date(
             20,
             10,
             null,
@@ -93,18 +79,11 @@ final class EndPeriodValueAdapterTest extends TestCase
             true,
             1
         );
+        $this->end_date_field_data = new FieldData($this->end_date_field);
     }
 
     public function testItThrowsWhenDurationValueIsNotFound(): void
     {
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartDateAndDuration($this->start_date, $this->duration_field)
-        );
-
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
         $source_changeset->shouldReceive('getValue')->with($this->duration_field)->andReturnNull();
@@ -114,19 +93,11 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->duration_field_data, $source_changeset);
     }
 
     public function testItBuildDurationValue(): void
     {
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartDateAndDuration($this->start_date, $this->duration_field)
-        );
-
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
         $changset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
@@ -137,21 +108,13 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $expected_data = new EndPeriodValueData("12");
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->duration_field_data, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }
 
     public function testItThrowsWhenEndDateValueIsNotFound(): void
     {
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartAndEndDates($this->start_date, $this->end_date_field)
-        );
-
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
         $source_changeset->shouldReceive('getValue')->with($this->end_date_field)->andReturnNull();
@@ -161,19 +124,11 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->end_date_field_data, $source_changeset);
     }
 
     public function testItBuildEndDateValue(): void
     {
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartAndEndDates($this->start_date, $this->end_date_field)
-        );
-
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
         $changset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
@@ -184,7 +139,7 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $expected_data = new EndPeriodValueData("2020-10-31");
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->end_date_field_data, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }

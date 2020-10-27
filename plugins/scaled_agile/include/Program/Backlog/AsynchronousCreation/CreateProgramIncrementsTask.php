@@ -36,9 +36,6 @@ use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status\StatusValueMapper;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueAdapter;
@@ -47,6 +44,13 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldArtifactLinkAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldDescriptionAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldStatusAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldsTimeFrameAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldTitleAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
@@ -108,7 +112,7 @@ class CreateProgramIncrementsTask
     ): void {
         try {
             $this->create($source_artifact, $user, $source_changeset);
-        } catch (ProjectIncrementTrackerRetrievalException | ProjectIncrementCreationException | SynchronizedFieldRetrievalException $exception) {
+        } catch (ProjectIncrementTrackerRetrievalException | ProjectIncrementCreationException | FieldRetrievalException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
     }
@@ -116,7 +120,7 @@ class CreateProgramIncrementsTask
     /**
      * @throws ProjectIncrementCreationException
      * @throws ProjectIncrementTrackerRetrievalException
-     * @throws SynchronizedFieldRetrievalException
+     * @throws FieldRetrievalException
      */
     private function create(
         Artifact $source_artifact,
@@ -166,14 +170,16 @@ class CreateProgramIncrementsTask
             $logger
         );
 
-        $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
-            $form_element_factory,
-            new Tracker_Semantic_TitleFactory(),
-            new Tracker_Semantic_DescriptionFactory(),
-            new Tracker_Semantic_StatusFactory(),
-            new SemanticTimeframeBuilder(
-                new SemanticTimeframeDao(),
-                $form_element_factory
+        $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
+            new FieldArtifactLinkAdapter($form_element_factory),
+            new FieldTitleAdapter(new Tracker_Semantic_TitleFactory()),
+            new FieldDescriptionAdapter(new Tracker_Semantic_DescriptionFactory()),
+            new FieldStatusAdapter(new Tracker_Semantic_StatusFactory()),
+            new FieldsTimeFrameAdapter(
+                new SemanticTimeframeBuilder(
+                    new SemanticTimeframeDao(),
+                    $form_element_factory
+                )
             )
         );
 

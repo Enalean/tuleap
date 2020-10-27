@@ -20,33 +20,51 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tracker_FormElement_Field;
 
 /**
- * @psalm-immutable
+ * @template F of Tracker_FormElement_Field
  */
-class ArtifactLinkValueData
+final class FieldData
 {
     /**
-     * @var int
+     * @psalm-var F
      */
-    private $source_artifact_id;
+    private $field;
 
-    public function __construct(int $source_artifact_id)
+    /**
+     * @psalm-param F $field
+     */
+    public function __construct(Tracker_FormElement_Field $field)
     {
-        $this->source_artifact_id = $source_artifact_id;
+        $this->field = $field;
     }
 
     /**
-     * @return array{new_values: string, natures: array<string, string>}
+     * @psalm-mutation-free
      */
-    public function getValues(): array
+    public function getId(): int
     {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        return (int) $this->field->getId();
+    }
+
+    public function userCanSubmit(\PFUser $user): bool
+    {
+        return $this->field->userCanSubmit($user);
+    }
+
+    public function userCanUpdate(\PFUser $user): bool
+    {
+        return $this->field->userCanUpdate($user);
+    }
+
+    /**
+     * @psalm-return F
+     */
+    public function getField(): Tracker_FormElement_Field
+    {
+        return $this->field;
     }
 }

@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
@@ -42,7 +42,7 @@ class ProjectIncrementArtifactCreatorChecker
      */
     private $scale_trackers_factory;
     /**
-     * @var SynchronizedFieldCollectionBuilder
+     * @var SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
      */
     private $field_collection_builder;
     /**
@@ -66,7 +66,7 @@ class ProjectIncrementArtifactCreatorChecker
     public function __construct(
         TeamProjectsCollectionBuilder $team_projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
-        SynchronizedFieldCollectionBuilder $field_collection_builder,
+        SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
         SemanticChecker $semantic_checker,
         RequiredFieldChecker $required_field_checker,
         WorkflowChecker $workflow_checker,
@@ -123,12 +123,12 @@ class ProjectIncrementArtifactCreatorChecker
         }
 
         try {
-            $fields = $this->field_collection_builder->buildFromSourceTrackers($program_and_project_increment_trackers);
-        } catch (SynchronizedFieldRetrievalException $exception) {
+            $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_project_increment_trackers);
+        } catch (FieldSynchronizationException $exception) {
             $this->logger->error("Cannot retrieve all the synchronized fields", ['exception' => $exception]);
             return false;
         }
-        if (! $fields->canUserSubmitAndUpdateAllFields($user)) {
+        if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user)) {
             $this->logger->debug("User cannot submit and update all needed fields in all trackers.");
             return false;
         }
@@ -136,7 +136,7 @@ class ProjectIncrementArtifactCreatorChecker
         if (
             ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
                 $project_increment_trackers,
-                $fields
+                $synchronized_fields_data_collection
             )
         ) {
             $this->logger->debug("A team tracker has a required fields outside the synchronized fields.");
@@ -146,7 +146,7 @@ class ProjectIncrementArtifactCreatorChecker
         if (
             ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $project_increment_trackers,
-                $fields
+                $synchronized_fields_data_collection
             )
         ) {
             $this->logger->debug("A team tracker is using one of the synchronized fields in a workflow rule.");

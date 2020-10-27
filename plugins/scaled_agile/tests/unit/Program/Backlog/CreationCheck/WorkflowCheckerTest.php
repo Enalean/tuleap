@@ -25,7 +25,10 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackers;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -69,10 +72,14 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
 
+        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
+        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection->add($synchronized_fields);
+
         $this->assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProjectIncrementsTrackerCollection([]),
-                new SynchronizedFieldCollection([])
+                new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
     }
@@ -84,13 +91,14 @@ final class WorkflowCheckerTest extends TestCase
         );
 
         $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
-        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn('963');
+        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
+        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProjectIncrementsTrackerCollection([$tracker]),
-                new SynchronizedFieldCollection([$field])
+                new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
     }
@@ -101,13 +109,14 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
         $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
-        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn('963');
+        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
+        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProjectIncrementsTrackerCollection([$tracker]),
-                new SynchronizedFieldCollection([$field])
+                new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
     }
@@ -119,14 +128,41 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
         $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
-        $field = \Mockery::mock(\Tracker_FormElement_Field::class);
-        $field->shouldReceive('getId')->andReturn('963');
+        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
+        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProjectIncrementsTrackerCollection([$tracker]),
-                new SynchronizedFieldCollection([$field])
+                new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
+    }
+
+    private function buildSynchronizedFieldsCollectionFromProgramAndTeam(): SynchronizedFieldDataFromProgramAndTeamTrackers
+    {
+        $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink(1001, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
+
+        $title_field_data = new FieldData(new \Tracker_FormElement_Field_String(1002, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
+
+        $description_field_data = new FieldData(new \Tracker_FormElement_Field_Text(1003, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
+
+        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
+
+        $start_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date(1005, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
+
+        $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date(1006, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
+
+        $synchronized_field_data = new SynchronizedFieldsData(
+            $artifact_link_field_data,
+            $title_field_data,
+            $description_field_data,
+            $status_field_data,
+            $start_date_field_data,
+            $end_date_field_data
+        );
+
+        return new SynchronizedFieldDataFromProgramAndTeamTrackers($synchronized_field_data);
     }
 }

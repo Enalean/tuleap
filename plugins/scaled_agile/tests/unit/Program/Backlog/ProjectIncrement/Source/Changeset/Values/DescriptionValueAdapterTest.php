@@ -24,25 +24,25 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 final class DescriptionValueAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Tracker_FormElement_Field_String
+     * @var \Tracker_FormElement_Field_Text
      */
     private $description_field;
+
     /**
-     * @var SynchronizedFields
+     * @var \Tracker_FormElement_Field_String
      */
-    private $synchronized_fields;
+    private $field_description_data;
 
     protected function setUp(): void
     {
-        $this->description_field = new \Tracker_FormElement_Field_Text(
+        $this->description_field      = new \Tracker_FormElement_Field_Text(
             1,
             10,
             null,
@@ -55,17 +55,7 @@ final class DescriptionValueAdapterTest extends TestCase
             true,
             1
         );
-
-        $start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            $this->description_field,
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartDateAndDuration($start_date_field, $duration_field)
-        );
+        $this->field_description_data = new FieldData($this->description_field);
     }
 
     public function testItThrowsWhenDescriptionValueIsNotFound(): void
@@ -79,7 +69,7 @@ final class DescriptionValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->field_description_data, $source_changeset);
     }
 
     public function testItBuildDescriptionValue(): void
@@ -95,7 +85,7 @@ final class DescriptionValueAdapterTest extends TestCase
 
         $expected_data = new DescriptionValueData("My description", "text");
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->field_description_data, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }

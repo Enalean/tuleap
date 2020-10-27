@@ -24,8 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 final class TitleValueAdapterTest extends TestCase
 {
@@ -35,14 +34,15 @@ final class TitleValueAdapterTest extends TestCase
      * @var \Tracker_FormElement_Field_String
      */
     private $title_field;
+
     /**
-     * @var SynchronizedFields
+     * @var \Tracker_FormElement_Field_String
      */
-    private $synchronized_fields;
+    private $field_title_data;
 
     protected function setUp(): void
     {
-        $this->title_field = new \Tracker_FormElement_Field_String(
+        $this->title_field      = new \Tracker_FormElement_Field_String(
             1,
             10,
             null,
@@ -55,17 +55,7 @@ final class TitleValueAdapterTest extends TestCase
             true,
             1
         );
-
-        $start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            $this->title_field,
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartDateAndDuration($start_date_field, $duration_field)
-        );
+        $this->field_title_data = new FieldData($this->title_field);
     }
 
     public function testItThrowsWhenTitleValueIsNotFound(): void
@@ -79,7 +69,7 @@ final class TitleValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->field_title_data, $source_changeset);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -93,7 +83,7 @@ final class TitleValueAdapterTest extends TestCase
 
         $this->expectException(UnsupportedTitleFieldException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->field_title_data, $source_changeset);
     }
 
     public function testItBuildTitleValue(): void
@@ -108,7 +98,7 @@ final class TitleValueAdapterTest extends TestCase
 
         $expected_data = new TitleValueData("My title");
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->field_title_data, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }

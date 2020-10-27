@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 class TitleValueAdapter
 {
@@ -30,19 +30,18 @@ class TitleValueAdapter
      * @throws UnsupportedTitleFieldException
      * @throws ChangesetValueNotFoundException
      */
-    public function build(SynchronizedFields $fields, \Tracker_Artifact_Changeset $source_tracker): TitleValueData
+    public function build(FieldData $field_title_data, \Tracker_Artifact_Changeset $source_tracker): TitleValueData
     {
-        $title_field = $fields->getTitleField();
-        $title_value = $source_tracker->getValue($title_field);
+        $title_value = $source_tracker->getValue($field_title_data->getField());
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $source_tracker->getId(),
-                (int) $title_field->getId(),
+                (int) $field_title_data->getId(),
                 "title"
             );
         }
         if (! ($title_value instanceof \Tracker_Artifact_ChangesetValue_String)) {
-            throw new UnsupportedTitleFieldException((int) $title_field->getId());
+            throw new UnsupportedTitleFieldException((int) $field_title_data->getId());
         }
 
         return new TitleValueData($title_value->getValue());

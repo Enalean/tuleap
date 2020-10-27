@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
 
 class WorkflowChecker
@@ -59,7 +59,7 @@ class WorkflowChecker
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         ProjectIncrementsTrackerCollection $project_increment_trackers,
-        SynchronizedFieldCollection $field_collection
+        SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         return $this->areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
             $project_increment_trackers,
@@ -75,7 +75,7 @@ class WorkflowChecker
 
     private function areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         ProjectIncrementsTrackerCollection $project_increment_trackers,
-        SynchronizedFieldCollection $field_collection
+        SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $workflow_transition_rules = $this->workflow_dao->searchWorkflowsByFieldIDsAndTrackerIDs(
             $project_increment_trackers->getTrackerIds(),
@@ -101,7 +101,7 @@ class WorkflowChecker
 
     private function areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         ProjectIncrementsTrackerCollection $project_increment_trackers,
-        SynchronizedFieldCollection $field_collection
+        SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $tracker_ids_with_date_rules = $this->tracker_rule_date_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $project_increment_trackers->getTrackerIds(),
@@ -123,7 +123,7 @@ class WorkflowChecker
 
     private function areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         ProjectIncrementsTrackerCollection $project_increment_trackers,
-        SynchronizedFieldCollection $field_collection
+        SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $tracker_ids_with_list_rules = $this->tracker_rule_list_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $project_increment_trackers->getTrackerIds(),

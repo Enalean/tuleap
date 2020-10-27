@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\ProjectIncrementFieldsData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status\StatusValueMapper;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\ProjectIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
@@ -40,9 +39,9 @@ class ProjectIncrementsCreator
      */
     private $transaction_executor;
     /**
-     * @var SynchronizedFieldsGatherer
+     * @var SynchronizedFieldsAdapter
      */
-    private $fields_gatherer;
+    private $synchronized_fields_adapter;
     /**
      * @var StatusValueMapper
      */
@@ -54,19 +53,19 @@ class ProjectIncrementsCreator
 
     public function __construct(
         DBTransactionExecutor $transaction_executor,
-        SynchronizedFieldsGatherer $fields_gatherer,
+        SynchronizedFieldsAdapter $synchronized_fields_adapter,
         StatusValueMapper $status_mapper,
         TrackerArtifactCreator $artifact_creator
     ) {
-        $this->transaction_executor = $transaction_executor;
-        $this->fields_gatherer      = $fields_gatherer;
-        $this->status_mapper        = $status_mapper;
-        $this->artifact_creator     = $artifact_creator;
+        $this->transaction_executor        = $transaction_executor;
+        $this->synchronized_fields_adapter = $synchronized_fields_adapter;
+        $this->status_mapper               = $status_mapper;
+        $this->artifact_creator            = $artifact_creator;
     }
 
     /**
      * @throws ProjectIncrementArtifactCreationException
-     * @throws SynchronizedFieldRetrievalException
+     * @throws FieldRetrievalException
      */
     public function createProjectIncrements(
         SourceChangesetValuesCollection $copied_values,
@@ -76,8 +75,11 @@ class ProjectIncrementsCreator
         $this->transaction_executor->execute(
             function () use ($copied_values, $project_increments_tracker_collection, $current_user) {
                 foreach ($project_increments_tracker_collection->getProjectIncrementTrackers() as $project_increment_tracker) {
-                    $synchronized_fields = $this->fields_gatherer->gather($project_increment_tracker);
-                    $mapped_status       = $this->status_mapper->mapStatusValueByDuckTyping($copied_values, $synchronized_fields);
+                    $synchronized_fields = $this->synchronized_fields_adapter->build($project_increment_tracker);
+
+                    $mapped_status       = $this->status_mapper
+                        ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getFieldStatuData());
+
                     $fields_data         = ProjectIncrementFieldsData::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
                         $mapped_status,

@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementCreationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 
 class SourceChangesetValuesCollectionAdapter
 {
     /**
-     * @var SynchronizedFieldsGatherer
+     * @var SynchronizedFieldsAdapter
      */
     private $fields_gatherer;
     /**
@@ -58,7 +58,7 @@ class SourceChangesetValuesCollectionAdapter
     private $artifact_link_value_adapter;
 
     public function __construct(
-        SynchronizedFieldsGatherer $fields_gatherer,
+        SynchronizedFieldsAdapter $fields_gatherer,
         TitleValueAdapter $title_value_data_adapter,
         DescriptionValueAdapter $description_value_adapter,
         StatusValueAdapter $status_value_adapter,
@@ -77,18 +77,18 @@ class SourceChangesetValuesCollectionAdapter
 
     /**
      * @throws ProjectIncrementCreationException
-     * @throws SynchronizedFieldRetrievalException
+     * @throws FieldRetrievalException
      */
     public function buildCollection(
         \Tracker_Artifact_Changeset $source_changeset,
         \Tracker $source_tracker
     ): SourceChangesetValuesCollection {
-        $fields              = $this->fields_gatherer->gather($source_tracker);
-        $title_value         = $this->title_value_data_adapter->build($fields, $source_changeset);
-        $description_value   = $this->description_value_adapter->build($fields, $source_changeset);
-        $status_value        = $this->status_value_adapter->build($fields, $source_changeset);
-        $start_date_value    = $this->start_date_adapter->build($fields, $source_changeset);
-        $end_period_value    = $this->end_period_adapter->build($fields, $source_changeset);
+        $fields              = $this->fields_gatherer->build($source_tracker);
+        $title_value         = $this->title_value_data_adapter->build($fields->getFieldTitleData(), $source_changeset);
+        $description_value   = $this->description_value_adapter->build($fields->getFieldDescriptionData(), $source_changeset);
+        $status_value        = $this->status_value_adapter->build($fields->getFieldStatuData(), $source_changeset);
+        $start_date_value    = $this->start_date_adapter->build($fields->getFieldStartDateData(), $source_changeset);
+        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPriodData(), $source_changeset);
         $artifact_link_value = $this->artifact_link_value_adapter->build($source_changeset->getArtifact());
 
         return new SourceChangesetValuesCollection(

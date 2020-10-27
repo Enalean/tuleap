@@ -20,33 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 
-/**
- * @psalm-immutable
- */
-class ArtifactLinkValueData
+final class NoProjectIncrementException extends \RuntimeException implements ProjectIncrementTrackerRetrievalException
 {
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
-
-    public function __construct(int $source_artifact_id)
+    public function __construct(int $planning_id)
     {
-        $this->source_artifact_id = $source_artifact_id;
-    }
-
-    /**
-     * @return array{new_values: string, natures: array<string, string>}
-     */
-    public function getValues(): array
-    {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        parent::__construct("Planning with id $planning_id has no project increment tracker");
     }
 }

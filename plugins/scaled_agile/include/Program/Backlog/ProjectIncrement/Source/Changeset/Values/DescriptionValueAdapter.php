@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 class DescriptionValueAdapter
 {
@@ -30,15 +30,14 @@ class DescriptionValueAdapter
      * @throws ChangesetValueNotFoundException
      */
     public function build(
-        SynchronizedFields $fields,
+        FieldData $field_description_data,
         \Tracker_Artifact_Changeset $source_changeset
     ): DescriptionValueData {
-        $description_field = $fields->getDescriptionField();
-        $description_value = $source_changeset->getValue($description_field);
+        $description_value = $source_changeset->getValue($field_description_data->getField());
         if (! $description_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $source_changeset->getId(),
-                (int) $description_field->getId(),
+                (int) $field_description_data->getId(),
                 "description"
             );
         }

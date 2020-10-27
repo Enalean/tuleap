@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class scaled_agilePluginTest extends TestCase
