@@ -22,13 +22,14 @@
 .project-with-background {
     .test-campaigns-header-title,
     .test-campaign-header-title,
-    .test-administration-title {
+    .test-administration-title,
+    .test-dependency-graph-title {
         @include background.project-background-title-header-typography($tlp-ui-white);
     }
 }
 
 body {
-    $elements-with-project-background: '.test-campaigns-header', '.test-campaign-header', '.test-administration-title';
+    $elements-with-project-background: '.test-campaigns-header', '.test-campaign-header', '.test-administration-title', '.test-dependency-graph-title';
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
