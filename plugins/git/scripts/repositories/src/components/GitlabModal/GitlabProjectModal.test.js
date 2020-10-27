@@ -21,6 +21,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import GitlabProjectModal from "./GitlabProjectModal.vue";
+import ListProjectsModal from "./ListProjectsModal.vue";
 
 describe("GitlabProjectModal", () => {
     let store_options, store;
@@ -89,21 +90,20 @@ describe("GitlabProjectModal", () => {
         );
     });
 
-    it("When there is a success message, Then it's displayed", async () => {
+    it("When projects have been retrieved, Then ListProjectModal is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token_user: "AFREZF546",
-            success_message: "Success message",
+            gitlab_projects: [{ id: 10 }],
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-success-load-projects]").text()).toEqual(
-            "Success message"
-        );
+        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-display-form-credentials]").exists()).toBeFalsy();
     });
 
     it("When there are no token and server url, Then submit button is disabled", async () => {

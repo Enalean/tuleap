@@ -272,6 +272,9 @@ describe("Store actions", () => {
             getAsyncGitlabProjectList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
+                        headers: {
+                            get: () => 1,
+                        },
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
                     });
@@ -287,6 +290,34 @@ describe("Store actions", () => {
                 server_url: "https://example/api/v4/projects?membership=true&per_page=20",
                 token: "azerty1234",
             });
+        });
+
+        it("When there is 2 pages, Then api is called twice", async () => {
+            const getAsyncGitlabProjectList = jest.spyOn(
+                gitlab_querier,
+                "getAsyncGitlabProjectList"
+            );
+            getAsyncGitlabProjectList.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        headers: {
+                            get: () => 2,
+                        },
+                        status: 200,
+                        json: () => Promise.resolve([{ id: 10 }]),
+                    });
+                })
+            );
+            const credentials = {
+                server_url: "https://example/",
+                token: "azerty1234",
+            };
+
+            expect(await getGitlabProjectList(context, credentials)).toEqual([
+                { id: 10 },
+                { id: 10 },
+            ]);
+            expect(getAsyncGitlabProjectList).toBeCalledTimes(2);
         });
 
         it("When en error retrieved from api, Then an error is thrown", async () => {
