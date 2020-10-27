@@ -1,0 +1,108 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/blue-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/green-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/grey-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/orange-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/purple-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/red-colors';
+
+.svn-homepage {
+    width: 50%;
+    padding: $tlp-medium-spacing;
+
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+    }
+}
+
+.svn-homepage-repository {
+    position: relative;
+    margin: 0 0 $tlp-medium-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.svn-homepage-repository-name {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.svn-homepage-repository-date {
+    display: block;
+    margin: $tlp-medium-spacing 0 0;
+    font-size: .875rem;
+}
+
+.svn-homepage-repository-date-icon {
+    margin: 0 4px 0 0;
+}
+
+.svn-homepage-repository-settings {
+    position: absolute;
+    top: $tlp-medium-spacing;
+    right: $tlp-medium-spacing;
+    transition: color ease-in-out 150ms;
+}
+
+.svn-homepage-create-repository-button {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
+@mixin definitions-with-theme-colors($tlp-ui-dimmed, $tlp-theme-color) {
+    .svn-homepage-repository-settings {
+        color: transparentize(blue-colors.$tlp-ui-dimmed, .3);
+
+        &:hover,
+        &:focus {
+            color: blue-colors.$tlp-ui-dimmed;
+
+            + .svn-homepage-repository-card {
+                border-color: $tlp-theme-color;
+            }
+        }
+    }
+}
+
+.theme-blue {
+    @include definitions-with-theme-colors(blue-colors.$tlp-ui-dimmed, blue-colors.$tlp-theme-color);
+}
+
+.theme-green {
+    @include definitions-with-theme-colors(green-colors.$tlp-ui-dimmed, green-colors.$tlp-theme-color);
+}
+
+.theme-grey {
+    @include definitions-with-theme-colors(grey-colors.$tlp-ui-dimmed, grey-colors.$tlp-theme-color);
+}
+
+.theme-orange {
+    @include definitions-with-theme-colors(orange-colors.$tlp-ui-dimmed, orange-colors.$tlp-theme-color);
+}
+
+.theme-purple {
+    @include definitions-with-theme-colors(purple-colors.$tlp-ui-dimmed, purple-colors.$tlp-theme-color);
+}
+
+.theme-red {
+    @include definitions-with-theme-colors(red-colors.$tlp-ui-dimmed, red-colors.$tlp-theme-color);
+}

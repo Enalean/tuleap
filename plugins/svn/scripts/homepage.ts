@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'density';
+import { openTargetModalIdOnClick } from "../../../src/scripts/tuleap/modals/modal-opener";
 
-$tlp-density: density.$tlp-density-confortable;
-
-$tlp-title-spacing: 30px;
-
-$tlp-small-spacing: 8px;
-$tlp-medium-spacing: 16px;
-$tlp-large-spacing: 24px;
-$tlp-x-large-spacing: 32px;
-$tlp-jumbo-spacing: 48px;
+document.addEventListener("DOMContentLoaded", () => {
+    openTargetModalIdOnClick(document, "create-repository-button");
+});

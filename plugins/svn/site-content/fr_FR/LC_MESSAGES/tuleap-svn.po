@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2020-10-27 10:39+0100\n"
+"PO-Revision-Date: 2020-10-27 17:37+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -28,9 +28,6 @@ msgstr "Une sauvegarde du dépôt '%1$s' sera disponible dans le répertoire %2$
 
 msgid "Access control"
 msgstr "Contrôle d'accès"
-
-msgid "Access to settings"
-msgstr "Accès aux paramètres"
 
 msgid "Active notifications list"
 msgstr "Liste des notifications actives"
@@ -75,6 +72,9 @@ msgstr "Confirmer la suppression"
 
 msgid "Confirm restore of the svn repository"
 msgstr "Confirmer la restauration du dépôt"
+
+msgid "Create a new SVN repository"
+msgstr "Créer un nouveau dépôt SVN"
 
 msgid "Create repository"
 msgstr "Créer le dépôt"
@@ -183,8 +183,8 @@ msgstr ""
 "minimum de trois caractères. Seuls les caractères spéciaux - _ . sont "
 "autorisés."
 
-msgid "No repository found"
-msgstr "Aucun dépôt trouvé"
+msgid "New repository"
+msgstr "Nouveau dépôt"
 
 msgid "No restorable svn repositories found."
 msgstr "Aucun dépôt svn à restaurer."
@@ -217,8 +217,9 @@ msgstr "Projet non trouvé"
 msgid "Read"
 msgstr "Lecture"
 
-msgid "Repository"
-msgstr "Dépôt"
+#, php-format
+msgid "Repository %s successfully created"
+msgstr "Le dépôt %s a été créé avec succès"
 
 #, php-format
 msgid "Repository '%1$s' will be removed in a few seconds"
@@ -310,9 +311,6 @@ msgstr "Entête du sujet"
 msgid "Subversion"
 msgstr "Subversion"
 
-msgid "Successfully Updated"
-msgstr "Mis à jour avec succès"
-
 #, php-format
 msgid ""
 "The default policy is to allow read-write access to all project members on "
@@ -340,8 +338,9 @@ msgid ""
 msgstr ""
 "Le dépôt est en attente de création. Veuillez revenir dans quelques minutes."
 
-msgid "The repository name is invalid"
-msgstr "Le nom du dépôt est invalide"
+#, php-format
+msgid "The repository name %s is invalid"
+msgstr "Le nom du dépôt %s est invalide"
 
 msgid ""
 "The requested action can not be understood, you have been redirected to the "
@@ -360,6 +359,9 @@ msgstr ""
 
 msgid "There is no notification"
 msgstr "Il n'y a aucune notification"
+
+msgid "There isn't any repository yet."
+msgstr "Il n'y pas de dépôt pour le moment."
 
 msgid "This action cannot be undone."
 msgstr "Cette action est irréversible."
@@ -403,6 +405,10 @@ msgstr ""
 msgid "Total number of users with SVN write operations"
 msgstr ""
 "Nombre total d'utilisateurs ayant réalisé des opérations SVN en écriture"
+
+#, php-format
+msgid "Unable to create repository %s"
+msgstr "Impossible de créer le dépôt %s"
 
 msgid "Unable to delete notification list"
 msgstr "Impossible de supprimer la liste des emails notifiés"
@@ -485,6 +491,9 @@ msgstr "Vous ne pouvez pas supprimer."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas les droits de voir les groupes utilisateurs"
+
+msgid "my-new-repository"
+msgstr "mon-depot"
 
 msgid "saved on"
 msgstr "sauvegardée le"

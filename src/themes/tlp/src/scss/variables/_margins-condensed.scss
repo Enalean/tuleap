@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-density: $tlp-density-condensed;
+@use 'density';
+
+$tlp-density: density.$tlp-density-condensed;
 
 $tlp-title-spacing: 30px;
 

@@ -28,8 +28,10 @@ const output = webpack_configurator.configureOutput(
 const webpack_config_for_vue_and_themes = {
     entry: {
         "permission-per-group": "./scripts/permissions-per-group/src/index.js",
+        homepage: "./scripts/homepage.ts",
         "style-fp": "./themes/FlamingParrot/css/style.scss",
         "style-bp": "./themes/BurningParrot/css/style.scss",
+        "style-bp-condensed": "./themes/BurningParrot/css/style-condensed.scss",
     },
     context,
     output,
@@ -38,6 +40,9 @@ const webpack_config_for_vue_and_themes = {
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
@@ -46,9 +51,13 @@ const webpack_config_for_vue_and_themes = {
     },
     plugins: [
         manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(true),
         webpack_configurator.getVueLoaderPlugin(),
         ...webpack_configurator.getCSSExtractionPlugins(),
     ],
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
     resolveLoader: { alias: webpack_configurator.easygettext_loader_alias },
 };
 

@@ -25,8 +25,14 @@ use ThemeVariantColor;
 
 class ThemeVariation
 {
+    /**
+     * @var ThemeVariantColor
+     */
     private $color;
 
+    /**
+     * @var bool
+     */
     private $is_condensed_mode;
 
     public function __construct(ThemeVariantColor $color, PFUser $current_user)
@@ -37,12 +43,17 @@ class ThemeVariation
         ) === PFUser::DISPLAY_DENSITY_CONDENSED;
     }
 
-    public function getFileColorCondensedSuffix()
+    public function getFileColorCondensedSuffix(): string
     {
         $condensed_suffix = '';
         if ($this->is_condensed_mode) {
             $condensed_suffix = '-condensed';
         }
         return '-' . $this->color->getName() . $condensed_suffix;
+    }
+
+    public function isCondensed(): bool
+    {
+        return $this->is_condensed_mode;
     }
 }

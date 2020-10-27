@@ -175,8 +175,9 @@ class HeaderPresenterBuilder
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
             [
-                'variant'     => $this->getMainColor(),
-                'stylesheets' => &$stylesheets
+                'variant'         => $this->getMainColor(),
+                'stylesheets'     => &$stylesheets,
+                'theme_variation' => $theme_variation
             ]
         );
 

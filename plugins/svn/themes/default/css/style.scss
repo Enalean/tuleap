@@ -51,21 +51,6 @@ body.viewvc-epel {
     margin: 0 0 40px;
 }
 
-#svn-homepage {
-    form {
-        margin: 30px 0 15px;
-
-        > .help {
-            margin: 0 0 0 5px;
-            font-size: 12px;
-        }
-    }
-
-    table {
-        max-width: 960px;
-    }
-}
-
 #svn-repository {
     #svn-repository-url-bar {
         > .input-append {
