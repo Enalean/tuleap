@@ -23,6 +23,7 @@ namespace Tuleap\SVN\PermissionsPerGroup;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
+use Tuleap\SVN\Admin\GlobalAdministratorsController;
 
 class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
 {
@@ -49,11 +50,6 @@ class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
 
     private function getGlobalAdminLink(Project $project)
     {
-        return SVN_BASE_URL . "/?" . http_build_query(
-            [
-                "group_id" => $project->getID(),
-                "action"   => "admin-groups"
-            ]
-        );
+        return GlobalAdministratorsController::getURL($project);
     }
 }

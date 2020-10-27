@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Admin;
 
-use Tuleap\SVN\ServiceSvn;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\SVN\SvnPermissionManager;
 use HTTPRequest;
 use CSRFSynchronizerToken;
@@ -29,7 +29,7 @@ use ProjectUGroup;
 use Feedback;
 use User_ForgeUserGroupFactory;
 
-class GlobalAdminController
+class GlobalAdministratorsUpdater
 {
     private $ugroup_factory;
     private $permissions_manager;
@@ -40,18 +40,18 @@ class GlobalAdminController
         $this->permissions_manager = $permissions_manager;
     }
 
-    private function generateToken(Project $project)
+    public static function generateToken(Project $project): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . "&action=save-admin-groups");
     }
 
     public function saveAdminGroups(
-        ServiceSvn $service,
-        HTTPRequest $request
-    ) {
+        HTTPRequest $request,
+        BaseLayout $layout
+    ): void {
         $project          = $request->getProject();
 
-        $token = $this->generateToken($project);
+        $token = self::generateToken($project);
         $token->check();
         $ugroups          = $request->get("admin_groups") ?: [];
         $selected_ugroups = $this->getSelectedUGroups($project, $ugroups);
@@ -59,29 +59,10 @@ class GlobalAdminController
         $this->permissions_manager->save($project, $selected_ugroups);
         $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-svn', 'Update successful'));
 
-        $this->showAdminGroups($service, $request);
+        $layout->redirect(GlobalAdministratorsController::getURL($project));
     }
 
-    public function showAdminGroups(
-        ServiceSvn $service,
-        HTTPRequest $request
-    ) {
-        $project       = $request->getProject();
-        $token         = $this->generateToken($project);
-
-        $service->renderInPage(
-            $request,
-            $GLOBALS['Language']->getText('global', 'Administration'),
-            'global-admin/admin_groups',
-            new AdminGroupsPresenter(
-                $project,
-                $token,
-                $this->getOptions($project)
-            )
-        );
-    }
-
-    private function getSelectedUGroups(Project $project, array $ugroups)
+    private function getSelectedUGroups(Project $project, array $ugroups): array
     {
         $groups          = [];
         $project_ugroups = $this->ugroup_factory->getAllForProject($project);
@@ -97,27 +78,5 @@ class GlobalAdminController
         }
 
         return $groups;
-    }
-
-    private function getOptions(Project $project)
-    {
-        $options         = [];
-        $project_ugroups = $this->ugroup_factory->getAllForProject($project);
-        $svn_ugroups = $this->permissions_manager->getAdminUgroupIds($project);
-
-        foreach ($project_ugroups as $project_ugroup) {
-            if ($project_ugroup->getId() == ProjectUGroup::ANONYMOUS) {
-                continue;
-            }
-
-            $selected  = in_array($project_ugroup->getId(), $svn_ugroups) ? 'selected="selected"' : '';
-            $options[] = [
-                'id'       => $project_ugroup->getId(),
-                'name'     => $project_ugroup->getName(),
-                'selected' => $selected
-            ];
-        }
-
-        return $options;
     }
 }
