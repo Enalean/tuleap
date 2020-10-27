@@ -28,16 +28,25 @@
 @use '../../../../../../src/themes/FlamingParrot/css/utils/variables-red';
 
 .project-with-background {
-    #tracker_report_config_options { // stylelint-disable-line selector-id-pattern
+    // stylelint-disable selector-id-pattern, selector-class-pattern
+    #tracker_report_config_options,
+    .tracker_artifact_title,
+    .tracker-hierarchy:not(.tracker-hierarchy-admin) .direct-link-to-artifact,
+    .tracker-hierarchy:not(.tracker-hierarchy-admin) {
         @include background.project-background-title-header-typography(variables-color-common.$white);
 
         .dropdown-menu {
             text-shadow: none;
         }
     }
+    // stylelint-enable
 
     :not(.browse_instructions) + .tracker-report-query { // stylelint-disable-line selector-class-pattern
         border-top: 0;
+    }
+
+    .tracker-hierarchy:not(.tracker-hierarchy-admin) > li .tree-last {
+        filter: brightness(1.7);
     }
 }
 
@@ -46,7 +55,7 @@ body.in_tracker_report .project-with-background .content { // stylelint-disable-
 }
 
 @mixin definitions-with-theme-colors($sidebar-background) {
-    $elements-with-project-background: '#tracker_report_config_options';
+    $elements-with-project-background: '#tracker_report_config_options', '.tracker_artifact_title', '.tracker-hierarchy:not(.tracker-hierarchy-admin)';
 
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(

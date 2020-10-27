@@ -33,6 +33,15 @@ $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
 $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height + $tracker-artifact-submit-buttons-concurrent-edition-height;
 
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type, selector-max-compound-selectors */
+body.tracker-artifact-view-body .main .content {
+    padding: 0;
+}
+
+.tracker-artifact-view-content {
+    padding: 12px 12px 0;
+}
+
+
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
     margin-top: 16px;
@@ -725,7 +734,7 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker_artifact_title {
     display: flex;
-    margin: 0 0 10px;
+    padding-bottom: 10px;
     color: #474747;
     font-size: 2em;
     font-weight: 600;
@@ -1815,7 +1824,7 @@ ul.plugin_tracker_my_artifacts_list {
 .tracker-hierarchy > li {
     display: flex;
     align-items: flex-start;
-    margin: 0 0 5px;
+    padding-bottom: 5px;
 
     .tree-blank,
     .tree-last {

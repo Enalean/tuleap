@@ -38,7 +38,9 @@ class Tracker_Artifact_View_ViewCollection
 
         $html  = '';
         $html .= $this->fetchTabs($requested_view);
+        $html .= '<div class="tracker-artifact-view-content">';
         $html .= $requested_view->fetch();
+        $html .= '</div>';
 
         return $html;
     }
@@ -63,7 +65,7 @@ class Tracker_Artifact_View_ViewCollection
     private function fetchTabs(Tracker_Artifact_View_View $current_view)
     {
         $html  = '';
-        $html .= '<ul class="nav nav-tabs tracker-artifact-nav">';
+        $html .= '<div class="main-project-tabs"><ul class="nav nav-tabs tracker-artifact-nav">';
         foreach ($this->views as $view) {
             $class = '';
             if ($view == $current_view) {
@@ -73,7 +75,7 @@ class Tracker_Artifact_View_ViewCollection
                 <a href="' . $view->getURL() . '" data-test="' . $view->getIdentifier() . '">' . $view->getTitle() . '</a>
             </li>';
         }
-        $html .= '</ul>';
+        $html .= '</ul></div>';
         return $html;
     }
 }
