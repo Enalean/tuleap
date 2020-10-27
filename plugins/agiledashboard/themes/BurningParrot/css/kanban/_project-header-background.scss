@@ -19,11 +19,15 @@
 
 @use '../../src/themes/common/css/project-background/background';
 
-.project-with-background {
+.project-with-background .kanban:not(.widget-context) {
     .kanban-header-title,
     .kanban-header-filter-label,
     .kanban-header-filter-text-info {
         @include background.project-background-title-header-typography($tlp-ui-white);
+    }
+
+    .kanban-column-header {
+        border-top: 1px solid $tlp-ui-border-normal;
     }
 }
 
