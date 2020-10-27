@@ -66,6 +66,18 @@ services:
     volumes:
     - jenkins-data:/var/jenkins_home
 
+  gitlab:
+    build:
+      context: tools/docker/gitlab
+    hostname: 'gitlab.local'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.local'
+        letsencrypt['enable'] = false
+    volumes:
+      - gitlab-config:/etc/gitlab
+      - gitlab-data:/var/opt/gitlab
+
   db55:
     image: mysql:5.5
     env_file:
@@ -115,6 +127,8 @@ volumes:
   tuleap-data:
   ldap-data:
   gerrit-data:
+  gitlab-config:
+  gitlab-data:
   db-data:
   db57-data:
   mariadb103-data:
