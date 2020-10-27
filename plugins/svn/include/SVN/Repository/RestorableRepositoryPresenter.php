@@ -25,7 +25,7 @@ namespace Tuleap\SVN\Repository;
 use DateHelper;
 
 /**
- * @pslam-immutable
+ * @psalm-immutable
  */
 class RestorableRepositoryPresenter
 {
