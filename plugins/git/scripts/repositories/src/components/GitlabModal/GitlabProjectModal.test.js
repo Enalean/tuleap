@@ -22,6 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import GitlabProjectModal from "./GitlabProjectModal.vue";
 import ListProjectsModal from "./ListProjectsModal.vue";
+import CredentialsFormModal from "./CredentialsFormModal.vue";
 
 describe("GitlabProjectModal", () => {
     let store_options, store;
@@ -47,75 +48,44 @@ describe("GitlabProjectModal", () => {
         });
     }
 
-    it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
+    it("When a user displays the modal ,then the CredentialsFormModal is displayed", async () => {
         const wrapper = instantiateComponent();
-        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-arrow-right");
 
         wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token_user: "AFREZF546",
+            gitlab_projects: null,
+            back_button_clicked: false,
         });
 
         await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=fetch-gitlab-project-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
-
-        expect(
-            wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-sync-alt");
-
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabProjectList", {
-            server_url: "https://example.com",
-            token: "AFREZF546",
-        });
+        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
     });
 
-    it("When there is an error message, Then it's displayed", async () => {
+    it("When user have clicked on back button, Then CredentialsFormModal is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token_user: "AFREZF546",
-            error_message: "Error message",
+            gitlab_projects: [{ id: 10 }],
+            back_button_clicked: true,
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-load-projects]").text()).toEqual(
-            "Error message"
-        );
+        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
     });
 
     it("When projects have been retrieved, Then ListProjectModal is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            is_loading: false,
-            gitlab_server: "https://example.com",
-            gitlab_token_user: "AFREZF546",
             gitlab_projects: [{ id: 10 }],
         });
 
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListProjectsModal).exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-display-form-credentials]").exists()).toBeFalsy();
-    });
-
-    it("When there are no token and server url, Then submit button is disabled", async () => {
-        const wrapper = instantiateComponent();
-        wrapper.setData({
-            is_loading: false,
-            gitlab_server: "",
-            gitlab_token_user: "",
-        });
-        await wrapper.vm.$nextTick();
-        expect(
-            wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
-        ).toBeTruthy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
     });
 });
