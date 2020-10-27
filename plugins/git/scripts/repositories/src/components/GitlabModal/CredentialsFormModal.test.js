@@ -113,4 +113,22 @@ describe("CredentialsFormModal", () => {
             wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
         ).toBeTruthy();
     });
+
+    it("When there are not projects in Gitlab, Then empty message is displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "",
+            gitlab_token_user: "",
+            gitlab_projects: [],
+            empty_message: "No project is available with your GitLab account",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-empty-projects]").text()).toEqual(
+            "No project is available with your GitLab account"
+        );
+    });
 });
