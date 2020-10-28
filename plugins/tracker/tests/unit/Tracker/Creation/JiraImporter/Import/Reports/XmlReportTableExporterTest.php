@@ -20,11 +20,10 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Creation\JiraImporter\Import\Reports;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use XML_SimpleXMLCDATAFactory;
 

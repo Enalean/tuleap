@@ -18,15 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace unit\REST;
+namespace Tuleap\AgileDashboard\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
-use Tuleap\AgileDashboard\REST\QueryToCriterionOnlyAllStatusConverter;
-use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 
 class QueryToCriterionOnlyAllStatusConverterTest extends TestCase
 {

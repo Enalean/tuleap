@@ -20,14 +20,10 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 final class JiraAuthorRetrieverTest extends TestCase

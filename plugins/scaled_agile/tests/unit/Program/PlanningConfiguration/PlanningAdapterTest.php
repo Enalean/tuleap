@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace unit\Program\PlanningConfiguration;
+namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
 
 use Mockery;
 use NullTracker;
 use PHPUnit\Framework\TestCase;
 use Planning;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanningAdapterTest extends TestCase

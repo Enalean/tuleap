@@ -20,12 +20,10 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -71,8 +69,7 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
                 'Status',
                 'sb',
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE
-            ),
-            $this->forge_user
+            )
         );
 
         $this->assertSame(['id' => '10005'], $list_value);
@@ -94,8 +91,7 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
                 'Assignee',
                 'sb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE
-            ),
-            $this->forge_user
+            )
         );
 
         $this->assertSame(['id' => '105'], $list_value);
@@ -122,8 +118,7 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
                 'Multi userpicker',
                 'msb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE
-            ),
-            $this->forge_user
+            )
         );
 
         $this->assertSame(
