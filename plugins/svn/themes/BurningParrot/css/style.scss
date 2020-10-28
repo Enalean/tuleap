@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.svn-permission-per-group-repository {
-    width: 100%;
-}
+@import '../../../../../src/themes/tlp/src/scss/variables/margins';
+
+@import 'include/definitions';

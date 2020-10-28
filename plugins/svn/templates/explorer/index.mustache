@@ -1,75 +1,108 @@
-<div id="svn-homepage">
-    <h2>{{ title_list_repositories }}</h2>
-
+<h1 class="project-administration-title">
+    {{# dgettext }} tuleap-svn | Project SVN repositories {{/ dgettext }}
     {{# is_admin }}
-    <form name="svn-repo-creator" class="form-inline" method="post" action="/plugins/svn/?group_id={{group_id}}&action=create-repository">
+        <button
+            type="button"
+            id="create-repository-button"
+            class="tlp-button-primary svn-homepage-create-repository-button"
+            data-test="create-repository-creation"
+            data-target-modal-id="create-repository-modal"
+        >
+            <i class="fas fa-plus tlp-button-icon"></i>
+            {{# dgettext }} tuleap-svn | New repository{{/ dgettext }}
+        </button>
+    {{/ is_admin }}
+</h1>
+
+{{# is_admin }}
+    <form
+        class="tlp-modal"
+        role="dialog"
+        id="create-repository-modal"
+        aria-labelledby="create-repository-modal-label"
+        method="POST"
+        action="/plugins/svn/?group_id={{ group_id }}&action=create-repository"
+    >
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="create-repository-modal-label">
+            <i class="fas fa-tlp-versioning-svn tlp-modal-title-icon" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-svn | Create a new SVN repository {{/ dgettext }}
+        </h1>
+        <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
 
-        <div class="input-append">
-            <input type="text"
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="create-repository-field-name">
+                {{# dgettext }} tuleap-svn | Repository name {{/ dgettext }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
                 id="create-repository-field-name"
-                data-test="create-repository-field-name"
                 name="repo_name"
-                value="{{ repository_name }}"
-                placeholder="{{ label_repository_name }}"
+                data-test="create-repository-field-name"
                 pattern="{{ validate_name }}"
+                placeholder="{{# dgettext }} tuleap-svn | my-new-repository {{/ dgettext }}"
                 required
-            />
-            <input type="submit"
-                   name="repo_add"
-                   value="{{ create_repository }}"
-                   data-test="create-repository"
-                   class="btn btn-primary"
-            />
+            >
+            <p class="tlp-text-info">
+                {{# dgettext }}
+                    tuleap-svn |
+                    Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed.
+                {{/ dgettext }}
+            </p>
         </div>
-        <span class="help">{{ help_repository_name }}</span>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="create-repository">
+            <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-svn | Create repository{{/ dgettext }}
+        </button>
+    </div>
     </form>
-    {{/ is_admin }}
+{{/ is_admin }}
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>{{ table_head_list_repository }}</th>
-            <th>{{ last_commit }}</th>
-            {{# is_admin }}
-                <th>
-                    {{ settings_label }}
-                </th>
-            {{/ is_admin }}
-        </tr>
-        </thead>
-        <tbody>
+{{# has_repositories }}
+    <section class="svn-homepage">
         {{# repository_list }}
             {{# repository }}
-                <tr>
-                    <td><a href="?roottype=svn&amp;root={{ getFullName }}" data-test="svn-repository-access-{{ getName }}">{{ getName }}</a></td>
-                    <td>{{{ purified_commit_date }}}</td>
+                <div class="svn-homepage-repository">
                     {{# is_admin }}
-                        <td>
-                            <a href="{{ getSettingUrl }}" class="btn" data-test="svn-admin-repository-access">
-                                <i class="fa fa-cog"></i> {{ settings_button }}
-                            </a>
-                        </td>
+                        <a href="{{ getSettingUrl }}" class="svn-homepage-repository-settings" data-test="svn-admin-repository-access" title="{{# dgettext }} tuleap-svn | Settings {{/ dgettext }}">
+                            <i class="fas fa-cog"></i>
+                        </a>
                     {{/ is_admin }}
-                </tr>
+                    <a class="tlp-card tlp-card-selectable svn-homepage-repository-card" href="?roottype=svn&amp;root={{ getFullName }}" data-test="svn-repository-access-{{ getName }}">
+                        <span class="svn-homepage-repository-name">{{ getName }}</span>
+                        {{# commit_date }}
+                            <span
+                                class="svn-homepage-repository-date"
+                                title="{{# dgettext }} tuleap-svn | Last commit {{/ dgettext }}"
+                            >
+                                <i class="far fa-clock svn-homepage-repository-date-icon" aria-hidden="true"></i>
+                                {{{ purified_commit_date }}}
+                            </span>
+                        {{/ commit_date }}
+                    </a>
+                </div>
             {{/ repository }}
         {{/ repository_list }}
-        {{^ repository_list }}
-            <tr>
-                <td class="table-cell-empty"
-                    {{# is_admin }}
-                    colspan="3"
-                    {{/ is_admin }}
-                    {{^ is_admin }}
-                    colspan="3"
-                    {{/ is_admin }}
-                >
-                    {{ no_repositories }}
-                </td>
-            </tr>
-        {{/ repository_list }}
-        </tbody>
-    </table>
-</div>
+    </section>
+{{/ has_repositories }}
+{{^ has_repositories }}
+    <div class="empty-page">
+        <div class=" empty-page-text">
+            {{# dgettext }} tuleap-svn | There isn't any repository yet.{{/ dgettext }}
+        </div>
+    </div>
+{{/ has_repositories }}

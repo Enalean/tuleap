@@ -41,21 +41,15 @@ class RepositoryPresenter
      * @var int
      * @psalm-readonly
      */
-    private $commit_date;
-    /**
-     * @var \PFUser
-     * @psalm-readonly
-     */
-    private $user;
+    public $commit_date;
 
     public function __construct(Repository $repository, int $commit_date, \PFUser $user)
     {
         $this->repository           = $repository;
         $this->commit_date          = $commit_date;
-        $this->user                 = $user;
         $this->purified_commit_date = (! $this->commit_date) ? '-' : DateHelper::relativeDateInlineContext(
             $this->commit_date,
-            $this->user
+            $user
         );
     }
 }

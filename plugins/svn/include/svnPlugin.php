@@ -24,6 +24,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use FastRoute\RouteCollector;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
@@ -204,6 +205,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
         $this->addHook(\Tuleap\svn\Event\UpdateProjectAccessFilesEvent::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1168,16 +1170,46 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $collector->collectPane($event);
     }
 
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
+    {
+        if ($this->isInSvnHomepage()) {
+            $event->setIsInBurningParrotCompatiblePage();
+        }
+    }
+
     /**
-     * @see Event:BURNING_PARROT_GET_STYLESHEETS
+     * @see Event::BURNING_PARROT_GET_STYLESHEETS
      */
     public function burningParrotGetStylesheets(array $params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0) {
+        if (
+            strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0
+            || $this->isInSvnHomepage()
+        ) {
             $assets = $this->getIncludeAssets();
-            $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
+
+            if ($params['theme_variation']->isCondensed()) {
+                $params['stylesheets'][] = $assets->getFileURL('style-bp-condensed.css');
+            } else {
+                $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
+            }
         }
     }
+
+    private function isInSvnHomepage(): bool
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
+        parse_str($_SERVER['QUERY_STRING'], $output);
+        if (count($output) !== 1) {
+            return false;
+        }
+
+        return array_keys($output) === ['group_id'];
+    }
+
 
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
