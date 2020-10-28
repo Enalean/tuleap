@@ -27,6 +27,21 @@
     .git-repository-name {
         @include background.project-background-title-header-typography($tlp-ui-white);
     }
+
+    .git-repository-parent {
+        color: $tlp-ui-white;
+
+        > a {
+            color: $tlp-ui-white;
+            text-decoration: underline;
+
+            &:focus,
+            &:hover,
+            &:active {
+                color: darken($tlp-ui-white, 10%);
+            }
+        }
+    }
 }
 
 body {
