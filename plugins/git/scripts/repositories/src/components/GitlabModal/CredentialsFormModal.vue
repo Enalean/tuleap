@@ -27,6 +27,13 @@
             >
                 {{ error_message }}
             </div>
+            <div
+                class="tlp-alert-warning"
+                data-test="gitlab-empty-projects"
+                v-if="empty_message.length > 0"
+            >
+                {{ empty_message }}
+            </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_server">
                     <translate>GitLab server URL</translate>
@@ -99,6 +106,7 @@ export default {
             gitlab_token_user: "",
             is_loading: false,
             error_message: "",
+            empty_message: "",
             gitlab_projects: null,
         };
     },
@@ -118,6 +126,7 @@ export default {
         },
         resetMessages() {
             this.error_message = "";
+            this.empty_message = "";
         },
         handleError() {
             this.resetMessages();
@@ -149,6 +158,14 @@ export default {
             try {
                 this.is_loading = true;
                 this.gitlab_projects = await this.getGitlabProjectList(credentials);
+
+                if (this.gitlab_projects.length === 0) {
+                    this.empty_message = this.$gettext(
+                        "No project is available with your GitLab account"
+                    );
+                    return;
+                }
+
                 this.$emit("on-get-projects", this.gitlab_projects);
             } catch (e) {
                 this.handleError();

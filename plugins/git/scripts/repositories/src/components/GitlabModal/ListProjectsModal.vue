@@ -35,17 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="projects.length === 0">
-                        <td
-                            colspan="3"
-                            class="tlp-table-cell-empty"
-                            data-test="gitlab-empty-projects"
-                        >
-                            <translate>No project is available with your GitLab account</translate>
-                        </td>
-                    </tr>
                     <tr
-                        v-else
                         v-for="project of projects"
                         v-bind:key="project.id"
                         v-bind:data-test="`gitlab-projects-displayed-${project.id}`"

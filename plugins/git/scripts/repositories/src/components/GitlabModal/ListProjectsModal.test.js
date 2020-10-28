@@ -47,17 +47,7 @@ describe("ListProjectsModal", () => {
         });
     }
 
-    it("When there is no project, Then an empty message is displayed", () => {
-        propsData = { projects: [] };
-        const wrapper = instantiateComponent();
-
-        expect(wrapper.find("[data-test=gitlab-empty-projects]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-empty-projects]").text()).toEqual(
-            "No project is available with your GitLab account"
-        );
-    });
-
-    it("When there are projects, Then no empty message is displayed and projects are displayed", () => {
+    it("When there are projects, Then projects are displayed", () => {
         propsData = {
             projects: [
                 { id: 10, name_with_namespace: "My Path / Project" },
@@ -66,7 +56,6 @@ describe("ListProjectsModal", () => {
         };
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=gitlab-empty-projects]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=gitlab-projects-displayed-10]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=gitlab-projects-displayed-11]").exists()).toBeTruthy();
     });
