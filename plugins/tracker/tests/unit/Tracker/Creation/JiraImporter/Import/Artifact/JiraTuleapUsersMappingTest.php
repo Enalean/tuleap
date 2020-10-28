@@ -20,12 +20,11 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 final class JiraTuleapUsersMappingTest extends TestCase

@@ -20,15 +20,11 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Creation\JiraImporter\Import\Reports;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
 final class XmlReportCreatedRecentlyExporterTest extends TestCase

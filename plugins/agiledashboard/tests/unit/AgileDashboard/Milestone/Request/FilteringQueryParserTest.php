@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace unit\AgileDashboard\Milestone\Request;
+namespace Tuleap\AgileDashboard\Milestone\Request;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
-use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
-use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 
 final class FilteringQueryParserTest extends TestCase
 {
