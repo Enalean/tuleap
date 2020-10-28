@@ -20,9 +20,7 @@
 
 namespace Tuleap\SVN\Explorer;
 
-use HTTPRequest;
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\SVN\SvnPermissionManager;
 
 class RepositoryDisplayPresenter
 {
@@ -37,20 +35,16 @@ class RepositoryDisplayPresenter
 
     public function __construct(
         Repository $repository,
-        HTTPRequest $request,
         $viewvc_html,
-        SvnPermissionManager $permissions_manager,
         $username
     ) {
         $this->repository            = $repository;
         $this->help_command          = "svn checkout --username " . escapeshellarg($username) . " " . $this->repository->getSvnUrl();
         $this->viewvc_html           = $viewvc_html;
-        $this->is_user_admin         = $permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser());
         $this->is_repository_created = $repository->isRepositoryCreated();
 
         $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->repository_not_created = dgettext('tuleap-svn', 'The repository is in queue for creation. Please check back here in a few minutes');
-        $this->settings_button        = dgettext('tuleap-svn', 'Settings');
     }
 
     public function repository_name() //phpcs:ignore
@@ -61,10 +55,5 @@ class RepositoryDisplayPresenter
     public function svn_url() //phpcs:ignore
     {
         return $this->repository->getSvnUrl();
-    }
-
-    public function settings_url() //phpcs:ignore
-    {
-        return $this->repository->getSettingUrl();
     }
 }
