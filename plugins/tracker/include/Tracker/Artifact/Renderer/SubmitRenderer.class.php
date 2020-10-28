@@ -49,7 +49,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
     {
         $breadcrumbs = [
             [
-                'title' => 'New artifact',
+                'title' => sprintf(dgettext('tuleap-tracker', 'New %s'), $this->tracker->getItemName()),
                 'url'   => $this->tracker->getSubmitUrl(),
             ],
         ];
