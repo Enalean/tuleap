@@ -20,6 +20,9 @@
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
+/**
+ * @psalm-immutable
+ */
 class UserMappingUsage
 {
 

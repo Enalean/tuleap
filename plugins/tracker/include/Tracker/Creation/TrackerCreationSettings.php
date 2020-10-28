@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 /**
- * @pslam-immutable
+ * @psalm-immutable
  */
 class TrackerCreationSettings
 {

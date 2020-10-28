@@ -28,7 +28,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 /**
- * @pslam-immutable
+ * @psalm-immutable
  */
 final class OIDCProvidersPresenter
 {
