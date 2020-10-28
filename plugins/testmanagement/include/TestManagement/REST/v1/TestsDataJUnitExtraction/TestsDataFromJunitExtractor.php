@@ -103,6 +103,10 @@ class TestsDataFromJunitExtractor
             $this->collectFailuresForTestSuite($test_suite, $extracted_result);
         }
 
+        foreach ($test_suite->testsuite as $nested_test_suite) {
+            $this->registerTestSuiteResults($nested_test_suite, $all_test_results, $build_url);
+        }
+
         if ($test_suite->testcase) {
             $this->extractTestCaseFromTestSuite($test_suite, $all_test_results, $build_url);
         }
@@ -164,6 +168,10 @@ class TestsDataFromJunitExtractor
     ): void {
         foreach ($test_suite->testcase as $testcase) {
             $this->addFailuresForTest($testcase, $result);
+        }
+
+        foreach ($test_suite->testsuite as $nested_test_suite) {
+            $this->collectFailuresForTestSuite($nested_test_suite, $result);
         }
     }
 
