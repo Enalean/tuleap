@@ -43,8 +43,7 @@
         }
 
         @media screen and (max-width: $creation-tiny-screen-width) {
-            width: 300px;
-            margin: 0 0 $tlp-medium-spacing;
+            display: none;
         }
     }
 

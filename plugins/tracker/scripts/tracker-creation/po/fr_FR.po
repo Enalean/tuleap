@@ -56,9 +56,6 @@ msgstr "Couleur"
 msgid "Connect"
 msgstr "Connexion"
 
-msgid "Create a new tracker"
-msgstr "Créer un nouvel outil de suivi"
-
 msgid "Create my tracker"
 msgstr "Créer mon outil de suivi"
 

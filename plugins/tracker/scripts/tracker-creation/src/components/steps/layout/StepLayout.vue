@@ -24,7 +24,6 @@
         </div>
         <div class="tracker-creation-step-content">
             <div class="tracker-creation-step-info">
-                <h1 v-translate>Create a new tracker</h1>
                 <slot name="step_info"></slot>
             </div>
             <div class="tracker-creation-step-interactive-content">
