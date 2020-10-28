@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from "d3";
+import { rgb } from "d3-color";
 
 export { topRoundedRect, alternateXAxisLabels, addLegendBox, defineGradients };
 
@@ -134,8 +134,16 @@ function addLegendBox(
         .append("g")
         .attr("class", "legend")
         .attr("transform", (d, i) => "translate(0, " + i * 20 + ")")
-        .on("mouseover", onOverValue)
-        .on("mouseout", onOutValue);
+        .on("mouseover", function (event) {
+            const nodes = legend.nodes();
+            const index = nodes.indexOf(event.currentTarget);
+            return onOverValue(index);
+        })
+        .on("mouseout", function (event) {
+            const nodes = legend.nodes();
+            const index = nodes.indexOf(event.currentTarget);
+            return onOutValue(index);
+        });
 
     legend
         .append("rect")
@@ -193,7 +201,7 @@ function defineGradients(svg, colors, getGradientId) {
     grads
         .append("stop")
         .attr("offset", "0%")
-        .style("stop-color", ({ color }) => d3.rgb(color).brighter(0.5));
+        .style("stop-color", ({ color }) => rgb(color).brighter(0.5));
     grads
         .append("stop")
         .attr("offset", "100%")

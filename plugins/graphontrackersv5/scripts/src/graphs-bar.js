@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from "d3";
-
 import { topRoundedRect, alternateXAxisLabels, defineGradients } from "./graphs-layout-helper.js";
+import { interpolateNumber } from "d3-interpolate";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { scaleBand, scaleLinear } from "d3-scale";
+import { axisBottom, axisRight } from "d3-axis";
+import { selectAll } from "d3-selection";
 
 // Inspired from  http://bl.ocks.org/mbostock/3887051
 export function bar(id, graph) {
     const margin = { top: 20, right: 20, bottom: 40, left: 40 },
         width = graph.width - margin.left - margin.right,
         height = graph.height - margin.top - margin.bottom,
-        color = d3.scale.category20();
+        color = schemeCategory10;
 
-    const x = d3.scale.ordinal().rangeRoundBands([0, width], 0.35);
+    const x = scaleBand().rangeRound([0, width], 0.35);
+    const y = scaleLinear().range([height, 0]);
 
-    const y = d3.scale.linear().range([height, 0]);
+    const xAxis = axisBottom(x);
+    const yAxis = axisRight(y).ticks(5).tickSize(width);
 
-    const xAxis = d3.svg.axis().scale(x).orient("bottom");
-
-    const yAxis = d3.svg.axis().scale(y).ticks(5).tickSize(width).orient("right");
-
-    const svg = d3
-        .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
+    const svg = selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -49,7 +49,7 @@ export function bar(id, graph) {
     for (let i = 0; i < graph.data.length; ++i) {
         let c = graph.colors[i];
         if (c === null) {
-            c = color(i);
+            c = color[i];
         }
         data.push({
             label: graph.legend[i],
@@ -60,8 +60,9 @@ export function bar(id, graph) {
 
     defineGradients(svg, data, getGradientId);
 
+    const max_y_value_object = data.reduce((p, c) => (p.value > c.value ? p : c));
     x.domain(data.map((d, i) => i));
-    y.domain([0, d3.max(data, ({ value }) => value)]);
+    y.domain([0, max_y_value_object.value]);
 
     alternateXAxisLabels(svg, height, xAxis, graph.legend);
 
@@ -90,13 +91,14 @@ export function bar(id, graph) {
         .transition()
         .duration(750)
         .attrTween("d", ({ value }, j) => {
-            const i = d3.interpolateNumber(height, y(value));
+            const i = interpolateNumber(height, y(value));
 
-            return (t) => topRoundedRect(x(j), i(t), x.rangeBand(), height - i(t), 3);
+            return (t) =>
+                topRoundedRect(x(j) + x.bandwidth() / 4, i(t), x.bandwidth() / 2, height - i(t), 3);
         });
 
     bar.append("text")
-        .attr("x", (d, i) => x(i) + x.rangeBand() / 2)
+        .attr("x", (d, i) => x(i) + x.bandwidth() / 2)
         .attr("y", () => height)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
