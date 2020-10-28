@@ -1525,6 +1525,9 @@ msgstr ""
 msgid "URL"
 msgstr "URL"
 
+msgid "URL have been copied"
+msgstr "L'URL a été copiée"
+
 msgid "Unable to create template"
 msgstr "Impossible de créer le modèle"
 
