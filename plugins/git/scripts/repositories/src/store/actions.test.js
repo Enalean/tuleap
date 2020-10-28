@@ -287,7 +287,8 @@ describe("Store actions", () => {
 
             expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
             expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
-                server_url: "https://example/api/v4/projects?membership=true&per_page=20",
+                server_url:
+                    "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
                 token: "azerty1234",
             });
         });
@@ -339,7 +340,8 @@ describe("Store actions", () => {
 
             await expect(getGitlabProjectList(context, credentials)).rejects.toEqual(new Error());
             expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
-                server_url: "https://example/api/v4/projects?membership=true&per_page=20",
+                server_url:
+                    "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
                 token: "azerty1234",
             });
         });

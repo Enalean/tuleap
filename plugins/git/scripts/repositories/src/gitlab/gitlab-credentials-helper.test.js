@@ -67,7 +67,7 @@ describe("Gitlab Credentials Helper", () => {
             const url = "https://example.com/";
 
             expect(formatUrl(url)).toEqual(
-                "https://example.com/api/v4/projects?membership=true&per_page=20"
+                "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
             );
         });
 
@@ -75,7 +75,7 @@ describe("Gitlab Credentials Helper", () => {
             const url = "https://example.com";
 
             expect(formatUrl(url)).toEqual(
-                "https://example.com/api/v4/projects?membership=true&per_page=20"
+                "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
             );
         });
     });

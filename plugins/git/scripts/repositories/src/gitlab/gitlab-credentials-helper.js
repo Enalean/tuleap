@@ -39,5 +39,5 @@ function formatUrl(server_url) {
         url = server_url.slice(0, -1);
     }
 
-    return url + "/api/v4/projects?membership=true&per_page=20";
+    return url + "/api/v4/projects?membership=true&per_page=20&min_access_level=40";
 }
