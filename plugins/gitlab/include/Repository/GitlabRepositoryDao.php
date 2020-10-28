@@ -38,4 +38,26 @@ class GitlabRepositoryDao extends DataAccessObject
 
         return $this->getDB()->run($sql, $project_id);
     }
+
+    /**
+     * @psalm-return array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}
+     */
+    public function getGitlabRepositorByInternalIdAndPath(int $gitlab_id, string $http_path): ?array
+    {
+        $sql = 'SELECT *
+                FROM plugin_gitlab_repository
+                WHERE gitlab_id = ?
+                    AND full_url = ?';
+
+        return $this->getDB()->row($sql, $gitlab_id, $http_path);
+    }
+
+    public function updateLastPushDateForRepository(int $repository_id, int $last_update_date): void
+    {
+        $this->getDB()->update(
+            'plugin_gitlab_repository',
+            ['last_push_date' => $last_update_date],
+            ['id' => $repository_id]
+        );
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,20 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\REST\ResourcesInjector;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -53,6 +63,8 @@ class gitlabPlugin extends Plugin
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
+
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -111,5 +123,30 @@ class gitlabPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addGroup('/plugins/gitlab', function (FastRoute\RouteCollector $r) {
+            $r->post('/repository/webhook', $this->getRouteHandler('routePostGitlabRepositoryWebhook'));
+        });
+    }
+
+    public function routePostGitlabRepositoryWebhook(): GitlabRepositoryWebhookController
+    {
+        return new GitlabRepositoryWebhookController(
+            new WebhookDataExtractor(
+                new GitlabRepositoryFactory(
+                    new GitlabRepositoryDao()
+                ),
+                new SecretRetriever(
+                    new SecretDao(),
+                    new KeyFactory()
+                )
+            ),
+            new GitlabRepositoryDao(),
+            HTTPFactoryBuilder::responseFactory(),
+            new SapiEmitter()
+        );
     }
 }

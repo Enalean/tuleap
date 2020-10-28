@@ -14,3 +14,8 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_project (
     project_id INT(11) NOT NULL,
     PRIMARY KEY (id, project_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_webhook_secret (
+    id INT(11) NOT NULL PRIMARY KEY,
+    webhook_secret BLOB NOT NULL
+) ENGINE=InnoDB;
