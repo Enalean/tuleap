@@ -17,23 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import french_translations from "../po/fr.po";
-
 export default function initCopyButton() {
     const buttons = document.querySelectorAll(".git-repository-copy-url");
     if (buttons.length === 0) {
         return;
     }
 
-    const gettext_provider = new Gettext();
-    gettext_provider.addTranslations("fr_FR", "git", french_translations);
-    const locale = document.body.dataset.userLocale;
-    gettext_provider.setLocale(locale);
-
     for (const copy_button of buttons) {
         const input = document.getElementById(copy_button.dataset.inputId);
         if (!input) {
+            continue;
+        }
+
+        const copy_clicked_message = copy_button.dataset.copyClickedMessage;
+
+        if (!copy_clicked_message) {
             continue;
         }
 
@@ -42,10 +40,7 @@ export default function initCopyButton() {
         copy_button.addEventListener("click", function () {
             input.select();
             document.execCommand("copy");
-            copy_button.setAttribute(
-                "data-tlp-tooltip",
-                gettext_provider.gettext("URL have been copied")
-            );
+            copy_button.setAttribute("data-tlp-tooltip", copy_clicked_message);
 
             removeTooltipDisplay(copy_button, original_title);
         });
