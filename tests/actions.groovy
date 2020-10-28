@@ -119,8 +119,8 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
         return;
     }
     sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none php:7.3-cli-alpine -d memory_limit=512M \
-        ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
+    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none $DOCKER_REGISTRY/enalean/tuleap-test-phpunit:c7-php73 \
+        scl enable php73 "php -d memory_limit=512M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
     """
 }
 
@@ -128,7 +128,7 @@ def runDeptrac(String configPath, String reportName) {
     dir ('sources') {
         sh """
         mkdir -p ../results/deptrac/
-        src/vendor/bin/deptrac analyze --formatter-junit=true --formatter-junit-dump-xml='../results/deptrac/${reportName}.xml' -- ${configPath}
+        scl enable php73 "src/vendor/bin/deptrac analyze --formatter-junit=true --formatter-junit-dump-xml='../results/deptrac/${reportName}.xml' -- ${configPath}"
         """
     }
 }
