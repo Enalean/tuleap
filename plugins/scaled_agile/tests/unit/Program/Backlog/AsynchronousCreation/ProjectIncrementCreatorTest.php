@@ -25,10 +25,6 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\Status\StatusValueMapper;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\EndPeriodValueData;
@@ -37,6 +33,9 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -56,9 +55,9 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
      */
     private $transaction_executor;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsGatherer
+     * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsAdapter
      */
-    private $target_fields_gatherer;
+    private $synchronized_fields_adapter;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|StatusValueMapper
      */
@@ -70,13 +69,13 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->transaction_executor   = new DBTransactionExecutorPassthrough();
-        $this->target_fields_gatherer = M::mock(SynchronizedFieldsGatherer::class);
-        $this->artifact_creator       = M::mock(TrackerArtifactCreator::class);
+        $this->transaction_executor        = new DBTransactionExecutorPassthrough();
+        $this->synchronized_fields_adapter = M::mock(SynchronizedFieldsAdapter::class);
+        $this->artifact_creator            = M::mock(TrackerArtifactCreator::class);
         $this->status_mapper          = M::mock(StatusValueMapper::class);
-        $this->mirrors_creator        = new ProjectIncrementsCreator(
+        $this->mirrors_creator             = new ProjectIncrementsCreator(
             $this->transaction_executor,
-            $this->target_fields_gatherer,
+            $this->synchronized_fields_adapter,
             $this->status_mapper,
             $this->artifact_creator
         );
@@ -92,10 +91,10 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
         $trackers                   = new ProjectIncrementsTrackerCollection([$first_tracker, $second_tracker]);
         $current_user               = UserTestBuilder::aUser()->build();
 
-        $this->target_fields_gatherer->shouldReceive('gather')
+        $this->synchronized_fields_adapter->shouldReceive('build')
             ->with($first_tracker)
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
-        $this->target_fields_gatherer->shouldReceive('gather')
+        $this->synchronized_fields_adapter->shouldReceive('build')
             ->with($second_tracker)
             ->andReturn($this->buildSynchronizedFields(2001, 2002, 2003, 2004, 2005, 2006));
         $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
@@ -120,7 +119,7 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
         $trackers              = new ProjectIncrementsTrackerCollection([$tracker]);
         $current_user          = UserTestBuilder::aUser()->build();
 
-        $this->target_fields_gatherer->shouldReceive('gather')
+        $this->synchronized_fields_adapter->shouldReceive('build')
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
         $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
             ->andReturn($this->buildMappedValue(5000));
@@ -183,22 +182,27 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
         int $status_id,
         int $start_date_id,
         int $end_date_id
-    ): SynchronizedFields {
-        return new SynchronizedFields(
-            new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
-            new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
-            new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
-            new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
-            TimeframeFields::fromStartAndEndDates(
-                $this->buildTestDateField($start_date_id, 89),
-                $this->buildTestDateField($end_date_id, 89)
-            )
-        );
-    }
+    ): SynchronizedFieldsData {
+        $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
-    private function buildTestDateField(int $id, int $tracker_id): \Tracker_FormElement_Field_Date
-    {
-        return new \Tracker_FormElement_Field_Date($id, $tracker_id, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 1);
+        $title_field_data = new FieldData(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
+
+        $description_field_data = new FieldData(new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
+
+        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
+
+        $start_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($start_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
+
+        $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
+
+        return new SynchronizedFieldsData(
+            $artifact_link_field_data,
+            $title_field_data,
+            $description_field_data,
+            $status_field_data,
+            $start_date_field_data,
+            $end_date_field_data
+        );
     }
 
     private function buildMappedValue(int $bind_value_id): MappedStatusValue

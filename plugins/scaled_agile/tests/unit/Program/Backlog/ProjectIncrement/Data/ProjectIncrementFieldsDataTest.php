@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature\ProjectIncrementArtifactLinkType;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\EndPeriodValueData;
@@ -34,6 +32,9 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\ProjectIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 
 final class ProjectIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
 {
@@ -111,27 +112,32 @@ final class ProjectIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
     }
 
     private function buildSynchronizedFields(
-        int $artifact_link_field_id,
-        int $title_field_id,
-        int $description_field_id,
-        int $status_field_id,
-        int $start_date_field_id,
-        int $end_date_field_id
-    ): SynchronizedFields {
-        return new SynchronizedFields(
-            new \Tracker_FormElement_Field_ArtifactLink($artifact_link_field_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1),
-            new \Tracker_FormElement_Field_String($title_field_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2),
-            new \Tracker_FormElement_Field_Text($description_field_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3),
-            new \Tracker_FormElement_Field_Selectbox($status_field_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4),
-            TimeframeFields::fromStartAndEndDates(
-                $this->buildTestDateField($start_date_field_id),
-                $this->buildTestDateField($end_date_field_id)
-            )
-        );
-    }
+        int $artifact_link_id,
+        int $title_id,
+        int $description_id,
+        int $status_id,
+        int $start_date_id,
+        int $end_date_id
+    ): SynchronizedFieldsData {
+        $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
-    private function buildTestDateField(int $id): \Tracker_FormElement_Field_Date
-    {
-        return new \Tracker_FormElement_Field_Date($id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 1);
+        $title_field_data = new FieldData(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
+
+        $description_field_data = new FieldData(new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
+
+        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
+
+        $start_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($start_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
+
+        $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
+
+        return new SynchronizedFieldsData(
+            $artifact_link_field_data,
+            $title_field_data,
+            $description_field_data,
+            $status_field_data,
+            $start_date_field_data,
+            $end_date_field_data
+        );
     }
 }

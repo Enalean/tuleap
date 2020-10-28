@@ -20,33 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-/**
- * @psalm-immutable
- */
-class ArtifactLinkValueData
+final class ProjectIncrementArtifactLinkType extends NaturePresenter
 {
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
-
-    public function __construct(int $source_artifact_id)
-    {
-        $this->source_artifact_id = $source_artifact_id;
-    }
+    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
 
     /**
-     * @return array{new_values: string, natures: array<string, string>}
+     * @psalm-readonly
      */
-    public function getValues(): array
+    public $is_system = true;
+
+    public function __construct()
     {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        parent::__construct(
+            self::ART_LINK_SHORT_NAME,
+            dgettext('tuleap-scaled_agile', 'Mirror of'),
+            dgettext('tuleap-scaled_agile', 'Mirrored by'),
+            false
+        );
     }
 }

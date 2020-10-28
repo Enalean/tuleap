@@ -25,25 +25,24 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 final class StatusValueAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Tracker_FormElement_Field_String
+     * @var FieldData
+     */
+    private $status_field_data;
+
+    /**
+     * @var \Tracker_FormElement_Field_Selectbox
      */
     private $status_field;
-    /**
-     * @var SynchronizedFields
-     */
-    private $synchronized_fields;
-
     protected function setUp(): void
     {
-        $this->status_field = new \Tracker_FormElement_Field_Selectbox(
+        $this->status_field       = new \Tracker_FormElement_Field_Selectbox(
             1,
             10,
             null,
@@ -56,17 +55,7 @@ final class StatusValueAdapterTest extends TestCase
             true,
             1
         );
-
-        $start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            $this->status_field,
-            TimeframeFields::fromStartDateAndDuration($start_date_field, $duration_field)
-        );
+        $this->status_field_data = new FieldData($this->status_field);
     }
 
     public function testItThrowsWhenStatusValueIsNotFound(): void
@@ -80,7 +69,7 @@ final class StatusValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->status_field_data, $source_changeset);
     }
 
     public function testItBuildStatusValue(): void
@@ -97,7 +86,7 @@ final class StatusValueAdapterTest extends TestCase
 
         $expected_data = new StatusValueData([$bind_values]);
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->status_field_data, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }

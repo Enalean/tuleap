@@ -20,33 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
-
-/**
- * @psalm-immutable
- */
-class ArtifactLinkValueData
+class FieldArtifactLinkAdapter
 {
     /**
-     * @var int
+     * @var \Tracker_FormElementFactory
      */
-    private $source_artifact_id;
+    private $form_element_factory;
 
-    public function __construct(int $source_artifact_id)
+    public function __construct(\Tracker_FormElementFactory $form_element_factory)
     {
-        $this->source_artifact_id = $source_artifact_id;
+        $this->form_element_factory = $form_element_factory;
     }
 
     /**
-     * @return array{new_values: string, natures: array<string, string>}
+     * @throws FieldSynchronizationException
      */
-    public function getValues(): array
+    public function build(\Tracker $source_tracker): FieldData
     {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($source_tracker);
+        if (count($artifact_link_fields) > 0) {
+            return new FieldData($artifact_link_fields[0]);
+        }
+        throw new NoArtifactLinkFieldException($source_tracker->getId());
     }
 }

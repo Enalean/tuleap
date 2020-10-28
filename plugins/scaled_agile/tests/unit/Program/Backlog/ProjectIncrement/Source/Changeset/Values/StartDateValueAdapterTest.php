@@ -24,8 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\TimeframeFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 final class StartDateValueAdapterTest extends TestCase
 {
@@ -34,16 +33,16 @@ final class StartDateValueAdapterTest extends TestCase
     /**
      * @var \Tracker_FormElement_Field_Date
      */
-    private $start_date;
+    private $field_start_date;
 
     /**
-     * @var SynchronizedFields
+     * @var FieldData
      */
-    private $synchronized_fields;
+    private $start_date;
 
     protected function setUp(): void
     {
-        $this->start_date = new \Tracker_FormElement_Field_Date(
+        $this->field_start_date = new \Tracker_FormElement_Field_Date(
             1,
             10,
             null,
@@ -56,30 +55,21 @@ final class StartDateValueAdapterTest extends TestCase
             true,
             1
         );
-
-        $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-
-        $this->synchronized_fields = new SynchronizedFields(
-            \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class),
-            \Mockery::mock(\Tracker_FormElement_Field_String::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Text::class),
-            \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class),
-            TimeframeFields::fromStartDateAndDuration($this->start_date, $duration_field)
-        );
+        $this->start_date = new FieldData($this->field_start_date);
     }
 
     public function testItThrowsWhenStartDateValueIsNotFound(): void
     {
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
-        $source_changeset->shouldReceive('getValue')->with($this->start_date)->andReturnNull();
+        $source_changeset->shouldReceive('getValue')->with($this->field_start_date)->andReturnNull();
         $source_changeset->shouldReceive('getId')->andReturn(1);
 
         $adapter = new StartDateValueAdapter();
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->synchronized_fields, $source_changeset);
+        $adapter->build($this->start_date, $source_changeset);
     }
 
     public function testItBuildStartDateValue(): void
@@ -88,13 +78,13 @@ final class StartDateValueAdapterTest extends TestCase
 
         $changset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
         $changset_value->shouldReceive('getValue')->once()->andReturn("2020-10-01");
-        $source_changeset->shouldReceive('getValue')->with($this->start_date)->andReturn($changset_value);
+        $source_changeset->shouldReceive('getValue')->with($this->field_start_date)->andReturn($changset_value);
 
         $adapter = new StartDateValueAdapter();
 
         $expected_data = new StartDateValueData("2020-10-01");
 
-        $data = $adapter->build($this->synchronized_fields, $source_changeset);
+        $data = $adapter->build($this->start_date, $source_changeset);
 
         $this->assertEquals($expected_data, $data);
     }

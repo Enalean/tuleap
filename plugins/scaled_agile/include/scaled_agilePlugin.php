@@ -47,10 +47,15 @@ use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\Nature\ProjectIncrementArtifactLinkType;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFieldsGatherer;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldArtifactLinkAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldDescriptionAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldStatusAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldsTimeFrameAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldTitleAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
@@ -315,10 +320,10 @@ final class scaled_agilePlugin extends Plugin
 
     private function getProjectIncrementCreatorChecker(): ProjectIncrementArtifactCreatorChecker
     {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-        $timeframe_dao = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger = $this->getLogger();
+        $logger                  = $this->getLogger();
 
         return new ProjectIncrementArtifactCreatorChecker(
             new TeamProjectsCollectionBuilder(
@@ -328,13 +333,13 @@ final class scaled_agilePlugin extends Plugin
             new TrackerCollectionFactory(
                 $this->getPlanningAdapter()
             ),
-            new SynchronizedFieldCollectionBuilder(
-                new SynchronizedFieldsGatherer(
-                    $form_element_factory,
-                    new Tracker_Semantic_TitleFactory(),
-                    new Tracker_Semantic_DescriptionFactory(),
-                    $semantic_status_factory,
-                    new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory)
+            new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
+                new SynchronizedFieldsAdapter(
+                    new FieldArtifactLinkAdapter($form_element_factory),
+                    new FieldTitleAdapter(new Tracker_Semantic_TitleFactory()),
+                    new FieldDescriptionAdapter(new Tracker_Semantic_DescriptionFactory()),
+                    new FieldStatusAdapter($semantic_status_factory),
+                    new FieldsTimeFrameAdapter(new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory))
                 )
             ),
             new SemanticChecker(

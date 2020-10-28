@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Data\SynchronizedFields\SynchronizedFields;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 
 class EndPeriodValueAdapter
 {
-    public function build(SynchronizedFields $fields, \Tracker_Artifact_Changeset $source_changeset): EndPeriodValueData
-    {
-        $end_period_field = $fields->getTimeframeFields()->getEndPeriodField();
-        $end_period_value = $source_changeset->getValue($end_period_field);
+    public function build(
+        FieldData $end_period_field_data,
+        \Tracker_Artifact_Changeset $source_changeset
+    ): EndPeriodValueData {
+        $end_period_value = $source_changeset->getValue($end_period_field_data->getField());
 
         if (! $end_period_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $source_changeset->getId(),
-                (int) $end_period_field->getId(),
+                (int) $end_period_field_data->getId(),
                 "time frame end period"
             );
         }

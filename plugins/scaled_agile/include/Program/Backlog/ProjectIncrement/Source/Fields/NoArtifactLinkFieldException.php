@@ -20,33 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
-
-/**
- * @psalm-immutable
- */
-class ArtifactLinkValueData
+final class NoArtifactLinkFieldException extends \RuntimeException implements FieldSynchronizationException
 {
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
-
-    public function __construct(int $source_artifact_id)
+    public function __construct(int $tracker_id)
     {
-        $this->source_artifact_id = $source_artifact_id;
-    }
-
-    /**
-     * @return array{new_values: string, natures: array<string, string>}
-     */
-    public function getValues(): array
-    {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        parent::__construct("Tracker with id $tracker_id has no artifact link field");
     }
 }

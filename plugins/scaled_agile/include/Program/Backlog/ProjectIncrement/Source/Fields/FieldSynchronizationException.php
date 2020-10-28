@@ -20,18 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-use PHPUnit\Framework\TestCase;
-
-final class MirroredMilestoneArtifactLinkTypeTest extends TestCase
+interface FieldSynchronizationException extends \Throwable
 {
-    public function testHasAMirroredMilestoneArtifactLinkType(): void
-    {
-        $art_link_type = new ProjectIncrementArtifactLinkType();
-
-        self::assertEquals(ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME, $art_link_type->shortname);
-        self::assertTrue($art_link_type->is_system);
-        self::assertFalse($art_link_type->is_visible);
-    }
 }
