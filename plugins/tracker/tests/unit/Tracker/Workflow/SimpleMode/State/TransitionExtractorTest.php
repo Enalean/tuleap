@@ -44,7 +44,7 @@ class TransitionExtractorTest extends TestCase
         $this->extractor = new TransitionExtractor();
     }
 
-    public function testExtractsFirstTransitionNotFromNewFromStateObject()
+    public function testExtractsFirstTransitionNotFromNewFromStateObject(): void
     {
         $transition_from_new   = Mockery::mock(\Transition::class);
         $transition_from_value = Mockery::mock(\Transition::class);
@@ -60,12 +60,12 @@ class TransitionExtractorTest extends TestCase
         );
     }
 
-    public function testExtractsTransitionFromNewFromStateObjectIfThisTransitionIsTheOnlyOne()
+    public function testExtractsTransitionFromNewFromStateObjectIfThisTransitionIsTheOnlyOne(): void
     {
         $transition_from_new = Mockery::mock(\Transition::class);
         $transition_from_new->shouldReceive('getIdFrom')->andReturn('');
 
-        $state = new State(1, [$transition_from_new]);
+        $state = new State(1, [1238 => $transition_from_new]);
 
         $this->assertSame(
             $transition_from_new,
@@ -73,7 +73,7 @@ class TransitionExtractorTest extends TestCase
         );
     }
 
-    public function testThrowsAnExceptionIfNoTransition()
+    public function testThrowsAnExceptionIfNoTransition(): void
     {
         $state = new State(1, []);
 
@@ -82,7 +82,7 @@ class TransitionExtractorTest extends TestCase
         $this->extractor->extractReferenceTransitionFromState($state);
     }
 
-    public function testRetrievesSiblingsTransitionsInState()
+    public function testRetrievesSiblingsTransitionsInState(): void
     {
         $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
@@ -103,7 +103,7 @@ class TransitionExtractorTest extends TestCase
         );
     }
 
-    public function testReturnsEmptyArrayIfNoSiblingsTransitionsInState()
+    public function testReturnsEmptyArrayIfNoSiblingsTransitionsInState(): void
     {
         $value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
