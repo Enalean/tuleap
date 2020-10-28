@@ -6039,23 +6039,23 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.1",
+            "version": "9.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ed363c3ce393560a1c300dce0298bbf0f0528b13"
+                "reference": "6b20e2055f7c29b56cb3870b3de7cc463d7add41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ed363c3ce393560a1c300dce0298bbf0f0528b13",
-                "reference": "ed363c3ce393560a1c300dce0298bbf0f0528b13",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6b20e2055f7c29b56cb3870b3de7cc463d7add41",
+                "reference": "6b20e2055f7c29b56cb3870b3de7cc463d7add41",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
-                "nikic/php-parser": "^4.8",
+                "nikic/php-parser": "^4.10.2",
                 "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
@@ -6104,7 +6104,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.1"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.3"
             },
             "funding": [
                 {
@@ -6112,7 +6112,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:46:21+00:00"
+            "time": "2020-10-30T10:46:41+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
