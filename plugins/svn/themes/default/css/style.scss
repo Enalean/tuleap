@@ -38,7 +38,7 @@ body.viewvc-epel {
 /* stylelint-enable */
 
 .svn-repository-header {
-    padding: 0 20px 20px;
+    padding: 0 0 20px;
 
     > h2 {
         margin: 0 0 10px;
@@ -46,29 +46,26 @@ body.viewvc-epel {
 }
 
 #svn-repository-help {
+    display: none;
     margin: 16px 16px 0;
+
+    .svn-intro-command {
+        margin: 0;
+    }
 }
 
 .viewvc-epel-references {
     margin: 0 0 40px;
 }
 
-#svn-repository {
-    #svn-repository-url-bar {
-        > .input-append {
-            margin: 0;
+#svn-repository-url-bar {
+    padding: 0 16px;
 
-            > input[type='text'] {
-                width: 500px;
-            }
-        }
-    }
+    > .input-append {
+        margin: 0;
 
-    #svn-repository-help {
-        display: none;
-
-        .svn-intro-command {
-            margin: 0;
+        > input[type='text'] {
+            width: 500px;
         }
     }
 }
@@ -76,7 +73,7 @@ body.viewvc-epel {
 
 .project-with-background {
     #svn-administration {
-        > .project-administration-title {
+        > .svn-administration-title {
             margin: (-$content-padding) (-$content-padding) 0;
         }
 

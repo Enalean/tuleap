@@ -35,7 +35,7 @@
         }
 
         .tuleap-viewvc-header {
-            padding: 20px;
+            padding: 16px;
             background: #fcfcfc;
         }
 
@@ -43,16 +43,7 @@
             background: $main-background;
         }
 
-        .svn-repository-title {
-            margin: 0;
-            padding: 16px 0 30px;
-        }
-
         .project-with-background {
-            .svn-repository-title {
-                @include background.project-background-title-header-typography($white);;
-            }
-
             #svn-repository #svn-repository-viewvc {
                 border-top-color: transparent;
             }
