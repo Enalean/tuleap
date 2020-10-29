@@ -25,35 +25,18 @@ namespace Tuleap\Cardwall\Semantic;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use XML_Security;
 
 class CardFieldXmlExtractorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var XML_Security
-     */
-    private $xml_security;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-    }
-
-    public function tearDown(): void
-    {
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
-
     public function testItImportsACardFieldsSemanticFromXMLFormat()
     {
-        $xml = simplexml_load_file(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml');
+        $xml = simplexml_load_string(
+            file_get_contents(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml'),
+            \SimpleXMLElement::class,
+            LIBXML_NONET
+        );
 
         $mapping   = [
             'F13' => 102,
@@ -68,7 +51,11 @@ class CardFieldXmlExtractorTest extends TestCase
 
     public function testItImportsBackgroundColorSemanticFromXMLFormat()
     {
-        $xml = simplexml_load_file(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml');
+        $xml = simplexml_load_string(
+            file_get_contents(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml'),
+            \SimpleXMLElement::class,
+            LIBXML_NONET
+        );
 
         $status = \Mockery::spy('Tracker_FormElement_Field');
         $status->shouldReceive('getId')->andReturn(101);

@@ -21,40 +21,19 @@
 
 namespace Tuleap\Hudson;
 
-use BaseLanguage;
 use Http\Mock\Client;
 use HudsonBuild;
 use HudsonJobURLMalformedException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
-use XML_Security;
 
 final class HudsonBuildTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /** @var XML_Security */
-    private $xml_security;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
+    use GlobalLanguageMock;
 
     public function testMalformedURL(): void
     {
@@ -80,7 +59,7 @@ final class HudsonBuildTest extends TestCase
     public function testSimpleJobBuild(): void
     {
         $build_file = __DIR__ . '/resources/jobbuild.xml';
-        $xmldom     = simplexml_load_file($build_file);
+        $xmldom     = simplexml_load_string(file_get_contents($build_file), \SimpleXMLElement::class, LIBXML_NONET);
 
         $build = Mockery::spy(HudsonBuild::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $build->shouldReceive('_getXMLObject')->andReturn($xmldom);
