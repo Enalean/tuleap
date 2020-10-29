@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            dgettext('tuleap-gitlab', 'Gitlab'),
+            dgettext('tuleap-gitlab', 'GitLab'),
             false,
-            dgettext('tuleap-gitlab', 'Provides an integration Gitlab to Tuleap.')
+            dgettext('tuleap-gitlab', 'Provides an integration GitLab to Tuleap.')
         );
     }
 }

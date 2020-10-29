@@ -6,8 +6,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Gitlab"
-msgstr "Gitlab"
+msgid "GitLab"
+msgstr "GitLab"
 
-msgid "Provides an integration Gitlab to Tuleap."
-msgstr "Fournit une integration de Gitlab vers Tuleap."
+msgid "Provides an integration GitLab to Tuleap."
+msgstr "Fournit une integration de GitLab vers Tuleap."
