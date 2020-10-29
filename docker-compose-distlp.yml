@@ -2,7 +2,7 @@ version: "2"
 
 services:
   reverse-proxy-distlp:
-    image: enalean/tuleap-reverseproxy:distlp-1.4
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-reverseproxy:distlp-1.4
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
@@ -12,7 +12,7 @@ services:
       - backend-svn
 
   backend-web:
-    image: enalean/tuleap-aio-dev:c6-php73-nginx
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c6-php73-nginx
     environment:
       RUN_COMMAND: "/opt/remi/php73/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
@@ -27,7 +27,7 @@ services:
       - redis
 
   backend-svn:
-    image: enalean/tuleap-dev:1.11
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-dev:1.13
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap

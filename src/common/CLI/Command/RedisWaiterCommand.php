@@ -34,7 +34,7 @@ class RedisWaiterCommand extends Command
 {
     public const NAME = 'wait-for-redis';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setHidden(true)
@@ -42,7 +42,7 @@ class RedisWaiterCommand extends Command
             ->setDescription('Poll until redis is up and running');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
             $output->writeln("No Redis configuration");
@@ -52,7 +52,7 @@ class RedisWaiterCommand extends Command
         do {
             try {
                 $client = RedisClientFactory::fromForgeConfig();
-                if ($client->ping() === '+PONG') {
+                if ($client->echo('Tuleap') === 'Tuleap') {
                     break;
                 }
             } catch (RedisNotConnectedException $exception) {
