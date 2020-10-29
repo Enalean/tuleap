@@ -126,7 +126,7 @@ describe("Store actions", () => {
             getProjectId.mockImplementation(() => current_project_id);
         });
 
-        it("Given that my repositories have already been loaded, then it should not try to fetch the list of repositories.", () => {
+        it("Given that my repositories have already been loaded, then it should not try to fetch the list of repositories.", async () => {
             const context = {
                 commit: jest.fn(),
                 getters: {
@@ -136,7 +136,7 @@ describe("Store actions", () => {
 
             const new_owner_id = 101;
 
-            changeRepositories(context, new_owner_id);
+            await changeRepositories(context, new_owner_id);
 
             expect(context.commit).toHaveBeenCalledWith("setSelectedOwnerId", new_owner_id);
             expect(context.commit).toHaveBeenCalledWith("setFilter", "");
@@ -145,7 +145,7 @@ describe("Store actions", () => {
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
 
-        it("Given that my repositories have not already been loaded, When I pass the PROJECT_KEY in parameters, then it should fetch the list of repositories of the project.", () => {
+        it("Given that my repositories have not already been loaded, When I pass the PROJECT_KEY in parameters, then it should fetch the list of repositories of the project.", async () => {
             const context = {
                 commit: jest.fn(),
                 getters: {
@@ -156,7 +156,7 @@ describe("Store actions", () => {
 
             mockFetchSuccess(getRepositoryList);
 
-            changeRepositories(context, PROJECT_KEY);
+            await changeRepositories(context, PROJECT_KEY);
 
             expect(context.commit).toHaveBeenCalledWith("setSelectedOwnerId", PROJECT_KEY);
             expect(context.commit).toHaveBeenCalledWith("setFilter", "");
@@ -169,7 +169,7 @@ describe("Store actions", () => {
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
 
-        it("Given that my repositories have not already been loaded, When I pass an user id in parameters, then it should fetch the list of forked repositories of the project.", () => {
+        it("Given that my repositories have not already been loaded, When I pass an user id in parameters, then it should fetch the list of forked repositories of the project.", async () => {
             const selected_owner_id = 120;
             const context = {
                 commit: jest.fn(),
@@ -186,7 +186,7 @@ describe("Store actions", () => {
 
             const owner_id = 101;
 
-            changeRepositories(context, owner_id);
+            await changeRepositories(context, owner_id);
 
             expect(context.commit).toHaveBeenCalledWith("setSelectedOwnerId", owner_id);
             expect(context.commit).toHaveBeenCalledWith("setFilter", "");
@@ -198,6 +198,38 @@ describe("Store actions", () => {
                 "push_date",
                 expect.any(Function)
             );
+        });
+
+        it("When plugin GitLab is used, Then gitlab repositories must be retrieved", async () => {
+            const getGitlabRepositoryList = jest.spyOn(rest_querier, "getGitlabRepositoryList");
+            const context = {
+                commit: jest.fn(),
+                getters: {
+                    areRepositoriesAlreadyLoadedForCurrentOwner: false,
+                    isFolderDisplayMode: false,
+                    isGitlabUsed: true,
+                },
+            };
+            mockFetchSuccess(getRepositoryList);
+            mockFetchSuccess(getGitlabRepositoryList);
+
+            await changeRepositories(context, PROJECT_KEY);
+
+            expect(context.commit).toHaveBeenCalledWith("setSelectedOwnerId", PROJECT_KEY);
+            expect(context.commit).toHaveBeenCalledWith("setFilter", "");
+
+            expect(getGitlabRepositoryList).toHaveBeenCalledWith(
+                current_project_id,
+                "push_date",
+                expect.any(Function)
+            );
+
+            expect(getRepositoryList).toHaveBeenCalledWith(
+                current_project_id,
+                "push_date",
+                expect.any(Function)
+            );
+            expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
     });
 
