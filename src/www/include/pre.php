@@ -29,10 +29,6 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\TimezoneRetriever;
 
-if (PHP_VERSION_ID < 70300) {
-    die('Tuleap must be run on a PHP 7.3 (or greater) engine.');
-}
-
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
