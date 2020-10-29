@@ -156,10 +156,6 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     #feedback {
         padding: $tlp-medium-spacing 0;
 
-        &:empty {
-            padding: 0;
-        }
-
         // stylelint-disable selector-class-pattern
         > .feedback_error,
         > .feedback_warning,
