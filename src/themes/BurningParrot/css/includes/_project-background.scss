@@ -66,12 +66,14 @@ body {
             color: $tlp-ui-white;
 
             &:hover,
+            &:focus,
             &.tlp-tab-active {
                 border-top-color: $tlp-ui-white;
                 background: rgba(0, 0, 0, .3);
             }
 
-            &:hover > .tlp-tab-menu {
+            &:hover > .tlp-tab-menu,
+            &:focus > .tlp-tab-menu {
                 bottom: 0;
             }
         }
@@ -88,12 +90,14 @@ body {
         text-shadow: initial;
     }
 
-    .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
+    .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
+    .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
         background: rgba(0, 0, 0, .3);
         color: $tlp-ui-white;
     }
 
-    .breadcrumb-switchable:hover > .breadcrumb-link::after {
+    .breadcrumb-switchable:hover > .breadcrumb-link::after,
+    .breadcrumb-switchable:focus-within > .breadcrumb-link::after {
         color: $tlp-ui-white;
     }
 

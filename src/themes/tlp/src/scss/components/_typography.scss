@@ -133,11 +133,8 @@ a {
     color: $tlp-theme-color;
     text-decoration: none;
 
-    &.tlp-link-underlined { //stylelint-disable-line selector-no-qualifying-type
-        text-decoration: underline;
-    }
-
-    &:hover {
+    &:hover,
+    &:focus {
         text-decoration: underline;
     }
 }

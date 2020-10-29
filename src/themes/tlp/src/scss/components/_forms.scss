@@ -183,8 +183,9 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 
     &:focus {
-        transition: border-color $tlp-form-element-border-transition-duration linear;
+        transition: border-color $tlp-form-element-border-transition-duration linear, box-shadow 350ms;
         border-color: $tlp-theme-color;
+        box-shadow: $tlp-shadow-focus;
     }
 }
 
