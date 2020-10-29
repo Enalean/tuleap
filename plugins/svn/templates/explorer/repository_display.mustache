@@ -7,12 +7,6 @@
                 <input type="text" value="{{ svn_url }}" />
                 <button id="toggle-svn-help" class="btn"><i class="fa fa-question-circle"></i></button>
             </div>
-
-            {{# is_user_admin }}
-                <a href="{{ settings_url }}" class="btn">
-                    <i class="fa fa-cog"></i> {{ settings_button }}
-                </a>
-            {{/ is_user_admin }}
         </div>
 
         <div id="svn-repository-help" class="alert alert-info">

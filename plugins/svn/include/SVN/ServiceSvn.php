@@ -63,12 +63,19 @@ class ServiceSvn extends Service
     public function renderInPage(HTTPRequest $request, $title, $template, $presenter)
     {
         $body_class = '';
-        $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class);
+        $breadcrumbs = new BreadCrumbCollection();
+        $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class, $breadcrumbs);
     }
 
-    public function renderInPageWithBodyClass(HTTPRequest $request, $title, $template, $presenter, $body_class)
-    {
-        $this->displaySVNHeader($request, $title, $body_class);
+    public function renderInPageWithBodyClass(
+        HTTPRequest $request,
+        $title,
+        $template,
+        $presenter,
+        $body_class,
+        BreadCrumbCollection $breadcrumbs
+    ): void {
+        $this->displaySVNHeader($request, $title, $body_class, $breadcrumbs);
         $this->getRenderer()->renderToPage($template, $presenter);
         $this->displayFooter();
         exit;
@@ -79,7 +86,7 @@ class ServiceSvn extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR) . '/templates');
     }
 
-    private function displaySVNHeader(HTTPRequest $request, $title, $body_class): void
+    private function displaySVNHeader(HTTPRequest $request, $title, $body_class, BreadCrumbCollection $breadcrumbs): void
     {
         $params = [
             'body_class' => [$body_class]
@@ -105,8 +112,7 @@ class ServiceSvn extends Service
             $repository_list_breadcrumb->setSubItems($sub_items);
         }
 
-        $breadcrumbs = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb($repository_list_breadcrumb);
+        $breadcrumbs->addFirst($repository_list_breadcrumb);
         $this->displayHeader($title, $breadcrumbs, [], $params);
     }
 
