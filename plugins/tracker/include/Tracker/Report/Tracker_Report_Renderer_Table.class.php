@@ -636,11 +636,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $read_only
         );
 
-        //Dispaly range
-        $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
-        $html .= '<div class="tracker_report_table_pager">';
-        $html .= $this->fetchRange($offset + 1, $offset_last + 1, $total_rows, $this->fetchWidgetGoToReport());
-        $html .= '</div>';
+        //Display range
+        if ($total_rows > 0) {
+            $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
+            $html .= '<div class="tracker_report_table_pager">';
+            $html .= $this->fetchRange($offset + 1, $offset_last + 1, $total_rows, $this->fetchWidgetGoToReport());
+            $html .= '</div>';
+        } else {
+            $html .= $this->fetchWidgetGoToReport();
+        }
 
         return $html;
     }
@@ -1260,7 +1264,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         } else {
-            $html .= '<tr class="tracker_report_table_no_result" data-test="tracker-report-table-empty-state"><td colspan="' . (count($this->getColumns()) + 2) . '" align="center">' . 'No results' . '</td></tr>';
+            $html .= '<tr class="tracker_report_table_no_result" data-test="tracker-report-table-empty-state">
+                          <td class="tlp-table-cell-empty table-cell-empty" colspan="' . (count($this->getColumns()) + 2)
+                          . '" align="center">' . dgettext('tuleap-tracker', 'No activity yet') . '
+                          </td>
+                      </tr>';
         }
         if (! $only_rows) {
             $html .= '</tbody>';

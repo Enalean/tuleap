@@ -1968,6 +1968,9 @@ msgstr "Nouvel outil de suivi"
 msgid "No Tracker pending for Deletion"
 msgstr "Aucun outil de suivi en attente de suppression"
 
+msgid "No activity yet"
+msgstr "Pas encore d'activité"
+
 msgid "No artifact links"
 msgstr "Aucun lien entre artefacts"
 
