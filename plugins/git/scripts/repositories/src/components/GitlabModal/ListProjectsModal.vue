@@ -113,6 +113,10 @@ export default {
         fetchProjects(event) {
             event.preventDefault();
         },
+        reset() {
+            this.selected_project = null;
+            this.is_loading = false;
+        },
     },
 };
 </script>

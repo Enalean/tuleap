@@ -45,11 +45,13 @@
             v-if="gitlab_projects === null || back_button_clicked"
             v-on:on-get-projects="getGitlabProject"
             v-on:on-close-modal="onCloseModal"
+            ref="credentialsForm"
         />
         <list-projects-modal
             v-else
             v-bind:projects="gitlab_projects"
             v-on:to-back-button="clickBackButton"
+            ref="listProjectsModal"
         />
     </div>
 </template>
@@ -76,6 +78,7 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$refs.fetch_modal);
+        this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.$store.commit("setAddGitlabProjectModal", this.modal);
     },
     methods: {
@@ -88,7 +91,20 @@ export default {
             this.gitlab_projects = projects;
         },
         onCloseModal() {
+            this.reset();
             this.modal.hide();
+        },
+        reset() {
+            const credentialsForm = this.$refs.credentialsForm;
+            if (credentialsForm) {
+                credentialsForm.reset();
+            }
+            const listProjectsModal = this.$refs.listProjectsModal;
+            if (listProjectsModal) {
+                listProjectsModal.reset();
+            }
+            this.gitlab_projects = null;
+            this.back_button_clicked = false;
         },
     },
 };
