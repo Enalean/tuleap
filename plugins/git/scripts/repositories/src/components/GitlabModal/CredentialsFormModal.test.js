@@ -51,15 +51,15 @@ describe("CredentialsFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=fetch-gitlab-project-modal-form]").trigger("submit.prevent");
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
+            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-sync-alt");
 
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabProjectList", {
+        expect(store.dispatch).toHaveBeenCalledWith("getGitlabRepositoryList", {
             server_url: "https://example.com",
             token: "AFREZF546",
         });
@@ -77,12 +77,12 @@ describe("CredentialsFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-load-projects]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
             "Error message"
         );
     });
 
-    it("When projects have been retrieved, Then event is emitted with this projects", async () => {
+    it("When repositories have been retrieved, Then event is emitted with these repositories", async () => {
         const wrapper = instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
 
@@ -90,15 +90,15 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token_user: "AFREZF546",
-            gitlab_projects: null,
+            gitlab_repositories: null,
         });
 
         await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=fetch-gitlab-project-modal-form]").trigger("submit.prevent");
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.emitted("on-get-projects")[0][0]).toEqual([{ id: 10 }]);
+        expect(wrapper.emitted("on-get-gitlab-repositories")[0][0]).toEqual([{ id: 10 }]);
     });
 
     it("When there are no token and server url, Then submit button is disabled", async () => {
@@ -110,25 +110,25 @@ describe("CredentialsFormModal", () => {
         });
         await wrapper.vm.$nextTick();
         expect(
-            wrapper.find("[data-test=button_add_gitlab_project]").attributes().disabled
+            wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled
         ).toBeTruthy();
     });
 
-    it("When there are not projects in GitLab, Then empty message is displayed", async () => {
+    it("When there aren't any repositories in Gitlab, Then empty message is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
             is_loading: false,
             gitlab_server: "",
             gitlab_token_user: "",
-            gitlab_projects: [],
-            empty_message: "No project is available with your GitLab account",
+            gitlab_repositories: [],
+            empty_message: "No repository is available with your GitLab account",
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-empty-projects]").text()).toEqual(
-            "No project is available with your GitLab account"
+        expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toEqual(
+            "No repository is available with your GitLab account"
         );
     });
 });

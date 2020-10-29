@@ -19,10 +19,10 @@
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { shallowMount } from "@vue/test-utils";
-import ListProjectsModal from "./ListProjectsModal.vue";
+import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import localVue from "../../support/local-vue";
 
-describe("ListProjectsModal", () => {
+describe("ListRepositoriesModal", () => {
     let store_options, store, propsData;
     beforeEach(() => {
         store_options = {
@@ -40,52 +40,60 @@ describe("ListProjectsModal", () => {
 
     function instantiateComponent() {
         store = createStoreMock(store_options);
-        return shallowMount(ListProjectsModal, {
+        return shallowMount(ListRepositoriesModal, {
             propsData,
             mocks: { $store: store },
             localVue,
         });
     }
 
-    it("When there are projects, Then projects are displayed", () => {
+    it("When there are repositories, Then repositories are displayed", () => {
         propsData = {
-            projects: [
-                { id: 10, name_with_namespace: "My Path / Project" },
-                { id: 11, name_with_namespace: "My Second / Project", avatar_url: "example.com" },
+            repositories: [
+                { id: 10, name_with_namespace: "My Path / Repository" },
+                {
+                    id: 11,
+                    name_with_namespace: "My Second / Repository",
+                    avatar_url: "example.com",
+                },
             ],
         };
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=gitlab-projects-displayed-10]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-projects-displayed-11]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-10]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-11]").exists()).toBeTruthy();
     });
 
-    it("When no project is selected, Then integrate button is disabled", async () => {
+    it("When no repository is selected, Then integrate button is disabled", async () => {
         propsData = {
-            projects: [
-                { id: 10, name_with_namespace: "My Path / Project" },
-                { id: 11, name_with_namespace: "My Second / Project", avatar_url: "example.com" },
+            repositories: [
+                { id: 10, name_with_namespace: "My Path / Repository" },
+                {
+                    id: 11,
+                    name_with_namespace: "My Second / Repository",
+                    avatar_url: "example.com",
+                },
             ],
         };
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            selected_project: null,
+            selected_repository: null,
         });
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button_integrate_gitlab_project]").attributes().disabled
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
         ).toBeTruthy();
 
         wrapper.setData({
-            selected_project: { id: 10, name_with_namespace: "My Path / Project" },
+            selected_repository: { id: 10, name_with_namespace: "My Path / Repository" },
         });
 
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button_integrate_gitlab_project]").attributes().disabled
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
         ).toBeFalsy();
     });
 

@@ -22,14 +22,12 @@
         <button
             type="button"
             data-test="gitlab-project-button"
-            v-on:click="showAddGitlabProjectModal()"
+            v-on:click="showAddGitlabRepositoryModal()"
             class="tlp-dropdown-menu-item"
             role="menuitem"
         >
             <i class="fa fa-gitlab tlp-button-icon"></i>
-            <translate class="git-add-action-button">
-                Integrate a GitLab remote repository
-            </translate>
+            <translate class="git-add-action-button">Add GitLab repository</translate>
         </button>
     </div>
 </template>
@@ -38,12 +36,12 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-    name: "AddGitlabProjectActionButton",
+    name: "AddGitlabRepositoryActionButton",
     computed: {
         ...mapGetters(["isGitlabUsed"]),
     },
     methods: {
-        ...mapActions(["showAddGitlabProjectModal"]),
+        ...mapActions(["showAddGitlabRepositoryModal"]),
     },
 };
 </script>

@@ -20,11 +20,11 @@
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import GitlabProjectModal from "./GitlabProjectModal.vue";
-import ListProjectsModal from "./ListProjectsModal.vue";
+import GitlabRepositoryModal from "./GitlabRepositoryModal.vue";
+import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 
-describe("GitlabProjectModal", () => {
+describe("GitlabRepositoryModal", () => {
     let store_options, store;
     beforeEach(() => {
         store_options = {
@@ -42,7 +42,7 @@ describe("GitlabProjectModal", () => {
 
     function instantiateComponent() {
         store = createStoreMock(store_options);
-        return shallowMount(GitlabProjectModal, {
+        return shallowMount(GitlabRepositoryModal, {
             mocks: { $store: store },
             localVue,
         });
@@ -52,13 +52,13 @@ describe("GitlabProjectModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_projects: null,
+            gitlab_repositories: null,
             back_button_clicked: false,
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
     });
 
@@ -66,26 +66,26 @@ describe("GitlabProjectModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_projects: [{ id: 10 }],
+            gitlab_repositories: [{ id: 10 }],
             back_button_clicked: true,
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
     });
 
-    it("When projects have been retrieved, Then ListProjectModal is displayed", async () => {
+    it("When repositories have been retrieved, Then ListRepositoriesModal is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_projects: [{ id: 10 }],
+            gitlab_repositories: [{ id: 10 }],
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ListProjectsModal).exists()).toBeTruthy();
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
     });
 });

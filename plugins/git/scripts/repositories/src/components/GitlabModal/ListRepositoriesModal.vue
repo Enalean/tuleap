@@ -20,47 +20,47 @@
 <template>
     <form
         role="dialog"
-        aria-labelledby="select-gitlab-project-modal-title"
-        id="select-gitlab-projects-modal"
+        aria-labelledby="select-gitlab-repository-modal-title"
+        id="select-gitlab-repositories-modal"
         ref="select_modal"
-        v-on:submit="fetchProjects"
-        data-test="select-gitlab-project-modal-form"
+        v-on:submit="fetchRepositories"
+        data-test="select-gitlab-repository-modal-form"
     >
         <div class="tlp-modal-body git-repository-create-modal-body">
             <table class="tlp-table">
                 <thead>
                     <tr>
                         <th></th>
-                        <th colspan="2"><translate>Project</translate></th>
+                        <th colspan="2"><translate>Repository</translate></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr
-                        v-for="project of projects"
-                        v-bind:key="project.id"
-                        v-bind:data-test="`gitlab-projects-displayed-${project.id}`"
+                        v-for="repository of repositories"
+                        v-bind:key="repository.id"
+                        v-bind:data-test="`gitlab-repositories-displayed-${repository.id}`"
                     >
                         <td class="gitlab-select-radio-button-container">
                             <label class="tlp-radio">
                                 <input
                                     type="radio"
-                                    v-bind:id="project.id"
-                                    v-bind:value="project"
-                                    v-model="selected_project"
+                                    v-bind:id="repository.id"
+                                    v-bind:value="repository"
+                                    v-model="selected_repository"
                                     class="gitlab-select-radio-button"
                                 />
                             </label>
                         </td>
                         <td class="gitlab-select-avatar">
                             <img
-                                v-if="project.avatar_url !== null"
-                                v-bind:src="project.avatar_url"
-                                v-bind:alt="project.name_with_namespace"
+                                v-if="repository.avatar_url !== null"
+                                v-bind:src="repository.avatar_url"
+                                v-bind:alt="repository.name_with_namespace"
                                 class="gitlab-avatar"
                             />
                         </td>
                         <td>
-                            {{ project.name_with_namespace }}
+                            {{ repository.name_with_namespace }}
                         </td>
                     </tr>
                 </tbody>
@@ -80,10 +80,10 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="disabled_button"
-                data-test="button_integrate_gitlab_project"
+                data-test="button-integrate-gitlab-repository"
             >
                 <i class="fa fa-arrow-right tlp-button-icon" data-test="icon-spin"></i>
-                <translate>Integrate the project</translate>
+                <translate>Integrate the repository</translate>
             </button>
         </div>
     </form>
@@ -91,30 +91,30 @@
 
 <script>
 export default {
-    name: "ListProjectsModal",
+    name: "ListRepositoriesModal",
     props: {
-        projects: {
+        repositories: {
             type: Array,
             default: () => [],
         },
     },
     data() {
         return {
-            selected_project: null,
+            selected_repository: null,
             is_loading: false,
         };
     },
     computed: {
         disabled_button() {
-            return this.selected_project === null || this.is_loading;
+            return this.selected_repository === null || this.is_loading;
         },
     },
     methods: {
-        fetchProjects(event) {
+        fetchRepositories(event) {
             event.preventDefault();
         },
         reset() {
-            this.selected_project = null;
+            this.selected_repository = null;
             this.is_loading = false;
         },
     },

@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { getAsyncGitlabProjectList } from "./gitlab-api-querier";
+import { getAsyncGitlabRepositoryList } from "./gitlab-api-querier";
 
 describe("Gitlab Api Querier", () => {
     afterEach(() => {
         // eslint-disable-next-line no-undef
         global.fetch.mockClear();
     });
-    it("When api is called, Then project are recovered", async () => {
+    it("When api is called, Then repositories are recovered", async () => {
         const credentials = {
             server_url: "https://example.com",
             token: "azerty1234",
@@ -37,7 +37,7 @@ describe("Gitlab Api Querier", () => {
             })
         );
 
-        const response = await getAsyncGitlabProjectList(credentials);
+        const response = await getAsyncGitlabRepositoryList(credentials);
         expect(await response.json()).toEqual([{ id: 1 }]);
 
         const headers = new Headers();

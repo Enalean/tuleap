@@ -18,18 +18,18 @@
   -->
 
 <template>
-    <form v-on:submit="fetchProjects" data-test="fetch-gitlab-project-modal-form">
+    <form v-on:submit="fetchRepositories" data-test="fetch-gitlab-repository-modal-form">
         <div class="tlp-modal-body git-repository-create-modal-body">
             <div
                 class="tlp-alert-danger"
-                data-test="gitlab-fail-load-projects"
+                data-test="gitlab-fail-load-repositories"
                 v-if="error_message.length > 0"
             >
                 {{ error_message }}
             </div>
             <div
                 class="tlp-alert-warning"
-                data-test="gitlab-empty-projects"
+                data-test="gitlab-empty-repositories"
                 v-if="empty_message.length > 0"
             >
                 {{ empty_message }}
@@ -81,14 +81,14 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="disabled_button"
-                data-test="button_add_gitlab_project"
+                data-test="button-add-gitlab-repository"
             >
                 <i
                     class="fa fa-arrow-right tlp-button-icon"
                     v-bind:class="{ 'fa-spin fa-sync-alt': is_loading }"
                     data-test="icon-spin"
                 ></i>
-                <translate>Fetch GitLab projects</translate>
+                <translate>Fetch GitLab repositories</translate>
             </button>
         </div>
     </form>
@@ -107,7 +107,7 @@ export default {
             is_loading: false,
             error_message: "",
             empty_message: "",
-            gitlab_projects: null,
+            gitlab_repositories: null,
         };
     },
     computed: {
@@ -116,12 +116,12 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["getGitlabProjectList"]),
+        ...mapActions(["getGitlabRepositoryList"]),
         reset() {
             this.gitlab_server = "";
             this.gitlab_token_user = "";
             this.is_loading = false;
-            this.gitlab_projects = null;
+            this.gitlab_repositories = null;
             this.resetMessages();
         },
         resetMessages() {
@@ -134,7 +134,7 @@ export default {
                 "Cannot connect to GitLab server, please check your credentials."
             );
         },
-        async fetchProjects(event) {
+        async fetchRepositories(event) {
             event.preventDefault();
             this.resetMessages();
 
@@ -157,16 +157,16 @@ export default {
 
             try {
                 this.is_loading = true;
-                this.gitlab_projects = await this.getGitlabProjectList(credentials);
+                this.gitlab_repositories = await this.getGitlabRepositoryList(credentials);
 
-                if (this.gitlab_projects.length === 0) {
+                if (this.gitlab_repositories.length === 0) {
                     this.empty_message = this.$gettext(
-                        "No project is available with your GitLab account"
+                        "No repository is available with your GitLab account"
                     );
                     return;
                 }
 
-                this.$emit("on-get-projects", this.gitlab_projects);
+                this.$emit("on-get-gitlab-repositories", this.gitlab_repositories);
             } catch (e) {
                 this.handleError();
             } finally {

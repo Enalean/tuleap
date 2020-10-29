@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-export { getAsyncGitlabProjectList };
+export { getAsyncGitlabRepositoryList };
 
-function getAsyncGitlabProjectList(credentials) {
+function getAsyncGitlabRepositoryList(credentials) {
     let headers = new Headers();
     headers.append("Authorization", "Bearer " + credentials.token);
 
