@@ -1,19 +1,11 @@
 <div id="svn-repository">
     <div class="svn-repository-header">
-        <h2>{{ repository_name }}</h2>
+        <h1 class="svn-repository-title">{{ repository_name }}</h1>
 
         <div id="svn-repository-url-bar">
             <div class="input-append">
                 <input type="text" value="{{ svn_url }}" />
                 <button id="toggle-svn-help" class="btn"><i class="fa fa-question-circle"></i></button>
-            </div>
-        </div>
-
-        <div id="svn-repository-help" class="alert alert-info">
-            <p>{{ help_message }}</p>
-
-            <div class="svn-intro-command">
-                <pre>{{ help_command }}</pre>
             </div>
         </div>
 
@@ -24,9 +16,17 @@
         {{/ is_repository_created }}
     </div>
 
-    {{# is_repository_created }}
-        <div id="svn-repository-viewvc" data-test="svn-repository-view">
-            {{{ viewvc_html }}}
+    <div id="svn-repository-viewvc" data-test="svn-repository-view">
+        <div id="svn-repository-help" class="alert alert-info">
+            <p>{{ help_message }}</p>
+
+            <div class="svn-intro-command">
+                <pre>{{ help_command }}</pre>
+            </div>
         </div>
-    {{/ is_repository_created }}
+
+        {{# is_repository_created }}
+            {{{ viewvc_html }}}
+        {{/ is_repository_created }}
+    </div>
 </div>
