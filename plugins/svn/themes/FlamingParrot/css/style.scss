@@ -17,10 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/FlamingParrot/css/utils/variables-common';
+@use '../../src/themes/common/css/project-background/background';
 @import '../../default/css/style';
 
-@mixin definitions($main, $main-background) {
+@mixin definitions($main, $main-background, $sidebar-background, $white) {
     &.viewvc-epel {
+        @include background.apply-background(
+            '.svn-repository-header',
+            $sidebar-background,
+            variables-common.$sidebar-width,
+            variables-common.$sidebar-width-collapsed,
+        );
+
         #svn-repository #svn-repository-viewvc {
             border-top-color: $main;
         }
@@ -33,37 +42,52 @@
         .svn-repository-header {
             background: $main-background;
         }
+
+        .svn-repository-title {
+            margin: 0;
+            padding: 16px 0 30px;
+        }
+
+        .project-with-background {
+            .svn-repository-title {
+                @include background.project-background-title-header-typography($white);;
+            }
+
+            #svn-repository #svn-repository-viewvc {
+                border-top-color: transparent;
+            }
+        }
     }
 }
 
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body {
     @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @include definitions($main, $main-background);
+    @include definitions($main, $main-background, $sidebar-background, $white);
 
     &.FlamingParrot_Blue {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $sidebar-background, $white);
     }
 
     &.FlamingParrot_Green {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $sidebar-background, $white);
     }
 
     &.FlamingParrot_BlueGrey {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $sidebar-background, $white);
     }
 
     &.FlamingParrot_Purple {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $sidebar-background, $white);
     }
 
     &.FlamingParrot_Red {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $sidebar-background, $white);
     }
 }
 /* stylelint-enable */
