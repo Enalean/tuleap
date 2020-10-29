@@ -115,6 +115,16 @@ class Repository
         return strtolower(HTTPRequest::instance()->getServerUrl());
     }
 
+    public function getHtmlPath(): string
+    {
+        return SVN_BASE_URL . '/?' . http_build_query(
+            [
+                'roottype' => 'svn',
+                'root' => $this->getFullName(),
+            ]
+        );
+    }
+
     public function canBeDeleted()
     {
         return $this->isRepositoryCreated();

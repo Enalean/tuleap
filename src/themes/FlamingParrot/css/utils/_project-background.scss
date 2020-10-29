@@ -26,6 +26,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 @import '../../../common/css/project-background/project-background';
 
 .project-with-background {
+    .project-administration-title,
     .administration-title,
     .cvs-header > .administration-title,
     .project-header-title {
@@ -154,6 +155,10 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     #feedback {
         padding: $tlp-medium-spacing 0;
+
+        &:empty {
+            padding: 0;
+        }
 
         // stylelint-disable selector-class-pattern
         > .feedback_error,

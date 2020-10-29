@@ -121,7 +121,7 @@ class AdminController
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
-        $service->renderInPage(
+        $service->renderInPageRepositoryAdministration(
             $request,
             $repository->getName() . ' – ' . $title,
             'admin/mail_notification',
@@ -132,7 +132,9 @@ class AdminController
                 $title,
                 $mail_header,
                 $this->notification_list_builder->getNotificationsPresenter($notifications_details, $this->emails_builder)
-            )
+            ),
+            '',
+            $repository,
         );
     }
 
@@ -391,7 +393,7 @@ class AdminController
         $token = $this->generateToken($request->getProject(), $repository);
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
-        $service->renderInPage(
+        $service->renderInPageRepositoryAdministration(
             $request,
             $repository->getName() . ' – ' . $title,
             'admin/hooks_config',
@@ -402,7 +404,9 @@ class AdminController
                 $title,
                 $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE),
                 $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
-            )
+            ),
+            '',
+            $repository,
         );
     }
 
@@ -413,7 +417,7 @@ class AdminController
 
         $token = $this->generateTokenDeletion($request->getProject(), $repository);
 
-        $service->renderInPage(
+        $service->renderInPageRepositoryAdministration(
             $request,
             $repository->getName() . ' – ' . $title,
             'admin/repository_delete',
@@ -422,7 +426,9 @@ class AdminController
                 $request->getProject(),
                 $title,
                 $token
-            )
+            ),
+            '',
+            $repository,
         );
     }
 

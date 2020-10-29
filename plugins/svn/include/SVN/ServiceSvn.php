@@ -31,7 +31,16 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\SVN\AccessControl\AccessControlPresenter;
+use Tuleap\SVN\Admin\AdminGroupsPresenter;
 use Tuleap\SVN\Admin\GlobalAdministratorsController;
+use Tuleap\SVN\Admin\HooksConfigurationPresenter;
+use Tuleap\SVN\Admin\ImmutableTagPresenter;
+use Tuleap\SVN\Admin\MailNotificationPresenter;
+use Tuleap\SVN\Admin\RepositoryDeletePresenter;
+use Tuleap\SVN\Explorer\ExplorerPresenter;
+use Tuleap\SVN\Explorer\RepositoryDisplayPresenter;
+use Tuleap\SVN\Repository\Repository;
 
 class ServiceSvn extends Service
 {
@@ -42,7 +51,6 @@ class ServiceSvn extends Service
     public function __construct($project, $data)
     {
         parent::__construct($project, $data);
-        $this->permissions_manager = null;
     }
 
     public function getIconName(): string
@@ -60,19 +68,82 @@ class ServiceSvn extends Service
         return $this->permissions_manager;
     }
 
-    public function renderInPage(HTTPRequest $request, $title, $template, $presenter)
+    /**
+     * @param AdminGroupsPresenter|ExplorerPresenter $presenter
+     */
+    public function renderInPage(HTTPRequest $request, string $title, string $template, $presenter)
     {
         $body_class = '';
         $breadcrumbs = new BreadCrumbCollection();
         $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class, $breadcrumbs);
     }
 
-    public function renderInPageWithBodyClass(
+    /**
+     * @param AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter $presenter
+     */
+    public function renderInPageRepositoryAdministration(
         HTTPRequest $request,
-        $title,
-        $template,
+        string $title,
+        string $template,
         $presenter,
-        $body_class,
+        string $body_class,
+        Repository $repository
+    ): void {
+        $breadcrumbs = new BreadCrumbCollection();
+        $admin_crumb = new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext('tuleap-svn', 'Settings'),
+                $repository->getSettingUrl(),
+            ),
+        );
+        $breadcrumbs->addBreadCrumb($admin_crumb);
+        $this->renderInPageRepository($request, $title, $template, $presenter, $body_class, $repository, $breadcrumbs);
+    }
+
+    /**
+     * @param AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
+     */
+    public function renderInPageRepository(
+        HTTPRequest $request,
+        string $title,
+        string $template,
+        $presenter,
+        string $body_class,
+        Repository $repository,
+        BreadCrumbCollection $breadcrumbs
+    ): void {
+        $repository_crumb = new BreadCrumb(
+            new BreadCrumbLink(
+                $repository->getName(),
+                $repository->getHtmlPath(),
+            ),
+        );
+        if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
+            $settings_link = new BreadCrumbLink(
+                dgettext('tuleap-svn', 'Settings'),
+                $repository->getSettingUrl(),
+            );
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$settings_link])));
+
+            $repository_crumb->setSubItems($sub_items);
+        }
+        $breadcrumbs->addFirst(
+            $repository_crumb,
+        );
+
+        $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class, $breadcrumbs);
+    }
+
+    /**
+     * @param AdminGroupsPresenter|ExplorerPresenter|AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
+     */
+    private function renderInPageWithBodyClass(
+        HTTPRequest $request,
+        string $title,
+        string $template,
+        $presenter,
+        string $body_class,
         BreadCrumbCollection $breadcrumbs
     ): void {
         $this->displaySVNHeader($request, $title, $body_class, $breadcrumbs);
@@ -86,7 +157,7 @@ class ServiceSvn extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR) . '/templates');
     }
 
-    private function displaySVNHeader(HTTPRequest $request, $title, $body_class, BreadCrumbCollection $breadcrumbs): void
+    private function displaySVNHeader(HTTPRequest $request, string $title, string $body_class, BreadCrumbCollection $breadcrumbs): void
     {
         $params = [
             'body_class' => [$body_class]
