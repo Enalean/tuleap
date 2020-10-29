@@ -26,16 +26,16 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class ProjectBackgroundRetrieverTest extends TestCase
+final class ProjectBackgroundRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testNoBackgroundIsSelectedIfProjectDidNotSelectOne()
+    public function testNoBackgroundIsSelectedIfProjectDidNotSelectOne(): void
     {
         $project = Mockery::mock(\Project::class);
 
         $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
-        $configuration->shouldReceive(['getBackgroundIgnoringFeatureFlag' => null]);
+        $configuration->shouldReceive(['getBackground' => null]);
 
         $retriever = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);
@@ -47,12 +47,12 @@ class ProjectBackgroundRetrieverTest extends TestCase
             self::assertFalse($backgrounds[$i]->is_selected);
         }
     }
-    public function testGetBackgrounds()
+    public function testGetBackgrounds(): void
     {
         $project = Mockery::mock(\Project::class);
 
         $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
-        $configuration->shouldReceive(['getBackgroundIgnoringFeatureFlag' => 'beach-daytime']);
+        $configuration->shouldReceive(['getBackground' => 'beach-daytime']);
 
         $retriever = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);

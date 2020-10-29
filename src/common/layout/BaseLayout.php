@@ -39,6 +39,7 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -395,12 +396,8 @@ abstract class BaseLayout extends Response
 
     protected function injectProjectBackground(Project $project, array &$params): void
     {
-        $background_configuration = ProjectBackgroundConfiguration::buildSelf();
-        if (isset($params['toptab']) && ($params['toptab'] === 'summary' || $params['toptab'] === 'admin')) {
-            $background = $background_configuration->getBackgroundIgnoringFeatureFlag($project);
-        } else {
-            $background = $background_configuration->getBackground($project);
-        }
+        $background_configuration = new ProjectBackgroundConfiguration(new ProjectBackgroundDao());
+        $background               = $background_configuration->getBackground($project);
         if (! $background) {
             return;
         }

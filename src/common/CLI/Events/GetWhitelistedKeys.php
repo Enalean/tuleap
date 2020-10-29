@@ -33,7 +33,6 @@ use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
@@ -61,7 +60,6 @@ final class GetWhitelistedKeys implements Dispatchable
         BackendLogger::class,
         LogToGraylog2::class,
         InviteBuddyConfiguration::class,
-        ProjectBackgroundConfiguration::class,
     ];
 
     /**
