@@ -37,10 +37,14 @@ class DatabaseInitialization extends \DatabaseInitialization
     {
         echo "Adding fake Gitlab repository \n";
 
-        $project_id = (int) $gitlab_integration_project->getID();
+        $sql = "INSERT INTO plugin_gitlab_repository (gitlab_id, name, path, description, full_url, last_push_date)
+                VALUES (15412, 'repo01', 'path/repo01', 'desc', 'https://example.com/path/repo01', 1603371803)";
 
-        $sql = "INSERT INTO plugin_gitlab_repository (id, project_id, gitlab_id, name, path, description, full_url, last_push_date)
-                VALUES (1, $project_id, 15412, 'repo01', 'path/', 'desc', 'https://example.com/path/repo01', 1603371803)";
+        $this->mysqli->real_query($sql);
+
+        $project_id = (int) $gitlab_integration_project->getID();
+        $sql = "INSERT INTO plugin_gitlab_repository_project (id, project_id)
+                VALUES (1, $project_id)";
 
         $this->mysqli->real_query($sql);
     }

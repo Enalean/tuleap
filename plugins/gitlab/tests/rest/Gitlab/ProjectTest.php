@@ -60,10 +60,10 @@ class ProjectTest extends TestBase
 
         $gitlab_repository = $gitlab_repositories[0];
         $this->assertArrayHasKey('id', $gitlab_repository);
+        $this->assertArrayHasKey('gitlab_id', $gitlab_repository);
         $this->assertEquals('repo01', $gitlab_repository['name']);
         $this->assertEquals('desc', $gitlab_repository['description']);
         $this->assertEquals('https://example.com/path/repo01', $gitlab_repository['full_url']);
-        $this->assertEquals(1, $gitlab_repository['id']);
         $this->assertEquals(15412, $gitlab_repository['gitlab_id']);
     }
 }

@@ -26,11 +26,15 @@ use Tuleap\DB\DataAccessObject;
 class GitlabRepositoryDao extends DataAccessObject
 {
     /**
-     * @psalm-return list<array{id:int, project_id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}>
+     * @psalm-return list<array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}>
      */
     public function getGitlabRepositoriesForProject(int $project_id): array
     {
-        $sql = 'SELECT * FROM plugin_gitlab_repository WHERE project_id = ?';
+        $sql = 'SELECT plugin_gitlab_repository.*
+                FROM plugin_gitlab_repository
+                    INNER JOIN plugin_gitlab_repository_project
+                        ON (plugin_gitlab_repository.id = plugin_gitlab_repository_project.id)
+                WHERE plugin_gitlab_repository_project.project_id = ?';
 
         return $this->getDB()->run($sql, $project_id);
     }
