@@ -23,22 +23,14 @@ namespace Tuleap\SVN\Explorer;
 use Event;
 use EventManager;
 use HTTPRequest;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
-use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
-use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 
 class RepositoryDisplayController
 {
-    /** @var SvnPermissionManager */
-    private $permissions_manager;
     /**
      * @var RepositoryManager
      */
@@ -54,11 +46,9 @@ class RepositoryDisplayController
 
     public function __construct(
         RepositoryManager $repository_manager,
-        SvnPermissionManager $permissions_manager,
         ViewVCProxy $viewvc_proxy,
         EventManager $event_manager
     ) {
-        $this->permissions_manager = $permissions_manager;
         $this->repository_manager  = $repository_manager;
         $this->proxy               = $viewvc_proxy;
         $this->event_manager       = $event_manager;
@@ -82,28 +72,7 @@ class RepositoryDisplayController
                 $username = $plugin_intro_info->getLogin();
             }
 
-            $repository_crumb = new BreadCrumb(
-                new BreadCrumbLink(
-                    $repository->getName(),
-                    $repository->getSvnUrl(),
-                ),
-            );
-            if ($this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {
-                $settings_link = new BreadCrumbLink(
-                    dgettext('tuleap-svn', 'Settings'),
-                    $repository->getSettingUrl(),
-                );
-                $sub_items = new BreadCrumbSubItems();
-                $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$settings_link])));
-
-                $repository_crumb->setSubItems($sub_items);
-            }
-            $breadcrumbs = new BreadCrumbCollection();
-            $breadcrumbs->addBreadCrumb(
-                $repository_crumb,
-            );
-
-            $service->renderInPageWithBodyClass(
+            $service->renderInPageRepository(
                 $request,
                 dgettext('tuleap-svn', 'SVN with multiple repositories'),
                 'explorer/repository_display',
@@ -113,7 +82,8 @@ class RepositoryDisplayController
                     $username
                 ),
                 $this->proxy->getBodyClass(),
-                $breadcrumbs,
+                $repository,
+                new BreadCrumbCollection(),
             );
         } catch (CannotFindRepositoryException $e) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Repository not found.'));

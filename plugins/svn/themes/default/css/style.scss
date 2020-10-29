@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$content-padding: 12px;
+
 /* stylelint-disable selector-no-qualifying-type */
 body.viewvc-epel {
     #svn-homepage,
     #svn-administration {
-        margin: 12px;
+        margin: $content-padding;
     }
 
     #svn-repository-viewvc {
@@ -71,9 +73,23 @@ body.viewvc-epel {
     }
 }
 
+
+.project-with-background {
+    #svn-administration {
+        > .project-administration-title {
+            margin: (-$content-padding) (-$content-padding) 0;
+        }
+
+        > .main-project-tabs {
+            margin: 0 (-$content-padding);
+        }
+    }
+}
+
 #svn-administration {
-    > h2 {
-        margin: 10px 0 30px;
+    > .project-administration-title {
+        margin: (-$content-padding) (-$content-padding) 0;
+        padding: 16px 16px 30px;
     }
 
     .nav-tabs {
@@ -88,7 +104,7 @@ body.viewvc-epel {
 
     > .tab-content {
         max-width: 1200px;
-        padding: 0 15px;
+        padding: 0 (16px - $content-padding);
 
         label:not(.checkbox),
         h4 {

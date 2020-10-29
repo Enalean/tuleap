@@ -92,7 +92,7 @@ class AccessControlController
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
 
-        $service->renderInPage(
+        $service->renderInPageRepositoryAdministration(
             $request,
             $title,
             'admin/edit_authfile',
@@ -105,7 +105,9 @@ class AccessControlController
                 $versions,
                 $current_version_number,
                 $last_version_number
-            )
+            ),
+            '',
+            $repository,
         );
     }
 

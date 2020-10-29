@@ -64,7 +64,7 @@ class ImmutableTagController
             $existing_tree = ImmutableTagPresenter::$SO_MUCH_FOLDERS;
         }
 
-        $service->renderInPage(
+        $service->renderInPageRepositoryAdministration(
             $request,
             $repository->getName() . ' – ' . $title,
             'admin/immutable_tag',
@@ -73,7 +73,9 @@ class ImmutableTagController
                 $this->immutable_tag_factory->getByRepositoryId($repository),
                 $existing_tree,
                 $title
-            )
+            ),
+            '',
+            $repository,
         );
     }
 

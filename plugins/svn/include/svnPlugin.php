@@ -609,7 +609,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             ),
             new RepositoryDisplayController(
                 $repository_manager,
-                $permissions_manager,
                 new ViewVCProxy(
                     $repository_manager,
                     ProjectManager::instance(),

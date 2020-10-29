@@ -82,7 +82,7 @@
                             <i class="fas fa-cog"></i>
                         </a>
                     {{/ is_admin }}
-                    <a class="tlp-card tlp-card-selectable svn-homepage-repository-card" href="?roottype=svn&amp;root={{ getFullName }}" data-test="svn-repository-access-{{ getName }}">
+                    <a class="tlp-card tlp-card-selectable svn-homepage-repository-card" href="{{ getHtmlPath }}" data-test="svn-repository-access-{{ getName }}">
                         <span class="svn-homepage-repository-name">{{ getName }}</span>
                         {{# commit_date }}
                             <span
