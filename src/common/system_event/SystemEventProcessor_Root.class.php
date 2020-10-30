@@ -122,17 +122,20 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         $this->launchAs($app->getProcessOwner(), $command);
     }
 
-    protected function launchAs($user, $command)
+    protected function launchAs(string $user, string $command): void
     {
-        $return_val = 0;
-        $output = [];
-        $cmd    = 'su -l ' . $user . ' -c "' . $command . ' 2>&1"';
-        exec($cmd, $output, $return_val);
-        if ($return_val == 0) {
-            return true;
-        } else {
-            throw new Exception('Unable to run command "' . $command . '" (error code: ' . $return_val . '): ' . implode("\n", $output));
-            return false;
+        $cmd    = 'sudo -E -u ' . $user . ' -- ' . $command;
+        $process = Symfony\Component\Process\Process::fromShellCommandline($cmd);
+        $process->start();
+
+        $output = '';
+
+        foreach ($process as $type => $data) {
+            $output .= $data;
+        }
+
+        if (! $process->isSuccessful()) {
+            throw new Exception('Unable to run command "' . $command . '" (error code: ' . $process->getExitCode() . '): ' . $output);
         }
     }
 
