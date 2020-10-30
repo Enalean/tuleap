@@ -1,6 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="xml_project_cardwall_data.rng"/>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="cardwall">
+    <element name="trackers">
+      <zeroOrMore>
+        <element name="tracker">
+          <attribute name="id">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+          <optional>
+            <element name="columns">
+              <zeroOrMore>
+                <element name="column">
+                  <optional>
+                    <attribute name="id">
+                      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                    </attribute>
+                  </optional>
+                  <attribute name="label">
+                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  </attribute>
+                  <choice>
+                    <ref name="legacy_columns_headers_color"/>
+                    <optional>
+                      <attribute name="tlp_color_name">
+                        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                      </attribute>
+                    </optional>
+                  </choice>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="mappings">
+              <zeroOrMore>
+                <element name="mapping">
+                  <attribute name="tracker_id">
+                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  </attribute>
+                  <attribute name="field_id">
+                    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                  </attribute>
+                  <optional>
+                    <element name="values">
+                      <zeroOrMore>
+                        <element name="value">
+                          <attribute name="value_id">
+                            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                          </attribute>
+                          <attribute name="column_id">
+                            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+                          </attribute>
+                        </element>
+                      </zeroOrMore>
+                    </element>
+                  </optional>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="legacy_columns_headers_color">
+    <optional>
+      <attribute name="bg_red">
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bg_green">
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bg_blue">
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+  </define>
+</div></div>
   <start>
     <element name="cardwall">
       <ref name="cardwall"/>
