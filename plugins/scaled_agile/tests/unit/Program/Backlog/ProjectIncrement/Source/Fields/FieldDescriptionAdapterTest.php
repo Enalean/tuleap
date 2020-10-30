@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldDescriptionAdapterTest extends TestCase
@@ -49,8 +50,8 @@ final class FieldDescriptionAdapterTest extends TestCase
     {
         $semantic_description = \Mockery::mock(\Tracker_Semantic_Description::class);
         $semantic_description->shouldReceive('getField')->andReturnNull();
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
-        $this->semantic_description_factory->shouldReceive('getByTracker')->with($source_tracker)->andReturn($semantic_description);
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $this->semantic_description_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn($semantic_description);
 
         $this->expectException(FieldRetrievalException::class);
         $this->adapter->build($source_tracker);
@@ -58,10 +59,10 @@ final class FieldDescriptionAdapterTest extends TestCase
 
     public function testItBuildDescriptionFieldData(): void
     {
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_Text(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "description",
             "Description",
@@ -74,7 +75,7 @@ final class FieldDescriptionAdapterTest extends TestCase
         );
         $semantic_description = \Mockery::mock(\Tracker_Semantic_Description::class);
         $semantic_description->shouldReceive('getField')->andReturn($field);
-        $this->semantic_description_factory->shouldReceive('getByTracker')->with($source_tracker)->andReturn(
+        $this->semantic_description_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_description
         );
 

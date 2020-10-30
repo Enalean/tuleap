@@ -25,10 +25,24 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DescriptionValueAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Artifact
+     */
+    private $artifact_data;
+
+    /**
+     * @var \PFUser
+     */
+    private $user;
 
     /**
      * @var \Tracker_FormElement_Field_Text
@@ -56,6 +70,15 @@ final class DescriptionValueAdapterTest extends TestCase
             1
         );
         $this->field_description_data = new FieldData($this->description_field);
+
+        $this->user          = UserTestBuilder::aUser()->withId(101)->build();
+        $submitted_on        = 123456789;
+        $project             = new \Project(
+            ['group_id' => '101', 'unix_group_name' => "project", 'group_name' => 'My project']
+        );
+        $tracker             = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->artifact_data = new Artifact(1, $tracker->getId(), $this->user->getId(), $submitted_on, true);
+        $this->artifact_data->setTracker($tracker);
     }
 
     public function testItThrowsWhenDescriptionValueIsNotFound(): void
@@ -69,7 +92,8 @@ final class DescriptionValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->field_description_data, $source_changeset);
+        $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
+        $adapter->build($this->field_description_data, $replication_data);
     }
 
     public function testItBuildDescriptionValue(): void
@@ -85,7 +109,8 @@ final class DescriptionValueAdapterTest extends TestCase
 
         $expected_data = new DescriptionValueData("My description", "text");
 
-        $data = $adapter->build($this->field_description_data, $source_changeset);
+        $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
+        $data = $adapter->build($this->field_description_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

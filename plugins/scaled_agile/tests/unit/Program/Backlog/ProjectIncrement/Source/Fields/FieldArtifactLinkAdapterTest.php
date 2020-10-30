@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldArtifactLinkAdapterTest extends TestCase
@@ -47,8 +48,8 @@ final class FieldArtifactLinkAdapterTest extends TestCase
 
     public function testItThrowsWhenNoArtifactLinkIsFound(): void
     {
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->with($source_tracker)->andReturn([]);
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->with($source_tracker->getFullTracker())->andReturn([]);
 
         $this->expectException(NoArtifactLinkFieldException::class);
         $this->adapter->build($source_tracker);
@@ -56,10 +57,10 @@ final class FieldArtifactLinkAdapterTest extends TestCase
 
     public function testItBuildArtifactLinkFieldData(): void
     {
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_ArtifactLink(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "links",
             "Links",
@@ -70,7 +71,7 @@ final class FieldArtifactLinkAdapterTest extends TestCase
             true,
             1
         );
-        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->with($source_tracker)->andReturn(
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->with($source_tracker->getFullTracker())->andReturn(
             [$field]
         );
 

@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 
 final class TeamProjectsCollectionTest extends TestCase
 {
     public function testGetTeamProjectsReturnsProjects(): void
     {
-        $first_team_project = new \Project(['group_id' => '103']);
-        $second_team_project = new \Project(['group_id' => '125']);
+        $first_team_project = ProjectDataAdapter::build(new \Project(['group_id' => '103', 'unix_group_name' => 'project', 'group_name' => 'My project']));
+        $second_team_project = ProjectDataAdapter::build(new \Project(['group_id' => '125', 'unix_group_name' => 'other_project', 'group_name' => 'Other project']));
         $collection = new TeamProjectsCollection(
             [$first_team_project, $second_team_project]
         );

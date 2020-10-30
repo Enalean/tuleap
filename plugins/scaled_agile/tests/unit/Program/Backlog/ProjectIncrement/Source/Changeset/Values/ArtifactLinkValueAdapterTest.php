@@ -23,16 +23,36 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
 use PHPUnit\Framework\TestCase;
+use Tracker_Artifact_Changeset;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactLinkValueAdapterTest extends TestCase
 {
     public function testItBuildsArtifactLinkData(): void
     {
-        $source_artifact    = new Artifact(101, 1, 102, 123456789, true);
-        $adapter = new ArtifactLinkValueAdapter();
-        $artifact_link_data = $adapter->build($source_artifact);
+        $project         = new \Project(
+            ['group_id' => '101', 'unix_group_name' => "project", 'group_name' => 'My project']
+        );
+        $tracker         = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $source_artifact = new Artifact(101, 1, 102, 123456789, true);
+        $source_artifact->setTracker($tracker);
+        $adapter   = new ArtifactLinkValueAdapter();
+        $user      = UserTestBuilder::aUser()->withId(101)->build();
+        $changeset = new Tracker_Artifact_Changeset(
+            1,
+            $source_artifact,
+            $user->getId(),
+            12345678,
+            "usermail@example.com"
+        );
+
+        $replication_data = ReplicationDataAdapter::build($source_artifact, $user, $changeset);
+
+        $artifact_link_data = $adapter->build($replication_data);
 
         $expected_value = [
             'new_values' => "101",

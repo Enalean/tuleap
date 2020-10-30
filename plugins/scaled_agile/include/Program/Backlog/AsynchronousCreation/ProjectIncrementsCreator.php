@@ -86,7 +86,7 @@ class ProjectIncrementsCreator
                         $synchronized_fields
                     );
                     $result              = $this->artifact_creator->create(
-                        $project_increment_tracker,
+                        $project_increment_tracker->getFullTracker(),
                         $fields_data->toFieldsDataArray(),
                         $current_user,
                         $copied_values->getSubmittedOn(),

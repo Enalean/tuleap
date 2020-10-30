@@ -46,18 +46,18 @@ class PlannableItemsPerTeamPresenterCollectionBuilder
         $presenters = [];
         foreach ($plannable_items_collection->getPlannableItems() as $plannable_items) {
             $plannable_item_presenters = [];
-            foreach ($plannable_items->getTrackers() as $tracker) {
+            foreach ($plannable_items->getTrackersData() as $tracker) {
                 $plannable_item_presenters[] = new PlannableItemPresenter(
-                    (string) $tracker->getName(),
+                    $tracker->getName(),
                     $tracker->getColor()
                 );
             }
 
-            $team_project = $plannable_items->getProject();
+            $team_project = $plannable_items->getProjectData();
             try {
                 $team_root_planning = $this->planning_adapter->buildRootPlanning(
                     $user,
-                    (int) $team_project->getID()
+                    $team_project->getID()
                 );
             } catch (TopPlanningNotFoundInProjectException $e) {
                 //ignore when team does not have a root planning
@@ -74,7 +74,7 @@ class PlannableItemsPerTeamPresenterCollectionBuilder
             }
 
             $presenters[] = new PlannableItemsPerTeamPresenter(
-                (string) $team_project->getPublicName(),
+                $team_project->getPublicName(),
                 $plannable_item_presenters,
                 $url
             );

@@ -24,9 +24,12 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Planning;
+use Project;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -35,9 +38,10 @@ final class ArtifactCreatorCheckerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningAdapter
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PlanningFactory
      */
-    private $planning_adapter;
+    private $planning_factory;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectIncrementArtifactCreatorChecker
      */
@@ -50,61 +54,67 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->planning_adapter          = \Mockery::mock(PlanningAdapter::class);
+        $this->planning_factory          = \Mockery::mock(\PlanningFactory::class);
+        $planning_adapter                = new PlanningAdapter($this->planning_factory);
         $this->milestone_creator_checker = \Mockery::mock(ProjectIncrementArtifactCreatorChecker::class);
 
         $this->artifact_creator_checker = new ArtifactCreatorChecker(
-            $this->planning_adapter,
+            $planning_adapter,
             $this->milestone_creator_checker
         );
     }
 
     public function testDisallowArtifactCreationWhenItIsAMilestoneTrackerAndMilestoneCannotBeCreated(): void
     {
-        $project  = \Project::buildForTest();
+        $project  = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning = new PlanningData($tracker, 43, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn(
-            $planning
-        );
+        $planning = new Planning(43, 'Planning', '', $project->getID(), '', [302, 504]);
+        $planning->setPlanningTracker($tracker);
+        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
         $this->milestone_creator_checker->shouldReceive('canProjectIncrementBeCreated')->andReturn(false);
 
         $this->assertFalse(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                $tracker
+                TrackerDataAdapter::build($tracker),
+                ProjectDataAdapter::build($project)
             )
         );
     }
 
     public function testAllowArtifactCreationWhenNoVirtualTopMilestoneCanBeFound(): void
     {
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->andThrow(
-            new TopPlanningNotFoundInProjectException(102)
-        );
-
+        $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(\Project::buildForTest())->build();
+
+        $this->planning_factory->shouldReceive('getRootPlanning')->andThrow(
+            new TopPlanningNotFoundInProjectException($project->getID())
+        );
 
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                $tracker
+                TrackerDataAdapter::build($tracker),
+                ProjectDataAdapter::build($project)
             )
         );
     }
 
     public function testAllowArtifactCreationWhenTrackerDoesNotCreateMilestone(): void
     {
-        $project          = \Project::buildForTest();
-        $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning         = new PlanningData($planning_tracker, 43, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->andReturn($planning);
-        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
+        $project  = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
+        $tracker  = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
+        $planning = new Planning(43, 'Planning', '', $project->getID(), '', [302, 504]);
+        $planning->setPlanningTracker($tracker);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->milestone_creator_checker->shouldReceive('canProjectIncrementBeCreated')->andReturn(true);
 
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                $tracker
+                TrackerDataAdapter::build($tracker),
+                ProjectDataAdapter::build($project)
             )
         );
     }

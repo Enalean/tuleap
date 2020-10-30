@@ -24,36 +24,21 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
 final class CreateProjectIncrementsRunnerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationDao
-     */
-    private $pending_artifact_creation_dao;
 
     /**
      * @var CreateProjectIncrementsRunner
@@ -66,30 +51,36 @@ final class CreateProjectIncrementsRunnerTest extends TestCase
 
     protected function setUp(): void
     {
-        $logger                              = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->queue_factory                 = Mockery::mock(QueueFactory::class);
-        $this->artifact_factory              = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->user_manager                  = Mockery::mock(UserManager::class);
-        $this->pending_artifact_creation_dao = Mockery::mock(PendingArtifactCreationDao::class);
-        $this->changeset_factory             = Mockery::mock(\Tracker_Artifact_ChangesetFactory::class);
-        $this->runner                        = new CreateProjectIncrementsRunner(
+        $logger              = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->queue_factory = Mockery::mock(QueueFactory::class);
+        $replication_adapter = new ReplicationDataAdapter(
+            Mockery::mock(Tracker_ArtifactFactory::class),
+            Mockery::mock(UserManager::class),
+            Mockery::mock(PendingArtifactCreationDao::class),
+            Mockery::mock(Tracker_Artifact_ChangesetFactory::class)
+        );
+        $this->runner        = new CreateProjectIncrementsRunner(
             $logger,
             $this->queue_factory,
-            $this->artifact_factory,
-            $this->user_manager,
-            $this->pending_artifact_creation_dao,
-            $this->changeset_factory
+            $replication_adapter
         );
     }
 
     public function testItExecuteMirrorsCreation(): void
     {
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
+        $project  = new Project(['group_id' => 123, 'group_name' => 'Project', 'unix_group_name' => 'project']);
+        $tracker  = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
+        $user     = UserTestBuilder::aUser()->withId(10)->build();
+        $artifact = new Artifact(1, 10, $user->getId(), 123456789, true);
+        $artifact->setTracker($tracker);
 
-        $user = UserTestBuilder::aUser()->withId(10)->build();
-
-        $changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset = new Tracker_Artifact_Changeset(
+            1,
+            $artifact,
+            $user->getId(),
+            12345678,
+            "usermail@example.com"
+        );
 
         $queue = \Mockery::mock(PersistentQueue::class);
         $this->queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
@@ -100,98 +91,8 @@ final class CreateProjectIncrementsRunnerTest extends TestCase
             )
             ->once();
 
-        $this->runner->executeProjectIncrementsCreation($artifact, $user, $changeset);
-    }
+        $replication_data = ReplicationDataAdapter::build($artifact, $user, $changeset);
 
-    public function testAddListenerThrowsExceptionWhenPendingArtifactNotFound(): void
-    {
-        $payload = ['artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $event   = $this->mockAnEvent($payload);
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->with(101, 201)
-            ->andReturnNull();
-
-        $this->expectException(PendingArtifactNotFoundException::class);
-
-        $this->runner->addListener($event);
-    }
-
-    public function testAddListenerThrowsExceptionWhenProgramArtifactNotFound(): void
-    {
-        $payload = ['artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $result = ['program_artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $event   = $this->mockAnEvent($payload);
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->with(101, 201)
-            ->andReturn($result);
-
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(101)
-            ->andReturnNull();
-
-        $this->expectException(PendingArtifactNotFoundException::class);
-
-        $this->runner->addListener($event);
-    }
-
-    public function testAddListenerThrowsExceptionWhenUserNotFound(): void
-    {
-        $payload = ['artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $result = ['program_artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $event   = $this->mockAnEvent($payload);
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->with(101, 201)
-            ->andReturn($result);
-
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(101)
-            ->andReturn($artifact);
-
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturnNull();
-
-        $this->expectException(PendingArtifactUserNotFoundException::class);
-
-        $this->runner->addListener($event);
-    }
-
-    public function testAddListenerThrowsExceptionWhenChangesetNotFound(): void
-    {
-        $payload = ['artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $result = ['program_artifact_id' => 101, 'user_id' => 201, 'changeset_id' => 301];
-        $event   = $this->mockAnEvent($payload);
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
-            ->once()
-            ->with(101, 201)
-            ->andReturn($result);
-
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')
-            ->with(101)
-            ->andReturn($artifact);
-
-        $user = UserTestBuilder::aUser()->withId(201)->build();
-        $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
-
-        $this->changeset_factory->shouldReceive('getChangeset')->with($artifact, 301)->andReturnNull();
-
-        $this->expectException(PendingArtifactChangesetNotFoundException::class);
-
-        $this->runner->addListener($event);
-    }
-
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|WorkerEvent
-     */
-    private function mockAnEvent(array $payload)
-    {
-        $event = Mockery::mock(WorkerEvent::class);
-        $event->shouldReceive('getPayload')->andReturn($payload);
-        $event->shouldReceive('getEventName')->andReturn('tuleap.tracker.artifact.creation');
-
-        return $event;
+        $this->runner->executeProjectIncrementsCreation($replication_data);
     }
 }

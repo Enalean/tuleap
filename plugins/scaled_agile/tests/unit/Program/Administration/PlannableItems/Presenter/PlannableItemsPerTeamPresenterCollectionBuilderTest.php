@@ -26,18 +26,35 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Planning;
+use PlanningFactory;
 use Project;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItems;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
+final class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Project
+     */
+    private $team_project_02;
+
+    /**
+     * @var Project
+     */
+    private $team_project;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
+     */
+    private $planning_factory;
 
     /**
      * @var PlannableItemsPerTeamPresenterCollectionBuilder
@@ -45,12 +62,7 @@ class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
     private $builder;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningAdapter
-     */
-    private $planning_adapter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     * @var PFUser
      */
     private $user;
 
@@ -58,20 +70,23 @@ class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->planning_adapter = Mockery::mock(PlanningAdapter::class);
+        $this->planning_factory = Mockery::mock(PlanningFactory::class);
+        $planning_adapter       = new PlanningAdapter($this->planning_factory);
 
         $this->builder = new PlannableItemsPerTeamPresenterCollectionBuilder(
-            $this->planning_adapter
+            $planning_adapter
         );
 
         $this->user = UserTestBuilder::aUser()->build();
+        $this->team_project = new Project(['group_id' => 123, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1']);
+        $this->team_project_02 = new Project(['group_id' => 124, 'group_name' => 'Team 2', 'unix_group_name' => 'team_2']);
     }
 
     public function testItBuildsACollectionOfPresenterFromCollectionObject(): void
     {
         $plannable_items_collection = $this->buildPlannableItemsCollection();
 
-        $this->mockRootPlannings();
+        $this->getRootPlannings();
 
         $presenters_collection = $this->builder->buildPresenterCollectionFromObjectCollection(
             $this->user,
@@ -105,30 +120,24 @@ class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
 
     private function buildPlannableItemsCollection(): PlannableItemsCollection
     {
-        $team_project  = new Project(['group_id' => 123, 'group_name' => 'Team 1']);
-
         $silver               = TrackerColor::fromName('chrome-silver');
         $green                = TrackerColor::fromName('neon-green');
 
         $plannable_tracker_01 = TrackerTestBuilder::aTracker()->withId(1)->withName('bugs')->withColor($silver)->build();
         $plannable_tracker_02 = TrackerTestBuilder::aTracker()->withId(2)->withName('user stories')->withColor($green)->build();
-
-        $team_project_02  = new Project(['group_id' => 124, 'group_name' => 'Team 2']);
-
         $plannable_tracker_03 = TrackerTestBuilder::aTracker()->withId(3)->withName('bugs')->withColor($silver)->build();
         $plannable_tracker_04 = TrackerTestBuilder::aTracker()->withId(4)->withName('stories')->withColor($green)->build();
 
-
         return new PlannableItemsCollection([
             new PlannableItems(
-                $team_project,
+                ProjectDataAdapter::build($this->team_project),
                 [
                     $plannable_tracker_01,
                     $plannable_tracker_02
                 ]
             ),
             new PlannableItems(
-                $team_project_02,
+                ProjectDataAdapter::build($this->team_project_02),
                 [
                     $plannable_tracker_03,
                     $plannable_tracker_04
@@ -137,15 +146,17 @@ class PlannableItemsPerTeamPresenterCollectionBuilderTest extends TestCase
         ]);
     }
 
-    private function mockRootPlannings(): void
+    private function getRootPlannings(): void
     {
-        $root_tracker   = TrackerTestBuilder::aTracker()->withId(1)->build();
-        $second_tracker = TrackerTestBuilder::aTracker()->withId(2)->build();
+        $root_tracker   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->team_project)->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(2)->withProject($this->team_project_02)->build();
 
-        $first_root_planning  = new PlanningData($root_tracker, 43, 'Release Planning', [302, 504]);
-        $second_root_planning = new PlanningData($second_tracker, 49, 'Release Planning', [302, 504]);
+        $first_root_planning = new Planning(43, 'Release Planning', $this->team_project->getID(), '', [302, 504]);
+        $first_root_planning->setPlanningTracker($root_tracker);
+        $second_root_planning = new Planning(49, 'Release Planning', $this->team_project_02->getID(), '', [302, 504]);
+        $second_root_planning->setPlanningTracker($second_tracker);
 
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->twice()->andReturn(
+        $this->planning_factory->shouldReceive('getRootPlanning')->twice()->andReturn(
             $first_root_planning,
             $second_root_planning
         );

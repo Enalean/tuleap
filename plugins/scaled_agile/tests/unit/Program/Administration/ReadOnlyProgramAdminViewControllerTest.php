@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Planning;
 use Project;
 use ProjectManager;
 use Service;
@@ -42,12 +43,16 @@ use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsColle
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollection;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ReadOnlyProgramAdminViewControllerTest extends TestCase
+final class ReadOnlyProgramAdminViewControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PlanningFactory
+     */
+    private $planning_factory;
 
     /**
      * @var ReadOnlyProgramAdminViewController
@@ -58,11 +63,6 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
      */
     private $project_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningAdapter
-     */
-    private $planning_adapter;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AgileDashboardCrumbBuilder
@@ -93,17 +93,20 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->project_manager       = Mockery::mock(ProjectManager::class);
-        $this->planning_adapter      = Mockery::mock(PlanningAdapter::class);
-        $this->service_crumb_builder = Mockery::mock(AgileDashboardCrumbBuilder::class);
-        $this->administration_crumb_builder                 = Mockery::mock(AdministrationCrumbBuilder::class);
-        $this->template_renderer                            = Mockery::mock(TemplateRenderer::class);
-        $this->plannable_items_collection_builder           = Mockery::mock(PlannableItemsCollectionBuilder::class);
-        $this->per_team_presenter_collection_builder        = Mockery::mock(PlannableItemsPerTeamPresenterCollectionBuilder::class);
+        $this->project_manager                       = Mockery::mock(ProjectManager::class);
+        $this->planning_factory                      = Mockery::mock(\PlanningFactory::class);
+        $planning_adapter                            = new PlanningAdapter($this->planning_factory);
+        $this->service_crumb_builder                 = Mockery::mock(AgileDashboardCrumbBuilder::class);
+        $this->administration_crumb_builder          = Mockery::mock(AdministrationCrumbBuilder::class);
+        $this->template_renderer                     = Mockery::mock(TemplateRenderer::class);
+        $this->plannable_items_collection_builder    = Mockery::mock(PlannableItemsCollectionBuilder::class);
+        $this->per_team_presenter_collection_builder = Mockery::mock(
+            PlannableItemsPerTeamPresenterCollectionBuilder::class
+        );
 
         $this->controller = new ReadOnlyProgramAdminViewController(
             $this->project_manager,
-            $this->planning_adapter,
+            $planning_adapter,
             $this->service_crumb_builder,
             $this->administration_crumb_builder,
             $this->template_renderer,
@@ -123,10 +126,7 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
             'project_name' => 'proj01'
         ];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(143);
-        $project->shouldReceive('isError')->andReturnFalse();
-        $project->shouldReceive('getPublicName')->andReturn('Project 01');
+        $project = $this->getMockedProject();
 
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
             ->once()
@@ -139,15 +139,17 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
 
-        $user->shouldReceive('isAdmin')->with(143)->andReturnTrue();
+        $user->shouldReceive('isAdmin')->with($project->getID())->andReturnTrue();
 
         $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning = new PlanningData($planning_tracker, 43, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildPlanningById')->with(43)->andReturn($planning);
+        $planning         = new Planning(43, 'Planning', $project->getID(), '', [302, 504]);
+        $planning->setPlanningTracker($planning_tracker);
+        $this->planning_factory->shouldReceive('getPlanning')->with(43)->andReturn($planning);
 
-        $root_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $root_planning = new PlanningData($root_tracker, 43, 'Release O1 Planning', []);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->with($user, 143)->andReturn($root_planning);
+        $root_tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $root_planning = new Planning(43, 'Release O1 Planning', $project->getID(), '', []);
+        $root_planning->setPlanningTracker($root_tracker);
+        $this->planning_factory->shouldReceive('getRootPlanning')->with($user, $project->getID())->andReturn($root_planning);
 
         $this->plannable_items_collection_builder->shouldReceive('buildCollection')->once();
 
@@ -208,9 +210,7 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
             'project_name' => 'proj01'
         ];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(143);
-        $project->shouldReceive('isError')->andReturnFalse();
+        $project = $this->getMockedProject();
 
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
             ->once()
@@ -237,13 +237,11 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $request   = Mockery::mock(HTTPRequest::class);
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'id' => '43',
+            'id'           => '43',
             'project_name' => 'proj01'
         ];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(143);
-        $project->shouldReceive('isError')->andReturnFalse();
+        $project = $this->getMockedProject();
 
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
             ->once()
@@ -256,7 +254,7 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
 
-        $user->shouldReceive('isAdmin')->with(143)->andReturnFalse();
+        $user->shouldReceive('isAdmin')->with($project->getID())->andReturnFalse();
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
@@ -277,13 +275,11 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $request   = Mockery::mock(HTTPRequest::class);
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'id' => '43',
+            'id'           => '43',
             'project_name' => 'proj01'
         ];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(143);
-        $project->shouldReceive('isError')->andReturnFalse();
+        $project = $this->getMockedProject();
 
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
             ->once()
@@ -296,12 +292,13 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
 
-        $user->shouldReceive('isAdmin')->with(143)->andReturnTrue();
+        $user->shouldReceive('isAdmin')->with($project->getID())->andReturnTrue();
 
-        $other_project = new Project(['group_id' => 666]);
+        $other_project    = new Project(['group_id' => 666, 'group_name' => 'Other', 'unix_group_name' => 'other']);
         $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($other_project)->build();
-        $planning = new PlanningData($planning_tracker, 43, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildPlanningById')->with(43)->andReturn($planning);
+        $planning         = new Planning(43, 'Planning', [302, 504], $project->getID(), '');
+        $planning->setPlanningTracker($planning_tracker);
+        $this->planning_factory->shouldReceive('getPlanning')->with(43)->andReturn($planning);
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
@@ -322,13 +319,11 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $request   = Mockery::mock(HTTPRequest::class);
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
-            'id' => '43',
+            'id'           => '43',
             'project_name' => 'proj01'
         ];
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(143);
-        $project->shouldReceive('isError')->andReturnFalse();
+        $project = $this->getMockedProject();
 
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
             ->once()
@@ -341,15 +336,17 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
 
-        $user->shouldReceive('isAdmin')->with(143)->andReturnTrue();
+        $user->shouldReceive('isAdmin')->with($project->getID())->andReturnTrue();
 
         $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning = new PlanningData($planning_tracker, 43, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildPlanningById')->with(43)->andReturn($planning);
+        $planning         = new Planning(43, 'Planning', [302, 504], $project->getID(), '');
+        $planning->setPlanningTracker($planning_tracker);
+        $this->planning_factory->shouldReceive('getPlanning')->with(43)->andReturn($planning);
 
-        $root_tracker = TrackerTestBuilder::aTracker()->withId(2)->withProject($project)->build();
-        $root_planning = new PlanningData($root_tracker, 44, 'Planning', [302, 504]);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')->with($user, 143)->andReturn($root_planning);
+        $root_tracker  = TrackerTestBuilder::aTracker()->withId(2)->withProject($project)->build();
+        $root_planning = new Planning(44, 'Planning', $project->getId(), '', [302, 504]);
+        $root_planning->setPlanningTracker($root_tracker);
+        $this->planning_factory->shouldReceive('getRootPlanning')->with($user, $project->getID())->andReturn($root_planning);
 
         $service->shouldReceive('displayHeader')->never();
         $layout->shouldReceive('footer')->never();
@@ -363,5 +360,19 @@ class ReadOnlyProgramAdminViewControllerTest extends TestCase
             $layout,
             $variables
         );
+    }
+
+    /**
+     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     */
+    private function getMockedProject()
+    {
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getID')->andReturn(143);
+        $project->shouldReceive('isError')->andReturnFalse();
+        $project->shouldReceive('getPublicName')->andReturn('Project 01');
+        $project->shouldReceive('getUnixName')->andReturn('project_01');
+
+        return $project;
     }
 }

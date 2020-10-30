@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldStatusAdapterTest extends TestCase
@@ -49,8 +50,8 @@ final class FieldStatusAdapterTest extends TestCase
     {
         $semantic_status = \Mockery::mock(\Tracker_Semantic_Status::class);
         $semantic_status->shouldReceive('getField')->andReturnNull();
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
-        $this->semantic_status_factory->shouldReceive('getByTracker')->with($source_tracker)->andReturn($semantic_status);
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $this->semantic_status_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn($semantic_status);
 
         $this->expectException(FieldRetrievalException::class);
         $this->adapter->build($source_tracker);
@@ -58,10 +59,10 @@ final class FieldStatusAdapterTest extends TestCase
 
     public function testItBuildStatusFieldData(): void
     {
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_Selectbox(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "status",
             "Status",
@@ -74,7 +75,7 @@ final class FieldStatusAdapterTest extends TestCase
         );
         $semantic_status = \Mockery::mock(\Tracker_Semantic_Status::class);
         $semantic_status->shouldReceive('getField')->andReturn($field);
-        $this->semantic_status_factory->shouldReceive('getByTracker')->with($source_tracker)->andReturn(
+        $this->semantic_status_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_status
         );
 

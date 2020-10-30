@@ -22,20 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker;
 
+use Tuleap\ScaledAgile\TrackerData;
+
 final class ProjectIncrementsTrackerCollection
 {
     /**
-     * @var \Tracker[]
+     * @var TrackerData[]
      * @psalm-readonly
      */
-    private $project_increments;
+    private $project_increments_tracker_collection;
 
     /**
-     * @param \Tracker[] $project_increment_tracker
+     * @param TrackerData[] $project_increment_tracker
      */
     public function __construct(array $project_increment_tracker)
     {
-        $this->project_increments = $project_increment_tracker;
+        $this->project_increments_tracker_collection = $project_increment_tracker;
     }
 
     /**
@@ -45,25 +47,25 @@ final class ProjectIncrementsTrackerCollection
     public function getTrackerIds(): array
     {
         return array_map(
-            static function (\Tracker $tracker) {
-                return $tracker->getId();
+            static function (TrackerData $tracker) {
+                return $tracker->getTrackerId();
             },
-            $this->project_increments
+            $this->project_increments_tracker_collection
         );
     }
 
     /**
-     * @return \Tracker[]
+     * @return TrackerData[]
      * @psalm-mutation-free
      */
     public function getProjectIncrementTrackers(): array
     {
-        return $this->project_increments;
+        return $this->project_increments_tracker_collection;
     }
 
     public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
     {
-        foreach ($this->project_increments as $project_increment_tracker) {
+        foreach ($this->project_increments_tracker_collection as $project_increment_tracker) {
             if (! $project_increment_tracker->userCanSubmitArtifact($user)) {
                 return false;
             }

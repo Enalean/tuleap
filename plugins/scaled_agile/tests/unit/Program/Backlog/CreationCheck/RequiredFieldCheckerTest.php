@@ -30,6 +30,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 
 final class RequiredFieldCheckerTest extends TestCase
 {
@@ -73,7 +74,9 @@ final class RequiredFieldCheckerTest extends TestCase
         $collection         = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProjectIncrementsTrackerCollection([$tracker, $other_tracker_with_no_required_field]),
+            new ProjectIncrementsTrackerCollection(
+                [TrackerDataAdapter::build($tracker), TrackerDataAdapter::build($other_tracker_with_no_required_field)]
+            ),
             $collection
         );
         $this->assertTrue($no_other_required_fields);
@@ -106,7 +109,7 @@ final class RequiredFieldCheckerTest extends TestCase
         $collection->add($synchronized_field);
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProjectIncrementsTrackerCollection([$tracker]),
+            new ProjectIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
             $collection
         );
         $this->assertFalse($no_other_required_fields);

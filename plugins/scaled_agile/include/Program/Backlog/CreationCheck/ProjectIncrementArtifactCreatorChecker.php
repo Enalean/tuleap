@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
@@ -83,9 +84,9 @@ class ProjectIncrementArtifactCreatorChecker
 
     public function canProjectIncrementBeCreated(PlanningData $planning, PFUser $user): bool
     {
-        $program_project = $planning->getPlanningTracker()->getProject();
+        $program_project = $planning->getProjectData();
         $this->logger->debug(
-            "Checking if program increment can be created in top planning of project " . $program_project->getUnixName() .
+            "Checking if program increment can be created in top planning of project " . $program_project->getName() .
             " by user " . $user->getName() . ' (#' . $user->getId() . ')'
         );
 
@@ -106,9 +107,8 @@ class ProjectIncrementArtifactCreatorChecker
                 $team_projects_collection,
                 $user
             );
-        } catch (TopPlanningNotFoundInProjectException $exception) {
+        } catch (TopPlanningNotFoundInProjectException | NoProjectIncrementException $exception) {
             $this->logger->error("Cannot retrieve all the program increments", ['exception' => $exception]);
-
             return false;
         }
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($planning, $program_and_project_increment_trackers)) {

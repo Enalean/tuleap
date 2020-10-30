@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration;
 
-use ProjectManager;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 
@@ -33,15 +32,9 @@ class ReadOnlyProgramAdminURLBuilder
      */
     private $program_dao;
 
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    public function __construct(ProgramDao $program_dao, ProjectManager $project_manager)
+    public function __construct(ProgramDao $program_dao)
     {
-        $this->program_dao     = $program_dao;
-        $this->project_manager = $project_manager;
+        $this->program_dao = $program_dao;
     }
 
     public function buildURL(PlanningData $planning, ?PlanningData $root_planning): ?string
@@ -50,21 +43,18 @@ class ReadOnlyProgramAdminURLBuilder
             return null;
         }
 
-        $project_id = (int) $planning->getPlanningTracker()->getGroupId();
-
-        if (! $this->program_dao->isProjectAProgramProject($project_id)) {
+        $project    = $planning->getProjectData();
+        if (! $this->program_dao->isProjectAProgramProject($project->getId())) {
             return null;
         }
 
-        $planning_id      = (int) $planning->getId();
-        $root_planning_id = (int) $root_planning->getId();
+        $planning_id      = $planning->getId();
+        $root_planning_id = $root_planning->getId();
 
         if ($planning_id !== $root_planning_id) {
             return null;
         }
 
-        $project = $this->project_manager->getProject($project_id);
-
-        return '/project/' . urlencode($project->getUnixName()) . '/backlog/admin/' . urlencode((string) $planning_id);
+        return '/project/' . urlencode($project->getName()) . '/backlog/admin/' . urlencode((string) $planning_id);
     }
 }

@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use BackendLogger;
-use PFUser;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
-use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_FormElementFactory;
@@ -51,10 +49,11 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldStatu
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldsTimeFrameAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldTitleAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -105,13 +104,10 @@ class CreateProgramIncrementsTask
         $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
     }
 
-    public function createProjectIncrements(
-        Artifact $source_artifact,
-        PFUser $user,
-        Tracker_Artifact_Changeset $source_changeset
-    ): void {
+    public function createProjectIncrements(ReplicationData $replication_data): void
+    {
         try {
-            $this->create($source_artifact, $user, $source_changeset);
+            $this->create($replication_data);
         } catch (ProjectIncrementTrackerRetrievalException | ProjectIncrementCreationException | FieldRetrievalException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
@@ -122,36 +118,26 @@ class CreateProgramIncrementsTask
      * @throws ProjectIncrementTrackerRetrievalException
      * @throws FieldRetrievalException
      */
-    private function create(
-        Artifact $source_artifact,
-        PFUser $current_user,
-        Tracker_Artifact_Changeset $source_changeset
-    ): void {
-        $source_tracker = $source_artifact->getTracker();
+    private function create(ReplicationData $replication_data): void
+    {
+        $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
-        $copied_values = $this->changeset_collection_adapter->buildCollection(
-            $source_changeset,
-            $source_tracker
-        );
-
-        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $source_tracker->getProject()
-        );
+        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject($replication_data->getProjectData());
 
         $team_project_increments_tracker = $this->scale_tracker_factory->buildFromTeamProjects(
             $team_projects,
-            $current_user
+            $replication_data->getUser()
         );
 
         $this->program_increment_creator->createProjectIncrements(
             $copied_values,
             $team_project_increments_tracker,
-            $current_user
+            $replication_data->getUser()
         );
 
         $this->pending_artifact_creation_dao->deleteArtifactFromPendingCreation(
-            (int) $source_artifact->getId(),
-            (int) $current_user->getId()
+            (int) $replication_data->getArtifactData()->getId(),
+            (int) $replication_data->getUser()->getId()
         );
     }
 
@@ -204,7 +190,7 @@ class CreateProgramIncrementsTask
             ),
             new TeamProjectsCollectionBuilder(
                 $program_dao,
-                ProjectManager::instance()
+                new ProjectDataAdapter(ProjectManager::instance())
             ),
             new TrackerCollectionFactory(new PlanningAdapter(\PlanningFactory::build())),
             $mirror_creator,

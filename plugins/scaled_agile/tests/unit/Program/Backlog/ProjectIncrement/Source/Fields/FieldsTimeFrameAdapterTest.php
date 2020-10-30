@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -51,8 +52,8 @@ final class FieldsTimeFrameAdapterTest extends TestCase
     {
         $semantic_timeframe = \Mockery::mock(SemanticTimeframe::class);
         $semantic_timeframe->shouldReceive('getStartDateField')->andReturnNull();
-        $source_tracker = TrackerTestBuilder::aTracker()->withId(123)->build();
-        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker)->andReturn(
+        $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_timeframe
         );
 
@@ -62,10 +63,10 @@ final class FieldsTimeFrameAdapterTest extends TestCase
 
     public function testItThrowsWhenNoEndPeriodIsFound(): void
     {
-        $source_tracker   = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker   = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $start_date_field = new \Tracker_FormElement_Field_Date(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "start_date",
             "Start date",
@@ -82,7 +83,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         $semantic_timeframe->shouldReceive('getEndDateField')->andReturnNull()->once();
         $semantic_timeframe->shouldReceive('getStartDateField')->andReturn($start_date_field);
 
-        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker)->andReturn(
+        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_timeframe
         );
 
@@ -93,10 +94,10 @@ final class FieldsTimeFrameAdapterTest extends TestCase
 
     public function testItBuildTimeFrameFieldDataBasedOnDuration(): void
     {
-        $source_tracker     = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker     = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $start_date_field   = new \Tracker_FormElement_Field_Date(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "start_date",
             "Start date",
@@ -109,7 +110,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         );
         $duration_field     = new \Tracker_FormElement_Field_Integer(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "duration",
             "Duration",
@@ -123,7 +124,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         $semantic_timeframe = \Mockery::mock(SemanticTimeframe::class);
         $semantic_timeframe->shouldReceive('getDurationField')->andReturn($duration_field);
         $semantic_timeframe->shouldReceive('getStartDateField')->andReturn($start_date_field);
-        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker)->andReturn(
+        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_timeframe
         );
 
@@ -137,10 +138,10 @@ final class FieldsTimeFrameAdapterTest extends TestCase
 
     public function testItBuildTimeFrameFieldDataBesedOnEndDate(): void
     {
-        $source_tracker     = TrackerTestBuilder::aTracker()->withId(123)->build();
+        $source_tracker     = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $start_date_field   = new \Tracker_FormElement_Field_Date(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "start_date",
             "Start date",
@@ -153,7 +154,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         );
         $end_date_field     = new \Tracker_FormElement_Field_Date(
             1,
-            $source_tracker->getId(),
+            $source_tracker->getTrackerId(),
             null,
             "end_date",
             "End date",
@@ -168,7 +169,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         $semantic_timeframe->shouldReceive('getDurationField')->andReturn(null);
         $semantic_timeframe->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $semantic_timeframe->shouldReceive('getEndDateField')->andReturn($end_date_field);
-        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker)->andReturn(
+        $this->semantic_timeframe_factory->shouldReceive('getSemantic')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_timeframe
         );
 

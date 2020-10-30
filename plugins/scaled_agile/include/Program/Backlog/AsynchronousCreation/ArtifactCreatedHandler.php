@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -55,7 +56,7 @@ class ArtifactCreatedHandler
         $this->program_dao                      = $program_dao;
         $this->create_project_increments_runner = $create_project_increments_runner;
         $this->pending_artifact_creation_dao    = $pending_artifact_creation_dao;
-        $this->planning_adapter = $planning_adapter;
+        $this->planning_adapter                 = $planning_adapter;
     }
 
     public function handle(ArtifactCreated $event): void
@@ -76,7 +77,7 @@ class ArtifactCreatedHandler
             return;
         }
 
-        $program_top_milestones_tracker_id = $root_planning->getPlanningTracker()->getId();
+        $program_top_milestones_tracker_id = $root_planning->getPlanningTrackerData()->getTrackerId();
         if ($source_tracker->getId() !== $program_top_milestones_tracker_id) {
             return;
         }
@@ -87,10 +88,7 @@ class ArtifactCreatedHandler
             (int) $event->getChangeset()->getId()
         );
 
-        $this->create_project_increments_runner->executeProjectIncrementsCreation(
-            $source_artifact,
-            $current_user,
-            $event->getChangeset()
-        );
+        $replication_data = ReplicationDataAdapter::build($source_artifact, $current_user, $event->getChangeset());
+        $this->create_project_increments_runner->executeProjectIncrementsCreation($replication_data);
     }
 }

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-class SynchronizedFieldDataFromProgramAndTeamTrackers
+final class SynchronizedFieldDataFromProgramAndTeamTrackers
 {
     /**
      * @var array<int, true>

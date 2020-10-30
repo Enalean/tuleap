@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Tracker;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\TrackerData;
 
 class ArtifactCreatorChecker
 {
@@ -46,18 +47,18 @@ class ArtifactCreatorChecker
         $this->planning_adapter                           = $planning_adapter;
     }
 
-    public function canCreateAnArtifact(PFUser $user, Tracker $tracker): bool
+    public function canCreateAnArtifact(PFUser $user, TrackerData $tracker_data, ProjectData $project_data): bool
     {
         try {
             $root_planning = $this->planning_adapter->buildRootPlanning(
                 $user,
-                (int) $tracker->getProject()->getID()
+                $project_data->getId()
             );
         } catch (TopPlanningNotFoundInProjectException $e) {
             return true;
         }
 
-        if ($root_planning->getPlanningTracker()->getId() !== $tracker->getId()) {
+        if ($root_planning->getPlanningTrackerData()->getTrackerId() !== $tracker_data->getTrackerId()) {
             return true;
         }
 

@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Administration;
 
 use ForgeConfig;
-use Project;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenter;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollection;
+use Tuleap\ScaledAgile\ProjectData;
 
 /**
  * @psalm-immutable
@@ -58,12 +58,12 @@ class ProgramAdminPresenter
     public $planning_name;
 
     public function __construct(
-        Project $project,
+        ProjectData $project,
         PlannableItemsPerTeamPresenterCollection $collection,
         string $planning_name
     ) {
-        $this->project_id               = (int) $project->getID();
-        $this->project_name             = (string) $project->getPublicName();
+        $this->project_id               = $project->getId();
+        $this->project_name             = $project->getPublicName();
         $this->plannable_items          = $collection->getPlannableItemsPerTeamPresenters();
         $this->can_burnup_be_configured = (bool) ForgeConfig::get('use_burnup_count_elements');
         $this->planning_name            = $planning_name;

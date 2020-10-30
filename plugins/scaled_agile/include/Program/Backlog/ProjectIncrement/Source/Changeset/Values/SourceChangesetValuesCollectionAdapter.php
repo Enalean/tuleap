@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\V
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementCreationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
 
 class SourceChangesetValuesCollectionAdapter
 {
@@ -79,24 +80,22 @@ class SourceChangesetValuesCollectionAdapter
      * @throws ProjectIncrementCreationException
      * @throws FieldRetrievalException
      */
-    public function buildCollection(
-        \Tracker_Artifact_Changeset $source_changeset,
-        \Tracker $source_tracker
-    ): SourceChangesetValuesCollection {
-        $fields              = $this->fields_gatherer->build($source_tracker);
-        $title_value         = $this->title_value_data_adapter->build($fields->getFieldTitleData(), $source_changeset);
-        $description_value   = $this->description_value_adapter->build($fields->getFieldDescriptionData(), $source_changeset);
-        $status_value        = $this->status_value_adapter->build($fields->getFieldStatuData(), $source_changeset);
-        $start_date_value    = $this->start_date_adapter->build($fields->getFieldStartDateData(), $source_changeset);
-        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPriodData(), $source_changeset);
-        $artifact_link_value = $this->artifact_link_value_adapter->build($source_changeset->getArtifact());
+    public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
+    {
+        $fields              = $this->fields_gatherer->build($replication_data->getTrackerData());
+        $title_value         = $this->title_value_data_adapter->build($fields->getFieldTitleData(), $replication_data);
+        $description_value   = $this->description_value_adapter->build($fields->getFieldDescriptionData(), $replication_data);
+        $status_value        = $this->status_value_adapter->build($fields->getFieldStatuData(), $replication_data);
+        $start_date_value    = $this->start_date_adapter->build($fields->getFieldStartDateData(), $replication_data);
+        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPriodData(), $replication_data);
+        $artifact_link_value = $this->artifact_link_value_adapter->build($replication_data);
 
         return new SourceChangesetValuesCollection(
-            (int) $source_changeset->getArtifact()->getId(),
+            (int) $replication_data->getArtifactData()->getId(),
             $title_value,
             $description_value,
             $status_value,
-            (int) $source_changeset->getSubmittedOn(),
+            (int) $replication_data->getArtifactData()->getSubmittedOn(),
             $start_date_value,
             $end_period_value,
             $artifact_link_value
