@@ -31,7 +31,7 @@ services:
       - external-connectivity
 
   reverse-proxy:
-    image: enalean/tuleap-reverseproxy:distlp-1.4
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-reverseproxy:distlp-1.4
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
@@ -43,7 +43,7 @@ services:
       - tuleap
 
   backend-web:
-    image: enalean/tuleap-aio-dev:c6-php73-nginx
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c6-php73-nginx
     environment:
       RUN_COMMAND: "/opt/remi/php73/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
@@ -60,7 +60,7 @@ services:
       - tuleap
 
   backend-svn:
-    image: enalean/tuleap-dev:1.12
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-dev:1.13
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
@@ -75,7 +75,7 @@ services:
       - tuleap
 
   ldap:
-    image: enalean/ldap
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/ldap
     environment:
       LDAP_ROOT_PASSWORD: DumpPass4Tests
       LDAP_MANAGER_PASSWORD: DumpPass4Tests
@@ -85,7 +85,7 @@ services:
       - tuleap
 
   db:
-    image: mysql:5.7
+    image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
     volumes:
@@ -95,7 +95,7 @@ services:
       - tuleap
 
   redis:
-    image: redis:3.2
+    image: ${DOCKER_REGISTRY:-docker.io}/redis:3.2
     networks:
      - tuleap
 
