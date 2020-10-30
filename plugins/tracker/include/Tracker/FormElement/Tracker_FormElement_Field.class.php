@@ -562,6 +562,25 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
+    protected function getTargetFieldsIds(): array
+    {
+        $tracker = $this->getTracker();
+        if ($tracker === null) {
+            return [];
+        }
+
+        $tracker_formelement_factory = Tracker_FormElementFactory::instance();
+        $tracker_rules_manager       = new Tracker_RulesManager(
+            $tracker,
+            $tracker_formelement_factory,
+            new FrozenFieldsDao(),
+            new TrackerRulesListValidator($tracker_formelement_factory),
+            new TrackerRulesDateValidator($tracker_formelement_factory),
+            TrackerFactory::instance()
+        );
+        return $tracker_rules_manager->getFieldTargets($this);
+    }
+
     /**
      * Fetch the element for the submit new artifact form
      *
@@ -961,10 +980,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function isUsedInFieldDependency()
     {
+        $tracker = $this->getTracker();
+        if ($tracker === null) {
+            return false;
+        }
+
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
         $tracker_rules_manager = new Tracker_RulesManager(
-            $this->getTracker(),
-            Tracker_FormElementFactory::instance(),
+            $tracker,
+            $tracker_formelement_factory,
             new FrozenFieldsDao(),
             new TrackerRulesListValidator($tracker_formelement_factory),
             new TrackerRulesDateValidator($tracker_formelement_factory),

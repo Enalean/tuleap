@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
 {
 
-    protected function fetchFieldContainerStart($id, $name)
+    protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';
     }

@@ -22,6 +22,7 @@ import {
     initListPickersPostUpdateErrorView,
     listenToggleEditionEvents,
 } from "./list-fields";
+import * as list_picker from "@tuleap/list-picker/src/list-picker";
 
 describe("list-fields", () => {
     let doc: HTMLDocument;
@@ -83,6 +84,7 @@ describe("list-fields", () => {
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
+        jest.spyOn(list_picker, "createListPicker").mockImplementation();
     });
 
     it("should listen for clicks on fields labels to create a list picker when the <select> is shown", () => {
@@ -90,30 +92,62 @@ describe("list-fields", () => {
             const { button, select } = createArtifactFormElementFieldInReadModeOfType(type);
 
             listenToggleEditionEvents(doc);
-
-            expect(select.classList).not.toContain("list-picker-hidden-accessible");
             button.dispatchEvent(new Event("click"));
-            expect(select.classList).toContain("list-picker-hidden-accessible");
+
+            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+                is_filterable: true,
+            });
         });
     });
 
     it("should init list-pickers when the artifact view is in creation mode", () => {
         ["sb", "msb"].forEach((type) => {
             const select = createArtifactFormElementFieldInEditionModeOfType(type);
-
-            expect(select.classList).not.toContain("list-picker-hidden-accessible");
             initListPickersInArtifactCreationView(doc);
-            expect(select.classList).toContain("list-picker-hidden-accessible");
+
+            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+                is_filterable: true,
+            });
         });
     });
 
     it("should init list-pickers when list fields are in edition mode", () => {
         ["sb", "msb"].forEach((type) => {
             const select = createArtifactFormElementFieldInEditionModeOfType(type, true);
-
-            expect(select.classList).not.toContain("list-picker-hidden-accessible");
             initListPickersPostUpdateErrorView(doc);
-            expect(select.classList).toContain("list-picker-hidden-accessible");
+
+            expect(list_picker.createListPicker).toHaveBeenCalledWith(select, {
+                is_filterable: true,
+            });
+        });
+    });
+
+    it("when the field has targets, then it should initialize the target fields recursively", () => {
+        const {
+            button: button_1,
+            select: select_1,
+        } = createArtifactFormElementFieldInReadModeOfType("sb");
+        const { select: select_2 } = createArtifactFormElementFieldInReadModeOfType("sb");
+        const { select: select_3 } = createArtifactFormElementFieldInReadModeOfType("msb");
+
+        select_1.id = "tracker_field_5";
+        select_2.id = "tracker_field_10";
+        select_3.id = "tracker_field_25";
+
+        select_1.setAttribute("data-target-fields-ids", JSON.stringify(["10"]));
+        select_2.setAttribute("data-target-fields-ids", JSON.stringify(["25"]));
+
+        listenToggleEditionEvents(doc);
+        button_1.dispatchEvent(new Event("click"));
+
+        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_1, {
+            is_filterable: true,
+        });
+        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_2, {
+            is_filterable: true,
+        });
+        expect(list_picker.createListPicker).toHaveBeenCalledWith(select_3, {
+            is_filterable: true,
         });
     });
 });

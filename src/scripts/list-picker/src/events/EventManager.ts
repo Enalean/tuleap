@@ -28,6 +28,7 @@ import {
     isEnterKey,
     isEscapeKey,
 } from "../helpers/keys-helper";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
@@ -46,7 +47,8 @@ export class EventManager {
         private readonly dropdown_toggler: DropdownToggler,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
-        private readonly list_item_highlighter: ListItemHighlighter
+        private readonly list_item_highlighter: ListItemHighlighter,
+        private readonly items_map_manager: ItemsMapManager
     ) {}
 
     public attachEvents(): void {
@@ -129,7 +131,7 @@ export class EventManager {
         );
     }
 
-    private attachItemListEvent(): void {
+    public attachItemListEvent(): void {
         const items = this.dropdown_element.querySelectorAll(".list-picker-dropdown-option-value");
         let mouse_target_id: string | null = null;
 
@@ -234,7 +236,6 @@ export class EventManager {
     private attachSourceSelectBoxChangeEvent(): void {
         this.source_select_box.addEventListener("change", () => {
             const is_valid = this.source_select_box.checkValidity();
-
             if (!is_valid) {
                 this.wrapper_element.classList.add("list-picker-error");
             } else {

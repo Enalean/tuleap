@@ -330,6 +330,18 @@ class Tracker_RulesManager
         return $targets;
     }
 
+    public function getFieldTargets(Tracker_FormElement_Field $source_field): array
+    {
+        $targets_ids = [];
+        $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
+        foreach ($used_fields as $field) {
+            if ($this->ruleExists($this->tracker->getId(), $source_field->getId(), $field->getId())) {
+                $targets_ids[] = $field->getId();
+            }
+        }
+        return $targets_ids;
+    }
+
     //New interface
      /**
      *getDependenciesBySourceTarget .

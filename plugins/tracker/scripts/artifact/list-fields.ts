@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function listenToggleEditionEvents(doc: HTMLDocument): void {
+    const initialized_list_pickers_ids: Array<string> = [];
     doc.querySelectorAll(
         ".tracker_artifact_field-sb > .tracker_formelement_edit, .tracker_artifact_field-msb > .tracker_formelement_edit"
     ).forEach((edit_button) => {
@@ -35,8 +36,7 @@ export function listenToggleEditionEvents(doc: HTMLDocument): void {
         }
 
         const select = edit_button.parentElement.querySelector("select");
-
-        if (!select) {
+        if (!(select instanceof HTMLSelectElement)) {
             return;
         }
 
@@ -44,8 +44,35 @@ export function listenToggleEditionEvents(doc: HTMLDocument): void {
             await createListPicker(select, {
                 is_filterable: true,
             });
+
+            initialized_list_pickers_ids.push(select.id);
+            initTargetFieldsIfAny(doc, select, initialized_list_pickers_ids);
         });
     });
+}
+
+function initTargetFieldsIfAny(
+    doc: HTMLDocument,
+    field: HTMLSelectElement,
+    initialized_list_pickers_ids: Array<string>
+): void {
+    if (field.dataset.targetFieldsIds) {
+        const target_fields = JSON.parse(field.dataset.targetFieldsIds);
+        const ids = target_fields.map((id: string) => {
+            return "#tracker_field_" + id;
+        });
+
+        doc.querySelectorAll(ids.join(", ")).forEach(async (field: HTMLSelectElement) => {
+            if (initialized_list_pickers_ids.includes(field.id)) {
+                return;
+            }
+            initTargetFieldsIfAny(doc, field, initialized_list_pickers_ids);
+            await createListPicker(field, {
+                is_filterable: true,
+            });
+            initialized_list_pickers_ids.push(field.id);
+        });
+    }
 }
 
 export function initListPickersInArtifactCreationView(doc: HTMLDocument): void {

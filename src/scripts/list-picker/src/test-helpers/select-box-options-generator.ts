@@ -22,28 +22,22 @@
  */
 
 export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement): void {
-    const empty_option = document.createElement("option");
-    empty_option.value = "";
-    select.appendChild(empty_option);
-
     let i;
     for (i = 0; i < 3; i++) {
         const option = document.createElement("option");
         option.value = "value_" + i;
         option.innerText = "Value " + i;
+        option.setAttribute("data-item-id", "item-" + i);
         select.appendChild(option);
     }
     const option_with_label = document.createElement("option");
     option_with_label.value = "value_" + i;
     option_with_label.label = "Value " + i;
+    option_with_label.setAttribute("data-item-id", "item-" + i);
     select.appendChild(option_with_label);
 }
 
 export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement): void {
-    const empty_option = document.createElement("option");
-    empty_option.value = "";
-    select.appendChild(empty_option);
-
     let option_index = 0;
     ["Group 1", "Group 2"].forEach((group_name: string) => {
         const group = document.createElement("optgroup");
@@ -53,6 +47,7 @@ export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement)
             const option = document.createElement("option");
             option.value = "value_" + option_index;
             option.innerText = "Value " + option_index;
+            option.setAttribute("data-item-id", "item-" + option_index);
             group.appendChild(option);
 
             if (option_index === 5) {

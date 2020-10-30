@@ -993,7 +993,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $id = 'id="' . $id . '"';
         }
 
-        $html .= $this->fetchFieldContainerStart($id, $name);
+        $data_target_fields_ids = '';
+        $target_fields_ids = $this->getTargetFieldsIds();
+        if (count($target_fields_ids) > 0) {
+            $data_target_fields_ids = "data-target-fields-ids='" . json_encode($target_fields_ids) . "'";
+        }
+
+        $html .= $this->fetchFieldContainerStart($id, $name, $data_target_fields_ids);
 
         $from = $this->getSelectedValue($selected_values);
         if ($from == null && ! isset($submitted_values_for_this_list)) {
@@ -1033,7 +1039,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    protected function fetchFieldContainerStart($id, $name)
+    protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         $html     = '';
         $multiple = '';
@@ -1046,8 +1052,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($this->isRequired()) {
             $required = 'required';
         }
-        $html .= "<select $id $name $multiple $size $required>";
-        return $html;
+        $html .= "<select $id $name $multiple $size $required";
+        if ($data_target_fields_ids !== '') {
+            $html .= $data_target_fields_ids;
+        }
+        return $html . '">';
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)

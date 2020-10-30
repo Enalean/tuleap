@@ -30,7 +30,7 @@ describe("static-list-helper", () => {
         select = document.createElement("select");
     });
 
-    it("generates the map of the available options inside the source <select>, ignoring options with no value", () => {
+    it("generates the map of the available options inside the source <select>, removing options with no value", () => {
         appendSimpleOptionsToSourceSelectBox(select);
 
         const map = generateItemMapBasedOnSourceSelectOptions(select);
@@ -43,6 +43,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-0",
                 template: "Value 0",
+                value: "value_0",
                 is_disabled: false,
                 group_id: "",
                 is_selected: false,
@@ -55,6 +56,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-1",
                 template: "Value 1",
+                value: "value_1",
                 is_disabled: false,
                 group_id: "",
                 is_selected: false,
@@ -67,6 +69,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-2",
                 template: "Value 2",
+                value: "value_2",
                 is_disabled: false,
                 group_id: "",
                 is_selected: false,
@@ -79,6 +82,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-3",
                 template: "Value 3",
+                value: "value_3",
                 is_disabled: false,
                 group_id: "",
                 is_selected: false,
@@ -101,6 +105,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-0",
                 template: "Value 0",
+                value: "value_0",
                 is_disabled: false,
                 group_id: "group1",
                 is_selected: false,
@@ -113,6 +118,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-1",
                 template: "Value 1",
+                value: "value_1",
                 is_disabled: false,
                 group_id: "group1",
                 is_selected: false,
@@ -125,6 +131,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-2",
                 template: "Value 2",
+                value: "value_2",
                 is_disabled: false,
                 group_id: "group1",
                 is_selected: false,
@@ -137,6 +144,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-3",
                 template: "Value 3",
+                value: "value_3",
                 is_disabled: false,
                 group_id: "group2",
                 is_selected: false,
@@ -149,6 +157,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-4",
                 template: "Value 4",
+                value: "value_4",
                 is_disabled: false,
                 group_id: "group2",
                 is_selected: false,
@@ -161,6 +170,7 @@ describe("static-list-helper", () => {
             {
                 id: "item-5",
                 template: "Value 5",
+                value: "value_5",
                 is_disabled: true,
                 group_id: "group2",
                 is_selected: false,
