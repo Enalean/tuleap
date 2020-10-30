@@ -44,7 +44,7 @@ class ProjectBackgroundRetriever
      */
     public function getBackgrounds(Project $project): array
     {
-        $current_background_identifier = $this->configuration->getBackgroundIgnoringFeatureFlag($project);
+        $current_background_identifier = $this->configuration->getBackground($project);
 
         $backgrounds = [
             ProjectBackground::buildNoBackground($current_background_identifier === null),

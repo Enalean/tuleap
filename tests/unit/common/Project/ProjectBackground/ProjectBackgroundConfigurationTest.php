@@ -24,29 +24,13 @@ namespace Tuleap\Project\ProjectBackground;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
 
-class ProjectBackgroundConfigurationTest extends TestCase
+final class ProjectBackgroundConfigurationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
 
-    public function testItReturnsNullIfProjectDoesNotHaveABackground(): void
+    public function testReturnsTheProjectBackgroundIdentifierWhenOneIsSet(): void
     {
-        \ForgeConfig::set('feature_flag_project_background', '1');
-        $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
-
-        $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturnNull();
-
-        $configuration = new ProjectBackgroundConfiguration($dao);
-
-        self::assertNull($configuration->getBackground($project));
-    }
-
-    public function testItReturnsTrueIfProjectDoesNotHaveABackground(): void
-    {
-        \ForgeConfig::set('feature_flag_project_background', '1');
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
@@ -57,29 +41,27 @@ class ProjectBackgroundConfigurationTest extends TestCase
         self::assertEquals('beach-daytime', $configuration->getBackground($project));
     }
 
-    public function testItReturnsNullIfFeatureFlagIsDeactivated(): void
+    public function testItReturnsNullIfProjectDoesNotHaveABackground(): void
     {
-        \ForgeConfig::set('feature_flag_project_background', '0');
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
+        $dao->shouldReceive('getBackground')->andReturnNull();
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
         self::assertNull($configuration->getBackground($project));
     }
 
-    public function testItCanIgnoreTheFeatureFlagSoThatWeCanDisplayBackgroundOnDashboards(): void
+    public function testItReturnsNullIfTheProjectBackgroundIdentifierStoredIsInvalid(): void
     {
-        \ForgeConfig::set('feature_flag_project_background', '0');
         $project = \Mockery::mock(\Project::class)->shouldReceive(['getID' => 102])->getMock();
 
         $dao = \Mockery::mock(ProjectBackgroundDao::class);
-        $dao->shouldReceive('getBackground')->andReturn('beach-daytime');
+        $dao->shouldReceive('getBackground')->andReturn('invalid-project-background-identifier');
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
-        self::assertEquals('beach-daytime', $configuration->getBackgroundIgnoringFeatureFlag($project));
+        self::assertNull($configuration->getBackground($project));
     }
 }

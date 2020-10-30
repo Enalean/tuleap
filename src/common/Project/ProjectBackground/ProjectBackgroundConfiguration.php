@@ -25,13 +25,6 @@ namespace Tuleap\Project\ProjectBackground;
 class ProjectBackgroundConfiguration
 {
     /**
-     * Should we display project background on every pages ('1') or only on dashboard ('0')? Default is 0
-     *
-     * @tlp-config-key
-     */
-    public const CONFIG_FEATURE_FLAG_PROJECT_BACKGROUND = 'feature_flag_project_background';
-
-    /**
      * @var ProjectBackgroundDao
      */
     private $dao;
@@ -41,21 +34,7 @@ class ProjectBackgroundConfiguration
         $this->dao = $dao;
     }
 
-    public static function buildSelf(): self
-    {
-        return new self(new ProjectBackgroundDao());
-    }
-
     public function getBackground(\Project $project): ?string
-    {
-        if (\ForgeConfig::getInt(self::CONFIG_FEATURE_FLAG_PROJECT_BACKGROUND, 0) === 0) {
-            return null;
-        }
-
-        return $this->getBackgroundIgnoringFeatureFlag($project);
-    }
-
-    public function getBackgroundIgnoringFeatureFlag(\Project $project): ?string
     {
         $background = $this->dao->getBackground((int) $project->getID());
         if (! $background) {
