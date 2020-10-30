@@ -772,7 +772,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             }
         );
 
-        return $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
+        $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
     }
 
     /**

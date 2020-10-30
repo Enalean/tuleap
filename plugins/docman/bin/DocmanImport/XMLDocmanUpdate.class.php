@@ -51,6 +51,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
             $remoteTree = $this->getTitleTreeFromIdTree($idtree);
         } catch (SoapFault $e) {
             $this->printSoapResponseAndThrow($e);
+            return;
         }
 
         // Merge the trees, and tag the nodes
@@ -313,7 +314,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
     /**
      * Compares the version checksums in order to decide what to do.
      * For each version of the item, the checksum of the local file and the remote file are compared
-     * @return true  if we just have to send the new versions to the server
+     * @return bool true  if we just have to send the new versions to the server
      *         false if some versions have been created server-side (so we will need to delete and recreate the whole item)
      */
     private function checkVersionChecksums($itemId, $node)
@@ -332,6 +333,10 @@ class XMLDocmanUpdate extends XMLDocmanImport
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
+
+        if (! isset($remoteMd5sums)) {
+            return false;
+        }
 
         if (count($localMd5sums) >= count($remoteMd5sums)) {
             $commonVersionCount = count($remoteMd5sums);

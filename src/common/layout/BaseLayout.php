@@ -243,7 +243,7 @@ abstract class BaseLayout extends Response
             echo '</script>';
             $this->footer([]);
         } else {
-            if (! $is_anon && ! headers_sent() && $has_feedback) {
+            if (! $is_anon && ! headers_sent()) {
                 $this->_serializeFeedback();
             }
 

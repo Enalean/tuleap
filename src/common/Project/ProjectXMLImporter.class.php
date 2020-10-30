@@ -436,6 +436,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                         );
                     } catch (CannotCreateUGroupException $e) {
                         $this->logger->error($e->getMessage());
+                        continue;
                     }
                     $ugroup = $this->ugroup_manager->getById($new_ugroup_id);
                 }

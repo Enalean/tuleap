@@ -49,8 +49,8 @@ $xml_security->disableExternalLoadOfEntities();
 if (! defined('IS_SCRIPT')) {
     if (php_sapi_name() == "cli") {
         // Backend scripts should never ends because of lack of time or memory
-        ini_set('max_execution_time', 0);
-        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', '0');
+        ini_set('memory_limit', '-1');
 
         define('IS_SCRIPT', true);
     } else {
