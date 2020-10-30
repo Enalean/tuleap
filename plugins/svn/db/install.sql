@@ -15,6 +15,7 @@ CREATE TABLE plugin_svn_repositories(
   id int(11) unsigned NOT NULL auto_increment,
   name varchar(255) NOT NULL,
   project_id int(11) NOT NULL,
+  is_core BOOL NOT NULL DEFAULT 0,
   accessfile_id INT(11) UNSIGNED NOT NULL,
   repository_deletion_date INT(11) NULL,
   backup_path text NULL,

@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN;
 
-use Backend;
 use Event;
 use EventManager;
 use Psr\Log\LoggerInterface;
@@ -50,7 +49,7 @@ class XMLRepositoryImporter
      */
     private $backend_svn;
     /**
-     * @var \Backend
+     * @var \BackendSystem
      */
     private $backend_system;
 
@@ -102,8 +101,8 @@ class XMLRepositoryImporter
         SimpleXMLElement $xml_repo,
         $extraction_path,
         RepositoryCreator $repository_creator,
-        Backend $backend_svn,
-        Backend $backend_system,
+        \BackendSVN $backend_svn,
+        \BackendSystem $backend_system,
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,

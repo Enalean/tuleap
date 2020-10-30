@@ -24,7 +24,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 
-class SvnRepository implements Repository
+final class SvnRepository implements Repository
 {
     private const TO_BE_CREATED_REPOSITORY_ID = -1;
 

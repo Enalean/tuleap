@@ -21,9 +21,11 @@
 namespace Tuleap\SVN\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class RepositoryDeleterTest extends TestCase
 {
@@ -79,10 +81,9 @@ class RepositoryDeleterTest extends TestCase
         );
 
         $this->repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
-        $this->project    = \Mockery::mock(\Project::class);
-        $this->project->shouldReceive('getId')->andReturn(101);
+        $this->project    = ProjectTestBuilder::aProject()->build();
 
-        $this->fixtures_dir = dirname(__FILE__) . '/../_fixtures';
+        $this->fixtures_dir = __DIR__ . '/../_fixtures';
     }
 
     public function testItReturnFalseWhenRepositoryIsNotFoundOnFileSystem(): void
@@ -120,6 +121,20 @@ class RepositoryDeleterTest extends TestCase
 
     public function testItShouldRemoveAllRepositoryOfAProject(): void
     {
+        $directory = vfsStream::create(
+            [
+                'svn_plugin' => [
+                    '101' => [
+                        'repo01' => [],
+                        'repo02' => [],
+                        'repo03' => [],
+                    ]
+                ]
+            ],
+            vfsStream::setup()
+        );
+
+        \ForgeConfig::set('sys_data_dir', $directory->url());
         $this->repository_manager->shouldReceive('getRepositoriesInProject')->andReturn(
             [
                 SvnRepository::buildActiveRepository(1, 'repo01', $this->project),

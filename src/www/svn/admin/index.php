@@ -21,9 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SVN\SvnCoreAccess;
+
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../svn_data.php';
-
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -41,6 +42,14 @@ if (! $request->valid($vGroupId)) {
 if (! user_ismember($group_id, 'A') && ! user_ismember($group_id, 'SVN_ADMIN')) {
     exit_permission_denied();
 }
+
+$project = ProjectManager::instance()->getProject($group_id);
+if (! $project || $project->isError() || ! $project->isActive()) {
+    exit_permission_denied();
+}
+$svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $GLOBALS['Response']));
+assert($svn_core_access instanceof SvnCoreAccess);
+$svn_core_access->redirect();
 
 $vFunc = new Valid_WhiteList('func', [
     'general_settings',

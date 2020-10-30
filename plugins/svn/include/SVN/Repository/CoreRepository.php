@@ -25,33 +25,56 @@ namespace Tuleap\SVN\Repository;
 
 use ForgeConfig;
 use HTTPRequest;
+use Project;
 
-class CoreRepository implements Repository
+final class CoreRepository implements Repository
 {
-    public const ID = 0;
+    private const TO_BE_CREATED_REPOSITORY_ID = -1;
 
     /**
      * @var \Project
      */
     private $project;
+    /**
+     * @var int
+     */
+    private $id;
 
-    public function __construct(\Project $project)
+    private function __construct(\Project $project, int $repository_id)
     {
         $this->project = $project;
+        $this->id      = $repository_id;
+    }
+
+    public static function buildActiveRepository(Project $project, int $repository_id): self
+    {
+        return new self($project, $repository_id);
+    }
+
+    public static function buildToBeCreatedRepository(Project $project): self
+    {
+        return new self($project, self::TO_BE_CREATED_REPOSITORY_ID);
     }
 
     public function getSettingUrl(): string
     {
-        return sprintf('/svn/admin/?group_id=%d', $this->project->getID());
+        return SVN_BASE_URL . '/?' . http_build_query(
+            [
+                'group_id' => $this->project->getID(),
+                'action'   => 'settings',
+                'repo_id'  => $this->id
+            ]
+        );
     }
 
     public function setId(int $id): void
     {
+        $this->id = $id;
     }
 
     public function getId(): int
     {
-        return 0;
+        return $this->id;
     }
 
     public function getName(): string

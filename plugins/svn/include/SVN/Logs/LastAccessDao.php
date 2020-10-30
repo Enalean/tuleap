@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\SVN\Logs;
 
+use Tuleap\SVN\Repository\Repository;
+
 class LastAccessDao extends \DataAccessObject
 {
     public function __construct()
@@ -28,7 +30,7 @@ class LastAccessDao extends \DataAccessObject
         $this->enableExceptionsOnError();
     }
 
-    public function updateLastCommitDate($repository_id, $date)
+    public function updateLastCommitDate($repository_id, $date): void
     {
         $repository_id = $this->da->escapeInt($repository_id);
         $date          = $this->da->escapeInt($date);
@@ -38,5 +40,15 @@ class LastAccessDao extends \DataAccessObject
                 ON DUPLICATE KEY UPDATE commit_date = $date";
 
         $this->update($sql);
+    }
+
+    public function importCoreLastCommitDate(Repository $repository): void
+    {
+        $sql = sprintf('SELECT date FROM svn_commits WHERE group_id = %d ORDER BY date DESC LIMIT 1', $this->da->escapeInt($repository->getProject()->getID()));
+        $dar = $this->retrieve($sql);
+        if ($dar && count($dar) === 1) {
+            $row = $dar->getRow();
+            $this->updateLastCommitDate($repository->getId(), $row['date']);
+        }
     }
 }

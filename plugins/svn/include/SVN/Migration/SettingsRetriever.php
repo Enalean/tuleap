@@ -135,10 +135,10 @@ class SettingsRetriever
         foreach ($this->history_dao->getAllVersions($repository->getProject()->getID()) as $version) {
             $version_history[] = new AccessFileHistory(
                 $repository,
-                $version['id'],
-                $version['version_number'],
-                $version['content'],
-                $version['version_date']
+                (int) $version['id'],
+                (int) $version['version_number'],
+                (string) $version['content'],
+                (int) $version['version_date']
             );
         }
 

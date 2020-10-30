@@ -20,6 +20,7 @@
  */
 
 use Tuleap\SVN\GetAllRepositories;
+use Tuleap\SVN\SvnCoreUsage;
 use Tuleap\Svn\SVNRepositoryCreationException;
 use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 use Tuleap\SvnCore\Cache\ParameterDao;
@@ -35,6 +36,10 @@ class BackendSVN extends Backend
 {
 
     protected $SVNApacheConfNeedUpdate;
+    /**
+     * @var SvnCoreUsage
+     */
+    private $svn_core_usage;
 
     /**
      * For mocking (unit tests)
@@ -1001,5 +1006,41 @@ class BackendSVN extends Backend
     public function exportSVNAccessFileDefaultBloc(Project $project): string
     {
         return $this->getDefaultBlockStart() . $this->getDefaultBlock($project) . $this->getDefaultBlocEnd();
+    }
+
+    public function systemCheck(Project $project): void
+    {
+        if ($project->usesSVN() && $this->getSvnCoreUsage()->isManagedByCore($project)) {
+            if (! $this->repositoryExists($project)) {
+                if (! $this->createProjectSVN($project->getId())) {
+                    throw new RuntimeException('Could not create/initialize project SVN repository');
+                }
+                $this->updateSVNAccess($project->getId(), $project->getSVNRootPath());
+                $this->setSVNPrivacy($project, ! $project->isPublic() || $project->isSVNPrivate());
+                $this->setSVNApacheConfNeedUpdate();
+            } else {
+                $this->checkSVNAccessPresence($project->getId());
+            }
+
+            $this->updateHooksForProjectRepository($project);
+
+            // Check ownership/mode/access rights
+            $this->checkSVNMode($project);
+        }
+
+        // If no codendi_svnroot.conf file, force recreate.
+        if (! is_file(ForgeConfig::get('svn_root_file'))) {
+            $this->setSVNApacheConfNeedUpdate();
+        }
+    }
+
+    private function getSvnCoreUsage(): SvnCoreUsage
+    {
+        if (! $this->svn_core_usage) {
+            $svn_core_usage = EventManager::instance()->dispatch(new SvnCoreUsage());
+            assert($svn_core_usage instanceof SvnCoreUsage);
+            $this->svn_core_usage = $svn_core_usage;
+        }
+        return $this->svn_core_usage;
     }
 }

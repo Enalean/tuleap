@@ -38,6 +38,7 @@ use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnCoreUsage;
 
 class RepositoryManager
 {
@@ -91,7 +92,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchByProject($project) as $row) {
-            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
+            $repositories[] = $this->instantiateFromRow($row, $project);
         }
 
         return $repositories;
@@ -104,7 +105,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
-            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
+            $repositories[] = $this->instantiateFromRow($row, $project);
         }
 
         return new RepositoryPaginatedCollection(
@@ -120,7 +121,7 @@ class RepositoryManager
     {
         $repositories = [];
         foreach ($this->dao->searchPaginatedByProjectAndByName($project, $repository_name, $limit, $offset) as $row) {
-            $repositories[] = SvnRepository::buildFromDatabase($row, $project);
+            $repositories[] = $this->instantiateFromRow($row, $project);
         }
 
         return new RepositoryPaginatedCollection(
@@ -135,16 +136,9 @@ class RepositoryManager
     public function getRepositoriesInProjectWithLastCommitInfo(Project $project): array
     {
         $repositories = [];
-        if ($this->dao->isCoreSvnEnabled($project)) {
-            $repositories[] = new RepositoryWithLastCommitDate(
-                new CoreRepository($project),
-                $this->dao->getCoreLastCommitDate($project),
-            );
-        }
-
         foreach ($this->dao->searchByProject($project) as $row) {
             $repositories[] = new RepositoryWithLastCommitDate(
-                SvnRepository::buildFromDatabase($row, $project),
+                $this->instantiateFromRow($row, $project),
                 $row['commit_date'] === null || $row['commit_date'] === '' ? null : new \DateTimeImmutable('@' . $row['commit_date']),
             );
         }
@@ -156,7 +150,7 @@ class RepositoryManager
     {
         $row = $this->dao->searchRepositoryByName($project, $name);
         if ($row) {
-            return SvnRepository::buildFromDatabase($row, $project);
+            return $this->instantiateFromRow($row, $project);
         } else {
             throw new CannotFindRepositoryException();
         }
@@ -164,22 +158,16 @@ class RepositoryManager
 
     public function getByIdAndProject(int $id_repository, Project $project): Repository
     {
-        if ($id_repository === CoreRepository::ID) {
-            return new CoreRepository($project);
-        }
         $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
         if (! $row) {
             throw new CannotFindRepositoryException();
         }
 
-        return SvnRepository::buildFromDatabase($row, $project);
+        return $this->instantiateFromRow($row, $project);
     }
 
     public function getRepositoryById(int $id): Repository
     {
-        if ($id === CoreRepository::ID) {
-            throw new CannotFindRepositoryException('Cannot find Core repository with `getRepositoryById`');
-        }
         $row = $this->dao->searchByRepositoryId($id);
         if (! $row) {
             throw new CannotFindRepositoryException();
@@ -188,10 +176,17 @@ class RepositoryManager
         return $this->instantiateFromRowWithoutProject($row);
     }
 
-    /**
-     * @return SystemEvent or null
-     */
-    public function queueRepositoryRestore(Repository $repository, SystemEventManager $system_event_manager)
+    public function getCoreRepository(\Project $project): Repository
+    {
+        $repository_id = $this->dao->getCoreRepositoryId($project);
+        if ($repository_id === null) {
+            throw new CannotFindRepositoryException();
+        }
+
+        return CoreRepository::buildActiveRepository($project, $repository_id);
+    }
+
+    public function queueRepositoryRestore(Repository $repository, SystemEventManager $system_event_manager): ?SystemEvent
     {
         return $system_event_manager->createEvent(
             'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME,
@@ -202,13 +197,15 @@ class RepositoryManager
     }
 
     /**
-     * @param $path
-     *
-     * @return Repository
      * @throws CannotFindRepositoryException
      */
-    public function getRepositoryFromSystemPath($path)
+    public function getRepositoryFromSystemPath(string $path): Repository
     {
+        $real_path = realpath($path);
+        if ($this->isPathInSvnCore($real_path)) {
+            return $this->getCoreRepositoryFromSystemPath($real_path);
+        }
+
         if (! preg_match('/\/(\d+)\/(' . RuleName::PATTERN_REPOSITORY_NAME . ')$/', $path, $matches)) {
             throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
@@ -217,12 +214,39 @@ class RepositoryManager
         return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
     }
 
+    private function isPathInSvnCore(string $path): bool
+    {
+        $core_svnroot = ForgeConfig::get('svn_prefix');
+        if ($core_svnroot === false) {
+            return false;
+        }
+
+        $core_svnroot_path = realpath($core_svnroot);
+        if (strpos($path, $core_svnroot_path) !== 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getCoreRepositoryFromSystemPath(string $path): Repository
+    {
+        $project_name = basename($path);
+        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($project_name);
+        if (! $project instanceof Project || $project->getID() === null || $project->isError() || ! $project->isActive()) {
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
+        }
+        $core_repository_id = $this->dao->getCoreRepositoryId($project);
+        if ($core_repository_id === null) {
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Core repository cannot be managed by plugin'));
+        }
+        return CoreRepository::buildActiveRepository($project, $core_repository_id);
+    }
+
     /**
-     *
-     * @return Repository
      * @throws CannotFindRepositoryException
      */
-    public function getRepositoryFromPublicPath(HTTPRequest $request)
+    public function getRepositoryFromPublicPath(HTTPRequest $request): Repository
     {
         $path         = $request->get('root');
         $project      = $request->getProject();
@@ -230,7 +254,11 @@ class RepositoryManager
 
         $matches = [];
         if (preg_match('/^' . preg_quote($project_name, '/') . '$/', $path, $matches)) {
-            return new CoreRepository($project);
+            $repository_id = $this->dao->getCoreRepositoryId($project);
+            if ($repository_id === null) {
+                throw new CannotFindRepositoryException();
+            }
+            return CoreRepository::buildActiveRepository($project, $repository_id);
         }
 
         $matches = [];
@@ -300,11 +328,19 @@ class RepositoryManager
         return $archived_repositories;
     }
 
+    private function instantiateFromRow(array $row, Project $project): Repository
+    {
+        if ((int) $row['is_core'] === 1) {
+            return CoreRepository::buildActiveRepository($project, (int) $row['id']);
+        }
+        return SvnRepository::buildFromDatabase($row, $project);
+    }
+
     private function instantiateFromRowWithoutProject(array $row): Repository
     {
         $project = $this->project_manager->getProject($row['project_id']);
 
-        return SvnRepository::buildFromDatabase($row, $project);
+        return $this->instantiateFromRow($row, $project);
     }
 
     public function purgeArchivedRepositories()
@@ -426,7 +462,20 @@ class RepositoryManager
             throw new \RuntimeException('Database error');
         }
         foreach ($dar as $row) {
-            yield SvnRepository::buildFromDatabase($row, $this->project_manager->getProjectFromDbRow($row));
+            yield $this->instantiateFromRow(
+                $row,
+                $this->project_manager->getProjectFromDbRow($row)
+            );
+        }
+    }
+
+    /**
+     * @throws \DataAccessQueryException
+     */
+    public function svnCoreUsage(SvnCoreUsage $svn_core_usage): void
+    {
+        foreach ($this->dao->getCoreRepositories() as $project_id) {
+            $svn_core_usage->addProjectId($project_id);
         }
     }
 }
