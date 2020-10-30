@@ -41,7 +41,6 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
-use XML_Security;
 use XMLImportHelper;
 
 final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -49,20 +48,6 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
-
-    /** @var XML_Security */
-    protected $xml_security;
-
-    protected function setUp(): void
-    {
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->xml_security->disableExternalLoadOfEntities();
-    }
 
     /**
      * @return \Mockery\Mock|Tracker_FormElement_Field_Date
@@ -277,7 +262,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testExportPropertiesToXMLNoDefaultValue(): void
     {
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesNoDefaultValueTest.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [
@@ -309,7 +294,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     {
         // another test if value = '0' instead of ''
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesNoDefaultValueTest.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [
@@ -340,7 +325,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testExportPropertiesToXMLDefaultValueToday(): void
     {
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesDefaultValueTodayTest.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [
@@ -373,7 +358,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testExportPropertiesToXMLDefaultValueSpecificDate(): void
     {
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesDefaultValueSpecificDateTest.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [
@@ -406,7 +391,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testExportPropertiesToXMLDisplayTime(): void
     {
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesDisplayTime.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [
@@ -430,7 +415,7 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     public function testExportPropertiesToXMLDisplayTimeWhenDisplayTimeIsZero(): void
     {
         $file     = __DIR__ . '/../_fixtures/FieldDate/ImportTrackerFormElementDatePropertiesDisplayTimeZero.xml';
-        $xml_test = simplexml_load_file($file);
+        $xml_test = simplexml_load_string(file_get_contents($file), SimpleXMLElement::class, LIBXML_NOENT);
 
         $date_field = $this->getDateField();
         $properties = [

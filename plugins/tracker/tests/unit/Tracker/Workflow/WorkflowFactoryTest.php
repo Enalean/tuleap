@@ -43,14 +43,10 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use WorkflowFactory;
-use XML_Security;
 
 class WorkflowFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /** @var XML_Security */
-    private $xml_security;
 
     protected function setUp(): void
     {
@@ -59,23 +55,19 @@ class WorkflowFactoryTest extends TestCase
         $permission_manager = Mockery::mock(PermissionsManager::class);
         PermissionsManager::setInstance($permission_manager);
 
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-
         $this->project = Mockery::mock(Project::class);
     }
 
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
     public function testImport(): void
     {
-        $xml = simplexml_load_file(__DIR__ . '/_fixtures/importWorkflow.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importWorkflow.xml'), SimpleXMLElement::class, LIBXML_NOENT);
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -174,7 +166,7 @@ class WorkflowFactoryTest extends TestCase
 
     public function testImportSimpleWorkflow(): void
     {
-        $xml = simplexml_load_file(__DIR__ . '/_fixtures/importSimpleWorkflow.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importSimpleWorkflow.xml'), SimpleXMLElement::class, LIBXML_NOENT);
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);

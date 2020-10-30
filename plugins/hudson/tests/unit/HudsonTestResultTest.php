@@ -21,40 +21,19 @@
 
 namespace Tuleap\Hudson;
 
-use BaseLanguage;
 use Http\Mock\Client;
 use HudsonJobURLMalformedException;
 use HudsonTestResult;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
-use XML_Security;
 
 final class HudsonTestResultTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /** @var XML_Security */
-    private $xml_security;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
-
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
+    use GlobalLanguageMock;
 
     public function testMalformedURL()
     {
@@ -80,7 +59,7 @@ final class HudsonTestResultTest extends TestCase
     public function testSimpleJobTestResult()
     {
         $test_result_file = __DIR__ . '/resources/testReport.xml';
-        $xmldom           = simplexml_load_file($test_result_file);
+        $xmldom           = simplexml_load_string(file_get_contents($test_result_file), \SimpleXMLElement::class, LIBXML_NONET);
 
         $test_result = Mockery::spy(HudsonTestResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $test_result->shouldReceive('_getXMLObject')->andReturn($xmldom);
