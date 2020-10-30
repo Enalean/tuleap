@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository;
 
 use DateTimeImmutable;
-use Project;
 
 /**
  * @psalm-immutable
@@ -33,11 +32,6 @@ class GitlabRepository
      * @var int
      */
     private $id;
-
-    /**
-     * @var Project
-     */
-    private $project;
 
     /**
      * @var int
@@ -71,7 +65,6 @@ class GitlabRepository
 
     public function __construct(
         int $id,
-        Project $project,
         int $gitlab_id,
         string $name,
         string $path,
@@ -80,7 +73,6 @@ class GitlabRepository
         DateTimeImmutable $last_push_date
     ) {
         $this->id             = $id;
-        $this->project        = $project;
         $this->gitlab_id      = $gitlab_id;
         $this->name           = $name;
         $this->path           = $path;
@@ -92,11 +84,6 @@ class GitlabRepository
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getProject(): Project
-    {
-        return $this->project;
     }
 
     public function getGitlabId(): int

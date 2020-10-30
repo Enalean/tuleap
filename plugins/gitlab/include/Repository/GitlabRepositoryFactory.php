@@ -45,7 +45,6 @@ class GitlabRepositoryFactory
         foreach ($this->dao->getGitlabRepositoriesForProject((int) $project->getID()) as $row) {
             $gitlab_repositories[] = new GitlabRepository(
                 $row['id'],
-                $project,
                 $row['gitlab_id'],
                 $row['name'],
                 $row['path'],
