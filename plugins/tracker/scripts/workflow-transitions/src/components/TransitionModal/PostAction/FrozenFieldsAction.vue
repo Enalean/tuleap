@@ -29,6 +29,7 @@
                 <i class="fa fa-asterisk"></i>
             </label>
             <multi-select
+                v-if="!is_list_picker_enabled"
                 id="workflow-transition-modal-frozen-fields"
                 class="tlp-select"
                 required
@@ -49,15 +50,36 @@
                     {{ field.label }}
                 </option>
             </multi-select>
+            <select
+                v-else
+                id="workflow-transition-modal-frozen-fields"
+                multiple
+                required
+                v-model="frozen_field_ids"
+                v-bind:disabled="is_modal_save_running"
+                data-test="frozen-fields-selector"
+                ref="workflow_transition_modal_frozen_fields"
+                v-on:change="updateFrozenFieldsPostActionFieldIds"
+            >
+                <option
+                    v-for="field in writable_fields"
+                    v-bind:key="field.field_id"
+                    v-bind:value="field.field_id"
+                    v-bind:data-test="`field_${field.field_id}`"
+                >
+                    {{ field.label }}
+                </option>
+            </select>
         </div>
     </post-action>
 </template>
 <script>
 import PostAction from "./PostAction.vue";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import MultiSelect from "../MultiSelect.vue";
 import { READ_ONLY_FIELDS, STRUCTURAL_FIELDS } from "../../../../../constants/fields-constants.js";
 import { compare } from "../../../support/string.js";
+import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
 
@@ -70,9 +92,19 @@ export default {
             mandatory: true,
         },
     },
+    data() {
+        return {
+            frozen_field_ids: [],
+            list_picker: null,
+        };
+    },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
+        ...mapState("transitionModal", [
+            "current_transition",
+            "is_modal_save_running",
+            "is_list_picker_enabled",
+        ]),
         ...mapGetters(["current_workflow_field"]),
         ...mapState({
             writable_fields(state) {
@@ -85,16 +117,30 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
         }),
-        frozen_field_ids: {
-            get() {
-                return this.post_action.field_ids;
-            },
-            set(field_ids) {
-                this.$store.commit("transitionModal/updateFrozenFieldsPostActionFieldIds", {
-                    post_action: this.post_action,
-                    field_ids,
-                });
-            },
+    },
+    async mounted() {
+        this.frozen_field_ids = this.post_action.field_ids;
+        if (this.is_list_picker_enabled) {
+            this.list_picker = await createListPicker(
+                this.$refs.workflow_transition_modal_frozen_fields,
+                {
+                    is_filterable: true,
+                    placeholder: this.$gettext("Choose a field"),
+                }
+            );
+        }
+    },
+    beforeDestroy() {
+        if (this.list_picker) {
+            this.list_picker.destroy();
+        }
+    },
+    methods: {
+        updateFrozenFieldsPostActionFieldIds() {
+            this.$store.commit("transitionModal/updateFrozenFieldsPostActionFieldIds", {
+                post_action: this.post_action,
+                field_ids: this.frozen_field_ids,
+            });
         },
     },
 };

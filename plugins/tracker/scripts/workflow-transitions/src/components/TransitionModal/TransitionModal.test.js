@@ -104,9 +104,10 @@ describe(`TransitionModal`, () => {
         expect(wrapper.findComponent(PreConditionsSkeleton).exists()).toBe(true);
     });
 
-    it(`when the modal is loaded, it will show the Pre-conditions section`, () => {
+    it(`when the modal is loaded and shown, it will show the Pre-conditions section`, () => {
         const store = mockStore();
         store.state.transitionModal.is_loading_modal = false;
+        store.state.transitionModal.is_modal_shown = true;
         const wrapper = createWrapper(store);
 
         expect(wrapper.findComponent(FilledPreConditionsSection).exists()).toBe(true);
