@@ -8,12 +8,6 @@
                 <button id="toggle-svn-help" class="btn"><i class="fa fa-question-circle"></i></button>
             </div>
         </div>
-
-        {{^ is_repository_created }}
-            <div class="alert alert-info">
-                {{ repository_not_created }}
-            </div>
-        {{/ is_repository_created }}
     </div>
 
     <div id="svn-repository-viewvc" data-test="svn-repository-view">
@@ -25,8 +19,13 @@
             </div>
         </div>
 
-        {{# is_repository_created }}
+        {{^ is_repository_created }}
             {{{ viewvc_html }}}
+        {{/ is_repository_created }}
+        {{# is_repository_created }}
+            <div class="alert alert-info svn-repository-not-created-yet">
+                {{ repository_not_created }}
+            </div>
         {{/ is_repository_created }}
     </div>
 </div>
