@@ -163,11 +163,33 @@
     #tracker-settings {
         padding: 0 0 150px;
     }
+
+    .tracker-form-element-artifactlink-list-nav {
+        min-height: 0;
+    }
+
+    /* stylelint-disable selector-no-qualifying-type */
+    &.tracker-administration {
+        background: $main-background;
+
+        .main {
+            #feedback > ul {
+                margin: 0 20px 20px;
+            }
+
+            .content {
+                padding: 0;
+            }
+        }
+    }
+    /* stylelint-enable selector-no-qualifying-type */
 }
 
 body {
-    @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+    &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+    }
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
@@ -193,20 +215,4 @@ body {
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
-
-    /* stylelint-disable selector-no-qualifying-type */
-    &.tracker-administration {
-        background: $main-background;
-
-        .main {
-            #feedback > ul {
-                margin: 0 20px 20px;
-            }
-
-            .content {
-                padding: 0;
-            }
-        }
-    }
-    /* stylelint-enable selector-no-qualifying-type */
 }
