@@ -50,7 +50,7 @@ class PreCommitSHA1CollisionTest extends TestCase
     {
         parent::setUp();
 
-        $this->svnlook                 = Mockery::spy(\Tuleap\SVN\Commit\SVNLook::class);
+        $this->svnlook                 = Mockery::spy(\Tuleap\SVN\Commit\Svnlook::class);
         $this->sha1_collision_detector = Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
         $this->repository_manager      = Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
 
