@@ -22,35 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project;
 
-use Project;
+use Tuleap\ScaledAgile\ProjectData;
 
+/**
+ * @psalm-immutable
+ */
 final class TeamProjectsCollection
 {
     /**
-     * @var Project[]
-     * @psalm-readonly
+     * @var ProjectData[]
      */
     private $team_projects;
 
     /**
-     * @param Project[] $team_projects
+     * @param ProjectData[] $team_projects
      */
     public function __construct(array $team_projects)
     {
         $this->team_projects = $team_projects;
     }
-
-    /**
-     * @psalm-mutation-free
-     */
     public function isEmpty(): bool
     {
         return empty($this->team_projects);
     }
 
     /**
-     * @return Project[]
-     * @psalm-mutation-free
+     * @return ProjectData[]
      */
     public function getTeamProjects(): array
     {

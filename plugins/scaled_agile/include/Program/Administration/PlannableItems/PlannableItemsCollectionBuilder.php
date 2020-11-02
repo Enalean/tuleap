@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
-use ProjectManager;
-use TrackerFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\TrackerNotFoundException;
 
 class PlannableItemsCollectionBuilder
 {
@@ -34,37 +35,40 @@ class PlannableItemsCollectionBuilder
     private $dao;
 
     /**
-     * @var TrackerFactory
+     * @var TrackerDataAdapter
      */
-    private $tracker_factory;
+    private $tracker_data_adapter;
 
     /**
-     * @var ProjectManager
+     * @var ProjectDataAdapter
      */
-    private $project_manager;
+    private $project_data_adapter;
 
     public function __construct(
         PlannableItemsTrackersDao $dao,
-        TrackerFactory $tracker_factory,
-        ProjectManager $project_manager
+        TrackerDataAdapter $tracker_data_adapter,
+        ProjectDataAdapter $project_data_adapter
     ) {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
-        $this->project_manager = $project_manager;
+        $this->dao                  = $dao;
+        $this->tracker_data_adapter = $tracker_data_adapter;
+        $this->project_data_adapter = $project_data_adapter;
     }
 
+    /**
+     * @throws TrackerNotFoundException
+     */
     public function buildCollection(PlanningData $project_root_planning): PlannableItemsCollection
     {
-        $plannable_items_rows = $this->dao->getPlannableItemsTrackerIds((int) $project_root_planning->getID());
+        $plannable_items_rows = $this->dao->getPlannableItemsTrackerIds($project_root_planning->getID());
 
         $plannable_items = [];
         foreach ($plannable_items_rows as $plannable_item_row) {
-            $project     = $this->project_manager->getProject((int) $plannable_item_row['project_id']);
+            $project     = $this->project_data_adapter->buildFromId((int) $plannable_item_row['project_id']);
             $tracker_ids = explode(',', $plannable_item_row['tracker_ids']);
 
             $trackers = [];
             foreach ($tracker_ids as $tracker_id) {
-                $trackers[] = $this->tracker_factory->getTrackerById((int) $tracker_id);
+                $trackers[] = $this->tracker_data_adapter->buildByTrackerID((int) $tracker_id);
             }
 
             $plannable_items[] = new PlannableItems(

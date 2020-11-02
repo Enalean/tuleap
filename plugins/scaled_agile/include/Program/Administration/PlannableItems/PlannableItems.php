@@ -22,42 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
-use Project;
-use Tracker;
+use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\TrackerData;
 
+/**
+ * @psalm-immutable
+ */
 class PlannableItems
 {
     /**
-     * @var Project
-     * @psalm-readonly
+     * @var ProjectData
      */
-    private $project;
+    private $project_data;
 
     /**
-     * @var Tracker[]
-     * @psalm-readonly
+     * @var TrackerData[]
      */
     private $trackers;
 
-    public function __construct(Project $project, array $trackers)
+    public function __construct(ProjectData $project_data, array $trackers)
     {
-        $this->project  = $project;
-        $this->trackers = $trackers;
+        $this->project_data = $project_data;
+        $this->trackers     = $trackers;
+    }
+
+    public function getProjectData(): ProjectData
+    {
+        return $this->project_data;
     }
 
     /**
-     * @psalm-mutation-free
+     * @return TrackerData[]
      */
-    public function getProject(): Project
-    {
-        return $this->project;
-    }
-
-    /**
-     * @return Tracker[]
-     * @psalm-mutation-free
-     */
-    public function getTrackers(): array
+    public function getTrackersData(): array
     {
         return $this->trackers;
     }

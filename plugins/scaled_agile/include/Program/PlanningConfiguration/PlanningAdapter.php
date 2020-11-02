@@ -22,7 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
 
-class PlanningAdapter
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerData;
+
+final class PlanningAdapter
 {
     /**
      * @var \PlanningFactory
@@ -53,6 +57,7 @@ class PlanningAdapter
 
     /**
      * @throws PlanningFotFoundException
+     * @throws TopPlanningNotFoundInProjectException
      */
     public function buildPlanningById(int $id): PlanningData
     {
@@ -65,13 +70,19 @@ class PlanningAdapter
         return $this->buildFromPlanning($planning);
     }
 
-    public function buildFromPlanning(\Planning $planning): PlanningData
+    public static function buildFromPlanning(\Planning $planning): PlanningData
     {
+        if ($planning->getPlanningTracker() instanceof \NullTracker) {
+            throw new NoProjectIncrementException($planning->getId());
+        }
+        $project_data = ProjectDataAdapter::build($planning->getPlanningTracker()->getProject());
+
         return new PlanningData(
-            $planning->getPlanningTracker(),
+            new TrackerData($planning->getPlanningTracker()),
             $planning->getId(),
             $planning->getName(),
-            $planning->getBacklogTrackersIds()
+            $planning->getBacklogTrackersIds(),
+            $project_data
         );
     }
 }

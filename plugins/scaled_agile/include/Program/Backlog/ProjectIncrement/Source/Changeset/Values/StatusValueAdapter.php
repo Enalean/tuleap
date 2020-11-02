@@ -23,15 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
 
-class StatusValueAdapter
+final class StatusValueAdapter
 {
-    public function build(FieldData $field_status_data, \Tracker_Artifact_Changeset $source_changeset): StatusValueData
+    public function build(FieldData $field_status_data, ReplicationData $replication_data): StatusValueData
     {
-        $status_value = $source_changeset->getValue($field_status_data->getField());
+        $status_value = $replication_data->getFullChangeset()->getValue($field_status_data->getFullField());
         if (! $status_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $source_changeset->getId(),
+                (int) $replication_data->getFullChangeset()->getId(),
                 (int) $field_status_data->getId(),
                 "status"
             );

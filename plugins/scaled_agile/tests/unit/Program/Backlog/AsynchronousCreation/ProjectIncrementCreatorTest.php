@@ -37,6 +37,8 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -72,7 +74,7 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
         $this->transaction_executor        = new DBTransactionExecutorPassthrough();
         $this->synchronized_fields_adapter = M::mock(SynchronizedFieldsAdapter::class);
         $this->artifact_creator            = M::mock(TrackerArtifactCreator::class);
-        $this->status_mapper          = M::mock(StatusValueMapper::class);
+        $this->status_mapper               = M::mock(StatusValueMapper::class);
         $this->mirrors_creator             = new ProjectIncrementsCreator(
             $this->transaction_executor,
             $this->synchronized_fields_adapter,
@@ -83,29 +85,29 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesMirrorMilestones(): void
     {
-        $copied_values              = $this->buildCopiedValues();
+        $copied_values       = $this->buildCopiedValues();
         $first_team_project  = new \Project(['group_id' => '102']);
-        $first_tracker              = $this->buildTestTracker(8, $first_team_project);
+        $test_tracker_data   = $this->buildTestTrackerData(8, $first_team_project);
         $second_team_project = new \Project(['group_id' => '103']);
-        $second_tracker             = $this->buildTestTracker(9, $second_team_project);
-        $trackers                   = new ProjectIncrementsTrackerCollection([$first_tracker, $second_tracker]);
-        $current_user               = UserTestBuilder::aUser()->build();
+        $second_tracker_data = $this->buildTestTrackerData(9, $second_team_project);
+        $trackers            = new ProjectIncrementsTrackerCollection([$test_tracker_data, $second_tracker_data]);
+        $current_user        = UserTestBuilder::aUser()->build();
 
         $this->synchronized_fields_adapter->shouldReceive('build')
-            ->with($first_tracker)
+            ->with($test_tracker_data)
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
         $this->synchronized_fields_adapter->shouldReceive('build')
-            ->with($second_tracker)
+            ->with($second_tracker_data)
             ->andReturn($this->buildSynchronizedFields(2001, 2002, 2003, 2004, 2005, 2006));
         $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
             ->andReturns($this->buildMappedValue(5000), $this->buildMappedValue(6000));
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($first_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
+            ->with($test_tracker_data->getFullTracker(), M::any(), $current_user, $copied_values->getSubmittedOn(), false, false, M::type(ChangesetValidationContext::class))
             ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($second_tracker, M::any(), $current_user, 123456789, false, false, M::type(ChangesetValidationContext::class))
+            ->with($second_tracker_data->getFullTracker(), M::any(), $current_user, $copied_values->getSubmittedOn(), false, false, M::type(ChangesetValidationContext::class))
             ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
 
         $this->mirrors_creator->createProjectIncrements($copied_values, $trackers, $current_user);
@@ -115,7 +117,7 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $copied_values         = $this->buildCopiedValues();
         $a_team_project = new \Project(['group_id' => '110']);
-        $tracker               = $this->buildTestTracker(10, $a_team_project);
+        $tracker               = $this->buildTestTrackerData(10, $a_team_project);
         $trackers              = new ProjectIncrementsTrackerCollection([$tracker]);
         $current_user          = UserTestBuilder::aUser()->build();
 
@@ -152,7 +154,7 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function buildTestTracker(int $tracker_id, \Project $project): \Tracker
+    private function buildTestTrackerData(int $tracker_id, \Project $project): TrackerData
     {
         $tracker = new \Tracker(
             $tracker_id,
@@ -172,7 +174,7 @@ final class ProjectIncrementCreatorTest extends \PHPUnit\Framework\TestCase
             false
         );
         $tracker->setProject($project);
-        return $tracker;
+        return TrackerDataAdapter::build($tracker);
     }
 
     private function buildSynchronizedFields(

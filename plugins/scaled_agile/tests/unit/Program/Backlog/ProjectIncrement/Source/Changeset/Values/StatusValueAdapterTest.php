@@ -26,10 +26,24 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StatusValueAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Artifact
+     */
+    private $artifact_data;
+
+    /**
+     * @var \PFUser
+     */
+    private $user;
 
     /**
      * @var FieldData
@@ -56,6 +70,15 @@ final class StatusValueAdapterTest extends TestCase
             1
         );
         $this->status_field_data = new FieldData($this->status_field);
+
+        $this->user          = UserTestBuilder::aUser()->withId(101)->build();
+        $submitted_on        = 123456789;
+        $project             = new \Project(
+            ['group_id' => '101', 'unix_group_name' => "project", 'group_name' => 'My project']
+        );
+        $tracker             = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->artifact_data = new Artifact(1, $tracker->getId(), $this->user->getId(), $submitted_on, true);
+        $this->artifact_data->setTracker($tracker);
     }
 
     public function testItThrowsWhenStatusValueIsNotFound(): void
@@ -69,7 +92,8 @@ final class StatusValueAdapterTest extends TestCase
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
-        $adapter->build($this->status_field_data, $source_changeset);
+        $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
+        $adapter->build($this->status_field_data, $replication_data);
     }
 
     public function testItBuildStatusValue(): void
@@ -86,7 +110,8 @@ final class StatusValueAdapterTest extends TestCase
 
         $expected_data = new StatusValueData([$bind_values]);
 
-        $data = $adapter->build($this->status_field_data, $source_changeset);
+        $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
+        $data = $adapter->build($this->status_field_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
+namespace Tuleap\ScaledAgile;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
 
-final class ArtifactLinkValueAdapter
+class TrackerNotFoundException extends \RuntimeException implements ProjectIncrementTrackerRetrievalException
 {
-    public function build(ReplicationData $replication_data): ArtifactLinkValueData
+    public function __construct(int $tracker_id)
     {
-        return new ArtifactLinkValueData((int) $replication_data->getArtifactData()->getID());
+        parent::__construct("Tracker with id #$tracker_id was not found");
     }
 }

@@ -25,11 +25,13 @@ namespace Tuleap\ScaledAgile\Program\Backlog;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Planning;
 use Project;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -38,9 +40,28 @@ final class TrackerCollectionFactoryTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PlanningAdapter
+     * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
      */
-    private $planning_adapter;
+    private $planning_factory;
+    /**
+     * @var \Tuleap\ScaledAgile\ProjectData
+     */
+    private $project_data;
+
+    /**
+     * @var \Tuleap\ScaledAgile\ProjectData
+     */
+    private $second_team_project_data;
+
+    /**
+     * @var \Tuleap\ScaledAgile\ProjectData
+     */
+    private $first_team_project_data;
+
+    /**
+     * @var \Tuleap\ScaledAgile\ProjectData
+     */
+    private $program_project_data;
     /**
      * @var TrackerCollectionFactory
      */
@@ -48,17 +69,32 @@ final class TrackerCollectionFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->planning_adapter = M::mock(PlanningAdapter::class);
-        $this->builder          = new TrackerCollectionFactory($this->planning_adapter);
+        $this->planning_factory = \Mockery::mock(\PlanningFactory::class);
+        $planning_adapter       = new PlanningAdapter($this->planning_factory);
+        $this->builder          = new TrackerCollectionFactory($planning_adapter);
+
+        $this->program_project_data     = ProjectDataAdapter::build(
+            new \Project(['group_id' => '101', 'unix_group_name' => "program", 'group_name' => 'Program'])
+        );
+        $this->first_team_project_data  = ProjectDataAdapter::build(
+            new \Project(['group_id' => '103', 'unix_group_name' => "teamA", 'group_name' => 'First Team'])
+        );
+        $this->second_team_project_data = ProjectDataAdapter::build(
+            new \Project(['group_id' => '123', 'unix_group_name' => "teamB", 'group_name' => 'Second Team'])
+        );
+
+        $project            = new \Project(
+            ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
+        );
+        $tracker            = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->tracker_data = TrackerDataAdapter::build($tracker);
+        $this->project_data = ProjectDataAdapter::build($project);
     }
 
     public function testBuildFromProgramProjectAndItsTeams(): void
     {
-        $program_project     = new \Project(['group_id' => '101']);
-        $first_team_project  = new \Project(['group_id' => '103']);
-        $second_team_project = new \Project(['group_id' => '123']);
         $teams               = new TeamProjectsCollection(
-            [$first_team_project, $second_team_project]
+            [$this->first_team_project_data, $this->second_team_project_data]
         );
         $user                = UserTestBuilder::aUser()->build();
 
@@ -70,7 +106,7 @@ final class TrackerCollectionFactoryTest extends TestCase
         $this->mockRootPlanning($second_tracker_id, 123, $user);
 
         $trackers = $this->builder->buildFromProgramProjectAndItsTeam(
-            $program_project,
+            $this->program_project_data,
             $teams,
             $user
         );
@@ -82,51 +118,46 @@ final class TrackerCollectionFactoryTest extends TestCase
 
     public function testItThrowsWhenProgramPlanningIsMalformedAndHasNoMilestoneTracker(): void
     {
-        $program_project     = new \Project(['group_id' => '101']);
-        $first_team_project  = new \Project(['group_id' => '103']);
-        $second_team_project = new \Project(['group_id' => '123']);
-        $teams               = new TeamProjectsCollection(
-            [$first_team_project, $second_team_project]
+        $teams = new TeamProjectsCollection(
+            [$this->first_team_project_data, $this->second_team_project_data]
         );
-        $user                = UserTestBuilder::aUser()->build();
+        $user  = UserTestBuilder::aUser()->build();
 
-        $malformed_planning = new PlanningData(new \NullTracker(), 3, 'Malformed planning', []);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')
+        $malformed_planning = new Planning(1, 'Malformed planning', $this->project_data->getId(), '', []);
+        $malformed_planning->setPlanningTracker(new \NullTracker());
+        $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->with($user, 101)
+            ->with($user, $this->project_data->getId())
             ->andReturn($malformed_planning);
 
         $this->expectException(NoProjectIncrementException::class);
-        $this->builder->buildFromProgramProjectAndItsTeam($program_project, $teams, $user);
+        $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 
     public function testItThrowsWhenTeamPlanningIsMalformedAndHasNoMilestoneTracker(): void
     {
-        $program_project     = new \Project(['group_id' => '101']);
-        $first_team_project  = new \Project(['group_id' => '103']);
-        $second_team_project = new \Project(['group_id' => '123']);
-        $teams               = new TeamProjectsCollection(
-            [$first_team_project, $second_team_project]
+        $teams = new TeamProjectsCollection(
+            [$this->first_team_project_data, $this->second_team_project_data]
         );
-        $user                = UserTestBuilder::aUser()->build();
+        $user  = UserTestBuilder::aUser()->build();
 
         $this->mockRootPlanning(512, 101, $user);
-        $malformed_planning = new PlanningData(new \NullTracker(), 3, 'Malformed planning', []);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')
+
+        $malformed_planning = new Planning(1, 'Malformed planning', $this->project_data->getId(), '', []);
+        $malformed_planning->setPlanningTracker(new \NullTracker());
+        $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->with($user, 103)
+            ->with($user, $this->first_team_project_data->getId())
             ->andReturn($malformed_planning);
 
         $this->expectException(NoProjectIncrementException::class);
-        $this->builder->buildFromProgramProjectAndItsTeam($program_project, $teams, $user);
+        $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 
     public function testBuildFromTeamProjects(): void
     {
-        $first_team_project  = new \Project(['group_id' => '103']);
-        $second_team_project = new \Project(['group_id' => '123']);
         $teams               = new TeamProjectsCollection(
-            [$first_team_project, $second_team_project]
+            [$this->first_team_project_data, $this->second_team_project_data]
         );
         $user                = UserTestBuilder::aUser()->build();
 
@@ -143,12 +174,16 @@ final class TrackerCollectionFactoryTest extends TestCase
 
     private function mockRootPlanning(int $tracker_id, int $project_id, \PFUser $user): void
     {
+        $project           = new Project(
+            ['group_id' => $project_id, 'unix_group_name' => 'irrelevant', 'group_name' => "Irrelevant"]
+        );
         $milestone_tracker = TrackerTestBuilder::aTracker()
             ->withId($tracker_id)
-            ->withProject(new Project(['group_id' => $project_id]))
+            ->withProject($project)
             ->build();
-        $root_planning     = new PlanningData($milestone_tracker, 7, 'Root Planning', []);
-        $this->planning_adapter->shouldReceive('buildRootPlanning')
+        $root_planning     = new Planning(7, 'Root Planning', $project->getID(), '', []);
+        $root_planning->setPlanningTracker($milestone_tracker);
+        $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->with($user, $project_id)
             ->andReturn($root_planning);

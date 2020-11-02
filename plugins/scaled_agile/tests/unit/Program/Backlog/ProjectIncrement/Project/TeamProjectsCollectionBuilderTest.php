@@ -28,8 +28,9 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 
-class TeamProjectsCollectionBuilderTest extends TestCase
+final class TeamProjectsCollectionBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -57,15 +58,16 @@ class TeamProjectsCollectionBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->program_dao  = Mockery::mock(ProgramDao::class);
+        $this->program_dao     = Mockery::mock(ProgramDao::class);
         $this->project_manager = Mockery::mock(ProjectManager::class);
+        $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
 
         $this->builder = new TeamProjectsCollectionBuilder(
             $this->program_dao,
-            $this->project_manager
+            $project_data_adapter
         );
 
-        $this->project = new Project(['group_id' => 123]);
+        $this->project = new Project(['group_id' => 123, 'unix_group_name' => 'program', 'group_name' => 'Program']);
     }
 
     public function testItBuildsACollectionOfTeamProjects(): void
@@ -78,8 +80,8 @@ class TeamProjectsCollectionBuilderTest extends TestCase
                 ['team_project_id' => 125],
             ]);
 
-        $team_project_01 = new Project(['group_id' => 124]);
-        $team_project_02 = new Project(['group_id' => 125]);
+        $team_project_01 = new Project(['group_id' => 124, 'unix_group_name' => 'team_a', 'group_name' => 'Team A']);
+        $team_project_02 = new Project(['group_id' => 125, 'unix_group_name' => 'team_b', 'group_name' => 'Team B']);
 
         $this->project_manager->shouldReceive('getProject')
             ->with(124)
@@ -91,11 +93,11 @@ class TeamProjectsCollectionBuilderTest extends TestCase
             ->once()
             ->andReturn($team_project_02);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject($this->project);
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectDataAdapter::build($this->project));
 
         $this->assertCount(2, $collection->getTeamProjects());
-        $this->assertSame(
-            [$team_project_01, $team_project_02],
+        $this->assertEquals(
+            [ProjectDataAdapter::build($team_project_01), ProjectDataAdapter::build($team_project_02)],
             $collection->getTeamProjects()
         );
     }
@@ -107,7 +109,7 @@ class TeamProjectsCollectionBuilderTest extends TestCase
             ->with(123)
             ->andReturn([]);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject($this->project);
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectDataAdapter::build($this->project));
 
         $this->assertEmpty($collection->getTeamProjects());
     }

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-class FieldArtifactLinkAdapter
+use Tuleap\ScaledAgile\TrackerData;
+
+final class FieldArtifactLinkAdapter
 {
     /**
      * @var \Tracker_FormElementFactory
@@ -37,12 +39,12 @@ class FieldArtifactLinkAdapter
     /**
      * @throws FieldSynchronizationException
      */
-    public function build(\Tracker $source_tracker): FieldData
+    public function build(TrackerData $replication_tracker_data): FieldData
     {
-        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($source_tracker);
+        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($replication_tracker_data->getFullTracker());
         if (count($artifact_link_fields) > 0) {
             return new FieldData($artifact_link_fields[0]);
         }
-        throw new NoArtifactLinkFieldException($source_tracker->getId());
+        throw new NoArtifactLinkFieldException($replication_tracker_data->getTrackerId());
     }
 }

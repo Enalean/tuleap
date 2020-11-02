@@ -23,19 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
 
-class TitleValueAdapter
+final class TitleValueAdapter
 {
     /**
      * @throws UnsupportedTitleFieldException
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_title_data, \Tracker_Artifact_Changeset $source_tracker): TitleValueData
+    public function build(FieldData $field_title_data, ReplicationData $replication_data): TitleValueData
     {
-        $title_value = $source_tracker->getValue($field_title_data->getField());
+        $title_value = $replication_data->getFullChangeset()->getValue($field_title_data->getFullField());
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $source_tracker->getId(),
+                (int) $replication_data->getFullChangeset()->getId(),
                 (int) $field_title_data->getId(),
                 "title"
             );

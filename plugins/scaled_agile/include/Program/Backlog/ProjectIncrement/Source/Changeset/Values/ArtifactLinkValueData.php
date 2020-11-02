@@ -27,7 +27,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifact
 /**
  * @psalm-immutable
  */
-class ArtifactLinkValueData
+final class ArtifactLinkValueData
 {
     /**
      * @var int

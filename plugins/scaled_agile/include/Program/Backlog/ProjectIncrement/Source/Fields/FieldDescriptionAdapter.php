@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-class FieldDescriptionAdapter
+use Tuleap\ScaledAgile\TrackerData;
+
+final class FieldDescriptionAdapter
 {
     /**
      * @var \Tracker_Semantic_DescriptionFactory
@@ -38,11 +40,11 @@ class FieldDescriptionAdapter
     /**
      * @throws FieldRetrievalException
      */
-    public function build(\Tracker $source_tracker): FieldData
+    public function build(TrackerData $replication_tracker_data): FieldData
     {
-        $description_field = $this->description_factory->getByTracker($source_tracker)->getField();
+        $description_field = $this->description_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
         if (! $description_field) {
-            throw new FieldRetrievalException($source_tracker->getId(), "Description");
+            throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Description");
         }
 
         return new FieldData($description_field);

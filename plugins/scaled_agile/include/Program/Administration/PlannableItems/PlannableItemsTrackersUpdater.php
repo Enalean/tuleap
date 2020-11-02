@@ -68,7 +68,7 @@ class PlannableItemsTrackersUpdater
      */
     public function updatePlannableItemsTrackersFromPlanning(PlanningData $updated_planning, PFUser $user): void
     {
-        $project_id = (int) $updated_planning->getPlanningTracker()->getGroupId();
+        $project_id = $updated_planning->getProjectData()->getId();
 
         if (! $this->team_dao->isProjectATeamProject($project_id)) {
             return;
@@ -85,7 +85,7 @@ class PlannableItemsTrackersUpdater
 
                     $program_top_planning = $this->planning_adapter->buildRootPlanning($user, $program_project_id);
 
-                    $program_top_planning_id = (int) $program_top_planning->getId();
+                    $program_top_planning_id = $program_top_planning->getId();
 
                     $this->plannable_items_trackers_dao->deletePlannableItemsTrackerIdsOfAGivenTeamProject(
                         $project_id,

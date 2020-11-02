@@ -22,14 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration\Administration\ProgramIncremant\Mirroring\Asynchronous;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
+use Tracker_Artifact_Changeset;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsTask;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementsCreator;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueData;
@@ -39,15 +41,44 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementTrackerRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PlanningFactory
+     */
+    private $planning_factory;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SourceChangesetValuesCollectionAdapter
+     */
+    private $changeset_values_adapter;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
+     */
+    private $program_dao;
 
     /**
      * @var CreateProgramIncrementsTask
@@ -65,96 +96,72 @@ final class CreateProgramIncrementsTaskTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectIncrementsCreator
      */
     private $mirror_creator;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerCollectionFactory
-     */
-    private $milestone_trackers_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TeamProjectsCollectionBuilder
-     */
-    private $projects_collection_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SourceChangesetValuesCollectionAdapter
-     */
-    private $changeset_values_adapter;
 
     protected function setUp(): void
     {
         $this->changeset_values_adapter      = \Mockery::mock(SourceChangesetValuesCollectionAdapter::class);
-        $this->projects_collection_builder   = \Mockery::mock(TeamProjectsCollectionBuilder::class);
-        $this->milestone_trackers_factory    = \Mockery::mock(TrackerCollectionFactory::class);
+        $this->program_dao                   = \Mockery::mock(ProgramDao::class);
+        $this->project_manager               = Mockery::mock(\ProjectManager::class);
+        $project_data_adapter                = new ProjectDataAdapter($this->project_manager);
+        $projects_collection_builder         = new TeamProjectsCollectionBuilder(
+            $this->program_dao,
+            $project_data_adapter
+        );
+        $this->planning_factory              = Mockery::mock(\PlanningFactory::class);
+        $milestone_trackers_factory          = new TrackerCollectionFactory(
+            new PlanningAdapter($this->planning_factory)
+        );
         $this->mirror_creator                = \Mockery::mock(ProjectIncrementsCreator::class);
         $this->logger                        = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_dao = \Mockery::mock(PendingArtifactCreationDao::class);
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
-            $this->projects_collection_builder,
-            $this->milestone_trackers_factory,
+            $projects_collection_builder,
+            $milestone_trackers_factory,
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_dao
         );
+
+        $this->project = new Project(['group_id' => 101, 'unix_group_name' => 'test', 'group_name' => 'My project']);
     }
 
     public function testItCreateMirrors(): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(89)->withProject(Project::buildForTest())->build();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-
-        $user = UserTestBuilder::aUser()->withId(1001)->build();
-
-        $team_projects = new TeamProjectsCollection([Project::buildForTest()]);
+        $replication_data = $this->getReplicationData();
 
         $copied_values = $this->buildCopiedValues();
         $this->changeset_values_adapter->shouldReceive('buildCollection')->andReturn($copied_values);
-        $this->projects_collection_builder->shouldReceive('getTeamProjectForAGivenProgramProject')
-            ->once()
-            ->andReturn($team_projects);
+        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+            ->andReturn([['team_project_id' => $this->project->getID()]]);
+        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
 
-        $milestone_trackers = [TrackerTestBuilder::aTracker()->withId(102)->build()];
-        $team_milestones = new ProjectIncrementsTrackerCollection($milestone_trackers);
-        $this->milestone_trackers_factory->shouldReceive('buildFromTeamProjects')
-            ->once()
-            ->withArgs([$team_projects, $user])
-            ->andReturn($team_milestones);
+        $planning = new \Planning(1, "Root planning", $this->project->getID(), '', '');
+        $planning->setPlanningTracker($replication_data->getTrackerData()->getFullTracker());
+        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
 
-
-        $this->mirror_creator->shouldReceive('createProjectIncrements')
-            ->once()
-            ->withArgs([$copied_values, $team_milestones, $user]);
+        $this->mirror_creator->shouldReceive('createProjectIncrements')->once();
 
         $this->pending_artifact_creation_dao->shouldReceive('deleteArtifactFromPendingCreation')
             ->once()
-            ->withArgs([(int) $artifact->getId(), (int) $user->getId()]);
+            ->withArgs(
+                [(int) $replication_data->getArtifactData()->getId(), (int) $replication_data->getUser()->getId()]
+            );
 
-        $this->task->createProjectIncrements($artifact, $user, $changeset);
+        $this->task->createProjectIncrements($replication_data);
     }
 
     public function testItLogsWhenAnExceptionOccurrs(): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(89)->withProject(Project::buildForTest())->build();
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getTracker')->once()->andReturn($tracker);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $replication_data = $this->getReplicationData();
 
-        $user = UserTestBuilder::aUser()->withId(1001)->build();
-
-        $copied_values = $this->buildCopiedValues();
-        $this->changeset_values_adapter->shouldReceive('buildCollection')->andReturn($copied_values);
-        $this->projects_collection_builder->shouldReceive('getTeamProjectForAGivenProgramProject')
-            ->once()
-            ->andThrow(
-                new class extends \RuntimeException implements ProjectIncrementTrackerRetrievalException {
-                }
-            );
+        $this->changeset_values_adapter->shouldReceive('buildCollection')
+            ->andThrow(new FieldRetrievalException(1, 'title'));
 
         $this->logger->shouldReceive('error')->once();
 
-        $this->task->createProjectIncrements($artifact, $user, $changeset);
+        $this->task->createProjectIncrements($replication_data);
     }
 
     private function buildCopiedValues(): SourceChangesetValuesCollection
@@ -178,5 +185,16 @@ final class CreateProgramIncrementsTaskTest extends TestCase
             $end_period_value,
             $artifact_link_value
         );
+    }
+
+    private function getReplicationData(): ReplicationData
+    {
+        $user     = UserTestBuilder::aUser()->withId(1001)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withId(89)->withProject($this->project)->build();
+        $artifact = new Artifact(101, $tracker->getId(), $user->getId(), 12345678, false);
+        $artifact->setTracker($tracker);
+        $changeset = new Tracker_Artifact_Changeset(1, $artifact, $user->getId(), 12345678, "user@email.com");
+
+        return ReplicationDataAdapter::build($artifact, $user, $changeset);
     }
 }

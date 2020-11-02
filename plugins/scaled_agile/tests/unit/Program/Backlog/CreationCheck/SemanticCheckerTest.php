@@ -27,7 +27,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 final class SemanticCheckerTest extends TestCase
@@ -71,7 +75,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -103,7 +115,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -118,7 +138,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -135,7 +163,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -156,7 +192,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -179,7 +223,15 @@ final class SemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
     {
-        $program_milestone            = new PlanningData(new \NullTracker(), 1, 'Release Planning', []);
+        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_milestone    = new PlanningData(
+            TrackerDataAdapter::build($top_planning_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
+
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
         $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
@@ -201,24 +253,26 @@ final class SemanticCheckerTest extends TestCase
         );
     }
 
-    private function buildTestTracker(int $tracker_id): \Tracker
+    private function buildTestTracker(int $tracker_id): TrackerData
     {
-        return new \Tracker(
-            $tracker_id,
-            null,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            TrackerColor::default(),
-            false
+        return TrackerDataAdapter::build(
+            new \Tracker(
+                $tracker_id,
+                null,
+                'Irrelevant',
+                'Irrelevant',
+                'irrelevant',
+                false,
+                null,
+                null,
+                null,
+                null,
+                true,
+                false,
+                \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+                TrackerColor::default(),
+                false
+            )
         );
     }
 }

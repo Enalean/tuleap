@@ -43,14 +43,14 @@ class RequiredFieldChecker
         SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         foreach ($project_increment_trackers->getProjectIncrementTrackers() as $program_increment_tracker) {
-            foreach ($program_increment_tracker->getFormElementFields() as $field) {
+            foreach ($program_increment_tracker->getFullTracker()->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
                     $this->logger->debug(
                         sprintf(
                             "Field #%d (%s) of tracker #%d is required but cannot be synchronized",
                             $field->getId(),
                             $field->getLabel(),
-                            $program_increment_tracker->getId()
+                            $program_increment_tracker->getTrackerId()
                         )
                     );
                     return false;

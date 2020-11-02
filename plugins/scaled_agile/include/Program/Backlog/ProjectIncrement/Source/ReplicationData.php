@@ -20,70 +20,69 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source;
 
-use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\TrackerData;
 
 /**
  * @psalm-immutable
  */
-final class PlanningData
+class ReplicationData
 {
-    /**
-     * @var int
-     */
-    private $id;
-
     /**
      * @var TrackerData
      */
-    private $planning_tracker;
+    private $tracker;
     /**
-     * @var string
+     * @var \Tracker_Artifact_Changeset
      */
-    private $name;
+    private $changeset;
     /**
-     * @var array
+     * @var \PFUser
      */
-    private $backlog_tracker_ids = [];
+    private $user;
+    /**
+     * @var ArtifactData
+     */
+    private $artifact_data;
     /**
      * @var ProjectData
      */
     private $project_data;
 
     public function __construct(
-        TrackerData $planning_tracker,
-        int $id,
-        string $name,
-        array $backlog_tracker_ids,
+        TrackerData $tracker,
+        \Tracker_Artifact_Changeset $changeset,
+        \PFUser $user,
+        ArtifactData $artifact_data,
         ProjectData $project_data
     ) {
-        $this->id                  = $id;
-        $this->planning_tracker    = $planning_tracker;
-        $this->name                = $name;
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->project_data = $project_data;
+        $this->tracker       = $tracker;
+        $this->changeset     = $changeset;
+        $this->user          = $user;
+        $this->artifact_data = $artifact_data;
+        $this->project_data  = $project_data;
     }
 
-    public function getId(): int
+    public function getTrackerData(): TrackerData
     {
-        return (int) $this->id;
+        return $this->tracker;
     }
 
-    public function getPlanningTrackerData(): TrackerData
+    public function getFullChangeset(): \Tracker_Artifact_Changeset
     {
-        return $this->planning_tracker;
+        return $this->changeset;
     }
 
-    public function getName(): string
+    public function getUser(): \PFUser
     {
-        return $this->name;
+        return $this->user;
     }
 
-    public function getPlannableTrackerIds(): array
+    public function getArtifactData(): ArtifactData
     {
-        return $this->backlog_tracker_ids;
+        return $this->artifact_data;
     }
 
     public function getProjectData(): ProjectData

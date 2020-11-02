@@ -38,6 +38,9 @@ msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie d'un backlog d'agilité à l'échelle."
 
+msgid "One of the planning tracker can not be found"
+msgstr "Un des outils de suivi du planning n'a pas été trouvé"
+
 msgid "Plannable Items"
 msgstr "Élements plannifiables"
 

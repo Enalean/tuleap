@@ -63,7 +63,7 @@ final class FieldData
     /**
      * @psalm-return F
      */
-    public function getField(): Tracker_FormElement_Field
+    public function getFullField(): Tracker_FormElement_Field
     {
         return $this->field;
     }

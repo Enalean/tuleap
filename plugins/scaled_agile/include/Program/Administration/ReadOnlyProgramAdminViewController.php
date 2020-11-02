@@ -45,6 +45,8 @@ use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\Plannable
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningFotFoundException;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerNotFoundException;
 
 final class ReadOnlyProgramAdminViewController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
@@ -133,9 +135,11 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "AgileDashboard service not used in project."));
         }
 
+        $project_data = ProjectDataAdapter::build($project);
+
         $user = $request->getCurrentUser();
 
-        if (! $user->isAdmin((int) $project->getID())) {
+        if (! $user->isAdmin($project_data->getId())) {
             throw new ForbiddenException(dgettext("tuleap-scaled_agile", "You are not AgileDashboard admin."));
         }
 
@@ -145,21 +149,23 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "This planning does not exist."));
         }
 
-        if ((int) $planning->getPlanningTracker()->getGroupId() !== (int) $project->getID()) {
+        if ((int) $planning->getProjectData()->getId() !== $project_data->getId()) {
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "This planning does not belong to the project."));
         }
 
         try {
             $project_root_planning = $this->planning_adapter->buildRootPlanning(
                 $user,
-                (int) $project->getID()
+                $project_data->getID()
             );
         } catch (TopPlanningNotFoundInProjectException $e) {
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "There is no root planning in the project."));
         }
 
-        if ((int) $planning->getId() !== (int) $project_root_planning->getId()) {
-            throw new NotFoundException(dgettext("tuleap-scaled_agile", "This planning is not the root planning of the project."));
+        if ($planning->getId() !== $project_root_planning->getId()) {
+            throw new NotFoundException(
+                dgettext("tuleap-scaled_agile", "This planning is not the root planning of the project.")
+            );
         }
 
         $layout->addCssAsset(new CssAsset($this->assets_agile_dashboard, 'administration'));
@@ -167,12 +173,21 @@ final class ReadOnlyProgramAdminViewController implements DispatchableWithReques
 
         $this->displayHeader($service, $user, $project);
 
-        $plannable_items_collection           = $this->plannable_items_collection_builder->buildCollection($project_root_planning);
+        try {
+            $plannable_items_collection = $this->plannable_items_collection_builder->buildCollection(
+                $project_root_planning
+            );
+        } catch (TrackerNotFoundException $exception) {
+            throw new NotFoundException(
+                dgettext("tuleap-scaled_agile", "One of the planning tracker can not be found")
+            );
+        }
+
         $plannable_items_presenter_collection = $this->per_team_presenter_collection_builder
             ->buildPresenterCollectionFromObjectCollection($user, $plannable_items_collection);
 
         $program_admin_presenter = new ProgramAdminPresenter(
-            $project,
+            $project_data,
             $plannable_items_presenter_collection,
             $planning->getName()
         );

@@ -27,14 +27,21 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use NullTracker;
 use PHPUnit\Framework\TestCase;
 use Project;
-use ProjectManager;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ReadOnlyProgramAdminURLBuilderTest extends TestCase
+final class ReadOnlyProgramAdminURLBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Tuleap\ScaledAgile\ProjectData
+     */
+    private $project_data;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
@@ -42,46 +49,33 @@ class ReadOnlyProgramAdminURLBuilderTest extends TestCase
     private $program_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-
-    /**
      * @var ReadOnlyProgramAdminURLBuilder
      */
     private $url_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningData
-     */
-    private $planning;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->program_dao     = Mockery::mock(ProgramDao::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->program_dao = Mockery::mock(ProgramDao::class);
+        $this->url_builder = new ReadOnlyProgramAdminURLBuilder($this->program_dao);
 
-        $this->url_builder = new ReadOnlyProgramAdminURLBuilder(
-            $this->program_dao,
-            $this->project_manager
+        $this->project_data = ProjectDataAdapter::build(
+            new Project(['group_id' => 102, 'group_name' => 'Team A', 'unix_group_name' => 'proj01'])
         );
-
-        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject(new Project(['group_id' => 102]))->build();
-        $this->planning = new PlanningData($tracker, 43, 'Planning 01', []);
     }
 
-    public function testItReturnsTheReaOnlyURL(): void
+    public function testItReturnsTheReadOnlyURL(): void
     {
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->once()->with(102)->andReturnTrue();
+        $this->program_dao->shouldReceive('isProjectAProgramProject')
+            ->once()
+            ->with($this->project_data->getId())
+            ->andReturnTrue();
 
-        $project = new Project(['group_id' => 101, 'unix_group_name' => 'proj01']);
-        $this->project_manager->shouldReceive('getProject')->once()->with(102)->andReturn($project);
-
+        $planning = $this->buildPlanningData($this->buildTrackerData(), 43);
         $url = $this->url_builder->buildURL(
-            $this->planning,
-            $this->planning
+            $planning,
+            $planning
         );
 
         $this->assertSame(
@@ -92,8 +86,9 @@ class ReadOnlyProgramAdminURLBuilderTest extends TestCase
 
     public function testItReturnsNullIfNoRootPlanning(): void
     {
+        $planning = $this->buildPlanningData($this->buildTrackerData(), 43);
         $url = $this->url_builder->buildURL(
-            $this->planning,
+            $planning,
             null
         );
 
@@ -102,12 +97,16 @@ class ReadOnlyProgramAdminURLBuilderTest extends TestCase
 
     public function testItReturnsNullIfPlanningIsNotRootPlanning(): void
     {
-        $root_planning = new PlanningData(new NullTracker(), 42, 'Planning Root 01', []);
+        $planning = $this->buildPlanningData($this->buildTrackerData(), 43);
+        $root_planning = $this->buildPlanningData(TrackerDataAdapter::build(new NullTracker()), 1);
 
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->once()->with(102)->andReturnTrue();
+        $this->program_dao->shouldReceive('isProjectAProgramProject')
+            ->once()
+            ->with($this->project_data->getID())
+            ->andReturnTrue();
 
         $url = $this->url_builder->buildURL(
-            $this->planning,
+            $planning,
             $root_planning
         );
 
@@ -116,13 +115,32 @@ class ReadOnlyProgramAdminURLBuilderTest extends TestCase
 
     public function testItReturnsNullIfProjectIsNotProgram(): void
     {
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->once()->with(102)->andReturnFalse();
+        $planning = $this->buildPlanningData($this->buildTrackerData(), 43);
+        $this->program_dao->shouldReceive('isProjectAProgramProject')
+            ->once()
+            ->with($this->project_data->getId())
+            ->andReturnFalse();
 
         $url = $this->url_builder->buildURL(
-            $this->planning,
-            $this->planning
+            $planning,
+            $planning
         );
 
         $this->assertNull($url);
+    }
+
+    private function buildTrackerData(): TrackerData
+    {
+        return TrackerDataAdapter::build(
+            TrackerTestBuilder::aTracker()
+                ->withId(1)
+                ->withProject(new Project(['group_id' => $this->project_data->getId()]))
+                ->build()
+        );
+    }
+
+    private function buildPlanningData(TrackerData $tracker_data, int $planning_id): PlanningData
+    {
+        return new PlanningData($tracker_data, $planning_id, 'Planning 01', [], $this->project_data);
     }
 }

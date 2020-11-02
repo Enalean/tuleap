@@ -24,14 +24,13 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use BackendLogger;
 use Exception;
-use PFUser;
-use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
 use UserManager;
 
 class CreateProjectIncrementsRunner
@@ -47,36 +46,19 @@ class CreateProjectIncrementsRunner
      */
     private $queue_factory;
     /**
-     * @var Tracker_ArtifactFactory
+     * @var ReplicationDataAdapter
      */
-    private $artifact_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var PendingArtifactCreationDao
-     */
-    private $pending_artifact_creation_dao;
-    /**
-     * @var \Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
+    private $replication_data_adapter;
+
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         QueueFactory $queue_factory,
-        Tracker_ArtifactFactory $artifact_factory,
-        UserManager $user_manager,
-        PendingArtifactCreationDao $pending_artifact_creation_dao,
-        \Tracker_Artifact_ChangesetFactory $changeset_factory
+        ReplicationDataAdapter $replication_data_adapter
     ) {
-        $this->logger                        = $logger;
-        $this->queue_factory                 = $queue_factory;
-        $this->artifact_factory              = $artifact_factory;
-        $this->user_manager                  = $user_manager;
-        $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
-        $this->changeset_factory             = $changeset_factory;
+        $this->logger                   = $logger;
+        $this->queue_factory            = $queue_factory;
+        $this->replication_data_adapter = $replication_data_adapter;
     }
 
     public static function build(): self
@@ -86,10 +68,12 @@ class CreateProjectIncrementsRunner
         return new self(
             $logger,
             new QueueFactory($logger),
-            Tracker_ArtifactFactory::instance(),
-            UserManager::instance(),
-            new PendingArtifactCreationDao(),
-            Tracker_Artifact_ChangesetFactoryBuilder::build()
+            new ReplicationDataAdapter(
+                Tracker_ArtifactFactory::instance(),
+                UserManager::instance(),
+                new PendingArtifactCreationDao(),
+                Tracker_Artifact_ChangesetFactoryBuilder::build()
+            )
         );
     }
 
@@ -101,54 +85,38 @@ class CreateProjectIncrementsRunner
         if ((string) $event->getEventName() === self::TOPIC) {
             $message = $event->getPayload();
 
-            $pending_artifact = $this->pending_artifact_creation_dao->getPendingArtifactById(
+            $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
                 $message['artifact_id'],
                 $message['user_id']
             );
 
-            if ($pending_artifact === null) {
-                throw new PendingArtifactNotFoundException($message['artifact_id'], $message['user_id']);
-            }
-
-            $source_artifact = $this->artifact_factory->getArtifactById($pending_artifact['program_artifact_id']);
-            if (! $source_artifact) {
-                throw new PendingArtifactNotFoundException($pending_artifact['program_artifact_id'], $pending_artifact['user_id']);
-            }
-
-            $user     = $this->user_manager->getUserById($pending_artifact['user_id']);
-            if (! $user) {
-                throw new PendingArtifactUserNotFoundException($pending_artifact['program_artifact_id'], $pending_artifact['user_id']);
-            }
-
-            $source_changeset = $this->changeset_factory->getChangeset($source_artifact, $pending_artifact['changeset_id']);
-            if (! $source_changeset) {
-                throw new PendingArtifactChangesetNotFoundException($pending_artifact['program_artifact_id'], $pending_artifact['changeset_id']);
-            }
-
-            $this->processProjectIncrementCreation($source_artifact, $user, $source_changeset);
+            $this->processProjectIncrementCreation($replication_data);
         }
     }
 
-    private function processProjectIncrementCreation(Artifact $source_artifact, PFUser $user, Tracker_Artifact_Changeset $source_changeset): void
+    private function processProjectIncrementCreation(ReplicationData $replication_data): void
     {
         $task = CreateProgramIncrementsTask::build();
-        $task->createProjectIncrements($source_artifact, $user, $source_changeset);
+        $task->createProjectIncrements($replication_data);
     }
 
-    public function executeProjectIncrementsCreation(Artifact $source_artifact, PFUser $user, Tracker_Artifact_Changeset $source_changeset): void
+    public function executeProjectIncrementsCreation(ReplicationData $replication_data): void
     {
+        $artifact_id = $replication_data->getArtifactData()->getId();
         try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+            $queue       = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 self::TOPIC,
                 [
-                    'artifact_id' => (int) $source_artifact->getId(),
-                    'user_id'     => (int) $user->getId(),
+                    'artifact_id' => (int) $artifact_id,
+                    'user_id'     => (int) $replication_data->getUser()->getId(),
                 ]
             );
         } catch (Exception $exception) {
-            $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$source_artifact->getId()}");
-            $this->processProjectIncrementCreation($source_artifact, $user, $source_changeset);
+            $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$artifact_id}");
+
+
+            $this->processProjectIncrementCreation($replication_data);
         }
     }
 }

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
-class FieldTitleAdapter
+use Tuleap\ScaledAgile\TrackerData;
+
+final class FieldTitleAdapter
 {
     /**
      * @var \Tracker_Semantic_TitleFactory
@@ -38,15 +40,15 @@ class FieldTitleAdapter
      * @throws FieldRetrievalException
      * @throws TitleFieldHasIncorrectTypeException
      */
-    public function build(\Tracker $source_tracker): FieldData
+    public function build(TrackerData $replication_tracker_data): FieldData
     {
-        $title_field = $this->title_factory->getByTracker($source_tracker)->getField();
+        $title_field = $this->title_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
         if (! $title_field) {
-            throw new FieldRetrievalException($source_tracker->getId(), "Title");
+            throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Title");
         }
 
         if (! $title_field instanceof \Tracker_FormElement_Field_String) {
-            throw new TitleFieldHasIncorrectTypeException((int) $source_tracker->getId(), (int) $title_field->getId());
+            throw new TitleFieldHasIncorrectTypeException((int) $replication_tracker_data->getTrackerId(), (int) $title_field->getId());
         }
         return new FieldData($title_field);
     }

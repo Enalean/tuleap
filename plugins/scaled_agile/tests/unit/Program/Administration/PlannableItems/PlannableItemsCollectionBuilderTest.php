@@ -24,28 +24,21 @@ namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use NullTracker;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tracker;
 use TrackerFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class PlannableItemsCollectionBuilderTest extends TestCase
+final class PlannableItemsCollectionBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PlannableItemsCollectionBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannableItemsTrackersDao
-     */
-    private $dao;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
@@ -57,43 +50,72 @@ class PlannableItemsCollectionBuilderTest extends TestCase
      */
     private $project_manager;
 
+    /**
+     * @var PlannableItemsCollectionBuilder
+     */
+    private $builder;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlannableItemsTrackersDao
+     */
+    private $dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->dao             = Mockery::mock(PlannableItemsTrackersDao::class);
         $this->tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_data_adapter  = new TrackerDataAdapter($this->tracker_factory);
         $this->project_manager = Mockery::mock(ProjectManager::class);
+        $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
 
         $this->builder = new PlannableItemsCollectionBuilder(
             $this->dao,
-            $this->tracker_factory,
-            $this->project_manager
+            $tracker_data_adapter,
+            $project_data_adapter
         );
     }
 
     public function testItBuildsAPlannableItemsCollection(): void
     {
-        $program_top_planning = new PlanningData(new NullTracker(), 1, 'Release Planning', []);
+        $program_tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject(new Project(['group_id' => 105]))
+            ->build();
+
+        $program_top_planning = new PlanningData(
+            new TrackerData($program_tracker),
+            1,
+            'Release Planning',
+            [],
+            new ProjectData(1, "my_project", "My project")
+        );
 
         $this->dao->shouldReceive('getPlannableItemsTrackerIds')
             ->once()
             ->with(1)
-            ->andReturn([
+            ->andReturn(
                 [
-                    'project_id' => 144,
-                    'tracker_ids' => "202, 210"
-                ],
-                [
-                    'project_id' => 145,
-                    'tracker_ids' => "245, 402"
-                ],
-            ]);
+                    [
+                        'project_id'  => 144,
+                        'tracker_ids' => "202, 210"
+                    ],
+                    [
+                        'project_id'  => 145,
+                        'tracker_ids' => "245, 402"
+                    ],
+                ]
+            );
 
-        $team_project_01 = new Project(['group_id' => 101]);
-        $team_project_02 = new Project(['group_id' => 102]);
+        $team_project_01 = new Project(
+            ['group_id' => 101, 'unix_group_name' => 'plannable_a', 'group_name' => 'Plan A']
+        );
+        $team_project_02 = new Project(
+            ['group_id' => 102, 'unix_group_name' => 'plannable_', 'group_name' => 'Plan A']
+        );
 
-        $this->mockTeampProjectsManager(
+        $this->mockTeamProjectsManager(
             $team_project_01,
             $team_project_02
         );
@@ -103,7 +125,7 @@ class PlannableItemsCollectionBuilderTest extends TestCase
         $team_project_02_tracker_01 = TrackerTestBuilder::aTracker()->withId(3)->build();
         $team_project_02_tracker_02 = TrackerTestBuilder::aTracker()->withId(4)->build();
 
-        $this->mockTeampTrackersFactory(
+        $this->mockTeamTrackersFactory(
             $team_project_01_tracker_01,
             $team_project_01_tracker_02,
             $team_project_02_tracker_01,
@@ -115,19 +137,31 @@ class PlannableItemsCollectionBuilderTest extends TestCase
         $this->assertCount(2, $collection->getPlannableItems());
 
         $first_plannable_item = $collection->getPlannableItems()[0];
-        $this->assertSame($team_project_01, $first_plannable_item->getProject());
-        $this->assertCount(2, $first_plannable_item->getTrackers());
-        $this->assertContains($team_project_01_tracker_01, $first_plannable_item->getTrackers());
-        $this->assertContains($team_project_01_tracker_02, $first_plannable_item->getTrackers());
+        $this->assertEquals(ProjectDataAdapter::build($team_project_01), $first_plannable_item->getProjectData());
+        $this->assertCount(2, $first_plannable_item->getTrackersData());
+        $this->assertEquals(
+            TrackerDataAdapter::build($team_project_01_tracker_01),
+            $first_plannable_item->getTrackersData()[0]
+        );
+        $this->assertEquals(
+            TrackerDataAdapter::build($team_project_01_tracker_02),
+            $first_plannable_item->getTrackersData()[1]
+        );
 
         $second_plannable_item = $collection->getPlannableItems()[1];
-        $this->assertSame($team_project_02, $second_plannable_item->getProject());
-        $this->assertCount(2, $second_plannable_item->getTrackers());
-        $this->assertContains($team_project_02_tracker_01, $second_plannable_item->getTrackers());
-        $this->assertContains($team_project_02_tracker_02, $second_plannable_item->getTrackers());
+        $this->assertEquals(ProjectDataAdapter::build($team_project_02), $second_plannable_item->getProjectData());
+        $this->assertCount(2, $second_plannable_item->getTrackersData());
+        $this->assertEquals(
+            TrackerDataAdapter::build($team_project_02_tracker_01),
+            $second_plannable_item->getTrackersData()[0]
+        );
+        $this->assertEquals(
+            TrackerDataAdapter::build($team_project_02_tracker_02),
+            $second_plannable_item->getTrackersData()[1]
+        );
     }
 
-    private function mockTeampTrackersFactory(
+    private function mockTeamTrackersFactory(
         Tracker $team_project_01_tracker_01,
         Tracker $team_project_01_tracker_02,
         Tracker $team_project_02_tracker_01,
@@ -154,7 +188,7 @@ class PlannableItemsCollectionBuilderTest extends TestCase
             ->andReturn($team_project_02_tracker_02);
     }
 
-    private function mockTeampProjectsManager(
+    private function mockTeamProjectsManager(
         Project $team_project_01,
         Project $team_project_02
     ): void {

@@ -45,7 +45,7 @@ class StatusValueMapper
         FieldData $field_status_data
     ): MappedStatusValue {
         $matching_values = [];
-        $field_status    = $field_status_data->getField();
+        $field_status    = $field_status_data->getFullField();
         assert($field_status instanceof Tracker_FormElement_Field_List);
         foreach ($changeset_values_collection->getStatusValue()->getListValues() as $status_value) {
             $matching_value = $this->value_matcher->getMatchingBindValueByDuckTyping(

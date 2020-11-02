@@ -20,33 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source;
 
-use Tuleap\ScaledAgile\TrackerData;
-
-final class FieldStatusAdapter
+/**
+ * @psalm-immutable
+ */
+final class ArtifactData
 {
     /**
-     * @var \Tracker_Semantic_StatusFactory
+     * @var int
      */
-    private $status_factory;
+    private $id;
+    /**
+     * @var int
+     */
+    private $submitted_on;
 
-    public function __construct(
-        \Tracker_Semantic_StatusFactory $status_factory
-    ) {
-        $this->status_factory = $status_factory;
+    public function __construct(int $id, int $submitted_on)
+    {
+        $this->id = $id;
+        $this->submitted_on = $submitted_on;
     }
 
-    /**
-     * @throws FieldRetrievalException
-     */
-    public function build(TrackerData $replication_tracker_data): FieldData
+    public function getId(): int
     {
-        $status_field = $this->status_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
-        if (! $status_field) {
-            throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Status");
-        }
+        return $this->id;
+    }
 
-        return new FieldData($status_field);
+    public function getSubmittedOn(): int
+    {
+        return $this->submitted_on;
     }
 }

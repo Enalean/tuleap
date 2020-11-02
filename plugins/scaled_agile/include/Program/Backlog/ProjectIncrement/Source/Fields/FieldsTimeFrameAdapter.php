@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
 
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-class FieldsTimeFrameAdapter
+final class FieldsTimeFrameAdapter
 {
     /**
      * @var SemanticTimeframeBuilder
@@ -40,12 +41,13 @@ class FieldsTimeFrameAdapter
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function build(\Tracker $source_tracker): FieldsTimeFrameData
+    public function build(TrackerData $replication_tracker_data): FieldsTimeFrameData
     {
+        $source_tracker   = $replication_tracker_data->getFullTracker();
         $semantic         = $this->timeframe_builder->getSemantic($source_tracker);
         $start_date_field = $semantic->getStartDateField();
         if (! $start_date_field) {
-            throw new MissingTimeFrameFieldException($source_tracker->getId(), 'start date');
+            throw new MissingTimeFrameFieldException($replication_tracker_data->getTrackerId(), 'start date');
         }
 
         $start_date_field_data = new FieldData($start_date_field);
@@ -60,6 +62,6 @@ class FieldsTimeFrameAdapter
             $end_date_field_data = new FieldData($end_date_field);
             return FieldsTimeFrameData::fromStartAndEndDates($start_date_field_data, $end_date_field_data);
         }
-        throw new MissingTimeFrameFieldException($source_tracker->getId(), 'end date or duration');
+        throw new MissingTimeFrameFieldException($replication_tracker_data->getTrackerId(), 'end date or duration');
     }
 }

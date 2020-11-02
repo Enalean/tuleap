@@ -51,8 +51,8 @@ class StatusSemanticChecker
         PlanningData $planning,
         SourceTrackerCollection $source_tracker_collection
     ): bool {
-        $program_top_milestone_tracker   = $planning->getPlanningTracker();
-        $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($program_top_milestone_tracker);
+        $program_top_milestone_tracker   = $planning->getPlanningTrackerData();
+        $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($program_top_milestone_tracker->getFullTracker());
 
         if ($program_tracker_status_semantic->getField() === null) {
             return false;
@@ -68,7 +68,7 @@ class StatusSemanticChecker
         $program_open_values_labels = $program_tracker_status_semantic->getOpenLabels();
 
         foreach ($source_tracker_collection->getSourceTrackers() as $tracker) {
-            $status_semantic = $this->semantic_status_factory->getByTracker($tracker);
+            $status_semantic = $this->semantic_status_factory->getByTracker($tracker->getFullTracker());
             if (count(array_diff($program_open_values_labels, $status_semantic->getOpenLabels())) > 0) {
                 return false;
             }

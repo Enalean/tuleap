@@ -20,56 +20,58 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source;
+namespace Tuleap\ScaledAgile;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tracker;
+use Tuleap\Tracker\TrackerColor;
 
-final class SourceTrackerCollection
+final class TrackerData
 {
     /**
-     * @var TrackerData[]
+     * @var Tracker
      * @psalm-readonly
      */
-    private $source_trackers;
+    private $tracker;
 
-    /**
-     * @param TrackerData[] $source_trackers
-     */
-    public function __construct(array $source_trackers)
+    public function __construct(Tracker $tracker)
     {
-        $this->source_trackers = $source_trackers;
+        $this->tracker = $tracker;
     }
 
     /**
-     * @return int[]
      * @psalm-mutation-free
      */
-    public function getTrackerIds(): array
+    public function getTrackerId(): int
     {
-        return self::extractTrackerIDs($this->source_trackers);
+        return (int) $this->tracker->getId();
     }
 
     /**
-     * @return TrackerData[]
      * @psalm-mutation-free
      */
-    public function getSourceTrackers(): array
+    public function getFullTracker(): Tracker
     {
-        return $this->source_trackers;
+        return $this->tracker;
+    }
+
+    public function userCanSubmitArtifact(\PFUser $user): bool
+    {
+        return $this->tracker->userCanSubmitArtifact($user);
     }
 
     /**
-     * @param TrackerData[] $trackers
-     * @return int[]
-     * @psalm-pure
+     * @psalm-mutation-free
      */
-    private static function extractTrackerIDs(array $trackers): array
+    public function getName(): string
     {
-        return array_map(
-            static function (TrackerData $tracker) {
-                return $tracker->getTrackerId();
-            },
-            $trackers
-        );
+        return (string) $this->tracker->getName();
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getColor(): TrackerColor
+    {
+        return $this->tracker->getColor();
     }
 }

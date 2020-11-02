@@ -47,8 +47,8 @@ use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldArtifactLinkAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldDescriptionAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldStatusAdapter;
@@ -58,8 +58,10 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -142,8 +144,8 @@ final class scaled_agilePlugin extends Plugin
             $this->buildTemplateRenderer(),
             new PlannableItemsCollectionBuilder(
                 new PlannableItemsTrackersDao(),
-                TrackerFactory::instance(),
-                ProjectManager::instance()
+                new TrackerDataAdapter(TrackerFactory::instance()),
+                $this->getProjectDataAdapter()
             ),
             new PlannableItemsPerTeamPresenterCollectionBuilder(
                 $planning_adapter
@@ -166,10 +168,7 @@ final class scaled_agilePlugin extends Plugin
             $root_planning = $adapter->buildFromPlanning($event->getRootPlanning());
         }
 
-        $url_builder = new ReadOnlyProgramAdminURLBuilder(
-            new ProgramDao(),
-            ProjectManager::instance()
-        );
+        $url_builder = new ReadOnlyProgramAdminURLBuilder(new ProgramDao());
 
         $url = $url_builder->buildURL(
             $planning,
@@ -212,14 +211,10 @@ final class scaled_agilePlugin extends Plugin
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
     {
-        $team_projects_collection_builder = new TeamProjectsCollectionBuilder(
-            new ProgramDao(),
-            ProjectManager::instance()
-        );
-
-        $virtual_top_milestone   = $event->getTopMilestone();
-        $team_project_collection = $team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $virtual_top_milestone->getProject()
+        $virtual_top_milestone = $event->getTopMilestone();
+        $project_data = ProjectDataAdapter::build($virtual_top_milestone->getProject());
+        $team_project_collection = $this->getTeamProjectCollectionBuilder()->getTeamProjectForAGivenProgramProject(
+            $project_data
         );
 
         if ($team_project_collection->isEmpty() === true || $virtual_top_milestone->getPlanning()->getId() === null) {
@@ -280,10 +275,13 @@ final class scaled_agilePlugin extends Plugin
             $this->getProjectIncrementCreatorChecker()
         );
 
+        $tracker_data = TrackerDataAdapter::build($can_submit_new_artifact->getTracker());
+        $project_data = ProjectDataAdapter::build($can_submit_new_artifact->getTracker()->getProject());
         if (
             ! $artifact_creator_checker->canCreateAnArtifact(
                 $can_submit_new_artifact->getUser(),
-                $can_submit_new_artifact->getTracker()
+                $tracker_data,
+                $project_data
             )
         ) {
             $can_submit_new_artifact->disableArtifactSubmission();
@@ -326,10 +324,7 @@ final class scaled_agilePlugin extends Plugin
         $logger                  = $this->getLogger();
 
         return new ProjectIncrementArtifactCreatorChecker(
-            new TeamProjectsCollectionBuilder(
-                new ProgramDao(),
-                ProjectManager::instance()
-            ),
+            $this->getTeamProjectCollectionBuilder(),
             new TrackerCollectionFactory(
                 $this->getPlanningAdapter()
             ),
@@ -367,5 +362,18 @@ final class scaled_agilePlugin extends Plugin
     private function getPlanningAdapter(): PlanningAdapter
     {
         return new PlanningAdapter(\PlanningFactory::build());
+    }
+
+    private function getTeamProjectCollectionBuilder(): TeamProjectsCollectionBuilder
+    {
+        return new TeamProjectsCollectionBuilder(
+            new ProgramDao(),
+            $this->getProjectDataAdapter()
+        );
+    }
+
+    private function getProjectDataAdapter(): ProjectDataAdapter
+    {
+        return new ProjectDataAdapter(ProjectManager::instance());
     }
 }
