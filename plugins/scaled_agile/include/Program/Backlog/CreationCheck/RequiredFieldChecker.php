@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
 
 class RequiredFieldChecker
 {
