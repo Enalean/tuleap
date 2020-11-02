@@ -69,7 +69,7 @@ function checkOnlyExpectedArtifactsAreListed(
 }
 
 function checkNoArtifactsAreListed(): void {
-    cy.get(`[data-test=tracker-report-table-empty-state]`).contains("No results");
+    cy.get(`[data-test=tracker-report-table-empty-state]`).should("exist");
 }
 
 describe("Report expert queries", () => {
