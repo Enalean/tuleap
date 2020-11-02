@@ -27,6 +27,7 @@ import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
+import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
@@ -111,4 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
             project_flags,
         },
     }).$mount(vue_mount_point);
+
+    setupDocumentShortcuts();
 });
