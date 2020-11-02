@@ -43,16 +43,34 @@ class GitlabRepositoryFactory
     {
         $gitlab_repositories = [];
         foreach ($this->dao->getGitlabRepositoriesForProject((int) $project->getID()) as $row) {
-            $gitlab_repositories[] = new GitlabRepository(
-                $row['id'],
-                $row['gitlab_id'],
-                $row['name'],
-                $row['path'],
-                (string) $row['description'],
-                $row['full_url'],
-                (new DateTimeImmutable())->setTimestamp($row['last_push_date'])
-            );
+            $gitlab_repositories[] = $this->getInstanceFromRow($row);
         }
         return $gitlab_repositories;
+    }
+
+    public function getGitlabRepositoryByInternalIdAndPath(int $gitlab_id, string $http_path): ?GitlabRepository
+    {
+        $row = $this->dao->getGitlabRepositorByInternalIdAndPath($gitlab_id, $http_path);
+        if ($row === null) {
+            return null;
+        }
+
+        return $this->getInstanceFromRow($row);
+    }
+
+    /**
+     * @param array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int} $row
+     */
+    private function getInstanceFromRow(array $row): GitlabRepository
+    {
+        return new GitlabRepository(
+            $row['id'],
+            $row['gitlab_id'],
+            $row['name'],
+            $row['path'],
+            (string) $row['description'],
+            $row['full_url'],
+            (new DateTimeImmutable())->setTimestamp($row['last_push_date'])
+        );
     }
 }
