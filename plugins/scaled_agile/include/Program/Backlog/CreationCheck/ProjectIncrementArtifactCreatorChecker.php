@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;

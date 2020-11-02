@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

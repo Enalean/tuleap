@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
 use Tuleap\ScaledAgile\ProjectDataAdapter;
 use Tuleap\ScaledAgile\TrackerDataAdapter;

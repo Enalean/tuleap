@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\ProjectDataAdapter;

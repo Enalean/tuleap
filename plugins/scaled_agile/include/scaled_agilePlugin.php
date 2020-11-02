@@ -47,7 +47,7 @@ use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Project\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldArtifactLinkAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldDescriptionAdapter;

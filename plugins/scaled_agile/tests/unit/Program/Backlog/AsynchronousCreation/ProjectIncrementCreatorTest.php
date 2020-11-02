@@ -36,7 +36,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\ScaledAgile\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;

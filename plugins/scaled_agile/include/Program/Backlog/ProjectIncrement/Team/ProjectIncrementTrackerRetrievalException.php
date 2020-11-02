@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Tracker;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team;
 
 interface ProjectIncrementTrackerRetrievalException extends \Throwable
 {
