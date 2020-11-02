@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\EventNotAllowedException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 use Tuleap\Gitlab\Repository\Webhook\RepositoryNotFoundException;
@@ -54,10 +55,16 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
      */
     private $response_factory;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         WebhookDataExtractor $webhook_data_extractor,
         GitlabRepositoryDao $gitlab_repository_dao,
         ResponseFactoryInterface $response_factory,
+        LoggerInterface $logger,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -66,10 +73,12 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
         $this->webhook_data_extractor = $webhook_data_extractor;
         $this->gitlab_repository_dao  = $gitlab_repository_dao;
         $this->response_factory       = $response_factory;
+        $this->logger                 = $logger;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->logger->info("GitLab webhook received.");
         $current_time = new DateTimeImmutable();
 
         try {
@@ -82,8 +91,10 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
                 $current_time->getTimestamp()
             );
 
+            $this->logger->info("Last update date successfully updated for GitLab repository #" . $gitlab_repository->getId());
             return $this->response_factory->createResponse(200);
         } catch (RepositoryNotFoundException $exception) {
+            $this->logger->error($exception->getMessage());
             return $this->response_factory->createResponse(404);
         } catch (
             MissingKeyException |
@@ -92,6 +103,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
             SecretNotDefinedException |
             SecretHeaderNotMatchingException $exception
         ) {
+            $this->logger->error($exception->getMessage());
             return $this->response_factory->createResponse(400);
         }
     }

@@ -23,4 +23,8 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class MissingKeyException extends \RuntimeException
 {
+    public function __construct(string $key_name)
+    {
+        parent::__construct("The key $key_name is missing in the GitLab webhook payload.");
+    }
 }
