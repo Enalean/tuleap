@@ -1,38 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<element name="externalField" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<element xmlns="http://relaxng.org/ns/structure/1.0" name="externalField">
   <attribute name="type">
-    <value>ttmstepdef</value>
+    <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ttmstepdef</value>
   </attribute>
   <attribute name="ID">
-    <data type="ID"/>
+    <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
   </attribute>
   <attribute name="rank">
-    <data type="int"/>
+    <data type="int" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
   </attribute>
   <optional>
     <attribute name="id">
-      <data type="long"/>
+      <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </attribute>
   </optional>
   <optional>
     <attribute name="tracker_id">
-      <data type="long"/>
+      <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </attribute>
   </optional>
   <optional>
     <attribute name="parent_id">
-      <data type="long"/>
+      <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </attribute>
   </optional>
   <element name="name">
-    <data type="string"/>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
   </element>
   <element name="label">
-    <data type="string"/>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
   </element>
   <optional>
     <element name="description">
-      <data type="string"/>
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </element>
   </optional>
 </element>

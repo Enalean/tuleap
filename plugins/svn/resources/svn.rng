@@ -1,6 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="svn-definition.rng"/>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="svn">
+    <zeroOrMore>
+      <element name="repository">
+        <interleave>
+          <!-- name of the repository -->
+          <attribute name="name">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+          <optional>
+            <!-- Path to the svn dump file -->
+            <attribute name="dump-file">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+          </optional>
+          <optional>
+            <!-- Content of the .SVNAccessFile inline in the XML -->
+            <element name="access-file">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
+          <zeroOrMore>
+            <!-- E-mail subscriptions -->
+            <element name="notification">
+              <attribute name="path">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+              <attribute name="emails">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+          </zeroOrMore>
+          <optional>
+            <!-- References -->
+            <element name="references">
+              <ref name="references"/>
+            </element>
+          </optional>
+        </interleave>
+      </element>
+    </zeroOrMore>
+  </define>
+</div></div>
   <start>
     <element name="svn">
       <ref name="svn"/>

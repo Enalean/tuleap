@@ -1,6 +1,391 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="artifact-definition.rng"/>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="artifacts">
+    <optional>
+      <attribute name="source_platform">
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <zeroOrMore>
+      <element name="artifact">
+        <ref name="artifact"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="artifact">
+    <attribute name="id">
+      <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </attribute>
+    <optional>
+      <attribute name="tracker_id">
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </attribute>
+    </optional>
+    <zeroOrMore>
+      <element name="changeset">
+        <optional>
+          <attribute name="id">
+            <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </optional>
+        <element name="submitted_by">
+          <ref name="tracker_user_content"/>
+        </element>
+        <element name="submitted_on">
+          <ref name="date_content"/>
+        </element>
+        <element name="comments">
+          <ref name="comments"/>
+        </element>
+        <zeroOrMore>
+          <element name="field_change">
+            <ref name="field_content"/>
+          </element>
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
+    <zeroOrMore>
+      <element name="file">
+        <attribute name="id">
+          <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+        <element name="filename">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+        <element name="path">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+        <element name="filesize">
+          <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+        <element name="filetype">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+        <element name="description">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="comments">
+    <zeroOrMore>
+      <element name="comment">
+        <ref name="comment_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="comment_content">
+    <element name="submitted_by">
+      <ref name="tracker_user_content"/>
+    </element>
+    <element name="submitted_on">
+      <ref name="date_content"/>
+    </element>
+    <element name="body">
+      <ref name="text_content"/>
+    </element>
+  </define>
+  <define name="text_content">
+    <attribute name="format">
+      <choice>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">html</value>
+      </choice>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="date_content">
+    <attribute name="format">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ISO8601</value>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="tracker_user_content">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">username</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ldap</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">email</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+      </group>
+    </choice>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="open_list_content">
+    <optional>
+      <attribute name="format">
+        <choice>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">label</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+        </choice>
+      </attribute>
+    </optional>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="field_content">
+    <attribute name="field_name">
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </attribute>
+    <choice>
+      <ref name="field_string"/>
+      <ref name="field_text"/>
+      <ref name="field_int"/>
+      <ref name="field_float"/>
+      <ref name="field_date"/>
+      <ref name="field_computed"/>
+      <ref name="field_file"/>
+      <ref name="field_art_link"/>
+      <ref name="field_static_list"/>
+      <ref name="field_user_list"/>
+      <ref name="field_ugroup_list"/>
+      <ref name="field_open_list_user"/>
+      <ref name="field_open_list_ugroup"/>
+      <ref name="field_open_list_static"/>
+      <ref name="field_perms_on_artifact"/>
+    </choice>
+  </define>
+  <define name="field_string">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">string</value>
+    </attribute>
+    <element name="value">
+      <optional>
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </optional>
+    </element>
+  </define>
+  <define name="field_text">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
+    </attribute>
+    <element name="value">
+      <optional>
+        <choice>
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          <ref name="text_content"/>
+        </choice>
+      </optional>
+    </element>
+  </define>
+  <define name="field_int">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">int</value>
+    </attribute>
+    <element name="value">
+      <optional>
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </optional>
+    </element>
+  </define>
+  <define name="field_float">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">float</value>
+    </attribute>
+    <element name="value">
+      <optional>
+        <data type="float" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </optional>
+    </element>
+  </define>
+  <define name="field_date">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">date</value>
+    </attribute>
+    <element name="value">
+      <optional>
+        <ref name="date_content"/>
+      </optional>
+    </element>
+  </define>
+  <define name="field_computed">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">computed</value>
+    </attribute>
+    <optional>
+      <element name="value">
+        <optional>
+          <data type="float" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </optional>
+      </element>
+    </optional>
+    <optional>
+      <element name="manual_value">
+        <optional>
+          <data type="float" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </optional>
+      </element>
+    </optional>
+    <optional>
+      <element name="is_autocomputed">
+        <optional>
+          <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </optional>
+      </element>
+    </optional>
+  </define>
+  <define name="field_file">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">file</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <optional>
+          <attribute name="ref">
+            <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </optional>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_art_link">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">art_link</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <optional>
+          <attribute name="nature">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </optional>
+        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_static_list">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">static</value>
+    </attribute>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <optional>
+            <attribute name="format">
+              <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+            </attribute>
+          </optional>
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+      </zeroOrMore>
+    </choice>
+  </define>
+  <define name="field_user_list">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">users</value>
+    </attribute>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <ref name="tracker_user_content"/>
+        </element>
+      </zeroOrMore>
+    </choice>
+  </define>
+  <define name="field_ugroup_list">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ugroups</value>
+    </attribute>
+    <choice>
+      <ref name="empty_value"/>
+      <zeroOrMore>
+        <element name="value">
+          <attribute name="format">
+            <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+          </attribute>
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+      </zeroOrMore>
+    </choice>
+  </define>
+  <define name="empty_value">
+    <element name="value">
+      <empty/>
+    </element>
+  </define>
+  <define name="field_open_list_user">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">users</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <choice>
+          <ref name="open_list_content"/>
+          <ref name="tracker_user_content"/>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_open_list_ugroup">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ugroups</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <ref name="open_list_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_open_list_static">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">static</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <ref name="open_list_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_perms_on_artifact">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">permissions_on_artifact</value>
+    </attribute>
+    <attribute name="use_perm">
+      <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </attribute>
+    <zeroOrMore>
+      <element name="ugroup">
+        <choice>
+          <attribute name="ugroup_id">
+            <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+          <attribute name="ugroup_name">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </define>
+</div></div>
   <start>
     <element name="artifacts">
       <ref name="artifacts"/>

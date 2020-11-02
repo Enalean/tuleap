@@ -1,6 +1,169 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="docman-definition.rng"/>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="docman">
+    <element name="item">
+      <ref name="docman_folder"/>
+    </element>
+  </define>
+  <define name="docman_item">
+    <element name="properties">
+      <element name="title">
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+      </element>
+      <optional>
+        <element name="description">
+          <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="create_date">
+          <ref name="docman_date_content"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="update_date">
+          <ref name="docman_date_content"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="owner">
+          <ref name="docman_user_content"/>
+        </element>
+      </optional>
+    </element>
+    <optional>
+      <element name="permissions">
+        <zeroOrMore>
+          <element name="permission">
+            <attribute name="ugroup">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+            <attribute name="type">
+              <choice>
+                <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">PLUGIN_DOCMAN_READ</value>
+                <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">PLUGIN_DOCMAN_WRITE</value>
+                <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">PLUGIN_DOCMAN_MANAGE</value>
+              </choice>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
+  </define>
+  <define name="docman_folder">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">folder</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <zeroOrMore>
+      <element name="item">
+        <choice>
+          <ref name="docman_folder"/>
+          <ref name="docman_file"/>
+          <ref name="docman_embedded"/>
+          <ref name="docman_link"/>
+          <ref name="docman_empty"/>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="docman_empty">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">empty</value>
+    </attribute>
+    <ref name="docman_item"/>
+  </define>
+  <define name="docman_link">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">link</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <element name="url">
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </element>
+  </define>
+  <define name="docman_file">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">file</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <ref name="docman_file_versions"/>
+  </define>
+  <define name="docman_embedded">
+    <attribute name="type">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">embeddedfile</value>
+    </attribute>
+    <ref name="docman_item"/>
+    <ref name="docman_file_versions"/>
+  </define>
+  <define name="docman_file_versions">
+    <element name="versions">
+      <zeroOrMore>
+        <element name="version">
+          <element name="filename">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+          <element name="filetype">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+          <element name="filesize">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+          <optional>
+            <element name="date">
+              <ref name="docman_date_content"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="author">
+              <ref name="docman_user_content"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="label">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="changelog">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
+          <element name="content">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="docman_date_content">
+    <attribute name="format">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ISO8601</value>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="docman_user_content">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">username</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ldap</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">email</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        </attribute>
+      </group>
+    </choice>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+</div></div>
   <start>
     <element name="docman">
       <ref name="docman"/>

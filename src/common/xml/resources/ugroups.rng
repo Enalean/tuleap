@@ -1,6 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-  <include href="ugroups-definition.rng"/>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="ugroups">
+    <optional>
+      <attribute name="mode">
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">synchronized</value>
+      </attribute>
+    </optional>
+    <oneOrMore>
+      <element name="ugroup">
+        <ref name="ugroup"/>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="ugroup">
+    <attribute name="name">
+      <ref name="ugroup_name"/>
+    </attribute>
+    <attribute name="description">
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </attribute>
+    <element name="members">
+      <zeroOrMore>
+        <element name="member">
+          <ref name="user_content"/>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="user_content">
+    <attribute name="format">
+      <choice>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">username</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ldap</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+      </choice>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="ugroup_name">
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+      <param name="pattern">[a-zA-Z0-9_\-]+</param>
+    </data>
+  </define>
+</div></div>
   <start>
     <element name="ugroups">
       <ref name="ugroups"/>

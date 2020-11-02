@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <start>
     <element name="external_field_change">
       <attribute name="field_name">
-        <data type="string"/>
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
       </attribute>
       <attribute name="type">
-        <value>ttmstepdef</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ttmstepdef</value>
       </attribute>
       <oneOrMore>
         <element name="step">
@@ -19,20 +18,20 @@
     <element name="description">
       <attribute name="format">
         <choice>
-          <value>text</value>
-          <value>html</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">html</value>
         </choice>
       </attribute>
-      <data type="string"/>
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </element>
     <element name="expected_results">
       <attribute name="format">
         <choice>
-          <value>text</value>
-          <value>html</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">html</value>
         </choice>
       </attribute>
-      <data type="string"/>
+      <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
     </element>
   </define>
 </grammar>

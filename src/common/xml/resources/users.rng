@@ -1,23 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <start>
     <element name="users">
       <zeroOrMore>
         <element name="user">
           <element name="id">
-            <data type="long"/>
+            <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
           <element name="username">
-            <data type="string"/>
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
           <element name="realname">
-            <data type="string"/>
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
           <element name="email">
-            <data type="string"/>
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
           <element name="ldapid">
-            <data type="string"/>
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
         </element>
       </zeroOrMore>

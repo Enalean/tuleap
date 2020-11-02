@@ -44,7 +44,7 @@ composer:  ## Install PHP dependencies with Composer
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --rnc2rng
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -w /tuleap -u "`id -u`":"`id -g`" enalean/rnc2rng make rnc2rng
 
 rnc2rng: src/common/xml/resources/project/project.rng \
 	 src/common/xml/resources/users.rng  \
@@ -76,6 +76,7 @@ plugins/tracker/resources/artifacts.rng: plugins/tracker/resources/artifacts.rnc
 
 %.rng: %.rnc
 	trang -I rnc -O rng $< $@
+	rnginline $@ $@
 
 clean-rng:
 	find . -type f -name "*.rng" | xargs rm -f

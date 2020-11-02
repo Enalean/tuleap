@@ -23,13 +23,10 @@ class XML_RNGValidator
     /**
      * @throws XML_ParseException
      */
-    public function validate(SimpleXMLElement $xml_element, $rng_path)
+    public function validate(SimpleXMLElement $xml_element, string $rng_path): void
     {
-        $dom          = $this->simpleXmlElementToDomDocument($xml_element);
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-        $is_valid = @$dom->relaxNGValidate($rng_path);
-        $xml_security->disableExternalLoadOfEntities();
+        $dom      = $this->simpleXmlElementToDomDocument($xml_element);
+        $is_valid = @$dom->relaxNGValidateSource(\file_get_contents($rng_path));
 
         if (! $is_valid) {
             $this->extractErrors($dom, $rng_path);
@@ -38,11 +35,8 @@ class XML_RNGValidator
 
     /**
      * Create a dom document based on a SimpleXMLElement
-     *
-     *
-     * @return \DOMDocument
      */
-    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element)
+    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element): DOMDocument
     {
         $dom = new DOMDocument("1.0", "UTF-8");
         $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
@@ -54,7 +48,7 @@ class XML_RNGValidator
      * @param             $rng_path
      * @throws XML_ParseException
      */
-    private function extractErrors(DOMDocument $dom, $rng_path): void
+    private function extractErrors(DOMDocument $dom, string $rng_path): void
     {
         $system_command = new System_Command();
         $temp           = tempnam(ForgeConfig::get('tmp_dir'), 'xml');
