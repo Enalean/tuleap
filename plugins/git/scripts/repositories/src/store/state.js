@@ -33,6 +33,6 @@ const state = {
     display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
     is_first_load_done: false,
     services_name_used: [],
-    add_gitlab_project_modal: null,
+    add_gitlab_repository_modal: null,
 };
 export default state;

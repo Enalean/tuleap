@@ -22,7 +22,7 @@ import {
     getRepositoryList,
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
-    getGitlabRepositoryList,
+    getGitlabRepositoryList as getGitlabRepository,
 } from "../api/rest-querier.js";
 import { getProjectId, getUserId } from "../repository-list-presenter.js";
 import {
@@ -33,7 +33,7 @@ import {
     ANONYMOUS_USER_ID,
 } from "../constants.js";
 import { formatUrl } from "../gitlab/gitlab-credentials-helper";
-import { getAsyncGitlabProjectList } from "../gitlab/gitlab-api-querier";
+import { getAsyncGitlabRepositoryList as getAsyncGitlabRepository } from "../gitlab/gitlab-api-querier";
 
 export const setDisplayMode = async (context, new_mode) => {
     context.commit("setDisplayMode", new_mode);
@@ -55,8 +55,8 @@ export const showAddRepositoryModal = ({ state }) => {
     state.add_repository_modal.toggle();
 };
 
-export const showAddGitlabProjectModal = ({ state }) => {
-    state.add_gitlab_project_modal.toggle();
+export const showAddGitlabRepositoryModal = ({ state }) => {
+    state.add_gitlab_repository_modal.toggle();
 };
 
 export const changeRepositories = async (context, new_owner_id) => {
@@ -106,7 +106,7 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
 
 async function getGitlabRepositories(context, order_by) {
     const getGitlabRepositories = (callback) =>
-        getGitlabRepositoryList(getProjectId(), order_by, callback);
+        getGitlabRepository(getProjectId(), order_by, callback);
 
     await getAsyncGitlabRepositoryList(context.commit, getGitlabRepositories);
 }
@@ -150,39 +150,39 @@ async function handleGetRepositoryListError(e, commit) {
     }
 }
 
-export async function getGitlabProjectList(context, credentials) {
+export async function getGitlabRepositoryList(context, credentials) {
     let pagination = 1;
-    let projects_gitlab = [];
+    let repositories_gitlab = [];
     credentials.server_url = formatUrl(credentials.server_url);
     const server_url_without_pagination = credentials.server_url;
 
-    const response = await getAsyncGitlabProjectList(credentials);
+    const response = await getAsyncGitlabRepository(credentials);
 
     if (response.status !== 200) {
         throw Error();
     }
     const total_page = response.headers.get("X-Total-Pages");
-    projects_gitlab.push(...(await response.json()));
+    repositories_gitlab.push(...(await response.json()));
 
     pagination++;
 
     while (pagination <= total_page) {
-        const projects = await queryAPIGitlab(
+        const repositories = await queryAPIGitlab(
             credentials,
             server_url_without_pagination,
             pagination
         );
-        projects_gitlab.push(...projects);
+        repositories_gitlab.push(...repositories);
         pagination++;
     }
 
-    return projects_gitlab;
+    return repositories_gitlab;
 }
 
 async function queryAPIGitlab(credentials, server_url_without_pagination, pagination) {
     credentials.server_url = server_url_without_pagination + "&page=" + pagination;
 
-    const response = await getAsyncGitlabProjectList(credentials);
+    const response = await getAsyncGitlabRepository(credentials);
     if (response.status !== 200) {
         throw Error();
     }

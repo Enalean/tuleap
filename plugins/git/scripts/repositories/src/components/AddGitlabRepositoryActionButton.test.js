@@ -19,10 +19,10 @@
 
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
-import AddGitlabProjectActionButton from "./AddGitlabProjectActionButton.vue";
+import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 import localVue from "../support/local-vue.js";
 
-describe("AddGitlabProjectActionButton", () => {
+describe("AddGitlabRepositoryActionButton", () => {
     let store_options;
     beforeEach(() => {
         store_options = {
@@ -37,7 +37,7 @@ describe("AddGitlabProjectActionButton", () => {
 
     function instantiateComponent() {
         const store = createStoreMock(store_options);
-        return shallowMount(AddGitlabProjectActionButton, {
+        return shallowMount(AddGitlabRepositoryActionButton, {
             mocks: { $store: store },
             localVue,
         });

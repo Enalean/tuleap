@@ -41,7 +41,7 @@
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate class="git-add-action-button">Create a repository</translate>
             </button>
-            <add-gitlab-project-action-button />
+            <add-gitlab-repository-action-button />
         </div>
     </div>
 </template>
@@ -50,11 +50,11 @@
 import { mapGetters, mapActions } from "vuex";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
 import { createDropdown } from "tlp";
-import AddGitlabProjectActionButton from "./AddGitlabProjectActionButton.vue";
+import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 
 export default {
     name: "DropdownActionButton",
-    components: { AddGitlabProjectActionButton },
+    components: { AddGitlabRepositoryActionButton },
     props: {
         is_empty_state: {
             type: Boolean,

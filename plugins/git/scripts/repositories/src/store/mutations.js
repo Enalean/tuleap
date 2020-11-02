@@ -58,8 +58,8 @@ export default {
     setAddRepositoryModal(state, modal) {
         state.add_repository_modal = modal;
     },
-    setAddGitlabProjectModal(state, modal) {
-        state.add_gitlab_project_modal = modal;
+    setAddGitlabRepositoryModal(state, modal) {
+        state.add_gitlab_repository_modal = modal;
     },
     setDisplayMode(state, new_mode) {
         if (isUnknownMode(new_mode)) {

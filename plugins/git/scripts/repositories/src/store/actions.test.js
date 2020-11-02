@@ -33,7 +33,7 @@ import {
     setDisplayMode,
     getAsyncRepositoryList,
     changeRepositories,
-    getGitlabProjectList,
+    getGitlabRepositoryList,
 } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter.js";
 import * as rest_querier from "../api/rest-querier.js";
@@ -288,7 +288,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("getGitlabProjectList", () => {
+    describe("getGitlabRepositoryList", () => {
         let context;
         beforeEach(() => {
             context = {
@@ -297,11 +297,11 @@ describe("Store actions", () => {
         });
 
         it("When api is called, Then url is formatted", async () => {
-            const getAsyncGitlabProjectList = jest.spyOn(
+            const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabProjectList"
+                "getAsyncGitlabRepositoryList"
             );
-            getAsyncGitlabProjectList.mockReturnValue(
+            getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
                         headers: {
@@ -317,8 +317,8 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
-            expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
+            expect(await getGitlabRepositoryList(context, credentials)).toEqual([{ id: 10 }]);
+            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
                 token: "azerty1234",
@@ -326,11 +326,11 @@ describe("Store actions", () => {
         });
 
         it("When there is 2 pages, Then api is called twice", async () => {
-            const getAsyncGitlabProjectList = jest.spyOn(
+            const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabProjectList"
+                "getAsyncGitlabRepositoryList"
             );
-            getAsyncGitlabProjectList.mockReturnValue(
+            getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
                         headers: {
@@ -346,19 +346,19 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabProjectList(context, credentials)).toEqual([
+            expect(await getGitlabRepositoryList(context, credentials)).toEqual([
                 { id: 10 },
                 { id: 10 },
             ]);
-            expect(getAsyncGitlabProjectList).toBeCalledTimes(2);
+            expect(getAsyncGitlabRepositoryList).toBeCalledTimes(2);
         });
 
         it("When en error retrieved from api, Then an error is thrown", async () => {
-            const getAsyncGitlabProjectList = jest.spyOn(
+            const getAsyncGitlabRepositoryList = jest.spyOn(
                 gitlab_querier,
-                "getAsyncGitlabProjectList"
+                "getAsyncGitlabRepositoryList"
             );
-            getAsyncGitlabProjectList.mockReturnValue(
+            getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
                     resolve({
                         status: 401,
@@ -370,8 +370,10 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            await expect(getGitlabProjectList(context, credentials)).rejects.toEqual(new Error());
-            expect(getAsyncGitlabProjectList).toHaveBeenCalledWith({
+            await expect(getGitlabRepositoryList(context, credentials)).rejects.toEqual(
+                new Error()
+            );
+            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
                 token: "azerty1234",

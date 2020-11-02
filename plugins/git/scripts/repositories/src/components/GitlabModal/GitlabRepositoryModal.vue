@@ -20,16 +20,15 @@
 <template>
     <div
         role="dialog"
-        aria-labelledby="fetch-gitlab-project-modal-title"
-        id="fetch-gitlab-projects-modal"
+        aria-labelledby="fetch-gitlab-repository-modal-title"
+        id="fetch-gitlab-repositories-modal"
         class="tlp-modal"
         ref="fetch_modal"
-        data-test="fetch-gitlab-project-modal-form"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
                 <i class="fa fa-gitlab tlp-modal-title-icon"></i>
-                <translate>Integrate a GitLab remote repository</translate>
+                <translate>Add GitLab repository</translate>
             </h1>
             <div
                 class="tlp-modal-close"
@@ -42,31 +41,31 @@
             </div>
         </div>
         <credentials-form-modal
-            v-if="gitlab_projects === null || back_button_clicked"
-            v-on:on-get-projects="getGitlabProject"
+            v-if="gitlab_repositories === null || back_button_clicked"
+            v-on:on-get-gitlab-repositories="getGitlabRepository"
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
         />
-        <list-projects-modal
+        <list-repositories-modal
             v-else
-            v-bind:projects="gitlab_projects"
+            v-bind:repositories="gitlab_repositories"
             v-on:to-back-button="clickBackButton"
-            ref="listProjectsModal"
+            ref="listRepositoriesModal"
         />
     </div>
 </template>
 
 <script>
 import { createModal } from "tlp";
-import ListProjectsModal from "./ListProjectsModal.vue";
+import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 
 export default {
-    name: "GitlabProjectModal",
-    components: { CredentialsFormModal, ListProjectsModal },
+    name: "GitlabRepositoryModal",
+    components: { CredentialsFormModal, ListRepositoriesModal },
     data() {
         return {
-            gitlab_projects: null,
+            gitlab_repositories: null,
             back_button_clicked: false,
             modal: null,
         };
@@ -79,16 +78,16 @@ export default {
     mounted() {
         this.modal = createModal(this.$refs.fetch_modal);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("setAddGitlabProjectModal", this.modal);
+        this.$store.commit("setAddGitlabRepositoryModal", this.modal);
     },
     methods: {
         clickBackButton() {
             this.back_button_clicked = true;
-            this.gitlab_projects = null;
+            this.gitlab_repositories = null;
         },
-        getGitlabProject(projects) {
+        getGitlabRepository(repositories) {
             this.back_button_clicked = false;
-            this.gitlab_projects = projects;
+            this.gitlab_repositories = repositories;
         },
         onCloseModal() {
             this.reset();
@@ -99,11 +98,11 @@ export default {
             if (credentialsForm) {
                 credentialsForm.reset();
             }
-            const listProjectsModal = this.$refs.listProjectsModal;
-            if (listProjectsModal) {
-                listProjectsModal.reset();
+            const listRepositoriesModal = this.$refs.listRepositoriesModal;
+            if (listRepositoriesModal) {
+                listRepositoriesModal.reset();
             }
-            this.gitlab_projects = null;
+            this.gitlab_repositories = null;
             this.back_button_clicked = false;
         },
     },

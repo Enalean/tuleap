@@ -22,6 +22,9 @@ msgid_plural "%{ numberPullRequest } pull requests"
 msgstr[0] "%{ numberPullRequest } pull request"
 msgstr[1] "%{ numberPullRequest } pull requests"
 
+msgid "Add GitLab repository"
+msgstr "Ajouter un dépôt GitLab"
+
 msgid "Add project repository"
 msgstr "Ajouter un dépôt"
 
@@ -63,8 +66,8 @@ msgstr "Fermer"
 msgid "Create a repository"
 msgstr "Créer un dépôt"
 
-msgid "Fetch GitLab projects"
-msgstr "Récuperer les projets GitLab"
+msgid "Fetch GitLab repositories"
+msgstr "Récuperer les dépôts GitLab"
 
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
@@ -87,11 +90,8 @@ msgstr "Jeton de l'utilisateur GitLab"
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
 
-msgid "Integrate a GitLab remote repository"
-msgstr "Intégrer un dépôt GitLab distant"
-
-msgid "Integrate the project"
-msgstr "Intégrer le projet"
+msgid "Integrate the repository"
+msgstr "Intégrer le dépôt"
 
 msgid "Jenkins servers"
 msgstr "Serveurs Jenkins"
@@ -99,20 +99,20 @@ msgstr "Serveurs Jenkins"
 msgid "New repository"
 msgstr "Nouveau dépôt"
 
-msgid "No project is available with your GitLab account"
-msgstr "Aucun projet n'est disponible avec votre compte GitLab"
+msgid "No repository is available with your GitLab account"
+msgstr "Aucun dépôt n'est disponible avec votre compte GitLab"
 
 msgid "No repository name matching your query has been found."
 msgstr "Aucun nom de dépôt ne correspond à votre recherche."
-
-msgid "Project"
-msgstr "Projet"
 
 msgid "Project not found"
 msgstr "Projet non trouvé"
 
 msgid "Project repositories"
 msgstr "Dépôts du projet"
+
+msgid "Repository"
+msgstr "Dépôt"
 
 msgid "Repository list"
 msgstr "Liste des dépôts"
