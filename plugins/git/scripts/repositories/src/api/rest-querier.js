@@ -26,6 +26,7 @@ export {
     postRepository,
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
+    getGitlabRepositoryList,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
@@ -48,6 +49,13 @@ function deleteRepositoriesSortedByPathUserPreference(user_id) {
 
 function buildCollectionCallback(displayCallback) {
     return ({ repositories }) => {
+        displayCallback(repositories);
+        return repositories;
+    };
+}
+
+function buildGitlabCollectionCallback(displayCallback) {
+    return (repositories) => {
         displayCallback(repositories);
         return repositories;
     };
@@ -79,6 +87,20 @@ function getRepositoryList(project_id, order_by, displayCallback) {
             offset: 0,
         },
         getCollectionCallback: buildCollectionCallback(displayCallback),
+    });
+}
+
+function getGitlabRepositoryList(project_id, order_by, displayCallback) {
+    return recursiveGet("/api/projects/" + project_id + "/gitlab_repositories", {
+        params: {
+            query: JSON.stringify({
+                scope: "project",
+            }),
+            order_by,
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: buildGitlabCollectionCallback(displayCallback),
     });
 }
 

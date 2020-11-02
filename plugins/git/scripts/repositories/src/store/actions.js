@@ -22,6 +22,7 @@ import {
     getRepositoryList,
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
+    getGitlabRepositoryList,
 } from "../api/rest-querier.js";
 import { getProjectId, getUserId } from "../repository-list-presenter.js";
 import {
@@ -58,7 +59,7 @@ export const showAddGitlabProjectModal = ({ state }) => {
     state.add_gitlab_project_modal.toggle();
 };
 
-export const changeRepositories = (context, new_owner_id) => {
+export const changeRepositories = async (context, new_owner_id) => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
 
@@ -70,7 +71,11 @@ export const changeRepositories = (context, new_owner_id) => {
     if (new_owner_id === PROJECT_KEY) {
         const getProjectRepositories = (callback) =>
             getRepositoryList(getProjectId(), order_by, callback);
-        getAsyncRepositoryList(context.commit, getProjectRepositories);
+        await getAsyncRepositoryList(context.commit, getProjectRepositories);
+
+        if (context.getters.isGitlabUsed) {
+            await getGitlabRepositories(context, order_by);
+        }
     } else {
         const getForkedRepositories = (callback) =>
             getForkedRepositoryList(
@@ -79,7 +84,7 @@ export const changeRepositories = (context, new_owner_id) => {
                 order_by,
                 callback
             );
-        getAsyncRepositoryList(context.commit, getForkedRepositories);
+        await getAsyncRepositoryList(context.commit, getForkedRepositories);
     }
 };
 
@@ -89,6 +94,29 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
     try {
         return await getRepositories((repositories) => {
             commit("pushRepositoriesForCurrentOwner", repositories);
+            commit("setIsLoadingInitial", false);
+        });
+    } catch (e) {
+        return handleGetRepositoryListError(e, commit);
+    } finally {
+        commit("setIsLoadingNext", false);
+        commit("setIsFirstLoadDone", true);
+    }
+}
+
+async function getGitlabRepositories(context, order_by) {
+    const getGitlabRepositories = (callback) =>
+        getGitlabRepositoryList(getProjectId(), order_by, callback);
+
+    await getAsyncGitlabRepositoryList(context.commit, getGitlabRepositories);
+}
+
+export async function getAsyncGitlabRepositoryList(commit, getGitlabRepositories) {
+    commit("setIsLoadingInitial", true);
+    commit("setIsLoadingNext", true);
+    try {
+        return await getGitlabRepositories((repositories) => {
+            commit("pushGitlabRepositoriesForCurrentOwner", repositories);
             commit("setIsLoadingInitial", false);
         });
     } catch (e) {

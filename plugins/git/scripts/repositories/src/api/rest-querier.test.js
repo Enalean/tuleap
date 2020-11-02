@@ -20,6 +20,7 @@
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import { getRepositoryList, getForkedRepositoryList, postRepository } from "./rest-querier.js";
+import { getGitlabRepositoryList } from "./rest-querier";
 
 jest.mock("tlp");
 
@@ -108,6 +109,27 @@ describe("API querier", () => {
             expect(tlpPost).toHaveBeenCalledWith("/api/git/", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: stringified_body,
+            });
+        });
+    });
+
+    describe("getGitlabRepositoryList", () => {
+        it("Given a project id and a callback, Then it will recursively get all Gitlab repositories and call the callback for each batch", () => {
+            return new Promise((done) => {
+                const repositories = [{ id: 37 }, { id: 91 }];
+
+                jest.spyOn(tlp, "recursiveGet").mockImplementation((route, config) =>
+                    config.getCollectionCallback(repositories)
+                );
+
+                function displayCallback(result) {
+                    expect(result).toEqual(repositories);
+                    done();
+                }
+
+                const project_id = 27;
+
+                getGitlabRepositoryList(project_id, "push_date", displayCallback);
             });
         });
     });

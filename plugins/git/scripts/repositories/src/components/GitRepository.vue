@@ -26,7 +26,11 @@
         }"
     >
         <div class="tlp-pane-container">
-            <a v-bind:href="getRepositoryPath" class="git-repository-card-link">
+            <a
+                v-bind:href="getRepositoryPath"
+                class="git-repository-card-link"
+                data-test="git-repository-path"
+            >
                 <div class="tlp-pane-header git-repository-card-header">
                     <h2
                         class="tlp-pane-title git-repository-card-title"
@@ -43,6 +47,7 @@
                     </h2>
                     <div class="git-repository-links-spacer"></div>
                     <pull-request-badge
+                        v-if="!isGitlabRepository"
                         v-bind:number-pull-request="number_pull_requests"
                         v-bind:repository-id="repository.id"
                     />
@@ -51,7 +56,7 @@
                         <translate>Updated %{ formatted_last_update_date }</translate>
                     </div>
                     <a
-                        v-if="is_admin"
+                        v-if="is_admin && !isGitlabRepository"
                         v-bind:href="repository_admin_url"
                         class="git-repository-card-admin-link"
                         data-test="git-repository-card-admin-link"
@@ -59,13 +64,23 @@
                         <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
                     </a>
                 </div>
-                <section class="tlp-pane-section" v-if="hasRepositoryDescription">
+                <section
+                    class="tlp-pane-section git-repository-card-header"
+                    v-if="hasRepositoryDescription || isGitlabRepository"
+                >
                     <p
+                        v-if="hasRepositoryDescription"
                         class="git-repository-card-description"
                         data-test="git-repository-card-description"
                     >
                         {{ repository.description }}
                     </p>
+                    <div v-if="isGitlabRepository" class="git-repository-links-spacer"></div>
+                    <i
+                        v-if="isGitlabRepository"
+                        class="fa fa-gitlab git-gitlab-icon"
+                        data-test="git-repository-card-gitlab-icon"
+                    ></i>
                 </section>
             </a>
         </div>
@@ -74,6 +89,7 @@
 <script>
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
+import { isGitlabRepository } from "../gitlab/gitlab-checker";
 import { mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter.js";
@@ -86,9 +102,17 @@ export default {
         PullRequestBadge,
     },
     props: {
-        repository: Object,
+        repository: {
+            type: Object,
+            default: () => {
+                return {};
+            },
+        },
     },
     computed: {
+        isGitlabRepository() {
+            return isGitlabRepository(this.repository);
+        },
         hasRepositoryDescription() {
             return this.repository.description !== DEFAULT_DESCRIPTION;
         },
@@ -118,6 +142,9 @@ export default {
             return this.repository.path_without_project.length;
         },
         getRepositoryPath() {
+            if (this.isGitlabRepository) {
+                return this.repository.gitlab_data.full_url;
+            }
             return getRepositoryListUrl() + this.repository.normalized_path;
         },
         folder_path() {

@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
+import { formatRepository } from "../gitlab/gitlab-repository-formatter";
 
 export default {
     setSelectedOwnerId(state, selected_owner_id) {
@@ -31,6 +32,15 @@ export default {
         if (repositories.length > 0) {
             repositories.forEach(extendRepository);
             state.repositories_for_owner[state.selected_owner_id].push(...repositories);
+        }
+    },
+    pushGitlabRepositoriesForCurrentOwner(state, repositories) {
+        if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
+            Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
+        }
+        if (repositories.length > 0) {
+            const repositories_formatted = repositories.map((repo) => formatRepository(repo));
+            state.repositories_for_owner[state.selected_owner_id].push(...repositories_formatted);
         }
     },
     setFilter(state, filter) {

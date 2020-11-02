@@ -142,4 +142,111 @@ describe("Store mutations", () => {
             });
         });
     });
+    describe("pushGitlabRepositoriesForCurrentOwner", () => {
+        it("Given some GitLab repositories and that the selected owner has no repositories loaded yet, then It should create an entry for him in the list, and push them in it.", () => {
+            const state = {
+                repositories_for_owner: {},
+                selected_owner_id: 101,
+            };
+
+            mutations.pushGitlabRepositoriesForCurrentOwner(state, []);
+
+            const has_101 = Object.prototype.hasOwnProperty.call(
+                state.repositories_for_owner,
+                "101"
+            );
+            expect(has_101).toBe(true);
+        });
+
+        it("When GitLab repository is push, Then it is formatted", () => {
+            const repositories = [
+                {
+                    id: 1,
+                    gitlab_id: 1,
+                    name: "MyRepo",
+                    path: "MyPath/MyRepo",
+                    description: "This is my description.",
+                    full_url: "https://example.com/MyPath/MyRepo",
+                    last_push_date: "2020-10-28T15:13:13+01:00",
+                },
+            ];
+
+            const state = {
+                repositories_for_owner: {},
+                selected_owner_id: PROJECT_KEY,
+            };
+
+            mutations.pushGitlabRepositoriesForCurrentOwner(state, repositories);
+
+            expect(state.repositories_for_owner[PROJECT_KEY][0]).toEqual({
+                id: "gitlab_1",
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                gitlab_data: {
+                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_id: 1,
+                },
+                additional_information: [],
+            });
+        });
+
+        it("Given some GitLab repositories and that the selected owner has already some repositories loaded, then It should push them in his list.", () => {
+            const repositories = [
+                {
+                    id: 1,
+                    gitlab_id: 1,
+                    name: "MyRepo",
+                    path: "MyPath/MyRepo",
+                    description: "This is my description.",
+                    full_url: "https://example.com/MyPath/MyRepo",
+                    last_push_date: "2020-10-28T15:13:13+01:00",
+                },
+            ];
+
+            const state = {
+                repositories_for_owner: {
+                    101: [
+                        {
+                            label: "vuex",
+                            name: "vuex",
+                            path: "myproject/vuex.git",
+                            path_without_project: "",
+                            normalized_path: "vuex",
+                        },
+                    ],
+                },
+                selected_owner_id: 101,
+            };
+
+            mutations.pushGitlabRepositoriesForCurrentOwner(state, repositories);
+
+            expect(state.repositories_for_owner).toEqual({
+                101: [
+                    {
+                        label: "vuex",
+                        name: "vuex",
+                        path: "myproject/vuex.git",
+                        path_without_project: "",
+                        normalized_path: "vuex",
+                    },
+                    {
+                        id: "gitlab_1",
+                        normalized_path: "MyPath/MyRepo",
+                        description: "This is my description.",
+                        path_without_project: "MyPath",
+                        label: "MyRepo",
+                        last_update_date: "2020-10-28T15:13:13+01:00",
+                        gitlab_data: {
+                            full_url: "https://example.com/MyPath/MyRepo",
+                            gitlab_id: 1,
+                        },
+                        additional_information: [],
+                    },
+                ],
+            });
+        });
+    });
 });
