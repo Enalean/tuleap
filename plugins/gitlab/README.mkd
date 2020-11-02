@@ -1,4 +1,0 @@
-Gitlab
-======
-
-Provides an integration Gitlab to Tuleap.

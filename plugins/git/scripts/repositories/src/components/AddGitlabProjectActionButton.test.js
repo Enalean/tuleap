@@ -43,12 +43,12 @@ describe("AddGitlabProjectActionButton", () => {
         });
     }
 
-    it("When there is no used externals services, Then there is no option Gitlab", () => {
+    it("When there is no used externals services, Then there is no option GitLab", () => {
         const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=gitlab-project-button]").exists()).toBeFalsy();
     });
 
-    it("When Gitlab is an external service, Then the action is displayed", () => {
+    it("When GitLab is an external service, Then the action is displayed", () => {
         store_options.getters.isGitlabUsed = true;
         store_options.state.used_service_name = ["gitlab"];
         const wrapper = instantiateComponent();

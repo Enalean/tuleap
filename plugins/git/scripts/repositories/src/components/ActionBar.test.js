@@ -56,7 +56,7 @@ describe("ActionBar", () => {
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
-    it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", () => {
+    it("When GitLab is an external service, Then dropdown is displayed the action is displayed", () => {
         store_options.getters.areExternalUsedServices = true;
         store_options.state.used_service_name = ["gitlab"];
         const wrapper = instantiateComponent();

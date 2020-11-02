@@ -114,7 +114,7 @@ describe("CredentialsFormModal", () => {
         ).toBeTruthy();
     });
 
-    it("When there are not projects in Gitlab, Then empty message is displayed", async () => {
+    it("When there are not projects in GitLab, Then empty message is displayed", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({

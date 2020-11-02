@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    unix-name="test-gitlab" full-name="Gitlab Integration" description="For test" access="public">
+    unix-name="test-gitlab" full-name="GitLab Integration" description="For test" access="public">
     <long-description>A test project</long-description>
     <services>
         <service shortname="plugin_git" enabled="true" />
