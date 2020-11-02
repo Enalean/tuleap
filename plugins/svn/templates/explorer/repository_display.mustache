@@ -19,10 +19,10 @@
             </div>
         </div>
 
-        {{^ is_repository_created }}
+        {{# is_repository_created }}
             {{{ viewvc_html }}}
         {{/ is_repository_created }}
-        {{# is_repository_created }}
+        {{^ is_repository_created }}
             <div class="alert alert-info svn-repository-not-created-yet">
                 {{ repository_not_created }}
             </div>

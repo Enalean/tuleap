@@ -48,7 +48,7 @@ describe("SVN", function () {
         });
 
         it("should be able to create a new repository from the UI", function () {
-            cy.get("[data-test=create-repository-button]").click();
+            cy.get("[data-test=create-repository-creation]").click();
             cy.get("[data-test=create-repository-field-name]").type("My_new_repo");
             cy.get("[data-test=create-repository]").click();
 
@@ -134,9 +134,12 @@ describe("SVN", function () {
         });
 
         it("should raise an error when user try to access to plugin SVN admin page", function () {
-            cy.visit("/plugins/svn/svn-project-full/admin");
-
-            cy.get("[data-test=feedback]").contains("Permission Denied");
+            cy.request({
+                url: "/plugins/svn/svn-project-full/admin",
+                failOnStatusCode: false,
+            }).then((response) => {
+                expect(response.status).to.eq(403);
+            });
         });
     });
 
