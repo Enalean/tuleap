@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use XML_Security;
-
 class DefaultTemplatesCollectionBuilder
 {
     /**
@@ -43,9 +41,8 @@ class DefaultTemplatesCollectionBuilder
         $this->event_manager->processEvent($xml_files_collection);
 
         $collection = new DefaultTemplatesCollection();
-        $xml_security = new XML_Security();
         foreach ($xml_files_collection->getXMLFiles() as $filepath) {
-            $xml = $xml_security->loadFile($filepath);
+            $xml = \simplexml_load_string(\file_get_contents($filepath));
             if (! (string) $xml->name) {
                 continue;
             }

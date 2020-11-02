@@ -1193,10 +1193,11 @@ class TrackerXmlImport
         }
     }
 
+    /**
+     * @return SimpleXMLElement|false
+     */
     protected function loadXmlFile(string $filepath)
     {
-        $xml_security = new XML_Security();
-
-        return $xml_security->loadFile($filepath);
+        return \simplexml_load_string(\file_get_contents($filepath));
     }
 }

@@ -142,8 +142,7 @@ class Tracker_Artifact_XMLImport
 
     public function importFromFile(Tracker $tracker, $xml_file_path, PFUser $user): void
     {
-        $xml_security      = new XML_Security();
-        $xml               = $xml_security->loadFile($xml_file_path);
+        $xml               = \simplexml_load_string(\file_get_contents($xml_file_path));
         $xml_file_path     = "";
         $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
         $config            = new ImportConfig();
