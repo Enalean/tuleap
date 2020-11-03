@@ -1490,6 +1490,12 @@ msgstr ""
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
 
+msgid "Platform banner"
+msgstr "Bannière de plateforme"
+
+msgid "Platform banner configuration"
+msgstr "Administration de la bannière de la plateforme"
+
 msgid "Platform configuration forbid users to change password"
 msgstr ""
 "La configuration de la plateforme ne permet pas de changer de mot de passe"

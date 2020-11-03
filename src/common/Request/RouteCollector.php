@@ -86,6 +86,9 @@ use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
+use Tuleap\Platform\Banner\BannerDao;
+use Tuleap\Platform\Banner\BannerRetriever;
+use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
@@ -651,6 +654,15 @@ class RouteCollector
         return BannerAdministrationController::buildSelf();
     }
 
+    public static function getGetPlatformBannerAdministration(): DispatchableWithRequest
+    {
+        return new PlatformBannerAdministrationController(
+            new AdminPageRenderer(),
+            new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+            new BannerRetriever(new BannerDao())
+        );
+    }
+
     public static function getGetProjectBackgroundAdministration(): DispatchableWithRequest
     {
         return ProjectBackgroundAdministrationController::buildSelf();
@@ -784,6 +796,8 @@ class RouteCollector
 
             $r->get('/dates-display', [self::class, 'getAdminDatesDisplay']);
             $r->post('/dates-display', [self::class, 'postAdminDatesDisplay']);
+
+            $r->get('/banner', [self::class, 'getGetPlatformBannerAdministration']);
         });
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {

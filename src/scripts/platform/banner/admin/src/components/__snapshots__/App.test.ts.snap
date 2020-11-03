@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App Should display an error if banner deletion fails 1`] = `
+<div>
+  <div
+    class="tlp-alert-danger"
+    data-current-language="en_US"
+    data-msgid="
+        An error occurred: %{ error_message }
+    "
+  >
+    
+        An error occurred: an error message
+    
+  </div>
+   
+  <div>
+    <banner-presenter-stub
+      importance="critical"
+      message="some message"
+    />
+  </div>
+</div>
+`;
+
+exports[`App Should display an error if banner update fails 1`] = `
+<div>
+  <div
+    class="tlp-alert-danger"
+    data-current-language="en_US"
+    data-msgid="
+        An error occurred: %{ error_message }
+    "
+  >
+    
+        An error occurred: Ooops something went wrong
+    
+  </div>
+   
+  <div>
+    <banner-presenter-stub
+      importance="critical"
+      message="some message"
+    />
+  </div>
+</div>
+`;
+
+exports[`App displays message and remove button when banner is not empty 1`] = `
+<div>
+  <!---->
+   
+  <div>
+    <banner-presenter-stub
+      importance="critical"
+      message=<b>My banner content</b>
+    />
+  </div>
+</div>
+`;
+
+exports[`App displays something when no banner is set 1`] = `
+<div>
+  <!---->
+   
+  <div>
+    <banner-presenter-stub
+      importance="critical"
+      message=""
+    />
+  </div>
+</div>
+`;
+
+exports[`App displays success message when the banner has been successfully modified 1`] = `
+<div>
+  <div
+    class="tlp-alert-success"
+    data-current-language="en_US"
+    data-msgid="
+        The banner has been successfully modified
+    "
+  >
+    
+        The banner has been successfully modified
+    
+  </div>
+   
+  <div>
+    <banner-presenter-stub
+      importance="critical"
+      message=""
+    />
+  </div>
+</div>
+`;
