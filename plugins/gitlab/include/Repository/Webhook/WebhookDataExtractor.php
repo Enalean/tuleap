@@ -36,7 +36,7 @@ class WebhookDataExtractor
     private const PROJECT_ID_KEY = 'id';
     private const PROJECT_URL_KEY = 'web_url';
     private const PUSH_EVENT = 'push';
-    private const GITLAB_TOKEN_HEADER = 'X-Gitlab-Token';
+    public const GITLAB_TOKEN_HEADER = 'X-Gitlab-Token';
 
     /**
      * @var GitlabRepositoryFactory
@@ -86,19 +86,23 @@ class WebhookDataExtractor
     private function checkExpectedJsonKeysAreSet(array $webhook_content): void
     {
         if (! isset($webhook_content[self::EVENT_NAME_KEY])) {
-            throw new MissingKeyException();
+            throw new MissingKeyException(self::EVENT_NAME_KEY);
         }
 
         if ($webhook_content[self::EVENT_NAME_KEY] !== self::PUSH_EVENT) {
-            throw new EventNotAllowedException();
+            throw new EventNotAllowedException($webhook_content[self::EVENT_NAME_KEY]);
         }
 
-        if (
-            ! isset($webhook_content[self::PROJECT_KEY]) ||
-            ! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY]) ||
-            ! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY])
-        ) {
-            throw new MissingKeyException();
+        if (! isset($webhook_content[self::PROJECT_KEY])) {
+            throw new MissingKeyException(self::PROJECT_KEY);
+        }
+
+        if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY])) {
+            throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_ID_KEY);
+        }
+
+        if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY])) {
+            throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_URL_KEY);
         }
     }
 

@@ -51,7 +51,7 @@ class SecretRetriever
     {
         $row = $this->dao->getGitlabRepositoryWebhookSecret($gitlab_repository->getId());
         if ($row === null) {
-            throw new SecretNotDefinedException();
+            throw new SecretNotDefinedException($gitlab_repository->getId());
         }
 
         return SymmetricCrypto::decrypt(

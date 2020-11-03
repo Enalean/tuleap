@@ -23,4 +23,8 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class EventNotAllowedException extends \RuntimeException
 {
+    public function __construct(string $event_value)
+    {
+        parent::__construct("The event $event_value is not handled. Skipping.");
+    }
 }
