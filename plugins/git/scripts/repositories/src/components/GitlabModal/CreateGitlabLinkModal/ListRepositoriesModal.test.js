@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
-import localVue from "../../support/local-vue";
+import localVue from "../../../support/local-vue";
 
 describe("ListRepositoriesModal", () => {
     let store_options, store, propsData;

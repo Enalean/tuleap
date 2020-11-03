@@ -96,7 +96,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { credentialsAreEmpty, serverUrlIsValid } from "../../gitlab/gitlab-credentials-helper";
+import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-credentials-helper";
 
 export default {
     name: "CredentialsFormModal",

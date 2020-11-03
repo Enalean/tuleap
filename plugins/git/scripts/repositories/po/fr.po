@@ -148,11 +148,24 @@ msgstr ""
 "Ces serveurs seront appelés lors de chaque push fait dans les dépôts du "
 "projet :"
 
+msgid "Unlink GitLab repository?"
+msgstr "Voulez-vous supprimer l'intégration du dépôt GitLab ?"
+
+msgid "Unlink the repository"
+msgstr "Supprimer l'intégration du dépôt"
+
 msgid "Updated %{ formatted_last_update_date }"
 msgstr "Mis à jour %{ formatted_last_update_date }"
 
 msgid "Users forks"
 msgstr "Forks des utilisateurs"
+
+msgid ""
+"Wow, wait a minute. You are about to unlink the GitLab repository <strong>"
+"%{ label }</strong>. Please confirm your action."
+msgstr ""
+"Hé, une petite minute. Vous allez supprimer l'intégration du dépot GitLab "
+"<strong>%{ label }</strong>. Merci de confirmer votre action."
 
 msgid ""
 "You don't have permission to create Git repositories as you are not Git "
