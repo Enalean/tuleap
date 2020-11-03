@@ -24,7 +24,6 @@ namespace User\XML\Import;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use XML_Security;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
 final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\TestCase
@@ -47,7 +46,6 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->builder = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
-            new XML_Security(),
             \Mockery::spy(\XML_RNGValidator::class)
         );
 

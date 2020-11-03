@@ -33,7 +33,6 @@ use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use XML_RNGValidator;
-use XML_Security;
 
 class ImportProjectXMLCommand extends Command
 {
@@ -151,7 +150,6 @@ class ImportProjectXMLCommand extends Command
 
         $user_manager  = \UserManager::instance();
         $event_manager = \EventManager::instance();
-        $security      = new XML_Security();
         $xml_validator = new XML_RNGValidator();
 
         $transformer    = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
@@ -160,7 +158,6 @@ class ImportProjectXMLCommand extends Command
         $broker_log  = new BrokerLogger([$file_logger, $console_logger]);
         $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,
-            $security,
             $xml_validator
         );
 

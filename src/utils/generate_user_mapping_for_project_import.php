@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -81,14 +81,12 @@ if (! isset($arguments['i'])) {
     $archive_path = $arguments['i'];
 }
 
-$security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 $user_manager  = UserManager::instance();
 $logger        = ProjectXMLImporter::getLogger();
 $console       = new Log_ConsoleLogger();
 $builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder(
     $user_manager,
-    $security,
     $xml_validator
 );
 

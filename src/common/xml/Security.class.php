@@ -50,32 +50,4 @@ class XML_Security
     {
         return libxml_disable_entity_loader($value);
     }
-
-    /**
-     * @param string $filename
-     *
-     * @return SimpleXMLElement
-     */
-    public function loadFile($filename)
-    {
-        $xml_string  = file_get_contents($filename);
-
-        return $this->loadString($xml_string);
-    }
-
-    /**
-     * @param string $xml_string
-     *
-     * @return SimpleXMLElement
-     */
-    public function loadString($xml_string)
-    {
-        $previous_setting = $this->disableExternalLoadOfEntities();
-
-        $xml_element = simplexml_load_string($xml_string);
-
-        $this->setExternalLoadOfEntities($previous_setting);
-
-        return $xml_element;
-    }
 }
