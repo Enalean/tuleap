@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tracker_FormElement_Field_List;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class StatusValueMapper

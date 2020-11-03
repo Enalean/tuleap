@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementCreationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 class SourceChangesetValuesCollectionAdapter
 {
@@ -77,7 +77,7 @@ class SourceChangesetValuesCollectionAdapter
     }
 
     /**
-     * @throws ProjectIncrementCreationException
+     * @throws ProgramIncrementCreationException
      * @throws FieldRetrievalException
      */
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection

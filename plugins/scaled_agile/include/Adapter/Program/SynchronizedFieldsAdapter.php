@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\TrackerData;
 
 class SynchronizedFieldsAdapter

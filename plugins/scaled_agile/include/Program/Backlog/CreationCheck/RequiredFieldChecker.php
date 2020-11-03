@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
 class RequiredFieldChecker
 {
@@ -39,10 +39,10 @@ class RequiredFieldChecker
     }
 
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-        ProjectIncrementsTrackerCollection $project_increment_trackers,
+        ProgramIncrementsTrackerCollection $program_increment_trackers,
         SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
-        foreach ($project_increment_trackers->getProjectIncrementTrackers() as $program_increment_tracker) {
+        foreach ($program_increment_trackers->getProgramIncrementTrackers() as $program_increment_tracker) {
             foreach ($program_increment_tracker->getFullTracker()->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
                     $this->logger->debug(

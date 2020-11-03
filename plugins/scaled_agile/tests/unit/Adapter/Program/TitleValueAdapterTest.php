@@ -24,10 +24,10 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

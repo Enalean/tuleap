@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
@@ -55,7 +55,7 @@ class TrackerCollectionFactory
         );
         $trackers = [];
         foreach ($projects as $project) {
-            $trackers[] = $this->getProjectIncrementTracker($user, $project);
+            $trackers[] = $this->getProgramIncrementTracker($user, $project);
         }
         return new SourceTrackerCollection($trackers);
     }
@@ -66,18 +66,18 @@ class TrackerCollectionFactory
     public function buildFromTeamProjects(
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
-    ): ProjectIncrementsTrackerCollection {
+    ): ProgramIncrementsTrackerCollection {
         $trackers = [];
         foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
-            $trackers[] = $this->getProjectIncrementTracker($user, $team_projects);
+            $trackers[] = $this->getProgramIncrementTracker($user, $team_projects);
         }
-        return new ProjectIncrementsTrackerCollection($trackers);
+        return new ProgramIncrementsTrackerCollection($trackers);
     }
 
     /**
      * @throws TopPlanningNotFoundInProjectException
      */
-    private function getProjectIncrementTracker(\PFUser $user, ProjectData $project): TrackerData
+    private function getProgramIncrementTracker(\PFUser $user, ProjectData $project): TrackerData
     {
         $root_planning     = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
         return $root_planning->getPlanningTrackerData();

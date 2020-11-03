@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -55,7 +55,7 @@ final class ArtifactLinkValueAdapterTest extends TestCase
 
         $expected_value = [
             'new_values' => "101",
-            'natures'    => ["101" => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
+            'natures'    => ["101" => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
         ];
         $this->assertEquals($expected_value, $artifact_link_data->getValues());
     }

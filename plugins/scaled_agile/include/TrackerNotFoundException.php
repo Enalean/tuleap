@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementTrackerRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 
-class TrackerNotFoundException extends \RuntimeException implements ProjectIncrementTrackerRetrievalException
+class TrackerNotFoundException extends \RuntimeException implements ProgramIncrementTrackerRetrievalException
 {
     public function __construct(int $tracker_id)
     {

@@ -31,9 +31,9 @@ use Tuleap\ScaledAgile\TrackerData;
 class ArtifactCreatorChecker
 {
     /**
-     * @var ProjectIncrementArtifactCreatorChecker
+     * @var ProgramIncrementArtifactCreatorChecker
      */
-    private $project_increment_artifact_creator_checker;
+    private $program_increment_artifact_creator_checker;
     /**
      * @var PlanningAdapter
      */
@@ -41,9 +41,9 @@ class ArtifactCreatorChecker
 
     public function __construct(
         PlanningAdapter $planning_adapter,
-        ProjectIncrementArtifactCreatorChecker $project_increment_artifact_creator_checker
+        ProgramIncrementArtifactCreatorChecker $program_increment_artifact_creator_checker
     ) {
-        $this->project_increment_artifact_creator_checker = $project_increment_artifact_creator_checker;
+        $this->program_increment_artifact_creator_checker = $program_increment_artifact_creator_checker;
         $this->planning_adapter                           = $planning_adapter;
     }
 
@@ -62,6 +62,6 @@ class ArtifactCreatorChecker
             return true;
         }
 
-        return $this->project_increment_artifact_creator_checker->canProjectIncrementBeCreated($root_planning, $user);
+        return $this->program_increment_artifact_creator_checker->canProgramIncrementBeCreated($root_planning, $user);
     }
 }

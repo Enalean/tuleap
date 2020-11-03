@@ -43,7 +43,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
     private $planning_factory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectIncrementArtifactCreatorChecker
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementArtifactCreatorChecker
      */
     private $milestone_creator_checker;
 
@@ -56,7 +56,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
     {
         $this->planning_factory          = \Mockery::mock(\PlanningFactory::class);
         $planning_adapter                = new PlanningAdapter($this->planning_factory);
-        $this->milestone_creator_checker = \Mockery::mock(ProjectIncrementArtifactCreatorChecker::class);
+        $this->milestone_creator_checker = \Mockery::mock(ProgramIncrementArtifactCreatorChecker::class);
 
         $this->artifact_creator_checker = new ArtifactCreatorChecker(
             $planning_adapter,
@@ -71,7 +71,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $planning = new Planning(43, 'Planning', '', $project->getID(), '', [302, 504]);
         $planning->setPlanningTracker($tracker);
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
-        $this->milestone_creator_checker->shouldReceive('canProjectIncrementBeCreated')->andReturn(false);
+        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(false);
 
         $this->assertFalse(
             $this->artifact_creator_checker->canCreateAnArtifact(
@@ -108,7 +108,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $planning->setPlanningTracker($tracker);
 
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
-        $this->milestone_creator_checker->shouldReceive('canProjectIncrementBeCreated')->andReturn(true);
+        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(true);
 
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
