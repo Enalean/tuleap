@@ -130,6 +130,19 @@ class PreCommitTest extends TestCase
         $pre_commit->assertCommitToTagIsAllowed();
     }
 
+    public function testCommitToWhiteListedTagIsAllowed()
+    {
+        $immutable_tags = Mockery::mock(ImmutableTag::class);
+
+        $immutable_tags->shouldReceive('getPaths')->andReturn(['/*/tags/']);
+        $immutable_tags->shouldReceive('getWhitelist')->andReturn(["trunk/tags/v1/to to/"]);
+
+        $this->immutable_tag_factory->shouldReceive('getByRepositoryId')->andReturn($immutable_tags);
+
+        $this->assertCommitIsAllowed('A   trunk/tags/v1/to to/banana');
+        $this->assertCommitIsDenied('A   trunk/tags/v2/to to/banana');
+    }
+
     public function testCommitToTagIsAllowed(): void
     {
         $immutable_tags = Mockery::mock(ImmutableTag::class);
