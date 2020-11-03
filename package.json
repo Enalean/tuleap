@@ -2,7 +2,7 @@
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
   "dependencies": {
-    "dompurify": "^2.2.0"
+    "dompurify": "^2.2.2"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.5.0",
