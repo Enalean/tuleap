@@ -91,6 +91,42 @@
     padding: $tlp-medium-spacing;
 }
 
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-state-text {
+    align-self: center;
+    width: 40%;
+    margin: 0 0 $tlp-small-spacing 0;
+    color: $tlp-ui-dimmed;
+    font-size: .875rem;
+    line-height: $tlp-large-spacing;
+    text-align: center;
+}
+
+.empty-state-svg {
+    margin: 0 0 $tlp-medium-spacing 0;
+}
+
+.empty-state-svg-inside {
+    fill: $tlp-theme-color;
+}
+
+.empty-state-svg-container {
+    fill: $tlp-ui-border-light;
+}
+
+.empty-state-button {
+    margin: $tlp-medium-spacing 0 0 0;
+}
+
+.empty-state-button-arrow-link {
+    margin: 0 0 0 $tlp-small-spacing;
+}
+
 .dashboard-add-widget-list-body {
     max-height: 50vh;
     overflow-x: hidden;
