@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\MediaWiki;
+namespace Tuleap\Mediawiki;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
