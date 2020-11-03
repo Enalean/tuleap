@@ -66,11 +66,6 @@ class RepositoryDeleter
 
     public function delete(Repository $repository)
     {
-        $project = $repository->getProject();
-        if (! $project) {
-            return false;
-        }
-
         $system_path = $repository->getSystemPath();
         if (is_dir($system_path)) {
             return $this->system_command->exec('rm -rf ' . escapeshellarg($system_path));

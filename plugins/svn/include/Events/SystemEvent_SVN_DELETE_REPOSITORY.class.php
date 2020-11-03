@@ -86,13 +86,12 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent //phpcs:ignore
             return false;
         }
 
-        $project    = $this->getProject($project_id);
-        $repository = $this->getRepository($project, $repository_id);
-
-        if ((int) $repository->getProject()->getID() !== (int) $project_id) {
-            $this->error('Bad project id');
+        $project = $this->getProject($project_id);
+        if (! $project || $project->isError() || $project->getID() === null) {
+            $this->error('Invalid project');
             return false;
         }
+        $repository = $this->getRepository($project, $repository_id);
 
         $this->repository_deleter->markAsDeleted($repository);
         $this->svn_admin->dumpRepository($repository, $repository->getSystemBackupPath());

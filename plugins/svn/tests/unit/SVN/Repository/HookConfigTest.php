@@ -96,7 +96,7 @@ class HookConfigTest extends TestCase
     {
         $this->hook_dao->shouldReceive('getHookConfig')->withArgs([33])->andReturn([]);
 
-        $repo = new Repository(33, 'reponame', '', '', $this->project);
+        $repo = SvnRepository::buildActiveRepository(33, 'reponame', $this->project);
         $cfg  = $this->hook_retriever->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
@@ -111,7 +111,7 @@ class HookConfigTest extends TestCase
             ]
         );
 
-        $repo = new Repository(33, 'reponame', '', '', $this->project);
+        $repo = SvnRepository::buildActiveRepository(33, 'reponame', $this->project);
         $cfg  = $this->hook_retriever->getHookConfig($repo);
 
         $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
@@ -120,7 +120,7 @@ class HookConfigTest extends TestCase
 
     public function testItCanChangeTheHookConfig(): void
     {
-        $repository = new Repository(22, 'reponame', '', '', $this->project);
+        $repository = SvnRepository::buildActiveRepository(22, 'reponame', $this->project);
         $this->hook_dao->shouldReceive('updateHookConfig')->withArgs(
             [
                 22,

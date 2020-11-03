@@ -22,10 +22,8 @@ namespace Tuleap\HudsonSvn\Job;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Commit\CommitInfo;
-
-require_once __DIR__ . '/../bootstrap.php';
+use Tuleap\SVN\Repository\SvnRepository;
 
 class LauncherTest extends TestCase
 {
@@ -42,7 +40,7 @@ class LauncherTest extends TestCase
 
         $this->logger      = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->project     = \Mockery::spy(\Project::class);
-        $this->repository  = new Repository(1, "repository_name", '', '', $this->project);
+        $this->repository  = SvnRepository::buildActiveRepository(1, "repository_name", $this->project);
         $this->commit_info = new CommitInfo();
         $this->commit_info->setChangedDirectories(["/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"]);
 

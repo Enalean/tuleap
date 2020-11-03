@@ -29,14 +29,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
+use Psr\Log\NullLogger;
 use System_Command;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
-
-require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryManagerTest extends TestCase
 {
@@ -68,12 +67,10 @@ class RepositoryManagerTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->dao                   = Mockery::mock(Dao::class);
         $this->project_manager       = Mockery::mock(ProjectManager::class);
         $svn_admin                   = Mockery::mock(SvnAdmin::class);
-        $logger                      = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger                      = new NullLogger();
         $system_command              = Mockery::mock(System_Command::class);
         $destructor                  = Mockery::mock(Destructor::class);
         $event_manager               = Mockery::mock(EventManager::class);
@@ -107,8 +104,8 @@ class RepositoryManagerTest extends TestCase
             [
                 'id'                       => 1,
                 'name'                     => 'repositoryname',
-                'repository_deletion_date' => '0000-00-00 00:00:00',
-                'backup_path'              => ''
+                'repository_deletion_date' => null,
+                'backup_path'              => null,
             ]
         );
 
@@ -155,10 +152,10 @@ class RepositoryManagerTest extends TestCase
         $this->dao->shouldReceive('searchRepositoryByName')->once()->withArgs([$this->project, 'repositoryname'])->once(
         )->andReturn(
             [
-                'id'                       => 1,
+                'id'                       => '1',
                 'name'                     => 'repositoryname',
-                'repository_deletion_date' => '0000-00-00 00:00:00',
-                'backup_path'              => ''
+                'repository_deletion_date' => null,
+                'backup_path'              => null
             ]
         );
 
@@ -167,6 +164,16 @@ class RepositoryManagerTest extends TestCase
 
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         $this->assertEquals($repository->getName(), 'repositoryname');
+    }
+
+    public function testItReturnsTheCoreRepository(): void
+    {
+        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('projectname');
+        $this->request->shouldReceive('get')->andReturn('projectname');
+        $this->request->shouldReceive('getProject')->andReturn($this->project);
+
+        $repository = $this->manager->getRepositoryFromPublicPath($this->request);
+        self::assertEquals('projectname', $repository->getName());
     }
 
     public function testItReturnsAnEmptyArrayWhenNoProjectHaveMultiSVNRepositories(): void
@@ -184,22 +191,22 @@ class RepositoryManagerTest extends TestCase
         $this->dao->shouldReceive('searchRepositoriesOfNonDeletedProjects')->andReturn(
             [
                 [
-                    'project_id'               => 102,
-                    'id'                       => 1,
+                    'project_id'               => '102',
+                    'id'                       => '1',
                     'name'                     => 'repo A',
                     'backup_path'              => '/tmp/102',
                     'repository_deletion_date' => null
                 ],
                 [
-                    'project_id'               => 102,
-                    'id'                       => 2,
+                    'project_id'               => '102',
+                    'id'                       => '2',
                     'name'                     => 'repo B',
                     'backup_path'              => '/tmp/102',
                     'repository_deletion_date' => null
                 ],
                 [
-                    'project_id'               => 103,
-                    'id'                       => 1,
+                    'project_id'               => '103',
+                    'id'                       => '3',
                     'name'                     => 'repo D',
                     'backup_path'              => '/tmp/103',
                     'repository_deletion_date' => null
@@ -215,10 +222,10 @@ class RepositoryManagerTest extends TestCase
         $collection          = $this->manager->getRepositoriesOfNonDeletedProjects();
         $expected_collection = [
             RepositoryByProjectCollection::build($project_A, [
-                new Repository(1, 'repo A', '/tmp/102', null, $project_A),
-                new Repository(2, 'repo B', '/tmp/102', null, $project_A)
+                SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null], $project_A),
+                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null], $project_A)
             ]),
-            RepositoryByProjectCollection::build($project_B, [new Repository(1, 'repo D', '/tmp/103', null, $project_A)])
+            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null], $project_A)])
         ];
 
         $this->assertEquals($expected_collection, $collection);

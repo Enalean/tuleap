@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Explorer;
 
 use DateHelper;
-use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\CoreRepository;
+use Tuleap\SVN\Repository\RepositoryWithLastCommitDate;
 
 class RepositoryPresenter
 {
     /**
-     * @var Repository
+     * @var RepositoryWithLastCommitDate
      * @psalm-readonly
      */
     public $repository;
@@ -36,20 +37,28 @@ class RepositoryPresenter
      * @var string
      * @psalm-readonly
      */
-    public $purified_commit_date;
+    public $purified_commit_date = '-';
     /**
      * @var int
      * @psalm-readonly
      */
-    public $commit_date;
+    public $commit_date = 0;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_core = false;
 
-    public function __construct(Repository $repository, int $commit_date, \PFUser $user)
+    public function __construct(RepositoryWithLastCommitDate $repository, \PFUser $user)
     {
-        $this->repository           = $repository;
-        $this->commit_date          = $commit_date;
-        $this->purified_commit_date = (! $this->commit_date) ? '-' : DateHelper::relativeDateInlineContext(
-            $this->commit_date,
-            $user
-        );
+        $this->repository = $repository;
+        if ($repository->hasCommitActivity()) {
+            $this->commit_date = $repository->getLastCommitDate()->getTimestamp();
+            $this->purified_commit_date = DateHelper::relativeDateInlineContext(
+                $repository->getLastCommitDate()->getTimestamp(),
+                $user
+            );
+        }
+        $this->is_core = $repository->repository instanceof CoreRepository;
     }
 }

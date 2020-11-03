@@ -44,13 +44,11 @@ class HookConfigCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->config_hook_retriever = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
         $this->config_hook_checker   = new HookConfigChecker($this->config_hook_retriever);
 
         $project                     = \Mockery::mock(\Project::class);
-        $this->repository            = new Repository(12, 'repo01', '', '', $project);
+        $this->repository            = SvnRepository::buildActiveRepository(12, 'repo01', $project);
     }
 
     public function testItReturnsTrueWhenCommitMessageParameterHaveChanged(): void

@@ -31,7 +31,7 @@ class RepositoryBuilder
     {
         $repository_list = [];
         foreach ($repositories as $repository) {
-            $repository_list[] = new RepositoryPresenter($repository['repository'], (int) $repository['commit_date'], $user);
+            $repository_list[] = new RepositoryPresenter($repository, $user);
         }
 
         return $repository_list;
