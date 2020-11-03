@@ -80,6 +80,7 @@ use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Explorer\ExplorerController;
 use Tuleap\SVN\Explorer\RepositoryBuilder;
 use Tuleap\SVN\Explorer\RepositoryDisplayController;
+use Tuleap\SVN\GetAllRepositories;
 use Tuleap\SVN\Logs\DBWriter;
 use Tuleap\SVN\Logs\QueryBuilder;
 use Tuleap\SVN\Migration\RepositoryCopier;
@@ -97,6 +98,7 @@ use Tuleap\SVN\PermissionsPerGroup\PermissionPerGroupSVNServicePaneBuilder;
 use Tuleap\SVN\PermissionsPerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\SVN\RedirectOldViewVCUrls;
 use Tuleap\SVN\Reference\Extractor;
+use Tuleap\SVN\Repository\ApacheRepositoriesCollector;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Repository\HookConfigChecker;
 use Tuleap\SVN\Repository\HookConfigRetriever;
@@ -157,7 +159,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
-        $this->addHook(Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS);
         $this->addHook(Event::UGROUP_RENAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook('cssfile');
@@ -206,6 +207,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(\Tuleap\svn\Event\UpdateProjectAccessFilesEvent::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+        $this->addHook(GetAllRepositories::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -338,10 +340,9 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
     }
 
-    public function get_svn_list_repositories_sql_fragments(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function getAllRepositories(GetAllRepositories $get_all_repositories): void
     {
-        $dao = new Dao();
-        $params['sql_fragments'][] = $dao->getListRepositoriesSqlFragment();
+        (new ApacheRepositoriesCollector($this->getRepositoryManager()))->process($get_all_repositories);
     }
 
     public function system_event_get_types_for_default_queue($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName

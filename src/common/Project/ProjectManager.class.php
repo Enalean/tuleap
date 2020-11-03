@@ -225,18 +225,16 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      *
      * @param array $row
      *
-     * @return Project
      */
-    public function getProjectFromDbRow(array $row)
+    public function getProjectFromDbRow(array $row): Project
     {
         return $this->getAndCacheProject($row);
     }
 
     /**
      * @param $group_id int The id of the project to look for
-     * @return Project
      */
-    protected function createProjectInstance($group_id_or_row)
+    protected function createProjectInstance($group_id_or_row): Project
     {
         if (is_array($group_id_or_row)) {
             return new Project($group_id_or_row);
@@ -373,10 +371,8 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      * Create new Project object from row or get it from cache if already built
      *
      * @param Array $row
-     *
-     * @return Project
      */
-    protected function getAndCacheProject($row)
+    protected function getAndCacheProject($row): Project
     {
         if (! isset($this->_cached_projects[$row['group_id']])) {
             $p = $this->createProjectInstance($row);

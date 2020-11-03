@@ -22,37 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
+use Event;
 use EventManager;
 use LDAP_SVN_Apache_ModPerl;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SVN_Apache_Auth_Factory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalSVNPollution;
 
 class LDAPBackendSVNTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
-
-    /**
-     * @var array
-     */
-    private $globals;
+    use GlobalLanguageMock;
+    use GlobalSVNPollution;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->globals = $GLOBALS;
-        $GLOBALS = [];
         \ForgeConfig::set('svn_prefix', '/svnroot');
         \ForgeConfig::set('sys_name', 'Platform');
-    }
-
-    protected function tearDown(): void
-    {
-        $GLOBALS = $this->globals;
-        parent::tearDown();
     }
 
     private function givenAFullApacheConf(): string
@@ -60,40 +50,36 @@ class LDAPBackendSVNTest extends TestCase
         $backend  = \Mockery::mock(\LDAP_BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $project_array_01 = [
-            'repository_name' => 'gpig',
+            'unix_group_name' => 'gpig',
             'group_name'      => 'Guinea Pig',
-            'public_path'     => '/svnroot/gpig',
-            'system_path'     => '/svnroot/gpig',
-            'group_id'        => 101
+            'group_id'        => '101',
         ];
 
         $project_array_02 = [
-            'repository_name' => 'garden',
-            'public_path'     => '/svnroot/garden',
-            'system_path'     => '/svnroot/garden',
+            'unix_group_name' => 'garden',
             'group_name'      => 'The Garden Project',
-            'group_id'        => 102
+            'group_id'        => '102',
         ];
 
         $svn_dao = \Mockery::spy(\SVN_DAO::class);
         $svn_dao->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar($project_array_01, $project_array_02));
-        $backend->shouldReceive('getsvnDao')->andReturns($svn_dao);
+        $backend->shouldReceive('getSvnDao')->andReturns($svn_dao);
 
-        $ldap = \Mockery::spy(\LDAP::class);
-        $ldap->shouldReceive('getLDAPParam')->with('server')->andReturns('ldap://ldap.tuleap.com');
-        $ldap->shouldReceive('getLDAPParam')->with('dn')->andReturns('dc=tuleap,dc=com');
+        $plugin = new class extends \Plugin {
+            public function svn_apache_auth(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            {
+                $ldap = \Mockery::spy(\LDAP::class);
+                $ldap->shouldReceive('getLDAPParam')->with('server')->andReturns('ldap://ldap.tuleap.com');
+                $ldap->shouldReceive('getLDAPParam')->with('dn')->andReturns('dc=tuleap,dc=com');
 
-        $event_manager = Mockery::mock(EventManager::class);
-        $event_manager->shouldReceive('processEvent')
-            ->with(Mockery::any(), Mockery::on(function (array $params) {
-                $ldap             = \Mockery::spy(\LDAP::class);
-                $cache_parameters = \Mockery::spy(\Tuleap\SvnCore\Cache\Parameters::class);
-                $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl($ldap, $cache_parameters, $params['project_info']);
-                return true;
-            }))
-            ->twice();
+                $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl($ldap, $params['cache_parameters']);
+            }
+        };
 
-        $cache_parameters = \Mockery::spy(\Tuleap\SvnCore\Cache\Parameters::class);
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::SVN_APACHE_AUTH, $plugin, Event::SVN_APACHE_AUTH, false);
+
+        $cache_parameters = new \Tuleap\SvnCore\Cache\Parameters(15, 20);
 
         $factory = new SVN_Apache_Auth_Factory($event_manager, $cache_parameters);
 
@@ -106,7 +92,7 @@ class LDAPBackendSVNTest extends TestCase
     {
         $conf = $this->givenAFullApacheConf();
 
-        $this->assertMatchesRegularExpression('/TuleapLdapServers/', $conf);
+        $this->assertMatchesRegularExpression('%TuleapLdapServers "ldap://ldap.tuleap.com"%', $conf);
         $this->thenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
 

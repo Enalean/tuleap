@@ -17,78 +17,58 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\SvnCore\Cache\Parameters;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SVN_Apache_Auth_FactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $event_manager;
-    private $cache_parameters;
-    private $factory;
-    private $project_info;
-
-    /**
-     * @var SVN_Apache
-     */
-    private $my_svn_apache;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->my_svn_apache  = new class ([]) extends SVN_Apache {
-            protected function getProjectAuthentication($row)
-            {
-            }
-        };
-
-        $this->event_manager                    = \Mockery::mock(\EventManager::class);
-        $this->event_manager_with_plugin_answer = new class ($this->my_svn_apache) extends EventManager
-        {
-            /**
-             * @var SVN_Apache
-             */
-            private $given_svn_apache;
-
-            public function __construct(SVN_Apache $given_svn_apache)
-            {
-                $this->given_svn_apache = $given_svn_apache;
-            }
-
-            public function processEvent($event_name, $params = [])
-            {
-                $params['svn_apache_auth'] = $this->given_svn_apache;
-            }
-        };
-
-        $this->cache_parameters = \Mockery::spy(\Tuleap\SvnCore\Cache\Parameters::class);
-
-        $this->factory = new SVN_Apache_Auth_Factory(
-            $this->event_manager,
-            $this->cache_parameters
-        );
-
-        $this->factory_with_plugin_answer = new SVN_Apache_Auth_Factory(
-            $this->event_manager_with_plugin_answer,
-            $this->cache_parameters
-        );
-
-        $this->project_info = [];
-    }
-
     public function testItReturnsModPerlByDefault(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
-        $this->assertInstanceOf('SVN_Apache_ModPerl', $this->factory->get($this->project_info));
+        $factory = new SVN_Apache_Auth_Factory(
+            new EventManager(),
+            new Parameters(15, 25)
+        );
+
+        self::assertInstanceOf(SVN_Apache_ModPerl::class, $factory->get(ProjectTestBuilder::aProject()->build()));
     }
 
     public function testItReturnModPluginIfPluginAuthIsConfiguredForThisProject(): void
     {
-        $mod = $this->factory_with_plugin_answer->get($this->project_info);
+        $my_svn_apache  = new class extends SVN_Apache {
+            protected function getProjectAuthentication(\Project $project): string
+            {
+            }
+        };
 
-        $this->assertSame($this->my_svn_apache, $mod);
+        $plugin = new class ($my_svn_apache) extends Plugin {
+            /**
+             * @var SVN_Apache
+             */
+            private $svn_apache;
+
+            public function __construct(SVN_Apache $svn_apache)
+            {
+                $this->svn_apache = $svn_apache;
+            }
+
+            public function svn_apache_auth(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            {
+                $params['svn_apache_auth'] = $this->svn_apache;
+            }
+        };
+
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::SVN_APACHE_AUTH, $plugin, Event::SVN_APACHE_AUTH, false);
+
+        $factory = new SVN_Apache_Auth_Factory(
+            $event_manager,
+            new Parameters(15, 25)
+        );
+
+        $mod = $factory->get(ProjectTestBuilder::aProject()->build());
+
+        self::assertSame($my_svn_apache, $mod);
     }
 }

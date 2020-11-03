@@ -51,7 +51,7 @@ class ApacheConfGenerator
 
     public static function build()
     {
-        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), Backend::instance(Backend::SVN));
+        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), Backend::instanceSVN());
     }
 
     public function generate()

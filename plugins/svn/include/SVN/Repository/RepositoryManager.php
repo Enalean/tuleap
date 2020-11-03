@@ -415,4 +415,18 @@ class RepositoryManager
 
         return $collection;
     }
+
+    /**
+     * @return \Generator<int, Repository>
+     */
+    public function getAllRepositoriesInActiveProjects(): \Generator
+    {
+        $dar = $this->dao->getAllRepositoriesInActiveProjects();
+        if (! $dar || $dar->isError()) {
+            throw new \RuntimeException('Database error');
+        }
+        foreach ($dar as $row) {
+            yield SvnRepository::buildFromDatabase($row, $this->project_manager->getProjectFromDbRow($row));
+        }
+    }
 }

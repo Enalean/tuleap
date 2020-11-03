@@ -864,11 +864,10 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             $ldapProjectManager = new LDAP_ProjectManager();
-            if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
+            if ($ldapProjectManager->hasSVNLDAPAuth($params['project']->getID())) {
                 $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl(
                     $this->getLdap(),
-                    $params['cache_parameters'],
-                    $params['project_info']
+                    $params['cache_parameters']
                 );
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\SVN\ApacheConfRepository;
+
 /**
  * Manage generation of Apache Subversion configuration for project Authentication
  * and authorization
@@ -24,42 +26,26 @@
  */
 abstract class SVN_Apache
 {
-    private $project = [];
-
-    /**
-     * Takes a project DB row
-     *
-     * @param Array $project
-     */
-    public function __construct($project)
-    {
-        $this->project = $project;
-    }
-
     /**
      * Return something to be inserted at the top of the svnroot.conf file
-     *
-     * @return String
      */
-    public function getHeaders()
+    public function getHeaders(): string
     {
         return '';
     }
 
     /**
      * Return project location configuration
-     *
-     * @return String
      */
-    public function getConf($public_path, $system_path)
+    public function getConf(ApacheConfRepository $repository): string
     {
         $conf = '';
-        $conf .= "<Location $public_path>\n";
+        $conf .= "<Location " . $repository->getURLPath() . ">\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath $system_path\n";
+        $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getRepositoryAuthorization($system_path);
-        $conf .= $this->getProjectAuthentication($this->project);
+        $conf .= $this->getRepositoryAuthorization($repository);
+        $conf .= $this->getProjectAuthentication($repository->getProject());
         $conf .= "</Location>\n\n";
 
         return $conf;
@@ -67,45 +53,35 @@ abstract class SVN_Apache
 
     /**
      * Returns the Apache authentication directives for given project
-     *
-     * @param Array $row Project DB row
-     *
-     * @return String
      */
-    abstract protected function getProjectAuthentication($row);
+    abstract protected function getProjectAuthentication(Project $project): string;
 
     /**
      * Returns the standard Apache authentication directives (shared by most modules)
-     *
-     * @param String $projectName
-     *
-     * @return String
      */
-    protected function getCommonAuthentication($projectName)
+    protected function getCommonAuthentication(Project $project): string
     {
         $conf = '';
         $conf .= "    Require valid-user\n";
         $conf .= "    AuthType Basic\n";
-        $conf .= "    AuthName \"Subversion Authorization (" . $this->escapeStringForApacheConf($projectName) . ")\"\n";
+        $conf .= "    AuthName \"Subversion Authorization (" . $this->escapeStringForApacheConf($project->getPublicName()) . ")\"\n";
         return $conf;
     }
 
 
-    protected function getRepositoryAuthorization($svn_dir)
+    protected function getRepositoryAuthorization(ApacheConfRepository $repository): string
     {
-        $conf = "    AuthzSVNAccessFile " . $svn_dir . "/.SVNAccessFile\n";
-        return $conf;
+        return "    AuthzSVNAccessFile " . $repository->getFilesystemPath() . "/.SVNAccessFile\n";
     }
 
     /**
      * Replace double quotes by single quotes in project name (conflict with Apache realm name)
-     *
-     * @param String $str
-     *
-     * @return String
      */
-    protected function escapeStringForApacheConf($str)
+    protected function escapeStringForApacheConf(?string $str): string
     {
+        if ($str === null) {
+            return '';
+        }
         return strtr($str, "\"", "'");
     }
 }

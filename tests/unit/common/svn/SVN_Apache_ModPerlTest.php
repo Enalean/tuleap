@@ -19,6 +19,8 @@
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\SVN\CoreApacheConfRepository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SVN_Apache_ModPerlTest extends TestCase
@@ -30,22 +32,18 @@ class SVN_Apache_ModPerlTest extends TestCase
      */
     private $modperl;
     /**
-     * @var array
+     * @var CoreApacheConfRepository
      */
-    private $gpig_project_row;
+    private $gpig_repository;
 
     protected function setUp(): void
     {
-        $this->gpig_project_row = [
-            'unix_group_name' => 'gpig',
-            'public_path'     => '/svnroot/gpig',
-            'system_path'     => '/svnroot/gpig',
-            'group_name'      => 'Guinea Pig',
-            'group_id'        => 101
-        ];
+        ForgeConfig::set('svn_prefix', '/var/lib/tuleap/svnroot/');
+        $this->gpig_repository = new CoreApacheConfRepository(
+            ProjectTestBuilder::aProject()->withId(101)->withPublicName('Guinea Pig')->build(),
+        );
         $this->modperl = new SVN_Apache_ModPerl(
             new \Tuleap\SvnCore\Cache\Parameters(50, 3600),
-            $this->gpig_project_row,
         );
     }
 
@@ -54,9 +52,25 @@ class SVN_Apache_ModPerlTest extends TestCase
         $this->assertStringContainsString('PerlLoadModule Apache::Tuleap', $this->modperl->getHeaders());
     }
 
+    public function testItSetTheLocation(): void
+    {
+        $this->assertStringStartsWith(
+            '<Location /svnroot/TestProject>',
+            $this->modperl->getConf($this->gpig_repository)
+        );
+    }
+
+    public function testItHasTheSVNPath(): void
+    {
+        $this->assertStringContainsString(
+            'SVNPath /var/lib/tuleap/svnroot/TestProject',
+            $this->modperl->getConf($this->gpig_repository)
+        );
+    }
+
     public function testGetApacheAuthShouldContainsDefaultValues(): void
     {
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertMatchesRegularExpression('/Require valid-user/', $conf);
         $this->assertMatchesRegularExpression('/AuthType Basic/', $conf);
@@ -65,7 +79,7 @@ class SVN_Apache_ModPerlTest extends TestCase
 
     public function testGetApacheAuthShouldSetupPerlAccess(): void
     {
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertMatchesRegularExpression('/PerlAccessHandler/', $conf);
         $this->assertMatchesRegularExpression('/TuleapDSN/', $conf);
@@ -73,18 +87,15 @@ class SVN_Apache_ModPerlTest extends TestCase
 
     public function testGetApacheAuthShouldNotReferenceAuthMysql(): void
     {
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertDoesNotMatchRegularExpression('/AuthMYSQLEnable/', $conf);
     }
 
     public function testItShouldUseCacheParameters(): void
     {
-        $apache_modperl          = new SVN_Apache_ModPerl(new \Tuleap\SvnCore\Cache\Parameters(877, 947), $this->gpig_project_row);
-        $generated_configuration = $apache_modperl->getConf(
-            $this->gpig_project_row['public_path'],
-            $this->gpig_project_row['system_path']
-        );
+        $apache_modperl          = new SVN_Apache_ModPerl(new \Tuleap\SvnCore\Cache\Parameters(877, 947));
+        $generated_configuration = $apache_modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapCacheCredsMax 877', $generated_configuration);
         $this->assertStringContainsString('TuleapCacheLifetime 947', $generated_configuration);
@@ -94,7 +105,7 @@ class SVN_Apache_ModPerlTest extends TestCase
     {
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com"', $conf);
 
@@ -111,7 +122,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '1');
 
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
@@ -126,7 +137,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '0');
 
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
@@ -136,7 +147,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
         ForgeConfig::set('sys_dbport', 3307);
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307"', $conf);
     }
@@ -151,14 +162,14 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('sys_enablessl', '1');
         ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '1');
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
 
     public function testItDoesntHaveRedis(): void
     {
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringNotContainsString('TuleapRedisServer', $conf);
     }
@@ -167,7 +178,7 @@ class SVN_Apache_ModPerlTest extends TestCase
     {
         ForgeConfig::set('redis_server', 'some-redis');
         ForgeConfig::set('redis_port', 3679);
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapRedisServer "some-redis:3679"', $conf);
         $this->assertStringNotContainsString('TuleapRedisPassword', $conf);
@@ -178,7 +189,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('redis_server', 'some-redis');
         ForgeConfig::set('redis_port', 3679);
         ForgeConfig::set('redis_password', 'stuff');
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringContainsString('TuleapRedisServer "some-redis:3679"', $conf);
         $this->assertStringContainsString('TuleapRedisPassword "stuff"', $conf);
@@ -189,7 +200,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         ForgeConfig::set('redis_server', 'tls://some-redis');
         ForgeConfig::set('redis_port', 3679);
         ForgeConfig::set('redis_password', 'stuff');
-        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+        $conf = $this->modperl->getConf($this->gpig_repository);
 
         $this->assertStringNotContainsString('TuleapRedisServer', $conf);
         $this->assertStringNotContainsString('TuleapRedisPassword', $conf);
