@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends TestCase

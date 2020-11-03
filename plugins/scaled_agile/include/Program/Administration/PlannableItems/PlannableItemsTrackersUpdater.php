@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 use PFUser;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\Team\TeamDao;
 

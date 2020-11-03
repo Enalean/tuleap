@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Project;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\Team\TeamDao;

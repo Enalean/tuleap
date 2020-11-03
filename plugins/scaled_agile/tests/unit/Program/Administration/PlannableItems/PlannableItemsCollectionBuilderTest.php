@@ -31,9 +31,9 @@ use Tracker;
 use TrackerFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlannableItemsCollectionBuilderTest extends TestCase

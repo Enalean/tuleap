@@ -29,8 +29,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Adapter\Program\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationDataAdapter;
 use UserManager;
 
 class CreateProjectIncrementsRunner
