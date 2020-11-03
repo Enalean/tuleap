@@ -18,8 +18,8 @@
  */
 import { sanitize } from "dompurify";
 import { DropdownToggler } from "../dropdown/DropdownToggler";
-import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
 import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 export class SingleSelectionManager implements SelectionManager {
     private selection_state: ListPickerSelectionStateSingle | null;
@@ -30,13 +30,13 @@ export class SingleSelectionManager implements SelectionManager {
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
         private readonly dropdown_toggler: DropdownToggler,
-        private readonly item_map: Map<string, ListPickerItem>
+        private readonly items_map_manager: ItemsMapManager
     ) {
         this.selection_state = null;
     }
 
     public processSelection(item: Element): void {
-        const list_item = findListPickerItemInItemMap(this.item_map, item.id);
+        const list_item = this.items_map_manager.findListPickerItemInItemMap(item.id);
         if (list_item.is_selected) {
             // We won't unselect it
             return;
@@ -56,14 +56,21 @@ export class SingleSelectionManager implements SelectionManager {
     }
 
     public initSelection(): void {
-        const selected_option = this.source_select_box.querySelector("option[selected]");
+        const item_to_select = this.items_map_manager.getItemWithValue(
+            this.source_select_box.value
+        );
+        if (item_to_select) {
+            this.replacePlaceholderWithCurrentSelection(item_to_select, this.placeholder_element);
+            return;
+        }
 
+        const selected_option = this.source_select_box.querySelector("option[selected]");
         if (!(selected_option instanceof HTMLElement) || !selected_option.dataset.itemId) {
             return;
         }
 
         this.replacePlaceholderWithCurrentSelection(
-            findListPickerItemInItemMap(this.item_map, selected_option.dataset.itemId),
+            this.items_map_manager.findListPickerItemInItemMap(selected_option.dataset.itemId),
             this.placeholder_element
         );
     }
@@ -71,6 +78,32 @@ export class SingleSelectionManager implements SelectionManager {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public handleBackspaceKey(event: KeyboardEvent): void {
         // Do nothing, we are in single selection mode
+    }
+
+    public resetAfterDependenciesUpdate(): void {
+        const available_items = this.items_map_manager.getListPickerItems();
+        if (available_items.length === 0) {
+            if (this.selection_state) {
+                this.replaceCurrentValueWithPlaceholder(this.selection_state.selected_item, true);
+            }
+            return;
+        }
+
+        if (this.selection_state === null) {
+            this.processSelection(available_items[0].element);
+            return;
+        }
+
+        const item = this.items_map_manager.getItemWithValue(
+            this.selection_state.selected_item.value
+        );
+
+        if (item) {
+            this.processSelection(item.element);
+            return;
+        }
+
+        this.processSelection(available_items[0].element);
     }
 
     private createCurrentSelectionElement(item: ListPickerItem): Element {
@@ -97,6 +130,7 @@ export class SingleSelectionManager implements SelectionManager {
         item.is_selected = true;
         item.element.setAttribute("aria-selected", "true");
         item.target_option.setAttribute("selected", "selected");
+        item.target_option.selected = true;
         this.source_select_box.dispatchEvent(new Event("change"));
 
         this.selection_state = {
@@ -114,10 +148,12 @@ export class SingleSelectionManager implements SelectionManager {
         selection_state.selected_item.is_selected = false;
         selection_state.selected_item.element.setAttribute("aria-selected", "false");
         selection_state.selected_item.target_option.removeAttribute("selected");
+        selection_state.selected_item.target_option.selected = false;
 
         newly_selected_item.is_selected = true;
         newly_selected_item.element.setAttribute("aria-selected", "true");
         newly_selected_item.target_option.setAttribute("selected", "selected");
+        newly_selected_item.target_option.selected = true;
 
         this.source_select_box.dispatchEvent(new Event("change"));
         this.selection_element.removeChild(selection_state.selected_value_element);
@@ -139,18 +175,26 @@ export class SingleSelectionManager implements SelectionManager {
 
             this.replaceCurrentValueWithPlaceholder(item);
             this.dropdown_toggler.openListPicker();
+            this.source_select_box.dispatchEvent(new Event("change"));
         });
 
         return remove_value_button;
     }
 
-    private replaceCurrentValueWithPlaceholder(item_to_unselect: ListPickerItem): void {
+    private replaceCurrentValueWithPlaceholder(
+        item_to_unselect: ListPickerItem,
+        is_clearing_state = false
+    ): void {
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(this.placeholder_element);
         item_to_unselect.element.setAttribute("aria-selected", "false");
         item_to_unselect.target_option.removeAttribute("selected");
+        item_to_unselect.target_option.selected = false;
         item_to_unselect.is_selected = false;
-        this.source_select_box.dispatchEvent(new Event("change"));
+
+        if (!is_clearing_state) {
+            this.source_select_box.dispatchEvent(new Event("change"));
+        }
 
         this.selection_state = null;
     }

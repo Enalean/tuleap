@@ -22,13 +22,14 @@ import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
 import { EventManager } from "./events/EventManager";
 import { DropdownToggler } from "./dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "./helpers/static-list-helper";
 import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
 import { SingleSelectionManager } from "./selection/SingleSelectionManager";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import { hideSourceSelectBox } from "./helpers/hide-selectbox-helper";
 import { KeyboardNavigationManager } from "./navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
+import { ItemsMapManager } from "./items/ItemsMapManager";
+import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -48,7 +49,7 @@ export async function createListPicker(
             import(/* webpackChunkName: "list-picker-po-" */ "../po/" + getPOFileFromLocale(locale))
     );
 
-    const item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
+    const items_map_manager = new ItemsMapManager(source_select_box);
     const base_renderer = new BaseComponentRenderer(source_select_box, options);
     const {
         wrapper_element,
@@ -76,7 +77,7 @@ export async function createListPicker(
             search_field_element,
             options?.placeholder ?? "",
             dropdown_toggler,
-            item_map,
+            items_map_manager,
             gettext_provider
         );
     } else {
@@ -86,14 +87,14 @@ export async function createListPicker(
             selection_element,
             placeholder_element,
             dropdown_toggler,
-            item_map
+            items_map_manager
         );
     }
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         source_select_box,
         dropdown_list_element,
-        item_map,
+        items_map_manager,
         gettext_provider
     );
 
@@ -115,13 +116,26 @@ export async function createListPicker(
         dropdown_toggler,
         dropdown_content_renderer,
         keyboard_navigation_manager,
-        highlighter
+        highlighter,
+        items_map_manager
     );
 
     event_manager.attachEvents();
     selection_manager.initSelection();
 
+    const list_options_observer = new ListOptionsChangesObserver(
+        source_select_box,
+        items_map_manager,
+        dropdown_content_renderer,
+        selection_manager,
+        event_manager
+    );
+    list_options_observer.startWatchingChangesInSelectOptions();
+
     return {
-        destroy: (): void => event_manager.removeEventsListenersOnDocument(),
+        destroy: (): void => {
+            list_options_observer.stopWatchingChangesInSelectOptions();
+            event_manager.removeEventsListenersOnDocument();
+        },
     };
 }

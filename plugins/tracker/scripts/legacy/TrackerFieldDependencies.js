@@ -184,11 +184,23 @@ tuleap.tracker.Field = function (id, name, label) {
             if (this._highlight) {
                 this.removeHighlight();
             }
-            this.element().classList.add("tracker-field-dependency-highlight");
+            if (this.element().classList.contains("list-picker-hidden-accessible")) {
+                this.element().nextElementSibling.classList.add(
+                    "list-picker-field-dependency-highlight"
+                );
+            } else {
+                this.element().classList.add("tracker-field-dependency-highlight");
+            }
             this._highlight = setTimeout(this.removeHighlight.bind(this), 1000);
         },
         removeHighlight: function () {
-            this.element().classList.remove("tracker-field-dependency-highlight");
+            if (this.element().classList.contains("list-picker-hidden-accessible")) {
+                this.element().nextElementSibling.classList.remove(
+                    "list-picker-field-dependency-highlight"
+                );
+            } else {
+                this.element().classList.remove("tracker-field-dependency-highlight");
+            }
             clearTimeout(this._highlight);
         },
         updateSelectedState: function (selected_values) {
@@ -205,7 +217,6 @@ tuleap.tracker.Field = function (id, name, label) {
             var el = this.element();
             //Store the selected state
             var len = el.options.length;
-
             for (var i = 0; i < len; ++i) {
                 if (typeof this.options[el.options[i].value] !== "undefined") {
                     this.options[el.options[i].value].selected = el.options[i].selected;

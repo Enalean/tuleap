@@ -20,11 +20,9 @@
 import { SingleSelectionManager } from "./SingleSelectionManager";
 import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
-import { ListPickerItem } from "../type";
-import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 describe("SingleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -32,7 +30,7 @@ describe("SingleSelectionManager", () => {
         placeholder: Element,
         manager: SingleSelectionManager,
         toggler: DropdownToggler,
-        item_map: Map<string, ListPickerItem>;
+        items_map_manager: ItemsMapManager;
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -59,21 +57,21 @@ describe("SingleSelectionManager", () => {
             search_field_element,
             selection_element
         );
-        item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
+        items_map_manager = new ItemsMapManager(source_select_box);
         manager = new SingleSelectionManager(
             source_select_box,
             dropdown_element,
             selection_container,
             placeholder,
             toggler,
-            item_map
+            items_map_manager
         );
         jest.spyOn(source_select_box, "dispatchEvent");
     });
 
     describe("initSelection", () => {
         it("When a value is already selected in the source <select>, then it selects it in the list-picker", () => {
-            const item = findListPickerItemInItemMap(item_map, "item-1");
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
             const option = item.target_option;
 
             option.setAttribute("selected", "selected");
@@ -87,11 +85,11 @@ describe("SingleSelectionManager", () => {
         });
 
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
-            const item = findListPickerItemInItemMap(item_map, "item-1");
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
             const option = item.target_option;
 
             selection_container.appendChild(placeholder);
-
+            source_select_box.value = "";
             manager.initSelection();
 
             expect(selection_container.contains(placeholder)).toBe(true);
@@ -104,7 +102,7 @@ describe("SingleSelectionManager", () => {
 
     describe("processSelection", () => {
         it("does nothing if item is already selected", () => {
-            const item = findListPickerItemInItemMap(item_map, "item-1");
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
             const option = item.target_option;
 
             option.setAttribute("selected", "selected");
@@ -118,7 +116,7 @@ describe("SingleSelectionManager", () => {
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
-            const item = findListPickerItemInItemMap(item_map, "item-1");
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
             const option = item.target_option;
 
             manager.processSelection(item.element);
@@ -135,10 +133,10 @@ describe("SingleSelectionManager", () => {
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
-            const old_item = findListPickerItemInItemMap(item_map, "item-1");
+            const old_item = items_map_manager.findListPickerItemInItemMap("item-1");
             const old_option = old_item.target_option;
 
-            const new_item = findListPickerItemInItemMap(item_map, "item-2");
+            const new_item = items_map_manager.findListPickerItemInItemMap("item-2");
             const new_option = new_item.target_option;
 
             manager.processSelection(old_item.element);
@@ -163,7 +161,7 @@ describe("SingleSelectionManager", () => {
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
         it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
             const openListPicker = jest.spyOn(toggler, "openListPicker");
-            const item = findListPickerItemInItemMap(item_map, "item-1");
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
             const option = item.target_option;
 
             selection_container.appendChild(placeholder);
@@ -191,7 +189,93 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(openListPicker).toHaveBeenCalled();
 
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
+        });
+    });
+
+    describe("resetAfterDependenciesUpdate", () => {
+        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", () => {
+            const item = items_map_manager.findListPickerItemInItemMap("item-1");
+
+            manager.processSelection(item.element);
+            source_select_box.innerHTML = "";
+            items_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            expect(item.is_selected).toBe(false);
+            expect(item.element.getAttribute("aria-selected")).toEqual("false");
+            expect(item.target_option.getAttribute("selected")).toBeNull();
+            expect(selection_container.contains(placeholder)).toBe(true);
+        });
+
+        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", () => {
+            source_select_box.innerHTML = "";
+            items_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+            expect(selection_container.contains(placeholder)).toBe(true);
+        });
+
+        it("when no item has been selected, then it should select the first available option", () => {
+            source_select_box.innerHTML = "";
+            const new_option_0 = document.createElement("option");
+            new_option_0.value = "new option 0";
+            const new_option_1 = document.createElement("option");
+            new_option_1.value = "new option 1";
+            source_select_box.appendChild(new_option_0);
+            source_select_box.appendChild(new_option_1);
+
+            items_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            const first_item = items_map_manager.findListPickerItemInItemMap("item-0");
+            expect(first_item.is_selected).toBe(true);
+            expect(first_item.element.getAttribute("aria-selected")).toEqual("true");
+            expect(first_item.target_option.getAttribute("selected")).toEqual("selected");
+            expect(selection_container.contains(placeholder)).toBe(false);
+        });
+
+        it("when an item has been selected, and is still available in the new options, then it should keep it selected", () => {
+            const item_0 = items_map_manager.findListPickerItemInItemMap("item-0");
+            manager.processSelection(item_0.element);
+
+            source_select_box.innerHTML = "";
+            const new_option_0 = document.createElement("option");
+            new_option_0.value = "new option 0";
+            const new_option_1 = document.createElement("option");
+            new_option_1.value = item_0.value;
+            source_select_box.appendChild(new_option_0);
+            source_select_box.appendChild(new_option_1);
+
+            items_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            const item_1 = items_map_manager.findListPickerItemInItemMap("item-1");
+            expect(item_1.is_selected).toBe(true);
+            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.target_option.getAttribute("selected")).toEqual("selected");
+            expect(selection_container.contains(placeholder)).toBe(false);
+        });
+
+        it("when an item has been selected, but is not available in the new options, then the first available item should be selected", () => {
+            const item_0 = items_map_manager.findListPickerItemInItemMap("item-0");
+            manager.processSelection(item_0.element);
+
+            source_select_box.innerHTML = "";
+            const new_option_0 = document.createElement("option");
+            new_option_0.value = "new option 0";
+            const new_option_1 = document.createElement("option");
+            new_option_1.value = "new option 1";
+            source_select_box.appendChild(new_option_0);
+            source_select_box.appendChild(new_option_1);
+
+            items_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            const item_1 = items_map_manager.findListPickerItemInItemMap("item-0");
+            expect(item_1.is_selected).toBe(true);
+            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.target_option.getAttribute("selected")).toEqual("selected");
+            expect(selection_container.contains(placeholder)).toBe(false);
         });
     });
 });

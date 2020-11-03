@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItem, ListPickerItemGroup } from "../type";
+import { ListPickerItemGroup } from "../type";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 export class DropdownContentRenderer {
     private readonly groups_map: Map<string, ListPickerItemGroup>;
@@ -26,19 +27,25 @@ export class DropdownContentRenderer {
     constructor(
         private readonly source_select_box: HTMLSelectElement,
         private readonly dropdown_list_element: Element,
-        private readonly item_map: Map<string, ListPickerItem>,
+        private readonly items_map_manager: ItemsMapManager,
         private readonly gettext_provider: GetText
     ) {
         this.groups_map = new Map();
     }
 
     public renderListPickerDropdownContent(): void {
+        const items = this.items_map_manager.getListPickerItems();
+        if (items.length === 0) {
+            this.dropdown_list_element.appendChild(this.createEmptyStateNoValuesAvailable());
+            return;
+        }
+
         if (this.hasGroupedListItems()) {
             this.renderGroupedOptions();
             return;
         }
 
-        Array.from(this.item_map.values()).forEach((current_item) => {
+        items.forEach((current_item) => {
             this.dropdown_list_element.appendChild(current_item.element);
         });
     }
@@ -51,12 +58,12 @@ export class DropdownContentRenderer {
         }
 
         const lowercase_query = filter_query.toLowerCase();
-        const matching_items = Array.from(this.item_map.values()).filter((item) => {
+        const matching_items = this.items_map_manager.getListPickerItems().filter((item) => {
             return item.template.toLowerCase().includes(lowercase_query);
         });
 
         if (matching_items.length === 0) {
-            this.dropdown_list_element.appendChild(this.createEmptyDropdownState());
+            this.dropdown_list_element.appendChild(this.createEmptyStateQueryDidNotMatch());
             return;
         }
 
@@ -76,6 +83,15 @@ export class DropdownContentRenderer {
         });
     }
 
+    public renderAfterDependenciesUpdate(): void {
+        this.dropdown_list_element.innerHTML = "";
+        if (this.items_map_manager.getListPickerItems().length === 0) {
+            this.dropdown_list_element.appendChild(this.createEmptyStateNoValuesAvailable());
+            return;
+        }
+        this.renderListPickerDropdownContent();
+    }
+
     private hasGroupedListItems(): boolean {
         return this.source_select_box.querySelectorAll("optgroup").length > 0;
     }
@@ -85,7 +101,8 @@ export class DropdownContentRenderer {
             const group = this.getRenderedEmptyListItemGroup(optgroup);
             this.groups_map.set(group.id, group);
 
-            Array.from(this.item_map.values())
+            this.items_map_manager
+                .getListPickerItems()
                 .filter((item) => {
                     return item.group_id === group.id;
                 })
@@ -127,14 +144,20 @@ export class DropdownContentRenderer {
         };
     }
 
-    private createEmptyDropdownState(): Element {
+    private createEmptyStateQueryDidNotMatch(): Element {
+        return this.createEmptyDropdownState(this.gettext_provider.gettext("No results found"));
+    }
+
+    private createEmptyStateNoValuesAvailable(): Element {
+        return this.createEmptyDropdownState(this.gettext_provider.gettext("No values to select"));
+    }
+
+    private createEmptyDropdownState(dropdown_message: string): Element {
         const empty_state = document.createElement("li");
         empty_state.classList.add("list-picker-empty-dropdown-state");
         empty_state.setAttribute("role", "alert");
         empty_state.setAttribute("aria-live", "assertive");
-        empty_state.appendChild(
-            document.createTextNode(this.gettext_provider.gettext("No results found"))
-        );
+        empty_state.appendChild(document.createTextNode(dropdown_message));
 
         return empty_state;
     }

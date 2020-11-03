@@ -21,7 +21,7 @@ import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } fr
 import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { sanitize } from "dompurify";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
-import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 export class MultipleSelectionManager implements SelectionManager {
     private readonly selection_state: ListPickerSelectionStateMultiple;
@@ -33,7 +33,7 @@ export class MultipleSelectionManager implements SelectionManager {
         private readonly search_field_element: HTMLInputElement,
         private readonly placeholder_text: string,
         private readonly dropdown_toggler: DropdownToggler,
-        private readonly item_map: Map<string, ListPickerItem>,
+        private readonly items_map_manager: ItemsMapManager,
         private readonly gettext_provider: GetText
     ) {
         this.selection_state = {
@@ -45,7 +45,7 @@ export class MultipleSelectionManager implements SelectionManager {
     }
 
     public processSelection(item: Element): void {
-        const list_item = findListPickerItemInItemMap(this.item_map, item.id);
+        const list_item = this.items_map_manager.findListPickerItemInItemMap(item.id);
         if (list_item.is_selected) {
             this.removeListItemFromSelection(list_item);
             this.togglePlaceholder();
@@ -61,6 +61,8 @@ export class MultipleSelectionManager implements SelectionManager {
         list_item.is_selected = true;
         list_item.element.setAttribute("aria-selected", "true");
         list_item.target_option.setAttribute("selected", "selected");
+        list_item.target_option.selected = true;
+
         this.source_select_box.dispatchEvent(new Event("change"));
 
         this.togglePlaceholder();
@@ -68,16 +70,15 @@ export class MultipleSelectionManager implements SelectionManager {
     }
 
     public initSelection(): void {
-        this.source_select_box.querySelectorAll("option[selected]").forEach((option: Element) => {
-            if (!(option instanceof HTMLElement)) {
-                return;
+        for (const option of this.source_select_box.options) {
+            if (!option.selected || !option.value) {
+                continue;
             }
-
-            const item_id = option.dataset?.itemId;
-            if (item_id) {
-                this.processSelection(findListPickerItemInItemMap(this.item_map, item_id).element);
+            const item_to_select = this.items_map_manager.getItemWithValue(option.value);
+            if (item_to_select) {
+                this.processSelection(item_to_select.element);
             }
-        });
+        }
     }
 
     public handleBackspaceKey(event: KeyboardEvent): void {
@@ -105,10 +106,27 @@ export class MultipleSelectionManager implements SelectionManager {
         event.cancelBubble = true;
     }
 
+    public resetAfterDependenciesUpdate(): void {
+        const selected_items: Array<ListPickerItem> = [];
+        this.selection_state.selected_items.forEach((item) => {
+            const item_to_select = this.items_map_manager.getItemWithValue(item.value);
+            if (item_to_select === null) {
+                return;
+            }
+            selected_items.push(item_to_select);
+        });
+
+        this.clearSelectionState(false);
+        this.source_select_box.value = "";
+        selected_items.forEach((item) => this.processSelection(item.element));
+
+        this.togglePlaceholder();
+        this.toggleClearValuesButton();
+    }
+
     private togglePlaceholder(): void {
         if (this.selection_state.selected_value_elements.size === 0) {
             this.search_field_element.setAttribute("placeholder", this.placeholder_text);
-            // Add the "remove all" cross
             return;
         }
 
@@ -120,11 +138,8 @@ export class MultipleSelectionManager implements SelectionManager {
             return;
         }
 
-        if (
-            this.selection_state.selected_value_elements.size === 0 &&
-            this.selection_element.contains(this.clear_selection_state_button_element)
-        ) {
-            this.selection_element.removeChild(this.clear_selection_state_button_element);
+        if (this.selection_state.selected_value_elements.size === 0) {
+            this.removeClearSelectionStateButton();
             return;
         }
 
@@ -134,6 +149,13 @@ export class MultipleSelectionManager implements SelectionManager {
                 this.clear_selection_state_button_element
             );
         }
+    }
+
+    private removeClearSelectionStateButton(): void {
+        if (!this.selection_element.contains(this.clear_selection_state_button_element)) {
+            return;
+        }
+        this.selection_element.removeChild(this.clear_selection_state_button_element);
     }
 
     private createClearSelectionStateButton(): Element {
@@ -149,9 +171,9 @@ export class MultipleSelectionManager implements SelectionManager {
             event.preventDefault();
             event.cancelBubble = true;
 
-            this.clearSelectionState();
+            this.clearSelectionState(true);
             this.togglePlaceholder();
-            this.toggleClearValuesButton();
+            this.removeClearSelectionStateButton();
             this.dropdown_toggler.openListPicker();
         });
 
@@ -203,16 +225,20 @@ export class MultipleSelectionManager implements SelectionManager {
         list_item.is_selected = false;
         list_item.element.setAttribute("aria-selected", "false");
         list_item.target_option.removeAttribute("selected");
+        list_item.target_option.selected = false;
 
         if (!is_clearing_selection) {
             this.source_select_box.dispatchEvent(new Event("change"));
         }
     }
 
-    private clearSelectionState(): void {
+    private clearSelectionState(should_change_be_dispatched: boolean): void {
         Array.from(this.selection_state.selected_items.values()).forEach((item) => {
             this.removeListItemFromSelection(item, true);
         });
-        this.source_select_box.dispatchEvent(new Event("change"));
+
+        if (should_change_be_dispatched) {
+            this.source_select_box.dispatchEvent(new Event("change"));
+        }
     }
 }

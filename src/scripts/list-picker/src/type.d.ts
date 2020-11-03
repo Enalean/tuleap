@@ -29,11 +29,12 @@ export interface ListPickerOptions {
 export interface ListPickerItem {
     id: string;
     template: string;
+    value: string;
     is_disabled: boolean;
     is_selected: boolean;
     group_id: string;
     element: Element;
-    target_option: Element;
+    target_option: HTMLOptionElement;
 }
 
 export interface ListPickerItemGroup {
@@ -67,4 +68,5 @@ export interface SelectionManager {
     readonly processSelection: (element: Element) => void;
     readonly initSelection: () => void;
     readonly handleBackspaceKey: (event: KeyboardEvent) => void;
+    readonly resetAfterDependenciesUpdate: () => void;
 }

@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
 
 
-    protected function fetchFieldContainerStart($id, $name)
+    protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';
     }

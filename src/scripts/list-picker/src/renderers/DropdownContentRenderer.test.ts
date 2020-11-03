@@ -23,7 +23,7 @@ import {
 } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 
 describe("dropdown-content-renderer", () => {
@@ -34,6 +34,9 @@ describe("dropdown-content-renderer", () => {
 
     beforeEach(() => {
         select = document.createElement("select");
+        gettext_provider = {
+            gettext: (english: string) => english,
+        } as GetText;
     });
 
     describe("without search input", () => {
@@ -56,7 +59,7 @@ describe("dropdown-content-renderer", () => {
             new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             ).renderListPickerDropdownContent();
 
@@ -68,7 +71,7 @@ describe("dropdown-content-renderer", () => {
             new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             ).renderListPickerDropdownContent();
 
@@ -85,7 +88,7 @@ describe("dropdown-content-renderer", () => {
             new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             ).renderListPickerDropdownContent();
 
@@ -112,7 +115,7 @@ describe("dropdown-content-renderer", () => {
             const renderer = new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             );
 
@@ -132,7 +135,7 @@ describe("dropdown-content-renderer", () => {
             const renderer = new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             );
 
@@ -153,7 +156,7 @@ describe("dropdown-content-renderer", () => {
             const renderer = new DropdownContentRenderer(
                 select,
                 dropdown_list,
-                generateItemMapBasedOnSourceSelectOptions(select),
+                new ItemsMapManager(select),
                 gettext_provider
             );
 
@@ -176,6 +179,84 @@ describe("dropdown-content-renderer", () => {
             expect(group.textContent).toContain("Group 1");
             expect(group.contains(item)).toBe(true);
             expect(item.textContent).toEqual("Value 1");
+        });
+    });
+
+    describe("renderAfterDependenciesUpdate", () => {
+        beforeEach(() => {
+            const { dropdown_list_element } = new BaseComponentRenderer(
+                select
+            ).renderBaseComponent();
+
+            dropdown_list = dropdown_list_element;
+        });
+
+        it("should re-render the list", () => {
+            const option_1 = document.createElement("option");
+            option_1.innerText = "Item 1";
+            option_1.value = "item_1";
+            const option_2 = document.createElement("option");
+            option_2.innerText = "Item 2";
+            option_2.value = "item_2";
+
+            select.appendChild(option_1);
+            const items_manager = new ItemsMapManager(select);
+            const content_renderer = new DropdownContentRenderer(
+                select,
+                dropdown_list,
+                items_manager,
+                gettext_provider
+            );
+            content_renderer.renderListPickerDropdownContent();
+
+            const list_item_1 = dropdown_list.querySelector("#item-0");
+            if (!list_item_1) {
+                throw new Error("List item not found in the list");
+            }
+            expect(list_item_1.innerHTML).toEqual("Item 1");
+
+            select.innerHTML = "";
+            select.appendChild(option_2);
+            items_manager.rebuildItemsMap();
+            content_renderer.renderAfterDependenciesUpdate();
+
+            const list_item_2 = dropdown_list.querySelector("#item-0");
+            if (!list_item_2) {
+                throw new Error("List item not found in the list");
+            }
+            expect(list_item_2.innerHTML).toEqual("Item 2");
+        });
+
+        it("should render an ampty state when the source <select> has no options", () => {
+            const option_1 = document.createElement("option");
+            option_1.innerText = "Item 1";
+            option_1.value = "item_1";
+            select.appendChild(option_1);
+
+            const items_manager = new ItemsMapManager(select);
+            const content_renderer = new DropdownContentRenderer(
+                select,
+                dropdown_list,
+                items_manager,
+                gettext_provider
+            );
+            content_renderer.renderListPickerDropdownContent();
+
+            const list_item_1 = dropdown_list.querySelector("#item-0");
+            if (!list_item_1) {
+                throw new Error("List item not found in the list");
+            }
+            expect(list_item_1.innerHTML).toEqual("Item 1");
+
+            select.innerHTML = "";
+            items_manager.rebuildItemsMap();
+            content_renderer.renderAfterDependenciesUpdate();
+
+            expect(dropdown_list.querySelector("#item-0")).toBeNull();
+            const empty_state = dropdown_list.querySelector(".list-picker-empty-dropdown-state");
+            if (!empty_state) {
+                throw new Error("Empty state not found");
+            }
         });
     });
 });

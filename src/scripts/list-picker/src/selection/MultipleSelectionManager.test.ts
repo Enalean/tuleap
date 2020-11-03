@@ -21,16 +21,15 @@ import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
-import { findListPickerItemInItemMap } from "../helpers/list-picker-items-helper";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
+import { ItemsMapManager } from "../items/ItemsMapManager";
 
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
         manager: MultipleSelectionManager,
-        item_map: Map<string, ListPickerItem>,
+        item_map_manager: ItemsMapManager,
         selection_container: Element,
         search_input: HTMLInputElement,
         gettext_provider: GetText,
@@ -65,19 +64,19 @@ describe("MultipleSelectionManager", () => {
         selection_container = selection_element;
         openListPicker = jest.fn();
 
-        item_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
+        item_map_manager = new ItemsMapManager(source_select_box);
         manager = new MultipleSelectionManager(
             source_select_box,
             selection_element,
             search_field_element,
             "Please select some values",
             { openListPicker } as DropdownToggler,
-            item_map,
+            item_map_manager,
             gettext_provider
         );
 
-        item_1 = findListPickerItemInItemMap(item_map, "item-1");
-        item_2 = findListPickerItemInItemMap(item_map, "item-2");
+        item_1 = item_map_manager.findListPickerItemInItemMap("item-1");
+        item_2 = item_map_manager.findListPickerItemInItemMap("item-2");
         jest.spyOn(source_select_box, "dispatchEvent");
     });
 
@@ -267,6 +266,45 @@ describe("MultipleSelectionManager", () => {
             expect(backspace_down_event.cancelBubble).toBe(false);
             expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
+        });
+    });
+
+    describe("resetAfterDependenciesUpdate", () => {
+        it("should remove the values from the previous selection that do not appear in the new options", () => {
+            manager.processSelection(item_1.element);
+            manager.processSelection(item_2.element);
+
+            source_select_box.options[2].value = "a_brand_new_value";
+            item_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            const new_item_with_item_1_value = item_map_manager.getItemWithValue(item_1.value);
+            const new_item_with_item_2_value = item_map_manager.getItemWithValue(item_2.value);
+            if (new_item_with_item_1_value === null) {
+                throw new Error(
+                    "an item matching item_1's value should have been found in the items map"
+                );
+            }
+            expect(isItemSelected(new_item_with_item_1_value)).toBe(true);
+            expect(new_item_with_item_2_value).toBeNull();
+
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
+        });
+
+        it("should put back the placeholder and remove the [remove all values] button when no item are selected", () => {
+            manager.processSelection(item_1.element);
+            manager.processSelection(item_2.element);
+
+            source_select_box.options[1].value = "a_brand_new_value";
+            source_select_box.options[2].value = "another_brand_new_value";
+            item_map_manager.rebuildItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            expect(
+                selection_container.querySelector(".list-picker-selected-value-remove-button")
+            ).toBeNull();
+            expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
     });
 });

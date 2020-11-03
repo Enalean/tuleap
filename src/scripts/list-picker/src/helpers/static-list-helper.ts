@@ -22,9 +22,11 @@ export function generateItemMapBasedOnSourceSelectOptions(
     source_select_box: HTMLSelectElement
 ): Map<string, ListPickerItem> {
     const map = new Map();
+    const useless_options = [];
     let i = 0;
     for (const option of source_select_box.options) {
         if (option.value === "") {
+            useless_options.push(option);
             continue;
         }
 
@@ -46,6 +48,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
         const item: ListPickerItem = {
             id,
             group_id,
+            value: option.value,
             template,
             is_disabled,
             is_selected: false,
@@ -56,6 +59,8 @@ export function generateItemMapBasedOnSourceSelectOptions(
         option.setAttribute("data-item-id", id);
         i++;
     }
+
+    useless_options.forEach((option) => source_select_box.removeChild(option));
     return map;
 }
 

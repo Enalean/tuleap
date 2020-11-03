@@ -3317,17 +3317,19 @@ td.tracker-unsubscriber-actions {
     }
 }
 
-.tracker-field-dependency-highlight {
+.tracker-field-dependency-highlight,
+.list-picker-field-dependency-highlight > .list-picker > .list-picker-selection,
+.list-picker-field-dependency-highlight > .list-picker > .list-picker-selection > .list-picker-multiple-search-section > .list-picker-search-field {
     animation: 1s linear 0s field-dependencies-highlight-anim;
 }
 
 @keyframes field-dependencies-highlight-anim {
     0% {
-        background: #ffff99;
+        background-color: #ffff99;
     }
 
     100% {
-        background: #ffffff;
+        background-color: #ffffff;
     }
 }
 
