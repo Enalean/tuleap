@@ -1,7 +1,3 @@
-{{# has_motd }}
-    <div class="motd">{{{ motd }}}</div>
-{{/ has_motd }}
-
 <header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }}">
     <div class="header-container">
         {{# should_logo_be_displayed }}
@@ -9,6 +5,25 @@
         {{/ should_logo_be_displayed }}
 
         <div class="header-container-spacer"></div>
+
+        {{# has_platform_banner }}
+            {{# user_id }}
+                <button
+                    type="button"
+                    id="platform-banner-bullhorn"
+                    class="btn
+                        {{# platform_banner_is_standard }}btn-info{{/ platform_banner_is_standard }}
+                        {{# platform_banner_is_warning }}btn-warning{{/ platform_banner_is_warning }}
+                        {{# platform_banner_is_critical }}btn-danger{{/ platform_banner_is_critical }}
+                        platform-banner-navbar-button
+                        {{# platform_banner_is_visible }}platform-banner-hidden{{/ platform_banner_is_visible }}
+                    "
+                    aria-labelledby="platform-banner-message"
+                >
+                    <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                </button>
+            {{/ user_id }}
+        {{/ has_platform_banner }}
 
         {{# is_super_user }}
             <a class="btn admin-link" href="/admin/" aria-label="{{# gettext }}Administration{{/ gettext }}">

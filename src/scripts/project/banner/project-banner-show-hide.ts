@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { updateFloatingButtonsPosition } from "./update-floating-buttons-position";
-
 export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
 export const PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID = "project-banner-close";
 export const PROJECT_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-project-banner";
@@ -26,7 +24,6 @@ export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
 
 export function allowToHideAndShowProjectBanner(
     mount_point: Document,
-    updateTopMarginAccordinglyToMOTDHeight: () => void,
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>
 ): void {
     const project_banner_navbar = mount_point.getElementById(PROJECT_BANNER_NAVBAR_ID);
@@ -45,12 +42,9 @@ export function allowToHideAndShowProjectBanner(
         );
     }
 
-    updateFloatingButtonsPosition();
-
     project_banner_navbar.addEventListener("click", (event: Event): void => {
         toggleProjectBannerMessage(
             event,
-            updateTopMarginAccordinglyToMOTDHeight,
             mount_point.body,
             project_banner_navbar,
             full_project_banner
@@ -68,7 +62,6 @@ export function allowToHideAndShowProjectBanner(
         async (): Promise<void> => {
             await hideProjectBannerMessage(
                 tlpPatch,
-                updateTopMarginAccordinglyToMOTDHeight,
                 mount_point.body,
                 project_banner_navbar,
                 full_project_banner,
@@ -81,7 +74,6 @@ export function allowToHideAndShowProjectBanner(
 
 function toggleProjectBannerMessage(
     event: Event,
-    updateTopMarginAccordinglyToMOTDHeight: () => void,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement
@@ -91,14 +83,10 @@ function toggleProjectBannerMessage(
     document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
-
-    updateTopMarginAccordinglyToMOTDHeight();
-    updateFloatingButtonsPosition();
 }
 
 async function hideProjectBannerMessage(
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
-    updateTopMarginAccordinglyToMOTDHeight: () => void,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement,
@@ -108,9 +96,6 @@ async function hideProjectBannerMessage(
     document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
-
-    updateTopMarginAccordinglyToMOTDHeight();
-    updateFloatingButtonsPosition();
 
     // Not dealing with potential errors here, worst case scenario the user will have to close the banner again on the next page
     await tlpPatch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {

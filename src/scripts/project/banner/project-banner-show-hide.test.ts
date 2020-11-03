@@ -29,8 +29,6 @@ const USER_ID = "1200";
 const PROJECT_ID = "102";
 
 describe("Show and hide project banner", () => {
-    const updateTopMarginAccordinglyToMOTDHeight = jest.fn();
-
     function getTlpPatchSpy(): jest.Mock<
         Promise<Response>,
         [string, RequestInit & { method?: "PATCH" }]
@@ -74,11 +72,7 @@ describe("Show and hide project banner", () => {
         const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
 
         local_document.project_banner.removeChild(local_document.close_button);
-        allowToHideAndShowProjectBanner(
-            local_document.document,
-            updateTopMarginAccordinglyToMOTDHeight,
-            getTlpPatchSpy()
-        );
+        allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
     });
 
     it("Throws an error when the close button does not know the user ID", () => {
@@ -87,11 +81,7 @@ describe("Show and hide project banner", () => {
         local_document.close_button.removeAttribute("data-user-id");
 
         expect(() => {
-            allowToHideAndShowProjectBanner(
-                local_document.document,
-                updateTopMarginAccordinglyToMOTDHeight,
-                getTlpPatchSpy()
-            );
+            allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
         }).toThrow();
     });
 
@@ -101,11 +91,7 @@ describe("Show and hide project banner", () => {
         local_document.close_button.removeAttribute("data-project-id");
 
         expect(() => {
-            allowToHideAndShowProjectBanner(
-                local_document.document,
-                updateTopMarginAccordinglyToMOTDHeight,
-                getTlpPatchSpy()
-            );
+            allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
         }).toThrow();
     });
 
@@ -114,11 +100,7 @@ describe("Show and hide project banner", () => {
         const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
         const tlpPatchSpy = getTlpPatchSpy();
 
-        allowToHideAndShowProjectBanner(
-            local_document.document,
-            updateTopMarginAccordinglyToMOTDHeight,
-            tlpPatchSpy
-        );
+        allowToHideAndShowProjectBanner(local_document.document, tlpPatchSpy);
 
         local_document.close_button.click();
         expect(local_document.document.body.classList).not.toContain(

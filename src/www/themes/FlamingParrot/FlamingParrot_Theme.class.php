@@ -234,15 +234,17 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->tuleap_version->version_number
         );
 
+        $platform_banner = $this->getPlatformBanner($current_user, 'platform/platform-banner-fp.js');
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
             $this->getNotificationPlaceholder(),
             $help_dropdown_presenter,
             $body_class,
             InviteBuddiesPresenter::build($current_user),
+            $platform_banner,
         ));
 
-        $this->navbar($params, $current_user, $project, $banner);
+        $this->navbar($params, $current_user, $project, $banner, $platform_banner);
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -264,7 +266,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $params,
         PFUser $current_user,
         ?Project $project,
-        ?BannerDisplay $banner
+        ?BannerDisplay $project_banner,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
@@ -307,7 +310,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->imgroot,
             $current_user,
             $this->displayNewAccount(),
-            $this->getMOTD(),
             $csrf_logout_token,
             $url_redirect,
             $user_dashboard_retriever->getAllUserDashboards($current_user),
@@ -316,13 +318,14 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user)
+            InviteBuddiesPresenter::build($current_user),
+            $platform_banner
         ));
 
         $this->container(
             $params,
             $current_user,
-            $banner,
+            $project_banner,
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,

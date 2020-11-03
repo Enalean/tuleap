@@ -17,31 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.motd {
-    position: fixed;
-    z-index: 2004;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    padding: $tlp-medium-spacing;
-    background: $tlp-theme-sidebar-background-color;
-    color: $tlp-ui-white;
-    font-size: 1rem;
-    line-height: 26px;
-    text-align: center;
-
-    a {
-        color: $tlp-ui-white;
-        text-decoration: underline;
-    }
-
-    button {
-        margin: 0;
-    }
-}
-
 /* stylelint-disable selector-no-qualifying-type */
-body.has-visible-project-banner > .motd {
+body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
     padding: $tlp-medium-spacing $tlp-medium-spacing $top-floating-buttons-space;
 
     + header > .header-container {
@@ -61,7 +38,7 @@ header {
         width: 100%;
 
         + #main-container {
-            margin-top: 64px;
+            margin-top: 61px;
         }
     }
 

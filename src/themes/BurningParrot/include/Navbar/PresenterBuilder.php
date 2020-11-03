@@ -45,7 +45,8 @@ class PresenterBuilder
         NewDropdownPresenter $new_dropdown_presenter,
         bool $should_logo_be_displayed,
         bool $is_legacy_logo_customized,
-        bool $is_svg_logo_customized
+        bool $is_svg_logo_customized,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->current_user    = $current_user;
 
@@ -63,7 +64,8 @@ class PresenterBuilder
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
                 $url_redirect,
-                $user_dashboard_retriever->getAllUserDashboards($this->current_user)
+                $user_dashboard_retriever->getAllUserDashboards($this->current_user),
+                $platform_banner,
             ),
             $new_dropdown_presenter,
             $current_user->isSuperUser(),

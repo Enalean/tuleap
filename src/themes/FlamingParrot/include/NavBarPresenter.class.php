@@ -20,6 +20,7 @@
 
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
+use Tuleap\Platform\Banner\Banner;
 
 class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -31,12 +32,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
     private $user;
 
     private $display_new_account;
-
-    /** @var string */
-    public $motd;
-
-    /** @var bool */
-    public $has_motd;
 
     /**
      * @var CSRFSynchronizerToken
@@ -103,12 +98,41 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
      * @var InviteBuddiesPresenter
      */
     public $invite_buddies_presenter;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_platform_banner;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_visible;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_standard;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_warning;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_critical;
+    /**
+     * @var int
+     * @psalm-readonly
+     */
+    public $user_id;
 
     public function __construct(
         $imgroot,
         PFUser $user,
         $display_new_account,
-        $motd,
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
         array $dashboards,
@@ -117,13 +141,12 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         ?\Tuleap\User\SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        InviteBuddiesPresenter $invite_buddies_presenter
+        InviteBuddiesPresenter $invite_buddies_presenter,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->imgroot                   = $imgroot;
         $this->user                      = $user;
         $this->display_new_account       = $display_new_account;
-        $this->motd                      = $motd;
-        $this->has_motd                  = ! empty($motd);
         $this->logout_csrf               = $logout_csrf;
         $this->url_redirect              = $url_redirect;
         $this->dashboards                = $dashboards;
@@ -136,6 +159,14 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->is_svg_logo_customized    = $is_svg_logo_customized;
         $this->is_super_user = $user->isSuperUser();
         $this->invite_buddies_presenter = $invite_buddies_presenter;
+
+        $this->user_id                    = $this->user->getId();
+        $this->has_platform_banner        = $platform_banner !== null;
+        $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
+
+        $this->platform_banner_is_standard = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_STANDARD;
+        $this->platform_banner_is_warning  = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_WARNING;
+        $this->platform_banner_is_critical = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_CRITICAL;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');

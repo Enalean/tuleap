@@ -17,16 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I make sure that the sidebar and the main content are not hidden under the
- * top navbar whent the motd is displayed
- */
+import { observePlatformBanner } from "../platform/banner/observe-platform-banner";
 
-import { updateTopMarginAccordinglyToMOTDHeight } from "./update-ui-margins-according-to-motd.ts";
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.querySelector(".motd")) {
-        window.addEventListener("resize", updateTopMarginAccordinglyToMOTDHeight);
-        updateTopMarginAccordinglyToMOTDHeight();
+export function initMainPosition(main: HTMLElement): void {
+    const platform_banner = document.querySelector(".platform-banner");
+    if (!(platform_banner instanceof HTMLElement)) {
+        return;
     }
-});
+
+    adjustMainPositionAccordingToPlatformBanner(main, platform_banner);
+    observePlatformBanner(platform_banner, () => {
+        adjustMainPositionAccordingToPlatformBanner(main, platform_banner);
+    });
+}
+
+function adjustMainPositionAccordingToPlatformBanner(
+    main: HTMLElement,
+    platform_banner: HTMLElement
+): void {
+    main.style.marginTop = platform_banner.offsetHeight + "px";
+}

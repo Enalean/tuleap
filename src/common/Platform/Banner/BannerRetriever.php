@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
+use PFUser;
+
 class BannerRetriever
 {
     /**
@@ -43,5 +45,26 @@ class BannerRetriever
         }
 
         return new Banner($row['message'], $row['importance']);
+    }
+
+    public function getBannerForDisplayPurpose(PFUser $user): ?BannerDisplay
+    {
+        $banner_with_visibility_row = $this->banner_dao->searchBannerWithVisibility((int) $user->getId());
+
+        if ($banner_with_visibility_row === null) {
+            return null;
+        }
+
+        if ($banner_with_visibility_row['preference_value'] === 'hidden') {
+            return BannerDisplay::buildHiddenBanner(
+                $banner_with_visibility_row['message'],
+                $banner_with_visibility_row['importance']
+            );
+        }
+
+        return BannerDisplay::buildVisibleBanner(
+            $banner_with_visibility_row['message'],
+            $banner_with_visibility_row['importance']
+        );
     }
 }

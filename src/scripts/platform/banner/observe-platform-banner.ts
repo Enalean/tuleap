@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I make sure that the sidebar and the main content are not hidden under the
- * top navbar whent the motd is displayed
- */
+import { ResizeObserver } from "@juggle/resize-observer";
 
-import { updateTopMarginAccordinglyToMOTDHeight } from "./update-ui-margins-according-to-motd.ts";
+export function observePlatformBanner(platform_banner: HTMLElement, callback: () => void): void {
+    const mutation_observer = new MutationObserver(callback);
+    mutation_observer.observe(platform_banner, { attributes: true, attributeFilter: ["class"] });
 
-export { init };
-
-function init() {
-    if (document.querySelector(".motd")) {
-        window.addEventListener("resize", updateTopMarginAccordinglyToMOTDHeight);
-        updateTopMarginAccordinglyToMOTDHeight();
-    }
+    const resize_observer = new ResizeObserver(callback);
+    resize_observer.observe(platform_banner, {
+        box: "border-box",
+    });
 }

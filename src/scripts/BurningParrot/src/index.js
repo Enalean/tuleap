@@ -18,8 +18,10 @@
  */
 
 import { init as initNavbarDropdown } from "./navbar-dropdown.js";
+import { initSidebarPosition } from "../../tuleap/sidebar-position.ts";
+import { initMainPosition } from "../../tuleap/main-position.ts";
+import { initHeaderPosition } from "../../tuleap/header-position.ts";
 import { init as initNavbarPinned } from "../../tuleap/navbar-pinned.js";
-import { init as initMotd } from "./motd.js";
 import { init as initSidebar } from "./sidebar.js";
 import { init as initScrollbar } from "./scrollbar.js";
 import { init as initProjectFlags } from "./project-flags.js";
@@ -29,11 +31,20 @@ import { init as initInviteBuddies } from "./invite-buddies";
 import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar instanceof HTMLElement) {
+        initSidebarPosition(sidebar);
+    }
+    const main = document.querySelector("main");
+    if (main instanceof HTMLElement) {
+        initMainPosition(main);
+    }
+
+    initHeaderPosition();
     initNavbarPinned();
     initNavbarDropdown();
     initSidebar();
     initHelpDropdown();
-    initMotd();
     initScrollbar();
     initProjectFlags();
     initProjectPrivacy();

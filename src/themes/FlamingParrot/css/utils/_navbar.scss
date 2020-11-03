@@ -20,32 +20,8 @@
 $nav-dropdown-content-border-radius: 4px;
 $dropdown-width: 250px;
 
-.motd {
-    position: fixed;
-    z-index: 2004;
-    top: 0;
-    left: 0;
-    box-sizing: border-box;
-    width: 100vw;
-    padding: $tlp-medium-spacing;
-    background: $sidebar-background;
-    color: $white;
-    font-size: 1rem;
-    line-height: 26px;
-    text-align: center;
-
-    a {
-        color: $white;
-        text-decoration: underline;
-    }
-
-    button {
-        margin: 0;
-    }
-}
-
 /* stylelint-disable selector-no-qualifying-type */
-&.has-visible-project-banner > .motd {
+&.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
     padding: $tlp-medium-spacing $tlp-medium-spacing $top-floating-buttons-space;
 
     + header > .header-container {

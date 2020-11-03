@@ -1,7 +1,4 @@
 {{# navbar_presenter }}
-{{# has_motd }}
-    <div class="motd">{{{ motd }}}</div>
-{{/ has_motd }}
 <header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }}">
     <div class="header-container">
         {{# should_logo_be_displayed }}
@@ -9,6 +6,28 @@
         {{/ should_logo_be_displayed }}
 
         <div class="header-container-spacer"></div>
+
+        {{# user_nav_presenter }}
+            {{# has_platform_banner }}
+                {{# user_id }}
+                    <button
+                        type="button"
+                        id="platform-banner-bullhorn"
+                        class="
+                            {{# platform_banner_is_standard }}tlp-button-info{{/ platform_banner_is_standard }}
+                            {{# platform_banner_is_warning }}tlp-button-warning{{/ platform_banner_is_warning }}
+                            {{# platform_banner_is_critical }}tlp-button-danger{{/ platform_banner_is_critical }}
+                            tlp-button-round
+                            platform-banner-navbar-button
+                            {{# platform_banner_is_visible }}platform-banner-hidden{{/ platform_banner_is_visible }}
+                        "
+                        aria-labelledby="platform-banner-message"
+                    >
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                    </button>
+                {{/ user_id }}
+            {{/ has_platform_banner }}
+        {{/ user_nav_presenter }}
 
         {{# is_super_user }}
             <a href="/admin/" class="tlp-button-danger tlp-button-round tlp-button-outline go-to-admin" aria-label="{{# gettext }}Administration{{/ gettext }}" data-test="platform-administration-link">

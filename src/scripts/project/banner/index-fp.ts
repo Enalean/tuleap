@@ -19,10 +19,9 @@
 
 import { allowUnclampingProjectBannerMessage } from "./project-banner-clamp";
 import { allowToHideAndShowProjectBanner } from "./project-banner-show-hide";
-import { updateTopMarginAccordinglyToMOTDHeight } from "../../FlamingParrot/update-ui-margins-according-to-motd";
 import { patch } from "../../../themes/tlp/src/js/fetch-wrapper";
 
 document.addEventListener("DOMContentLoaded", () => {
     allowUnclampingProjectBannerMessage(document);
-    allowToHideAndShowProjectBanner(document, updateTopMarginAccordinglyToMOTDHeight, patch);
+    allowToHideAndShowProjectBanner(document, patch);
 });
