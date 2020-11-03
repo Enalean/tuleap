@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Controller.class.php';
-
 /**
  * Base class for plugin controllers
  *
@@ -35,10 +33,15 @@ abstract class MVC2_PluginController extends MVC2_Controller
         return ForgeConfig::get('codendi_dir') . '/plugins/' . $this->base_name . '/templates';
     }
 
-    protected function redirect($query_parts)
+    /**
+     * @psalm-return never-return
+     */
+    protected function redirect($query_parts): void
     {
         $redirect = http_build_query($query_parts);
-        $GLOBALS['Response']->redirect('/plugins/' . $this->base_name . '/?' . $redirect);
+        $layout = $GLOBALS['Response'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
+        $layout->redirect('/plugins/' . $this->base_name . '/?' . $redirect);
     }
 
     /**
