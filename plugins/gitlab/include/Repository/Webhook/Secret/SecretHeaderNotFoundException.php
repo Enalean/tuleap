@@ -21,12 +21,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\Secret;
 
-use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
-
 class SecretHeaderNotFoundException extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct("The HTTP header " . WebhookDataExtractor::GITLAB_TOKEN_HEADER . " is not found in the request sent by GitLab.");
+        parent::__construct("The HTTP header " . SecretChecker::GITLAB_TOKEN_HEADER . " is not found in the request sent by GitLab.");
     }
 }

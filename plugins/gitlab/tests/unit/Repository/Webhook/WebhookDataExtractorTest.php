@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
@@ -58,6 +59,11 @@ class WebhookDataExtractorTest extends TestCase
      */
     private $secret_retriever;
 
+    /**
+     * @var SecretChecker
+     */
+    private $secret_checker;
+
     protected function setUp(): void
     {
         $this->gitlab_repository = new GitlabRepository(
@@ -72,10 +78,11 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
         $this->secret_retriever          = Mockery::mock(SecretRetriever::class);
+        $this->secret_checker            = new SecretChecker($this->secret_retriever);
 
         $this->data_extractor = new WebhookDataExtractor(
             $this->gitlab_repository_factory,
-            $this->secret_retriever
+            $this->secret_checker
         );
     }
 
