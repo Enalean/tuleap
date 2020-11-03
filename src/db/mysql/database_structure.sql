@@ -1684,6 +1684,12 @@ CREATE TABLE project_banner (
     message text
 );
 
+DROP TABLE IF EXISTS platform_banner;
+CREATE TABLE platform_banner (
+    message text,
+    importance VARCHAR(8)
+);
+
 DROP TABLE IF EXISTS release_note_link;
 CREATE TABLE release_note_link (
     enforce_one_row_table ENUM('SHOULD_HAVE_AT_MOST_ONE_ROW') NOT NULL PRIMARY KEY DEFAULT 'SHOULD_HAVE_AT_MOST_ONE_ROW',

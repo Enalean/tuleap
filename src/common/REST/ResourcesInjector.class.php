@@ -25,6 +25,7 @@ use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\REST\v1\JWTResource;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\PhpWiki\REST\v1\PhpWikiResource;
+use Tuleap\Platform\Banner\REST\v1\BannerResource;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
@@ -65,6 +66,7 @@ class ResourcesInjector
         $restler->addAPIClass(AccessKeyResource::class, AccessKeyResource::ROUTE);
         $restler->addAPIClass(ServiceResource::class, ServiceRepresentation::ROUTE);
         $restler->addAPIClass(InvitationsResource::class, InvitationsResource::ROUTE);
+        $restler->addAPIClass(BannerResource::class, BannerResource::ROUTE);
     }
 
     public function declareProjectResources(array &$resources, Project $project)
