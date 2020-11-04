@@ -26,6 +26,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
@@ -140,10 +141,12 @@ class gitlabPlugin extends Plugin
                 new GitlabRepositoryFactory(
                     new GitlabRepositoryDao()
                 ),
-                new SecretRetriever(
-                    new SecretDao(),
-                    new KeyFactory()
-                )
+                new SecretChecker(
+                    new SecretRetriever(
+                        new SecretDao(),
+                        new KeyFactory()
+                    )
+                ),
             ),
             new GitlabRepositoryDao(),
             HTTPFactoryBuilder::responseFactory(),

@@ -24,10 +24,10 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretNotDefinedException;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 
 class WebhookDataExtractor
 {
@@ -36,7 +36,6 @@ class WebhookDataExtractor
     private const PROJECT_ID_KEY = 'id';
     private const PROJECT_URL_KEY = 'web_url';
     private const PUSH_EVENT = 'push';
-    public const GITLAB_TOKEN_HEADER = 'X-Gitlab-Token';
 
     /**
      * @var GitlabRepositoryFactory
@@ -44,16 +43,16 @@ class WebhookDataExtractor
     private $gitlab_repository_factory;
 
     /**
-     * @var SecretRetriever
+     * @var SecretChecker
      */
-    private $secret_retriever;
+    private $secret_checker;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
-        SecretRetriever $secret_retriever
+        SecretChecker $secret_checker
     ) {
         $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->secret_retriever          = $secret_retriever;
+        $this->secret_checker            = $secret_checker;
     }
 
     /**
@@ -74,7 +73,10 @@ class WebhookDataExtractor
             throw new RepositoryNotFoundException();
         }
 
-        $this->checkSecret($gitlab_repository, $request);
+        $this->secret_checker->checkSecret(
+            $gitlab_repository,
+            $request
+        );
 
         return $gitlab_repository;
     }
@@ -112,28 +114,5 @@ class WebhookDataExtractor
             (int) $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
             (string) $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY]
         );
-    }
-
-    /**
-     * @throws SecretHeaderNotFoundException
-     * @throws SecretNotDefinedException
-     * @throws SecretHeaderNotMatchingException
-     */
-    private function checkSecret(
-        GitlabRepository $gitlab_repository,
-        ServerRequestInterface $http_request
-    ): void {
-        $webhook_secret_header = $http_request->getHeaderLine(self::GITLAB_TOKEN_HEADER);
-        if ($webhook_secret_header === '') {
-            throw new SecretHeaderNotFoundException();
-        }
-
-        $webhook_secret = $this->secret_retriever->getWebhookSecretForRepository(
-            $gitlab_repository
-        );
-
-        if (! hash_equals($webhook_secret_header, $webhook_secret->getString())) {
-            throw new SecretHeaderNotMatchingException();
-        }
     }
 }
