@@ -77,17 +77,13 @@ try {
         $validator->validate(simplexml_import_dom($xml), realpath(__DIR__ . '/../../plugins/tracker/resources/artifacts.rng'));
     }
 
-    $xml_security = new XML_Security();
-    $xml_security->enableExternalLoadOfEntities();
-
     $xsl = new DOMDocument();
-    $xsl->load(dirname(__FILE__) . '/xml/indent.xsl');
+    $xsl->loadXML(\file_get_contents(__DIR__ . '/xml/indent.xsl'));
 
     $proc = new XSLTProcessor();
     $proc->importStyleSheet($xsl);
 
     $archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
-    $xml_security->disableExternalLoadOfEntities();
 
     $archive->close();
 } catch (XML_ParseException $exception) {

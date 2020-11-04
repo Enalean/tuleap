@@ -134,9 +134,6 @@ try {
         $archive = new Export\ZipArchive($output);
     }
 
-    $xml_security = new XML_Security();
-    $xml_security->enableExternalLoadOfEntities();
-
     $user = UserManager::instance()->forceLogin($username);
     $temporary_dump_path_on_filesystem = $archive->getArchivePath() . time();
 
@@ -151,8 +148,6 @@ try {
 
     $archive->addFromString(Export\ArchiveInterface::PROJECT_FILE, $xml_content);
     $archive->addFromString(Export\ArchiveInterface::USER_FILE, $users_xml_content);
-
-    $xml_security->disableExternalLoadOfEntities();
 
     $archive->close();
 
