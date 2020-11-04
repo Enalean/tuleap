@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\MediaWiki;
+namespace Tuleap\Mediawiki;
 
 use DirectoryIterator;
 use ForgeConfig;
@@ -30,7 +30,6 @@ use ProjectUGroup;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UGroupManager;
-use Tuleap\Mediawiki\MediawikiDataDir;
 use XML_SimpleXMLCDATAFactory;
 
 class XMLMediaWikiExporter

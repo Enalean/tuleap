@@ -112,7 +112,7 @@ class PreCommitTest extends TestCase
      */
     private function preCommitToTags(array $paths): void
     {
-        $svn_look = Mockery::mock('Tuleap\SVN\Commit\SVNLook');
+        $svn_look = Mockery::mock(Svnlook::class);
         $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(["COMMIT MSG"]);
         $svn_look->shouldReceive('getTransactionPath')->andReturn($paths);
 
