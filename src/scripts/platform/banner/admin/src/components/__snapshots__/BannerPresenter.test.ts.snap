@@ -24,11 +24,10 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
    
   <div>
     <div
-      class="tlp-form-element"
+      class="tlp-form-element siteadmin-platform-banner-importance"
     >
       <label
         class="tlp-label"
-        for="banner-importance"
       >
         <translate-stub
           tag="span"
@@ -42,35 +41,56 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
         />
       </label>
        
-      <select
-        class="tlp-select tlp-select-adjusted"
-        id="banner-importance"
-        required="required"
+      <label
+        class="tlp-label tlp-radio"
       >
-        <option
-          data-current-language="en_US"
-          data-msgid="Standard"
+        <input
+          class="siteadmin-platform-banner-importance-standard"
+          type="radio"
           value="standard"
+        />
+         
+        <translate-stub
+          class="tlp-text-info"
+          tag="span"
         >
           Standard
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Warning"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-warning"
+          type="radio"
           value="warning"
+        />
+         
+        <translate-stub
+          class="tlp-text-warning"
+          tag="span"
         >
           Warning
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Critical"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-critical"
+          type="radio"
           value="critical"
+        />
+         
+        <translate-stub
+          class="tlp-text-danger"
+          tag="span"
         >
           Critical
-        </option>
-      </select>
+        </translate-stub>
+      </label>
     </div>
      
     <div
@@ -167,11 +187,10 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
     style="display: none;"
   >
     <div
-      class="tlp-form-element"
+      class="tlp-form-element siteadmin-platform-banner-importance"
     >
       <label
         class="tlp-label"
-        for="banner-importance"
       >
         <translate-stub
           tag="span"
@@ -185,35 +204,56 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
         />
       </label>
        
-      <select
-        class="tlp-select tlp-select-adjusted"
-        id="banner-importance"
-        required="required"
+      <label
+        class="tlp-label tlp-radio"
       >
-        <option
-          data-current-language="en_US"
-          data-msgid="Standard"
+        <input
+          class="siteadmin-platform-banner-importance-standard"
+          type="radio"
           value="standard"
+        />
+         
+        <translate-stub
+          class="tlp-text-info"
+          tag="span"
         >
           Standard
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Warning"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-warning"
+          type="radio"
           value="warning"
+        />
+         
+        <translate-stub
+          class="tlp-text-warning"
+          tag="span"
         >
           Warning
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Critical"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-critical"
+          type="radio"
           value="critical"
+        />
+         
+        <translate-stub
+          class="tlp-text-danger"
+          tag="span"
         >
           Critical
-        </option>
-      </select>
+        </translate-stub>
+      </label>
     </div>
      
     <div
@@ -300,11 +340,10 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
    
   <div>
     <div
-      class="tlp-form-element"
+      class="tlp-form-element siteadmin-platform-banner-importance"
     >
       <label
         class="tlp-label"
-        for="banner-importance"
       >
         <translate-stub
           tag="span"
@@ -318,35 +357,56 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
         />
       </label>
        
-      <select
-        class="tlp-select tlp-select-adjusted"
-        id="banner-importance"
-        required="required"
+      <label
+        class="tlp-label tlp-radio"
       >
-        <option
-          data-current-language="en_US"
-          data-msgid="Standard"
+        <input
+          class="siteadmin-platform-banner-importance-standard"
+          type="radio"
           value="standard"
+        />
+         
+        <translate-stub
+          class="tlp-text-info"
+          tag="span"
         >
           Standard
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Warning"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-warning"
+          type="radio"
           value="warning"
+        />
+         
+        <translate-stub
+          class="tlp-text-warning"
+          tag="span"
         >
           Warning
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="Critical"
+        </translate-stub>
+      </label>
+       
+      <label
+        class="tlp-label tlp-radio"
+      >
+        <input
+          class="siteadmin-platform-banner-importance-critical"
+          type="radio"
           value="critical"
+        />
+         
+        <translate-stub
+          class="tlp-text-danger"
+          tag="span"
         >
           Critical
-        </option>
-      </select>
+        </translate-stub>
+      </label>
     </div>
      
     <div

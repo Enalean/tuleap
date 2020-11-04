@@ -29,21 +29,38 @@
             <p v-translate>No banner defined</p>
         </div>
         <div v-show="banner_is_activated">
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="banner-importance">
+            <div class="tlp-form-element siteadmin-platform-banner-importance">
+                <label class="tlp-label">
                     <translate>Importance</translate>
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
-                <select
-                    class="tlp-select tlp-select-adjusted"
-                    id="banner-importance"
-                    required
-                    v-model="current_importance"
-                >
-                    <option value="standard" v-translate>Standard</option>
-                    <option value="warning" v-translate>Warning</option>
-                    <option value="critical" v-translate>Critical</option>
-                </select>
+                <label class="tlp-label tlp-radio">
+                    <input
+                        type="radio"
+                        value="standard"
+                        v-model="current_importance"
+                        class="siteadmin-platform-banner-importance-standard"
+                    />
+                    <translate class="tlp-text-info">Standard</translate>
+                </label>
+                <label class="tlp-label tlp-radio">
+                    <input
+                        type="radio"
+                        value="warning"
+                        v-model="current_importance"
+                        class="siteadmin-platform-banner-importance-warning"
+                    />
+                    <translate class="tlp-text-warning">Warning</translate>
+                </label>
+                <label class="tlp-label tlp-radio">
+                    <input
+                        type="radio"
+                        value="critical"
+                        v-model="current_importance"
+                        class="siteadmin-platform-banner-importance-critical"
+                    />
+                    <translate class="tlp-text-danger">Critical</translate>
+                </label>
             </div>
 
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
