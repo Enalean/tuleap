@@ -24,6 +24,8 @@ import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angula
 import * as tlp from "tlp";
 import * as rest_querier from "../api/rest-querier";
 
+jest.mock("tlp");
+
 describe(`DefinitionService`, () => {
     let DefinitionService, $q, wrapPromise, SharedPropertiesService;
     beforeEach(() => {
