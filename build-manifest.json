@@ -48,6 +48,10 @@
         "switch-to": {
             "src": "src/scripts/switch-to/src",
             "po": "src/scripts/switch-to/po"
+        },
+        "platform-banner-admin": {
+            "src": "src/scripts/platform/banner/admin/src",
+            "po": "src/scripts/platform/banner/admin/po"
         }
     }
 }

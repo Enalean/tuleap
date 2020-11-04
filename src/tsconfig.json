@@ -7,6 +7,7 @@
         "scripts/account/**/*",
         "scripts/browser-deprecation/**/*",
         "scripts/list-picker/src/**/*",
+        "scripts/platform/banner/admin/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/admin/header-background/**/*",
         "scripts/project/banner/**/*",

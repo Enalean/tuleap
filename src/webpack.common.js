@@ -297,6 +297,8 @@ const webpack_config_for_vue = {
         "news-permissions": "./scripts/news/permissions-per-group/index.js",
         "project/project-admin-banner":
             "./scripts/project/admin/banner/index-banner-project-admin.ts",
+        "site-admin/platform-banner":
+            "./scripts/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./scripts/project/admin/services/src/index-project-admin.js",
         "project/project-registration": "./scripts/project/registration/index.ts",
         "site-admin-services": "./scripts/project/admin/services/src/index-site-admin.js",

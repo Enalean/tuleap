@@ -1,0 +1,410 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BannerPresenter disables the whole form when on loading state 1`] = `
+<div>
+  <div
+    class="tlp-form-element tlp-form-element-disabled"
+  >
+    <label
+      class="tlp-label tlp-checkbox"
+    >
+      <input
+        type="checkbox"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Activate the banner on the whole platform
+      </translate-stub>
+    </label>
+  </div>
+   
+  <!---->
+   
+  <div>
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="banner-importance"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Importance
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <select
+        class="tlp-select tlp-select-adjusted"
+        id="banner-importance"
+        required="required"
+      >
+        <option
+          data-current-language="en_US"
+          data-msgid="Standard"
+          value="standard"
+        >
+          Standard
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Warning"
+          value="warning"
+        >
+          Warning
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Critical"
+          value="critical"
+        >
+          Critical
+        </option>
+      </select>
+    </div>
+     
+    <div
+      class="tlp-form-element tlp-form-element-disabled"
+    >
+      <label
+        class="tlp-label"
+        for="description"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Message
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        style="visibility: hidden;"
+        type="text"
+      />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
+    </div>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      disabled="disabled"
+      type="button"
+    >
+      <i
+        class="tlp-button-icon fas fa-fw fa-spin fa-circle-notch"
+      />
+       
+      <span
+        data-current-language="en_US"
+        data-msgid="Save the configuration"
+      >
+        Save the configuration
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`BannerPresenter displays a default message and an unchecked switch if banner is not set 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label tlp-checkbox"
+    >
+      <input
+        type="checkbox"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Activate the banner on the whole platform
+      </translate-stub>
+    </label>
+  </div>
+   
+  <div>
+    <p
+      data-current-language="en_US"
+      data-msgid="No banner defined"
+    >
+      No banner defined
+    </p>
+  </div>
+   
+  <div
+    style="display: none;"
+  >
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="banner-importance"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Importance
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <select
+        class="tlp-select tlp-select-adjusted"
+        id="banner-importance"
+        required="required"
+      >
+        <option
+          data-current-language="en_US"
+          data-msgid="Standard"
+          value="standard"
+        >
+          Standard
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Warning"
+          value="warning"
+        >
+          Warning
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Critical"
+          value="critical"
+        >
+          Critical
+        </option>
+      </select>
+    </div>
+     
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="description"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Message
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        style="visibility: hidden;"
+        type="text"
+      />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
+    </div>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      type="button"
+    >
+      <i
+        class="tlp-button-icon fas fa-save"
+      />
+       
+      <span
+        data-current-language="en_US"
+        data-msgid="Save the configuration"
+      >
+        Save the configuration
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`BannerPresenter displays the banner and a checked switch if banner is set 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label tlp-checkbox"
+    >
+      <input
+        type="checkbox"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Activate the banner on the whole platform
+      </translate-stub>
+    </label>
+  </div>
+   
+  <!---->
+   
+  <div>
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="banner-importance"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Importance
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <select
+        class="tlp-select tlp-select-adjusted"
+        id="banner-importance"
+        required="required"
+      >
+        <option
+          data-current-language="en_US"
+          data-msgid="Standard"
+          value="standard"
+        >
+          Standard
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Warning"
+          value="warning"
+        >
+          Warning
+        </option>
+         
+        <option
+          data-current-language="en_US"
+          data-msgid="Critical"
+          value="critical"
+        >
+          Critical
+        </option>
+      </select>
+    </div>
+     
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="description"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Message
+        </translate-stub>
+         
+        <i
+          aria-hidden="true"
+          class="fas fa-asterisk"
+        />
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        style="visibility: hidden;"
+        type="text"
+      />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
+    </div>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      type="button"
+    >
+      <i
+        class="tlp-button-icon fas fa-save"
+      />
+       
+      <span
+        data-current-language="en_US"
+        data-msgid="Save the configuration"
+      >
+        Save the configuration
+      </span>
+    </button>
+  </div>
+</div>
+`;
