@@ -25,11 +25,11 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackers;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackers;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 
 final class RequiredFieldCheckerTest extends TestCase
@@ -74,7 +74,7 @@ final class RequiredFieldCheckerTest extends TestCase
         $collection         = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProjectIncrementsTrackerCollection(
+            new ProgramIncrementsTrackerCollection(
                 [TrackerDataAdapter::build($tracker), TrackerDataAdapter::build($other_tracker_with_no_required_field)]
             ),
             $collection
@@ -109,7 +109,7 @@ final class RequiredFieldCheckerTest extends TestCase
         $collection->add($synchronized_field);
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProjectIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
+            new ProgramIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
             $collection
         );
         $this->assertFalse($no_other_required_fields);

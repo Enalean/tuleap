@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-final class PendingArtifactChangesetNotFoundException extends \RuntimeException implements ProjectIncrementCreationException
+final class PendingArtifactChangesetNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
     public function __construct(int $artifact_id, int $changeset_id)
     {

@@ -45,18 +45,18 @@ use Tuleap\ScaledAgile\Adapter\Program\FieldsTimeFrameAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\FieldTitleAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProjectIncrementsRunner;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
-use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProjectIncrementArtifactCreatorChecker;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
@@ -232,7 +232,7 @@ final class scaled_agilePlugin extends Plugin
         $planning_adapter = $this->getPlanningAdapter();
         $scaled_planning  = $planning_adapter->buildFromPlanning($virtual_top_milestone->getPlanning());
 
-        $user_can_create_project_increment = $project_increment_creator_checker->canProjectIncrementBeCreated(
+        $user_can_create_project_increment = $project_increment_creator_checker->canProgramIncrementBeCreated(
             $scaled_planning,
             $event->getUser()
         );
@@ -247,7 +247,7 @@ final class scaled_agilePlugin extends Plugin
      */
     public function getArtifactLinkNatures(array $params): void
     {
-        $params['natures'][] = new ProjectIncrementArtifactLinkType();
+        $params['natures'][] = new ProgramIncrementArtifactLinkType();
     }
 
     /**
@@ -255,8 +255,8 @@ final class scaled_agilePlugin extends Plugin
      */
     public function getNaturePresenter(array $params): void
     {
-        if ($params['shortname'] === ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME) {
-            $params['presenter'] = new ProjectIncrementArtifactLinkType();
+        if ($params['shortname'] === ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME) {
+            $params['presenter'] = new ProgramIncrementArtifactLinkType();
         }
     }
 
@@ -265,7 +265,7 @@ final class scaled_agilePlugin extends Plugin
      */
     public function trackerAddSystemNatures(array $params): void
     {
-        $params['natures'][] = ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME;
+        $params['natures'][] = ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
@@ -290,7 +290,7 @@ final class scaled_agilePlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
-        $create_mirrors_runner = CreateProjectIncrementsRunner::build();
+        $create_mirrors_runner = CreateProgramIncrementsRunner::build();
         $create_mirrors_runner->addListener($event);
     }
 
@@ -309,21 +309,21 @@ final class scaled_agilePlugin extends Plugin
 
         $handler = new ArtifactCreatedHandler(
             $program_dao,
-            CreateProjectIncrementsRunner::build(),
+            CreateProgramIncrementsRunner::build(),
             new PendingArtifactCreationDao(),
             $this->getPlanningAdapter()
         );
         $handler->handle($event);
     }
 
-    private function getProjectIncrementCreatorChecker(): ProjectIncrementArtifactCreatorChecker
+    private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker
     {
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
         $logger                  = $this->getLogger();
 
-        return new ProjectIncrementArtifactCreatorChecker(
+        return new ProgramIncrementArtifactCreatorChecker(
             $this->getTeamProjectCollectionBuilder(),
             new TrackerCollectionFactory(
                 $this->getPlanningAdapter()

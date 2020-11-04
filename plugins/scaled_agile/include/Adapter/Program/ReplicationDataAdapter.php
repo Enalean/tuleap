@@ -28,8 +28,8 @@ use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactChang
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactUserNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ArtifactData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use UserManager;

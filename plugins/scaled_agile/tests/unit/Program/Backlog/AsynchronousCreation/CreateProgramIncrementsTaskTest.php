@@ -32,18 +32,18 @@ use Tuleap\ScaledAgile\Adapter\Program\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsTask;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProjectIncrementsCreator;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\EndPeriodValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\StatusValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Changeset\Values\TitleValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
@@ -93,7 +93,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
      */
     private $logger;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectIncrementsCreator
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsCreator
      */
     private $mirror_creator;
 
@@ -111,7 +111,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $milestone_trackers_factory          = new TrackerCollectionFactory(
             new PlanningAdapter($this->planning_factory)
         );
-        $this->mirror_creator                = \Mockery::mock(ProjectIncrementsCreator::class);
+        $this->mirror_creator                = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                        = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_dao = \Mockery::mock(PendingArtifactCreationDao::class);
 
@@ -141,7 +141,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $planning->setPlanningTracker($replication_data->getTrackerData()->getFullTracker());
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
 
-        $this->mirror_creator->shouldReceive('createProjectIncrements')->once();
+        $this->mirror_creator->shouldReceive('createProgramIncrements')->once();
 
         $this->pending_artifact_creation_dao->shouldReceive('deleteArtifactFromPendingCreation')
             ->once()
@@ -149,7 +149,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
                 [(int) $replication_data->getArtifactData()->getId(), (int) $replication_data->getUser()->getId()]
             );
 
-        $this->task->createProjectIncrements($replication_data);
+        $this->task->createProgramIncrements($replication_data);
     }
 
     public function testItLogsWhenAnExceptionOccurrs(): void
@@ -161,7 +161,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
         $this->logger->shouldReceive('error')->once();
 
-        $this->task->createProjectIncrements($replication_data);
+        $this->task->createProgramIncrements($replication_data);
     }
 
     private function buildCopiedValues(): SourceChangesetValuesCollection

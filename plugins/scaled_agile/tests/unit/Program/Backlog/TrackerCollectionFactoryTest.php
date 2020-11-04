@@ -27,11 +27,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -130,7 +130,7 @@ final class TrackerCollectionFactoryTest extends TestCase
             ->with($user, $this->project_data->getId())
             ->andReturn($malformed_planning);
 
-        $this->expectException(NoProjectIncrementException::class);
+        $this->expectException(NoProgramIncrementException::class);
         $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 
@@ -150,7 +150,7 @@ final class TrackerCollectionFactoryTest extends TestCase
             ->with($user, $this->first_team_project_data->getId())
             ->andReturn($malformed_planning);
 
-        $this->expectException(NoProjectIncrementException::class);
+        $this->expectException(NoProgramIncrementException::class);
         $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 

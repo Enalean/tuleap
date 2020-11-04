@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\NoProjectIncrementException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningFotFoundException;
@@ -76,7 +76,7 @@ final class PlanningAdapter
     public static function buildFromPlanning(\Planning $planning): PlanningData
     {
         if ($planning->getPlanningTracker() instanceof \NullTracker) {
-            throw new NoProjectIncrementException($planning->getId());
+            throw new NoProgramIncrementException($planning->getId());
         }
         $project_data = ProjectDataAdapter::build($planning->getPlanningTracker()->getProject());
 

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldsTimeFrameData;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\MissingTimeFrameFieldException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldsTimeFrameData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 

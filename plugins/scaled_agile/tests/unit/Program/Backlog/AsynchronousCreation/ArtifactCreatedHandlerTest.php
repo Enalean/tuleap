@@ -44,7 +44,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     private $planning_factory;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|CreateProjectIncrementsRunner
+     * @var M\LegacyMockInterface|M\MockInterface|CreateProgramIncrementsRunner
      */
     private $asyncronous_runner;
 
@@ -68,7 +68,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $this->planning_factory              = M::mock(\PlanningFactory::class);
         $planning_adapter                    = new PlanningAdapter($this->planning_factory);
         $this->pending_artifact_creation_dao = M::mock(PendingArtifactCreationDao::class);
-        $this->asyncronous_runner            = M::mock(CreateProjectIncrementsRunner::class);
+        $this->asyncronous_runner            = M::mock(CreateProgramIncrementsRunner::class);
         $this->handler                       = new ArtifactCreatedHandler(
             $this->program_dao,
             $this->asyncronous_runner,
@@ -95,7 +95,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
             ->withArgs([$artifact->getId(), $current_user->getId(), $changeset->getId()])
             ->once();
 
-        $this->asyncronous_runner->shouldReceive('executeProjectIncrementsCreation')
+        $this->asyncronous_runner->shouldReceive('executeProgramIncrementsCreation')
             ->once();
 
         $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));

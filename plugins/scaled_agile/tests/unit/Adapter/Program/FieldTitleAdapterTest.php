@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

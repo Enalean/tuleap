@@ -47,10 +47,10 @@ use Tuleap\ScaledAgile\Adapter\Program\StatusValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\TitleValueAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementTrackerRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
@@ -76,7 +76,7 @@ class CreateProgramIncrementsTask
      */
     private $scale_tracker_factory;
     /**
-     * @var ProjectIncrementsCreator
+     * @var ProgramIncrementsCreator
      */
     private $program_increment_creator;
     /**
@@ -92,7 +92,7 @@ class CreateProgramIncrementsTask
         SourceChangesetValuesCollectionAdapter $changeset_collection_adapter,
         TeamProjectsCollectionBuilder $projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
-        ProjectIncrementsCreator $program_increment_creator,
+        ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationDao $pending_artifact_creation_dao
     ) {
@@ -104,18 +104,18 @@ class CreateProgramIncrementsTask
         $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
     }
 
-    public function createProjectIncrements(ReplicationData $replication_data): void
+    public function createProgramIncrements(ReplicationData $replication_data): void
     {
         try {
             $this->create($replication_data);
-        } catch (ProjectIncrementTrackerRetrievalException | ProjectIncrementCreationException | FieldRetrievalException $exception) {
+        } catch (ProgramIncrementTrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
     }
 
     /**
-     * @throws ProjectIncrementCreationException
-     * @throws ProjectIncrementTrackerRetrievalException
+     * @throws ProgramIncrementCreationException
+     * @throws ProgramIncrementTrackerRetrievalException
      * @throws FieldRetrievalException
      */
     private function create(ReplicationData $replication_data): void
@@ -124,14 +124,14 @@ class CreateProgramIncrementsTask
 
         $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject($replication_data->getProjectData());
 
-        $team_project_increments_tracker = $this->scale_tracker_factory->buildFromTeamProjects(
+        $team_program_increments_tracker = $this->scale_tracker_factory->buildFromTeamProjects(
             $team_projects,
             $replication_data->getUser()
         );
 
-        $this->program_increment_creator->createProjectIncrements(
+        $this->program_increment_creator->createProgramIncrements(
             $copied_values,
-            $team_project_increments_tracker,
+            $team_program_increments_tracker,
             $replication_data->getUser()
         );
 
@@ -169,7 +169,7 @@ class CreateProgramIncrementsTask
             )
         );
 
-        $mirror_creator = new ProjectIncrementsCreator(
+        $mirror_creator = new ProgramIncrementsCreator(
             $transaction_executor,
             $synchronized_fields_gatherer,
             new StatusValueMapper(

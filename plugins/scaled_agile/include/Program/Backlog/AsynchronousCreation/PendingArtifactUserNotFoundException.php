@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-class PendingArtifactUserNotFoundException extends \RuntimeException implements ProjectIncrementCreationException
+class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
     public function __construct(int $artifact_id, int $user_id)
     {

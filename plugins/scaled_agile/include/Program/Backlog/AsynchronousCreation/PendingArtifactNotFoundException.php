@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-class PendingArtifactNotFoundException extends \RuntimeException implements ProjectIncrementCreationException
+class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
     public function __construct(int $artifact_id, int $user_id)
     {
-        parent::__construct("Could not find Program source artifact #$artifact_id while creating project increments for user #$user_id");
+        parent::__construct("Could not find Program source artifact #$artifact_id while creating program increments for user #$user_id");
     }
 }

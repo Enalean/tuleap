@@ -35,9 +35,9 @@ class ArtifactCreatedHandler
      */
     private $program_dao;
     /**
-     * @var CreateProjectIncrementsRunner
+     * @var CreateProgramIncrementsRunner
      */
-    private $create_project_increments_runner;
+    private $create_program_increments_runner;
     /**
      * @var PendingArtifactCreationDao
      */
@@ -49,12 +49,12 @@ class ArtifactCreatedHandler
 
     public function __construct(
         ProgramDao $program_dao,
-        CreateProjectIncrementsRunner $create_project_increments_runner,
+        CreateProgramIncrementsRunner $create_program_increments_runner,
         PendingArtifactCreationDao $pending_artifact_creation_dao,
         PlanningAdapter $planning_adapter
     ) {
         $this->program_dao                      = $program_dao;
-        $this->create_project_increments_runner = $create_project_increments_runner;
+        $this->create_program_increments_runner = $create_program_increments_runner;
         $this->pending_artifact_creation_dao    = $pending_artifact_creation_dao;
         $this->planning_adapter                 = $planning_adapter;
     }
@@ -89,6 +89,6 @@ class ArtifactCreatedHandler
         );
 
         $replication_data = ReplicationDataAdapter::build($source_artifact, $current_user, $event->getChangeset());
-        $this->create_project_increments_runner->executeProjectIncrementsCreation($replication_data);
+        $this->create_program_increments_runner->executeProgramIncrementsCreation($replication_data);
     }
 }

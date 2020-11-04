@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\ProjectIncrementArtifactLinkType;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class scaled_agilePluginTest extends TestCase
@@ -33,17 +33,17 @@ final class scaled_agilePluginTest extends TestCase
         $params  = ['natures' => &$natures];
         $plugin->getArtifactLinkNatures($params);
 
-        self::assertEquals([new ProjectIncrementArtifactLinkType()], $natures);
+        self::assertEquals([new ProgramIncrementArtifactLinkType()], $natures);
     }
 
     public function testProvidesNaturePresenterWhenTheTypeIsExposedByThePlugin(): void
     {
         $plugin    = new scaled_agilePlugin(1);
         $presenter = null;
-        $params    = ['shortname' => ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
+        $params    = ['shortname' => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
         $plugin->getNaturePresenter($params);
 
-        self::assertEquals(new ProjectIncrementArtifactLinkType(), $presenter);
+        self::assertEquals(new ProgramIncrementArtifactLinkType(), $presenter);
     }
 
     public function testDoesNotProvideNaturePresenterWhenTheTypeIsNotExposedByThePlugin(): void
@@ -63,6 +63,6 @@ final class scaled_agilePluginTest extends TestCase
         $params  = ['natures' => &$natures];
         $plugin->trackerAddSystemNatures($params);
 
-        self::assertEquals([ProjectIncrementArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
+        self::assertEquals([ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
     }
 }
