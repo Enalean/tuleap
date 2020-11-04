@@ -123,11 +123,11 @@ final class ProgramIncrementFieldsData
             $changeset_values_collection->getTitleValue(),
             (int) $target_fields->getFieldDescriptionData()->getId(),
             $changeset_values_collection->getDescriptionValue(),
-            (int) $target_fields->getFieldStatuData()->getId(),
+            (int) $target_fields->getFieldStatusData()->getId(),
             $mapped_status_value,
             (int) $target_fields->getFieldStartDateData()->getId(),
             $changeset_values_collection->getStartDateValue(),
-            (int) $target_fields->getFieldEndPriodData()->getId(),
+            (int) $target_fields->getFieldEndPeriodData()->getId(),
             $changeset_values_collection->getEndPeriodValue(),
             $changeset_values_collection->getArtifactLinkValue()
         );

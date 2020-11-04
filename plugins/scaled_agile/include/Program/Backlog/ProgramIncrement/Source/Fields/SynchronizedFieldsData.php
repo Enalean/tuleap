@@ -86,7 +86,7 @@ final class SynchronizedFieldsData
         return $this->field_description_data;
     }
 
-    public function getFieldStatuData(): FieldData
+    public function getFieldStatusData(): FieldData
     {
         return $this->field_status_data;
     }
@@ -96,7 +96,7 @@ final class SynchronizedFieldsData
         return $this->field_start_date_data;
     }
 
-    public function getFieldEndPriodData(): FieldData
+    public function getFieldEndPeriodData(): FieldData
     {
         return $this->field_end_period_data;
     }

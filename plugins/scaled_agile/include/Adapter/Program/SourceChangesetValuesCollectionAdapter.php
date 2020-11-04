@@ -85,9 +85,9 @@ class SourceChangesetValuesCollectionAdapter
         $fields              = $this->fields_gatherer->build($replication_data->getTrackerData());
         $title_value         = $this->title_value_data_adapter->build($fields->getFieldTitleData(), $replication_data);
         $description_value   = $this->description_value_adapter->build($fields->getFieldDescriptionData(), $replication_data);
-        $status_value        = $this->status_value_adapter->build($fields->getFieldStatuData(), $replication_data);
+        $status_value        = $this->status_value_adapter->build($fields->getFieldStatusData(), $replication_data);
         $start_date_value    = $this->start_date_adapter->build($fields->getFieldStartDateData(), $replication_data);
-        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPriodData(), $replication_data);
+        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPeriodData(), $replication_data);
         $artifact_link_value = $this->artifact_link_value_adapter->build($replication_data);
 
         return new SourceChangesetValuesCollection(

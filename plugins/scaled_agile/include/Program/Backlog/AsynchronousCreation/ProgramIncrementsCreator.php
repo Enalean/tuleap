@@ -78,7 +78,7 @@ class ProgramIncrementsCreator
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
 
                     $mapped_status       = $this->status_mapper
-                        ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getFieldStatuData());
+                        ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getFieldStatusData());
 
                     $fields_data         = ProgramIncrementFieldsData::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
