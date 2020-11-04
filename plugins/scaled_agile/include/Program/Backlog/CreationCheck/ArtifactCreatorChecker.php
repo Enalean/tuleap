@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;

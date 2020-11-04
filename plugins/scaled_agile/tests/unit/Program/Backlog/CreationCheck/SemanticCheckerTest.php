@@ -29,7 +29,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerColl
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;

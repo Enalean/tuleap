@@ -30,7 +30,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\Fields\SynchronizedFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 
 final class RequiredFieldCheckerTest extends TestCase
 {

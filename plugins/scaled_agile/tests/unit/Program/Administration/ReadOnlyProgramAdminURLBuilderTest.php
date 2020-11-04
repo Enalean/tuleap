@@ -29,9 +29,9 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ReadOnlyProgramAdminURLBuilderTest extends TestCase

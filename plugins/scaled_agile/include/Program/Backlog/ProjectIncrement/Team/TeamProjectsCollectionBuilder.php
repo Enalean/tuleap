@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
 use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 
 final class TeamProjectsCollectionBuilder
 {

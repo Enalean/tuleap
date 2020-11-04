@@ -26,10 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 

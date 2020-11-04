@@ -27,7 +27,7 @@ use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProjectIncrement\Team\ProjectIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class TrackerCollectionFactory

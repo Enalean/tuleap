@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter;
 
 use PFUser;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class PlannableItemsPerTeamPresenterCollectionBuilder

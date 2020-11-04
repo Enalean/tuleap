@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Administration\PlannableItems;
 
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
-use Tuleap\ScaledAgile\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\TrackerNotFoundException;
 
 class PlannableItemsCollectionBuilder

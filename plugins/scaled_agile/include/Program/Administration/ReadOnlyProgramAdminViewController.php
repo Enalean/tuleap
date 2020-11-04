@@ -42,10 +42,10 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningFotFoundException;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\TrackerNotFoundException;
 
 final class ReadOnlyProgramAdminViewController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
