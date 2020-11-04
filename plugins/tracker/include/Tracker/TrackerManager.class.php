@@ -557,8 +557,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         foreach ($trackers as $tracker) {
             if ($this->trackerCanBeDisplayed($tracker, $user)) {
-                $html .= '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '" data-test="tracker-link-' . $tracker->getItemName() . '" ';
-                $html .= 'data-test-tracker-id="' . $tracker->getId() . '" data-tracker-id="' . $tracker->id . '" ';
+                $html .= '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode($tracker->id)) . '" data-test="tracker-link-' . $hp->purify($tracker->getItemName()) . '" ';
+                $html .= 'data-test-tracker-id="' . $hp->purify($tracker->getId()) . '" data-tracker-id="' . $hp->purify($tracker->id) . '" ';
                 $html .= 'class="tlp-card tlp-card-selectable trackers-homepage-tracker ' . $hp->purify($tracker->getColor()->getName()) . '">';
 
                 $html .= '<span class="trackers-homepage-tracker-title-container">';

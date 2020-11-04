@@ -196,6 +196,7 @@ class PluginFactory // phpcs:ignore
      * Check for directory separator to prevent potential LFI
      *
      * @psalm-taint-escape text
+     * @psalm-taint-escape shell
      * @psalm-pure
      */
     private static function verifyPluginName(string $name): string

@@ -116,8 +116,8 @@ class Tracker_DateReminderRenderer
             $output .= "<h3>" . dgettext('tuleap-tracker', 'Update reminder') . "</h3>";
             $output .= '<form method="post" name="update_date_field_reminder" class="form-inline">';
             $output .= '<input type="hidden" name="action" value="update_reminder">';
-            $output .= '<input type="hidden" name="reminder_id" value="' . $reminderId . '">
-                        <input type="hidden" name="reminder_field_date" value="' . $reminder->getField()->getId() . '">';
+            $output .= '<input type="hidden" name="reminder_id" value="' . $purifier->purify($reminderId) . '">
+                        <input type="hidden" name="reminder_field_date" value="' . $purifier->purify($reminder->getField()->getId()) . '">';
             $output .= '<table border="0" cellpadding="5"><tr>';
             $output .= $csrf_token->fetchHTMLInput();
             $output .= '<td><label>' . dgettext('tuleap-tracker', 'Send an email to') . ':</label></td>
@@ -443,8 +443,8 @@ class Tracker_DateReminderRenderer
         $output .= sprintf(dgettext('tuleap-tracker', '<h3>Confirm deletion of date reminder</h3><p>You are going to delete this date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>'), $reminderString);
         $output .= '<div class="date_reminder_confirm_delete_buttons">';
         $output .= '<input type="hidden" name="action" value="confirm_delete_reminder" />';
-        $output .= '<input type="hidden" name="tracker" value="' . (int) $this->tracker->id . '" />';
-        $output .= '<input type="hidden" name="reminder_id" value="' . $reminderId . '" />';
+        $output .= '<input type="hidden" name="tracker" value="' . $purifier->purify((int) $this->tracker->id) . '" />';
+        $output .= '<input type="hidden" name="reminder_id" value="' . $purifier->purify($reminderId) . '" />';
         $output .= '<input type="submit" name="cancel_delete_reminder" value="' . dgettext('tuleap-tracker', 'No, I do not want to delete it') . '" />';
         $output .= '<input type="submit" name="confirm_delete" value="' . dgettext('tuleap-tracker', 'Yes, I am sure!') . '" />';
         $output .= '</div>';
