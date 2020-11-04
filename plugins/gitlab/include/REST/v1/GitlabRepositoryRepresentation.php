@@ -29,6 +29,8 @@ use Tuleap\REST\JsonCast;
  */
 class GitlabRepositoryRepresentation
 {
+    public const ROUTE = 'gitlab_repositories';
+
     /**
      * @var int
      */

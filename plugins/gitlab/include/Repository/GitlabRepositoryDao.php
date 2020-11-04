@@ -42,6 +42,18 @@ class GitlabRepositoryDao extends DataAccessObject
     /**
      * @psalm-return array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}
      */
+    public function getGitlabRepositoryByIntegrationId(int $id): ?array
+    {
+        $sql = 'SELECT *
+                FROM plugin_gitlab_repository
+                WHERE id = ?';
+
+        return $this->getDB()->row($sql, $id);
+    }
+
+    /**
+     * @psalm-return array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}
+     */
     public function getGitlabRepositorByInternalIdAndPath(int $gitlab_id, string $http_path): ?array
     {
         $sql = 'SELECT *
@@ -57,6 +69,14 @@ class GitlabRepositoryDao extends DataAccessObject
         $this->getDB()->update(
             'plugin_gitlab_repository',
             ['last_push_date' => $last_update_date],
+            ['id' => $repository_id]
+        );
+    }
+
+    public function deleteGitlabRepository(int $repository_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlab_repository',
             ['id' => $repository_id]
         );
     }

@@ -22,6 +22,8 @@ namespace Tuleap\Gitlab\REST;
 
 use Project;
 use Tuleap\Gitlab\REST\v1\GitlabProjectResource;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryResource;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 
@@ -34,12 +36,13 @@ class ResourcesInjector
     public function populate(\Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass(GitlabProjectResource::class, ProjectRepresentation::ROUTE);
+        $restler->addAPIClass(GitlabRepositoryResource::class, GitlabRepositoryRepresentation::ROUTE);
     }
 
     public function declareProjectGitlabResource(array &$resources, Project $project): void
     {
         $routes = [
-            'gitlab_repositories'
+            GitlabRepositoryRepresentation::ROUTE
         ];
 
         foreach ($routes as $route) {

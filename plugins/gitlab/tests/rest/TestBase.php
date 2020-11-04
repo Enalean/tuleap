@@ -26,10 +26,16 @@ class TestBase extends RestBase
 {
     protected $gitlab_project_id;
 
+    /**
+     * @var int
+     */
+    protected $gitlab_repository_id;
+
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->gitlab_project_id = $this->getProjectId(GitLabDataBuilder::PROJECT_TEST_GITLAB_SHORTNAME);
+        $this->gitlab_project_id    = $this->getProjectId(GitLabDataBuilder::PROJECT_TEST_GITLAB_SHORTNAME);
+        $this->gitlab_repository_id = 1;
     }
 }
