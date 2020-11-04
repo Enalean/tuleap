@@ -233,6 +233,7 @@ class PreCommit
         $immutable_path = trim($immutable_path, '/');
         $immutable_path = preg_quote($immutable_path);
         $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
+        $immutable_path = str_replace(" ", "\s", $immutable_path);
 
         return $immutable_path;
     }
