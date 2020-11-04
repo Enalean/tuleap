@@ -44,7 +44,7 @@
 
     .quick-look-button,
     .document-dropdown-menu,
-    .document-dropdown-menu-button {
+    .document-dropdown-menu-button>button {
         visibility: hidden;
     }
 }
@@ -66,10 +66,20 @@
 
 .document-tree-item-toggle-quicklook:hover {
     .quick-look-button,
-    .document-dropdown-menu,
-    .document-dropdown-menu-button {
+    .document-dropdown-menu-button>button {
         visibility: visible;
     }
+}
+
+.document-tree-item-toggle-quicklook:focus-within {
+    .quick-look-button,
+    .document-dropdown-menu-button>button {
+        visibility: visible;
+    }
+}
+
+.document-tree-item-toggle-quicklook .document-dropdown-menu.tlp-dropdown-shown {
+    visibility: visible;
 }
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -176,8 +186,9 @@
     color: $tlp-ui-dimmed;
     cursor: pointer;
 
-    &:hover {
-        color: #222222;
+    &:hover,
+    &:focus {
+        color: #111111;
     }
 }
 

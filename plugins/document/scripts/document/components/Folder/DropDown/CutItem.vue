@@ -18,8 +18,9 @@
   -->
 
 <template>
-    <a
+    <button
         class="tlp-dropdown-menu-item"
+        type="button"
         role="menuitem"
         v-on:click="cutItem(item)"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
@@ -28,7 +29,7 @@
     >
         <i class="fa fa-fw fa-cut tlp-dropdown-menu-item-icon"></i>
         <translate>Cut</translate>
-    </a>
+    </button>
 </template>
 <script>
 import { mapState } from "vuex";

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <a
+    <button
         type="button"
         class="tlp-dropdown-menu-item"
         role="menuitem"
@@ -33,7 +33,7 @@
             }"
         ></i>
         <translate>Download as zip</translate>
-    </a>
+    </button>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";

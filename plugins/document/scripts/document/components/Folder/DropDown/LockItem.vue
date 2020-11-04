@@ -18,16 +18,17 @@
   -->
 
 <template>
-    <a
+    <button
         v-if="can_lock_document"
         class="tlp-dropdown-menu-item"
+        type="button"
         role="menuitem"
         data-test="document-dropdown-menu-lock-item"
         v-on:click.prevent="lockDocument"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Lock</translate>
-    </a>
+    </button>
 </template>
 <script>
 export default {

@@ -28,6 +28,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
 .tlp-dropdown-menu {
     display: flex;
+    visibility: hidden;
     position: absolute;
     z-index: 1000;
     flex-direction: column;
@@ -39,7 +40,6 @@ $tlp-dropdown-transition: 75ms ease-out;
         box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
     border-radius: $tlp-dropdown-radius;
-    opacity: 0;
     background: $tlp-ui-white;
     box-shadow: none;
     pointer-events: none;
@@ -104,8 +104,8 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 
     &.tlp-dropdown-shown {
+        visibility: visible;
         transform: translateY(0);
-        opacity: 1;
         box-shadow: $tlp-dropdown-shadow;
         pointer-events: auto;
 

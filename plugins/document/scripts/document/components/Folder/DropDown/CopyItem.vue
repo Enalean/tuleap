@@ -18,8 +18,9 @@
   -->
 
 <template>
-    <a
+    <button
         class="tlp-dropdown-menu-item"
+        type="button"
         role="menuitem"
         v-on:click="copyItem(item)"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
@@ -27,12 +28,11 @@
     >
         <i class="fa fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
         <translate>Copy</translate>
-    </a>
+    </button>
 </template>
 <script>
 import { mapState } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
-
 export default {
     name: "CopyItem",
     props: {

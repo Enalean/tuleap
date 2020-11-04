@@ -18,15 +18,16 @@
   -->
 
 <template>
-    <a
+    <button
         v-on:click.prevent="showUpdateModal"
         class="tlp-dropdown-menu-item"
+        type="button"
         role="menuitem"
         data-test="document-dropdown-update-properties"
     >
         <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
         <translate>Update properties</translate>
-    </a>
+    </button>
 </template>
 
 <script>
