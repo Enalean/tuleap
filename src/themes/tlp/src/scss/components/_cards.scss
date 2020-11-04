@@ -39,7 +39,9 @@
     color: $tlp-typo-default-text-color;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:focus,
+    &:focus-within {
         border-color: $tlp-theme-color;
         text-decoration: none;
 
@@ -65,7 +67,8 @@
     > .tlp-card-selectable {
         transition: background-color 100ms linear;
 
-        &:hover {
+        &:hover,
+        &:focus {
             border-color: $tlp-ui-border-light;
             background-color: $tlp-theme-color-hover-background;
             text-decoration: none;
@@ -76,7 +79,8 @@
         border: 0;
         background: $tlp-theme-color-dimmed-background;
 
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: $tlp-theme-color-dimmed-hover-background;
         }
 
