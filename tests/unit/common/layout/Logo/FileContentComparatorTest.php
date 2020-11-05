@@ -34,22 +34,18 @@ class FileContentComparatorTest extends TestCase
         $comparator = new FileContentComparator();
 
         self::assertTrue($comparator->doesFilesHaveTheSameContent(
-            __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png",
+            [
+                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png"),
+                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png"),
+            ],
             __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png",
         ));
         self::assertFalse($comparator->doesFilesHaveTheSameContent(
-            __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png",
+            [
+                hash_file('sha256', __DIR__ . "/../../../../../src/www/themes/common/images/organization_logo.png"),
+            ],
             __DIR__ . "/../../../../../src/www/themes/BurningParrot/images/organization_logo_small.png",
         ));
-    }
-
-    public function testRaiseExceptionIfSourcePathDoesNotExist(): void
-    {
-        $comparator = new FileContentComparator();
-
-        $this->expectException(\RuntimeException::class);
-
-        $comparator->doesFilesHaveTheSameContent("does not exists", __FILE__);
     }
 
     public function testRaiseExceptionIfTargetPathDoesNotExist(): void
@@ -58,6 +54,6 @@ class FileContentComparatorTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        $comparator->doesFilesHaveTheSameContent(__FILE__, "does not exists");
+        $comparator->doesFilesHaveTheSameContent([], "does not exists");
     }
 }

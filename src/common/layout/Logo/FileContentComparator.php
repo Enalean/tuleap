@@ -22,46 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Logo;
 
-class FileContentComparator
+final class FileContentComparator
 {
-    public function doesFilesHaveTheSameContent(string $source_path, string $target_path): bool
+    /**
+     * @param string[] $expected_sha256_content_hashes
+     */
+    public function doesFilesHaveTheSameContent(array $expected_sha256_content_hashes, string $target_path): bool
     {
-        if (! is_file($source_path) || ! is_readable($source_path)) {
-            throw new \RuntimeException("$source_path does not exist or is not readable");
-        }
-
         if (! is_file($target_path) || ! is_readable($target_path)) {
             throw new \RuntimeException("$target_path does not exist or is not readable");
         }
 
-        if (! $this->areFilesTheSameSize($source_path, $target_path)) {
-            return false;
-        }
-
-        return $this->areContentsTheSame($source_path, $target_path);
-    }
-
-    private function areFilesTheSameSize(string $source_path, string $target_path): bool
-    {
-        return filesize($source_path) === filesize($target_path);
-    }
-
-    private function areContentsTheSame(string $source_path, string $target_path): bool
-    {
-        $source_handle = fopen($source_path, 'rb');
-        $target_handle = fopen($target_path, 'rb');
-
-        $are_same = true;
-        while (! feof($source_handle)) {
-            if (fread($source_handle, 8192) !== fread($target_handle, 8192)) {
-                $are_same = false;
-                break;
-            }
-        }
-
-        fclose($source_handle);
-        fclose($target_handle);
-
-        return $are_same;
+        return in_array(hash_file('sha256', $target_path), $expected_sha256_content_hashes, true);
     }
 }

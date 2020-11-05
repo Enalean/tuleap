@@ -27,6 +27,11 @@ use LogoRetriever;
 
 class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
 {
+    private const ORGANIZATION_LOGO_SHA256_CONTENT_HASHES = [
+        'f6aeea978b22cd40c9804fd1e897ad394643a3715fa8e6ab449dd18397dce1c0',
+        '1eabd948d8d077314370f9ee3b76c5e8bbf70ab993f1e3eea49c32074333cbdf',
+    ];
+
     /**
      * @var LogoRetriever
      */
@@ -65,7 +70,7 @@ class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
     private function isLegacyOrganizationLogoDifferentThanOurs(): bool
     {
         return ! $this->comparator->doesFilesHaveTheSameContent(
-            __DIR__ . '/../../../www/themes/BurningParrot/images/organization_logo.png',
+            self::ORGANIZATION_LOGO_SHA256_CONTENT_HASHES,
             ForgeConfig::get('sys_data_dir') . '/images/organization_logo.png',
         );
     }
