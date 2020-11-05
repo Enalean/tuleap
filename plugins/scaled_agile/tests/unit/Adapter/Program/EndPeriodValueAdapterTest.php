@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -131,7 +131,7 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $adapter = new EndPeriodValueAdapter();
 
-        $expected_data = new EndPeriodValueData("12");
+        $expected_data = new EndPeriodValue("12");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
         $data = $adapter->build($this->duration_field_data, $replication_data);
@@ -164,7 +164,7 @@ final class EndPeriodValueAdapterTest extends TestCase
 
         $adapter = new EndPeriodValueAdapter();
 
-        $expected_data = new EndPeriodValueData("2020-10-31");
+        $expected_data = new EndPeriodValue("2020-10-31");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
         $data = $adapter->build($this->end_date_field_data, $replication_data);

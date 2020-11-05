@@ -121,7 +121,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
         $this->mockField($field_end_date, 6, true, true);
         $end_date_field_data = new FieldData($field_end_date);
 
-        $synchronized_field_data = new SynchronizedFieldsData(
+        $synchronized_field_data = new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,

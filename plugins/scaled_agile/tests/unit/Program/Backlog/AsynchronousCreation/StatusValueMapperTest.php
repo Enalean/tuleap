@@ -25,13 +25,13 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
@@ -113,12 +113,12 @@ final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
     private function buildCopiedValues(
         array $status_value
     ): SourceChangesetValuesCollection {
-        $title_value         = new TitleValueData('Irrelevant');
-        $description_value   = new DescriptionValueData('Irrelevant', 'text');
-        $status_value        = new StatusValueData($status_value);
-        $start_date_value    = new StartDateValueData('2020-10-01');
-        $end_period_value    = new EndPeriodValueData('2020-10-10');
-        $artifact_link_value = new ArtifactLinkValueData(123);
+        $title_value         = new TitleValue('Irrelevant');
+        $description_value   = new DescriptionValue('Irrelevant', 'text');
+        $status_value        = new StatusValue($status_value);
+        $start_date_value    = new StartDateValue('2020-10-01');
+        $end_period_value    = new EndPeriodValue('2020-10-10');
+        $artifact_link_value = new ArtifactLinkValue(123);
         $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(

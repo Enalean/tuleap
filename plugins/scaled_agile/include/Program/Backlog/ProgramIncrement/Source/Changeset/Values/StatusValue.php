@@ -22,34 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tracker_FormElement_Field_List_BindValue;
+
 /**
  * @psalm-immutable
  */
-final class DescriptionValueData
+final class StatusValue
 {
     /**
-     * @var string
+     * @var Tracker_FormElement_Field_List_BindValue[]
      */
-    private $value;
-    /**
-     * @var string
-     */
-    private $format;
+    private $list_values;
 
-    public function __construct(string $value, string $format)
+    /**
+     * @param Tracker_FormElement_Field_List_BindValue[] $list_values
+     */
+    public function __construct(array $list_values)
     {
-        $this->value  = $value;
-        $this->format = $format;
+        $this->list_values = $list_values;
     }
 
     /**
-     * @return array{content: string, format: string}
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public function getValue(): array
+    public function getListValues(): array
     {
-        return [
-            'content' => $this->value,
-            'format'  => $this->format
-        ];
+        return $this->list_values;
     }
 }

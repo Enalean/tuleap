@@ -25,20 +25,20 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\V
 /**
  * @psalm-immutable
  */
-final class StartDateValueData
+final class EndPeriodValue
 {
     /**
      * @var string
      */
-    private $date_value;
+    private $value;
 
-    public function __construct(string $date_value)
+    public function __construct(string $value)
     {
-        $this->date_value = $date_value;
+        $this->value = $value;
     }
 
     public function getValue(): string
     {
-        return $this->date_value;
+        return $this->value;
     }
 }

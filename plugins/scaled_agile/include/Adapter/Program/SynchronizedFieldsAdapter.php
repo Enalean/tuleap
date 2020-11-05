@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\TrackerData;
 
 class SynchronizedFieldsAdapter
@@ -66,10 +66,10 @@ class SynchronizedFieldsAdapter
     /**
      * @throws FieldSynchronizationException
      */
-    public function build(TrackerData $source_tracker): SynchronizedFieldsData
+    public function build(TrackerData $source_tracker): SynchronizedFields
     {
         $timeframe_fields = $this->fields_time_frame_adapter->build($source_tracker);
-        return new SynchronizedFieldsData(
+        return new SynchronizedFields(
             $this->artifact_link_adapter->build($source_tracker),
             $this->field_title_adapter->build($source_tracker),
             $this->field_description_adapter->build($source_tracker),

@@ -22,24 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
 final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
         $copied_values       = $this->buildCopiedValues(
@@ -92,12 +89,12 @@ final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
             );
         }
 
-        $title_value         = new TitleValueData($title_value);
-        $description_value   = new DescriptionValueData($description_value, $description_format);
-        $status_value        = new StatusValueData($list_values);
-        $start_date_value    = new StartDateValueData('2020-10-01');
-        $end_period_value    = new EndPeriodValueData('2020-10-10');
-        $artifact_link_value = new ArtifactLinkValueData($program_artifact_id);
+        $title_value         = new TitleValue($title_value);
+        $description_value   = new DescriptionValue($description_value, $description_format);
+        $status_value        = new StatusValue($list_values);
+        $start_date_value    = new StartDateValue('2020-10-01');
+        $end_period_value    = new EndPeriodValue('2020-10-10');
+        $artifact_link_value = new ArtifactLinkValue($program_artifact_id);
         $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
@@ -119,7 +116,7 @@ final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
         int $status_id,
         int $start_date_id,
         int $end_date_id
-    ): SynchronizedFieldsData {
+    ): SynchronizedFields {
         $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
         $title_field_data = new FieldData(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
@@ -132,7 +129,7 @@ final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
 
         $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
 
-        return new SynchronizedFieldsData(
+        return new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,

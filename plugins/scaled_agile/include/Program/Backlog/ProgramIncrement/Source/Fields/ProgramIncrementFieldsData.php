@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 
 /**
  * @psalm-immutable
@@ -44,17 +44,17 @@ final class ProgramIncrementFieldsData
      */
     private $title_field_id;
     /**
-     * @var TitleValueData
+     * @var TitleValue
      */
-    private $title_value_data;
+    private $title_value;
     /**
      * @var int
      */
     private $description_field_id;
     /**
-     * @var DescriptionValueData
+     * @var DescriptionValue
      */
-    private $description_value_data;
+    private $description_value;
     /**
      * @var int
      */
@@ -64,13 +64,13 @@ final class ProgramIncrementFieldsData
      */
     private $mapped_status_value;
     /**
-     * @var StartDateValueData
+     * @var StartDateValue
      */
-    private $start_date_value_data;
+    private $start_date_value;
     /**
-     * @var EndPeriodValueData
+     * @var EndPeriodValue
      */
-    private $end_period_value_data;
+    private $end_period_value;
     /**
      * @var int
      */
@@ -80,55 +80,55 @@ final class ProgramIncrementFieldsData
      */
     private $end_period_field_id;
     /**
-     * @var ArtifactLinkValueData
+     * @var ArtifactLinkValue
      */
-    private $artifact_link_value_data;
+    private $artifact_link_value;
 
     public function __construct(
         int $artifact_link_field_id,
-        ArtifactLinkValueData $artifact_link_value_data,
+        ArtifactLinkValue $artifact_link_value,
         int $title_field_id,
-        TitleValueData $title_value_data,
+        TitleValue $title_value,
         int $description_field_id,
-        DescriptionValueData $description_value_data,
+        DescriptionValue $description_value,
         int $status_field_id,
         MappedStatusValue $mapped_status_value,
         int $start_date_field_id,
-        StartDateValueData $start_date_value_data,
+        StartDateValue $start_date_value,
         int $end_period_field_id,
-        EndPeriodValueData $end_period_value
+        EndPeriodValue $end_period_value
     ) {
-        $this->artifact_link_field_id   = $artifact_link_field_id;
-        $this->artifact_link_value_data = $artifact_link_value_data;
-        $this->title_field_id           = $title_field_id;
-        $this->title_value_data         = $title_value_data;
-        $this->description_field_id     = $description_field_id;
-        $this->description_value_data   = $description_value_data;
-        $this->status_field_id          = $status_field_id;
-        $this->mapped_status_value      = $mapped_status_value;
-        $this->start_date_field_id      = $start_date_field_id;
-        $this->start_date_value_data    = $start_date_value_data;
-        $this->end_period_field_id      = $end_period_field_id;
-        $this->end_period_value_data    = $end_period_value;
+        $this->artifact_link_field_id = $artifact_link_field_id;
+        $this->artifact_link_value    = $artifact_link_value;
+        $this->title_field_id         = $title_field_id;
+        $this->title_value            = $title_value;
+        $this->description_field_id   = $description_field_id;
+        $this->description_value      = $description_value;
+        $this->status_field_id        = $status_field_id;
+        $this->mapped_status_value    = $mapped_status_value;
+        $this->start_date_field_id    = $start_date_field_id;
+        $this->start_date_value       = $start_date_value;
+        $this->end_period_field_id    = $end_period_field_id;
+        $this->end_period_value       = $end_period_value;
     }
 
     public static function fromSourceChangesetValuesAndSynchronizedFields(
         SourceChangesetValuesCollection $changeset_values_collection,
         MappedStatusValue $mapped_status_value,
-        SynchronizedFieldsData $target_fields
+        SynchronizedFields $target_fields
     ): self {
         return new self(
-            $target_fields->getFieldArtifactLinkData()->getId(),
+            $target_fields->getArtifactLinkField()->getId(),
             $changeset_values_collection->getArtifactLinkValue(),
-            $target_fields->getFieldTitleData()->getId(),
+            $target_fields->getTitleField()->getId(),
             $changeset_values_collection->getTitleValue(),
-            $target_fields->getFieldDescriptionData()->getId(),
+            $target_fields->getDescriptionField()->getId(),
             $changeset_values_collection->getDescriptionValue(),
-            $target_fields->getFieldStatusData()->getId(),
+            $target_fields->getStatusField()->getId(),
             $mapped_status_value,
-            $target_fields->getFieldStartDateData()->getId(),
+            $target_fields->getStartDateField()->getId(),
             $changeset_values_collection->getStartDateValue(),
-            $target_fields->getFieldEndPeriodData()->getId(),
+            $target_fields->getEndPeriodField()->getId(),
             $changeset_values_collection->getEndPeriodValue()
         );
     }
@@ -139,12 +139,12 @@ final class ProgramIncrementFieldsData
     public function toFieldsDataArray(): array
     {
         return [
-            $this->artifact_link_field_id => $this->artifact_link_value_data->getValues(),
-            $this->title_field_id         => $this->title_value_data->getValue(),
-            $this->description_field_id   => $this->description_value_data->getValue(),
+            $this->artifact_link_field_id => $this->artifact_link_value->getValues(),
+            $this->title_field_id         => $this->title_value->getValue(),
+            $this->description_field_id   => $this->description_value->getValue(),
             $this->status_field_id        => $this->mapped_status_value->getValues(),
-            $this->start_date_field_id    => $this->start_date_value_data->getValue(),
-            $this->end_period_field_id    => $this->end_period_value_data->getValue(),
+            $this->start_date_field_id    => $this->start_date_value->getValue(),
+            $this->end_period_field_id    => $this->end_period_value->getValue(),
         ];
     }
 }

@@ -22,31 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
-
 /**
  * @psalm-immutable
  */
-final class ArtifactLinkValueData
+final class StartDateValue
 {
     /**
-     * @var int
+     * @var string
      */
-    private $source_artifact_id;
+    private $date_value;
 
-    public function __construct(int $source_artifact_id)
+    public function __construct(string $date_value)
     {
-        $this->source_artifact_id = $source_artifact_id;
+        $this->date_value = $date_value;
     }
 
-    /**
-     * @return array{new_values: string, natures: array<string, string>}
-     */
-    public function getValues(): array
+    public function getValue(): string
     {
-        return [
-            'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
-        ];
+        return $this->date_value;
     }
 }

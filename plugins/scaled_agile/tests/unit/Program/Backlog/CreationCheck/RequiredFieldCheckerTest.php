@@ -28,7 +28,7 @@ use Psr\Log\NullLogger;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackers;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 
@@ -163,7 +163,7 @@ final class RequiredFieldCheckerTest extends TestCase
             new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6)
         );
 
-        $synchronized_field_data = new SynchronizedFieldsData(
+        $synchronized_fields = new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,
@@ -172,6 +172,6 @@ final class RequiredFieldCheckerTest extends TestCase
             $end_date_field_data
         );
 
-        return new SynchronizedFieldDataFromProgramAndTeamTrackers($synchronized_field_data);
+        return new SynchronizedFieldDataFromProgramAndTeamTrackers($synchronized_fields);
     }
 }

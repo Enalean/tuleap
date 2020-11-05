@@ -25,20 +25,31 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\V
 /**
  * @psalm-immutable
  */
-final class TitleValueData
+final class DescriptionValue
 {
     /**
      * @var string
      */
     private $value;
+    /**
+     * @var string
+     */
+    private $format;
 
-    public function __construct(string $value)
+    public function __construct(string $value, string $format)
     {
-        $this->value = $value;
+        $this->value  = $value;
+        $this->format = $format;
     }
 
-    public function getValue(): string
+    /**
+     * @return array{content: string, format: string}
+     */
+    public function getValue(): array
     {
-        return $this->value;
+        return [
+            'content' => $this->value,
+            'format'  => $this->format
+        ];
     }
 }

@@ -22,31 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 
 /**
  * @psalm-immutable
  */
-final class StatusValueData
+final class ArtifactLinkValue
 {
     /**
-     * @var Tracker_FormElement_Field_List_BindValue[]
+     * @var int
      */
-    private $list_values;
+    private $source_artifact_id;
 
-    /**
-     * @param Tracker_FormElement_Field_List_BindValue[] $list_values
-     */
-    public function __construct(array $list_values)
+    public function __construct(int $source_artifact_id)
     {
-        $this->list_values = $list_values;
+        $this->source_artifact_id = $source_artifact_id;
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_BindValue[]
+     * @return array{new_values: string, natures: array<string, string>}
      */
-    public function getListValues(): array
+    public function getValues(): array
     {
-        return $this->list_values;
+        return [
+            'new_values' => (string) $this->source_artifact_id,
+            'natures'    => [(string) $this->source_artifact_id => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
+        ];
     }
 }

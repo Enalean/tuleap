@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class EndPeriodValueAdapter
 {
-    public function build(FieldData $end_period_field_data, ReplicationData $replication_data): EndPeriodValueData
+    public function build(FieldData $end_period_field_data, ReplicationData $replication_data): EndPeriodValue
     {
         $end_period_value = $replication_data->getFullChangeset()->getValue($end_period_field_data->getFullField());
 
@@ -44,6 +44,6 @@ final class EndPeriodValueAdapter
         assert($end_period_value instanceof \Tracker_Artifact_ChangesetValue_Date ||
                $end_period_value instanceof  \Tracker_Artifact_ChangesetValue_Numeric);
 
-        return new EndPeriodValueData((string) $end_period_value->getValue());
+        return new EndPeriodValue((string) $end_period_value->getValue());
     }
 }
