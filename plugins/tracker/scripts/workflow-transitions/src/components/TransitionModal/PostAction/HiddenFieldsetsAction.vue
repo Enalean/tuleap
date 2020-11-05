@@ -26,6 +26,7 @@
                 <i class="fa fa-asterisk"></i>
             </label>
             <multi-select
+                v-if="!is_list_picker_enabled"
                 id="workflow-transition-modal-hidden-fieldsets"
                 class="tlp-select"
                 required
@@ -45,6 +46,25 @@
                     {{ fieldset.label }}
                 </option>
             </multi-select>
+            <select
+                v-else
+                id="workflow-transition-modal-hidden-fieldsets"
+                multiple
+                required
+                v-model="hidden_fieldset_ids"
+                v-bind:disabled="is_modal_save_running"
+                ref="workflow_transition_modal_hidden_fieldsets"
+                v-on:change="updateHiddenFieldsetsPostActionFieldsetIds"
+            >
+                <option
+                    v-for="fieldset in writable_fieldsets"
+                    v-bind:key="fieldset.field_id"
+                    v-bind:value="fieldset.field_id"
+                    v-bind:data-test="`fieldset_${fieldset.field_id}`"
+                >
+                    {{ fieldset.label }}
+                </option>
+            </select>
             <p class="tlp-text-info" v-translate>
                 Selected fieldsets won't be displayed by default but users can make them visible if
                 they want to. It's not an Access Control option.
@@ -58,6 +78,7 @@ import { mapState, mapGetters } from "vuex";
 import MultiSelect from "../MultiSelect.vue";
 import { CONTAINER_FIELDSET } from "../../../../../constants/fields-constants.js";
 import { compare } from "../../../support/string.js";
+import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
 export default {
     name: "HiddenFieldsetsAction",
@@ -68,9 +89,19 @@ export default {
             mandatory: true,
         },
     },
+    data() {
+        return {
+            hidden_fieldset_ids: [],
+            list_picker: null,
+        };
+    },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
+        ...mapState("transitionModal", [
+            "current_transition",
+            "is_modal_save_running",
+            "is_list_picker_enabled",
+        ]),
         ...mapGetters(["current_workflow_field"]),
         ...mapState({
             writable_fieldsets(state) {
@@ -85,16 +116,30 @@ export default {
         hidden_fieldsets_select_placeholder() {
             return this.$gettext("Choose a fieldset");
         },
-        hidden_fieldset_ids: {
-            get() {
-                return this.post_action.fieldset_ids;
-            },
-            set(fieldset_ids) {
-                this.$store.commit("transitionModal/updateHiddenFieldsetsPostActionFieldsetIds", {
-                    post_action: this.post_action,
-                    fieldset_ids,
-                });
-            },
+    },
+    async mounted() {
+        this.hidden_fieldset_ids = this.post_action.fieldset_ids;
+        if (this.is_list_picker_enabled) {
+            this.list_picker = await createListPicker(
+                this.$refs.workflow_transition_modal_hidden_fieldsets,
+                {
+                    is_filterable: true,
+                    placeholder: this.$gettext("Choose a fieldset"),
+                }
+            );
+        }
+    },
+    beforeDestroy() {
+        if (this.list_picker) {
+            this.list_picker.destroy();
+        }
+    },
+    methods: {
+        updateHiddenFieldsetsPostActionFieldsetIds() {
+            this.$store.commit("transitionModal/updateHiddenFieldsetsPostActionFieldsetIds", {
+                post_action: this.post_action,
+                fieldset_ids: this.hidden_fieldset_ids,
+            });
         },
     },
 };

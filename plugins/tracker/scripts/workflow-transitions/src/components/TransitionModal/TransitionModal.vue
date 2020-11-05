@@ -40,7 +40,7 @@
         <modal-error-feedback />
         <div class="tlp-modal-body tlp-modal-body-with-sections">
             <pre-conditions-skeleton v-if="is_loading_modal" />
-            <filled-pre-conditions-section v-else />
+            <filled-pre-conditions-section v-else-if="is_modal_shown && !is_loading_modal" />
             <post-actions-section />
         </div>
         <div class="tlp-modal-footer">
@@ -91,7 +91,11 @@ export default {
         PostActionsSection,
     },
     computed: {
-        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"]),
+        ...mapState("transitionModal", [
+            "is_modal_save_running",
+            "is_loading_modal",
+            "is_modal_shown",
+        ]),
     },
     mounted() {
         const modal = createModal(this.$el);

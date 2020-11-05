@@ -87,7 +87,7 @@ export class BaseComponentRenderer {
         return dropdown_list_element;
     }
 
-    private createDropdownElement(): Element {
+    private createDropdownElement(): HTMLElement {
         const dropdown_element = document.createElement("span");
         dropdown_element.classList.add("list-picker-dropdown");
         return dropdown_element;

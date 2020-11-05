@@ -30,8 +30,13 @@ describe("FilledPreConditionsSection", () => {
     let store;
     let wrapper;
 
-    beforeEach(() => {
-        const { state, mutations, actions } = module_options;
+    function filledPreConditionsMockFactory(state_store) {
+        let state = state_store;
+        if (state_store === null) {
+            state = module_options.state;
+        }
+
+        const { mutations, actions } = module_options;
         const store_options = {
             state: {
                 current_tracker: null,
@@ -43,24 +48,22 @@ describe("FilledPreConditionsSection", () => {
             mutations,
             actions,
         };
-
         store = createStoreMock(store_options);
 
-        wrapper = shallowMount(FilledPreConditionsSection, {
+        return shallowMount(FilledPreConditionsSection, {
             mocks: {
                 $store: store,
             },
             localVue,
             sync: false, // Without this, store.reset() causes errors
         });
-    });
-
+    }
     afterEach(() => store.reset());
 
     describe("writable_fields", () => {
         describe("when no current tracker", () => {
             beforeEach(() => {
-                store.state.current_tracker = null;
+                wrapper = filledPreConditionsMockFactory(null);
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.writable_fields).toEqual([]);
@@ -72,6 +75,7 @@ describe("FilledPreConditionsSection", () => {
             const invalid_field = create("field", { type: "burndown" });
 
             beforeEach(() => {
+                wrapper = filledPreConditionsMockFactory(null);
                 store.state.current_tracker = {
                     fields: [invalid_field, valid_field],
                 };
@@ -105,7 +109,7 @@ describe("FilledPreConditionsSection", () => {
     describe("authorized_user_group_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store.state.transitionModal.current_transition = null;
+                wrapper = filledPreConditionsMockFactory(null);
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.authorized_user_group_ids).toEqual([]);
@@ -115,12 +119,18 @@ describe("FilledPreConditionsSection", () => {
         describe("with a current transition", () => {
             const authorized_user_group_ids = ["1", "2"];
             beforeEach(() => {
-                store.state.transitionModal.current_transition = {
-                    authorized_user_group_ids,
+                const state = {
+                    current_transition: {
+                        not_empty_field_ids: [],
+                        authorized_user_group_ids,
+                    },
                 };
+                wrapper = filledPreConditionsMockFactory(state);
             });
             it("returns transition authorized group ids", () => {
-                expect(wrapper.vm.authorized_user_group_ids).toBe(authorized_user_group_ids);
+                expect(wrapper.vm.authorized_user_group_ids).toStrictEqual(
+                    authorized_user_group_ids
+                );
             });
         });
     });
@@ -128,7 +138,7 @@ describe("FilledPreConditionsSection", () => {
     describe("not_empty_field_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store.state.transitionModal.current_transition = null;
+                wrapper = filledPreConditionsMockFactory(null);
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.not_empty_field_ids).toEqual([]);
@@ -138,13 +148,16 @@ describe("FilledPreConditionsSection", () => {
         describe("with a current transition", () => {
             const not_empty_field_ids = [1, 2];
             beforeEach(() => {
-                store.state.transitionModal.current_transition = {
-                    not_empty_field_ids,
-                    authorized_user_group_ids: [],
+                const state = {
+                    current_transition: {
+                        not_empty_field_ids,
+                        authorized_user_group_ids: [],
+                    },
                 };
+                wrapper = filledPreConditionsMockFactory(state);
             });
             it("returns transition empty field ids", () => {
-                expect(wrapper.vm.not_empty_field_ids).toBe(not_empty_field_ids);
+                expect(wrapper.vm.$data.not_empty_field_ids).toStrictEqual(not_empty_field_ids);
             });
         });
     });
@@ -152,7 +165,7 @@ describe("FilledPreConditionsSection", () => {
     describe("transition_comment_not_empty", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store.state.transitionModal.current_transition = null;
+                wrapper = filledPreConditionsMockFactory(null);
             });
             it("returns false", () => {
                 expect(wrapper.vm.transition_comment_not_empty).toBeFalsy();
@@ -161,10 +174,13 @@ describe("FilledPreConditionsSection", () => {
 
         describe("when current transition requires comment", () => {
             beforeEach(() => {
-                store.state.transitionModal.current_transition = {
-                    is_comment_required: true,
-                    authorized_user_group_ids: [],
+                const state = {
+                    current_transition: {
+                        is_comment_required: true,
+                        authorized_user_group_ids: [],
+                    },
                 };
+                wrapper = filledPreConditionsMockFactory(state);
             });
             it("returns true", () => {
                 expect(wrapper.vm.transition_comment_not_empty).toBeTruthy();
@@ -174,7 +190,10 @@ describe("FilledPreConditionsSection", () => {
 
     describe(`when the modal is saving`, () => {
         beforeEach(() => {
-            store.state.transitionModal.is_modal_save_running = true;
+            const state = {
+                is_modal_save_running: true,
+            };
+            wrapper = filledPreConditionsMockFactory(state);
         });
 
         it(`will disable the "Authorized ugroups" selectbox`, () => {
