@@ -21,6 +21,7 @@ export function formatRepository(repository) {
     let repository_formatted = {};
 
     repository_formatted.id = "gitlab_" + repository.id;
+    repository_formatted.integration_id = repository.id;
     repository_formatted.description = repository.description;
     repository_formatted.label = repository.name;
     repository_formatted.last_update_date = repository.last_push_date;

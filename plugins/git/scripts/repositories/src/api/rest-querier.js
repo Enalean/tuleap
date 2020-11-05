@@ -27,6 +27,7 @@ export {
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
     getGitlabRepositoryList,
+    deleteIntegrationGitlab,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
@@ -45,6 +46,15 @@ function setRepositoriesSortedByPathUserPreference(user_id) {
 
 function deleteRepositoriesSortedByPathUserPreference(user_id) {
     return del(`/api/users/${user_id}/preferences?key=${USER_PREFERENCE_KEY}`);
+}
+
+function deleteIntegrationGitlab({ repository_id, project_id }) {
+    return del(
+        "/api/v1/gitlab_repositories/" +
+            encodeURIComponent(repository_id) +
+            "?project_id=" +
+            encodeURIComponent(project_id)
+    );
 }
 
 function buildCollectionCallback(displayCallback) {

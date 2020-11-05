@@ -81,6 +81,12 @@ msgstr "Le plugin Git est désactivé"
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
+msgid ""
+"GitLab repository <strong>%{ label }</strong> has been successfully unlinked!"
+msgstr ""
+"L'intégration du dépot GitLab <strong>%{ label }</strong> a été supprimée avec "
+"succés !"
+
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
 
@@ -104,6 +110,9 @@ msgstr "Aucun dépôt n'est disponible avec votre compte GitLab"
 
 msgid "No repository name matching your query has been found."
 msgstr "Aucun nom de dépôt ne correspond à votre recherche."
+
+msgid "Oops, an error occurred!"
+msgstr "Oups, une erreur s'est produite !"
 
 msgid "Project not found"
 msgstr "Projet non trouvé"

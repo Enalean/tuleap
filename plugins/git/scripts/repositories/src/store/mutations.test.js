@@ -180,6 +180,7 @@ describe("Store mutations", () => {
 
             expect(state.repositories_for_owner[PROJECT_KEY][0]).toEqual({
                 id: "gitlab_1",
+                integration_id: 1,
                 normalized_path: "MyPath/MyRepo",
                 description: "This is my description.",
                 path_without_project: "MyPath",
@@ -234,6 +235,7 @@ describe("Store mutations", () => {
                     },
                     {
                         id: "gitlab_1",
+                        integration_id: 1,
                         normalized_path: "MyPath/MyRepo",
                         description: "This is my description.",
                         path_without_project: "MyPath",
@@ -244,6 +246,54 @@ describe("Store mutations", () => {
                             gitlab_id: 1,
                         },
                         additional_information: [],
+                    },
+                ],
+            });
+        });
+    });
+    describe("removeRepository", () => {
+        it("Given repository, Then it must be removed from state", () => {
+            const repository_to_remove = {
+                id: "gitlab_1",
+                integration_id: 1,
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                gitlab_data: {
+                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_id: 1,
+                },
+                additional_information: [],
+            };
+
+            const state = {
+                repositories_for_owner: {
+                    101: [
+                        {
+                            label: "vuex",
+                            name: "vuex",
+                            path: "myproject/vuex.git",
+                            path_without_project: "",
+                            normalized_path: "vuex",
+                        },
+                        repository_to_remove,
+                    ],
+                },
+                selected_owner_id: 101,
+            };
+
+            mutations.removeRepository(state, repository_to_remove);
+
+            expect(state.repositories_for_owner).toEqual({
+                101: [
+                    {
+                        label: "vuex",
+                        name: "vuex",
+                        path: "myproject/vuex.git",
+                        path_without_project: "",
+                        normalized_path: "vuex",
                     },
                 ],
             });

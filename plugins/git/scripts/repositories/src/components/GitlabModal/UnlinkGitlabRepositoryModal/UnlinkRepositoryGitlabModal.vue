@@ -41,14 +41,23 @@
                 &times;
             </div>
         </div>
-        <div
-            v-if="repository !== null"
-            class="tlp-modal-body git-repository-create-modal-body tlp-text-danger"
-        >
-            <p
-                v-dompurify-html="confirmation_message"
-                data-test="confirm-unlink-gitlab-message"
-            ></p>
+        <div class="tlp-modal-body">
+            <div
+                class="tlp-alert-danger"
+                data-test="gitlab-fail-delete-repository"
+                v-if="have_any_rest_error"
+            >
+                {{ message_error_rest }}
+            </div>
+            <div
+                v-else-if="repository !== null"
+                class="git-repository-create-modal-body tlp-text-danger"
+            >
+                <p
+                    v-dompurify-html="confirmation_message"
+                    data-test="confirm-unlink-gitlab-message"
+                ></p>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -62,10 +71,15 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                data-test="button-add-gitlab-repository"
+                data-test="button-delete-gitlab-repository"
                 v-on:click="confirmUnlink"
+                v-bind:disabled="disabled_button"
             >
-                <i class="fa fa-arrow-right tlp-button-icon" data-test="icon-spin"></i>
+                <i
+                    class="fa fa-arrow-right tlp-button-icon"
+                    v-bind:class="{ 'fa-spin fa-sync-alt': is_loading }"
+                    data-test="icon-spin"
+                ></i>
                 <translate>Unlink the repository</translate>
             </button>
         </div>
@@ -74,6 +88,8 @@
 
 <script>
 import { createModal } from "tlp";
+import { getProjectId } from "../../../repository-list-presenter";
+import { deleteIntegrationGitlab } from "../../../api/rest-querier";
 
 export default {
     name: "UnlinkRepositoryGitlabModal",
@@ -81,6 +97,8 @@ export default {
         return {
             modal: null,
             repository: null,
+            message_error_rest: "",
+            is_loading: false,
         };
     },
     computed: {
@@ -97,18 +115,68 @@ export default {
                 }
             );
         },
+        have_any_rest_error() {
+            return this.message_error_rest.length > 0;
+        },
+        disabled_button() {
+            return this.is_loading || this.have_any_rest_error;
+        },
+        success_message() {
+            return this.$gettextInterpolate(
+                this.$gettext(
+                    "GitLab repository <strong>%{ label }</strong> has been successfully unlinked!"
+                ),
+                {
+                    label: this.repository.label,
+                }
+            );
+        },
     },
     mounted() {
         this.modal = createModal(this.$refs.unlink_gitlab_repository_modal);
         this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
+        this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.$store.commit("setUnlinkGitlabRepositoryModal", this.modal);
     },
     methods: {
         onShownModal() {
             this.repository = this.$store.state.unlink_gitlab_repository;
         },
-        confirmUnlink(event) {
+        reset() {
+            this.is_loading = false;
+            this.message_error_rest = "";
+        },
+        async confirmUnlink(event) {
             event.preventDefault();
+            if (this.have_any_rest_error) {
+                return;
+            }
+            this.is_loading = true;
+            try {
+                await deleteIntegrationGitlab({
+                    repository_id: this.repository.integration_id,
+                    project_id: getProjectId(),
+                });
+
+                this.$store.commit("removeRepository", this.repository);
+                this.$store.commit("setSuccessMessage", this.success_message);
+                this.modal.hide();
+            } catch (rest_error) {
+                this.has_rest_error = true;
+                await this.handle_error(rest_error);
+            } finally {
+                this.is_loading = false;
+            }
+        },
+        async handle_error(rest_error) {
+            try {
+                const { error } = await rest_error.response.json();
+                this.message_error_rest = error.code + " " + error.message;
+            } catch (error) {
+                this.message_error_rest = this.$gettext("Oops, an error occurred!");
+            } finally {
+                this.is_loading = false;
+            }
         },
     },
 };

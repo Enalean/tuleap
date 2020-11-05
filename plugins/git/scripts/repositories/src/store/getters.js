@@ -162,6 +162,10 @@ export const isThereAResultInCurrentFilteredList = (state, getters) => {
 
 export const hasError = (state) => state.error_message_type !== ERROR_TYPE_NO_ERROR;
 
+export const hasSuccess = (state) => state.success_message.length > 0;
+
+export const getSuccessMessage = (state) => state.success_message;
+
 export const isInitialLoadingDoneWithoutError = (state, getters) =>
     !state.is_loading_initial && !getters.hasError;
 
