@@ -28,7 +28,6 @@ import {
     isEnterKey,
     isEscapeKey,
 } from "../helpers/keys-helper";
-import { ItemsMapManager } from "../items/ItemsMapManager";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
@@ -47,8 +46,7 @@ export class EventManager {
         private readonly dropdown_toggler: DropdownToggler,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
-        private readonly list_item_highlighter: ListItemHighlighter,
-        private readonly items_map_manager: ItemsMapManager
+        private readonly list_item_highlighter: ListItemHighlighter
     ) {}
 
     public attachEvents(): void {
@@ -141,12 +139,15 @@ export class EventManager {
             });
 
             item.addEventListener("mouseenter", () => {
-                if (mouse_target_id === item.id) {
+                if (!(item instanceof HTMLElement) || !item.dataset.itemId) {
+                    throw new Error("item is not an highlightable item");
+                }
+                if (mouse_target_id === item.dataset.itemId) {
                     // keyboard navigation occurring, let's not mess things up.
                     return;
                 }
 
-                mouse_target_id = item.id;
+                mouse_target_id = item.dataset.itemId;
                 this.list_item_highlighter.highlightItem(item);
             });
         });

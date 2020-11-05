@@ -31,9 +31,11 @@ describe("ItemsMapManager", () => {
 
     describe("findListPickerItemInItemMap", () => {
         it("Given an item map and an item id, Then it should return the corresponding ListPickerItem", () => {
-            const item = items_manager.findListPickerItemInItemMap("item-2");
+            const item = items_manager.findListPickerItemInItemMap(
+                "list-picker-item-group1-value_2"
+            );
 
-            expect(item.id).toEqual("item-2");
+            expect(item.id).toEqual("list-picker-item-group1-value_2");
         });
 
         it("should throw an error when the given item id does not reference a ListPickerItem", () => {
@@ -48,7 +50,7 @@ describe("ItemsMapManager", () => {
             expect(items_manager.getItemWithValue("value_5")).toEqual({
                 element: expect.any(Element),
                 group_id: "group2",
-                id: "item-5",
+                id: "list-picker-item-group2-value_5",
                 is_disabled: true,
                 is_selected: false,
                 target_option: expect.any(HTMLOptionElement),

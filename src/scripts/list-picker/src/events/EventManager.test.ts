@@ -24,7 +24,6 @@ import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import { ItemsMapManager } from "../items/ItemsMapManager";
 import { SelectionManager } from "../type";
 
 describe("event manager", () => {
@@ -37,7 +36,6 @@ describe("event manager", () => {
         clickable_item: Element,
         search_field: HTMLInputElement,
         item_highlighter: ListItemHighlighter,
-        items_map_manager: ItemsMapManager,
         dropdown_content_renderer: DropdownContentRenderer,
         selection_manager: SelectionManager,
         navigation_manager: KeyboardNavigationManager;
@@ -86,10 +84,6 @@ describe("event manager", () => {
             getHighlightedItem: jest.fn(),
         } as unknown) as ListItemHighlighter;
 
-        items_map_manager = ({
-            rebuildItemsMap: jest.fn(),
-        } as unknown) as ItemsMapManager;
-
         dropdown_content_renderer = ({
             renderFilteredListPickerDropdownContent: jest.fn(),
             renderAfterDependenciesUpdate: jest.fn(),
@@ -113,8 +107,7 @@ describe("event manager", () => {
             toggler,
             dropdown_content_renderer,
             navigation_manager,
-            item_highlighter,
-            items_map_manager
+            item_highlighter
         );
     });
 
@@ -171,8 +164,7 @@ describe("event manager", () => {
                 toggler,
                 dropdown_content_renderer,
                 navigation_manager,
-                item_highlighter,
-                new ItemsMapManager(single_select)
+                item_highlighter
             );
 
             jest.spyOn(toggler, "openListPicker");

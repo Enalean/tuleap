@@ -23,7 +23,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
 ): Map<string, ListPickerItem> {
     const map = new Map();
     const useless_options = [];
-    let i = 0;
+
     for (const option of source_select_box.options) {
         if (option.value === "" || option.value === "?") {
             useless_options.push(option);
@@ -39,7 +39,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
             }
         }
 
-        const id = `item-${i}`;
+        const id = getItemId(option, group_id);
         const template =
             option.innerText !== "" && option.innerText !== undefined
                 ? option.innerText
@@ -57,19 +57,22 @@ export function generateItemMapBasedOnSourceSelectOptions(
         };
         map.set(id, item);
         option.setAttribute("data-item-id", id);
-        i++;
     }
 
     useless_options.forEach((option) => source_select_box.removeChild(option));
     return map;
 }
 
-function getRenderedListItem(option_id: string, template: string, is_disabled: boolean): Element {
+function getRenderedListItem(
+    option_id: string,
+    template: string,
+    is_disabled: boolean
+): HTMLElement {
     const list_item = document.createElement("li");
-    list_item.id = option_id;
     list_item.appendChild(document.createTextNode(template));
     list_item.setAttribute("role", "option");
     list_item.setAttribute("aria-selected", "false");
+    list_item.setAttribute("data-item-id", option_id);
 
     if (is_disabled) {
         list_item.classList.add("list-picker-dropdown-option-value-disabled");
@@ -77,4 +80,19 @@ function getRenderedListItem(option_id: string, template: string, is_disabled: b
         list_item.classList.add("list-picker-dropdown-option-value");
     }
     return list_item;
+}
+
+function getItemId(option: HTMLOptionElement, group_id: string): string {
+    let base_id = "list-picker-item-";
+    let option_value = option.value.toLowerCase().trim();
+
+    if (group_id !== "") {
+        base_id += group_id + "-";
+    }
+
+    if (option_value.includes(" ")) {
+        option_value = option_value.split(" ").join("-");
+    }
+
+    return base_id + option_value;
 }

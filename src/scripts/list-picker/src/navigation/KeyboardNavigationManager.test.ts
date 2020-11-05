@@ -85,7 +85,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("item-1").element.classList
+                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_1")
+                        .element.classList
                 ).toContain("list-picker-item-highlighted");
             });
 
@@ -96,7 +97,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // won't highlight 5th since it is disabled
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("item-4").element.classList
+                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group2-value_4")
+                        .element.classList
                 ).toContain("list-picker-item-highlighted");
             });
         });
@@ -107,7 +109,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // highlights 1st
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("item-0").element.classList
+                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_0")
+                        .element.classList
                 ).toContain("list-picker-item-highlighted");
             });
 
@@ -118,7 +121,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // same
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("item-0").element.classList
+                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_0")
+                        .element.classList
                 ).toContain("list-picker-item-highlighted");
             });
         });

@@ -27,13 +27,13 @@ export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement):
         const option = document.createElement("option");
         option.value = "value_" + i;
         option.innerText = "Value " + i;
-        option.setAttribute("data-item-id", "item-" + i);
+        option.setAttribute("data-item-id", "list-picker-item-value_" + i);
         select.appendChild(option);
     }
     const option_with_label = document.createElement("option");
     option_with_label.value = "value_" + i;
     option_with_label.label = "Value " + i;
-    option_with_label.setAttribute("data-item-id", "item-" + i);
+    option_with_label.setAttribute("data-item-id", "list-picker-item-value_" + i);
     select.appendChild(option_with_label);
 }
 
@@ -47,7 +47,7 @@ export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement)
             const option = document.createElement("option");
             option.value = "value_" + option_index;
             option.innerText = "Value " + option_index;
-            option.setAttribute("data-item-id", "item-" + option_index);
+            option.setAttribute("data-item-id", "list-picker-item-value" + option_index);
             group.appendChild(option);
 
             if (option_index === 5) {

@@ -39,9 +39,9 @@ describe("static-list-helper", () => {
 
         const iterator = map.entries();
         expect(iterator.next().value).toEqual([
-            "item-0",
+            "list-picker-item-value_0",
             {
-                id: "item-0",
+                id: "list-picker-item-value_0",
                 template: "Value 0",
                 value: "value_0",
                 is_disabled: false,
@@ -52,9 +52,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-1",
+            "list-picker-item-value_1",
             {
-                id: "item-1",
+                id: "list-picker-item-value_1",
                 template: "Value 1",
                 value: "value_1",
                 is_disabled: false,
@@ -65,9 +65,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-2",
+            "list-picker-item-value_2",
             {
-                id: "item-2",
+                id: "list-picker-item-value_2",
                 template: "Value 2",
                 value: "value_2",
                 is_disabled: false,
@@ -78,9 +78,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-3",
+            "list-picker-item-value_3",
             {
-                id: "item-3",
+                id: "list-picker-item-value_3",
                 template: "Value 3",
                 value: "value_3",
                 is_disabled: false,
@@ -101,9 +101,9 @@ describe("static-list-helper", () => {
 
         const iterator = map.entries();
         expect(iterator.next().value).toEqual([
-            "item-0",
+            "list-picker-item-group1-value_0",
             {
-                id: "item-0",
+                id: "list-picker-item-group1-value_0",
                 template: "Value 0",
                 value: "value_0",
                 is_disabled: false,
@@ -114,9 +114,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-1",
+            "list-picker-item-group1-value_1",
             {
-                id: "item-1",
+                id: "list-picker-item-group1-value_1",
                 template: "Value 1",
                 value: "value_1",
                 is_disabled: false,
@@ -127,9 +127,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-2",
+            "list-picker-item-group1-value_2",
             {
-                id: "item-2",
+                id: "list-picker-item-group1-value_2",
                 template: "Value 2",
                 value: "value_2",
                 is_disabled: false,
@@ -140,9 +140,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-3",
+            "list-picker-item-group2-value_3",
             {
-                id: "item-3",
+                id: "list-picker-item-group2-value_3",
                 template: "Value 3",
                 value: "value_3",
                 is_disabled: false,
@@ -153,9 +153,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-4",
+            "list-picker-item-group2-value_4",
             {
-                id: "item-4",
+                id: "list-picker-item-group2-value_4",
                 template: "Value 4",
                 value: "value_4",
                 is_disabled: false,
@@ -166,9 +166,9 @@ describe("static-list-helper", () => {
             },
         ]);
         expect(iterator.next().value).toEqual([
-            "item-5",
+            "list-picker-item-group2-value_5",
             {
-                id: "item-5",
+                id: "list-picker-item-group2-value_5",
                 template: "Value 5",
                 value: "value_5",
                 is_disabled: true,
