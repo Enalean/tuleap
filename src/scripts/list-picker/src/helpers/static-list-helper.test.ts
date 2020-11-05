@@ -30,7 +30,7 @@ describe("static-list-helper", () => {
         select = document.createElement("select");
     });
 
-    it("generates the map of the available options inside the source <select>, removing options with no value", () => {
+    it("generates the map of the available options inside the source <select>", () => {
         appendSimpleOptionsToSourceSelectBox(select);
 
         const map = generateItemMapBasedOnSourceSelectOptions(select);
@@ -92,7 +92,7 @@ describe("static-list-helper", () => {
         ]);
     });
 
-    it("generates the map of the available grouped options inside the source <select>, ignoring options with no value", () => {
+    it("generates the map of the available grouped options inside the source <select>", () => {
         appendGroupedOptionsToSourceSelectBox(select);
 
         const map = generateItemMapBasedOnSourceSelectOptions(select);
@@ -178,5 +178,27 @@ describe("static-list-helper", () => {
                 target_option: expect.any(Element),
             },
         ]);
+    });
+
+    it("should ignore options with empty value attribute and remove them from the source <select> options", () => {
+        appendSimpleOptionsToSourceSelectBox(select);
+        const map = generateItemMapBasedOnSourceSelectOptions(select);
+        const item_with_empty_value = Array.from(map.values()).find((item) => {
+            return item.value === "";
+        });
+        expect(item_with_empty_value).toBeUndefined();
+        expect(select.querySelector("option[value='']")).toBeNull();
+    });
+
+    it("should ignore empty options in the angular-modal remove it from the source <select> options", () => {
+        appendSimpleOptionsToSourceSelectBox(select);
+        select.options[0].value = "?";
+
+        const map = generateItemMapBasedOnSourceSelectOptions(select);
+        const item_with_empty_value = Array.from(map.values()).find((item) => {
+            return item.value === "?";
+        });
+        expect(item_with_empty_value).toBeUndefined();
+        expect(select.querySelector("option[value='?']")).toBeNull();
     });
 });
