@@ -26,18 +26,18 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldsTimeFrameData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TimeFrameFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FieldsTimeFrameAdapterTest extends TestCase
+final class TimeFrameFieldsAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldsTimeFrameAdapter
+     * @var TimeFrameFieldsAdapter
      */
     private $adapter;
     /**
@@ -48,7 +48,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->semantic_timeframe_factory = \Mockery::mock(SemanticTimeframeBuilder::class);
-        $this->adapter                    = new FieldsTimeFrameAdapter($this->semantic_timeframe_factory);
+        $this->adapter                    = new TimeFrameFieldsAdapter($this->semantic_timeframe_factory);
     }
 
     public function testItThrowsWhenNoStartDateIsFound(): void
@@ -95,7 +95,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
     }
 
 
-    public function testItBuildTimeFrameFieldDataBasedOnDuration(): void
+    public function testItBuildTimeFrameFieldsBasedOnDuration(): void
     {
         $source_tracker     = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $start_date_field   = new \Tracker_FormElement_Field_Date(
@@ -131,7 +131,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
             $semantic_timeframe
         );
 
-        $field_time_frame_data = FieldsTimeFrameData::fromStartDateAndDuration(
+        $field_time_frame_data = TimeFrameFields::fromStartDateAndDuration(
             new FieldData($start_date_field),
             new FieldData($duration_field)
         );
@@ -139,7 +139,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
         $this->assertEquals($field_time_frame_data, $this->adapter->build($source_tracker));
     }
 
-    public function testItBuildTimeFrameFieldDataBesedOnEndDate(): void
+    public function testItBuildTimeFrameFieldsBasedOnEndDate(): void
     {
         $source_tracker     = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $start_date_field   = new \Tracker_FormElement_Field_Date(
@@ -176,7 +176,7 @@ final class FieldsTimeFrameAdapterTest extends TestCase
             $semantic_timeframe
         );
 
-        $field_time_frame_data = FieldsTimeFrameData::fromStartAndEndDates(
+        $field_time_frame_data = TimeFrameFields::fromStartAndEndDates(
             new FieldData($start_date_field),
             new FieldData($end_date_field)
         );

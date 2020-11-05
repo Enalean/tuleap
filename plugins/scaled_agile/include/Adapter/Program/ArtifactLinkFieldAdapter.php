@@ -23,36 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class FieldTitleAdapter
+final class ArtifactLinkFieldAdapter
 {
     /**
-     * @var \Tracker_Semantic_TitleFactory
+     * @var \Tracker_FormElementFactory
      */
-    private $title_factory;
+    private $form_element_factory;
 
-    public function __construct(
-        \Tracker_Semantic_TitleFactory $title_factory
-    ) {
-        $this->title_factory        = $title_factory;
+    public function __construct(\Tracker_FormElementFactory $form_element_factory)
+    {
+        $this->form_element_factory = $form_element_factory;
     }
+
     /**
-     * @throws FieldRetrievalException
-     * @throws TitleFieldHasIncorrectTypeException
+     * @throws FieldSynchronizationException
      */
     public function build(TrackerData $replication_tracker_data): FieldData
     {
-        $title_field = $this->title_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
-        if (! $title_field) {
-            throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Title");
+        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($replication_tracker_data->getFullTracker());
+        if (count($artifact_link_fields) > 0) {
+            return new FieldData($artifact_link_fields[0]);
         }
-
-        if (! $title_field instanceof \Tracker_FormElement_Field_String) {
-            throw new TitleFieldHasIncorrectTypeException((int) $replication_tracker_data->getTrackerId(), (int) $title_field->getId());
-        }
-        return new FieldData($title_field);
+        throw new NoArtifactLinkFieldException($replication_tracker_data->getTrackerId());
     }
 }

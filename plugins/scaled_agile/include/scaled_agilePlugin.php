@@ -38,11 +38,11 @@ use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrack
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminURLBuilder;
 use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminViewController;
-use Tuleap\ScaledAgile\Adapter\Program\FieldArtifactLinkAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldDescriptionAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldStatusAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldsTimeFrameAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldTitleAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\DescriptionFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\StatusFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TimeFrameFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
@@ -330,11 +330,11 @@ final class scaled_agilePlugin extends Plugin
             ),
             new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
                 new SynchronizedFieldsAdapter(
-                    new FieldArtifactLinkAdapter($form_element_factory),
-                    new FieldTitleAdapter(new Tracker_Semantic_TitleFactory()),
-                    new FieldDescriptionAdapter(new Tracker_Semantic_DescriptionFactory()),
-                    new FieldStatusAdapter($semantic_status_factory),
-                    new FieldsTimeFrameAdapter(new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory))
+                    new ArtifactLinkFieldAdapter($form_element_factory),
+                    new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
+                    new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
+                    new StatusFieldAdapter($semantic_status_factory),
+                    new TimeFrameFieldsAdapter(new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory))
                 )
             ),
             new SemanticChecker(

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-final class FieldsTimeFrameData
+final class TimeFrameFields
 {
     /**
      * @var FieldData
@@ -62,7 +62,6 @@ final class FieldsTimeFrameData
     {
         return $this->start_date;
     }
-
 
     public function getEndPeriodField(): FieldData
     {

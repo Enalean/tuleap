@@ -23,31 +23,36 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class FieldArtifactLinkAdapter
+final class TitleFieldAdapter
 {
     /**
-     * @var \Tracker_FormElementFactory
+     * @var \Tracker_Semantic_TitleFactory
      */
-    private $form_element_factory;
+    private $title_factory;
 
-    public function __construct(\Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->form_element_factory = $form_element_factory;
+    public function __construct(
+        \Tracker_Semantic_TitleFactory $title_factory
+    ) {
+        $this->title_factory        = $title_factory;
     }
-
     /**
-     * @throws FieldSynchronizationException
+     * @throws FieldRetrievalException
+     * @throws TitleFieldHasIncorrectTypeException
      */
     public function build(TrackerData $replication_tracker_data): FieldData
     {
-        $artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($replication_tracker_data->getFullTracker());
-        if (count($artifact_link_fields) > 0) {
-            return new FieldData($artifact_link_fields[0]);
+        $title_field = $this->title_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
+        if (! $title_field) {
+            throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Title");
         }
-        throw new NoArtifactLinkFieldException($replication_tracker_data->getTrackerId());
+
+        if (! $title_field instanceof \Tracker_FormElement_Field_String) {
+            throw new TitleFieldHasIncorrectTypeException((int) $replication_tracker_data->getTrackerId(), (int) $title_field->getId());
+        }
+        return new FieldData($title_field);
     }
 }

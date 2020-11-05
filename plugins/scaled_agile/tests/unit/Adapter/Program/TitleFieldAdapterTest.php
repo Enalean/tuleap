@@ -25,16 +25,16 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Semantic_Title;
-use Tuleap\ScaledAgile\Adapter\Program\FieldTitleAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FieldTitleAdapterTest extends TestCase
+final class TitleFieldAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldTitleAdapter
+     * @var TitleFieldAdapter
      */
     private $adapter;
     /**
@@ -45,7 +45,7 @@ final class FieldTitleAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->semantic_title_factory = \Mockery::mock(\Tracker_Semantic_TitleFactory::class);
-        $this->adapter                = new FieldTitleAdapter($this->semantic_title_factory);
+        $this->adapter                = new TitleFieldAdapter($this->semantic_title_factory);
     }
 
     public function testItThrowsWhenNoTitleIsFound(): void
@@ -86,7 +86,7 @@ final class FieldTitleAdapterTest extends TestCase
         $this->adapter->build($source_tracker);
     }
 
-    public function testItBuildTitleFieldData(): void
+    public function testItBuildTitleField(): void
     {
         $source_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_String(
