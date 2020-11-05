@@ -20,30 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog;
+namespace Tuleap\ScaledAgile\REST\v1;
 
-use Tuleap\DB\DataAccessObject;
-
-class ProgramDao extends DataAccessObject
+/**
+ * @psalm-immutable
+ */
+final class ProjectResourcePutRepresentation
 {
-    public function isProjectAProgramProject(int $project_id): bool
-    {
-        $sql = "SELECT COUNT(*)
-                FROM plugin_scaled_agile_team_projects
-                WHERE program_project_id = ?";
-
-        return $this->getDB()->exists($sql, $project_id);
-    }
-
     /**
-     * @psalm-return list<array{team_project_id:int}>
+     * @var int {@required true}
      */
-    public function getTeamProjectIdsForGivenProgramProject(int $project_id): array
-    {
-        $sql = "SELECT team_project_id
-                FROM plugin_scaled_agile_team_projects
-                WHERE program_project_id = ?";
+    public $program_increment_tracker_id;
+    /**
+     * @var array {@type int}
+     */
+    public $plannable_tracker_ids;
 
-        return $this->getDB()->run($sql, $project_id);
+    public function __construct(int $program_increment_tracker_id, array $plannable_tracker_ids)
+    {
+        $this->program_increment_tracker_id = $program_increment_tracker_id;
+        $this->plannable_tracker_ids        = $plannable_tracker_ids;
     }
 }

@@ -29,3 +29,9 @@ CREATE TABLE plugin_scaled_agile_pending_mirrors(
     user_id INT(11) NOT NULL,
     changeset_id INT(11) NOT NULL
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_scaled_agile_plan(
+    program_increment_tracker_id INT(11) NOT NULL,
+    plannable_tracker_id INT(11) NOT NULL,
+    PRIMARY KEY (program_increment_tracker_id, plannable_tracker_id)
+) ENGINE=InnoDB;

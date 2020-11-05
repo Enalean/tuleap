@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_scaled_agile_team_projects;
-DROP TABLE IF EXISTS plugin_scaled_agile_pending_mirrors;
-DROP TABLE IF EXISTS plugin_scaled_agile_plan;
+declare(strict_types=1);
+
+namespace Tuleap\ScaledAgile\Program\Plan;
+
+use Tuleap\ScaledAgile\Adapter\Plan\ProgramAccessException;
+use Tuleap\ScaledAgile\Adapter\Plan\ProjectIsNotAProgramException;
+
+interface BuildProgram
+{
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public function buildProgramProject(int $id, \PFUser $user): Program;
+}
