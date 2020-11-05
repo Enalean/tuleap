@@ -28,6 +28,7 @@ export {
     deleteRepositoriesSortedByPathUserPreference,
     getGitlabRepositoryList,
     deleteIntegrationGitlab,
+    postGitlabRepository,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
@@ -130,4 +131,27 @@ async function postRepository(project_id, repository_name) {
     });
 
     return response.json();
+}
+
+function postGitlabRepository({
+    project_id,
+    gitlab_internal_id,
+    gitlab_server_url,
+    gitlab_user_api_token,
+}) {
+    const headers = {
+        "content-type": "application/json",
+    };
+
+    const body = JSON.stringify({
+        project_id,
+        gitlab_internal_id,
+        gitlab_server_url,
+        gitlab_user_api_token,
+    });
+
+    return post("/api/gitlab_repositories", {
+        headers,
+        body,
+    });
 }

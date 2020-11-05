@@ -22,7 +22,7 @@
         role="dialog"
         aria-labelledby="fetch-gitlab-repository-modal-title"
         id="fetch-gitlab-repositories-modal"
-        class="tlp-modal"
+        class="tlp-modal fetch-gitlab-repositories-modal"
         ref="fetch_modal"
     >
         <div class="tlp-modal-header">
@@ -42,14 +42,17 @@
         </div>
         <credentials-form-modal
             v-if="gitlab_repositories === null || back_button_clicked"
-            v-on:on-get-gitlab-repositories="getGitlabRepository"
+            v-on:on-get-gitlab-repositories="getGitlabRepositories"
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
         />
         <list-repositories-modal
             v-else
             v-bind:repositories="gitlab_repositories"
+            v-bind:user_token="user_token"
+            v-bind:server_url="server_url"
             v-on:to-back-button="clickBackButton"
+            v-on:on-success-close-modal="onSuccessCloseModal"
             ref="listRepositoriesModal"
         />
     </div>
@@ -68,6 +71,8 @@ export default {
             gitlab_repositories: null,
             back_button_clicked: false,
             modal: null,
+            user_token: null,
+            server_url: null,
         };
     },
     computed: {
@@ -85,13 +90,27 @@ export default {
             this.back_button_clicked = true;
             this.gitlab_repositories = null;
         },
-        getGitlabRepository(repositories) {
+        getGitlabRepositories({ repositories, token, server_url }) {
             this.back_button_clicked = false;
             this.gitlab_repositories = repositories;
+            this.user_token = token;
+            this.server_url = server_url;
         },
         onCloseModal() {
             this.reset();
             this.modal.hide();
+        },
+        onSuccessCloseModal({ repository }) {
+            this.onCloseModal();
+            const success_message = this.$gettextInterpolate(
+                this.$gettext(
+                    "GitLab repository <strong>%{ label }</strong> has been successfully integrated!"
+                ),
+                {
+                    label: repository.path_with_namespace,
+                }
+            );
+            this.$store.commit("setSuccessMessage", success_message);
         },
         reset() {
             const credentialsForm = this.$refs.credentialsForm;

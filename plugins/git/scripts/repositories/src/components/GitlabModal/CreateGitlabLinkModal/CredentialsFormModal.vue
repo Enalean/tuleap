@@ -166,7 +166,11 @@ export default {
                     return;
                 }
 
-                this.$emit("on-get-gitlab-repositories", this.gitlab_repositories);
+                this.$emit("on-get-gitlab-repositories", {
+                    repositories: this.gitlab_repositories,
+                    token: this.gitlab_token_user,
+                    server_url: this.gitlab_server,
+                });
             } catch (e) {
                 this.handleError();
             } finally {

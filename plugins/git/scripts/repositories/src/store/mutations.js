@@ -89,6 +89,9 @@ export default {
         );
         state.repositories_for_owner[state.selected_owner_id].splice(index_of_repository, 1);
     },
+    resetRepositories(state) {
+        state.repositories_for_owner = {};
+    },
 };
 
 function isUnknownMode(mode) {

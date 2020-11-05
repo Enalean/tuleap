@@ -98,7 +98,11 @@ describe("CredentialsFormModal", () => {
         wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.emitted("on-get-gitlab-repositories")[0][0]).toEqual([{ id: 10 }]);
+        expect(wrapper.emitted("on-get-gitlab-repositories")[0][0]).toEqual({
+            repositories: [{ id: 10 }],
+            server_url: "https://example.com",
+            token: "AFREZF546",
+        });
     });
 
     it("When there are no token and server url, Then submit button is disabled", async () => {
