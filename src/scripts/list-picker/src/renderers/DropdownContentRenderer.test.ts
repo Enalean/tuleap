@@ -209,7 +209,7 @@ describe("dropdown-content-renderer", () => {
             );
             content_renderer.renderListPickerDropdownContent();
 
-            const list_item_1 = dropdown_list.querySelector("#item-0");
+            const list_item_1 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
@@ -220,14 +220,14 @@ describe("dropdown-content-renderer", () => {
             items_manager.rebuildItemsMap();
             content_renderer.renderAfterDependenciesUpdate();
 
-            const list_item_2 = dropdown_list.querySelector("#item-0");
+            const list_item_2 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_2) {
                 throw new Error("List item not found in the list");
             }
             expect(list_item_2.innerHTML).toEqual("Item 2");
         });
 
-        it("should render an ampty state when the source <select> has no options", () => {
+        it("should render an empty state when the source <select> has no options", () => {
             const option_1 = document.createElement("option");
             option_1.innerText = "Item 1";
             option_1.value = "item_1";
@@ -242,7 +242,7 @@ describe("dropdown-content-renderer", () => {
             );
             content_renderer.renderListPickerDropdownContent();
 
-            const list_item_1 = dropdown_list.querySelector("#item-0");
+            const list_item_1 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
@@ -252,7 +252,7 @@ describe("dropdown-content-renderer", () => {
             items_manager.rebuildItemsMap();
             content_renderer.renderAfterDependenciesUpdate();
 
-            expect(dropdown_list.querySelector("#item-0")).toBeNull();
+            expect(dropdown_list.querySelector("#list-picker-item-item_1")).toBeNull();
             const empty_state = dropdown_list.querySelector(".list-picker-empty-dropdown-state");
             if (!empty_state) {
                 throw new Error("Empty state not found");

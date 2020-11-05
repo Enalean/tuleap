@@ -19,7 +19,7 @@
 
 import { ListItemHighlighter } from "./ListItemHighlighter";
 
-describe("ListItemNavigationHighlighter", () => {
+describe("ListItemHighlighter", () => {
     let highlighter: ListItemHighlighter, item_1: Element, item_2: Element, item_3: Element;
 
     beforeEach(() => {

@@ -75,8 +75,8 @@ describe("MultipleSelectionManager", () => {
             gettext_provider
         );
 
-        item_1 = item_map_manager.findListPickerItemInItemMap("item-1");
-        item_2 = item_map_manager.findListPickerItemInItemMap("item-2");
+        item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
+        item_2 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
         jest.spyOn(source_select_box, "dispatchEvent");
     });
 

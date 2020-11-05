@@ -116,8 +116,7 @@ export async function createListPicker(
         dropdown_toggler,
         dropdown_content_renderer,
         keyboard_navigation_manager,
-        highlighter,
-        items_map_manager
+        highlighter
     );
 
     event_manager.attachEvents();

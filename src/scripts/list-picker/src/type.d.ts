@@ -33,7 +33,7 @@ export interface ListPickerItem {
     is_disabled: boolean;
     is_selected: boolean;
     group_id: string;
-    element: Element;
+    element: HTMLElement;
     target_option: HTMLOptionElement;
 }
 

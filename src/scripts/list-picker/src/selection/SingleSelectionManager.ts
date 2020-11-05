@@ -36,7 +36,11 @@ export class SingleSelectionManager implements SelectionManager {
     }
 
     public processSelection(item: Element): void {
-        const list_item = this.items_map_manager.findListPickerItemInItemMap(item.id);
+        if (!(item instanceof HTMLElement) || !item.dataset.itemId) {
+            throw new Error("No data-item-id found on element.");
+        }
+
+        const list_item = this.items_map_manager.findListPickerItemInItemMap(item.dataset.itemId);
         if (list_item.is_selected) {
             // We won't unselect it
             return;
