@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldsTimeFrameData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TimeFrameFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-final class FieldsTimeFrameAdapter
+final class TimeFrameFieldsAdapter
 {
     /**
      * @var SemanticTimeframeBuilder
@@ -44,7 +44,7 @@ final class FieldsTimeFrameAdapter
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function build(TrackerData $replication_tracker_data): FieldsTimeFrameData
+    public function build(TrackerData $replication_tracker_data): TimeFrameFields
     {
         $source_tracker   = $replication_tracker_data->getFullTracker();
         $semantic         = $this->timeframe_builder->getSemantic($source_tracker);
@@ -58,12 +58,12 @@ final class FieldsTimeFrameAdapter
         $duration_field = $semantic->getDurationField();
         if ($duration_field !== null) {
             $duration_field_data = new FieldData($duration_field);
-            return FieldsTimeFrameData::fromStartDateAndDuration($start_date_field_data, $duration_field_data);
+            return TimeFrameFields::fromStartDateAndDuration($start_date_field_data, $duration_field_data);
         }
         $end_date_field = $semantic->getEndDateField();
         if ($end_date_field !== null) {
             $end_date_field_data = new FieldData($end_date_field);
-            return FieldsTimeFrameData::fromStartAndEndDates($start_date_field_data, $end_date_field_data);
+            return TimeFrameFields::fromStartAndEndDates($start_date_field_data, $end_date_field_data);
         }
         throw new MissingTimeFrameFieldException($replication_tracker_data->getTrackerId(), 'end date or duration');
     }

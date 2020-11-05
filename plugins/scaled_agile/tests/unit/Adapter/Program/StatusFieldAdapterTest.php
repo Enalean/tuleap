@@ -29,12 +29,12 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FieldStatusAdapterTest extends TestCase
+final class StatusFieldAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldStatusAdapter
+     * @var StatusFieldAdapter
      */
     private $adapter;
     /**
@@ -45,7 +45,7 @@ final class FieldStatusAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->semantic_status_factory = \Mockery::mock(\Tracker_Semantic_StatusFactory::class);
-        $this->adapter                      = new FieldStatusAdapter($this->semantic_status_factory);
+        $this->adapter                      = new StatusFieldAdapter($this->semantic_status_factory);
     }
 
     public function testItThrowsWhenNoStatusIsFound(): void

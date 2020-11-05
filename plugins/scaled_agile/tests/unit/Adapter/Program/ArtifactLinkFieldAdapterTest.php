@@ -29,12 +29,12 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FieldArtifactLinkAdapterTest extends TestCase
+final class ArtifactLinkFieldAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldArtifactLinkAdapter
+     * @var ArtifactLinkFieldAdapter
      */
     private $adapter;
     /**
@@ -45,7 +45,7 @@ final class FieldArtifactLinkAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->adapter              = new FieldArtifactLinkAdapter($this->form_element_factory);
+        $this->adapter              = new ArtifactLinkFieldAdapter($this->form_element_factory);
     }
 
     public function testItThrowsWhenNoArtifactLinkIsFound(): void

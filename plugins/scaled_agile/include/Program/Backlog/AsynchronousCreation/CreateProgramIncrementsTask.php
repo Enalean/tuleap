@@ -36,11 +36,11 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\DescriptionValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\EndPeriodValueAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldArtifactLinkAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldDescriptionAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldStatusAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldsTimeFrameAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\FieldTitleAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\DescriptionFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\StatusFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TimeFrameFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\StartDateValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\StatusValueAdapter;
@@ -157,11 +157,11 @@ class CreateProgramIncrementsTask
         );
 
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
-            new FieldArtifactLinkAdapter($form_element_factory),
-            new FieldTitleAdapter(new Tracker_Semantic_TitleFactory()),
-            new FieldDescriptionAdapter(new Tracker_Semantic_DescriptionFactory()),
-            new FieldStatusAdapter(new Tracker_Semantic_StatusFactory()),
-            new FieldsTimeFrameAdapter(
+            new ArtifactLinkFieldAdapter($form_element_factory),
+            new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
+            new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
+            new StatusFieldAdapter(new Tracker_Semantic_StatusFactory()),
+            new TimeFrameFieldsAdapter(
                 new SemanticTimeframeBuilder(
                     new SemanticTimeframeDao(),
                     $form_element_factory

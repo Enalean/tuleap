@@ -26,7 +26,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class FieldDescriptionAdapter
+final class DescriptionFieldAdapter
 {
     /**
      * @var \Tracker_Semantic_DescriptionFactory

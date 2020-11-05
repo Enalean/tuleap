@@ -29,32 +29,32 @@ use Tuleap\ScaledAgile\TrackerData;
 class SynchronizedFieldsAdapter
 {
     /**
-     * @var FieldArtifactLinkAdapter
+     * @var ArtifactLinkFieldAdapter
      */
     private $artifact_link_adapter;
     /**
-     * @var FieldTitleAdapter
+     * @var TitleFieldAdapter
      */
     private $field_title_adapter;
     /**
-     * @var FieldDescriptionAdapter
+     * @var DescriptionFieldAdapter
      */
     private $field_description_adapter;
     /**
-     * @var FieldStatusAdapter
+     * @var StatusFieldAdapter
      */
     private $field_status_adapter;
     /**
-     * @var FieldsTimeFrameAdapter
+     * @var TimeFrameFieldsAdapter
      */
     private $fields_time_frame_adapter;
 
     public function __construct(
-        FieldArtifactLinkAdapter $artifact_link_adapter,
-        FieldTitleAdapter $field_title_adapter,
-        FieldDescriptionAdapter $field_description_adapter,
-        FieldStatusAdapter $field_status_adapter,
-        FieldsTimeFrameAdapter $fields_time_frame_adapter
+        ArtifactLinkFieldAdapter $artifact_link_adapter,
+        TitleFieldAdapter $field_title_adapter,
+        DescriptionFieldAdapter $field_description_adapter,
+        StatusFieldAdapter $field_status_adapter,
+        TimeFrameFieldsAdapter $fields_time_frame_adapter
     ) {
         $this->artifact_link_adapter     = $artifact_link_adapter;
         $this->field_title_adapter       = $field_title_adapter;

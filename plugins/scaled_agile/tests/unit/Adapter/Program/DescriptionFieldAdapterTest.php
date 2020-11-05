@@ -29,12 +29,12 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FieldDescriptionAdapterTest extends TestCase
+final class DescriptionFieldAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FieldDescriptionAdapter
+     * @var DescriptionFieldAdapter
      */
     private $adapter;
     /**
@@ -45,7 +45,7 @@ final class FieldDescriptionAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->semantic_description_factory = \Mockery::mock(\Tracker_Semantic_DescriptionFactory::class);
-        $this->adapter                      = new FieldDescriptionAdapter($this->semantic_description_factory);
+        $this->adapter                      = new DescriptionFieldAdapter($this->semantic_description_factory);
     }
 
     public function testItThrowsWhenNoDescriptionIsFound(): void
