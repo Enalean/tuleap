@@ -23,21 +23,22 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use Mockery;
+use Tuleap\Layout\BaseLayout;
 
 trait GlobalResponseMock
 {
     /**
      * @before
      */
-    protected function mockResponse()
+    protected function mockResponse(): void
     {
-        $GLOBALS['Response'] = Mockery::spy(\Response::class);
+        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
     }
 
     /**
      * @after
      */
-    protected function clearResponse()
+    protected function clearResponse(): void
     {
         unset($GLOBALS['Response']);
     }
