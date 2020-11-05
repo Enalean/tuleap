@@ -38,9 +38,6 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 
 class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
-    public const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
-
     public const LOG_FILE = 'tv3_tv5_migration_syslog';
 
     /** @var  Tracker_SystemEventManager */
@@ -243,9 +240,8 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
     private function exportTV3Data($tv3_id)
     {
         $this->logger->info('--> Export TV3 data ');
-        $xml_path    = $this->generateTemporaryPath();
-        $indent_xsl_path = $this->getIndentXSLResourcePath();
-        $xml             = new DOMDocument("1.0", "UTF8");
+        $xml_path = $this->generateTemporaryPath();
+        $xml      = new DOMDocument("1.0", "UTF8");
 
         $dao                 = new ArtifactXMLExporterDao();
         $node_helper         = new ArtifactXMLNodeHelper($xml);
@@ -255,27 +251,19 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         $exporter->exportTrackerData($tv3_id);
         $this->logger->info('<-- TV3 data exported ' . PHP_EOL);
 
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
         $xsl = new DOMDocument();
-        $xsl->load($indent_xsl_path);
+        $xsl->load(__DIR__ . '/../../../../../src/utils/xml/indent.xsl');
 
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($xsl);
 
         $xml_string = $proc->transformToXML($xml);
-        $xml_security->disableExternalLoadOfEntities();
 
         if (file_put_contents($xml_path, $xml_string) !== strlen($xml_string)) {
             throw new Exception('Something went wrong when writing tv3 xml in ' . $xml_path);
         }
 
         return $xml_path;
-    }
-
-    private function getIndentXSLResourcePath()
-    {
-        return ForgeConfig::get('codendi_utils_prefix') . self::INDENT_XSL_RESOURCE;
     }
 
     private function generateTemporaryPath()
