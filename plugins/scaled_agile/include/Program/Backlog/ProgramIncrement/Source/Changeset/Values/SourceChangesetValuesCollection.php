@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+
 /**
  * @psalm-immutable
  */
@@ -40,7 +42,7 @@ final class SourceChangesetValuesCollection
      */
     private $source_artifact_id;
     /**
-     * @var int
+     * @var SubmissionDate
      */
     private $submitted_on;
     /**
@@ -65,7 +67,7 @@ final class SourceChangesetValuesCollection
         TitleValueData $title_value,
         DescriptionValueData $description_value,
         StatusValueData $status_value,
-        int $submitted_on,
+        SubmissionDate $submitted_on,
         StartDateValueData $start_date_value,
         EndPeriodValueData $end_period_value,
         ArtifactLinkValueData $artifact_link_value_data
@@ -95,7 +97,7 @@ final class SourceChangesetValuesCollection
         return $this->status_value;
     }
 
-    public function getSubmittedOn(): int
+    public function getSubmittedOn(): SubmissionDate
     {
         return $this->submitted_on;
     }

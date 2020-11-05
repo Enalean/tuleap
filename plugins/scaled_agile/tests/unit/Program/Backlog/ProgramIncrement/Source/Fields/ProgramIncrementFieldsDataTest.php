@@ -34,6 +34,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
 final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
 {
@@ -97,13 +98,14 @@ final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
         $start_date_value    = new StartDateValueData('2020-10-01');
         $end_period_value    = new EndPeriodValueData('2020-10-10');
         $artifact_link_value = new ArtifactLinkValueData($program_artifact_id);
+        $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
             $program_artifact_id,
             $title_value,
             $description_value,
             $status_value,
-            123456789,
+            $submission_date,
             $start_date_value,
             $end_period_value,
             $artifact_link_value

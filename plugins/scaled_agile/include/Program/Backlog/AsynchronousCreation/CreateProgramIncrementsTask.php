@@ -33,27 +33,28 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkValueAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\DescriptionFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\DescriptionValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\EndPeriodValueAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\ArtifactLinkFieldAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\DescriptionFieldAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\StatusFieldAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\TimeFrameFieldsAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\TitleFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\StartDateValueAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\StatusFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\StatusValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TimeFrameFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\TitleValueAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -150,12 +151,13 @@ class CreateProgramIncrementsTask
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("scaled_agile_syslog");
 
-        $artifact_creator = TrackerArtifactCreator::build(
-            Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
-            Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
-            $logger
+        $artifact_creator = new ArtifactCreatorAdapter(
+            TrackerArtifactCreator::build(
+                Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
+                Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
+                $logger
+            )
         );
-
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
             new ArtifactLinkFieldAdapter($form_element_factory),
             new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),

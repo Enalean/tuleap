@@ -34,6 +34,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
@@ -118,13 +119,14 @@ final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
         $start_date_value    = new StartDateValueData('2020-10-01');
         $end_period_value    = new EndPeriodValueData('2020-10-10');
         $artifact_link_value = new ArtifactLinkValueData(123);
+        $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
             123,
             $title_value,
             $description_value,
             $status_value,
-            123456789,
+            $submission_date,
             $start_date_value,
             $end_period_value,
             $artifact_link_value

@@ -34,6 +34,7 @@ use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncreme
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
@@ -171,16 +172,17 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $title_value         = new TitleValueData('Program Release');
         $description_value   = new DescriptionValueData('Description', 'text');
         $status_value        = new StatusValueData([$planned_value]);
-        $start_date_value    = new StartDateValueData("2020-10-01");
-        $end_period_value    = new EndPeriodValueData("2020-10-30");
+        $start_date_value    = new StartDateValueData('2020-10-01');
+        $end_period_value    = new EndPeriodValueData('2020-10-30');
         $artifact_link_value = new ArtifactLinkValueData(112);
+        $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
             112,
             $title_value,
             $description_value,
             $status_value,
-            123456789,
+            $submission_date,
             $start_date_value,
             $end_period_value,
             $artifact_link_value

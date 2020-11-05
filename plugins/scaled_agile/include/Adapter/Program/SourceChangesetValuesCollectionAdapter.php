@@ -26,6 +26,7 @@ use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCrea
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
 class SourceChangesetValuesCollectionAdapter
 {
@@ -91,11 +92,11 @@ class SourceChangesetValuesCollectionAdapter
         $artifact_link_value = $this->artifact_link_value_adapter->build($replication_data);
 
         return new SourceChangesetValuesCollection(
-            (int) $replication_data->getArtifactData()->getId(),
+            $replication_data->getArtifactData()->getId(),
             $title_value,
             $description_value,
             $status_value,
-            (int) $replication_data->getArtifactData()->getSubmittedOn(),
+            new SubmissionDate($replication_data->getArtifactData()->getSubmittedOn()),
             $start_date_value,
             $end_period_value,
             $artifact_link_value
