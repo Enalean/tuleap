@@ -227,7 +227,7 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
-        it.only(`user can download a folder as a zip archive`, function () {
+        it(`user can download a folder as a zip archive`, function () {
             // Create a folder
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-drop-down-button]").click();
@@ -252,6 +252,7 @@ describe("Document new UI", () => {
                 });
             // Force the dropdown to be visible for cypress
             cy.get("[data-test=dropdown-menu]").invoke("css", "visibility", "visible");
+            cy.get("[data-test=dropdown-menu]").invoke("css", "pointer-events", "auto");
             cy.get("[data-test=document-new-item]").click();
             cy.get("[data-test=document-new-item-modal]").within(() => {
                 cy.get("[data-test=embedded]").click();
