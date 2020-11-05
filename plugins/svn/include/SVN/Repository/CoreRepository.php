@@ -76,7 +76,7 @@ class CoreRepository implements Repository
 
     public function getSystemPath(): string
     {
-        return ForgeConfig::get('sys_data_dir') . '/svnroot/' . $this->getName();
+        return rtrim(ForgeConfig::get('svn_prefix'), '/') . '/' . $this->getName();
     }
 
     public function isRepositoryCreated(): bool

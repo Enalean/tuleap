@@ -25,7 +25,6 @@ use SystemEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\Repository;
 use Project;
-use ForgeConfig;
 
 class Dao extends DataAccessObject
 {
@@ -102,23 +101,21 @@ class Dao extends DataAccessObject
         return count($this->retrieve($sql)) > 0;
     }
 
-    public function getListRepositoriesSqlFragment()
+    /**
+     * @return \DataAccessResult|false
+     * @throws \DataAccessQueryException
+     */
+    public function getAllRepositoriesInActiveProjects()
     {
-        $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('sys_data_dir'));
-
-        $sql = "SELECT groups.*, service.*,
-                CONCAT('/svnplugin/', unix_group_name, '/', name) AS public_path,
-                CONCAT($sys_dir,'/svn_plugin/', groups.group_id, '/', name) AS system_path,
-                backup_path, repository_deletion_date
-                FROM groups, service, plugin_svn_repositories
-                WHERE groups.group_id = service.group_id
-                  AND service.is_used = '1'
+        $sql = "SELECT groups.*, plugin_svn_repositories.*
+                FROM groups
+                    INNER JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'plugin_svn')
+                    INNER JOIN plugin_svn_repositories ON (plugin_svn_repositories.project_id = groups.group_id)
+                WHERE service.is_used = '1'
                   AND groups.status = 'A'
-                  AND plugin_svn_repositories.project_id = groups.group_id
-                  AND service.short_name = 'plugin_svn'
                   AND repository_deletion_date IS NULL";
 
-        return $sql;
+        return $this->retrieve($sql);
     }
 
     public function searchRepositoryByName(Project $project, $name)

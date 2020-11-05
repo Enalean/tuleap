@@ -66,7 +66,7 @@ class SvnrootUpdater
     {
         $this->logger->info("Wait for messages on " . get_class($this->queue));
 
-        $generate = function () {
+        $generate = static function (): void {
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
 
             $apache_conf_generator = new ApacheConfGenerator(
@@ -74,7 +74,7 @@ class SvnrootUpdater
                     new ServiceControl(),
                     new ProcessFactory()
                 ),
-                Backend::instance('SVN')
+                Backend::instanceSVN()
             );
             $apache_conf_generator->generate();
         };

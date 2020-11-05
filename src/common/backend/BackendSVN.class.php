@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SVN\GetAllRepositories;
 use Tuleap\Svn\SVNRepositoryCreationException;
 use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 use Tuleap\SvnCore\Cache\ParameterDao;
@@ -761,12 +762,18 @@ class BackendSVN extends Backend
     /**
      * public for testing purpose
      */
-    public function getApacheConf()
+    public function getApacheConf(): string
     {
-        $list_repositories = $this->getSvnDao()->searchSvnRepositories();
+        $get_all_repositories = EventManager::instance()->dispatch(
+            new GetAllRepositories(
+                $this->getSvnDao(),
+                ProjectManager::instance()
+            )
+        );
+        assert($get_all_repositories instanceof GetAllRepositories);
         $factory           = $this->getSVNApacheAuthFactory();
 
-        $conf = new SVN_Apache_SvnrootConf($factory, $list_repositories);
+        $conf = new SVN_Apache_SvnrootConf($factory, $get_all_repositories->getRepositories());
 
         return $conf->getFullConf();
     }

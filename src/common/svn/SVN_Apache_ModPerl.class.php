@@ -27,31 +27,30 @@ class SVN_Apache_ModPerl extends SVN_Apache
      */
     private $cache_parameters;
 
-    public function __construct(Parameters $cache_parameters, array $project)
+    public function __construct(Parameters $cache_parameters)
     {
-        parent::__construct($project);
         $this->cache_parameters = $cache_parameters;
     }
 
-    public function getHeaders()
+    public function getHeaders(): string
     {
         return 'PerlLoadModule Apache::Tuleap' . PHP_EOL;
     }
 
-    protected function getProjectAuthentication($row)
+    protected function getProjectAuthentication(Project $project): string
     {
         $tuleap_dsn          = $this->escapeStringForApacheConf($this->getDBIConnect());
         $maximum_credentials = $this->escapeStringForApacheConf($this->cache_parameters->getMaximumCredentials());
         $lifetime            = $this->escapeStringForApacheConf($this->cache_parameters->getLifetime());
 
         $conf  = '';
-        $conf .= $this->getCommonAuthentication($row['group_name']);
+        $conf .= $this->getCommonAuthentication($project);
         $conf .= "    PerlAccessHandler Apache::Authn::Tuleap::access_handler\n";
         $conf .= "    PerlAuthenHandler Apache::Authn::Tuleap::authen_handler\n";
         $conf .= '    TuleapDSN "' . $tuleap_dsn . '"' . "\n";
         $conf .= '    TuleapDbUser "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_user')) . '"' . "\n";
         $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf(ForgeConfig::get('sys_dbauth_passwd')) . '"' . "\n";
-        $conf .= '    TuleapGroupId "' . $this->escapeStringForApacheConf($row['group_id']) . '"' . "\n";
+        $conf .= '    TuleapGroupId "' . $this->escapeStringForApacheConf((string) $project->getID()) . '"' . "\n";
         $conf .= '    TuleapCacheCredsMax ' . $maximum_credentials . "\n";
         $conf .= '    TuleapCacheLifetime ' . $lifetime . "\n";
 

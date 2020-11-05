@@ -18,40 +18,17 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/
 */
 
-class SVN_DAO extends DataAccessObject
+class SVN_DAO extends \Tuleap\DB\DataAccessObject
 {
-
-    private $event_manager;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->event_manager = EventManager::instance();
-    }
 
     public function searchSvnRepositories()
     {
-        $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('svn_prefix'));
-
-        $sql = "SELECT groups.*, service.*,
-                CONCAT('/svnroot/', unix_group_name) AS public_path,
-                CONCAT($sys_dir,'/', unix_group_name) AS system_path,
-                '' AS backup_path, '' AS repository_deletion_date
-                FROM groups, service
-                WHERE groups.group_id = service.group_id
-                  AND service.short_name = 'svn'
-                  AND service.is_used = '1'
+        $sql = "SELECT groups.*
+                FROM groups
+                    INNER JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'svn')
+                WHERE service.is_used = '1'
                   AND groups.status = 'A'";
 
-        $sql_fragments = [$sql];
-
-        $this->event_manager->processEvent(
-            Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS,
-            [
-                'sql_fragments' => &$sql_fragments
-            ]
-        );
-
-        return $this->retrieve(implode(' UNION ', $sql_fragments));
+        return $this->getDB()->run($sql);
     }
 }

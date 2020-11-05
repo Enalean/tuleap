@@ -308,21 +308,15 @@ final class BackendSVNTest extends TestCase
         $svn_dao = \Mockery::spy(\SVN_DAO::class)->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar([
             "group_id"        => "101",
             "group_name"      => "Guinea Pig",
-            "repository_name" => "gpig",
-            "public_path"     => "/svnroot/gpig",
-            "system_path"     => "/svnroot/gpig"
+            "unix_group_name" => "gpig",
         ], [
             "group_id"        => "102",
             "group_name"      => "Guinea Pig is \"back\"",
-            "repository_name" => "gpig2",
-            "public_path"     => "/svnroot/gpig2",
-            "system_path"     => "/svnroot/gpig2"
+            "unix_group_name" => "gpig2",
         ], [
             "group_id"        => "103",
             "group_name"      => "Guinea Pig is 'angry'",
-            "repository_name" => "gpig3",
-            "public_path"     => "/svnroot/gpig3",
-            "system_path"     => "/svnroot/gpig3"
+            "unix_group_name" => "gpig3",
         ]))->getMock();
         $this->backend->shouldReceive('getSvnDao')->andReturns($svn_dao);
         $this->backend->shouldReceive('getProjectManager')->andReturns($this->project_manager);

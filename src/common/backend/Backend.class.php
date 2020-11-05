@@ -133,6 +133,16 @@ class Backend
     }
 
     /**
+     * Helper for static analysis
+     */
+    public static function instanceSVN(): BackendSVN
+    {
+        $instance = self::instance(self::SVN);
+        assert($instance instanceof BackendSVN);
+        return $instance;
+    }
+
+    /**
      * Clear the cache of instances.
      * Main goal is for unit tests. Useless in prod.
      *

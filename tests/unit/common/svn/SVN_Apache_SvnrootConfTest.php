@@ -21,6 +21,8 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\SVN\CoreApacheConfRepository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SVN_Apache_SvnrootConfTest extends TestCase
@@ -30,7 +32,6 @@ class SVN_Apache_SvnrootConfTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         ForgeConfig::set('sys_name', 'Platform');
         ForgeConfig::set('sys_dbhost', 'db_server');
         ForgeConfig::set('sys_dbname', 'db');
@@ -41,24 +42,14 @@ class SVN_Apache_SvnrootConfTest extends TestCase
 
     private function givenSvnrootForTwoGroups(): SVN_Apache_SvnrootConf
     {
-        $projects = [
-            [
-                'repository_name' => 'gpig',
-                'public_path'     => '/svnroot/gpig',
-                'system_path'     => '/svnroot/gpig',
-                'group_name'      => 'Guinea Pig',
-                'group_id'        => 101
-            ],
-            [
-                'repository_name' => 'garden',
-                'public_path'     => '/svnroot/garden',
-                'system_path'     => '/svnroot/garden',
-                'group_name'      => 'The Garden Project',
-                'group_id'        => 102
-            ]
+        $repositories = [
+            new CoreApacheConfRepository(
+                ProjectTestBuilder::aProject()->withId(101)->withUnixName('gpig')->withPublicName('Guinea Pig')->build(),
+            ),
+            new CoreApacheConfRepository(
+                ProjectTestBuilder::aProject()->withId(102)->withUnixName('garden')->withPublicName('The Garden Project')->build(),
+            ),
         ];
-
-        $repositories = [];
 
         $event_manager = new class extends EventManager
         {
@@ -72,7 +63,7 @@ class SVN_Apache_SvnrootConfTest extends TestCase
 
         $factory = new SVN_Apache_Auth_Factory($event_manager, $cache_parameters);
 
-        return new SVN_Apache_SvnrootConf($factory, $projects, $repositories);
+        return new SVN_Apache_SvnrootConf($factory, $repositories);
     }
 
     private function givenAFullApacheConfWithModPerl()

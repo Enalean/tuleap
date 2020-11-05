@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,32 +42,25 @@ class SVN_Apache_Auth_Factory
         $this->cache_parameters = $cache_parameters;
     }
 
-    /**
-     * @param array $projectInfo The project data db row
-     *
-     * @return SVN_Apache
-     */
-    public function get(array $projectInfo)
+    public function get(\Project $project): SVN_Apache
     {
-        $svn_apache_auth = $this->getModFromPlugins(
-            $projectInfo
-        );
+        $svn_apache_auth = $this->getModFromPlugins($project);
 
         if (! $svn_apache_auth) {
-            $svn_apache_auth = new SVN_Apache_ModPerl($this->cache_parameters, $projectInfo);
+            $svn_apache_auth = new SVN_Apache_ModPerl($this->cache_parameters);
         }
 
         return $svn_apache_auth;
     }
 
-    private function getModFromPlugins(array $project_info)
+    private function getModFromPlugins(\Project $project): ?SVN_Apache
     {
         $svn_apache_auth = null;
 
         $params = [
             'svn_apache_auth'           => &$svn_apache_auth,
             'cache_parameters'          => $this->cache_parameters,
-            'project_info'              => $project_info
+            'project'                   => $project,
         ];
 
         $this->event_manager->processEvent(Event::SVN_APACHE_AUTH, $params);

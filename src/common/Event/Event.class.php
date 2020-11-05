@@ -836,21 +836,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
 
     /**
-     * Retrieve sql fragments in ordoer to retrieve all repositories of all projects.
-     *
-     * Sql fragments should be in the form of:
-     *
-     *  SELECT groups.*, service.*, repository_name
-     *  FROM ...
-     *
-     * Where repository_name is "my_project" or "my_project/my_repo"
-     *
-     * Parameters:
-     *      'sql_fragments' => array
-     */
-    public const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
-
-    /**
      * When a user group is modified
      *
      * Parameters:
