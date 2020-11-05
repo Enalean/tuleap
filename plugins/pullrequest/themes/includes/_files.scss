@@ -85,12 +85,11 @@
 }
 
 .pull-request-file-changes {
-    visibility: hidden;
     flex: 0 0 auto;
     width: 50px;
 
-    &.pull-request-file-show-changes {
-        visibility: visible;
+    &:not(.pull-request-file-show-changes) {
+        visibility: hidden;
     }
 
     &.pull-request-file-lines-added {
