@@ -112,4 +112,16 @@ final class SvnCoreAccessTest extends TestCase
 
         self::assertEquals('/plugins/svn/trunk/README?root=mozilla&view=log', $layout_inspector->getRedirectUrl());
     }
+
+    public function testItForbidsSOAPAccess(): void
+    {
+        $event = new \Tuleap\SVN\SvnCoreAccess(
+            $this->project,
+            \SVN_SOAPServer::FAKE_URL,
+            null
+        );
+        $this->plugin_svn_access->process($event);
+
+        self::assertTrue($event->hasRedirectUri());
+    }
 }

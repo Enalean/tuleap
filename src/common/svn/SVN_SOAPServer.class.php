@@ -17,13 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\SOAP\SOAPRequestValidator;
+use Tuleap\SVN\SvnCoreAccess;
 
 /**
  * Wrapper for subversion related SOAP methods
  */
 class SVN_SOAPServer
 {
+    public const FAKE_URL = 'SVN_SOAP';
+
     /**
      * @var SOAPRequestValidator
      */
@@ -33,13 +37,19 @@ class SVN_SOAPServer
      * @var SVN_RepositoryListing
      */
     private $svn_repository_listing;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     public function __construct(
         SOAPRequestValidator $soap_request_validator,
-        SVN_RepositoryListing $svn_repository_listing
+        SVN_RepositoryListing $svn_repository_listing,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -66,6 +76,7 @@ class SVN_SOAPServer
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            $this->assertCanAccess($project);
 
             return $this->svn_repository_listing->getSvnPaths($current_user, $project, $path);
         } catch (Exception $e) {
@@ -111,6 +122,7 @@ class SVN_SOAPServer
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            $this->assertCanAccess($project);
 
             $path_logs = $this->svn_repository_listing->getSvnPathsWithLogDetails($current_user, $project, $path, $sort);
 
@@ -176,6 +188,7 @@ class SVN_SOAPServer
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            $this->assertCanAccess($project);
 
             $author    = $this->getUser($author_id);
             $svn_log   = new SVN_LogFactory($project);
@@ -203,6 +216,7 @@ class SVN_SOAPServer
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            $this->assertCanAccess($project);
 
             $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getCommiters(TimeInterval::fromUnixTimestamps($start_date, $end_date));
@@ -230,6 +244,7 @@ class SVN_SOAPServer
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            $this->assertCanAccess($project);
 
             $svn_log = new SVN_LogFactory($project);
             $files   = $svn_log->getTopModifiedFiles($current_user, TimeInterval::fromUnixTimestamps($start_date, $end_date), $limit);
@@ -252,6 +267,15 @@ class SVN_SOAPServer
             return $user;
         } else {
             throw new Exception("Invalid user id", '3005');
+        }
+    }
+
+    private function assertCanAccess(\Project $project): void
+    {
+        $svn_core_access = $this->dispatcher->dispatch(new SvnCoreAccess($project, self::FAKE_URL, null));
+        assert($svn_core_access instanceof SvnCoreAccess);
+        if ($svn_core_access->hasRedirectUri()) {
+            throw new Exception('Repository migrated to SVN plugin, SOAP no longer available', 3003);
         }
     }
 }

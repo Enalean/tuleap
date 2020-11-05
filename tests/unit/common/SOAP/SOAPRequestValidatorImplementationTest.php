@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SOAP;
 
+use EventManager;
 use Exception;
 use Mockery;
 use PFUser;
@@ -42,7 +43,8 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator      = new SOAPRequestValidatorImplementation(
             Mockery::mock(ProjectManager::class),
             Mockery::mock(UserManager::class),
-            $access_checker
+            $access_checker,
+            new EventManager()
         );
 
         $access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true)->once();
@@ -56,7 +58,8 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator      = new SOAPRequestValidatorImplementation(
             Mockery::mock(ProjectManager::class),
             Mockery::mock(UserManager::class),
-            $access_checker
+            $access_checker,
+            new EventManager()
         );
 
         $access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(
@@ -75,7 +78,8 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator    = new SOAPRequestValidatorImplementation(
             Mockery::mock(ProjectManager::class),
             $user_manager,
-            Mockery::mock(ProjectAccessChecker::class)
+            Mockery::mock(ProjectAccessChecker::class),
+            new EventManager()
         );
 
         $expected_user = Mockery::mock(PFUser::class);
@@ -93,7 +97,8 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator    = new SOAPRequestValidatorImplementation(
             Mockery::mock(ProjectManager::class),
             $user_manager,
-            Mockery::mock(ProjectAccessChecker::class)
+            Mockery::mock(ProjectAccessChecker::class),
+            new EventManager()
         );
 
         $user = Mockery::mock(PFUser::class);

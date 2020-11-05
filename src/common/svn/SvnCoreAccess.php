@@ -41,7 +41,7 @@ final class SvnCoreAccess implements Dispatchable
      */
     public $requested_uri;
     /**
-     * @var BaseLayout
+     * @var ?BaseLayout
      */
     private $response;
     /**
@@ -49,7 +49,7 @@ final class SvnCoreAccess implements Dispatchable
      */
     private $redirect_uri;
 
-    public function __construct(\Project $project, string $requested_uri, BaseLayout $response)
+    public function __construct(\Project $project, string $requested_uri, ?BaseLayout $response)
     {
         $this->project       = $project;
         $this->requested_uri = $requested_uri;
@@ -63,8 +63,13 @@ final class SvnCoreAccess implements Dispatchable
 
     public function redirect(): void
     {
-        if ($this->redirect_uri) {
+        if ($this->response && $this->redirect_uri) {
             $this->response->redirect($this->redirect_uri);
         }
+    }
+
+    public function hasRedirectUri(): bool
+    {
+        return $this->redirect_uri !== null;
     }
 }
