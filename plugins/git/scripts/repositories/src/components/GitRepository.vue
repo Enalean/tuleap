@@ -30,6 +30,7 @@
                 v-bind:href="getRepositoryPath"
                 class="git-repository-card-link"
                 data-test="git-repository-path"
+                v-bind:id="`git-repository-card-link-${repository.id}`"
             >
                 <div class="tlp-pane-header git-repository-card-header">
                     <h2
@@ -63,6 +64,17 @@
                     >
                         <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
                     </a>
+                    <div
+                        v-if="is_admin && isGitlabRepository"
+                        class="git-repository-card-admin-link"
+                        data-test="git-repository-card-admin-unlink-gitlab"
+                    >
+                        <i
+                            class="far fa-trash-alt unlink-repository-gitlab"
+                            v-bind:title="unlink_repository_title"
+                            v-bind:id="`unlink-gitlab-repository-${repository.id}`"
+                        ></i>
+                    </div>
                 </div>
                 <section
                     class="tlp-pane-section git-repository-card-header"
@@ -90,7 +102,7 @@
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
 import { isGitlabRepository } from "../gitlab/gitlab-checker";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter.js";
 import PullRequestBadge from "./PullRequestBadge.vue";
@@ -127,6 +139,9 @@ export default {
         administration_link_title() {
             return this.$gettext("Go to repository administration");
         },
+        unlink_repository_title() {
+            return this.$gettext("Unlink the repository");
+        },
         formatted_last_update_date() {
             const date = new Date(this.repository.last_update_date);
             const time_ago = new TimeAgo(getDashCasedLocale());
@@ -151,6 +166,30 @@ export default {
             return this.repository.path_without_project + "/";
         },
         ...mapGetters(["isFolderDisplayMode"]),
+    },
+    mounted() {
+        if (this.isGitlabRepository) {
+            const card_repository = document.getElementById(
+                "git-repository-card-link-" + this.repository.id
+            );
+            const button_unlink = document.getElementById(
+                "unlink-gitlab-repository-" + this.repository.id
+            );
+            if (card_repository && button_unlink) {
+                card_repository.addEventListener("click", (event) => {
+                    if (event.target === button_unlink) {
+                        event.preventDefault();
+                        this.showDeleteGitlabRepositoryModal(this.repository);
+                        return;
+                    }
+
+                    event.stopPropagation();
+                });
+            }
+        }
+    },
+    methods: {
+        ...mapActions(["showDeleteGitlabRepositoryModal"]),
     },
 };
 </script>

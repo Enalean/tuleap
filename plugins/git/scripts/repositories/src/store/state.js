@@ -34,5 +34,7 @@ const state = {
     is_first_load_done: false,
     services_name_used: [],
     add_gitlab_repository_modal: null,
+    unlink_gitlab_repository_modal: null,
+    unlink_gitlab_repository: null,
 };
 export default state;

@@ -22,13 +22,14 @@ import GetTextPlugin from "vue-gettext";
 import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
-
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import french_translations from "../po/fr.po";
 import App from "./components/App.vue";
 import { setBreadcrumbSettings } from "./breadcrumb-presenter.js";
 import { build as buildRepositoryListPresenter } from "./repository-list-presenter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages,

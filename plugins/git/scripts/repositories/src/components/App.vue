@@ -29,6 +29,7 @@
             <error-message />
             <git-repository-create />
             <gitlab-repository-modal />
+            <unlink-repository-gitlab-modal />
             <folder-repository-list v-if="isFolderDisplayMode" />
             <repository-list v-else />
             <repository-list-spinner />
@@ -52,13 +53,15 @@ import FolderRepositoryList from "./folders/FolderRepositoryList.vue";
 import { PROJECT_KEY } from "../constants.js";
 import { getExternalPlugins } from "../repository-list-presenter";
 import JenkinsServers from "./ActionBar/JenkinsServers.vue";
-import GitlabRepositoryModal from "./GitlabModal/GitlabRepositoryModal";
+import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRepositoryModal.vue";
+import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
 
 export default {
     name: "App",
     store,
     components: {
         GitlabRepositoryModal,
+        UnlinkRepositoryGitlabModal,
         ErrorMessage,
         RepositoryList,
         ActionBar,

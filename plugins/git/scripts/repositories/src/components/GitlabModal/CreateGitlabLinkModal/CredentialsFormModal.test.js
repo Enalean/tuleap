@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../../support/local-vue.js";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 
 describe("CredentialsFormModal", () => {
