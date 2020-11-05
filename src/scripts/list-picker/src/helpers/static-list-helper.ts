@@ -25,7 +25,7 @@ export function generateItemMapBasedOnSourceSelectOptions(
     const useless_options = [];
     let i = 0;
     for (const option of source_select_box.options) {
-        if (option.value === "") {
+        if (option.value === "" || option.value === "?") {
             useless_options.push(option);
             continue;
         }
