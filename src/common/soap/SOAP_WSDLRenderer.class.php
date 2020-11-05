@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,20 +31,15 @@ class SOAP_WSDLRenderer
      */
     public function render($wsdl_uri)
     {
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-
         $proc = new XSLTProcessor();
 
         $xslDoc = new DOMDocument();
-        $xslDoc->load(ForgeConfig::get('codendi_dir') . "/src/www/soap/wsdl-viewer.xsl");
+        $xslDoc->loadXML(\file_get_contents(__DIR__ . '/../../www/soap/wsdl-viewer.xsl'));
         $proc->importStylesheet($xslDoc);
 
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML($this->getWSDL($wsdl_uri));
         echo $proc->transformToXML($xmlDoc);
-
-        $xml_security->disableExternalLoadOfEntities();
     }
 
     private function getWSDL($wsdl_uri)
