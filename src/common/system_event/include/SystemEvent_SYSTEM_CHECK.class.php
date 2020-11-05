@@ -49,9 +49,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $backendSystem      = Backend::instance('System');
         \assert($backendSystem instanceof BackendSystem);
         $backendAliases     = Backend::instance('Aliases');
+        \assert($backendAliases instanceof BackendAliases);
         $backendSVN         = Backend::instance('SVN');
+        \assert($backendSVN instanceof BackendSVN);
         $backendCVS         = Backend::instance('CVS');
+        \assert($backendCVS instanceof BackendCVS);
         $backendMailingList = Backend::instance('MailingList');
+        \assert($backendMailingList instanceof BackendMailingList);
 
         //TODO:
         // User: unix_status vs status??
@@ -114,24 +118,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
                 $backendCVS->checkCVSMode($project);
             }
 
-            if ($project->usesSVN()) {
-                if (! $backendSVN->repositoryExists($project)) {
-                    if (! $backendSVN->createProjectSVN($project->getId())) {
-                        $this->error("Could not create/initialize project SVN repository");
-                        return false;
-                    }
-                    $backendSVN->updateSVNAccess($project->getId(), $project->getSVNRootPath());
-                    $backendSVN->setSVNPrivacy($project, ! $project->isPublic() || $project->isSVNPrivate());
-                    $backendSVN->setSVNApacheConfNeedUpdate();
-                } else {
-                    $backendSVN->checkSVNAccessPresence($project->getId());
-                }
-
-                $backendSVN->updateHooksForProjectRepository($project);
-
-                // Check ownership/mode/access rights
-                $backendSVN->checkSVNMode($project);
-            }
+            $backendSVN->systemCheck($project);
         }
 
         $backend_logger = BackendLogger::getDefaultLogger();
@@ -139,11 +126,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
 
         if ($backend_logger instanceof BackendLogger) {
             $backend_logger->restoreOwnership($backendSystem);
-        }
-
-        // If no codendi_svnroot.conf file, force recreate.
-        if (! is_file(ForgeConfig::get('svn_root_file'))) {
-            $backendSVN->setSVNApacheConfNeedUpdate();
         }
 
         // remove deleted releases and released files

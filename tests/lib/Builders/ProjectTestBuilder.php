@@ -62,7 +62,7 @@ final class ProjectTestBuilder
         return $this;
     }
 
-    public function withPublicName(string $name)
+    public function withPublicName(string $name): self
     {
         $this->data['group_name'] = $name;
         return $this;

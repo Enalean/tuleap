@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\SVN\Repository\Repository;
@@ -37,7 +39,7 @@ class AccessFileHistory
      */
     private $repository;
 
-    public function __construct(Repository $repository, int $id, $version_number, $content, $version_date)
+    public function __construct(Repository $repository, int $id, int $version_number, string $content, int $version_date)
     {
         $this->id             = $id;
         $this->version_number = $version_number;
@@ -53,7 +55,7 @@ class AccessFileHistory
 
     public function getVersionNumber()
     {
-        return (int) $this->version_number;
+        return $this->version_number;
     }
 
     public function getContent()

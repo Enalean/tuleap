@@ -116,7 +116,10 @@ class Settings
             || $this->access_file !== "";
     }
 
-    public function getAccessFileHistory()
+    /**
+     * @return AccessFileHistory[]
+     */
+    public function getAccessFileHistory(): array
     {
         return $this->access_file_history;
     }

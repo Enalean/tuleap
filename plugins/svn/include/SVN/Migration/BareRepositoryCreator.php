@@ -20,14 +20,10 @@
 
 namespace Tuleap\SVN\Migration;
 
-use Backend;
 use PFUser;
-use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryCreator;
-use Tuleap\SVN\Repository\RepositoryManager;
-use UserManager;
 
 class BareRepositoryCreator
 {
@@ -36,81 +32,30 @@ class BareRepositoryCreator
      */
     private $repository_creator;
     /**
-     * @var AccessFileHistoryCreator
-     */
-    private $access_file_history_creator;
-    /**
-     * @var RepositoryManager
-     */
-    private $repository_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Backend
-     */
-    private $backend_svn;
-    /**
-     * @var Backend
-     */
-    private $backend_system;
-    /**
-     * @var RepositoryCopier
-     */
-    private $repository_copier;
-    /**
      * @var SettingsRetriever
      */
     private $settings_retriever;
 
     public function __construct(
         RepositoryCreator $repository_creator,
-        AccessFileHistoryCreator $access_file_history_creator,
-        RepositoryManager $repository_manager,
-        UserManager $user_manager,
-        \BackendSVN $backend_svn,
-        \BackendSystem $backend_system,
-        RepositoryCopier $repository_copier,
         SettingsRetriever $settings_retriever
     ) {
         $this->repository_creator          = $repository_creator;
-        $this->access_file_history_creator = $access_file_history_creator;
-        $this->repository_manager          = $repository_manager;
-        $this->user_manager                = $user_manager;
-        $this->backend_svn                 = $backend_svn;
-        $this->backend_system              = $backend_system;
-        $this->repository_copier           = $repository_copier;
         $this->settings_retriever          = $settings_retriever;
     }
 
-    public function create(Repository $repository, PFUser $user)
+    public function create(Repository $repository, PFUser $user): void
     {
         try {
             $settings = $this->settings_retriever->getSettingsFromCoreRepository($repository);
 
-            $copy_from_core = true;
-            $system_event   = $this->repository_creator->createWithSettings(
+            $this->repository_creator->importCoreRepository(
                 $repository,
                 $user,
-                $settings,
-                [],
-                $copy_from_core
+                $settings
             );
         } catch (RepositoryNameIsInvalidException $e) {
             throw new SvnMigratorException("Repository name is already used in this project.");
         }
-        if (! $system_event) {
-            throw new SvnMigratorException("Could not create system event.");
-        }
-
-        $system_event->injectDependencies(
-            $this->access_file_history_creator,
-            $this->repository_manager,
-            $this->user_manager,
-            $this->backend_svn,
-            $this->backend_system,
-            $this->repository_copier
-        );
     }
 }

@@ -21,40 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Builders;
+namespace Tuleap\SVN;
 
-final class LayoutInspector
+use Tuleap\Event\Dispatchable;
+
+final class SvnCoreUsage implements Dispatchable
 {
-    /**
-     * @var string
-     */
-    private $redirect_url;
-
-    private $feedbacks = [];
-
-    public function getRedirectUrl(): ?string
-    {
-        return $this->redirect_url;
-    }
-
-    public function setRedirectUrl(string $redirect_url): void
-    {
-        $this->redirect_url = $redirect_url;
-    }
-
-    public function addFeedback(string $level, string $message): void
-    {
-        $this->feedbacks[] = [
-            'level'   => $level,
-            'message' => $message,
-        ];
-    }
+    public const NAME = 'svnCoreUsageEvent';
 
     /**
-     * @retrun array{level:string, message:string}
+     * @psalm-var array<int, bool>
      */
-    public function getFeedback(): array
+    private $core_project_ids = [];
+
+    public function isManagedByCore(\Project $project): bool
     {
-        return $this->feedbacks;
+        return ! isset($this->core_project_ids[(int) $project->getID()]);
+    }
+
+    public function addProjectId(int $project_id): void
+    {
+        $this->core_project_ids[$project_id] = true;
     }
 }

@@ -413,7 +413,10 @@ class AdminController
     public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request)
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
-        $title      = $GLOBALS['Language']->getText('global', 'Administration');
+        if (! $repository->canBeDeleted()) {
+            $this->redirect($request->getProject()->getID());
+        }
+        $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $token = $this->generateTokenDeletion($request->getProject(), $repository);
 

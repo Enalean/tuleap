@@ -76,6 +76,7 @@ use Tuleap\SVN\DiskUsage\DiskUsageRetriever;
 use Tuleap\svn\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\SVN\Events\SystemEvent_SVN_IMPORT_CORE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Explorer\ExplorerController;
 use Tuleap\SVN\Explorer\RepositoryBuilder;
@@ -112,6 +113,8 @@ use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVN\Service\ServiceActivator;
 use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnCoreAccess;
+use Tuleap\SVN\SvnCoreUsage;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
 use Tuleap\SVN\ViewVC\AccessHistoryDao;
@@ -120,9 +123,6 @@ use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
 
-/**
- * SVN plugin
- */
 class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SERVICE_SHORTNAME  = 'plugin_svn';
@@ -208,6 +208,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(GetAllRepositories::NAME);
+        $this->addHook(SvnCoreUsage::NAME);
+        $this->addHook(SvnCoreAccess::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -261,7 +263,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return [
             SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             SystemEvent_SVN_DELETE_REPOSITORY::NAME,
-            SystemEvent_SVN_RESTORE_REPOSITORY::NAME
+            SystemEvent_SVN_RESTORE_REPOSITORY::NAME,
+            SystemEvent_SVN_IMPORT_CORE_REPOSITORY::NAME
         ];
     }
 
@@ -350,6 +353,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
+        $params['types'][] = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class;
     }
 
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
@@ -375,6 +379,15 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->getRepositoryDeleter(),
                     new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN))
                 ];
+                break;
+            case SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class:
+                $params['class'] = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class;
+                $params['dependencies'] = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::getDependencies(
+                    ProjectManager::instance(),
+                    $this->getBackendSVN(),
+                    $this->getRepositoryManager(),
+                    new \Tuleap\SVN\Logs\LastAccessDao(),
+                );
                 break;
         }
     }
@@ -670,10 +683,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         });
     }
 
-    /** @return BackendSVN */
-    private function getBackendSVN()
+    private function getBackendSVN(): BackendSVN
     {
-        return Backend::instance(Backend::SVN);
+        $backend_svn = Backend::instance(Backend::SVN);
+        assert($backend_svn instanceof BackendSVN);
+        return $backend_svn;
     }
 
     public function get_reference($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
@@ -1054,12 +1068,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    /**
-     * @return Backend
-     */
-    private function getBackendSystem()
+    private function getBackendSystem(): BackendSystem
     {
-        return Backend::instance('System');
+        $backend = Backend::instance('System');
+        assert($backend instanceof BackendSystem);
+        return $backend;
     }
 
     /**
@@ -1248,5 +1261,15 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
 
         $collector->setSvnCommits($commits);
+    }
+
+    public function svnCoreUsageEvent(SvnCoreUsage $svn_core_usage): void
+    {
+        $this->getRepositoryManager()->svnCoreUsage($svn_core_usage);
+    }
+
+    public function svnCoreAccess(SvnCoreAccess $svn_core_access): void
+    {
+        (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
     }
 }

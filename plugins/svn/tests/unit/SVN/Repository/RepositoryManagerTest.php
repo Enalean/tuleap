@@ -36,11 +36,14 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\SvnAdmin;
+use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class RepositoryManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
+    use TemporaryTestDirectory;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
@@ -102,10 +105,11 @@ class RepositoryManagerTest extends TestCase
             [$this->project, 'repositoryname']
         )->andReturn(
             [
-                'id'                       => 1,
+                'id'                       => '1',
                 'name'                     => 'repositoryname',
                 'repository_deletion_date' => null,
                 'backup_path'              => null,
+                'is_core'                  => '0'
             ]
         );
 
@@ -155,7 +159,8 @@ class RepositoryManagerTest extends TestCase
                 'id'                       => '1',
                 'name'                     => 'repositoryname',
                 'repository_deletion_date' => null,
-                'backup_path'              => null
+                'backup_path'              => null,
+                'is_core'                  => '0',
             ]
         );
 
@@ -172,8 +177,11 @@ class RepositoryManagerTest extends TestCase
         $this->request->shouldReceive('get')->andReturn('projectname');
         $this->request->shouldReceive('getProject')->andReturn($this->project);
 
+        $this->dao->shouldReceive('getCoreRepositoryId')->andReturn(15);
+
         $repository = $this->manager->getRepositoryFromPublicPath($this->request);
         self::assertEquals('projectname', $repository->getName());
+        self::assertEquals(15, $repository->getId());
     }
 
     public function testItReturnsAnEmptyArrayWhenNoProjectHaveMultiSVNRepositories(): void
@@ -195,21 +203,24 @@ class RepositoryManagerTest extends TestCase
                     'id'                       => '1',
                     'name'                     => 'repo A',
                     'backup_path'              => '/tmp/102',
-                    'repository_deletion_date' => null
+                    'repository_deletion_date' => null,
+                    'is_core'                  => '0',
                 ],
                 [
                     'project_id'               => '102',
                     'id'                       => '2',
                     'name'                     => 'repo B',
                     'backup_path'              => '/tmp/102',
-                    'repository_deletion_date' => null
+                    'repository_deletion_date' => null,
+                    'is_core'                  => '0',
                 ],
                 [
                     'project_id'               => '103',
                     'id'                       => '3',
                     'name'                     => 'repo D',
                     'backup_path'              => '/tmp/103',
-                    'repository_deletion_date' => null
+                    'repository_deletion_date' => null,
+                    'is_core'                  => '0',
                 ]
             ]
         );
@@ -222,12 +233,43 @@ class RepositoryManagerTest extends TestCase
         $collection          = $this->manager->getRepositoriesOfNonDeletedProjects();
         $expected_collection = [
             RepositoryByProjectCollection::build($project_A, [
-                SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null], $project_A),
-                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null], $project_A)
+                SvnRepository::buildFromDatabase(['id' => '1', 'name' => 'repo A', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A),
+                SvnRepository::buildFromDatabase(['id' => '2', 'name' => 'repo B', 'backup_path' => '/tmp/102', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)
             ]),
-            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null], $project_A)])
+            RepositoryByProjectCollection::build($project_B, [SvnRepository::buildFromDatabase(['id' => '3', 'name' => 'repo D', 'backup_path' => '/tmp/103', 'repository_deletion_date' => null, 'is_core' => '0'], $project_A)])
         ];
 
         $this->assertEquals($expected_collection, $collection);
+    }
+
+    public function testGetRepositoryFromSystemPathWithCoreRepository(): void
+    {
+        $tmp_dir = $this->getTmpDir();
+        mkdir($tmp_dir . '/svnroot/ProjectName', 0750, true);
+        mkdir($tmp_dir . '/svnplugin/101/FooBar', 0750, true);
+        \ForgeConfig::set('svn_prefix', $tmp_dir . '/svnroot');
+
+        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('ProjectName')->andReturn(ProjectTestBuilder::aProject()->build());
+        $this->dao->shouldReceive('getCoreRepositoryId')->andReturn(67);
+
+        $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnroot/ProjectName');
+        self::assertInstanceOf(CoreRepository::class, $repository);
+        self::assertEquals(67, $repository->getId());
+    }
+
+    public function testGetRepositoryFromSystemPathWithPluginRepository(): void
+    {
+        $tmp_dir = $this->getTmpDir();
+        mkdir($tmp_dir . '/svnroot/ProjectName', 0750, true);
+        mkdir($tmp_dir . '/svnplugin/101/FooBar', 0750, true);
+        \ForgeConfig::set('svn_prefix', $tmp_dir . '/svnroot');
+
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+        $this->dao->shouldReceive('searchRepositoryByName')->with($project, 'FooBar')->andReturn(['id' => 670, 'name' => 'FooBar', 'is_core' => '0', 'backup_path' => null, 'repository_deletion_date' => null]);
+
+        $repository = $this->manager->getRepositoryFromSystemPath($tmp_dir . '/svnplugin/101/FooBar');
+        self::assertInstanceOf(SvnRepository::class, $repository);
+        self::assertEquals(670, $repository->getId());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,17 +64,21 @@ class RepositoryDeleter
         $this->repository_manager   = $repository_manager;
     }
 
-    public function delete(Repository $repository)
+    public function delete(Repository $repository): bool
     {
+        if ($repository instanceof CoreRepository) {
+            throw new \RuntimeException('Cannot delete core repositories yet');
+        }
         $system_path = $repository->getSystemPath();
         if (is_dir($system_path)) {
-            return $this->system_command->exec('rm -rf ' . escapeshellarg($system_path));
+            $this->system_command->exec('/bin/rm -rf ' . escapeshellarg($system_path));
+            return true;
         }
 
         return false;
     }
 
-    public function markAsDeleted(Repository $repository)
+    public function markAsDeleted(Repository $repository): void
     {
         if ($repository->canBeDeleted()) {
             $deletion_date = time();
@@ -91,18 +95,18 @@ class RepositoryDeleter
         }
     }
 
-    public function deleteProjectRepositories(Project $project)
+    public function deleteProjectRepositories(Project $project): void
     {
         $repositories = $this->repository_manager->getRepositoriesInProject($project);
         foreach ($repositories as $repository) {
+            if (! $repository->canBeDeleted()) {
+                continue;
+            }
             $this->queueRepositoryDeletion($repository);
         }
     }
 
-    /**
-     * @return SystemEvent or null
-     */
-    public function queueRepositoryDeletion(Repository $repository)
+    public function queueRepositoryDeletion(Repository $repository): ?SystemEvent
     {
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_deletion',

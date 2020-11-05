@@ -24,11 +24,13 @@ use PFUser;
 use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
+use Tuleap\SVN\Events\SystemEvent_SVN_IMPORT_CORE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
@@ -96,13 +98,10 @@ class RepositoryCreator
     }
 
     /**
-     * @return SystemEvent
-     *
      * @throws CannotCreateRepositoryException
-     * @throws RepositoryNameIsInvalidException
      * @throws UserIsNotSVNAdministratorException
      */
-    public function create(Repository $svn_repository, PFUser $user)
+    public function create(Repository $svn_repository, PFUser $user): ?SystemEvent_SVN_CREATE_REPOSITORY
     {
         $this->checkUserHasAdministrationPermissions($svn_repository, $user);
         $copy_from_core = false;
@@ -111,12 +110,9 @@ class RepositoryCreator
     }
 
     /**
-     * @return SystemEvent
-     *
      * @throws CannotCreateRepositoryException
-     * @throws RepositoryNameIsInvalidException
      */
-    public function createWithoutUserAdminCheck(Repository $svn_repository, PFUser $committer, $copy_from_core)
+    public function createWithoutUserAdminCheck(Repository $svn_repository, PFUser $committer, $copy_from_core): ?SystemEvent_SVN_CREATE_REPOSITORY
     {
         $svn_repository = $this->createRepository($svn_repository);
         $this->logCreation($svn_repository);
@@ -126,15 +122,12 @@ class RepositoryCreator
         return $this->sendEvent($svn_repository, $committer, $initial_repository_layout, $copy_from_core);
     }
 
-    /**
-     * @return SystemEvent
-     */
     private function sendEvent(
         Repository $svn_repository,
         PFUser $committer,
         array $initial_repository_layout,
         $copy_from_core
-    ) {
+    ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $repo_event['system_path']    = $svn_repository->getSystemPath();
         $repo_event['project_id']     = $svn_repository->getProject()->getId();
         $repo_event['name']           = $svn_repository->getProject()->getUnixNameMixedCase() . "/" .
@@ -144,15 +137,18 @@ class RepositoryCreator
         $repo_event['user_id']        = $committer->getId();
         $repo_event['copy_from_core'] = $copy_from_core;
 
-        return $this->system_event_manager->createEvent(
-            'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME,
+        $event = $this->system_event_manager->createEvent(
+            SystemEvent_SVN_CREATE_REPOSITORY::class,
             SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repo_event),
             SystemEvent::PRIORITY_HIGH
         );
+        assert($event instanceof SystemEvent_SVN_CREATE_REPOSITORY || $event === null);
+        return $event;
     }
 
     /**
-     * @return SystemEvent
+     * @throws CannotCreateRepositoryException
+     * @throws UserIsNotSVNAdministratorException
      */
     public function createWithSettings(
         Repository $repository,
@@ -160,7 +156,7 @@ class RepositoryCreator
         Settings $settings,
         array $initial_repository_layout,
         $copy_from_core
-    ) {
+    ): ?SystemEvent_SVN_CREATE_REPOSITORY {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
 
@@ -172,6 +168,21 @@ class RepositoryCreator
         }
 
         return $this->sendEvent($repository, $user, $initial_repository_layout, $copy_from_core);
+    }
+
+    /**
+     * @throws CannotCreateRepositoryException
+     * @throws UserIsNotSVNAdministratorException
+     */
+    public function importCoreRepository(Repository $repository, PFUser $user, Settings $settings): void
+    {
+        $this->checkUserHasAdministrationPermissions($repository, $user);
+
+        $repository = $this->createRepository($repository);
+        $this->addSettingsToRepository($repository, $settings);
+        $this->logCreationWithCustomSettings($repository);
+
+        SystemEvent_SVN_IMPORT_CORE_REPOSITORY::queueEvent($this->system_event_manager, $repository);
     }
 
     private function logCreation(Repository $repository)
@@ -253,7 +264,7 @@ class RepositoryCreator
         $this->createMailNotifications($settings);
     }
 
-    private function createCommitRules(Repository $repository, Settings $settings)
+    private function createCommitRules(Repository $repository, Settings $settings): void
     {
         $commit_rules = $settings->getCommitRules();
         if ($commit_rules) {
@@ -263,10 +274,10 @@ class RepositoryCreator
         }
     }
 
-    private function createImmutableTags(Repository $repository, Settings $settings)
+    private function createImmutableTags(Repository $repository, Settings $settings): void
     {
         $immutable_tag = $settings->getImmutableTag();
-        if (count($immutable_tag->getPaths()) > 0) {
+        if ($immutable_tag && count($immutable_tag->getPaths()) > 0) {
             $this->immutable_tag_creator->saveWithoutHistory(
                 $repository,
                 $immutable_tag->getPathsAsString(),
@@ -277,6 +288,10 @@ class RepositoryCreator
         }
     }
 
+    /**
+     * @param AccessFileHistory[]      $access_file_history
+     * @throws \Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException
+     */
     private function createAccessAndAVersionOfFileHistoryWithoutCleaningContent(
         Repository $repository,
         Settings $settings,

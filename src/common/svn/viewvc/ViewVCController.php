@@ -30,6 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\SVN\SvnCoreAccess;
 use Valid_String;
 
 class ViewVCController implements DispatchableWithRequest
@@ -59,6 +60,10 @@ class ViewVCController implements DispatchableWithRequest
         if (! $project) {
             throw new NotFoundException();
         }
+
+        $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $layout));
+        assert($svn_core_access instanceof SvnCoreAccess);
+        $svn_core_access->redirect();
 
         $viewvc_proxy = new ViewVCProxy(EventManager::instance());
         $viewvc_proxy->displayContent($project, $request, $this->fixPathInfo($variables));

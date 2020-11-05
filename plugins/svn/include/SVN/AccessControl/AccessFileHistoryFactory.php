@@ -98,10 +98,10 @@ class AccessFileHistoryFactory
     {
         return new AccessFileHistory(
             $repository,
-            $row['id'],
-            $row['version_number'],
-            $row['content'],
-            $row['version_date']
+            (int) $row['id'],
+            (int) $row['version_number'],
+            (string) $row['content'],
+            (int) $row['version_date']
         );
     }
 }
