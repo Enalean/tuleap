@@ -29,6 +29,7 @@
     "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-no-only-tests": "^2.4.0",
     "eslint-plugin-no-unsanitized": "^3.1.2",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^7.0.1",
