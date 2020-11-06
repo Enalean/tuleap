@@ -36,6 +36,7 @@
                 }"
                 v-model="hidden_fieldset_ids"
                 v-bind:disabled="is_modal_save_running"
+                v-on:input="updateHiddenFieldsetsPostActionFieldsetIds"
             >
                 <option
                     v-for="fieldset in writable_fieldsets"
