@@ -62,6 +62,8 @@ class ProjectCreationTest extends TestCase
 
     public function tearDown(): void
     {
+        ProjectManager::clearInstance();
+
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, $this->backup_project_can_be_created);
         ForgeConfig::set('codendi_log', $this->backup_codendi_log);
         ForgeConfig::set('sys_logger_level', $this->backup_plogger_level);

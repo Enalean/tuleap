@@ -95,6 +95,7 @@ final class BackendSVNTest extends TestCase
     {
         //clear the cache between each tests
         Backend::clearInstances();
+        ProjectManager::clearInstance();
         ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
         ForgeConfig::set('svn_root_file', $this->initial_svn_root_file);
         ForgeConfig::set('sys_http_user', $this->initial_http_user);
