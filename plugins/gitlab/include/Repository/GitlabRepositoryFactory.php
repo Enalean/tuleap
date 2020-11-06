@@ -48,6 +48,16 @@ class GitlabRepositoryFactory
         return $gitlab_repositories;
     }
 
+    public function getGitlabRepositoryByIntegrationId(int $integration_id): ?GitlabRepository
+    {
+        $row = $this->dao->getGitlabRepositoryByIntegrationId($integration_id);
+        if ($row === null) {
+            return null;
+        }
+
+        return $this->getInstanceFromRow($row);
+    }
+
     public function getGitlabRepositoryByInternalIdAndPath(int $gitlab_id, string $http_path): ?GitlabRepository
     {
         $row = $this->dao->getGitlabRepositorByInternalIdAndPath($gitlab_id, $http_path);

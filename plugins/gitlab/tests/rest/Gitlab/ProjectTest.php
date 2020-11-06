@@ -26,7 +26,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class ProjectTest extends TestBase
 {
-    public function testOptionsGitLabRepositories(): void
+    public function testOptionsProjectGitLabRepositories(): void
     {
         $response = $this->getResponse(
             $this->client->options(
@@ -65,5 +65,6 @@ class ProjectTest extends TestBase
         $this->assertEquals('desc', $gitlab_repository['description']);
         $this->assertEquals('https://example.com/path/repo01', $gitlab_repository['full_url']);
         $this->assertEquals(15412, $gitlab_repository['gitlab_id']);
+        $this->assertEquals($this->gitlab_repository_id, $gitlab_repository['id']);
     }
 }
