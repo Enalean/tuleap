@@ -73,6 +73,7 @@
                             class="far fa-trash-alt unlink-repository-gitlab"
                             v-bind:title="unlink_repository_title"
                             v-bind:id="`unlink-gitlab-repository-${repository.id}`"
+                            v-bind:data-test="`unlink-gitlab-repository-${repository.id}`"
                         ></i>
                     </div>
                 </div>

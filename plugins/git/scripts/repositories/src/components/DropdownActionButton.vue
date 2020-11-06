@@ -47,8 +47,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { getUserIsAdmin } from "../repository-list-presenter.js";
+import { mapActions } from "vuex";
 import { createDropdown } from "tlp";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 
@@ -63,15 +62,6 @@ export default {
     },
     data() {
         return { dropdown: null };
-    },
-    computed: {
-        show_create_repository_button() {
-            return (
-                getUserIsAdmin() &&
-                !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
-            );
-        },
-        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
     },
     mounted() {
         this.dropdown = createDropdown(this.$refs.dropdownButton);

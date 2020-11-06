@@ -88,4 +88,40 @@ describe("GitlabRepositoryModal", () => {
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
     });
+
+    it("When ListRepositoriesModal emit to-back-button, Then CredentialsFormModal is displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            gitlab_repositories: [{ id: 10 }],
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
+
+        wrapper.findComponent(ListRepositoriesModal).vm.$emit("to-back-button");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
+    });
+
+    it("When CredentialsFormModal emit on-get-gitlab-repositories with repositories, Then ListRepositoriesModal is displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
+
+        wrapper
+            .findComponent(CredentialsFormModal)
+            .vm.$emit("on-get-gitlab-repositories", [{ id: 10 }]);
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
+        expect(wrapper.findComponent(ListRepositoriesModal).props("repositories")).toEqual([
+            { id: 10 },
+        ]);
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
+    });
 });
