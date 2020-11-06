@@ -115,9 +115,7 @@ export class SingleSelectionManager implements SelectionManager {
         selected_value.classList.add("list-picker-selected-value");
         selected_value.setAttribute("data-item-id", item.id);
         selected_value.setAttribute("aria-readonly", "true");
-
         selected_value.innerHTML = sanitize(item.template);
-        selected_value.appendChild(this.createRemoveCurrentSelectionButton(item));
 
         return selected_value;
     }
@@ -129,6 +127,7 @@ export class SingleSelectionManager implements SelectionManager {
         const selected_value = this.createCurrentSelectionElement(item);
 
         this.selection_element.appendChild(selected_value);
+        this.selection_element.appendChild(this.createRemoveCurrentSelectionButton(item));
         this.selection_element.removeChild(placeholder);
 
         item.is_selected = true;
@@ -160,8 +159,11 @@ export class SingleSelectionManager implements SelectionManager {
         newly_selected_item.target_option.selected = true;
 
         this.source_select_box.dispatchEvent(new Event("change"));
-        this.selection_element.removeChild(selection_state.selected_value_element);
+        this.selection_element.innerHTML = "";
         this.selection_element.appendChild(new_selected_value_element);
+        this.selection_element.appendChild(
+            this.createRemoveCurrentSelectionButton(newly_selected_item)
+        );
         this.selection_state = {
             selected_item: newly_selected_item,
             selected_value_element: new_selected_value_element,

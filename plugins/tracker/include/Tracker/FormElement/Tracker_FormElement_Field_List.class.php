@@ -1085,10 +1085,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function _fetchFieldMasschange($id, $name, $selected_values)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $multiple = ' ';
-        $size     = ' ';
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $html      = '';
+        $multiple  = ' ';
+        $size      = ' ';
+        $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
         if ($this->isMultiple()) {
             $multiple = ' multiple="multiple" ';
             $size     = ' size="' . min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) . '" ';
@@ -1103,7 +1104,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($name) {
             $html .= 'name="' . $name . '" ';
         }
-        $html .= $size . $multiple . '>';
+        $html .= $size . $multiple . $bind_type . '>';
 
         $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
             $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';

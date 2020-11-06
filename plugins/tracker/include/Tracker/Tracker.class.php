@@ -531,7 +531,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function fetchFormElementsMasschange()
     {
         $html = '';
-        $html .= '<table width="20%"><tr><td>';
+        $html .= '<table class="masschange-tracker-artifact"><tr><td>';
         foreach ($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchSubmitMasschange();
         }
@@ -1673,11 +1673,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                 'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ],
         ];
-        $this->displayHeader($layout, $this->name, $breadcrumbs, []);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, [], ["body_class" => ["widgetable"]]);
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
-
+        \Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder::includeListPickerAssets();
         $this->renderer->renderToPage(
             'masschange',
             new Tracker_Masschange_Presenter(

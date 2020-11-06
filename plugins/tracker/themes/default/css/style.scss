@@ -1628,6 +1628,11 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     }
 }
 
+.masschange-tracker-artifact {
+    width: 100%;
+    max-width: 960px;
+}
+
 /* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
 .pc_checkbox {
     display: inline;
@@ -3364,10 +3369,6 @@ td.tracker-unsubscriber-actions {
     display: inline-block;
     width: 250px;
     color: #333333;
-}
-
-.list-picker > .list-picker-with-custom-items-templates > .list-picker-badge {
-    padding: 2px 8px;
 }
 
 .tracker-list-picker-avatar {
