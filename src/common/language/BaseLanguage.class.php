@@ -353,7 +353,10 @@ class BaseLanguage
     public function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt')
     {
         // Language for current user unless it is specified in the param list
-        if (! isset($lang_code)) {
+        if (! isset($lang_code) && preg_match('/^[A-Za-z]{2,4}_[A-Za-z]{2}$/', $this->lang) === 1) {
+            /**
+             * @psalm-taint-escape text
+             */
             $lang_code = $this->lang;
         }
 
@@ -378,9 +381,9 @@ class BaseLanguage
                 // The custom file exists.
                 return $fn;
             } else {
-                if ($lang_code == self::DEFAULT_LANG) {
+                if ($lang_code === self::DEFAULT_LANG) {
                     // return empty content to avoid include error
-                    return ForgeConfig::get('sys_incdir') . "/" . $lang_code . "/others/empty.txt";
+                    return __DIR__ . '/../../../site-content/en_US/others/empty.txt';
                 } else {
                     // else try to find the file in the en_US directory
                     return $this->getContent($file, "en_US", $plugin_name, $ext);

@@ -131,7 +131,7 @@ function html_build_list_table_top($title_arr, $links_arr = false, $mass_change 
                 $return .= '<td class="boxtitle">' . $purifier->purify($title_arr[$i]) . '</td>';
             } else {
                 $return .= '
-			        <TD class="boxtitle"><a class=sortbutton href="' . $links_arr[$i] . '">' . $purifier->purify($title_arr[$i]) . '</A></TD>';
+			        <TD class="boxtitle"><a class=sortbutton href="' . $purifier->purify($links_arr[$i]) . '">' . $purifier->purify($title_arr[$i]) . '</A></TD>';
             }
         }
     } else {

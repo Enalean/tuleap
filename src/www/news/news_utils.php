@@ -73,14 +73,15 @@ function news_header($params)
 			<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
     }
     if (! isset($params['pv']) || ! $params['pv']) {
+        $purifier = Codendi_HTMLPurifier::instance();
         echo '<P><B>';
         // 'Admin' tab is only displayed if the user is News admin or project admin
         if ($group_id) {
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2')) {
-                echo '<A HREF="/news/submit.php?group_id=' . $group_id . '">' . $Language->getText('news_utils', 'submit_news') . '</A> | <A HREF="/news/admin/?group_id=' . $group_id . '">' . $Language->getText('news_utils', 'admin') . '</A>';
+                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A> | <A HREF="/news/admin/?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'admin') . '</A>';
             } elseif (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
               // 'Submit News' tab is only displayed if the user is News writer, or project admin
-                echo '<A HREF="/news/submit.php?group_id=' . $group_id . '">' . $Language->getText('news_utils', 'submit_news') . '</A>';
+                echo '<A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('news_utils', 'submit_news') . '</A>';
             }
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
                 if (isset($params['help'])) {
