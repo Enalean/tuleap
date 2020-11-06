@@ -84,8 +84,9 @@ final class ProgramIncrementFieldsData
      */
     private $artifact_link_value_data;
 
-    private function __construct(
+    public function __construct(
         int $artifact_link_field_id,
+        ArtifactLinkValueData $artifact_link_value_data,
         int $title_field_id,
         TitleValueData $title_value_data,
         int $description_field_id,
@@ -95,10 +96,10 @@ final class ProgramIncrementFieldsData
         int $start_date_field_id,
         StartDateValueData $start_date_value_data,
         int $end_period_field_id,
-        EndPeriodValueData $end_period_value,
-        ArtifactLinkValueData $artifact_link_value
+        EndPeriodValueData $end_period_value
     ) {
         $this->artifact_link_field_id   = $artifact_link_field_id;
+        $this->artifact_link_value_data = $artifact_link_value_data;
         $this->title_field_id           = $title_field_id;
         $this->title_value_data         = $title_value_data;
         $this->description_field_id     = $description_field_id;
@@ -109,7 +110,6 @@ final class ProgramIncrementFieldsData
         $this->start_date_value_data    = $start_date_value_data;
         $this->end_period_field_id      = $end_period_field_id;
         $this->end_period_value_data    = $end_period_value;
-        $this->artifact_link_value_data = $artifact_link_value;
     }
 
     public static function fromSourceChangesetValuesAndSynchronizedFields(
@@ -118,18 +118,18 @@ final class ProgramIncrementFieldsData
         SynchronizedFieldsData $target_fields
     ): self {
         return new self(
-            (int) $target_fields->getFieldArtifactLinkData()->getId(),
-            (int) $target_fields->getFieldTitleData()->getId(),
+            $target_fields->getFieldArtifactLinkData()->getId(),
+            $changeset_values_collection->getArtifactLinkValue(),
+            $target_fields->getFieldTitleData()->getId(),
             $changeset_values_collection->getTitleValue(),
-            (int) $target_fields->getFieldDescriptionData()->getId(),
+            $target_fields->getFieldDescriptionData()->getId(),
             $changeset_values_collection->getDescriptionValue(),
-            (int) $target_fields->getFieldStatusData()->getId(),
+            $target_fields->getFieldStatusData()->getId(),
             $mapped_status_value,
-            (int) $target_fields->getFieldStartDateData()->getId(),
+            $target_fields->getFieldStartDateData()->getId(),
             $changeset_values_collection->getStartDateValue(),
-            (int) $target_fields->getFieldEndPeriodData()->getId(),
-            $changeset_values_collection->getEndPeriodValue(),
-            $changeset_values_collection->getArtifactLinkValue()
+            $target_fields->getFieldEndPeriodData()->getId(),
+            $changeset_values_collection->getEndPeriodValue()
         );
     }
 

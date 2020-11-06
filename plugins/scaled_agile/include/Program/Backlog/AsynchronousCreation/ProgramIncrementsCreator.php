@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreationException;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
 class ProgramIncrementsCreator
 {
@@ -47,7 +46,7 @@ class ProgramIncrementsCreator
      */
     private $status_mapper;
     /**
-     * @var TrackerArtifactCreator
+     * @var ArtifactCreatorAdapter
      */
     private $artifact_creator;
 
@@ -55,7 +54,7 @@ class ProgramIncrementsCreator
         DBTransactionExecutor $transaction_executor,
         SynchronizedFieldsAdapter $synchronized_fields_adapter,
         StatusValueMapper $status_mapper,
-        TrackerArtifactCreator $artifact_creator
+        ArtifactCreatorAdapter $artifact_creator
     ) {
         $this->transaction_executor        = $transaction_executor;
         $this->synchronized_fields_adapter = $synchronized_fields_adapter;
@@ -85,16 +84,14 @@ class ProgramIncrementsCreator
                         $mapped_status,
                         $synchronized_fields
                     );
-                    $result              = $this->artifact_creator->create(
-                        $program_increment_tracker->getFullTracker(),
-                        $fields_data->toFieldsDataArray(),
-                        $current_user,
-                        $copied_values->getSubmittedOn(),
-                        false,
-                        false,
-                        new ChangesetWithFieldsValidationContext(new SystemActionContext())
-                    );
-                    if (! $result) {
+                    try {
+                        $this->artifact_creator->create(
+                            $program_increment_tracker,
+                            $fields_data,
+                            $current_user,
+                            $copied_values->getSubmittedOn(),
+                        );
+                    } catch (ArtifactCreationException $e) {
                         throw new ProgramIncrementArtifactCreationException($copied_values->getSourceArtifactId());
                     }
                 }

@@ -24,8 +24,11 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreationException;
+use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
@@ -36,15 +39,13 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 
-final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
+final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -52,10 +53,6 @@ final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
      * @var ProgramIncrementsCreator
      */
     private $mirrors_creator;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsAdapter
      */
@@ -65,18 +62,18 @@ final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
      */
     private $status_mapper;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|TrackerArtifactCreator
+     * @var M\LegacyMockInterface|M\MockInterface|ArtifactCreatorAdapter
      */
     private $artifact_creator;
 
     protected function setUp(): void
     {
-        $this->transaction_executor        = new DBTransactionExecutorPassthrough();
+        $transaction_executor              = new DBTransactionExecutorPassthrough();
         $this->synchronized_fields_adapter = M::mock(SynchronizedFieldsAdapter::class);
-        $this->artifact_creator            = M::mock(TrackerArtifactCreator::class);
+        $this->artifact_creator            = M::mock(ArtifactCreatorAdapter::class);
         $this->status_mapper               = M::mock(StatusValueMapper::class);
         $this->mirrors_creator             = new ProgramIncrementsCreator(
-            $this->transaction_executor,
+            $transaction_executor,
             $this->synchronized_fields_adapter,
             $this->status_mapper,
             $this->artifact_creator
@@ -103,12 +100,12 @@ final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
             ->andReturns($this->buildMappedValue(5000), $this->buildMappedValue(6000));
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($test_tracker_data->getFullTracker(), M::any(), $current_user, $copied_values->getSubmittedOn(), false, false, M::type(ChangesetValidationContext::class))
-            ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
+            ->with($test_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
+            ->andReturn(new ArtifactData(201, 123456789));
         $this->artifact_creator->shouldReceive('create')
             ->once()
-            ->with($second_tracker_data->getFullTracker(), M::any(), $current_user, $copied_values->getSubmittedOn(), false, false, M::type(ChangesetValidationContext::class))
-            ->andReturn(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class));
+            ->with($second_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
+            ->andReturn(new ArtifactData(202, 123456789));
 
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
     }
@@ -125,7 +122,7 @@ final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
         $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
             ->andReturn($this->buildMappedValue(5000));
-        $this->artifact_creator->shouldReceive('create')->andReturnNull();
+        $this->artifact_creator->shouldReceive('create')->andThrow(new ArtifactCreationException());
 
         $this->expectException(ProgramIncrementArtifactCreationException::class);
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
@@ -135,19 +132,20 @@ final class ProgramIncrementCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $planned_value          = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
 
-        $title_value = new TitleValueData('Program Release');
-        $description_value = new DescriptionValueData('Description', 'text');
+        $title_value         = new TitleValueData('Program Release');
+        $description_value   = new DescriptionValueData('Description', 'text');
         $status_value        = new StatusValueData([$planned_value]);
         $start_date_value    = new StartDateValueData("2020-10-01");
         $end_period_value    = new EndPeriodValueData("2020-10-31");
         $artifact_link_value = new ArtifactLinkValueData(112);
+        $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
             112,
             $title_value,
             $description_value,
             $status_value,
-            123456789,
+            $submission_date,
             $start_date_value,
             $end_period_value,
             $artifact_link_value
