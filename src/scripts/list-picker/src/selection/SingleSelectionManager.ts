@@ -116,7 +116,7 @@ export class SingleSelectionManager implements SelectionManager {
         selected_value.setAttribute("data-item-id", item.id);
         selected_value.setAttribute("aria-readonly", "true");
 
-        selected_value.appendChild(document.createTextNode(item.template));
+        selected_value.innerHTML = sanitize(item.template);
         selected_value.appendChild(this.createRemoveCurrentSelectionButton(item));
 
         return selected_value;

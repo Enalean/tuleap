@@ -1041,10 +1041,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
-        $html     = '';
-        $multiple = '';
-        $size     = '';
-        $required = '';
+        $html      = '';
+        $multiple  = '';
+        $size      = '';
+        $required  = '';
+        $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
             $size     = 'size="' . min($this->getMaxSize(), count($this->getBind()->getBindValues()) + 2) . '"';
@@ -1052,7 +1053,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($this->isRequired()) {
             $required = 'required';
         }
-        $html .= "<select $id $name $multiple $size $required";
+
+        $html .= "<select $id $name $multiple $size $bind_type $required";
         if ($data_target_fields_ids !== '') {
             $html .= $data_target_fields_ids;
         }

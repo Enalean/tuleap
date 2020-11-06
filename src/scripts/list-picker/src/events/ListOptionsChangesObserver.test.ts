@@ -42,7 +42,7 @@ describe("ListOptionsChangesObserver", () => {
         } as unknown) as DropdownContentRenderer;
 
         items_map_manager = ({
-            rebuildItemsMap: jest.fn(),
+            refreshItemsMap: jest.fn().mockReturnValue(Promise.resolve()),
         } as unknown) as ItemsMapManager;
 
         selection_manager = ({
@@ -68,7 +68,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        expect(items_map_manager.rebuildItemsMap).toHaveBeenCalled();
+        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
         expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        expect(items_map_manager.rebuildItemsMap).toHaveBeenCalled();
+        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
         expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
@@ -98,7 +98,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        expect(items_map_manager.rebuildItemsMap).not.toHaveBeenCalled();
+        await expect(items_map_manager.refreshItemsMap).not.toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).not.toHaveBeenCalled();
         expect(selection_manager.resetAfterDependenciesUpdate).not.toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).not.toHaveBeenCalled();

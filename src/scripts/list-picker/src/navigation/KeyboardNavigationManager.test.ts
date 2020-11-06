@@ -25,6 +25,7 @@ import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ItemsMapManager } from "../items/ItemsMapManager";
+import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,
@@ -37,7 +38,7 @@ describe("KeyboardNavigationManager", () => {
         expect(dropdown_list.querySelectorAll(".list-picker-item-highlighted").length).toEqual(1);
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const source_select_box = document.createElement("select");
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
@@ -49,7 +50,8 @@ describe("KeyboardNavigationManager", () => {
             selection_element,
         } = new BaseComponentRenderer(source_select_box).renderBaseComponent();
 
-        item_map_manager = new ItemsMapManager(source_select_box);
+        item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
+        await item_map_manager.refreshItemsMap();
         const content_renderer = new DropdownContentRenderer(
             source_select_box,
             dropdown_list_element,

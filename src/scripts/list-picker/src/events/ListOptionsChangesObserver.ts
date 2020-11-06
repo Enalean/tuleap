@@ -47,13 +47,13 @@ export class ListOptionsChangesObserver {
     }
 
     private refreshListPickerOnOptionsChanges(): (mutations: Array<MutationRecord>) => void {
-        return (mutations: Array<MutationRecord>): void => {
+        return async (mutations: Array<MutationRecord>): Promise<void> => {
             const children_mutation = mutations.find((mutation) => mutation.type === "childList");
             if (!children_mutation) {
                 return;
             }
 
-            this.items_map_manager.rebuildItemsMap();
+            await this.items_map_manager.refreshItemsMap();
             this.dropdown_content_renderer.renderAfterDependenciesUpdate();
             this.selection_manager.resetAfterDependenciesUpdate();
             this.event_manager.attachItemListEvent();

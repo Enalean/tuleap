@@ -104,7 +104,7 @@ export class MultipleSelectionManager implements SelectionManager {
         this.removeListItemFromSelection(last_selected_item);
         this.toggleClearValuesButton();
 
-        this.search_field_element.value = last_selected_item.template;
+        this.search_field_element.value = last_selected_item.label;
         event.preventDefault();
         event.cancelBubble = true;
     }
@@ -192,8 +192,8 @@ export class MultipleSelectionManager implements SelectionManager {
         const badge = document.createElement("span");
         badge.classList.add("list-picker-badge");
         badge.appendChild(remove_badge_button);
-        badge.appendChild(document.createTextNode(list_item.template));
-        badge.setAttribute("title", list_item.template);
+        badge.insertAdjacentHTML("beforeend", sanitize(list_item.template));
+        badge.setAttribute("title", list_item.label);
 
         if (this.source_select_box.disabled) {
             return badge;

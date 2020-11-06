@@ -25,18 +25,30 @@ import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
+import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("dropdown-content-renderer", () => {
     let select: HTMLSelectElement,
         dropdown: Element,
         dropdown_list: Element,
-        gettext_provider: GetText;
+        gettext_provider: GetText,
+        items_map_manager: ItemsMapManager;
+
+    function getDropdownContentRenderer(): DropdownContentRenderer {
+        return new DropdownContentRenderer(
+            select,
+            dropdown_list,
+            items_map_manager,
+            gettext_provider
+        );
+    }
 
     beforeEach(() => {
         select = document.createElement("select");
         gettext_provider = {
             gettext: (english: string) => english,
         } as GetText;
+        items_map_manager = new ItemsMapManager(new ListItemMapBuilder(select));
     });
 
     describe("without search input", () => {
@@ -47,50 +59,36 @@ describe("dropdown-content-renderer", () => {
 
             dropdown = dropdown_element;
             dropdown_list = dropdown_list_element;
-
-            gettext_provider = {
-                gettext: (english: string) => english,
-            } as GetText;
         });
 
-        it("renders grouped list items", () => {
+        it("renders grouped list items", async () => {
             appendGroupedOptionsToSourceSelectBox(select);
-
-            new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            ).renderListPickerDropdownContent();
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderListPickerDropdownContent();
 
             expect(dropdown.innerHTML).toMatchSnapshot();
         });
 
-        it("renders simple list items", () => {
+        it("renders simple list items", async () => {
             appendSimpleOptionsToSourceSelectBox(select);
-            new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            ).renderListPickerDropdownContent();
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderListPickerDropdownContent();
 
             expect(dropdown.innerHTML).toMatchSnapshot();
         });
 
-        it("when the source option is disabled, then the list item should be disabled", () => {
+        it("when the source option is disabled, then the list item should be disabled", async () => {
             const disabled_option = document.createElement("option");
             disabled_option.setAttribute("disabled", "disabled");
             disabled_option.setAttribute("value", "You can't select me");
 
             select.appendChild(disabled_option);
 
-            new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            ).renderListPickerDropdownContent();
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderListPickerDropdownContent();
 
             const disabled_list_item = dropdown.querySelector(
                 ".list-picker-dropdown-option-value-disabled"
@@ -110,14 +108,10 @@ describe("dropdown-content-renderer", () => {
             dropdown_list = dropdown_list_element;
         });
 
-        it("renders only items matching the query", () => {
+        it("renders only items matching the query", async () => {
             appendSimpleOptionsToSourceSelectBox(select);
-            const renderer = new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            );
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
 
             renderer.renderListPickerDropdownContent();
             renderer.renderFilteredListPickerDropdownContent("1");
@@ -130,14 +124,10 @@ describe("dropdown-content-renderer", () => {
             expect(dropdown_list.firstElementChild.textContent).toEqual("Value 1");
         });
 
-        it("renders an empty state if no items are matching the query", () => {
+        it("renders an empty state if no items are matching the query", async () => {
             appendSimpleOptionsToSourceSelectBox(select);
-            const renderer = new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            );
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
 
             renderer.renderListPickerDropdownContent();
             renderer.renderFilteredListPickerDropdownContent("This query will match no item");
@@ -150,15 +140,10 @@ describe("dropdown-content-renderer", () => {
             }
         });
 
-        it("renders groups containing matching items", () => {
+        it("renders groups containing matching items", async () => {
             appendGroupedOptionsToSourceSelectBox(select);
-
-            const renderer = new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                new ItemsMapManager(select),
-                gettext_provider
-            );
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
 
             renderer.renderListPickerDropdownContent();
             renderer.renderFilteredListPickerDropdownContent("Value 1");
@@ -191,7 +176,7 @@ describe("dropdown-content-renderer", () => {
             dropdown_list = dropdown_list_element;
         });
 
-        it("should re-render the list", () => {
+        it("should re-render the list", async () => {
             const option_1 = document.createElement("option");
             option_1.innerText = "Item 1";
             option_1.value = "item_1";
@@ -200,14 +185,10 @@ describe("dropdown-content-renderer", () => {
             option_2.value = "item_2";
 
             select.appendChild(option_1);
-            const items_manager = new ItemsMapManager(select);
-            const content_renderer = new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                items_manager,
-                gettext_provider
-            );
-            content_renderer.renderListPickerDropdownContent();
+
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderListPickerDropdownContent();
 
             const list_item_1 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_1) {
@@ -217,8 +198,8 @@ describe("dropdown-content-renderer", () => {
 
             select.innerHTML = "";
             select.appendChild(option_2);
-            items_manager.rebuildItemsMap();
-            content_renderer.renderAfterDependenciesUpdate();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderAfterDependenciesUpdate();
 
             const list_item_2 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_2) {
@@ -227,20 +208,15 @@ describe("dropdown-content-renderer", () => {
             expect(list_item_2.innerHTML).toEqual("Item 2");
         });
 
-        it("should render an empty state when the source <select> has no options", () => {
+        it("should render an empty state when the source <select> has no options", async () => {
             const option_1 = document.createElement("option");
             option_1.innerText = "Item 1";
             option_1.value = "item_1";
             select.appendChild(option_1);
 
-            const items_manager = new ItemsMapManager(select);
-            const content_renderer = new DropdownContentRenderer(
-                select,
-                dropdown_list,
-                items_manager,
-                gettext_provider
-            );
-            content_renderer.renderListPickerDropdownContent();
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderListPickerDropdownContent();
 
             const list_item_1 = dropdown_list.querySelector(".list-picker-dropdown-option-value");
             if (!list_item_1) {
@@ -249,8 +225,8 @@ describe("dropdown-content-renderer", () => {
             expect(list_item_1.innerHTML).toEqual("Item 1");
 
             select.innerHTML = "";
-            items_manager.rebuildItemsMap();
-            content_renderer.renderAfterDependenciesUpdate();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderAfterDependenciesUpdate();
 
             expect(dropdown_list.querySelector("#list-picker-item-item_1")).toBeNull();
             const empty_state = dropdown_list.querySelector(".list-picker-empty-dropdown-state");

@@ -24,11 +24,15 @@ export interface ListPicker {
 export interface ListPickerOptions {
     placeholder?: string;
     is_filterable?: boolean;
+    items_template_formatter?: (value_id: string, item_label: string) => Promise<string>;
 }
+
+export type ListPickerItemMap = Map<string, ListPickerItem>;
 
 export interface ListPickerItem {
     id: string;
     template: string;
+    label: string;
     value: string;
     is_disabled: boolean;
     is_selected: boolean;
@@ -60,7 +64,7 @@ export interface ListPickerSelectionStateSingle {
 }
 
 export interface ListPickerSelectionStateMultiple {
-    selected_items: Map<string, ListPickerItem>;
+    selected_items: ListPickerItemMap;
     selected_value_elements: Map<string, Element>;
 }
 

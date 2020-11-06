@@ -59,7 +59,7 @@ export class DropdownContentRenderer {
 
         const lowercase_query = filter_query.toLowerCase();
         const matching_items = this.items_map_manager.getListPickerItems().filter((item) => {
-            return item.template.toLowerCase().includes(lowercase_query);
+            return item.label.toLowerCase().includes(lowercase_query);
         });
 
         if (matching_items.length === 0) {

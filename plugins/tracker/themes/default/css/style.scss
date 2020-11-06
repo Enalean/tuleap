@@ -3365,3 +3365,15 @@ td.tracker-unsubscriber-actions {
     width: 250px;
     color: #333333;
 }
+
+.list-picker > .list-picker-with-custom-items-templates > .list-picker-badge {
+    padding: 2px 8px;
+}
+
+.tracker-list-picker-avatar {
+    width: 20px;
+    height: 20px;
+    margin: 0 6px 0 0;
+    border-radius: 50%;
+    vertical-align: middle;
+}
