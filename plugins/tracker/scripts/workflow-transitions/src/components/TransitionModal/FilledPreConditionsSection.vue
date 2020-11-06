@@ -61,6 +61,7 @@
                 v-model="not_empty_field_ids"
                 v-bind:disabled="is_modal_save_running"
                 data-test="not-empty-field-select"
+                v-on:input="updateNotEmptyFieldIds"
             >
                 <option
                     v-for="field in writable_fields"

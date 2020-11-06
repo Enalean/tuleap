@@ -40,6 +40,7 @@
                 v-model="frozen_field_ids"
                 v-bind:disabled="is_modal_save_running"
                 data-test="frozen-fields-selector"
+                v-on:input="updateFrozenFieldsPostActionFieldIds"
             >
                 <option
                     v-for="field in writable_fields"
